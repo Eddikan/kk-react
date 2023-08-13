@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Layout from '../Components/Layout/Layout';
-import Container from 'react-bootstrap/Container'
+import { Container, Row, Col, Button }  from 'react-bootstrap';
+import '../Assets/styles/Home/style.css'
 
 const Home = () => {
   return (
     <Layout>
-      <Container>
-        <h1>Home</h1>
+      <Container id="your-container-id" class="your-container-class">
+        <Row>
+          <Col md="12">
+            <h1>Home</h1>
+            <Button className="me-2" variant="primary">Primary</Button>
+          </Col>
+        </Row>
       </Container>
     </Layout>
   );
