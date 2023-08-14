@@ -5,6 +5,7 @@ import './Assets/styles/overrides.css';
 
 const Home = lazy(() => import('./Pages/Home'));
 const Buttons = lazy(() => import('./Pages/Elements/Buttons'));
+const Forms = lazy(() => import('./Pages/Forms'));
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Routes>
           <Route path="/" exact element={<Home/>} /> 
           <Route path="/elements/buttons" exact element={<Buttons/>} /> 
+          <Route path="/forms" exact element={<Forms/>} />
         </Routes>
       </Suspense>
     </Router>
