@@ -14,6 +14,7 @@ const Stripe = lazy(() => import('./Pages/Stripe'));
 const Howell = lazy(() => import('./Pages/Howell'));
 const Jackie = lazy(() => import('./Pages/Jackie'));
 const Jiboy = lazy(() => import('./Pages/Jiboy'));
+const Juriel = lazy(() => import('./Pages/Juriel'));
 const Bien = lazy(() => import('./Pages/Bien'));
 
 const App = () => {
@@ -33,6 +34,7 @@ const App = () => {
           <Route path="/elements/buttons" exact element={<Buttons/>} />
           <Route path="/forms" exact element={<Forms/>} />
           <Route path="/bien" exact element={<Bien/>} />
+          <Route path="/juriel" exact element={<Juriel/>} />
         </Routes>
       </Suspense>
     </Router>
