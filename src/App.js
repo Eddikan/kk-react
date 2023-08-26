@@ -11,6 +11,7 @@ const Home = lazy(() => import('./Pages/Home'));
 const Buttons = lazy(() => import('./Pages/Elements/Buttons'));
 const Forms = lazy(() => import('./Pages/Forms'));
 const Stripe = lazy(() => import('./Pages/Stripe'));
+const Jackie = lazy(() => import('./Pages/Jackie'));
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" exact element={<Home/>} />
+          <Route path="/jackie" exact element={<Jackie/>} />
           <Route path="/elements/buttons" exact element={<Buttons/>} />
           <Route path="/forms" exact element={<Forms/>} />
         </Routes>
