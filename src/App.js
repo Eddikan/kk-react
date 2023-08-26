@@ -11,15 +11,10 @@ const Home = lazy(() => import('./Pages/Home'));
 const Buttons = lazy(() => import('./Pages/Elements/Buttons'));
 const Forms = lazy(() => import('./Pages/Forms'));
 const Stripe = lazy(() => import('./Pages/Stripe'));
-<<<<<<< HEAD
 const Howell = lazy(() => import('./Pages/Howell'));
-=======
-<<<<<<< HEAD
 const Jackie = lazy(() => import('./Pages/Jackie'));
-=======
 const Jiboy = lazy(() => import('./Pages/Jiboy'));
->>>>>>> 276a572b4312cde896f559111d46628a55697b13
->>>>>>> c094db5abab506eadf436cd96fee1202d553b72b
+const Bien = lazy(() => import('./Pages/Bien'));
 
 const App = () => {
   return (
@@ -32,17 +27,12 @@ const App = () => {
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" exact element={<Home/>} />
-<<<<<<< HEAD
           <Route path="/howell" exact element={<Howell/>} />
-=======
-<<<<<<< HEAD
           <Route path="/jackie" exact element={<Jackie/>} />
-=======
           <Route path="/jiboy" exact element={<Jiboy/>} />
->>>>>>> 276a572b4312cde896f559111d46628a55697b13
->>>>>>> c094db5abab506eadf436cd96fee1202d553b72b
           <Route path="/elements/buttons" exact element={<Buttons/>} />
           <Route path="/forms" exact element={<Forms/>} />
+          <Route path="/bien" exact element={<Bien/>} />
         </Routes>
       </Suspense>
     </Router>
