@@ -6,7 +6,7 @@ import '../Assets/styles/Home/style.css'
 const Home = () => {
   return (
     <Layout>
-      <Container id="your-container-id" class="your-container-class">
+      <Container id="your-container-id" className="your-container-class">
         <Row>
           <Col md="12">
             <h1>Home</h1>
