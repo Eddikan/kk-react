@@ -1,4 +1,4 @@
-import '../Assets/styles/Jackie/style.css'
+// import '../Assets/styles/Jackie/style.css'
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 

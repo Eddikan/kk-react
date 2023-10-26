@@ -19,6 +19,7 @@ const Lhemar = lazy(() => import('./Pages/Lhemar'));
 const Bien = lazy(() => import('./Pages/Bien'));
 const Aj = lazy(() => import('./Pages/Aj'));
 const Victor = lazy(() => import('./Pages/Victor'));
+const BienPost = lazy(() => import('./Pages/BienPost'));
 
 const App = () => {
   return (
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="/john_lhemar" exact element={<Lhemar/>} />
           <Route path="/Aj" exact element={<Aj/>} />
           <Route path="/victor" exact element={<Victor/>} />
+          <Route path="/bienpost" exact element={<BienPost/>} />
           
         </Routes>
       </Suspense>
