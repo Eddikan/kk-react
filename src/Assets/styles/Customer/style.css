@@ -8,3 +8,51 @@
     font-weight: 700;
     outline: none;
 }
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.action_table {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
+  
+.action_table .action_content {
+    visibility: hidden;
+    width: 200px;
+    padding:0;
+    right: 15px;
+    top: 5px;
+    position: absolute;
+    z-index: 1;
+    box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.39);
+}
+
+.action_table:hover .action_content {
+    visibility: visible;
+}
+
+.action_table .action_container {
+    padding: 0px !important;
+}
+
+.action_container a {
+    text-decoration: none;
+    color: #212529;
+    font-size: 14px;
+    font-weight: 600;
+    padding-left: 12px;
+    display: inline-block;
+    width: 115px;
+}
+
+.action_container .link_container {
+    padding: 5px 30px;
+    text-align: left!important;
+}
+
+.action_container .link_container:hover {
+    background: #ebebeb;
+}
