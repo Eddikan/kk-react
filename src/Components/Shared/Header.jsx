@@ -1,37 +1,29 @@
-import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
+import { Container, Button }  from 'react-bootstrap';
+import { FaMagnifyingGlass } from "react-icons/fa6";
+import Logo from '../../Assets/images/kouture-konect-logo.png'
 
 function Header() {
   return (
-    <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary">
+    <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
       <Container>
-        <Navbar.Brand href="/">React-Bootstrap</Navbar.Brand>
+        <Navbar.Brand href="/"><img src={Logo}/></Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto">
-            <NavDropdown title="Elements">
-              <NavDropdown.Item href="/elements/buttons">Buttons</NavDropdown.Item>
-            </NavDropdown>
-            <Nav.Link href="#pricing">Pricing</Nav.Link>
-            <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown>
+        <Navbar.Collapse className="justify-content-between" id="responsive-navbar-nav">
+          <Nav className="align-items-center">
+            <Nav.Link href="/find-designs">Find Designs</Nav.Link>
+            <Nav.Link href="/inspirations">Inspirations</Nav.Link>
           </Nav>
-          <Nav>
-            <Nav.Link href="#deets">More deets</Nav.Link>
-            <Nav.Link eventKey={2} href="#memes">
-              Dank memes
-            </Nav.Link>
+          <Nav className="align-items-center d-grid-mobile">
+            <Form inline className='search d-flex align-items-center'>
+              <FormControl type='text' placeholder='Search' className='mr-sm-2' />
+              <FaMagnifyingGlass />
+            </Form>
+            <Nav.Link href="/login">Log in</Nav.Link>
+            <Button className="btn-primary" variant="primary">Sign Up</Button>
           </Nav>
         </Navbar.Collapse>
       </Container>
