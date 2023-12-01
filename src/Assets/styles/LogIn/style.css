@@ -1,0 +1,72 @@
+/*Login*/
+body:has(section#login) #navigation {
+    display: none!important;
+}
+section#login h1{
+    font-size: 35px;
+    font-weight: 600;
+}
+section#login p.subtitle {
+    font-size: 20px;
+}
+section#login .with-bg{
+    background-image: url('../../images/login-img.png');
+    background-position: center right;
+    background-repeat: no-repeat;
+}
+section#login .sign-in-container {
+    margin: 0 auto;
+    max-width: 500px;
+    width: 100%;
+}
+section#login hr{
+    border-color: var(--dgrey);
+    border-width: 2px;
+}
+section#login button.sign-in {
+    background-color: transparent;
+    border: 2px solid var(--grey);
+    border-radius: 5px;
+    padding: 10px 20px;
+    width: 100%;
+    color: var(--black);
+    box-shadow: none!important;
+    -webkit-appearance: none!important;
+}
+section#login button.sign-in img {
+    width: 25px;
+    margin-right: 20px;
+}
+section#login .sign-in-with-email {
+    background-color: var(--white);
+    display: block;
+    position: relative;
+    width: fit-content;
+    color: var(--dgrey);
+    margin: -15px auto 0 auto;
+}
+section#login a.forgot-password {
+    text-align: right;
+    display: block;
+    text-decoration: none;
+}
+@media screen and (min-width:1200px){
+    form.search input{
+        min-width: 350px;
+    }
+}
+@media screen and (max-width:991px){
+    section#login h1{
+        font-size: 35px;
+    }
+    section#login .with-bg{
+        background-position: center;
+        background-size: cover;
+        min-height: 300px;
+    }
+    section#login .sign-in-container{
+        margin:50px auto;
+        padding-left: 0.5rem!important;
+        padding-right: 0.5rem!important;
+    }
+}

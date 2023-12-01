@@ -8,13 +8,14 @@ import { Elements } from "@stripe/react-stripe-js";
 const stripePromise = loadStripe("pk_test_NuJ5XLTawKbspF46LKSgwDbk");
 
 const Home = lazy(() => import('./Pages/Home'));
+const LogIn = lazy(() => import('./Pages/LogIn'));
+const SignUp = lazy(() => import('./Pages/SignUp'));
 const About = lazy(() => import('./Pages/About'));
 const Buttons = lazy(() => import('./Pages/Elements/Buttons'));
 const Forms = lazy(() => import('./Pages/Forms'));
 const Stripe = lazy(() => import('./Pages/Stripe'));
 const Howell = lazy(() => import('./Pages/Howell'));
 const Jackie = lazy(() => import('./Pages/Jackie'));
-const Jiboy = lazy(() => import('./Pages/Jiboy'));
 const Juriel = lazy(() => import('./Pages/Juriel'));
 const Lhemar = lazy(() => import('./Pages/Lhemar'));
 const Bien = lazy(() => import('./Pages/Bien'));
@@ -33,10 +34,11 @@ const App = () => {
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path="/" exact element={<Home/>} />
+          <Route path="/login" exact element={<LogIn/>} />
+          <Route path="/sign-up" exact element={<SignUp/>} />
           <Route path="/about" exact element={<About/>} />
           <Route path="/howell" exact element={<Howell/>} />
           <Route path="/jackie" exact element={<Jackie/>} />
-          <Route path="/jiboy" exact element={<Jiboy/>} />
           <Route path="/elements/buttons" exact element={<Buttons/>} />
           <Route path="/forms" exact element={<Forms/>} />
           <Route path="/bien" exact element={<Bien/>} />

@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import { Container, Button }  from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import Logo from '../../Assets/images/kouture-konect-logo.png'
+import Logo from '../../Assets/images/kouture-konect-logo.png';
 
 function Header() {
   return (
