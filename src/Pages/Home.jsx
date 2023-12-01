@@ -14,7 +14,7 @@ const Home = () => {
               <p className='subtitle'>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p>
             </Col>
           </Row>
-          <Row className='narrow mt-4'>
+          <Row className='narrow-400 mt-4'>
             <Col lg='6'>
               <Button className='btn-outline' variant='secondary'>Start Selling</Button>
             </Col>

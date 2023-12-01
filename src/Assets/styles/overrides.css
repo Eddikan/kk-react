@@ -18,6 +18,7 @@
     --black: #000000;
     --white: #ffffff;
     --grey: #F3F3F3;
+    --lgrey: #F8F9FA;
     --dgrey: #959595;
     --body-font: ProximaNova;
     --heading-font: Rufina;
@@ -27,6 +28,7 @@ body {
     font-family: var(--body-font);
     background-color: var(--white);
     font-size: 18px;
+    line-height: 1.3;
 }
 h1,h2,h3,h4,h5{
     font-family: var(--heading-font);
@@ -36,10 +38,14 @@ h1,h2,h3,h4,h5{
 .mh650{
     min-height: 650px;
 }
-.narrow{
+.narrow-400{
     max-width: 450px;
     margin: 0 auto;
     row-gap: 20px;
+}
+.narrow-600{
+    max-width: 600px;
+    margin: 0 auto;
 }
 .btn-primary {
     font-size: 18px;
@@ -79,6 +85,15 @@ h1,h2,h3,h4,h5{
 }
 .fs-16{
     font-size: 16px;
+}
+.text-right{
+    text-align: right;
+}
+.text-left{
+    text-align: left;
+}
+.hide{
+    display: none;
 }
 a{
     color: var(--primary);
@@ -133,7 +148,7 @@ form.search input {
     background-color: var(--grey);
     border: none;
     border-radius: 0px!important;
-    padding: 13px 0px;
+    padding: 10px 20px 10px 0px!important;
     color:  var(--black);
 }
 form.search input:focus,form.search input:active  {
@@ -161,7 +176,7 @@ form.search input::placeholder {
 @media screen and (max-width:991px){
     .navbar-nav.d-grid-mobile{
         display: grid;
-        grid-gap: 15px;
+        grid-gap: 5px;
         text-align: center;
         grid-template-areas:
             'search'
@@ -170,5 +185,11 @@ form.search input::placeholder {
     }
     .navbar-nav.d-grid-mobile form.search{
         grid-area: sign;
+    }
+    .mh650{
+        min-height: auto;
+    }
+    body,p {
+        font-size: 16px;
     }
 }

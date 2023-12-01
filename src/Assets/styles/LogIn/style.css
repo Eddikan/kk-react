@@ -6,15 +6,13 @@ section#login h1{
     font-size: 35px;
     font-weight: 600;
 }
-section#login p.subtitle {
-    font-size: 20px;
-}
 section#login .with-bg{
     background-image: url('../../images/login-img.png');
     background-position: center right;
     background-repeat: no-repeat;
+    background-size: cover;
 }
-section#login .sign-in-container {
+section#login .login-container {
     margin: 0 auto;
     max-width: 500px;
     width: 100%;
@@ -23,7 +21,7 @@ section#login hr{
     border-color: var(--dgrey);
     border-width: 2px;
 }
-section#login button.sign-in {
+section#login button.login-google {
     background-color: transparent;
     border: 2px solid var(--grey);
     border-radius: 5px;
@@ -33,11 +31,11 @@ section#login button.sign-in {
     box-shadow: none!important;
     -webkit-appearance: none!important;
 }
-section#login button.sign-in img {
+section#login button.login-google img {
     width: 25px;
     margin-right: 20px;
 }
-section#login .sign-in-with-email {
+section#login .login-with-email {
     background-color: var(--white);
     display: block;
     position: relative;
@@ -57,16 +55,14 @@ section#login a.forgot-password {
 }
 @media screen and (max-width:991px){
     section#login h1{
-        font-size: 35px;
+        font-size: 25px;
     }
     section#login .with-bg{
         background-position: center;
         background-size: cover;
         min-height: 300px;
     }
-    section#login .sign-in-container{
-        margin:50px auto;
-        padding-left: 0.5rem!important;
-        padding-right: 0.5rem!important;
+    section#login .login-container{
+        padding: 30px 0.5rem!important;
     }
 }

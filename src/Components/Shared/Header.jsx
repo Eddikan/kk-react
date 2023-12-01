@@ -23,7 +23,7 @@ function Header() {
               <FaMagnifyingGlass />
             </Form>
             <Nav.Link href="/login">Log in</Nav.Link>
-            <Button className="btn-primary" variant="primary">Sign Up</Button>
+            <Nav.Link href="/sign-up"><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

@@ -13,14 +13,14 @@ const LogIn = () => {
         <Container fluid>
           <Row className='vh-100'>
             <Col lg='8' className='d-flex flex-column justify-content-center'>
-                <div className='sign-in-container'>
+                <div className='login-container'>
                     <h1 className='text-center'>Sign in to Kouture Konect</h1>
-                    <button className='sign-in mt-3'>
+                    <button className='login-google mt-3'>
                         <img src={GoogleIcon}/>
-                        <span className='subtitle'>Sign in with google</span>
+                        <span className='subtitle'>Sign in with Google</span>
                     </button>
                     <hr className='mb-0 mt-5'/>
-                    <p className='sign-in-with-email'>or sign in with email</p>
+                    <p className='login-with-email'>or sign in with email</p>
                     <Form className='mt-4'>
                         <Form.Group className='mb-3' controlId='formBasicEmail'>
                             <Form.Label>Email Address</Form.Label>
@@ -30,10 +30,8 @@ const LogIn = () => {
                             <Form.Label>Password</Form.Label>
                             <FormControl type='password' className='mr-sm-2' />
                         </Form.Group>
-                        <a className='forgot-password text-dgrey fs-16' href='/forgot-password'>Forgot Password</a>
-                        <Button className='w-100 mt-4' variant='primary' type='submit'>
-                            Sign in
-                        </Button>
+                        <a className='forgot-password text-dgrey fs-16'>Forgot Password</a>
+                        <Button className='w-100 mt-4' variant='primary' type='submit'>Sign in</Button>
                         <p className='mb-0 mt-3 text-center fs-16 text-dgrey'>Don't have an account? <a className='sign-up' href='/sign-up'>Sign Up</a></p>
                     </Form>
                 </div>

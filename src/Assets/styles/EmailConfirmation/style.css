@@ -1,0 +1,39 @@
+/*Home*/
+body:has(section#email-confirmation) #navigation {
+    display: none!important;
+}
+section#email-confirmation h1{
+    font-size: 28px;
+    font-weight: 600;
+}
+section#email-confirmation img{
+    max-width: 150px;
+    width: 100%;
+}
+section#email-confirmation p.subtitle {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+section#email-confirmation .narrow-600{
+    background-color: var(--lgrey);
+}
+section#email-confirmation .btn-primary{
+    min-width: 150px;
+}
+@media screen and (min-width:1200px){
+    form.search input{
+        min-width: 350px;
+    }
+}
+@media screen and (max-width:991px){
+    section#email-confirmation{
+        padding-top:30px;
+        padding-bottom:30px;
+    }
+    section#email-confirmation h1{
+        font-size: 23px;
+    }
+    section#email-confirmation .narrow-600{
+        padding: 30px!important;
+    }
+}

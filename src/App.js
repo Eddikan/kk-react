@@ -10,6 +10,8 @@ const stripePromise = loadStripe("pk_test_NuJ5XLTawKbspF46LKSgwDbk");
 const Home = lazy(() => import('./Pages/Home'));
 const LogIn = lazy(() => import('./Pages/LogIn'));
 const SignUp = lazy(() => import('./Pages/SignUp'));
+const EmailConfirmation = lazy(() => import('./Pages/EmailConfirmation'));
+const Questionnaire = lazy(() => import('./Pages/Questionnaire'));
 const About = lazy(() => import('./Pages/About'));
 const Buttons = lazy(() => import('./Pages/Elements/Buttons'));
 const Forms = lazy(() => import('./Pages/Forms'));
@@ -36,6 +38,8 @@ const App = () => {
           <Route path="/" exact element={<Home/>} />
           <Route path="/login" exact element={<LogIn/>} />
           <Route path="/sign-up" exact element={<SignUp/>} />
+          <Route path="/email-confirmation" exact element={<EmailConfirmation/>} />
+          <Route path="/questionnaire" exact element={<Questionnaire/>} />
           <Route path="/about" exact element={<About/>} />
           <Route path="/howell" exact element={<Howell/>} />
           <Route path="/jackie" exact element={<Jackie/>} />
