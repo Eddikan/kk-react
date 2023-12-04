@@ -2,12 +2,17 @@
 body:has(section#questionnaire) #navigation {
     display: none!important;
 }
+section#questionnaire {
+    min-height: 100vh;
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
 section#questionnaire h1{
     font-size: 28px;
     font-weight: 600;
 }
-section#questionnaire .form-title{
-    font-size: 28px;
+section#questionnaire .form-title {
+    font-size: 25px;
     font-weight: 600;
     color: var(--black);
 }
@@ -22,8 +27,14 @@ section#questionnaire p.subtitle {
 section#questionnaire .narrow-600{
     background-color: var(--lgrey);
 }
+section#questionnaire .narrow-750 {
+    background-color: var(--lgrey); 
+}
 section#questionnaire .btn-primary{
     min-width: 150px;
+}
+section#questionnaire select {
+    color: #8F8F8F;
 }
 @media screen and (min-width:1200px){
     form.search input{

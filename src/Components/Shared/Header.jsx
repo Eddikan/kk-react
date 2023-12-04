@@ -16,6 +16,7 @@ function Header() {
           <Nav className="align-items-center">
             <Nav.Link href="/find-designs">Find Designs</Nav.Link>
             <Nav.Link href="/inspirations">Inspirations</Nav.Link>
+            <Nav.Link href="/inspirations">Blog</Nav.Link>
           </Nav>
           <Nav className="align-items-center d-grid-mobile">
             <Form inline className='search d-flex align-items-center'>

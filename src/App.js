@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { IoShirtSharp } from "react-icons/io5";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'Assets/styles/overrides.css';
 
@@ -25,6 +26,18 @@ const Aj = lazy(() => import('./Pages/Aj'));
 const Victor = lazy(() => import('./Pages/Victor'));
 const CustomerPage = lazy(() => import('./Pages/CustomerPage'));
 
+const LoadingPage = () => {
+  return (
+    <>
+      <div className="full-screen-container">
+        <div className="center-content">
+          <IoShirtSharp color="#000000" className="centered-icon" />
+        </div>
+      </div>
+    </>
+  )
+}
+
 const App = () => {
   return (
     <Router>
@@ -33,7 +46,7 @@ const App = () => {
           <Route path="/stripe" element={<Stripe/>}/>
         </Routes>
       </Elements>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingPage />}>
         <Routes>
           <Route path="/" exact element={<Home/>} />
           <Route path="/login" exact element={<LogIn/>} />

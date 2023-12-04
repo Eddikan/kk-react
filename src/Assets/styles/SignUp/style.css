@@ -30,6 +30,7 @@ section#signup button.sign-in-google {
     color: var(--black);
     box-shadow: none!important;
     -webkit-appearance: none!important;
+    font-size: 16px;
 }
 section#signup button.sign-in-google img {
     width: 25px;
@@ -41,7 +42,10 @@ section#signup .sign-up-with-email {
     position: relative;
     width: fit-content;
     color: var(--dgrey);
-    margin: -15px auto 0 auto;
+    margin: -10px auto 0 auto;
+    font-size: 14px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 @media screen and (min-width:1200px){
     form.search input{

@@ -1,15 +1,17 @@
 /*Home*/
-section#home h1{
-    font-size: 60px;
+section#home {
+    background: transparent linear-gradient(180deg, #000000CC 0%, #00000096 100%) 0% 0% no-repeat padding-box;
 }
+
+section#home h1 {
+    font-size: 55px;
+    line-height: 60px;
+}
+
 section#home p.subtitle {
-    font-size: 20px;
+    font-size: 18px;
 }
-@media screen and (min-width:1200px){
-    form.search input{
-        min-width: 350px;
-    }
-}
+
 @media screen and (max-width:991px){
     section#home h1{
         font-size: 35px;

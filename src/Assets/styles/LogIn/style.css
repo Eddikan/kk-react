@@ -2,11 +2,11 @@
 body:has(section#login) #navigation {
     display: none!important;
 }
-section#login h1{
-    font-size: 35px;
+section#login h1 {
+    font-size: 30px;
     font-weight: 600;
 }
-section#login .with-bg{
+section#login .with-bg {
     background-image: url('../../images/login-img.png');
     background-position: center right;
     background-repeat: no-repeat;
@@ -17,7 +17,7 @@ section#login .login-container {
     max-width: 500px;
     width: 100%;
 }
-section#login hr{
+section#login hr {
     border-color: var(--dgrey);
     border-width: 2px;
 }
@@ -30,6 +30,7 @@ section#login button.login-google {
     color: var(--black);
     box-shadow: none!important;
     -webkit-appearance: none!important;
+    font-size: 16px;
 }
 section#login button.login-google img {
     width: 25px;
@@ -41,19 +42,27 @@ section#login .login-with-email {
     position: relative;
     width: fit-content;
     color: var(--dgrey);
-    margin: -15px auto 0 auto;
+    margin: -10px auto 0 auto;
+    font-size: 14px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
 section#login a.forgot-password {
     text-align: right;
     display: block;
     text-decoration: none;
+    font-size: 14px;
 }
-@media screen and (min-width:1200px){
+section#login #login-column {
+    padding-top: 120px;
+    padding-bottom: 120px;
+}
+@media screen and (min-width:1200px) {
     form.search input{
         min-width: 350px;
     }
 }
-@media screen and (max-width:991px){
+@media screen and (max-width:991px) {
     section#login h1{
         font-size: 25px;
     }

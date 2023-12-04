@@ -1,19 +1,23 @@
-/*Home*/
+/*Email Confirmation*/
 body:has(section#email-confirmation) #navigation {
-    display: none!important;
+    display: none !important;
 }
-section#email-confirmation h1{
-    font-size: 28px;
+
+section#email-confirmation h1 {
+    font-size: 25px;
     font-weight: 600;
 }
-section#email-confirmation img{
-    max-width: 150px;
+
+section#email-confirmation img {
+    max-width: 160px;
     width: 100%;
 }
+
 section#email-confirmation p.subtitle {
-    font-size: 18px;
+    font-size: 16px;
     margin-bottom: 20px;
 }
+
 section#email-confirmation .narrow-600{
     background-color: var(--lgrey);
 }
