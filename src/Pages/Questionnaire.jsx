@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 // Import each Questionnaires
 import Questionnaire1 from 'Components/Questionnaire/Questionnaire1';
 import Questionnaire2 from 'Components/Questionnaire/Questionnaire2';
+import Questionnaire3 from 'Components/Questionnaire/Questionnaire3';
 
 const initialUserData = Object.freeze({
   first_name: '',
@@ -52,6 +53,8 @@ const Questionnaire = () => {
       setQuestionnaire1Show(false);
     } else if (e == 2) {
       setQuestionnaire2Show(false);
+    } else if (e == 2) {
+      setQuestionnaire3Show(false);
     }
   };
 
@@ -146,21 +149,32 @@ const Questionnaire = () => {
           null
         }
         
-        <Container className='hide q3 q2-no narrow-600 py-5 px-3 mt-5 text-dgrey'>
-          <Row>
-            <Col lg='12' className='text-center'>
-              <h2 className='form-title pb-2'>Do you sell fabrics?</h2>
-            </Col>
-          </Row>
-          <Row className='narrow-400 mt-3'>
-            <Col lg='6' className='text-right'>
-              <Button className='btn-outline'>No</Button>
-            </Col>
-            <Col lg='6' className='text-left'>
-              <Button className='btn-primary'>Yes</Button>
-            </Col>
-          </Row>
-        </Container>
+        {step == 3 && !questionnaire3Show  ?
+        <>
+          <Container className='q3 q2-no narrow-600 py-5 px-3 mt-5 text-dgrey'>
+            <Row>
+              <Col lg='12' className='text-center'>
+                <h2 className='form-title pb-2'>Do you sell fabrics?</h2>
+              </Col>
+            </Row>
+            <Row className='narrow-400 mt-3'>
+              <Col lg='6' className='text-right'>
+                <Button className='btn-outline' onClick={function() { setStep((prevStep) => prevStep + 1); }}>No</Button>
+              </Col>
+              <Col lg='6' className='text-left'>
+                <Button className='btn-primary' onClick={function() { setQuestionnaire3Show((prevStatus) => true); }} >Yes</Button>
+              </Col>
+            </Row>
+          </Container>
+        </>
+          :
+          null
+        }
+        {step == 3 && questionnaire3Show ?
+          <Questionnaire3 currentUser={currentUser} onHideQuestionnaire={hideQuestionnaire} onSkip={skip} step={step} />
+          :
+          null
+        }
       </section>
       
     </Layout>

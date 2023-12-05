@@ -106,8 +106,14 @@ h1,h2,h3,h4,h5{
 .fs-18 {
     font-size: 18px;
 }
+.fs-20 {
+    font-size: 20px;
+}
+.fs-22 {
+    font-size: 22px;
+}
 .fs-25 {
-    font-size: 18px;
+    font-size: 25px;
 }
 .fw-600 {
     font-weight: 600;
