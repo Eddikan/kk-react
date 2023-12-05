@@ -17,14 +17,8 @@ const About = lazy(() => import('./Pages/About'));
 const Buttons = lazy(() => import('./Pages/Elements/Buttons'));
 const Forms = lazy(() => import('./Pages/Forms'));
 const Stripe = lazy(() => import('./Pages/Stripe'));
-const Howell = lazy(() => import('./Pages/Howell'));
-const Jackie = lazy(() => import('./Pages/Jackie'));
-const Juriel = lazy(() => import('./Pages/Juriel'));
-const Lhemar = lazy(() => import('./Pages/Lhemar'));
-const Bien = lazy(() => import('./Pages/Bien'));
-const Aj = lazy(() => import('./Pages/Aj'));
-const Victor = lazy(() => import('./Pages/Victor'));
 const CustomerPage = lazy(() => import('./Pages/CustomerPage'));
+const UserProfile = lazy(() => import('./Pages/User/Profile'));
 
 const LoadingPage = () => {
   return (
@@ -54,17 +48,10 @@ const App = () => {
           <Route path="/email-confirmation" exact element={<EmailConfirmation/>} />
           <Route path="/questionnaire" exact element={<Questionnaire/>} />
           <Route path="/about" exact element={<About/>} />
-          <Route path="/howell" exact element={<Howell/>} />
-          <Route path="/jackie" exact element={<Jackie/>} />
           <Route path="/elements/buttons" exact element={<Buttons/>} />
           <Route path="/forms" exact element={<Forms/>} />
-          <Route path="/bien" exact element={<Bien/>} />
-          <Route path="/juriel" exact element={<Juriel/>} />
-          <Route path="/john_lhemar" exact element={<Lhemar/>} />
-          <Route path="/Aj" exact element={<Aj/>} />
-          <Route path="/victor" exact element={<Victor/>} />
           <Route path="/customer" exact element={<CustomerPage/>} />
-          
+          <Route path="/user/profile" exact element={<UserProfile/>} />
         </Routes>
       </Suspense>
     </Router>
