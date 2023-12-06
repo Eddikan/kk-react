@@ -172,6 +172,10 @@ a {
     color: var(--primary);
 }
 
+.opacity-0 {
+    opacity: 0;
+}
+
 .form-check label {
     padding-top: 2px;
 }
@@ -440,6 +444,10 @@ form select::placeholder {
     color: var(--mgray) !important;
 }
 
+.text-mgray {
+    color: var(--mgray) !important;
+}
+
 .bg-gray {
     background-color: #EEEEEE;
     padding: 9px;
@@ -457,6 +465,10 @@ form select::placeholder {
 
 .bg-lgray {
     background-color: var(--lgray) !important;
+}
+
+.text-lgray {
+    color: var(--lgray) !important;
 }
 
 .profile-details.social {
@@ -569,6 +581,12 @@ form select::placeholder {
     position: absolute;
     bottom: 10px;
     right: 10px;
+}
+
+.add-more-box {
+    background: var(--lgray) 0% 0% no-repeat padding-box;
+    border: 1px dashed #DFDFDF;
+    border-radius: 5px;
 }
 
 @media only screen and (min-width: 981px) {

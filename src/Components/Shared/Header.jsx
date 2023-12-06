@@ -4,13 +4,22 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import { Container, Button }  from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import Logo from '../../Assets/images/kouture-konect-logo.png';
+import Logo from 'Assets/images/kouture-konect-logo.png';
+import { useCookies } from 'react-cookie';
 
-function Header() {
+const Header = () => {
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+
+  const currentUser = cookies.currentUser;
+
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
       <Container>
-        <Navbar.Brand href="/"><img src={Logo}/></Navbar.Brand>
+        {currentUser ?
+          <Navbar.Brand href="/user/profile"><img src={Logo}/></Navbar.Brand>
+          :
+          <Navbar.Brand href="/"><img src={Logo}/></Navbar.Brand>
+        }
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse className="justify-content-between" id="responsive-navbar-nav">
           <Nav className="align-items-center">
@@ -23,8 +32,14 @@ function Header() {
               <FormControl type='text' placeholder='Search' className='mr-sm-2' />
               <FaMagnifyingGlass />
             </Form>
-            <Nav.Link href="/login">Log in</Nav.Link>
-            <Nav.Link href="/sign-up"><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link>
+            {currentUser && currentUser != "" ?
+              null
+              :
+              <>
+                <Nav.Link href="/login">Log in</Nav.Link>
+                <Nav.Link href="/sign-up"><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link>
+              </>
+            }
           </Nav>
         </Navbar.Collapse>
       </Container>

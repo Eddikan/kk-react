@@ -1,0 +1,24 @@
+.image-drop-container {
+    border: 2px dashed #ddd;
+    padding: 10px;
+}
+  
+.image-preview {
+    position: relative;
+}
+  
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+}
+  
+.remove-btn:hover {
+    background-color: darkred;
+}
+  

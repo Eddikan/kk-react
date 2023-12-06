@@ -50,8 +50,8 @@ const LogIn = () => {
         setCookie('isLoggedIn', true, { path: '/' });
         setCookie('token', data.token, { path: '/' });
         setTimeout(function () {
-          navigate("/email-confirmation");
-        }, 1500);
+          navigate("/user/profile");
+        }, 1000);
       } else {
         const errors = response.data.errors;
         if (errors.email) {

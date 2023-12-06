@@ -23,6 +23,9 @@ const CustomerPage = lazy(() => import('./Pages/CustomerPage'));
 const UserProfile = lazy(() => import('./Pages/User/Profile'));
 const EditUserProfile = lazy(() => import('./Pages/User/EditProfile'));
 
+// Portfolio
+const AddPortfolio = lazy(() => import('./Pages/Portfolio/AddPortfolio'));
+
 const LoadingPage = () => {
   return (
     <>
@@ -56,6 +59,8 @@ const App = () => {
           <Route path="/customer" exact element={<CustomerPage/>} />
           <Route path="/user/profile" exact element={<UserProfile/>} />
           <Route path="/user/profile/edit" exact element={<EditUserProfile/>} />
+          <Route path="/portfolio/add" exact element={<AddPortfolio/>} />
+          
         </Routes>
       </Suspense>
     </Router>

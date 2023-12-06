@@ -6,20 +6,11 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import 'Assets/styles/User/EditProfile/style.css'
 import PinIcon from 'Assets/images/pin.png';
-import LinkIcon from 'Assets/images/link.png';
-import TelephonIcon from 'Assets/images/telephone.png';
-import BehanceIcon from 'Assets/images/behance.png';
-import FacebookIcon from 'Assets/images/facebook.png';
-import LinkedinIcon from 'Assets/images/linkedin.png';
-import SocialmediaIcon from 'Assets/images/social-media.png';
-import YoutubeIcon from 'Assets/images/youtube.png';
 import UserPlaceholder from 'Assets/images/user.png';
-import PortfolioFabric from 'Assets/images/fabric.png';
 import getUserData from 'Utils/GetUserData';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
-import PortfolioGrid from 'Components/Shared/PortfolioGrid';
-import { CardBody } from 'reactstrap';
+import GoBack from 'Components/Shared/GoBack';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -46,6 +37,7 @@ const initialUserData = Object.freeze({
     instagram: '',
     linkedIn: '',
     pinterest: '',
+    areas_of_specialization: [{name: '', year_from: '', year_to: ''}]
 });
 
 const EditProfile = () => {
@@ -58,6 +50,8 @@ const EditProfile = () => {
     const [socialMediaShow, setSocialMediaShow] = useState(false);
     const [skillShow, setSkillShow] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+
+    const [areaOfSpecialization, setAreaOfSpecialization] = useState(initialUserData.areas_of_specialization);
 
     const currentUser = cookies.currentUser;
 
@@ -104,7 +98,22 @@ const EditProfile = () => {
             ...profileFormData,
             [e.target.name]: e.target.value,
         })
-    }
+    };
+
+    const addMoreAos = (e) => {
+        const newAos = {name: '', year_from: '', year_to: ''};
+        setAreaOfSpecialization((prevAos) => [...prevAos, newAos]);
+    };
+
+    const handleChangeAos = (e, index) => {
+        const { name, value } = e.target;
+
+        setAreaOfSpecialization((prevAos) =>
+            prevAos.map((item, i) =>
+                i === index ? { ...item, [name]: value } : item
+            )
+        );
+    };
 
     const handleChangeDob = (e) => {
         setProfileFormData({
@@ -116,6 +125,9 @@ const EditProfile = () => {
         });
     };
 
+    const handleRemove = (index) => {
+        setAreaOfSpecialization((prevAos) => prevAos.filter((item, i) => i !== index));
+    };
 
     const fetchData = async (e) => {
         try {
@@ -142,7 +154,7 @@ const EditProfile = () => {
                 <Container>
                     <Row>
                         <Col lg="12" className='mb-3'>
-                            <div className='d-flex column-gap-20'>
+                            <div className='d-flex column-gap-20 justify-content-between'>
                                 <div className="d-flex column-gap-20">
                                     <div>
                                         <img src={UserPlaceholder} className='user-placeholder' />
@@ -154,6 +166,9 @@ const EditProfile = () => {
                                             <p className='fs-16 color-light-blue'>Subic, Agoncillo, Batangas</p>
                                         </div>
                                     </div>
+                                </div>
+                                <div>
+                                    <GoBack fallBack="/user/profile" />
                                 </div>
                             </div>
                         </Col>
@@ -357,31 +372,60 @@ const EditProfile = () => {
                                                 <p>Areas of Specialization and Expertise</p>
                                                 <Card>
                                                     <Card.Body>
-                                                        <Row>
-                                                            <Col lg="6">
-                                                                <Form.Group className='mb-4'>
-                                                                    <Form.Label>Specify your areas of expertise</Form.Label>
-                                                                    <FormControl type='text' name='' value={profileFormData.linkedIn} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                                </Form.Group>
-                                                            </Col>
-                                                            <Col lg="3">
-                                                                <Form.Group className='mb-4'>
-                                                                    <Form.Label>Year</Form.Label>
-                                                                    <FormControl type='date' name='date' value={profileFormData.linkedIn} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                                </Form.Group>
-                                                            </Col>
-                                                            <Col lg="3">
-                                                                <Form.Group className='mb-4'>
-                                                                    <Form.Label className='year'>Year</Form.Label>
-                                                                    <FormControl type='date' name='date' value={profileFormData.linkedIn} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                                </Form.Group>
-                                                            </Col>
-
-                                                        </Row>
+                                                        {areaOfSpecialization && areaOfSpecialization.length > 0 ?
+                                                            <>
+                                                                {areaOfSpecialization.map((item, index) => (
+                                                                    <Row>
+                                                                        <Col lg="6">
+                                                                            <Form.Group className='mb-4'>
+                                                                                <Form.Label>Specify your areas of expertise</Form.Label>
+                                                                                <FormControl type='text' name='name' value={item.name} className='mr-sm-2' onChange={(e) => handleChangeAos(e, index)} required placeholder='' />
+                                                                            </Form.Group>
+                                                                        </Col>
+                                                                        <Col lg="3">
+                                                                            <Form.Group className='mb-4'>
+                                                                                <Form.Label>Year</Form.Label>
+                                                                                <FormControl as='select' name='year_from' value={item.year_from} className='mr-sm-2' onChange={(e) => handleChangeAos(e, index)} required>
+                                                                                    <option value="">Year</option>
+                                                                                    {years.map((year) => (
+                                                                                        <option key={year} value={year}>
+                                                                                            {year}
+                                                                                        </option>
+                                                                                    ))}
+                                                                                </FormControl>
+                                                                            </Form.Group>
+                                                                        </Col>
+                                                                        <Col lg="3">
+                                                                            <Form.Group className='mb-4'>
+                                                                                <Form.Label className='year'>Year</Form.Label>
+                                                                                <FormControl as='select' name='year_to' value={item.year_to} className='mr-sm-2' onChange={(e) => handleChangeAos(e, index)} required>
+                                                                                    <option value="">Year</option>
+                                                                                    {years.map((year) => (
+                                                                                        <option key={year} value={year}>
+                                                                                            {year}
+                                                                                        </option>
+                                                                                    ))}
+                                                                                </FormControl>
+                                                                            </Form.Group>
+                                                                        </Col>
+                                                                        {areaOfSpecialization.length > 1 ?
+                                                                            <Col lg="12">
+                                                                                <p className="cursor-pointer" onClick={() => {handleRemove(index); }}>Remove</p>
+                                                                            </Col>
+                                                                            :
+                                                                            null
+                                                                        }
+                                                                    </Row>
+                                                                ))}
+                                                            </>
+                                                            :
+                                                            null
+                                                        
+                                                        }
                                                     </Card.Body>
                                                 </Card>
                                                 <div className='mt-4'>
-                                                    <p>+ <span className='add_more text-gray'>Add more</span></p>
+                                                    <p className="cursor-pointer" onClick={addMoreAos}>+ <span className='add_more text-gray'>Add more</span></p>
                                                 </div>
                                                 <div className="text-right mt-4 mb-5">
                                                     <Button type='submit' className="btn-save">Save</Button>
