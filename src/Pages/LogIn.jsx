@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../Components/Layout/Layout';
-import { Container, Row, Col, Button }  from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import '../Assets/styles/LogIn/style.css'; 
+import '../Assets/styles/LogIn/style.css';
 import GoogleIcon from '../Assets/images/google-icon.png';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -20,7 +20,7 @@ const LogIn = () => {
 
   const [loginFormData, setLoginFormData] = useState(initialLoginData);
   const [loginFormLoading, setLoginFormLoading] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn','userDetails','userRole']);
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
 
   const currentUser = cookies.currentUser;
   const isLoggedIn = cookies.isLoggedIn;
@@ -49,7 +49,7 @@ const LogIn = () => {
         setCookie('userDetails', JSON.stringify(user), { path: '/' });
         setCookie('isLoggedIn', true, { path: '/' });
         setCookie('token', data.token, { path: '/' });
-        setTimeout(function(){
+        setTimeout(function () {
           navigate("/email-confirmation");
         }, 1500);
       } else {
@@ -69,7 +69,7 @@ const LogIn = () => {
     }).catch((error) => {
       setLoginFormLoading(false);
       toast.error('Something went wrong, please contact the administrator!');
-    });  
+    });
   }
 
   useEffect(() => {
@@ -82,39 +82,39 @@ const LogIn = () => {
         <Container fluid>
           <Row className='vh-100'>
             <Col id="login-column" lg='8' className='d-flex flex-column justify-content-center'>
-                <div className='login-container'>
-                    <h1 className='text-center'>Sign in to Kouture Konect</h1>
-                    <button className='login-google mt-3'>
-                        <img src={GoogleIcon}/>
-                        <span className='subtitle'>Sign in with Google</span>
-                    </button>
-                    <hr className='mb-0 mt-5'/>
-                    <p className='login-with-email'>or sign in with email</p>
-                    <Form className='mt-4' onSubmit={loginSubmit}>
-                        <Form.Group className='mb-3' controlId='formBasicEmail'>
-                            <Form.Label>Email Address</Form.Label>
-                            <FormControl type='email' name='email' value={loginFormData.email}  className='mr-sm-2' onChange={handleChange} required />
-                        </Form.Group>
-                        <Form.Group className='mb-3' controlId='formBasicPassword'>
-                            <Form.Label>Password</Form.Label>
-                            <FormControl type='password' name='password' value={loginFormData.password} className='mr-sm-2' onChange={handleChange} required />
-                        </Form.Group>
-                        <a className='forgot-password text-dgrey fs-16'>Forgot Password</a>
-                        {loginFormLoading ?
-                          <Button className='w-100 mt-4' variant='primary' type='button'>Signing in...</Button>
-                          :
-                          <Button className='w-100 mt-4' variant='primary' type='submit'>Sign in</Button>
-                        }
-                        <p className='mb-0 mt-4 text-center fs-14 text-dgrey'>Don't have an account? <a className='sign-up' href='/sign-up'>Sign Up</a></p>
-                    </Form>
-                </div>
+              <div className='login-container'>
+                <h1 className='text-center'>Sign in to Kouture Konect</h1>
+                <button className='login-google mt-3'>
+                  <img src={GoogleIcon} />
+                  <span className='subtitle'>Sign in with Google</span>
+                </button>
+                <hr className='mb-0 mt-5' />
+                <p className='login-with-email'>or sign in with email</p>
+                <Form className='mt-4' onSubmit={loginSubmit}>
+                  <Form.Group className='mb-3' controlId='formBasicEmail'>
+                    <Form.Label>Email Address</Form.Label>
+                    <FormControl type='email' name='email' value={loginFormData.email} className='mr-sm-2' onChange={handleChange} required />
+                  </Form.Group>
+                  <Form.Group className='mb-3' controlId='formBasicPassword'>
+                    <Form.Label>Password</Form.Label>
+                    <FormControl type='password' name='password' value={loginFormData.password} className='mr-sm-2' onChange={handleChange} required />
+                  </Form.Group>
+                  <a className='forgot-password text-dgrey fs-16'>Forgot Password</a>
+                  {loginFormLoading ?
+                    <Button className='w-100 mt-4' variant='primary' type='button'>Signing in...</Button>
+                    :
+                    <Button className='w-100 mt-4' variant='primary' type='submit'>Sign in</Button>
+                  }
+                  <p className='mb-0 mt-4 text-center fs-14 text-dgrey'>Don't have an account? <a className='sign-up' href='/sign-up'>Sign Up</a></p>
+                </Form>
+              </div>
             </Col>
             <Col lg="4" className='with-bg'>
             </Col>
           </Row>
         </Container>
       </section>
-      
+
     </Layout>
   );
 };

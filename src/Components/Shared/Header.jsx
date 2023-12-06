@@ -19,7 +19,7 @@ function Header() {
             <Nav.Link href="/inspirations">Blog</Nav.Link>
           </Nav>
           <Nav className="align-items-center d-grid-mobile">
-            <Form inline className='search d-flex align-items-center'>
+            <Form inline className='search d-flex column-gap-70 align-items-center'>
               <FormControl type='text' placeholder='Search' className='mr-sm-2' />
               <FaMagnifyingGlass />
             </Form>

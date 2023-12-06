@@ -18,7 +18,10 @@ const Buttons = lazy(() => import('./Pages/Elements/Buttons'));
 const Forms = lazy(() => import('./Pages/Forms'));
 const Stripe = lazy(() => import('./Pages/Stripe'));
 const CustomerPage = lazy(() => import('./Pages/CustomerPage'));
+
+// User
 const UserProfile = lazy(() => import('./Pages/User/Profile'));
+const EditUserProfile = lazy(() => import('./Pages/User/EditProfile'));
 
 const LoadingPage = () => {
   return (
@@ -52,6 +55,7 @@ const App = () => {
           <Route path="/forms" exact element={<Forms/>} />
           <Route path="/customer" exact element={<CustomerPage/>} />
           <Route path="/user/profile" exact element={<UserProfile/>} />
+          <Route path="/user/profile/edit" exact element={<EditUserProfile/>} />
         </Routes>
       </Suspense>
     </Router>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../Components/Layout/Layout';
-import Section2 from '../Components/Shared/Section2';
 import { Container, Row, Col, Button }  from 'react-bootstrap';
 import '../Assets/styles/Home/style.css'
 
@@ -17,7 +16,6 @@ const About = () => {
             </Row>
         </Container>
       </section>
-      <Section2/>
     </Layout>
   );
 };
