@@ -19,6 +19,7 @@ import getUserData from 'Utils/GetUserData';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
 import PortfolioGrid from 'Components/Shared/PortfolioGrid';
+import { CardBody } from 'reactstrap';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -62,7 +63,7 @@ const EditProfile = () => {
 
     const days = Array.from({ length: 31 }, (_, i) => i + 1);
     const months = Array.from({ length: 12 }, (_, i) => i + 1);
-    const years = Array.from({ length: 2025 - 1900 }, (_, i) => 1900 + i);  
+    const years = Array.from({ length: 2025 - 1900 }, (_, i) => 1900 + i);
 
     const showTab = (tab) => {
         if (tab == "profile") {
@@ -100,34 +101,34 @@ const EditProfile = () => {
 
     const handleChange = (e) => {
         setProfileFormData({
-          ...profileFormData,
-          [e.target.name]: e.target.value,
+            ...profileFormData,
+            [e.target.name]: e.target.value,
         })
     }
 
     const handleChangeDob = (e) => {
         setProfileFormData({
-          ...profileFormData,
-          date_of_birth: {
-            ...profileFormData.date_of_birth,
-            [e.target.name]: e.target.value,
-          },
+            ...profileFormData,
+            date_of_birth: {
+                ...profileFormData.date_of_birth,
+                [e.target.name]: e.target.value,
+            },
         });
     };
-    
+
 
     const fetchData = async (e) => {
         try {
-          const userData = await getUserData(e);
-          if (userData.id) {
-            setUser(userData);
-          } else {
-            toast.error('User does not exist!');
-          }
-          // Update state or perform other logic with userData
+            const userData = await getUserData(e);
+            if (userData.id) {
+                setUser(userData);
+            } else {
+                toast.error('User does not exist!');
+            }
+            // Update state or perform other logic with userData
         } catch (error) {
             toast.error('User does not exist!');
-          // Handle the error, if needed
+            // Handle the error, if needed
         }
     };
 
@@ -174,7 +175,7 @@ const EditProfile = () => {
                                 <Card className='h-100'>
                                     <Card.Body>
                                         {profileShow ?
-                                            <div class="edit-profile">
+                                            <div className="edit-profile mt-3">
                                                 <Row>
                                                     <Col lg="6">
                                                         <Form.Group className='mb-3'>
@@ -223,11 +224,26 @@ const EditProfile = () => {
                                                             </Form.Group>
                                                         </Row>
                                                     </Col>
-                                                    
+
                                                 </Row>
                                                 <Row>
                                                     <Col lg="12">
-                                                        
+                                                        <Form.Group className='mb-4'>
+                                                            <Form.Label>Short Bio <span className='text-gray'>(title)</span></Form.Label>
+                                                            <FormControl type='text' name='short_bio' value={profileFormData.short_bio} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                        </Form.Group>
+                                                        <Form.Group className='mb-3'>
+                                                            <Form.Label>Long Bio <span className='text-gray'>(profile overview)</span></Form.Label>
+                                                            <FormControl as="textarea"
+                                                                name="long_bio"
+                                                                rows={5} // You can adjust the number of rows as needed
+                                                                value={profileFormData.long_bio}
+                                                                placeholder=''
+                                                                onChange={handleChange} required />
+                                                        </Form.Group>
+                                                        <div className="text-right mt-4 mb-5">
+                                                            <Button type='submit' className="btn-save">Save</Button>
+                                                        </div>
                                                     </Col>
                                                 </Row>
                                             </div>
@@ -235,28 +251,141 @@ const EditProfile = () => {
                                             null
                                         }
                                         {addressShow ?
-                                            <PortfolioGrid currentUser={currentUser} reloadCount={reloadCount} />
+                                            <div className='edit-address mt-3'>
+                                                <Col lg="12">
+                                                    <Form.Group className='mb-4'>
+                                                        <Form.Label>Address Line 1</Form.Label>
+                                                        <FormControl type='text' name='address_line_1' value={profileFormData.address_line_1} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                    </Form.Group>
+                                                    <Form.Group className='mb-4'>
+                                                        <Form.Label>Address Line 2</Form.Label>
+                                                        <FormControl type='text' name='address_line_2' value={profileFormData.address_line_2} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Row>
+                                                    <Col lg="6">
+                                                        <Form.Group className='mb-4'>
+                                                            <Form.Label>City</Form.Label>
+                                                            <FormControl type='text' name='city' value={profileFormData.city} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                        </Form.Group>
+                                                    </Col>
+                                                    <Col lg="6">
+                                                        <Form.Group className='mb-4'>
+                                                            <Form.Label>State/Region</Form.Label>
+                                                            <FormControl type='text' name='province' value={profileFormData.province} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                        </Form.Group>
+                                                    </Col>
+                                                    <Col lg="6">
+                                                        <Form.Group className='mb-4'>
+                                                            <Form.Label>Postal Code</Form.Label>
+                                                            <FormControl type='number' name='postal_code' value={profileFormData.postal_code} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                        </Form.Group>
+                                                    </Col>
+                                                    <Col lg="6">
+                                                        <Form.Group className='mb-4'>
+                                                            <Form.Label>Country</Form.Label>
+                                                            <FormControl type='text' name='country' value={profileFormData.country} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                        </Form.Group>
+                                                    </Col>
+                                                    <div className="text-right mt-4 mb-5">
+                                                        <Button type='submit' className="btn-save">Save</Button>
+                                                    </div>
+                                                </Row>
+                                            </div>
                                             :
                                             null
                                         }
                                         {contactShow ?
-                                            <div id="profile-portfolio">
-                                            <img src={PortfolioFabric} className='portfolio-img'/>
+                                            <div className="edit-contact mt-3">
+                                                <Col lg="12">
+                                                    <Form.Group className='mb-4'>
+                                                        <Form.Label>Website</Form.Label>
+                                                        <FormControl type='text' name='website' value={profileFormData.website} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                    </Form.Group>
+                                                </Col>
+                                                <Row>
+                                                    <Col lg="6">
+                                                        <Form.Group className='mb-4'>
+                                                            <Form.Label>Phone Number</Form.Label>
+                                                            <FormControl type='number' name='phone_number' value={profileFormData.phone_number} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                        </Form.Group>
+                                                    </Col>
+                                                    <Col lg="6">
+                                                        <Form.Group className='mb-4'>
+                                                            <Form.Label>Secondary Email</Form.Label>
+                                                            <FormControl type='email' name='secondary_email_address' value={profileFormData.secondary_email_address} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                        </Form.Group>
+                                                    </Col>
+                                                </Row>
+                                                <div className="text-right mt-4 mb-5">
+                                                    <Button type='submit' className="btn-save">Save</Button>
+                                                </div>
                                             </div>
                                             :
                                             null
                                         }
 
                                         {socialMediaShow ?
-                                            <div id="profile-portfolio">
-                                                This is Process
+                                            <div className="edit-social-media mt-3">
+                                                <Col lg="12">
+                                                    <Form.Group className='mb-4'>
+                                                        <Form.Label>Facebook</Form.Label>
+                                                        <FormControl type='text' name='facebook' value={profileFormData.facebook} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                    </Form.Group>
+                                                    <Form.Group className='mb-4'>
+                                                        <Form.Label>Twitter</Form.Label>
+                                                        <FormControl type='text' name='twitter' value={profileFormData.twitter} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                    </Form.Group>
+                                                    <Form.Group className='mb-4'>
+                                                        <Form.Label>Instagram</Form.Label>
+                                                        <FormControl type='text' name='instagram' value={profileFormData.instagram} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                    </Form.Group>
+                                                    <Form.Group className='mb-4'>
+                                                        <Form.Label>LinkedIn</Form.Label>
+                                                        <FormControl type='text' name='linkedIn' value={profileFormData.linkedIn} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                    </Form.Group>
+                                                    <div className="text-right mt-4 mb-5">
+                                                        <Button type='submit' className="btn-save">Save</Button>
+                                                    </div>
+                                                </Col>
                                             </div>
                                             :
                                             null
                                         }
                                         {skillShow ?
-                                            <div id="profile-portfolio">
-                                                This is Limited Design
+                                            <div className="edit-skills mt-3">
+                                                <p>Areas of Specialization and Expertise</p>
+                                                <Card>
+                                                    <Card.Body>
+                                                        <Row>
+                                                            <Col lg="6">
+                                                                <Form.Group className='mb-4'>
+                                                                    <Form.Label>Specify your areas of expertise</Form.Label>
+                                                                    <FormControl type='text' name='' value={profileFormData.linkedIn} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                                </Form.Group>
+                                                            </Col>
+                                                            <Col lg="3">
+                                                                <Form.Group className='mb-4'>
+                                                                    <Form.Label>Year</Form.Label>
+                                                                    <FormControl type='date' name='date' value={profileFormData.linkedIn} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                                </Form.Group>
+                                                            </Col>
+                                                            <Col lg="3">
+                                                                <Form.Group className='mb-4'>
+                                                                    <Form.Label className='year'>Year</Form.Label>
+                                                                    <FormControl type='date' name='date' value={profileFormData.linkedIn} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                                </Form.Group>
+                                                            </Col>
+
+                                                        </Row>
+                                                    </Card.Body>
+                                                </Card>
+                                                <div className='mt-4'>
+                                                    <p>+ <span className='add_more text-gray'>Add more</span></p>
+                                                </div>
+                                                <div className="text-right mt-4 mb-5">
+                                                    <Button type='submit' className="btn-save">Save</Button>
+                                                </div>
                                             </div>
                                             :
                                             null

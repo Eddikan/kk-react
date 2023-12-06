@@ -1,3 +1,20 @@
 .user-placeholder {
     max-width: 60px;
 }
+
+.btn-save {
+    min-width: 150px !important;
+}
+
+.year {
+    visibility: hidden;
+}
+
+.add_more {
+    cursor: pointer;
+}
+
+.add_more:hover {
+    color:#000000 !important;
+    font-weight: 500;
+}
