@@ -65,6 +65,24 @@ section#questionnaire .background-dashed, .modal-content .background-dashed {
     padding: 8px 30px;
     margin: 5px 0;
 }
+.step4-first-cont {
+    width: 80%;
+}
+.step4-second-cont {
+    background-image: url('../../images/signup-img.png') !important;
+    width: 20%;
+    min-height: 344.3px;
+}
+.circle-number {
+    width: 30px;
+    height: 30px;
+    background-color: #b5a3c5;
+    border-radius: 50%;
+    color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 @media screen and (min-width:1200px){
     form.search input{
         min-width: 350px;

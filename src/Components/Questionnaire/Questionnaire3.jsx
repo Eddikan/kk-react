@@ -9,6 +9,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
 import { IoCloudUploadOutline } from "react-icons/io5";
+import { TagsInput } from "react-tag-input-component";
 
 const initialQuestionnaire3Data = Object.freeze({
     fabric_type: '',
@@ -32,6 +33,9 @@ const Questionnaire3 = (props) => {
   const [userLoading, setUserLoading] = useState(true);
   const [reloadCount, setReloadCount] = useState(0);
   const [uploadFileShow, setUploadFileShow] = useState(false);
+  const [selectedFabricType, setSelectedFabricType] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageName, setImageName] = useState('');
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn','userDetails','userRole', 'token']);
 
@@ -54,9 +58,6 @@ const Questionnaire3 = (props) => {
       [e.target.name]: e.target.value,
     })
   }
-
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [imageName, setImageName] = useState('');
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -140,15 +141,21 @@ const Questionnaire3 = (props) => {
                                 <Form.Label className="mb-3">
                                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut aliquyam erat voluptua.
                                 </Form.Label>
-                                <Col lg="12">
-                                    <Row>
-                                        <div className="form-control d-flex" id="fabric-buttons">
+                                <Row>
+                                    <Col lg="12">
+                                        {/* <div className="form-control d-flex" id="fabric-buttons">
                                             <Button className='me-3' type="button">Cotton</Button>
                                             <Button className='me-3' type="button">Linen</Button>
                                             <Button className='me-3' type="button">Nylon</Button>
-                                        </div>
-                                    </Row>
-                                </Col>
+                                        </div> */}
+                                        <TagsInput
+                                            value={selectedFabricType}
+                                            onChange={setSelectedFabricType}
+                                            name="fabric_type"
+                                            // placeHolder="Fabric Type"
+                                        />
+                                    </Col>
+                                </Row>
                             </CardBody>
                         </Card>
                         <Card className='mb-4 border-white'>
@@ -187,7 +194,7 @@ const Questionnaire3 = (props) => {
                                         name="fabric_process_insights"
                                         rows={5} // You can adjust the number of rows as needed
                                         value={questionnaire3Data.fabric_process_insights}
-                                        placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
+                                        // placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
                                         onChange={handleChange}
                                     />
                                 </Form.Group>

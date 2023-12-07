@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../Components/Layout/Layout';
 import { Container, Row, Col, Button }  from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import Logo from '../Assets/images/kouture-konect-logo.png';
 import '../Assets/styles/Questionnaire/style.css'
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import Form from 'react-bootstrap/Form';
 
 // Import each Questionnaires
 import Questionnaire1 from 'Components/Questionnaire/Questionnaire1';
@@ -55,7 +57,7 @@ const Questionnaire = () => {
       setQuestionnaire2Show(false);
     } else if (e == 2) {
       setQuestionnaire3Show(false);
-    }
+    } 
   };
 
   const skip = (e) => {
@@ -89,13 +91,19 @@ const Questionnaire = () => {
   return (
     <Layout>
       <section id='questionnaire' className='d-flex justify-content-center flex-column py-5 px-2'>
-        <Container className='text-center'>
-          <Row>
-            <Col lg='12'>
-              <img src={Logo}/>  
-            </Col>
-          </Row>
-        </Container>
+        {step == 4 ?
+          null
+          :
+          <>
+            <Container className='text-center'>
+              <Row>
+                <Col lg='12'>
+                  <img src={Logo}/>  
+                </Col>
+              </Row>
+            </Container>
+          </>
+        }
         {step == 1 && !questionnaire1Show ?
           <>
             <Container className='q1 narrow-600 py-5 px-3 mt-5 text-dgray'>
@@ -175,6 +183,43 @@ const Questionnaire = () => {
           :
           null
         }
+
+        {step == 4 ?
+          <>
+            <Container className='q1 narrow-750 mt-5 px-0 text-dgray d-flex'>
+              <div className='step4-first-cont py-5 px-4 '>
+                <Row>
+                  <Col lg='12'>
+                    <h2 className='form-title pb-2'>Welcome to Kouture Konect</h2>
+                    <p className="mb-3">
+                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed 
+                      diam nonumy eirmod tempor invidunt ut aliquyam erat voluptua.
+                    </p>
+                    <div className='d-flex align-items-center mb-3'>
+                      <div className='circle-number'>1</div>
+                      &nbsp;
+                      <span>Verify your email address! You won't be able to share your work then</span>
+                    </div>
+                    <div className='d-flex align-items-center mb-4'>
+                      <div className='circle-number'>2</div>
+                      &nbsp;
+                      <span>Upload your work, fill out your profile, and set your work experience</span>
+                    </div>
+                    <Link to="/user/profile">
+                      <Button className='btn-primary' type="button">
+                        Take Me to My Profile
+                      </Button>
+                    </Link>
+                  </Col>
+                </Row>
+              </div>
+              <div className='step4-second-cont '></div>
+            </Container>
+          </>
+          :
+          null
+        }
+        
       </section>
       
     </Layout>
