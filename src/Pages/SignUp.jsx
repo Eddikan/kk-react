@@ -111,7 +111,7 @@ const SignUp = () => {
                           :
                           <Button className='w-100 mt-4' variant='primary' type='submit'>Sign up</Button>
                         }
-                        <p className='mb-0 mt-4 text-center fs-14 text-dgrey'>Already have an account? <a className='login' href='/login'>Log In</a></p>
+                        <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <a className='login' href='/login'>Log In</a></p>
                     </Form>
                 </div>
             </Col>

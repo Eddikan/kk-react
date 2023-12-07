@@ -99,13 +99,13 @@ const LogIn = () => {
                     <Form.Label>Password</Form.Label>
                     <FormControl type='password' name='password' value={loginFormData.password} className='mr-sm-2' onChange={handleChange} required />
                   </Form.Group>
-                  <a className='forgot-password text-dgrey fs-16'>Forgot Password</a>
+                  <a className='forgot-password text-dgray fs-16'>Forgot Password</a>
                   {loginFormLoading ?
                     <Button className='w-100 mt-4' variant='primary' type='button'>Signing in...</Button>
                     :
                     <Button className='w-100 mt-4' variant='primary' type='submit'>Sign in</Button>
                   }
-                  <p className='mb-0 mt-4 text-center fs-14 text-dgrey'>Don't have an account? <a className='sign-up' href='/sign-up'>Sign Up</a></p>
+                  <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Don't have an account? <a className='sign-up' href='/sign-up'>Sign Up</a></p>
                 </Form>
               </div>
             </Col>

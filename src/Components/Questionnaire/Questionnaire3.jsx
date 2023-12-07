@@ -123,7 +123,7 @@ const Questionnaire3 = (props) => {
 
   return (
     <>
-        <Container className='q1 narrow-750 py-5 px-4 mt-5 text-dgrey'>
+        <Container className='q1 narrow-750 py-5 px-4 mt-5 text-dgray'>
             <Row>
                 <Col lg='12' className='text-center'>
                     <h2 className='form-title pb-2 mb-3'>Showcase the rich textures, and pattern of your fabrics</h2>

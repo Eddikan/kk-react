@@ -72,7 +72,7 @@ const EmailConfirmation = () => {
               <img src={Logo}/>  
             </Col>
           </Row>
-          <Row className='narrow-600 p-5  mt-5 text-dgrey'>
+          <Row className='narrow-600 p-5  mt-5 text-dgray'>
             <Col lg='12'>
               <h1 className='pb-2'>Email Confirmation</h1>
               <p className='subtitle'>Thank you for signing up for Kouture Konect. Before we get started, we'll need to verify your email.</p>

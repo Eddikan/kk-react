@@ -25,10 +25,10 @@ section#questionnaire p.subtitle {
     margin-bottom: 20px;
 }
 section#questionnaire .narrow-600{
-    background-color: var(--lgrey);
+    background-color: var(--lgray);
 }
 section#questionnaire .narrow-750 {
-    background-color: var(--lgrey); 
+    background-color: var(--lgray); 
 }
 section#questionnaire .btn-primary{
     min-width: 150px;

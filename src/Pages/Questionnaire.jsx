@@ -98,7 +98,7 @@ const Questionnaire = () => {
         </Container>
         {step == 1 && !questionnaire1Show ?
           <>
-            <Container className='q1 narrow-600 py-5 px-3 mt-5 text-dgrey'>
+            <Container className='q1 narrow-600 py-5 px-3 mt-5 text-dgray'>
               <Row>
                 <Col lg='12' className='text-center'>
                   <h2 className='form-title pb-2'>Are you looking to shop for ready-to-wear, couture, or fabrics?</h2>
@@ -124,7 +124,7 @@ const Questionnaire = () => {
         }
         {step == 2 && !questionnaire2Show  ?
           <>
-            <Container className='q1 narrow-600 py-5 px-3 mt-5 text-dgrey'>
+            <Container className='q1 narrow-600 py-5 px-3 mt-5 text-dgray'>
               <Row>
                 <Col lg='12' className='text-center'>
                   <h2 className='form-title pb-2'>Are you a fashion designer?</h2>
@@ -151,7 +151,7 @@ const Questionnaire = () => {
         
         {step == 3 && !questionnaire3Show  ?
         <>
-          <Container className='q3 q2-no narrow-600 py-5 px-3 mt-5 text-dgrey'>
+          <Container className='q3 q2-no narrow-600 py-5 px-3 mt-5 text-dgray'>
             <Row>
               <Col lg='12' className='text-center'>
                 <h2 className='form-title pb-2'>Do you sell fabrics?</h2>

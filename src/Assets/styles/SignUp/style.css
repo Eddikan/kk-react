@@ -18,12 +18,12 @@ section#signup .sign-up-container {
     width: 100%;
 }
 section#signup hr{
-    border-color: var(--dgrey);
+    border-color: var(--dgray);
     border-width: 2px;
 }
 section#signup button.sign-in-google {
     background-color: transparent;
-    border: 2px solid var(--grey);
+    border: 2px solid var(--gray);
     border-radius: 5px;
     padding: 10px 20px;
     width: 100%;
@@ -41,7 +41,7 @@ section#signup .sign-up-with-email {
     display: block;
     position: relative;
     width: fit-content;
-    color: var(--dgrey);
+    color: var(--dgray);
     margin: -10px auto 0 auto;
     font-size: 14px;
     padding-left: 20px;

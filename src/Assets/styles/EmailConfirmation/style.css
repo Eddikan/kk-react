@@ -19,7 +19,7 @@ section#email-confirmation p.subtitle {
 }
 
 section#email-confirmation .narrow-600{
-    background-color: var(--lgrey);
+    background-color: var(--lgray);
 }
 section#email-confirmation .btn-primary{
     min-width: 150px;
