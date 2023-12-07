@@ -370,60 +370,60 @@ const EditProfile = () => {
                                         {skillShow ?
                                             <div className="edit-skills mt-3">
                                                 <p>Areas of Specialization and Expertise</p>
-                                                <Card>
-                                                    <Card.Body>
-                                                        {areaOfSpecialization && areaOfSpecialization.length > 0 ?
-                                                            <>
-                                                                {areaOfSpecialization.map((item, index) => (
-                                                                    <Row>
-                                                                        <Col lg="6">
-                                                                            <Form.Group className='mb-4'>
-                                                                                <Form.Label>Specify your areas of expertise</Form.Label>
-                                                                                <FormControl type='text' name='name' value={item.name} className='mr-sm-2' onChange={(e) => handleChangeAos(e, index)} required placeholder='' />
-                                                                            </Form.Group>
-                                                                        </Col>
-                                                                        <Col lg="3">
-                                                                            <Form.Group className='mb-4'>
-                                                                                <Form.Label>Year</Form.Label>
-                                                                                <FormControl as='select' name='year_from' value={item.year_from} className='mr-sm-2' onChange={(e) => handleChangeAos(e, index)} required>
-                                                                                    <option value="">Year</option>
-                                                                                    {years.map((year) => (
-                                                                                        <option key={year} value={year}>
-                                                                                            {year}
-                                                                                        </option>
-                                                                                    ))}
-                                                                                </FormControl>
-                                                                            </Form.Group>
-                                                                        </Col>
-                                                                        <Col lg="3">
-                                                                            <Form.Group className='mb-4'>
-                                                                                <Form.Label className='year'>Year</Form.Label>
-                                                                                <FormControl as='select' name='year_to' value={item.year_to} className='mr-sm-2' onChange={(e) => handleChangeAos(e, index)} required>
-                                                                                    <option value="">Year</option>
-                                                                                    {years.map((year) => (
-                                                                                        <option key={year} value={year}>
-                                                                                            {year}
-                                                                                        </option>
-                                                                                    ))}
-                                                                                </FormControl>
-                                                                            </Form.Group>
-                                                                        </Col>
-                                                                        {areaOfSpecialization.length > 1 ?
-                                                                            <Col lg="12">
-                                                                                <p className="cursor-pointer" onClick={() => {handleRemove(index); }}>Remove</p>
+                                                    {areaOfSpecialization && areaOfSpecialization.length > 0 ?
+                                                        <>
+                                                            {areaOfSpecialization.map((item, index) => (
+                                                                <Card>
+                                                                    <Card.Body>
+                                                                        <Row>
+                                                                            <Col lg="6">
+                                                                                <Form.Group className='mb-4'>
+                                                                                    <Form.Label>Specify your areas of expertise</Form.Label>
+                                                                                    <FormControl type='text' name='name' value={item.name} className='mr-sm-2' onChange={(e) => handleChangeAos(e, index)} required placeholder='' />
+                                                                                </Form.Group>
                                                                             </Col>
-                                                                            :
-                                                                            null
-                                                                        }
-                                                                    </Row>
-                                                                ))}
-                                                            </>
-                                                            :
-                                                            null
-                                                        
-                                                        }
-                                                    </Card.Body>
-                                                </Card>
+                                                                            <Col lg="3">
+                                                                                <Form.Group className='mb-4'>
+                                                                                    <Form.Label>Year</Form.Label>
+                                                                                    <FormControl as='select' name='year_from' value={item.year_from} className='mr-sm-2' onChange={(e) => handleChangeAos(e, index)} required>
+                                                                                        <option value="">Year</option>
+                                                                                        {years.map((year) => (
+                                                                                            <option key={year} value={year}>
+                                                                                                {year}
+                                                                                            </option>
+                                                                                        ))}
+                                                                                    </FormControl>
+                                                                                </Form.Group>
+                                                                            </Col>
+                                                                            <Col lg="3">
+                                                                                <Form.Group className='mb-4'>
+                                                                                    <Form.Label className='year'>Year</Form.Label>
+                                                                                    <FormControl as='select' name='year_to' value={item.year_to} className='mr-sm-2' onChange={(e) => handleChangeAos(e, index)} required>
+                                                                                        <option value="">Year</option>
+                                                                                        {years.map((year) => (
+                                                                                            <option key={year} value={year}>
+                                                                                                {year}
+                                                                                            </option>
+                                                                                        ))}
+                                                                                    </FormControl>
+                                                                                </Form.Group>
+                                                                            </Col>
+                                                                            {areaOfSpecialization.length > 1 ?
+                                                                                <Col lg="12">
+                                                                                    <button type='button' className='aos-close close react-modal-close' onClick={() => {handleRemove(index); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
+                                                                                </Col>
+                                                                                :
+                                                                                null
+                                                                            }
+                                                                        </Row>
+                                                                    </Card.Body>
+                                                                </Card>
+                                                            ))}
+                                                        </>
+                                                        :
+                                                        null
+                                                    
+                                                    }
                                                 <div className='mt-4'>
                                                     <p className="cursor-pointer" onClick={addMoreAos}>+ <span className='add_more text-gray'>Add more</span></p>
                                                 </div>

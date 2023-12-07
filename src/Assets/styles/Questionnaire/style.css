@@ -57,6 +57,14 @@ section#questionnaire .background-dashed, .modal-content .background-dashed {
 .modal-content .save-fabrics-buttons button{
     min-width: 130px;
 }
+#fabric-buttons button {
+    min-width: unset !important;
+    background-color: #e6e7e8;
+    border: none;
+    color: #000;
+    padding: 8px 30px;
+    margin: 5px 0;
+}
 @media screen and (min-width:1200px){
     form.search input{
         min-width: 350px;

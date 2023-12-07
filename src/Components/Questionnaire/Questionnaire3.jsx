@@ -11,17 +11,15 @@ import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'react
 import { IoCloudUploadOutline } from "react-icons/io5";
 
 const initialQuestionnaire3Data = Object.freeze({
-    top_size: '',
-    top_size_standard: '',
-    skirt_size: '',
-    skirt_size_standard: '',
-    pants_size: '',
-    pants_size_standard: '',
-    dress_size: '',
-    dress_size_standard: '',
-    referrer: '',
-    referrer_details: '',
-    lifestyle_details: '',
+    fabric_type: '',
+    fabric_process_insights: '',
+    pricing_structure: '',
+    selectedImage: '',
+    fabrics_image_title: '',
+    fabrics_image_description: '',
+    fabrics_image_colors: '',
+    fabrics_image_materials: '',
+    fabrics_image_tags: '',
   });
 
 const Questionnaire3 = (props) => {
@@ -142,14 +140,15 @@ const Questionnaire3 = (props) => {
                                 <Form.Label className="mb-3">
                                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut aliquyam erat voluptua.
                                 </Form.Label>
-                                <Form.Group>
-                                    <Form.Control
-                                        type="text"
-                                        name="fabric_type"
-                                        value={questionnaire3Data.fabric_type}
-                                        onChange={handleChange}
-                                    />
-                                </Form.Group>
+                                <Col lg="12">
+                                    <Row>
+                                        <div className="form-control d-flex" id="fabric-buttons">
+                                            <Button className='me-3' type="button">Cotton</Button>
+                                            <Button className='me-3' type="button">Linen</Button>
+                                            <Button className='me-3' type="button">Nylon</Button>
+                                        </div>
+                                    </Row>
+                                </Col>
                             </CardBody>
                         </Card>
                         <Card className='mb-4 border-white'>

@@ -18,3 +18,21 @@
     color:#000000 !important;
     font-weight: 500;
 }
+
+.edit-skills select {
+    appearance: auto;
+    padding: 13px !important;
+}
+
+.edit-skills>.card:not(:nth-child(2)) {
+    margin-top: 20px;
+}
+
+.edit-skills .card .aos-close {
+    background-color: #f84545;
+    border-radius: 50%;
+    width: 13px;
+    height: 13px;
+    color: #fff;
+    font-size: 14px;
+}
