@@ -50,17 +50,19 @@ const Questionnaire = () => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
   };
 
-  const hideQuestionnaire = (e) => {
-    if (e == 1) {
-      setQuestionnaire1Show(false);
-    } else if (e == 2) {
-      setQuestionnaire2Show(false);
-    } else if (e == 2) {
-      setQuestionnaire3Show(false);
-    } 
+  const reloadPage = (e) => {
+    setReloadCount((prevReloadCount) => prevReloadCount + 1);
   };
 
   const skip = (e) => {
+    setStep(e);
+  };
+
+  const hideAll = (e) => {
+    console.log(e);
+    setQuestionnaire1Show(false);
+    setQuestionnaire2Show(false);
+    setQuestionnaire3Show(false);
     setStep(e);
   }
 
@@ -126,7 +128,7 @@ const Questionnaire = () => {
           null
         }
         {step == 1 && questionnaire1Show ?
-          <Questionnaire1 currentUser={currentUser} onHideQuestionnaire={hideQuestionnaire} onSkip={skip} step={step} />
+          <Questionnaire1 currentUser={currentUser} user={user} onReloadPage={reloadPage} onHideAll={hideAll} step={step} />
           :
           null
         }
@@ -152,7 +154,7 @@ const Questionnaire = () => {
           null
         }
         {step == 2 && questionnaire2Show ?
-          <Questionnaire2 currentUser={currentUser} onHideQuestionnaire={hideQuestionnaire} onSkip={skip} step={step} />
+          <Questionnaire2 currentUser={currentUser} user={user} onReloadPage={reloadPage} onHideAll={hideAll} step={step} />
           :
           null
         }
@@ -179,7 +181,7 @@ const Questionnaire = () => {
           null
         }
         {step == 3 && questionnaire3Show ?
-          <Questionnaire3 currentUser={currentUser} onHideQuestionnaire={hideQuestionnaire} onSkip={skip} step={step} />
+          <Questionnaire3 currentUser={currentUser} user={user} onReloadPage={reloadPage} onHideAll={hideAll} step={step} />
           :
           null
         }

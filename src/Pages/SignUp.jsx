@@ -14,8 +14,8 @@ const initialRegisterData = Object.freeze({
   email: '',
   password: '',
   password_confirmation: '',
-  first_name: 'Jeno',
-  last_name: 'Cabrera'
+  first_name: '',
+  last_name: ''
 });
 
 const SignUp = () => {
@@ -76,7 +76,10 @@ const SignUp = () => {
   }
 
   useEffect(() => {
-
+    if (currentUser && currentUser != "") {
+      toast.error("You are already logged in!");
+      navigate("/user/profile");
+    }
   }, [isLoggedIn]);
 
   return (
@@ -87,12 +90,12 @@ const SignUp = () => {
             <Col lg='8' className='d-flex flex-column justify-content-center'>
                 <div className='sign-up-container'>
                     <h1 className='text-center'>Sign up to Kouture Konect</h1>
-                    <button className='sign-in-google mt-3'>
+                    {/* <button className='sign-in-google mt-3'>
                         <img src={GoogleIcon}/>
                         <span className='subtitle'>Sign in with Google</span>
                     </button>
                     <hr className='mb-0 mt-5'/>
-                    <p className='sign-up-with-email'>or create an account</p>
+                    <p className='sign-up-with-email'>or create an account</p> */}
                     <Form className='mt-4' onSubmit={registerSubmit}>
                         <Form.Group className='mb-3' controlId='formBasicEmail'>
                             <Form.Label>Email Address</Form.Label>

@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../Components/Layout/Layout';
 import { Container, Row, Col, Button }  from 'react-bootstrap';
+import Designers from 'Components/Shared/Designers';
 import '../Assets/styles/Home/style.css'
+import Designs from 'Components/Shared/Designs';
+import HomeVideo from 'Assets/videos/kouture-homepage-video.mp4'
 
 const Home = () => {
   return (
     <Layout>
       <section id='home' className='py-5 px-2 d-flex align-items-center mh650'>
+        <video id="home-video" autoPlay muted loop>
+          <source src={HomeVideo} type="video/mp4" />
+          {/* Add additional source elements for other formats if needed */}
+          Your browser does not support the video tag.
+        </video>
         <Container className='text-center'>
           <Row>
             <Col lg='12'>
@@ -20,7 +28,24 @@ const Home = () => {
           </div>
         </Container>
       </section>
-      
+      <section id="designers" className="pt-5">
+        <Container>
+          <Row>
+            <Col lg="12">
+              <Designers />
+            </Col>
+          </Row>
+        </Container>
+      </section>
+      <section id="designs" className="py-5">
+        <Container>
+          <Row>
+            <Col lg="12">
+              <Designs />
+            </Col>
+          </Row>
+        </Container>
+      </section>
     </Layout>
   );
 };

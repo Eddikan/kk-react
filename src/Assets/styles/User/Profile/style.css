@@ -1,0 +1,23 @@
+.user-image-edit {
+    position: absolute;
+    background: #fff;
+    bottom: 0;
+    right: 15px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border-radius: 50%;
+    padding-top: 3px;
+    cursor: pointer;
+    border: 1px solid #DFDFDF;
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+    border-radius: 50%;
+}

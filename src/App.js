@@ -24,7 +24,7 @@ const UserProfile = lazy(() => import('./Pages/User/Profile'));
 const EditUserProfile = lazy(() => import('./Pages/User/EditProfile'));
 
 // Portfolio
-const AddPortfolio = lazy(() => import('./Pages/Portfolio/AddPortfolio'));
+const AddNewPortfolio = lazy(() => import('./Pages/Portfolio/AddNewPortfolio'));
 
 const LoadingPage = () => {
   return (
@@ -59,7 +59,7 @@ const App = () => {
           <Route path="/customer" exact element={<CustomerPage/>} />
           <Route path="/user/profile" exact element={<UserProfile/>} />
           <Route path="/user/profile/edit" exact element={<EditUserProfile/>} />
-          <Route path="/portfolio/add" exact element={<AddPortfolio/>} />
+          <Route path="/portfolio/add" exact element={<AddNewPortfolio/>} />
           
         </Routes>
       </Suspense>

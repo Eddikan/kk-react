@@ -2,9 +2,9 @@
 // GetUserData.js
 import axios from 'axios';
 
-const getPortfolioData = async (currentUser) => {
+const getPortfolioData = async () => {
     try {
-        const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'media?award_id=7');
+        const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item');
         return response.data.data;
     } catch (error) {
         // Handle the error or show a toast message

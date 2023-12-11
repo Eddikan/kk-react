@@ -36,7 +36,8 @@ const EmailConfirmation = () => {
 
   async function verifyEmail(e) {
     e.preventDefault();
-    navigate("/questionnaire");
+    // navigate("/questionnaire");
+    navigate("/user/profile");
   }
 
   useEffect(() => {

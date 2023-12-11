@@ -1,10 +1,37 @@
 .image-drop-container {
-    border: 2px dashed #ddd;
-    padding: 10px;
+    background-image: url(data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%233332' stroke-width='3' stroke-dasharray='12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e);
+    border: none;
+    padding: 25px;
+}
+
+.image-dnd {
+    width: 100%;
+    min-height: 250px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.image-dnd.min {
+    min-height: 125px;
 }
   
 .image-preview {
     position: relative;
+}
+
+.image-dnd:hover .dnd-actions-overlay {
+    opacity: 1;
+}
+
+.dnd-actions-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.3);
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0;
 }
   
 .remove-btn {

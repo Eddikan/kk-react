@@ -9,7 +9,10 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { TagsInput } from "react-tag-input-component";
+import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
+import AddPortfolio from 'Components/Pages/Forms/AddPortfolio';
+import GetUserPortfolioData from 'Utils/GetPortfolioData';
 
 const initialQuestionnaire2Data = Object.freeze({
     design_collection: '',
@@ -41,8 +44,28 @@ const Questionnaire2 = (props) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageName, setImageName] = useState('');
   const [selectedSpecialitation, setSelectedSpecialitation] = useState([]);
+  const [portfolio, setPortfolio] = useState([]);
+  const [portfolioLoading, setPortfolioLoading] = useState([]);
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn','userDetails','userRole', 'token']);
+
+  const fetchData = async (e) => {
+    try {
+      const portfolioData = await GetUserPortfolioData(e);
+      if (portfolioData) {
+        setPortfolio(portfolioData);
+        setPortfolioLoading(false);
+      } else {
+        toast.error('Fail!');
+      }
+      // Update state or perform other logic with userData
+    } catch (error) {
+        toast.error('Fail!');
+      // Handle the error, if needed
+    }
+};
+
+
 
   const toggleSchedule = (e) => {
     e.preventDefault();
@@ -54,12 +77,12 @@ const Questionnaire2 = (props) => {
     setUploadFileShow(!uploadFileShow);
   }
 
-  const back = (e) => {
-    props.onHideQuestionnaire(e);
-  };
+  const hideUpload = (e) => {
+    setUploadFileShow(false);
+  }
 
-  const skip = (e) => {
-    props.onSkip(e);
+  const hideAll = (e) => {
+    props.onHideAll(e);
   };
 
   const handleChange = (e) => {
@@ -69,33 +92,17 @@ const Questionnaire2 = (props) => {
     })
   }
 
-  const handleDragOver = (event) => {
-    event.preventDefault();
-  };
-
-  const handleDrop = (event) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
-    displayImage(file);
-  };
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    displayImage(file);
-  };
-
-  const displayImage = (file) => {
-    if (file) {
-      setSelectedImage(URL.createObjectURL(file));
-      setImageName(file.name);
+  const refreshPortfolio = (e) => {
+    if (e) {
+        setReloadCount(reloadCount + 1);
     }
-  };
+  }
 
   async function questionnaire2Submit(e) {
     e.preventDefault();
     setQuestionnaire2Loading(true);
     setTimeout(function(){
-        skip(currentStep + 1);
+        hideAll(3);
         setQuestionnaire2Loading(false);
     }, 1500)
     // axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser, {clothing_sizes: questionnaire2Data, user_id: currentUser }).then((response) => {
@@ -130,6 +137,10 @@ const Questionnaire2 = (props) => {
     //   toast.error('Something went wrong, please contact the administrator!');
     // });  
   }
+
+  useEffect(() => {
+    fetchData(currentUser);
+}, [reloadCount]);
 
   return (
     <>
@@ -281,13 +292,13 @@ const Questionnaire2 = (props) => {
                 </Row>
                 <Row>
                     <Col lg="12" className="text-right">
-                        <Button className='btn-outline me-3' type="button" onClick={function() { back(1); }}>Back</Button>
+                        <Button className='btn-outline me-3' type="button" onClick={function() { hideAll(2); }}>Back</Button>
                         {questionnaire2Loading ?
                             <Button className='btn-primary me-3' type="button">Saving...</Button>
                             :
                             <Button className='btn-primary me-3' type="submit">Save</Button>
                         }
-                        <span className="cursor-pointer text-black" onClick={function() {back(1); skip(currentStep + 1);}}>Skip <IoIosArrowRoundForward /></span>
+                        <span className="cursor-pointer text-black" onClick={function() { hideAll(3); }}>Skip <IoIosArrowRoundForward /></span>
                     </Col>
                 </Row>
             </Form>
@@ -317,6 +328,7 @@ const Questionnaire2 = (props) => {
             isOpen={uploadFileShow}
             className='modal-preview'
             fade={false}
+            style={{minWidth: '600px'}}
             centered
         >
             <ModalHeader className="pb-0">
@@ -325,167 +337,11 @@ const Questionnaire2 = (props) => {
             </ModalHeader>
             <ModalBody>
                 <h2 className='modal-title fs-25 fw-600 text-center'>Upload your Design</h2>
-                <Form onSubmit={questionnaire2Submit}>
-                    <Card  className="border-0">
-                        <CardBody className="p-2">
-                            <Row className="text-center my-3">
-                                <Col lg="12">
-                                    <Form.Group controlId="imageUpload" className='background-dashed py-4 image-upload'>
-                                        <IoCloudUploadOutline className="upload-logo"/>
-                                        <div
-                                            onDrop={handleDrop}
-                                            onDragOver={handleDragOver}
-                                            style={{
-                                            cursor: 'pointer',
-                                            }}
-                                        >
-                                        <Form.Control
-                                            type="file"
-                                            onChange={handleFileChange}
-                                            style={{ display: 'none' }}
-                                            accept="image/*"
-                                        />
-                                        <p className="mt-2 mb-1">Drag and drop file here</p>
-                                        <p className="mb-1">or</p>
-                                        <Button className="imageUpload-button" onClick={() => document.getElementById('imageUpload').click()}>
-                                            Browse Files
-                                        </Button>
-                                        </div>
-                                        
-                                        {imageName && (
-                                            <div>
-                                                <p className='mt-2'>Selected Image: {imageName}</p>
-                                                <div>
-                                                    <img style={{ width: '150px', height: 'auto' }} src={selectedImage} alt="Preview" thumbnail />
-                                                </div>
-                                            </div>
-                                        )}
-                                    </Form.Group>
-                                    
-                                    <Form.Group className="d-block text-left mt-4">
-                                        <Form.Label className="mb-2">
-                                            Name
-                                        </Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="design_name"
-                                            value={questionnaire2Data.design_name}
-                                        />
-                                    </Form.Group>
-
-                                    <Form.Group className="d-block text-left mt-3">
-                                        <Form.Label className="mb-2">
-                                            Description
-                                        </Form.Label>
-                                        <Form.Control
-                                            as="textarea"
-                                            rows={2}
-                                            onChange={handleChange}
-                                            name="design_image_description"
-                                            value={questionnaire2Data.design_image_description}
-                                        />
-                                    </Form.Group>
-
-                                    <Form.Group className="d-block text-left mt-3">
-                                        <Form.Label className="mb-2">
-                                            Category
-                                        </Form.Label>
-                                        <Form.Control as='select' name='top_size_standard' onChange={handleChange}>
-                                            <option value=''>Select category/s</option>
-                                            <option value='option1'>Option 1</option>
-                                            <option value='option2'>Option 2</option>
-                                            <option value='option3'>Option 3</option>
-                                        </Form.Control>
-                                    </Form.Group>
-
-                                    <Form.Group className="d-block text-left mt-3">
-                                        <Form.Label className="mb-2">
-                                            Season
-                                        </Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="design_season"
-                                            value={questionnaire2Data.design_season}
-                                        />
-                                    </Form.Group>
-
-                                    <Form.Group className="d-block text-left mt-3">
-                                        <Form.Label className="mb-2">
-                                            Colors
-                                        </Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="design_color"
-                                            value={questionnaire2Data.design_color}
-                                        />
-                                    </Form.Group>
-
-                                    <Form.Group className="d-block text-left mt-3">
-                                        <Form.Label className="mb-2">
-                                            Materials
-                                        </Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="design_materials"
-                                            value={questionnaire2Data.design_materials}
-                                        />
-                                    </Form.Group>
-
-                                    <Form.Group className="d-block text-left mt-3">
-                                        <Form.Label className="mb-2">
-                                            Tags
-                                        </Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="design_image_tags"
-                                            value={questionnaire2Data.design_image_tags}
-                                        />
-                                    </Form.Group>
-
-                                    <Form.Group className="d-block text-left mt-3">
-                                        <Form.Label className="mb-2">
-                                            Collection
-                                        </Form.Label>
-                                        <Row>
-                                            <Form.Group as={Col} lg={3}>
-                                                <Form.Check
-                                                    className="cursor-pointer"
-                                                    type="radio"
-                                                    label="Regular"
-                                                    name="design_collection"
-                                                    value="Regular"
-                                                    checked={questionnaire2Data.collection === 'Regular'}
-                                                    onChange={handleChange}
-                                                />
-                                            </Form.Group>
-                                            <Form.Group as={Col} lg={3}>
-                                                <Form.Check
-                                                    className="cursor-pointer"
-                                                    type="radio"
-                                                    label="Limited"
-                                                    name="design_collection"
-                                                    value="Limited"
-                                                    checked={questionnaire2Data.referrer === 'Limited'}
-                                                    onChange={handleChange}
-                                                />
-                                            </Form.Group>
-                                        </Row>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col lg="12" className="text-right save-fabrics-buttons">
-                                    <Button className='btn-outline me-3' type="button" onClick={toggleuploadFile}>Cancel</Button>
-                                    {questionnaire2Loading ?
-                                        <Button className='btn-primary me-3' type="button">Uploading...</Button>
-                                        :
-                                        <Button className='btn-primary' type="submit">Upload</Button>
-                                    }
-                                </Col>
-                            </Row>
-                        </CardBody>
-                    </Card>
-                </Form>
+                <Card  className="border-0">
+                    <CardBody className="p-2">
+                        <AddPortfolio size="small" withDraft={false} onSuccess={refreshPortfolio} onCancel={hideUpload} />
+                    </CardBody>
+                </Card>
             </ModalBody>
         </Modal>
     </>

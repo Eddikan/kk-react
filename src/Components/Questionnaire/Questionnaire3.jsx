@@ -44,12 +44,8 @@ const Questionnaire3 = (props) => {
     setUploadFileShow(!uploadFileShow);
   }
 
-  const back = (e) => {
-    props.onHideQuestionnaire(e);
-  };
-
-  const skip = (e) => {
-    props.onSkip(e);
+  const hideAll = (e) => {
+    props.onHideAll(e);
   };
 
   const handleChange = (e) => {
@@ -86,7 +82,7 @@ const Questionnaire3 = (props) => {
     e.preventDefault();
     setQuestionnaire3Loading(true);
     setTimeout(function(){
-        skip(currentStep + 1);
+        hideAll(4);
         setQuestionnaire3Loading(false);
     }, 1500)
     // axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser, {clothing_sizes: questionnaire2Data, user_id: currentUser }).then((response) => {
@@ -223,13 +219,13 @@ const Questionnaire3 = (props) => {
                 </Row>
                 <Row>
                     <Col lg="12" className="text-right">
-                        <Button className='btn-outline me-3' type="button" onClick={function() { back(1); }}>Back</Button>
+                        <Button className='btn-outline me-3' type="button" onClick={function() { hideAll(3); }}>Back</Button>
                         {questionnaire3Loading ?
                             <Button className='btn-primary me-3' type="button">Saving...</Button>
                             :
                             <Button className='btn-primary me-3' type="submit">Save</Button>
                         }
-                        <span className="cursor-pointer text-black" onClick={function() {back(1); skip(currentStep + 1);}}>Skip <IoIosArrowRoundForward /></span>
+                        <span className="cursor-pointer text-black" onClick={function() { hideAll(4); }}>Skip <IoIosArrowRoundForward /></span>
                     </Col>
                 </Row>
             </Form>

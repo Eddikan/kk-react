@@ -1,6 +1,19 @@
 /*Home*/
 section#home {
     background: transparent linear-gradient(180deg, #000000CC 0%, #00000096 100%) 0% 0% no-repeat padding-box;
+    position: relative;
+    overflow: hidden;
+}
+
+#home-video {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    height: 100vh;
+    object-fit: cover;
 }
 
 section#home h1 {

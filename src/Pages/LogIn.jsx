@@ -73,7 +73,10 @@ const LogIn = () => {
   }
 
   useEffect(() => {
-
+    if (currentUser && currentUser != "") {
+      toast.error("You are already logged in!");
+      navigate("/user/profile");
+    }
   }, [isLoggedIn]);
 
   return (
@@ -84,12 +87,12 @@ const LogIn = () => {
             <Col id="login-column" lg='8' className='d-flex flex-column justify-content-center'>
               <div className='login-container'>
                 <h1 className='text-center'>Sign in to Kouture Konect</h1>
-                <button className='login-google mt-3'>
+                {/* <button className='login-google mt-3'>
                   <img src={GoogleIcon} />
                   <span className='subtitle'>Sign in with Google</span>
                 </button>
                 <hr className='mb-0 mt-5' />
-                <p className='login-with-email'>or sign in with email</p>
+                <p className='login-with-email'>or sign in with email</p> */}
                 <Form className='mt-4' onSubmit={loginSubmit}>
                   <Form.Group className='mb-3' controlId='formBasicEmail'>
                     <Form.Label>Email Address</Form.Label>
