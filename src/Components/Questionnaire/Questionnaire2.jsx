@@ -28,6 +28,7 @@ const initialQuestionnaire2Data = Object.freeze({
     lead_time: '',
     specialization_and_expertise: '',
     design_process_insights: '',
+    is_designer: 1,
   });
 
 const Questionnaire2 = (props) => {
