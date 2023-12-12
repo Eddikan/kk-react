@@ -47,6 +47,10 @@ const AddPortfolio = (props) => {
         props.onCancel(true);
     }
 
+    const savePortfolioItems = (e) => {
+        props.onSave(e);
+    }
+
     const handleChange = (e) => {
         setPortfolioData({
             ...portfolioData,
@@ -72,29 +76,37 @@ const AddPortfolio = (props) => {
 
     async function PortfolioSubmit(e) {
         e.preventDefault();
-        if (portfolioData.image_urls) {
+        if (size == "small") {
             setPortfolioLoading(true);
-            axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
-                const success = response.data.status;
-                if(success == 'Success') {
-                    toast.success('Design added successfully!');
-                    setPortfolioLoading(false);
-                    reloadPage(true);
-                    formSuccess(true);
-                } else {
+            setTimeout(function(){
+                setPortfolioLoading(false);
+                savePortfolioItems({...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' });
+                handleCancel();
+            }, 1000);
+        } else {
+            if (portfolioData.image_urls) {
+                setPortfolioLoading(true);
+                axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
+                    const success = response.data.status;
+                    if(success == 'Success') {
+                        toast.success('Design added successfully!');
+                        setPortfolioLoading(false);
+                        reloadPage(true);
+                        formSuccess(true);
+                    } else {
+                        toast.error('An error occured. Please try again or contact the administrator.');
+                        setPortfolioLoading(false);
+                        formSuccess(false);
+                    }
+                }).catch(() => {
                     toast.error('An error occured. Please try again or contact the administrator.');
                     setPortfolioLoading(false);
-                    formSuccess(false);
-                }
-            }).catch(() => {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setPortfolioLoading(false);
-                formSuccess(true);
-            });
-        } else {
-            toast.error('Please upload design images!');
+                    formSuccess(true);
+                });
+            } else {
+                toast.error('Please upload design images!');
+            }
         }
-        
     };
 
     async function PortfolioDraftSubmit(e) {

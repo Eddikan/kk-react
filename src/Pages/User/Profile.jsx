@@ -17,6 +17,7 @@ import toast from 'react-hot-toast';
 import PortfolioGrid from 'Components/Shared/PortfolioGrid';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { GoPencil } from "react-icons/go";
+import { GoAlertFill } from 'react-icons/go';
 import axios from 'axios';
 
 
@@ -50,8 +51,17 @@ const initialUserData = Object.freeze({
     instagram: '',
 });
 
+const initialDesignerData = Object.freeze({
+    design_inspirations: '',
+    design_process: '',
+    areas_of_specialization: '',
+    lead_time: '',
+    pricing_structure: '',
+});
+
 const Profile = () => {
     const [user, setUser] = useState(initialUserData);
+    const [designer, setDesigner] = useState(initialDesignerData);
     const [userLoading, setUserLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
     const [aboutShow, setAboutShow] = useState(true);
@@ -61,6 +71,7 @@ const Profile = () => {
     const [limitedDesignShow, setLimitedDesignShow] = useState(false);
     const [formStatus, setFormStatus] = useState('standby');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const [areasOfSpecialization, setAreaOfSpecialization] = useState([])
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -178,6 +189,10 @@ const Profile = () => {
             setUserImage(userData.image);
             setCookie('userDetails', JSON.stringify(userData), { path: '/' });
             setUserLoading(false);
+            if (userData.designer) {
+                setDesigner(userData.designer);
+                setAreaOfSpecialization(userData.designer.areas_of_specialization);
+            }
           } else {
             setUserLoading(false);
             toast.error('User does not exist!');
@@ -267,8 +282,16 @@ const Profile = () => {
                                             <>
                                                 <p className='fw-600 mb-3'>Areas of Specialization and Expertise</p>
                                                 <div className='mb-4'>
-                                                    <span className='text-gray fs-14 bg-gray'>Bridal Wear</span>
-                                                    <span className='text-gray fs-14 bg-gray'>Casual Wear</span>
+                                                {areasOfSpecialization && areasOfSpecialization.length > 0 ?
+                                                    <>
+                                                        {areasOfSpecialization.map((item, index) => (
+                                                            <span className='text-gray fs-14 bg-gray'>{item}</span>
+                                                        ))}
+                                                    </>
+                                                    :
+                                                    null
+                                                
+                                                }
                                                 </div>
                                             </>
                                             :
@@ -383,9 +406,9 @@ const Profile = () => {
                             null
                         }
                         {fabricShow ?
-                            <div id="profile-portfolio">
-                            {/* <img src={PortfolioFabric} className='portfolio-img'/> */}
-                            <p>This section is under construction.</p>
+                            <div id="profile-portfolio" className='text-center'>
+                                <GoAlertFill size="120px" color="#b5a3c5" className="mb-3 mt-2" />
+                                <p className="fs-30 text-black"><i>This section is under construction.</i></p>
                             </div>
                             :
                             null

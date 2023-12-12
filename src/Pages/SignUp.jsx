@@ -49,7 +49,8 @@ const SignUp = () => {
         toast.success('Successfully signed up!');
         setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
         setCookie('userRole', JSON.stringify(user.role), { path: '/' });
-        setCookie('userDetails', JSON.stringify(user), { path: '/' });
+        const user_details = {id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at}
+        setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
         setCookie('isLoggedIn', true, { path: '/' });
         setCookie('token', data.token, { path: '/' });
         setTimeout(function(){
@@ -80,7 +81,7 @@ const SignUp = () => {
       toast.error("You are already logged in!");
       navigate("/user/profile");
     }
-  }, [isLoggedIn]);
+  }, []);
 
   return (
     <Layout>
@@ -89,7 +90,7 @@ const SignUp = () => {
           <Row className='vh-100'>
             <Col lg='8' className='d-flex flex-column justify-content-center'>
                 <div className='sign-up-container'>
-                    <h1 className='text-center'>Sign up to Kouture Konect</h1>
+                    <h1 className='text-left'>Sign up to Kouture Konect</h1>
                     {/* <button className='sign-in-google mt-3'>
                         <img src={GoogleIcon}/>
                         <span className='subtitle'>Sign in with Google</span>

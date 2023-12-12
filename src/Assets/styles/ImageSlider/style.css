@@ -1,0 +1,39 @@
+.slider {
+    margin: 0 10px;
+    overflow: "hidden";
+    padding: 2rem 0 0 0;
+}
+
+.slider img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.react-multi-carousel-list {
+    padding: 0;
+}
+
+.slider-image {
+    min-height: 150px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.single-image-slider {
+    width: 100%;
+    min-height: 420px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.react-multi-carousel-list {
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+/* .react-multi-carousel-track {
+    margin-left: -20px;
+    margin-right: -20px;
+} */

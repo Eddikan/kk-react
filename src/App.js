@@ -12,6 +12,7 @@ const Home = lazy(() => import('./Pages/Home'));
 const LogIn = lazy(() => import('./Pages/LogIn'));
 const SignUp = lazy(() => import('./Pages/SignUp'));
 const EmailConfirmation = lazy(() => import('./Pages/EmailConfirmation'));
+const EmailConfirmed = lazy(() => import('./Pages/EmailConfirmed'));
 const Questionnaire = lazy(() => import('./Pages/Questionnaire'));
 const About = lazy(() => import('./Pages/About'));
 const Buttons = lazy(() => import('./Pages/Elements/Buttons'));
@@ -25,6 +26,7 @@ const EditUserProfile = lazy(() => import('./Pages/User/EditProfile'));
 
 // Portfolio
 const AddNewPortfolio = lazy(() => import('./Pages/Portfolio/AddNewPortfolio'));
+const ViewPortfolio = lazy(() => import('./Pages/Portfolio/ViewPortfolio'));
 
 const LoadingPage = () => {
   return (
@@ -52,6 +54,7 @@ const App = () => {
           <Route path="/login" exact element={<LogIn/>} />
           <Route path="/sign-up" exact element={<SignUp/>} />
           <Route path="/email-confirmation" exact element={<EmailConfirmation/>} />
+          <Route path="/email-confirmed" exact element={<EmailConfirmed/>} />
           <Route path="/questionnaire" exact element={<Questionnaire/>} />
           <Route path="/about" exact element={<About/>} />
           <Route path="/elements/buttons" exact element={<Buttons/>} />
@@ -60,6 +63,7 @@ const App = () => {
           <Route path="/user/profile" exact element={<UserProfile/>} />
           <Route path="/user/profile/edit" exact element={<EditUserProfile/>} />
           <Route path="/portfolio/add" exact element={<AddNewPortfolio/>} />
+          <Route path="/portfolio/:portfolioId" exact element={<ViewPortfolio/>} />
           
         </Routes>
       </Suspense>

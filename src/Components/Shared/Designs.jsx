@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Layout from 'Components/Layout/Layout';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import DesignPlaceholder from 'Assets/images/placeholders/design.png';
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import toast from 'react-hot-toast';
 // import getDesignsData from 'Utils/GetDesignsData';
@@ -69,9 +67,11 @@ const Designs = (props) => {
                                         <>
                                             {index < 8 ?
                                                 <Col className="designs-grid mb-3" xs="4" md="3">
-                                                    <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+design.image_urls[0].image_url+")"}}>
-                                                        
-                                                    </div>
+                                                    <Link to={`/portfolio/${design.id}`}>
+                                                        <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+design.image_urls[0].image_url+")"}}>
+                                                            
+                                                        </div>
+                                                    </Link>
                                                     <div className="design-details d-flex">
                                                         {design.user.image ?
                                                             <div className='designer-photo' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+design.user.image+")"}} ></div>

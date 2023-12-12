@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
@@ -15,9 +15,11 @@ import { Link } from 'react-router-dom';
 
 const Header = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const currentUrl = window.location.href;
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [userImage, setUserImage] = useState('');
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
   const userRef = useRef(null);
 
   const currentUser = cookies.currentUser;
@@ -52,15 +54,22 @@ const Header = () => {
   useEffect(() => {
     document.addEventListener('click', handleClickOutside);
 
-    if (userDetails && userDetails.image != "") {
-      setUserImage(userDetails.image);
+    if (userDetails) {
+      if (userDetails.image != "") {
+        setUserImage(userDetails.image);
+      }
+      if (userDetails.email_verified_at == "" || userDetails.email_verified_at == null) {
+        if (!currentUrl.includes('email-confirmation') && !currentUrl.includes('login') && !currentUrl.includes('sign-up') && !currentUrl.includes('email-confirmed') && location.pathname !== '/') {
+          navigate("/email-confirmation");
+        }
+      }
     }
 
     // Clean up the event listener when the component unmounts
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, []);
+  }, [userDetails]);
 
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
@@ -71,14 +80,14 @@ const Header = () => {
           <Nav className="align-items-center">
             <Nav.Link href="/find-designs">Find Designs</Nav.Link>
             <Nav.Link href="/inspirations">Inspirations</Nav.Link>
-            <Nav.Link href="/inspirations">Blog</Nav.Link>
+            <Nav.Link href="/blog">Blog</Nav.Link>
           </Nav>
           <Nav className="align-items-center d-grid-mobile">
             <Form inline className='search d-flex column-gap-70 align-items-center'>
               <FormControl type='text' placeholder='Search' className='mr-sm-2' />
               <FaMagnifyingGlass />
             </Form>
-            <div className="d-flex">
+            <div className="d-flex column-gap-20 align-items-center">
               {currentUser && currentUser != "" ?
                 <>
                   <Nav.Link href="/"><HiOutlineShoppingBag size={30}/></Nav.Link>

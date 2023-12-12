@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import DesignerPlaceholder from 'Assets/images/designer-placeholder.jpg';
 import toast from 'react-hot-toast';
-import getDesignersData from 'Utils/GetDesignersData';
+import GetDesignersData from 'Utils/GetDesignersData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline } from "react-icons/io5";
@@ -19,7 +19,7 @@ const Designers = (props) => {
 
     const fetchData = async (e) => {
         try {
-          const designersData = await getDesignersData(e);
+          const designersData = await GetDesignersData(e);
           if (designersData) {
             setDesigners(designersData);
             setDesignersLoading(false);

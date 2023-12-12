@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../Components/Layout/Layout';
-import { Container, Row, Col, Button }  from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import Logo from '../Assets/images/kouture-konect-logo.png';
 import '../Assets/styles/EmailConfirmation/style.css';
 import { useCookies } from 'react-cookie';
@@ -22,10 +22,12 @@ const EmailConfirmation = () => {
   const [user, setUser] = useState(initialUserData);
   const [userLoading, setUserLoading] = useState(true);
   const [reloadCount, setReloadCount] = useState(0);
+  const [formStatus, setFormStatus] = useState('standby');
 
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn','userDetails','userRole', 'token']);
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
 
   const currentUser = cookies.currentUser;
+  const token = cookies.token;
   const isLoggedIn = cookies.isLoggedIn;
   const userDetails = cookies.userDetails;
   const userRole = cookies.userRole;
@@ -34,33 +36,48 @@ const EmailConfirmation = () => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
   };
 
-  async function verifyEmail(e) {
-    e.preventDefault();
-    // navigate("/questionnaire");
-    navigate("/user/profile");
+  async function resendVerificationEmail(e) {
+    axios(process.env.REACT_APP_API_ENDPOINT + 'resend/verification/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {
+      user_id: currentUser
+    }).then((response) => {
+      const success = response.data.status;
+      if (success == 'Success') {
+        toast.success('Email sent successfully!');
+        setFormStatus("standby");
+      } else {
+        toast.error('An error occured. Please try again or contact the administrator.');
+        setFormStatus("standby");
+      }
+    }).catch(() => {
+      toast.error('An error occured. Please try again or contact the administrator.');
+      setFormStatus("standby");
+    });
   }
 
   useEffect(() => {
     // ComponentDidMount logic goes here
     // This will be executed after the component is mounted
     getUser().then(response => {
-        const selectedUser = response.data.data;
-        if (selectedUser) {
-          setUser(selectedUser);
-          setUserLoading(false);
-        } else {
-          const message = 'There has been an error getting the user, please try again!';
-          toast.error(message);
+      const selectedUser = response.data.data;
+      if (selectedUser) {
+        setUser(selectedUser);
+        setUserLoading(false);
+        if (selectedUser.email_verified_at != "" && selectedUser.email_verified_at) {
+          navigate("/email-confirmed");
         }
+      } else {
+        const message = 'There has been an error getting the user, please try again!';
+        toast.error(message);
+      }
     }).catch((error) => {
       const message = 'There has been an error getting the user, please try again!';
       toast.error(message);
     });
 
     return () => {
-        // ComponentWillUnmount logic goes here (optional)
-        // This will be executed before the component is unmounted
-        //   console.log('Component is unmounted');
+      // ComponentWillUnmount logic goes here (optional)
+      // This will be executed before the component is unmounted
+      //   console.log('Component is unmounted');
     };
   }, [reloadCount]);
 
@@ -70,19 +87,20 @@ const EmailConfirmation = () => {
         <Container className='text-center'>
           <Row>
             <Col lg='12'>
-              <img src={Logo}/>  
+              <img src={Logo} />
             </Col>
           </Row>
           <Row className='narrow-600 p-5  mt-5 text-dgray'>
             <Col lg='12'>
               <h1 className='pb-2'>Email Confirmation</h1>
-              <p className='subtitle'>Thank you for signing up for Kouture Konect. Before we get started, we'll need to verify your email.</p>
-              <Button onClick={verifyEmail} className='btn-primary fs-16' variant='primary'>Verify Email</Button>
+              <p className='subtitle'>Thank you for signing up for Kouture Konect. Before we get started, we'll need to verify your email. Please check your email</p>
+              <p className='login-with-email'>or</p>
+              <Button onClick={resendVerificationEmail} className='btn-primary fs-16' variant='primary'>Resend Email</Button>
             </Col>
           </Row>
         </Container>
       </section>
-      
+
     </Layout>
   );
 };

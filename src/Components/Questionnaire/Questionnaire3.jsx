@@ -7,6 +7,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { GoAlertFill } from "react-icons/go";
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { TagsInput } from "react-tag-input-component";
@@ -26,7 +27,7 @@ const initialQuestionnaire3Data = Object.freeze({
 const Questionnaire3 = (props) => {
   const navigate = useNavigate();
   const currentStep = props.step;
-  const currentUser = props.currentUser;
+  
 
   const [questionnaire3Data, setQuestionnaire3Data] = useState(initialQuestionnaire3Data);
   const [questionnaire3Loading, setQuestionnaire3Loading] = useState(false);
@@ -36,8 +37,12 @@ const Questionnaire3 = (props) => {
   const [selectedFabricType, setSelectedFabricType] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageName, setImageName] = useState('');
+  const underConstruction = true;
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn','userDetails','userRole', 'token']);
+
+  const token = cookies.token;
+  const currentUser = cookies.currentUser;
 
   const toggleuploadFile = (e) => {
     e.preventDefault();
@@ -76,7 +81,6 @@ const Questionnaire3 = (props) => {
       setImageName(file.name);
     }
   };
-
 
   async function questionnaire3Submit(e) {
     e.preventDefault();
@@ -121,12 +125,26 @@ const Questionnaire3 = (props) => {
   return (
     <>
         <Container className='q1 narrow-750 py-5 px-4 mt-5 text-dgray'>
-            <Row>
+            {underConstruction ?
+                <Row>
+                    <Col lg='12' className='text-center'>
+                        <h2 className='form-title pb-2 mb-3'>This page is under construction</h2>
+                        <GoAlertFill size="120px" color="#b5a3c5" className="mt-3" />
+                    </Col>
+                    <Col lg="12" className="text-right mt-4">
+                        <Button className='btn-primary' type="button" onClick={function() { hideAll(4); }}>Proceed</Button>
+                    </Col>
+                </Row>
+                :
+                null
+            }
+            <Row style={{display: 'none'}}>
                 <Col lg='12' className='text-center'>
                     <h2 className='form-title pb-2 mb-3'>Showcase the rich textures, and pattern of your fabrics</h2>
+                   
                 </Col>
             </Row>
-            <Form onSubmit={questionnaire3Submit}>
+            <Form  style={{display: 'none'}} onSubmit={questionnaire3Submit}>
                 <Row className="mb-3">
                     <Col lg="12">
                         <Card className='mb-4 border-white'>

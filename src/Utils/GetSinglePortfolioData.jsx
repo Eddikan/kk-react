@@ -2,9 +2,9 @@
 // GetUserData.js
 import axios from 'axios';
 
-const GetDesignersData = async (currentUser) => {
+const GetSinglePortfolioData = async (id) => {
     try {
-        const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer');
+        const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+id);
         return response.data.data;
     } catch (error) {
         // Handle the error or show a toast message
@@ -13,4 +13,4 @@ const GetDesignersData = async (currentUser) => {
     }
 };
 
-export default GetDesignersData;
+export default GetSinglePortfolioData;

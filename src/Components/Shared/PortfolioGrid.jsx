@@ -8,6 +8,7 @@ import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline } from "react-icons/io5";
+import Loading from './Loading';
 
 const PortfolioGrid = (props) => {
     const navigate = useNavigate();
@@ -52,7 +53,7 @@ const PortfolioGrid = (props) => {
                 {portfolioLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
-                            Loading...
+                            <Loading className="bg-white" />
                         </p>
                     </>
                     :
@@ -62,33 +63,36 @@ const PortfolioGrid = (props) => {
                                 <Row className="portfolio-row">
                                     {/* <img src={object.url} className='portfolio-img'/> */}
                                     {portfolio.map((object, index) => (
-                                        <Col className="portfolio-grid mb-3" xs="4" md="2">
-                                            <div className="portfolio-grid-div w-100" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+object.image_urls[0].image_url+")"}}>
-                                                <div className="portfolio-overlay">
-                                                    <div className="portfolio-actions">
-                                                        <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
-                                                        {selectedItemIndex === index && (
-                                                            <div className="action-box">
-                                                                <p className="mb-2"><GoPencil /> Edit</p>
-                                                                <p className="mb-2"><GoTrash  /> Delete</p>
-                                                                <p className="mb-0"><IoDocumentOutline /> Draft Design</p>
-                                                                {/* Add other actions as needed */}
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <div className="portfolio-details">
-                                                        <span className="text-white">{object.stage ?? "Lorem ipsum"}</span>
-                                                        <div className="other-actions">
-                                                            <div className="action-button bg-white me-2">
-                                                                <GoHeart className="text-black" />
-                                                            </div>
-                                                            <div className="action-button bg-white">
-                                                                <GoBookmark className="text-black" />
+                                        <Col className={`portfolio-grid mb-3`} xs="4" md="2">
+                                                <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : ""}`} style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+object.image_urls[0].image_url+")"}}>
+                                                    <div className="portfolio-overlay">
+                                                        <div className="portfolio-actions">
+                                                            <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
+                                                            {selectedItemIndex === index && (
+                                                                <div className="action-box">
+                                                                    <p className="mb-3"><GoPencil /> Edit</p>
+                                                                    <p className="mb-3"><GoTrash  /> Delete</p>
+                                                                    <p className="mb-0"><IoDocumentOutline /> Draft Design</p>
+                                                                    {/* Add other actions as needed */}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <div className="portfolio-details">
+                                                            <span className="text-white text-decoration-none">{object.name ?? "-"}</span>
+                                                            <div className="other-actions">
+                                                                <div className="action-button bg-white me-2">
+                                                                    <GoHeart className="text-black" />
+                                                                </div>
+                                                                <div className="action-button bg-white">
+                                                                    <GoBookmark className="text-black" />
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <Link to={`/portfolio/${object.id}`} className="text-decoration-none">
+                                                        <div className="portfolio-overlay" style={{background: 'transparent', height: '85%', bottom: 0}}></div>
+                                                    </Link>
                                                 </div>
-                                            </div>
                                         </Col>
                                     ))}
                                     <Col className="portfolio-grid mb-3" xs="4" md="2">
