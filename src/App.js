@@ -6,6 +6,7 @@ import 'Assets/styles/overrides.css';
 
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import PortfolioGrid from 'Components/Shared/PortfolioGrid';
 const stripePromise = loadStripe("pk_test_NuJ5XLTawKbspF46LKSgwDbk");
 
 const Home = lazy(() => import('./Pages/Home'));
@@ -25,8 +26,16 @@ const UserProfile = lazy(() => import('./Pages/User/Profile'));
 const EditUserProfile = lazy(() => import('./Pages/User/EditProfile'));
 
 // Portfolio
+const Portfolio = lazy(() => import('./Pages/Portfolio/Portfolio'));
 const AddNewPortfolio = lazy(() => import('./Pages/Portfolio/AddNewPortfolio'));
+const EditPortfolio = lazy(() => import('./Pages/Portfolio/EditPortfolio'));
 const ViewPortfolio = lazy(() => import('./Pages/Portfolio/ViewPortfolio'));
+
+// Design
+const Designs = lazy(() => import('./Pages/Designs'));
+
+// Under Construction
+const UnderConstruction = lazy(() => import('./Pages/UnderConstruction'));
 
 const LoadingPage = () => {
   return (
@@ -45,26 +54,47 @@ const App = () => {
     <Router>
       <Elements stripe={stripePromise}>
         <Routes>
-          <Route path="/stripe" element={<Stripe/>}/>
+          <Route path="/stripe" element={<Stripe />} />
         </Routes>
       </Elements>
       <Suspense fallback={<LoadingPage />}>
         <Routes>
-          <Route path="/" exact element={<Home/>} />
-          <Route path="/login" exact element={<LogIn/>} />
-          <Route path="/sign-up" exact element={<SignUp/>} />
-          <Route path="/email-confirmation" exact element={<EmailConfirmation/>} />
-          <Route path="/email-confirmed" exact element={<EmailConfirmed/>} />
-          <Route path="/questionnaire" exact element={<Questionnaire/>} />
-          <Route path="/about" exact element={<About/>} />
-          <Route path="/elements/buttons" exact element={<Buttons/>} />
-          <Route path="/forms" exact element={<Forms/>} />
-          <Route path="/customer" exact element={<CustomerPage/>} />
-          <Route path="/user/profile" exact element={<UserProfile/>} />
-          <Route path="/user/profile/edit" exact element={<EditUserProfile/>} />
-          <Route path="/portfolio/add" exact element={<AddNewPortfolio/>} />
-          <Route path="/portfolio/:portfolioId" exact element={<ViewPortfolio/>} />
+          <Route path="/" exact element={<Home />} />
+          <Route path="/login" exact element={<LogIn />} />
+          <Route path="/sign-up" exact element={<SignUp />} />
+          <Route path="/email-confirmation" exact element={<EmailConfirmation />} />
+          <Route path="/email-confirmed" exact element={<EmailConfirmed />} />
+          <Route path="/questionnaire" exact element={<Questionnaire />} />
+          <Route path="/about" exact element={<About />} />
+          <Route path="/elements/buttons" exact element={<Buttons />} />
+          <Route path="/forms" exact element={<Forms />} />
+          <Route path="/customer" exact element={<CustomerPage />} />
+          <Route path="/user/profile" exact element={<UserProfile />} />
+          <Route path="/user/profile/edit" exact element={<EditUserProfile />} />
+
+          <Route path="/portfolio/add" exact element={<AddNewPortfolio />} />
+          <Route path="/portfolio/:portfolioId" exact element={<ViewPortfolio />} />
+          <Route path="/portfolio/:portfolioId/edit" exact element={<EditPortfolio />} />
+          <Route path="/user/portfolio" exact element={<Portfolio />} />
+
+          {/* Designs */}
+          <Route path="/find-designs" exact element={<Designs />} />
+          <Route path="/designs" exact element={<Designs />} />
+          <Route path="/design/:portfolioId" exact element={<ViewPortfolio />} />
+
+          {/* Under Construction */}
           
+          <Route path="/inspirations" exact element={<UnderConstruction />} />
+          <Route path="/blog" exact element={<UnderConstruction />} />
+          <Route path="/wish-list" exact element={<UnderConstruction />} />
+          <Route path="/orders" exact element={<UnderConstruction />} />
+
+          <Route path="/category/tops" exact element={<UnderConstruction />} />
+          <Route path="/category/dresses" exact element={<UnderConstruction />} />
+          <Route path="/category/pants" exact element={<UnderConstruction />} />
+          <Route path="/category/skirts" exact element={<UnderConstruction />} />
+          
+
         </Routes>
       </Suspense>
     </Router>

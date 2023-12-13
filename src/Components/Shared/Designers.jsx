@@ -24,11 +24,13 @@ const Designers = (props) => {
             setDesigners(designersData);
             setDesignersLoading(false);
           } else {
-            toast.error('Fail!');
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setDesignersLoading(false);
           }
           // Update state or perform other logic with userData
         } catch (error) {
-            toast.error('Fail!');
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setDesignersLoading(false);
           // Handle the error, if needed
         }
     };
@@ -65,27 +67,23 @@ const Designers = (props) => {
                                     {/* <img src={object.url} className='designers-img'/> */}
                                     {designers.map((designer, index) => (
                                         <>
-                                            {index < 4 ?
-                                                <Col className="designers-grid mb-3" xs="4" md="3">
-                                                    {designer.image ?
-                                                        <div className="designers-grid-div w-100" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+designer.image+")"}}>
-                                                            <div className="designer-details">
-                                                                <h3 className="designer-name text-white fs-25 mb-1">{designer.first_name ?? ""} {designer.last_name ?? ""}</h3>
-                                                                <p className="text-white mb-0">{designer.occupation || "-"}</p>
-                                                            </div>
+                                            <Col className="designers-grid mb-3" xs="4" md="3">
+                                                {designer.user.image ?
+                                                    <div className="designers-grid-div w-100" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+designer.user.image+")"}}>
+                                                        <div className="designer-details">
+                                                            <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name != "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name != "" ? designer.user.last_name : "-"}</h3>
+                                                            <p className="text-white mb-0">{designer.user.occupation || "-"}</p>
                                                         </div>
-                                                        :
-                                                        <div className="designers-grid-div w-100" style={{ backgroundImage: "url(" + DesignerPlaceholder + ")" }}>
-                                                            <div className="designer-details">
-                                                                <h3 className="designer-name text-white fs-25 mb-1">{designer.first_name ?? ""} {designer.last_name ?? ""}</h3>
-                                                                <p className="text-white mb-0">{designer.occupation || "-"}</p>
-                                                            </div>
+                                                    </div>
+                                                    :
+                                                    <div className="designers-grid-div w-100" style={{ backgroundImage: "url(" + DesignerPlaceholder + ")" }}>
+                                                        <div className="designer-details">
+                                                            <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name != "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name != "" ? designer.user.last_name : "-"}</h3>
+                                                            <p className="text-white mb-0">{designer.user.occupation || "-"}</p>
                                                         </div>
-                                                    }
-                                                </Col>
-                                                :
-                                                null
-                                            }
+                                                    </div>
+                                                }
+                                            </Col>
                                         </>
                                     ))}
                                 </Row>

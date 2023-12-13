@@ -5,6 +5,7 @@ import Designers from 'Components/Shared/Designers';
 import '../Assets/styles/Home/style.css'
 import Designs from 'Components/Shared/Designs';
 import HomeVideo from 'Assets/videos/kouture-homepage-video.mp4'
+import ShopByCategory from 'Components/Shared/ShopByCategory';
 
 const Home = () => {
   return (
@@ -28,11 +29,20 @@ const Home = () => {
           </div>
         </Container>
       </section>
-      <section id="designers" className="pt-5">
+      <section id="designers" className="pt-5 pb-3">
         <Container>
           <Row>
             <Col lg="12">
               <Designers />
+            </Col>
+          </Row>
+        </Container>
+      </section>
+      <section id="designs" className="pt-5">
+        <Container>
+          <Row>
+            <Col lg="12">
+              <ShopByCategory />
             </Col>
           </Row>
         </Container>

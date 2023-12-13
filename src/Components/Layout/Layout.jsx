@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from '../Shared/Header'
 import toast, { Toaster } from 'react-hot-toast';
 
 const Layout = ({ children }) => {
+  
+  useEffect(() => {
+    // Scroll to the top when the component mounts or updates
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
     <Toaster 

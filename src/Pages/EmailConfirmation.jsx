@@ -37,7 +37,8 @@ const EmailConfirmation = () => {
   };
 
   async function resendVerificationEmail(e) {
-    axios(process.env.REACT_APP_API_ENDPOINT + 'resend/verification/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {
+    setFormStatus('loading');
+    axios.post(process.env.REACT_APP_API_ENDPOINT + 'resend/verification/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {
       user_id: currentUser
     }).then((response) => {
       const success = response.data.status;
@@ -95,7 +96,11 @@ const EmailConfirmation = () => {
               <h1 className='pb-2'>Email Confirmation</h1>
               <p className='subtitle'>Thank you for signing up for Kouture Konect. Before we get started, we'll need to verify your email. Please check your email</p>
               <p className='login-with-email'>or</p>
-              <Button onClick={resendVerificationEmail} className='btn-primary fs-16' variant='primary'>Resend Email</Button>
+              {formStatus != "standby" ?
+                <Button className='btn-primary fs-16' variant='primary'>Sending...</Button>
+                :
+                <Button onClick={resendVerificationEmail} className='btn-primary fs-16' variant='primary'>Resend Email</Button>
+              }
             </Col>
           </Row>
         </Container>

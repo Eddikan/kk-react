@@ -15,8 +15,8 @@ const ViewPortFolio = () => {
     const { portfolioId } = useParams();
     const [portfolio, setPortfolio] = useState('');
     const [portfolioLoading, setPortfolioLoading] = useState(true);
-    const [reloadCount, setReloadCount] = useState(0);
     const [images, setImages] = useState([]);
+    const [reloadCount, setReloadCount] = useState(0);
     const [activeImage, setActiveImage] = useState('');
     const [commentsTabShow, setCommentsTabShow] = useState(true);
     const [reviewsTabShow, setReviewsTabShow] = useState(false);
@@ -66,7 +66,7 @@ const ViewPortFolio = () => {
             {portfolioLoading ?
                 <LoadingPage />
                 :
-                <section id="single-portfolio" className='pt-3 pb-5 px-2'>
+                <section id="single-portfolio" className='py-5 px-2'>
                     <Container>
                         <Row>
                             <Col lg="12" className='text-right'>
@@ -185,8 +185,8 @@ const ViewPortFolio = () => {
                                 {commentsTabShow ?
                                     <>
                                         <div className="text-center">
-                                            <GoAlertFill size="60px" color="#b5a3c5" className="mb-3 mt-2" />
-                                            <p className="fs-20 text-black"><i>No available comments at this time</i></p>
+                                            <GoAlertFill size="60px" color="#000000" className="mb-3 mt-2" />
+                                            <p className="fs-20 text-black">No available comments at this time</p>
                                         </div>
                                     </>
                                     :
@@ -195,8 +195,8 @@ const ViewPortFolio = () => {
                                 {reviewsTabShow ?
                                     <>
                                         <div className="text-center">
-                                            <GoAlertFill size="60px" color="#b5a3c5" className="mb-3 mt-2" />
-                                            <p className="fs-20 text-black"><i>No available reviews at this time</i></p>
+                                            <GoAlertFill size="60px" color="#000000" className="mb-3 mt-2" />
+                                            <p className="fs-20 text-black">No available reviews at this time</p>
                                         </div>
                                     </>
                                     :

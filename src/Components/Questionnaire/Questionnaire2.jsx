@@ -53,11 +53,11 @@ const Questionnaire2 = (props) => {
                 setPortfolio(portfolioData);
                 setPortfolioLoading(false);
             } else {
-                toast.error('Fail!');
+                toast.error('An error occured. Please try again or contact the administrator.');
             }
             // Update state or perform other logic with userData
         } catch (error) {
-            toast.error('Fail!');
+            toast.error('An error occured. Please try again or contact the administrator.');
             // Handle the error, if needed
         }
     };
@@ -157,6 +157,7 @@ const Questionnaire2 = (props) => {
                                             value={selectedSpecialization}
                                             onChange={setSelectedSpecialization}
                                             name="areas_of_specialization"
+                                            className="form-control"
                                         // placeHolder="Fabric Type"
                                         />
                                     </Form.Group>

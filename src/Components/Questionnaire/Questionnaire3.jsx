@@ -128,8 +128,8 @@ const Questionnaire3 = (props) => {
             {underConstruction ?
                 <Row>
                     <Col lg='12' className='text-center'>
-                        <h2 className='form-title pb-2 mb-3'>This page is under construction</h2>
-                        <GoAlertFill size="120px" color="#b5a3c5" className="mt-3" />
+                        <GoAlertFill size="120px" color="#000000" className="mt-3" />
+                        <h2 className='form-title pb-2 mb-3'>Under Construction</h2>
                     </Col>
                     <Col lg="12" className="text-right mt-4">
                         <Button className='btn-primary' type="button" onClick={function() { hideAll(4); }}>Proceed</Button>

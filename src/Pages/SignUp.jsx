@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Layout from '../Components/Layout/Layout';
 import { Container, Row, Col, Button }  from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
@@ -49,7 +49,7 @@ const SignUp = () => {
         toast.success('Successfully signed up!');
         setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
         setCookie('userRole', JSON.stringify(user.role), { path: '/' });
-        const user_details = {id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at}
+        const user_details = {currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at}
         setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
         setCookie('isLoggedIn', true, { path: '/' });
         setCookie('token', data.token, { path: '/' });
@@ -90,14 +90,15 @@ const SignUp = () => {
           <Row className='vh-100'>
             <Col lg='8' className='d-flex flex-column justify-content-center'>
                 <div className='sign-up-container'>
-                    <h1 className='text-left'>Sign up to Kouture Konect</h1>
+                    <h1 className='text-center'>Sign up to Kouture Konect</h1>
+                    <div className="divider-small mb-3 mt-4"></div>
                     {/* <button className='sign-in-google mt-3'>
                         <img src={GoogleIcon}/>
                         <span className='subtitle'>Sign in with Google</span>
                     </button>
                     <hr className='mb-0 mt-5'/>
                     <p className='sign-up-with-email'>or create an account</p> */}
-                    <Form className='mt-4' onSubmit={registerSubmit}>
+                    <Form onSubmit={registerSubmit}>
                         <Form.Group className='mb-3' controlId='formBasicEmail'>
                             <Form.Label>Email Address</Form.Label>
                             <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required />
@@ -115,7 +116,7 @@ const SignUp = () => {
                           :
                           <Button className='w-100 mt-4' variant='primary' type='submit'>Sign up</Button>
                         }
-                        <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <a className='login' href='/login'>Log In</a></p>
+                        <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to='/login'>Log In</Link></p>
                     </Form>
                 </div>
             </Col>

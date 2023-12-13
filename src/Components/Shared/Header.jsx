@@ -9,6 +9,8 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import Logo from 'Assets/images/kouture-konect-logo.png';
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoIosHeartEmpty, IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
+import { GoBell } from "react-icons/go";
+import { BsEnvelope } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import UserPlaceholder from 'Assets/images/user.png';
 import { Link } from 'react-router-dom';
@@ -73,11 +75,11 @@ const Header = () => {
 
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
-      <Container>
+      <Container className="position-relative">
         <Navbar.Brand href="/"><img src={Logo}/></Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse className="justify-content-between" id="responsive-navbar-nav">
-          <Nav className="align-items-center">
+        <Navbar.Collapse className="justify-content-between column-gap-10" id="responsive-navbar-nav">
+          <Nav className="align-items-center column-gap-30">
             <Nav.Link href="/find-designs">Find Designs</Nav.Link>
             <Nav.Link href="/inspirations">Inspirations</Nav.Link>
             <Nav.Link href="/blog">Blog</Nav.Link>
@@ -87,12 +89,14 @@ const Header = () => {
               <FormControl type='text' placeholder='Search' className='mr-sm-2' />
               <FaMagnifyingGlass />
             </Form>
-            <div className="d-flex column-gap-20 align-items-center">
+            <div className="d-flex column-gap-10 align-items-center">
               {currentUser && currentUser != "" ?
                 <>
-                  <Nav.Link href="/"><HiOutlineShoppingBag size={30}/></Nav.Link>
-                  <Nav.Link href="/"><IoIosHeartEmpty size={30}/></Nav.Link>
-                  <div className="user-dropdown" ref={userRef}>
+                  <div className="cursor-pointer nav-link"><GoBell size={25}/></div>
+                  <div className="cursor-pointer nav-link"><BsEnvelope size={25}/></div>
+                  <Nav.Link href="/wish-list"><IoIosHeartEmpty size={25}/></Nav.Link>
+                  <Nav.Link href="/orders">Orders</Nav.Link>
+                  <div className="user-dropdown nav-link" ref={userRef}>
                     {userImage ?
                       <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+userImage+")"}}></div>
                       :
@@ -101,7 +105,7 @@ const Header = () => {
                     {userMenuOpen && (
                       <div className="action-box user-menu">
                         <Link to="/user/profile" className="mb-3 text-decoration-none d-block"><IoIosCog /> Profile</Link>
-                        <Link to="/" className="mb-3 text-decoration-none d-block"><IoIosImages /> Portfolio</Link>
+                        {/* <Link to="/user/portfolio" className="mb-3 text-decoration-none d-block"><IoIosImages /> Portfolio</Link> */}
                         <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower /> Logout</p>
                       </div>
                     )}

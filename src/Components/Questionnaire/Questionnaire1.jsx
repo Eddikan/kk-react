@@ -369,8 +369,8 @@ const Questionnaire1 = (props) => {
                     <h4 className='text-center fs-25 fw-600'>Schedule</h4>
                     <Card>
                         <CardBody className="text-center py-5">
-                            <GoAlertFill size="60px" color="#b5a3c5" className="mb-2" />
-                            <p className="fs-20 text-black"><i>This page is under construction.</i></p>
+                            <GoAlertFill size="60px" color="#000" className="mb-2" />
+                            <p className="fs-20 text-black">Under Construction</p>
                         </CardBody>
                     </Card>
                 </ModalBody>

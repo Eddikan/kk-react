@@ -4,7 +4,7 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import toast from 'react-hot-toast';
 // import getDesignsData from 'Utils/GetDesignsData';
-import getPortfolioData from 'Utils/GetPortfolioData';
+import GetDesignsData from 'Utils/GetDesignsData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline } from "react-icons/io5";
@@ -19,16 +19,18 @@ const Designs = (props) => {
 
     const fetchData = async (e) => {
         try {
-          const designsData = await getPortfolioData(e);
+          const designsData = await GetDesignsData(e);
           if (designsData) {
             setDesigns(designsData);
             setDesignsLoading(false);
           } else {
-            toast.error('Fail!');
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setDesignsLoading(false);
           }
           // Update state or perform other logic with userData
         } catch (error) {
-            toast.error('Fail!');
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setDesignsLoading(false);
           // Handle the error, if needed
         }
     };
@@ -80,14 +82,14 @@ const Designs = (props) => {
                                                         }
                                                         
                                                         <div className="designer-info">
-                                                            <p className="text-black fs-18 fw-600 mb-0">{design.user.first_name ?? "-"} {design.user.last_name ?? "-"}</p>
+                                                            <p className="text-black fs-18 fw-600 mb-0">{design.user.first_name && design.user.first_name != "" ? design.user.first_name : "-"} {design.user.last_name && design.user.last_name != "" ? design.user.last_name : "-"}</p>
                                                             <p className="text-black fs-14 mb-0">{design.user.occupation ?? "-"}</p>
                                                             {design.materials ?
                                                                 <>
                                                                     {design.materials.length > 0 ?
                                                                         <>
                                                                             {design.materials.map((material, index) => (
-                                                                                <span className="design-tag bg-light fs-12">
+                                                                                <span className="design-tag bg-light fs-12 text-center">
                                                                                     {material}
                                                                                 </span>
                                                                             ))}
@@ -107,6 +109,11 @@ const Designs = (props) => {
                                             }
                                         </>
                                     ))}
+                                    <Col lg={12} className="text-center mt-4">
+                                        <Link to="/designs">
+                                            <Button className="btn-primary" variant="primary">View All</Button>
+                                        </Link>
+                                    </Col>
                                 </Row>
                             </>
                             :

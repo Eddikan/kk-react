@@ -135,6 +135,10 @@ const Profile = () => {
             toast.success('Profile picture updated successfully!');
             setFormStatus("standby");
             setUploadStatus("standby");
+            const data = response.data.data;
+            const user = data.user;
+            const user_details = {currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at}
+            setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
           } else {
             toast.error('An error occured. Please try again or contact the administrator.');
             setFormStatus("standby");
@@ -188,18 +192,19 @@ const Profile = () => {
             setUser(userData);
             setUserImage(userData.image);
             setCookie('userDetails', JSON.stringify(userData), { path: '/' });
-            setUserLoading(false);
             if (userData.designer) {
                 setDesigner(userData.designer);
                 setAreaOfSpecialization(userData.designer.areas_of_specialization);
             }
+            setUserLoading(false);
           } else {
             setUserLoading(false);
-            toast.error('User does not exist!');
+            toast.error('An error occured. Please try again or contact the administrator.');
           }
           // Update state or perform other logic with userData
         } catch (error) {
-            toast.error('User does not exist!');
+            setUserLoading(false);
+            toast.error('An error occured. Please try again or contact the administrator.');
           // Handle the error, if needed
         }
     };
@@ -407,8 +412,8 @@ const Profile = () => {
                         }
                         {fabricShow ?
                             <div id="profile-portfolio" className='text-center'>
-                                <GoAlertFill size="120px" color="#b5a3c5" className="mb-3 mt-2" />
-                                <p className="fs-30 text-black"><i>This section is under construction.</i></p>
+                                <GoAlertFill size="120px" color="#000000" className="mb-3 mt-3" />
+                                <p className="fs-30 text-black">Under Construction</p>
                             </div>
                             :
                             null
@@ -416,14 +421,14 @@ const Profile = () => {
 
                         {processShow ?
                             <div id="profile-portfolio">
-                                <p>This section is under construction.</p>
+                                <p>Under Construction</p>
                             </div>
                             :
                             null
                         }
                         {limitedDesignShow ?
                             <div id="profile-portfolio">
-                                <p>This section is under construction.</p>
+                                <p>Under Construction</p>
                             </div>
                             :
                             null

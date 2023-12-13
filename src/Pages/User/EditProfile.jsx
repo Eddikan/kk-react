@@ -12,6 +12,7 @@ import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
 import GoBack from 'Components/Shared/GoBack';
 import LoadingPage from 'Components/Shared/LoadingPage';
+import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
 
 const initialUserData = Object.freeze({
@@ -42,11 +43,15 @@ const initialUserData = Object.freeze({
     pinterest: '',
     behance: '',
     youtube: '',
-    areas_of_specialization: [{name: '', year_from: '', year_to: ''}]
+});
+
+const initialDesignerData = Object.freeze({
+    areas_of_specialization: [""],
 });
 
 const EditProfile = () => {
     const [user, setUser] = useState(initialUserData);
+    const [designer, setDesigner] = useState()
     const [userLoading, setUserLoading] = useState(true);
     const [profileFormData, setProfileFormData] = useState(initialUserData);
     const [profileFormLoading, setProfileFormLoading] = useState(false);
@@ -58,10 +63,12 @@ const EditProfile = () => {
     const [skillShow, setSkillShow] = useState(false);
     const [userImage, setUserImage] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const [areasOfSpecializationData, setAreaOfSpecializationData] = useState(initialDesignerData.areas_of_specialization);
 
-    const [areaOfSpecialization, setAreaOfSpecialization] = useState(initialUserData.areas_of_specialization);
+    const [areasOfSpecialization, setAreaOfSpecialization] = useState(initialDesignerData.areas_of_specialization);
 
     const currentUser = cookies.currentUser;
+    const token = cookies.token;
 
     const days = Array.from({ length: 31 }, (_, i) => i + 1);
     const months = Array.from({ length: 12 }, (_, i) => i + 1);
@@ -108,29 +115,16 @@ const EditProfile = () => {
         })
     };
 
-    const addMoreAos = (e) => {
-        const newAos = {name: '', year_from: '', year_to: ''};
-        setAreaOfSpecialization((prevAos) => [...prevAos, newAos]);
-    };
-
-    const handleChangeAos = (e, index) => {
-        const { name, value } = e.target;
-
-        setAreaOfSpecialization((prevAos) =>
-            prevAos.map((item, i) =>
-                i === index ? { ...item, [name]: value } : item
-            )
-        );
-    };
-
     async function submitProfile(e) {
         e.preventDefault();
         setProfileFormLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser, profileFormData).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser+'?user_id='+currentUser+'&token='+token, profileFormData).then((response) => {
           const success = response.data.status;
           if (success == 'Success') {
             const data = response.data.data;
             const user = data.user;
+            const user_details = {currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at}
+            setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
             toast.success('Profile updated successfully!');
             setReloadCount((prevReloadCount) => prevReloadCount + 1);
           } else {
@@ -141,6 +135,32 @@ const EditProfile = () => {
           setProfileFormLoading(false);
           toast.error('Something went wrong, please contact the administrator!');
         });
+    }
+
+    async function submitDesigner(e) {
+        if (areasOfSpecializationData.length > 0 ) {
+            e.preventDefault();
+            setProfileFormLoading(true);
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/'+designer.id+'?user_id='+currentUser+'&token='+token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                const data = response.data.data;
+                const user = data.user;
+                toast.success('Profile updated successfully!');
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+            } else {
+                const errors = response.data.errors;
+            }
+            setProfileFormLoading(false);
+            }).catch((error) => {
+            setProfileFormLoading(false);
+            toast.error('Something went wrong, please contact the administrator!');
+            });
+        } else {
+            setProfileFormLoading(false);
+            toast.error('Please insert your specialization and experties!');
+        }
+        
     }
 
     const handleRemove = (index) => {
@@ -156,14 +176,19 @@ const EditProfile = () => {
                 setUserImage(userData.image);
                 setCookie('userDetails', JSON.stringify(userData), { path: '/' });
                 setUserLoading(false);
+                if (userData.designer) {
+                    setDesigner(userData.designer);
+                    setAreaOfSpecialization(userData.designer.areas_of_specialization);
+                    setAreaOfSpecializationData(userData.designer.areas_of_specialization);
+                }
             } else {
-                toast.error('User does not exist!');
                 setUserLoading(false);
+                toast.error('An error occured. Please try again or contact the administrator.');
             }
             // Update state or perform other logic with userData
         } catch (error) {
-            toast.error('User does not exist!');
             setUserLoading(false);
+            toast.error('An error occured. Please try again or contact the administrator.');
             // Handle the error, if needed
         }
     };
@@ -191,10 +216,22 @@ const EditProfile = () => {
                                             }
                                         </div>
                                         <div>
-                                            <h2 className='fs-20 mb-2'><span>{user.first_name} {user.last_name}</span></h2>
+                                            <h2 className='fs-20 mb-2'>
+                                                {user.first_name || user.last_name ?
+                                                    <span>{user.first_name} {user.last_name}</span>
+                                                    :
+                                                    <span>-</span>
+                                                }
+                                            </h2>
                                             <div className='icons-d-flex'>
                                                 <img src={PinIcon} />
-                                                <p className='fs-16 color-light-blue'>{user.city ? user.city+',' : ""} {user.province ? user.province+"," : ""} {user.country ? user.country+"," : ""}</p>
+                                                {user.city || user.province || user.country ?
+                                                    <p className='fs-16 color-light-blue'>
+                                                        {user.city ? user.city+',' : ""} {user.province ? user.province+"," : ""} {user.country ? user.country+"," : ""}
+                                                    </p>
+                                                    :
+                                                    <p className='fs-16 color-light-blue'>-</p>
+                                                }
                                             </div>
                                         </div>
                                     </div>
@@ -317,7 +354,7 @@ const EditProfile = () => {
                                                         </Form.Group>
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Address Line 2</Form.Label>
-                                                            <FormControl type='text' name='address_line_2' value={profileFormData.address_line_2} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                            <FormControl type='text' name='address_line_2' value={profileFormData.address_line_2} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                         </Form.Group>
                                                     </Col>
                                                     <Row>
@@ -436,69 +473,26 @@ const EditProfile = () => {
                                             }
                                             {skillShow ?
                                                 <div className="edit-skills mt-3">
-                                                    <p>Areas of Specialization and Expertise</p>
-                                                        {areaOfSpecialization && areaOfSpecialization.length > 0 ?
-                                                            <>
-                                                                {areaOfSpecialization.map((item, index) => (
-                                                                    <Card>
-                                                                        <Card.Body>
-                                                                            <Row>
-                                                                                <Col lg="6">
-                                                                                    <Form.Group>
-                                                                                        <Form.Label>Specify your areas of expertise</Form.Label>
-                                                                                        <FormControl type='text' name='name' value={item.name} className='mr-sm-2' onChange={(e) => handleChangeAos(e, index)} required placeholder='' />
-                                                                                    </Form.Group>
-                                                                                </Col>
-                                                                                <Col lg="3">
-                                                                                    <Form.Group>
-                                                                                        <Form.Label>Year</Form.Label>
-                                                                                        <FormControl as='select' name='year_from' value={item.year_from} className='mr-sm-2' onChange={(e) => handleChangeAos(e, index)} required>
-                                                                                            <option value="">Year</option>
-                                                                                            {years.map((year) => (
-                                                                                                <option key={year} value={year}>
-                                                                                                    {year}
-                                                                                                </option>
-                                                                                            ))}
-                                                                                        </FormControl>
-                                                                                    </Form.Group>
-                                                                                </Col>
-                                                                                <Col lg="3">
-                                                                                    <Form.Group>
-                                                                                        <Form.Label className='year'>Year</Form.Label>
-                                                                                        <FormControl as='select' name='year_to' value={item.year_to} className='mr-sm-2' onChange={(e) => handleChangeAos(e, index)} required>
-                                                                                            <option value="">Year</option>
-                                                                                            {years.map((year) => (
-                                                                                                <option key={year} value={year}>
-                                                                                                    {year}
-                                                                                                </option>
-                                                                                            ))}
-                                                                                        </FormControl>
-                                                                                    </Form.Group>
-                                                                                </Col>
-                                                                                {areaOfSpecialization.length > 1 ?
-                                                                                    <Col lg="12">
-                                                                                        <button type='button' className='aos-close close react-modal-close' onClick={() => {handleRemove(index); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>
-                                                                                    </Col>
-                                                                                    :
-                                                                                    null
-                                                                                }
-                                                                            </Row>
-                                                                        </Card.Body>
-                                                                    </Card>
-                                                                ))}
-                                                            </>
-                                                            :
-                                                            null
-                                                        
-                                                        }
-                                                    <div className='mt-4'>
-                                                        <p className="cursor-pointer" onClick={addMoreAos}>+ <span className='add_more text-gray'>Add more</span></p>
-                                                    </div>
+                                                    <Form.Label className='mb-1 fs-18'>
+                                                        Areas of Specialization and Expertise
+                                                    </Form.Label>
+                                                    <Form.Label className="mb-3 mt-2 small">
+                                                        Specify your areas of expertise (e.g., bridal wear, ready-to-wear women’s clothing, casual, haute couture, sustainable fashion)
+                                                    </Form.Label>
+                                                    <Form.Group>
+                                                        <TagsInput
+                                                            value={areasOfSpecializationData}
+                                                            onChange={setAreaOfSpecializationData}
+                                                            name="areas_of_specialization"
+                                                            className="form-control"
+                                                        // placeHolder="Fabric Type"
+                                                        />
+                                                    </Form.Group>
                                                     <div className="text-right mt-4 mb-5">
                                                         {profileFormLoading ?
                                                             <Button type='button' className="btn-save">Saving...</Button>
                                                             :
-                                                            <Button type='submit' className="btn-save">Save</Button>
+                                                            <Button type='button' onClick={submitDesigner} className="btn-save">Save</Button>
                                                         }
                                                     </div>
                                                 </div>

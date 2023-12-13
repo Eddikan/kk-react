@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import 'Assets/styles/User/Profile/style.css';
 import GoBack from 'Components/Shared/GoBack';
 import AddPortfolio from 'Components/Pages/Forms/AddPortfolio';
 

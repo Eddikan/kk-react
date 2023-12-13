@@ -2,9 +2,9 @@
 // GetUserData.js
 import axios from 'axios';
 
-const getDesignsData = async () => {
+const GetDesignsData = async () => {
     try {
-        const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'media?award_id=7');
+        const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design');
         return response.data.data;
     } catch (error) {
         // Handle the error or show a toast message
@@ -13,4 +13,4 @@ const getDesignsData = async () => {
     }
 };
 
-export default getDesignsData;
+export default GetDesignsData;

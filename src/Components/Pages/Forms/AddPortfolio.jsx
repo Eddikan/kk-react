@@ -10,11 +10,10 @@ import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
 
-const initialUserData = Object.freeze({
+const initialPortfolioData = Object.freeze({
     image_urls: [],
     name: '',
     description: '',
-    category: '',
     season: '',
     collection_type: 'Regular',
 });
@@ -23,7 +22,7 @@ const AddPortfolio = (props) => {
     const size = props.size;
     const withDraft = props.withDraft;
 
-    const [portfolioData, setPortfolioData] = useState(initialUserData);
+    const [portfolioData, setPortfolioData] = useState(initialPortfolioData);
     const [portfolioLoading, setPortfolioLoading] = useState(false);
     const [portfolioDraftLoading, setPortfolioDraftLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
@@ -31,6 +30,7 @@ const AddPortfolio = (props) => {
     const [colors, setColors] = useState([]);
     const [tags, setTags] = useState([]);
     const [materials, setMaterials] = useState([]);
+    const [categories, setCategories] = useState([])
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -115,7 +115,7 @@ const AddPortfolio = (props) => {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
-                toast.success('Portfolio saved as draft successfully!');
+                toast.success('Design saved as draft successfully!');
                 setPortfolioDraftLoading(false);
                 reloadPage(true);
                 formSuccess(true);
@@ -152,13 +152,13 @@ const AddPortfolio = (props) => {
                             onChange={handleChange} required />
                     </Form.Group>
                     <Form.Group className='my-4'>
-                        <Form.Label>Category</Form.Label>
-                        <Form.Control as='select' name='category' value={portfolioData.category} onChange={handleChange} className='mr-sm-2' required>
-                            <option value=''>Select category</option>
-                            <option value='option1'>Option 1</option>
-                            <option value='option2'>Option 2</option>
-                            <option value='option3'>Option 3</option>
-                        </Form.Control>
+                        <Form.Label>Categories</Form.Label>
+                        <TagsInput
+                            value={categories}
+                            onChange={setCategories}
+                            name="categories"
+                            className="form-control"
+                        />
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Season</Form.Label>
@@ -170,6 +170,7 @@ const AddPortfolio = (props) => {
                             value={colors}
                             onChange={setColors}
                             name="colors"
+                            className="form-control"
                         />
                     </Form.Group>
                     <Form.Group className='my-4'>
@@ -178,6 +179,7 @@ const AddPortfolio = (props) => {
                             value={materials}
                             onChange={setMaterials}
                             name="materials"
+                            className="form-control"
                         />
                     </Form.Group>
                     <Form.Group className='my-4'>
@@ -186,6 +188,7 @@ const AddPortfolio = (props) => {
                             value={tags}
                             onChange={setTags}
                             name="tags"
+                            className="form-control"
                         />
                     </Form.Group>
                 </Col>
