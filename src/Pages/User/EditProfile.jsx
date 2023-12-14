@@ -246,12 +246,12 @@ const EditProfile = () => {
                                 <Col md="3" className='flex-grow-1 flex-shrink-0'>
                                     <Card className='h-100'>
                                         <Card.Body>
-                                            <p className={`text-black cursor-pointer me-5 mb-3 fs-16 ${profileShow ? 'fw-600' : ''}`} onClick={function () { showTab("profile"); }}>About</p>
-                                            <p className={`text-black cursor-pointer me-5 mb-3 fs-16 ${addressShow ? 'fw-600' : ''}`} onClick={function () { showTab("address"); }}>Address</p>
-                                            <p className={`text-black cursor-pointer me-5 mb-3 fs-16 ${contactShow ? 'fw-600' : ''}`} onClick={function () { showTab("contact") }}>Contact</p>
-                                            <p className={`text-black cursor-pointer me-5 mb-3 fs-16 ${socialMediaShow ? 'fw-600' : ''}`} onClick={function () { showTab("social_media") }}>Social Media</p>
+                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${profileShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("profile"); }}>About</p>
+                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${addressShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("address"); }}>Address</p>
+                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${contactShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("contact") }}>Contact</p>
+                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${socialMediaShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("social_media") }}>Social Media</p>
                                             {user && user.is_designer ?
-                                                <p className={`text-black cursor-pointer me-5 mb-0 fs-16 ${skillShow ? 'fw-600' : ''}`} onClick={function () { showTab("skill"); }}>Skills</p>
+                                                <p className={`cursor-pointer me-5 mb-0 fs-16 ${skillShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("skill"); }}>Skills</p>
                                                 :
                                                 null
                                             }
