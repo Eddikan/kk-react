@@ -13,7 +13,7 @@ import { FaTimesCircle } from 'react-icons/fa';
 import { GoPlus } from 'react-icons/go';
 import axios from 'axios';
 
-const initialPortfolioData = Object.freeze({
+const initialProductData = Object.freeze({
     image_urls: [],
     name: '',
     description: '',
@@ -21,19 +21,19 @@ const initialPortfolioData = Object.freeze({
     collection_type: 'Regular',
 });
 
-const EditPortfolio = (props) => {
+const EditProduct = (props) => {
     const size = props.size;
     const withDraft = props.withDraft;
-    const portfolio = props.portfolio;
+    const product = props.product;
     const image_urls = props.images;
-    const portfolioId = props.portfolioId;
+    const productId = props.productId;
 
     const fileInputRef = useRef(null);
     
-    const [portfolioData, setPortfolioData] = useState(initialPortfolioData);
+    const [productData, setProductData] = useState(initialProductData);
     const [images, setImages] = useState([]);
-    const [portfolioLoading, setPortfolioLoading] = useState(false);
-    const [portfolioDraftLoading, setPortfolioDraftLoading] = useState(false);
+    const [productLoading, setProductLoading] = useState(false);
+    const [productDraftLoading, setProductDraftLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
     const [uploadStatus, setUploadStatus] = useState('standby');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
@@ -58,13 +58,13 @@ const EditPortfolio = (props) => {
         props.onCancel(true);
     }
 
-    const savePortfolioItems = (e) => {
+    const saveProductItems = (e) => {
         props.onSave(e);
     }
 
     const handleChange = (e) => {
-        setPortfolioData({
-            ...portfolioData,
+        setProductData({
+            ...productData,
             [e.target.name]: e.target.value,
         })
     };
@@ -99,7 +99,7 @@ const EditPortfolio = (props) => {
       
           try {
             const response = await axios.post(
-              `${process.env.REACT_APP_API_ENDPOINT}portfolio/image?user_id=${currentUser}&token=${token}`,
+              `${process.env.REACT_APP_API_ENDPOINT}product/image?user_id=${currentUser}&token=${token}`,
               dataArray,
               {
                 headers: {
@@ -157,19 +157,19 @@ const EditPortfolio = (props) => {
     };
 
     useEffect(() => {
-        if (portfolio) {
-            setPortfolioData({...portfolio, user_id: currentUser});
-            if (portfolio.colors) {
-                setColors(portfolio.colors);
+        if (product) {
+            setProductData({...product, user_id: currentUser});
+            if (product.colors) {
+                setColors(product.colors);
             }
-            if (portfolio.materials) {
-                setMaterials(portfolio.materials);
+            if (product.materials) {
+                setMaterials(product.materials);
             }
-            if (portfolio.tags) {
-                setTags(portfolio.tags);
+            if (product.tags) {
+                setTags(product.tags);
             }
-            if (portfolio.categories) {
-                setCategories(portfolio.categories);
+            if (product.categories) {
+                setCategories(product.categories);
             }
             if(image_urls) {
                 setImages(image_urls);
@@ -183,25 +183,25 @@ const EditPortfolio = (props) => {
     }, [reloadCount]);
 
 
-    async function PortfolioSubmit(e) {
+    async function ProductSubmit(e) {
         e.preventDefault();
         if (images) {
-            setPortfolioLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+portfolioId+'?user_id=' + currentUser + '&token=' + token, {...portfolioData, image_urls: images, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
+            setProductLoading(true);
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product_item/'+productId+'?user_id=' + currentUser + '&token=' + token, {...productData, image_urls: images, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if(success == 'Success') {
                     toast.success('Design updated successfully!');
-                    setPortfolioLoading(false);
+                    setProductLoading(false);
                     reloadPage(true);
                     formSuccess(true);
                 } else {
                     toast.error('An error occured. Please try again or contact the administrator.');
-                    setPortfolioLoading(false);
+                    setProductLoading(false);
                     formSuccess(false);
                 }
             }).catch(() => {
                 toast.error('An error occured. Please try again or contact the administrator.');
-                setPortfolioLoading(false);
+                setProductLoading(false);
                 formSuccess(true);
             });
         } else {
@@ -210,30 +210,30 @@ const EditPortfolio = (props) => {
         
     };
 
-    async function PortfolioDraftSubmit(e) {
+    async function ProductDraftSubmit(e) {
         e.preventDefault();
-        setPortfolioDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+portfolioId+'?user_id=' + currentUser + '&token=' + token, {...portfolioData, image_urls: images, colors: colors, tags: tags, materials: materials, status: 'Draft' }).then((response) => {
+        setProductDraftLoading(true);
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product_item/'+productId+'?user_id=' + currentUser + '&token=' + token, {...productData, image_urls: images, colors: colors, tags: tags, materials: materials, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Design saved as draft successfully!');
-                setPortfolioDraftLoading(false);
+                setProductDraftLoading(false);
                 reloadPage(true);
                 formSuccess(true);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
-                setPortfolioDraftLoading(false);
+                setProductDraftLoading(false);
                 formSuccess(true);
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
-            setPortfolioDraftLoading(false);
+            setProductDraftLoading(false);
             formSuccess(true);
         });
     };
 
     return (
-        <Form onSubmit={PortfolioSubmit}>
+        <Form onSubmit={ProductSubmit}>
             <Row>
                 <Col lg='12'>
                     <Form.Group className='my-4'>
@@ -246,7 +246,7 @@ const EditPortfolio = (props) => {
                                         
                                         {images.length > 3 && index > 3 ?
                                             <Col lg={2} key={image.id} className="image-preview mt-3">
-                                                <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")", minHeight: '170px'}}>
+                                                <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '170px'}}>
                                                 <div className="dnd-actions-overlay">
                                                     <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                 </div>
@@ -254,7 +254,7 @@ const EditPortfolio = (props) => {
                                             </Col>
                                             :
                                             <Col lg={2} key={image.id} className="image-preview">
-                                                <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")", minHeight: '170px'}}>
+                                                <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '170px'}}>
                                                 <div className="dnd-actions-overlay">
                                                     <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
                                                 </div>
@@ -277,7 +277,7 @@ const EditPortfolio = (props) => {
                                     </>
                                     :
                                     <Col lg={2} className="image-preview">
-                                        <div onClick={handleAddMore} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed bg-lgray" style={{minHeight: '170px'}}>
+                                        <div onClick={handleAddMore} className="product-grid-div add-more-box w-100 text-center cursor-pointer background-dashed bg-lgray" style={{minHeight: '170px'}}>
                                             <GoPlus color="#a4a4a4" size="130px" className="mt-2" />
                                             <p className="text-dgray" style={{marginTop: '-15px'}}>Add More</p>
                                         </div>
@@ -299,14 +299,14 @@ const EditPortfolio = (props) => {
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Name</Form.Label>
-                        <FormControl type='text' name='name' value={portfolioData.name} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                        <FormControl type='text' name='name' value={productData.name} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Description</Form.Label>
                         <FormControl as="textarea"
                             name="description"
                             rows={3} // You can adjust the number of rows as needed
-                            value={portfolioData.description}
+                            value={productData.description}
                             placeholder=''
                             onChange={handleChange} required />
                     </Form.Group>
@@ -321,7 +321,7 @@ const EditPortfolio = (props) => {
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Season</Form.Label>
-                        <FormControl type='text' name='season' value={portfolioData.season} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                        <FormControl type='text' name='season' value={productData.season} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Colors</Form.Label>
@@ -362,7 +362,7 @@ const EditPortfolio = (props) => {
                                         label="Regular"
                                         name="collection_type"
                                         value="Regular"
-                                        checked={portfolioData.collection_type === 'Regular'}
+                                        checked={productData.collection_type === 'Regular'}
                                         onChange={handleChange}
                                     />
                                 </Form.Group>
@@ -373,7 +373,7 @@ const EditPortfolio = (props) => {
                                         label="Limited"
                                         name="collection_type"
                                         value="Limited"
-                                        checked={portfolioData.collection_type === 'Limited'}
+                                        checked={productData.collection_type === 'Limited'}
                                         onChange={handleChange}
                                     />
                                 </Form.Group>
@@ -382,17 +382,17 @@ const EditPortfolio = (props) => {
                 </Col>
                 <Col lg="12" className="text-right mt-4">
                     <Button className='btn-outline me-3' type="button" onClick={handleCancel}>Cancel</Button>
-                    {portfolioLoading ?
+                    {productLoading ?
                         <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..." }</Button>
                         :
                         <Button className='btn-primary' type="submit">{size == "small" ? "Upload" : "Save" }</Button>
                     }
                     {withDraft ?
                         <>
-                            {portfolioDraftLoading ?
+                            {productDraftLoading ?
                                 <span className="cursor-pointer text-black ms-3">Saving as Draft...</span>
                                 :
-                                <span className="cursor-pointer text-black ms-3" onClick={PortfolioDraftSubmit}>Save as Draft <HiOutlineArrowLongRight /></span>
+                                <span className="cursor-pointer text-black ms-3" onClick={ProductDraftSubmit}>Save as Draft <HiOutlineArrowLongRight /></span>
                             }
                         </>
                         :
@@ -404,4 +404,4 @@ const EditPortfolio = (props) => {
     );
 };
 
-export default EditPortfolio;
+export default EditProduct;

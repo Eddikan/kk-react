@@ -129,7 +129,7 @@ const Questionnaire3 = (props) => {
                 <Row>
                     <Col lg='12' className='text-center'>
                         <GoAlertFill size="120px" color="#000000" className="mt-3" />
-                        <h2 className='form-title pb-2 mb-3'>Under Construction</h2>
+                        <h2 className='form-title pb-2 mb-3 mt-3'>Under Construction</h2>
                     </Col>
                     <Col lg="12" className="text-right mt-4">
                         <Button className='btn-primary' type="button" onClick={function() { hideAll(4); }}>Proceed</Button>

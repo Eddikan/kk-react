@@ -15,6 +15,7 @@
 
 :root {
     --primary: #202A44;
+    --gold: #CEA835;
     --secondary: #B5A3C5;
     --icons: #CEA835;
     --black: #000000;
@@ -27,6 +28,7 @@
     --purple: #B5A3C5;
     --dark: #363636;
     --light: #EEEEEE;
+    --gray-600: #39393A;
     --body-font: Poppins;
     --heading-font: Rufina;
 }
@@ -49,6 +51,10 @@ h5 {
     line-height: 1;
 }
 
+.text-gold {
+    color: var(--gold) !important;
+}
+
 .text-muted {
     color: var(--dgray) !important;
 }
@@ -63,6 +69,10 @@ h5 {
 
 .text-purple {
     color: var(--purple) !important;
+}
+
+.text-gray600 {
+    color: var(--gray-600) !important;
 }
 
 .bg-light {
@@ -92,6 +102,11 @@ h5 {
 
 .narrow-750 {
     max-width: 750px;
+    margin: 0 auto;
+}
+
+.narrow-850 {
+    max-width: 850px;
     margin: 0 auto;
 }
 
@@ -375,6 +390,37 @@ a {
     border: none;
 }
 
+/* Calendar */
+.react-calendar {
+    width: 100% !important;
+}
+
+.react-calendar__tile--now {
+    background: #CEA835 !important;
+    color: #fff !important;
+}
+
+.react-calendar button {
+    padding: 0 !important;
+}
+
+.calendar-date {
+    padding: 10px 6.6667px;
+}
+
+.modal-dialog {
+    max-width: 600px !important;
+}
+
+.react-calendar__tile--now:enabled:hover, .react-calendar__tile--now:enabled:focus {
+    background: #f5ce5a !important;
+}
+
+.react-calendar__tile--active {
+    background: var(--black) !important;
+    color: var(--white) !important;
+}
+
 /*Header*/
 a.navbar-brand img {
     max-width: 160px;
@@ -422,12 +468,12 @@ form.search input {
     border: none;
     border-radius: 0px !important;
     padding: 10px 20px 10px 0px !important;
-    color: var(--black);
+    color: var(--gray-600);
 }
 
 form.search input:focus,
 form.search input:active {
-    color: var(--black);
+    color: var(--gray-600);
     background-color: var(--gray) !important;
     border-color: transparent !important;
     outline: 0;
@@ -443,15 +489,15 @@ form select.form-control, .form-control, .rti--container {
     border: 2px solid var(--gray) !important;
     border-radius: 5px !important;
     padding: 10px 20px;
-    color: var(--black);
-    font-size: 15px;
+    color: var(--gray-600);
+    font-size: 14px;
 }
 
 form input.form-control:focus,
 form input.form-control:active,
 form select.form-control:focus,
 form select.form-control:active, .form-control:focus, .form-control:active, .rti--container:focus {
-    color: var(--black);
+    color: var(--gray-600);
     border-color: var(--gray) !important;
     outline: 0;
     box-shadow: none !important;
@@ -716,6 +762,14 @@ form select::placeholder {
     background: transparent linear-gradient(180deg, #FFFFFF00 0%, #0000007A 100%) 0% 0% no-repeat padding-box;
 }
 
+.portfolio-details .portfolio-name {
+    width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
 .portfolio-overlay .portfolio-details {
     position: absolute;
     bottom: 0px;
@@ -748,6 +802,99 @@ form select::placeholder {
 
 @media only screen and (min-width: 981px) {
     .portfolio-grid {
+        width: 20%;
+    }
+}
+
+/* Portfolio Grid */
+
+.product-grid-div.limited::before {
+    content: 'LIMITED DESIGN';
+    position: absolute;
+    bottom: 60px;
+    left: -25px;
+    width: 185px;
+    background-color: #caa533;
+    color: #000;
+    text-align: center;
+    transform: translateY(-50%) rotate(-45deg);
+    transform-origin: top left;
+    padding: 5px 5px;
+    font-weight: 600;
+    font-family: var(--heading-font);
+    font-size: 13px;
+    z-index: 99;
+}
+  
+.product-img {
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.product-grid {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.product-row {
+    margin-left: -8px;
+    margin-right: -8px;
+}
+
+.product-grid-div {
+    min-height: 210px;
+    border-radius: 5px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-actions .action-menu {
+    position: absolute;
+    right: 10px;
+}
+
+.product-grid-div:hover .product-overlay {
+    opacity: 1;
+}
+
+.product-overlay {
+    height: 100%;
+    position: absolute;
+    right: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    background: transparent linear-gradient(180deg, #FFFFFF00 0%, #0000007A 100%) 0% 0% no-repeat padding-box;
+}
+
+.product-details .product-name {
+    width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
+.product-overlay .product-details {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    padding: 10px;
+}
+
+.product-details .other-actions {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+@media only screen and (min-width: 981px) {
+    .product-grid {
         width: 20%;
     }
 }

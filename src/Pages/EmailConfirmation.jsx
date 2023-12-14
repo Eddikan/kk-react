@@ -64,7 +64,7 @@ const EmailConfirmation = () => {
         setUser(selectedUser);
         setUserLoading(false);
         if (selectedUser.email_verified_at != "" && selectedUser.email_verified_at) {
-          navigate("/email-confirmed");
+          navigate("/questionnaire");
         }
       } else {
         const message = 'There has been an error getting the user, please try again!';

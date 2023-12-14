@@ -1,0 +1,14 @@
+.react-calendar__tile abbr {
+    display: none;;
+}
+
+.past-date {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.available {
+    background: #87ab69 !important;
+    color: #fff;
+}

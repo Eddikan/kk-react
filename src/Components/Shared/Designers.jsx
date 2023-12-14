@@ -51,7 +51,7 @@ const Designers = (props) => {
     return (
         <>
             <div id="profile-designers">
-                <p className="fs-18 text-center text-dark mb-1"> Looking for Designers? <span className="text-purple">Meet them </span></p >
+                <p className="fs-18 text-center text-dark mb-1"> Looking for Designers? <span className="text-gold">Meet them </span></p >
                 <h2 className="fs-40 text-center text-black mb-30">Today's Trendsetting Fashion Designers</h2>
                 {designersLoading ?
                     <>

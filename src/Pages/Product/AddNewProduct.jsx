@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import GoBack from 'Components/Shared/GoBack';
-import NewPortfolio from 'Components/Pages/Forms/NewPortfolio';
+import NewProduct from 'Components/Pages/Forms/NewProduct';
 
-const AddNewPortfolio = () => {
+const AddNewProduct = () => {
     const navigate = useNavigate();
 
     const addSuccess = (e) => {
@@ -34,11 +34,11 @@ const AddNewPortfolio = () => {
                             <GoBack fallBack="/user/profile" />
                         </Col>
                     </Row>
-                    <NewPortfolio size="normal" withDraft={true} onSuccess={addSuccess} onReloadPage={reloadPage} onCancel={cancel} />
+                    <NewProduct size="normal" withDraft={true} onSuccess={addSuccess} onReloadPage={reloadPage} onCancel={cancel} />
                 </Container> 
             </section>
         </Layout>
     );
 };
 
-export default AddNewPortfolio;
+export default AddNewProduct;

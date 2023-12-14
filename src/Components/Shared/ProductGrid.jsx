@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import Layout from 'Components/Layout/Layout';
 import { useNavigate, Link } from 'react-router-dom';
-import {  Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
+import PortfolioWhiteDress from 'Assets/images/white-dress.png';
 import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { BsThreeDots } from "react-icons/bs";
@@ -58,7 +60,7 @@ const PortfolioGrid = (props) => {
     const deleteConfirm = (e) => {
         setDeleteConfirmShow(true);
         setPortfolioId(e);
-    };
+    }
 
     async function PortfolioDeleteSubmit(e) {
         setPortfolioDeleteLoading(true);

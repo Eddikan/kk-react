@@ -1,0 +1,5 @@
+.past-date {
+    pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.4;
+}

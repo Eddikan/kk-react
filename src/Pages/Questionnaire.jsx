@@ -188,8 +188,8 @@ const Questionnaire = () => {
 
         {step == 4 ?
           <>
-            <Container className='q1 narrow-750 mt-5 px-0 text-dgray d-flex'>
-              <div className='step4-first-cont py-5 px-4 '>
+            <Container className='q1 narrow-850 mt-5 px-0 d-flex'>
+              <div className='step4-first-cont p-5 '>
                 <Row>
                   <Col lg='12'>
                     <h2 className='form-title pb-2'>Welcome to Kouture Konect</h2>
@@ -208,7 +208,7 @@ const Questionnaire = () => {
                       <span>Upload your work, fill out your profile, and set your work experience</span>
                     </div>
                     <Link to="/user/profile">
-                      <Button className='btn-primary' type="button">
+                      <Button className='btn-primary mt-2' type="button">
                         Take Me to My Profile
                       </Button>
                     </Link>

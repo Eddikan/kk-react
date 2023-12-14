@@ -18,7 +18,7 @@ const initialPortfolioData = Object.freeze({
     collection_type: 'Regular',
 });
 
-const AddPortfolio = (props) => {
+const NewPortfolio = (props) => {
     const size = props.size;
     const withDraft = props.withDraft;
 
@@ -245,4 +245,4 @@ const AddPortfolio = (props) => {
     );
 };
 
-export default AddPortfolio;
+export default NewPortfolio;

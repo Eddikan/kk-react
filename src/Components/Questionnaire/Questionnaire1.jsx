@@ -9,11 +9,13 @@ import { GoAlertFill } from "react-icons/go";
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import DatePicker from 'Components/Shared/DatePicker';
 
 const initialQuestionnaire1Data = Object.freeze({
     referrer: '',
     referrer_details: '',
     lifestyle_details: '',
+    target_date: '',
 });
 
 const initialClothingSizes = Object.freeze({
@@ -53,19 +55,26 @@ const Questionnaire1 = (props) => {
         props.onReloadPage(e);
     };
 
+    const handleDateChange = (e) => {
+        setQuestionnaire1Data({
+            ...questionnaire1Data,
+            target_date: e,
+        })
+    };
+    
     const handleChange = (e) => {
         setQuestionnaire1Data({
             ...questionnaire1Data,
             [e.target.name]: e.target.value,
-        })
-    }
+        });
+    };
 
     const handleChangeClothingSizes = (e) => {
         setClothingSizes({
             ...clothingSizes,
             [e.target.name]: e.target.value,
         })
-    }
+    };
 
     async function questionnaire1Submit(e) {
         e.preventDefault();
@@ -83,7 +92,7 @@ const Questionnaire1 = (props) => {
             setQuestionnaire1Loading(false);
             toast.error('Something went wrong, please contact the administrator!');
         });
-    }
+    };
 
     useEffect(() => {
         // ComponentDidMount logic goes here
@@ -92,7 +101,7 @@ const Questionnaire1 = (props) => {
             if (user.customer) {
                 setQuestionnaire1Data(user.customer);
                 if (user.customer.clothing_sizes) {
-                    const sizes = JSON.parse(user.customer.clothing_sizes);
+                    const sizes = user.customer.clothing_sizes;
                     setClothingSizes(sizes);
                 }
             }
@@ -103,7 +112,7 @@ const Questionnaire1 = (props) => {
             // This will be executed before the component is unmounted
             //   console.log('Component is unmounted');
         };
-      }, []);
+    }, []);
 
     return (
         <>
@@ -248,7 +257,7 @@ const Questionnaire1 = (props) => {
                                     <Form.Label className='mb-2 fs-18'>
                                         How did you find out about Kouture Konect?
                                     </Form.Label>
-                                    <Row>
+                                    <Row className='mt-2'>
                                         <Form.Group as={Col}>
                                             <Form.Check
                                                 className="cursor-pointer"
@@ -314,7 +323,7 @@ const Questionnaire1 = (props) => {
                                     <Form.Label className='mb-1 fs-18'>
                                         Lifestyle Details
                                     </Form.Label>
-                                    <Form.Label className="mb-3">
+                                    <Form.Label className="mb-3 small mt-1">
                                         Understanding your daily activities, profession, and hobbies can help designers suggest versatile pieces that suit your lifestyle.
                                     </Form.Label>
                                     <Form.Group>
@@ -333,7 +342,14 @@ const Questionnaire1 = (props) => {
                                     <Form.Label className='mb-2 fs-18'>
                                         When do you need the clothing?
                                     </Form.Label>
-                                    <Form.Group>
+                                    <Form.Group className="d-flex column-gap-10">
+                                        <Form.Control
+                                            type="date"
+                                            name="target_date"
+                                            value={questionnaire1Data.target_date}
+                                            onChange={handleChange}
+                                            style={{maxWidth: '250px'}}
+                                        />
                                         <Button className='btn-primary' onClick={toggleSchedule} type="button">Pick a Date</Button>
                                     </Form.Group>
                                 </CardBody>
@@ -371,6 +387,7 @@ const Questionnaire1 = (props) => {
                         <CardBody className="text-center py-5">
                             <GoAlertFill size="60px" color="#000" className="mb-2" />
                             <p className="fs-20 text-black">Under Construction</p>
+                            {/* <DatePicker onSelectedDate={handleDateChange} date={questionnaire1Data.target_date} /> */}
                         </CardBody>
                     </Card>
                 </ModalBody>

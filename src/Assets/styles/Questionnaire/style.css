@@ -30,6 +30,9 @@ section#questionnaire .narrow-600{
 section#questionnaire .narrow-750 {
     background-color: var(--lgray); 
 }
+section#questionnaire .narrow-850 {
+    background-color: var(--lgray); 
+}
 section#questionnaire .btn-primary{
     min-width: 150px;
 }

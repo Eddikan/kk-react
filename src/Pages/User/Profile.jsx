@@ -252,7 +252,7 @@ const Profile = () => {
                                             <img src={PinIcon} />
                                             {user.city || user.province || user.country ?
                                                 <p className='fs-16 color-light-blue'>
-                                                    {user.city ? user.city+',' : ""} {user.province ? user.province+"," : ""} {user.country ? user.country+"," : ""}
+                                                    {user.city ? user.city+',' : ""} {user.province ? user.province+"," : ""} {user.country ? user.country : ""}
                                                 </p>
                                                 :
                                                 <p className='fs-16 color-light-blue'>-</p>
@@ -263,9 +263,9 @@ const Profile = () => {
                                 </div>
                             </Col>
                             <Col lg="12" className='mt-4'>
-                                <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${aboutShow ? 'fw-600' : ''}`} onClick={function () { showTab("about"); }}>About</span>
-                                <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${portfolioShow ? 'fw-600' : ''}`} onClick={function () { showTab("portfolio"); }}>Portfolio</span>
-                                <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${fabricShow ? 'fw-600' : ''}`} onClick={function () { showTab("fabric") }}>Fabrics</span>
+                                <span className={`cursor-pointer me-5 mb-3 fs-16 ${aboutShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("about"); }}>About</span>
+                                <span className={`cursor-pointer me-5 mb-3 fs-16 ${portfolioShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("portfolio"); }}>Portfolio</span>
+                                <span className={`cursor-pointer me-5 mb-3 fs-16 ${fabricShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("fabric") }}>Fabrics</span>
                                 {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${processShow ? 'fw-600' : ''}`} onClick={function () { showTab("process") }}>Process</span>
                                 <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${limitedDesignShow ? 'fw-600' : ''}`} onClick={function () { showTab("limited_design"); }}>Limited Design</span> */}
                                 <hr className='mt-2' />
@@ -290,7 +290,7 @@ const Profile = () => {
                                                 {areasOfSpecialization && areasOfSpecialization.length > 0 ?
                                                     <>
                                                         {areasOfSpecialization.map((item, index) => (
-                                                            <span className='text-gray fs-14 bg-gray'>{item}</span>
+                                                            <span className='text-gray600 fs-14 bg-gray'>{item}</span>
                                                         ))}
                                                     </>
                                                     :
