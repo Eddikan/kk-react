@@ -303,7 +303,7 @@ const Questionnaire1 = (props) => {
                                             />
                                         </Form.Group>
                                     </Row>
-                                    {questionnaire1Data.referrer === 'Other' ?
+                                    {/* {questionnaire1Data.referrer === 'Other' ? */}
                                         <Form.Group className="mt-3">
                                             <Form.Control
                                                 as="textarea"
@@ -313,9 +313,9 @@ const Questionnaire1 = (props) => {
                                                 onChange={handleChange}
                                             />
                                         </Form.Group>
-                                        :
+                                        {/* :
                                         null
-                                    }
+                                    } */}
                                 </CardBody>
                             </Card>
                             <Card className='mb-4 border-white'>

@@ -46,3 +46,24 @@
     display: block;
     border-radius: 50%;
 }
+
+.remove-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+    color: #fff;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.remove-circle:hover {
+    opacity: 50%;
+}

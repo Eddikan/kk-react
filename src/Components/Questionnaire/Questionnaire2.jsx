@@ -297,11 +297,11 @@ const Questionnaire2 = (props) => {
                                     </Form.Label>
                                     <Form.Label className="mb-3 mt-1 small">
                                         Provide information about the typical lead time for designing,
-                                        creatung, and delivering garments, along with transparent
-                                        pricing structyres, helps set expectations.
+                                        creating, and delivering garments, along with transparent
+                                        pricing structures, helps set expectations.
                                     </Form.Label>
                                     <Form.Label className="mb-3">
-                                        Lead Time
+                                        Lead Time (No. of days)
                                     </Form.Label>
                                     <Form.Group className='mb-3'>
                                         <Form.Control

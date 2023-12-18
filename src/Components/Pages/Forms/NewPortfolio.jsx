@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
 import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
@@ -135,91 +135,111 @@ const NewPortfolio = (props) => {
         <Form onSubmit={PortfolioSubmit}>
             <Row>
                 <Col lg='12'>
-                    <ImageDragAndDrop onImagesChange={handleImagesChange} size={size} />
+                    <Card className='mb-3'>
+                        <Card.Body className='bg-lgray'>
+                            <ImageDragAndDrop onImagesChange={handleImagesChange} size={size} />
+                        </Card.Body>
+                    </Card>
                 </Col>
                 <Col lg='12'>
-                    <Form.Group className='my-4'>
-                        <Form.Label>Name</Form.Label>
-                        <FormControl type='text' name='name' value={portfolioData.name} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                    </Form.Group>
-                    <Form.Group className='my-4'>
-                        <Form.Label>Description</Form.Label>
-                        <FormControl as="textarea"
-                            name="description"
-                            rows={3} // You can adjust the number of rows as needed
-                            value={portfolioData.description}
-                            placeholder=''
-                            onChange={handleChange} required />
-                    </Form.Group>
-                    <Form.Group className='my-4'>
-                        <Form.Label>Categories</Form.Label>
-                        <TagsInput
-                            value={categories}
-                            onChange={setCategories}
-                            name="categories"
-                            className="form-control"
-                        />
-                    </Form.Group>
-                    <Form.Group className='my-4'>
-                        <Form.Label>Season</Form.Label>
-                        <FormControl type='text' name='season' value={portfolioData.season} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                    </Form.Group>
-                    <Form.Group className='my-4'>
-                        <Form.Label>Colors</Form.Label>
-                        <TagsInput
-                            value={colors}
-                            onChange={setColors}
-                            name="colors"
-                            className="form-control"
-                        />
-                    </Form.Group>
-                    <Form.Group className='my-4'>
-                        <Form.Label>Materials</Form.Label>
-                        <TagsInput
-                            value={materials}
-                            onChange={setMaterials}
-                            name="materials"
-                            className="form-control"
-                        />
-                    </Form.Group>
-                    <Form.Group className='my-4'>
-                        <Form.Label>Tags</Form.Label>
-                        <TagsInput
-                            value={tags}
-                            onChange={setTags}
-                            name="tags"
-                            className="form-control"
-                        />
-                    </Form.Group>
-                </Col>
-                <Col lg="2">
-                    <Form.Group>
-                        <Form.Label>Collections</Form.Label>
-                            <Row className="mt-2">
-                                <Form.Group as={Col}>
-                                    <Form.Check
-                                        className="cursor-pointer"
-                                        type="radio"
-                                        label="Regular"
-                                        name="collection_type"
-                                        value="Regular"
-                                        checked={portfolioData.collection_type === 'Regular'}
-                                        onChange={handleChange}
-                                    />
-                                </Form.Group>
-                                <Form.Group as={Col}>
-                                    <Form.Check
-                                        className="cursor-pointer"
-                                        type="radio"
-                                        label="Limited"
-                                        name="collection_type"
-                                        value="Limited"
-                                        checked={portfolioData.collection_type === 'Limited'}
-                                        onChange={handleChange}
-                                    />
-                                </Form.Group>
-                            </Row>
-                    </Form.Group>
+                    <Card>
+                        <Card.Body className='bg-lgray'>
+                            <Form.Group className='my-4'>
+                                <Form.Label>Name</Form.Label>
+                                <FormControl type='text' name='name' value={portfolioData.name} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                            </Form.Group>
+                            <Form.Group className='my-4'>
+                                <Form.Label>Description</Form.Label>
+                                <FormControl as="textarea"
+                                    name="description"
+                                    rows={3} // You can adjust the number of rows as needed
+                                    value={portfolioData.description}
+                                    placeholder=''
+                                    onChange={handleChange} required />
+                            </Form.Group>
+                            <Form.Group className='my-4'>
+                                <Form.Label>Categories</Form.Label>
+                                <TagsInput
+                                    value={categories}
+                                    onChange={setCategories}
+                                    name="categories"
+                                    className="form-control"
+                                />
+                            </Form.Group>
+                            <Form.Group className='my-4'>
+                                <Form.Label>Season</Form.Label>
+                                <FormControl type='text' name='season' value={portfolioData.season} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                            </Form.Group>
+                            <Form.Group className='my-4'>
+                                <Form.Label>Colors</Form.Label>
+                                <TagsInput
+                                    value={colors}
+                                    onChange={setColors}
+                                    name="colors"
+                                    className="form-control"
+                                />
+                            </Form.Group>
+                            <Form.Group className='my-4'>
+                                <Form.Label>Materials</Form.Label>
+                                <TagsInput
+                                    value={materials}
+                                    onChange={setMaterials}
+                                    name="materials"
+                                    className="form-control"
+                                />
+                            </Form.Group>
+                            {/* <Form.Group className='my-4'>
+                                <Form.Label>Lead Time (No. of days)</Form.Label>
+                                <FormControl type='text' name='lead_time' required placeholder='' />
+                            </Form.Group>
+                            <Form.Group className='my-4'>
+                                <Form.Label>Pricing Structure</Form.Label>
+                                <FormControl as="textarea"
+                                    name="description"
+                                    rows={3}
+                                    // value={portfolioData.description}
+                                    placeholder=''
+                                    // onChange={handleChange} 
+                                    required />
+                            </Form.Group> */}
+                            <Form.Group className='my-4'>
+                                <Form.Label>Tags</Form.Label>
+                                <TagsInput
+                                    value={tags}
+                                    onChange={setTags}
+                                    name="tags"
+                                    className="form-control"
+                                />
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label>Collections</Form.Label>
+                                    <Row className="mt-1">
+                                        <Form.Group as={Col} lg={3}>
+                                            <Form.Check
+                                                className="cursor-pointer"
+                                                type="radio"
+                                                label="Regular"
+                                                name="collection_type"
+                                                value="Regular"
+                                                checked={portfolioData.collection_type === 'Regular'}
+                                                onChange={handleChange}
+                                            />
+                                        </Form.Group>
+                                        <Form.Group as={Col} lg={2}>
+                                            <Form.Check
+                                                className="cursor-pointer"
+                                                type="radio"
+                                                label="Limited"
+                                                name="collection_type"
+                                                value="Limited"
+                                                checked={portfolioData.collection_type === 'Limited'}
+                                                onChange={handleChange}
+                                            />
+                                        </Form.Group>
+                                    </Row>
+                            </Form.Group>
+                        </Card.Body>
+                    </Card>
                 </Col>
                 <Col lg="12" className="text-right mt-4">
                     <Button className='btn-outline me-3' type="button" onClick={handleCancel}>Cancel</Button>

@@ -8,6 +8,8 @@ import toast from 'react-hot-toast';
 import GetDesignsData from 'Utils/GetDesignsData';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import GoBack from 'Components/Shared/GoBack';
+import { GoHeart, GoBookmark } from "react-icons/go";
+import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 
 const Designs = (props) => {
     const navigate = useNavigate();
@@ -80,37 +82,38 @@ const Designs = (props) => {
                                                     {designs.map((design, index) => (
                                                         <>
                                                             <Col className="designs-grid mb-3" xs="4" md="3">
-                                                                <Link to={`/design/${design.id}`}>
+                                                                <Link to={`/design/${design.id}`} className='portfolio-link'>
                                                                     <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+design.image_urls[0].image_url+")"}}>
-                                                                        
+                                                                        <div className='save-link'>
+                                                                            <div className="action-button bg-white me-2">
+                                                                                <GoBookmark className="text-black" />
+                                                                            </div>
+                                                                            <div className="action-button bg-white">
+                                                                                <GoHeart className="text-black" />
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </Link>
-                                                                <div className="design-details d-flex">
-                                                                    {design.user.image ?
-                                                                        <div className='designer-photo' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+design.user.image+")"}} ></div>
-                                                                        :
-                                                                        <div className='designer-photo' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
-                                                                    }
-                                                                    <div className="designer-info">
-                                                                        <p className="text-black fs-18 fw-600 mb-0">{design.user.first_name && design.user.first_name != "" ? design.user.first_name : "-"} {design.user.last_name && design.user.last_name != "" ? design.user.last_name : "-"}</p>
-                                                                        <p className="text-black fs-14 mb-0">{design.user.occupation ?? "-"}</p>
-                                                                        {design.materials ?
-                                                                            <>
-                                                                                {design.materials.length > 0 ?
-                                                                                    <>
-                                                                                        {design.materials.map((material, index) => (
-                                                                                            <span className="design-tag bg-light fs-12 text-center">
-                                                                                                {material}
-                                                                                            </span>
-                                                                                        ))}
-                                                                                    </>
-                                                                                    :
-                                                                                    null
-                                                                                }
-                                                                            </>
+                                                                <div className="design-details">
+                                                                    <div className='d-flex align-items-center justify-content-between'>
+                                                                        <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{design.name ?? '-'}</p>
+                                                                        <div className='d-flex align-items-center'>
+                                                                            <span className='fs-14 text-no-wrap mx-2'>
+                                                                                <IoHeartOutline /> 1.1k
+                                                                            </span>
+                                                                            <span className='fs-14 text-no-wrap'>
+                                                                                <IoEyeOutline /> 10.1k
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className='d-flex align-items-center mt-1'>
+                                                                        {design.user.image ?
+                                                                            <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+design.user.image+")"}} ></div>
                                                                             :
-                                                                            null
+                                                                            <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
                                                                         }
+                                                                        &nbsp;&nbsp;
+                                                                        <p className="text-black fs-14 mb-0">{design.user.first_name && design.user.first_name != "" ? design.user.first_name : "-"} {design.user.last_name && design.user.last_name != "" ? design.user.last_name : "-"}</p>
                                                                     </div>
                                                                 </div>
                                                             </Col>

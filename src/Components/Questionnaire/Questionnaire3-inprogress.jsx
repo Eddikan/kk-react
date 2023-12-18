@@ -286,7 +286,7 @@ const Questionnaire3 = (props) => {
                                     <Form.Label className="mb-3">
                                         Provide information about the typical lead time for designing,
                                         creatung, and delivering garments, along with transparent
-                                        pricing structyres, helps set expectations.
+                                        pricing structures, helps set expectations.
                                     </Form.Label>
                                     <Form.Label className="mb-3">
                                         Lead Time

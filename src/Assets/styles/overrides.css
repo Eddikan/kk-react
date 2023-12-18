@@ -728,6 +728,17 @@ form select::placeholder {
     right: 10px;
 }
 
+.portfolio-designer .designer-photo {
+    min-width: 45px;
+    min-height: 45px;
+    max-width: 45px;
+    max-height: 45px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}
+
 .action-box {
     background: #fff;
     position: absolute;
@@ -912,7 +923,7 @@ form select::placeholder {
 
 .designers-grid-div {
     min-height: 400px;
-    border-radius: 5px;
+    border-radius: 15px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -928,6 +939,13 @@ form select::placeholder {
     padding-right: 20px;
 }
 
+.bg-black-faded {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.1) 22%, rgba(0, 0, 0, 0) 100%);
+    width: 100%;
+    min-height: 400px;
+    border-radius: 15px;
+}
+
 /* Design */
 .designs-row {
     margin-left: -20px;
@@ -941,7 +959,7 @@ form select::placeholder {
 
 .designs-grid-div {
     min-height: 300px;
-    border-radius: 5px;
+    border-radius: 10px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -966,6 +984,17 @@ form select::placeholder {
     border-radius: 50%;
 }
 
+.design-details .designer-photo-small {
+    min-width: 20px;
+    min-height: 20px;
+    max-width: 20px;
+    max-height: 20px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}
+
 .design-tag {
     padding: 5px 15px;
     border-radius: 5px;
@@ -983,4 +1012,34 @@ form select::placeholder {
     right: 10px;
     background: #fff;
     border-radius: 50%;
+}
+
+/* Set text to no wrap and ellipsis */
+.text-no-wrap {
+    text-wrap: nowrap;
+}
+
+.text-ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.save-link {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
+.portfolio-link .save-link {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.portfolio-link:hover .save-link {
+    opacity: 1;
+}
+
+.portfolio-link .save-link .action-button {
+    pointer-events: auto;
 }

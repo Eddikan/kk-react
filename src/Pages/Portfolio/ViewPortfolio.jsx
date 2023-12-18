@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { GoBookmark, GoHeart, GoAlertFill } from 'react-icons/go';
+import { GoBookmark, GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import 'Assets/styles/Portfolio/ViewPortFolio/style.css';
 import GoBack from 'Components/Shared/GoBack';
 import GetSinglePortfolioData from 'Utils/GetSinglePortfolioData';
@@ -10,6 +10,8 @@ import toast from 'react-hot-toast';
 import ImageSlider from 'Components/Shared/ImageSlider';
 import { Card, CardBody } from 'reactstrap';
 import LoadingPage from 'Components/Shared/LoadingPage';
+import UserPlaceholder from 'Assets/images/placeholders/user.png';
+import { useCookies } from 'react-cookie';
 
 const ViewPortFolio = () => {
     const { portfolioId } = useParams();
@@ -20,6 +22,8 @@ const ViewPortFolio = () => {
     const [activeImage, setActiveImage] = useState('');
     const [commentsTabShow, setCommentsTabShow] = useState(true);
     const [reviewsTabShow, setReviewsTabShow] = useState(false);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const currentUser = cookies.currentUser;
 
     const navigate = useNavigate();
 
@@ -91,12 +95,43 @@ const ViewPortFolio = () => {
                                 <Card className="h-100">
                                     <CardBody>
                                         <Row>
-                                            <Col lg="12" className="text-right">
-                                                <div className="action-button bg-smgray me-2">
-                                                    <GoHeart className="text-black" />
+                                            <Col lg="12" className="d-flex justify-content-between">
+                                                <div className='mb-3 d-flex portfolio-designer'>
+                                                    {portfolio.user.image ? (
+                                                        <div
+                                                            className='designer-photo'
+                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
+                                                        ></div>
+                                                        ) : (
+                                                        <div
+                                                            className='designer-photo'
+                                                            style={{ backgroundImage: `url(${UserPlaceholder})` }}
+                                                        ></div>
+                                                    )}
+                                                    <div className="designer-info mx-2">
+                                                        <p className="text-black fs-18 fw-600 mb-0">{portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"}</p>
+                                                        {currentUser !== portfolio.user.id ?
+                                                            <>
+                                                                <a className='text-decoration-none text-primary fs-14'>Follow</a>
+                                                            </>
+                                                            :
+                                                            <>
+                                                                
+                                                                <a className='text-decoration-none fs-14'>You</a>
+                                                            </>
+                                                        }
+                                                    </div>
                                                 </div>
-                                                <div className="action-button bg-smgray">
-                                                    <GoBookmark className="text-black" />
+                                                <div>
+                                                    <div className="action-button bg-smgray me-2">
+                                                        <GoShareAndroid className="text-black" />
+                                                    </div>
+                                                    <div className="action-button bg-smgray me-2">
+                                                        <GoHeart className="text-black" />
+                                                    </div>
+                                                    <div className="action-button bg-smgray">
+                                                        <GoBookmark className="text-black" />
+                                                    </div>
                                                 </div>
                                             </Col>
                                             <Col lg="12">

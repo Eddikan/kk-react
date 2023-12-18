@@ -3,6 +3,9 @@ import Layout from 'Components/Layout/Layout';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import DesignerPlaceholder from 'Assets/images/designer-placeholder.jpg';
+import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
+import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
+import UnknownPlaceholder from 'Assets/images/placeholders/unknown-placeholder-1.png';
 import toast from 'react-hot-toast';
 import GetDesignersData from 'Utils/GetDesignersData';
 import { BsThreeDots } from "react-icons/bs";
@@ -51,7 +54,7 @@ const Designers = (props) => {
     return (
         <>
             <div id="profile-designers">
-                <p className="fs-18 text-center text-dark mb-1"> Looking for Designers? <span className="text-gold">Meet them </span></p >
+                <p className="fs-18 text-center text-dark mb-3"> Looking for Designers? <span className="text-gold">Meet them </span></p >
                 <h2 className="fs-40 text-center text-black mb-30">Today's Trendsetting Fashion Designers</h2>
                 {designersLoading ?
                     <>
@@ -67,23 +70,33 @@ const Designers = (props) => {
                                     {/* <img src={object.url} className='designers-img'/> */}
                                     {designers.map((designer, index) => (
                                         <>
-                                            <Col className="designers-grid mb-3" xs="4" md="3">
-                                                {designer.user.image ?
-                                                    <div className="designers-grid-div w-100" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+designer.user.image+")"}}>
-                                                        <div className="designer-details">
-                                                            <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name != "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name != "" ? designer.user.last_name : "-"}</h3>
-                                                            <p className="text-white mb-0">{designer.user.occupation || "-"}</p>
-                                                        </div>
-                                                    </div>
-                                                    :
-                                                    <div className="designers-grid-div w-100" style={{ backgroundImage: "url(" + DesignerPlaceholder + ")" }}>
-                                                        <div className="designer-details">
-                                                            <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name != "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name != "" ? designer.user.last_name : "-"}</h3>
-                                                            <p className="text-white mb-0">{designer.user.occupation || "-"}</p>
-                                                        </div>
-                                                    </div>
-                                                }
-                                            </Col>
+                                            {designer.user.first_name !== null && designer.user.first_name !== '' && designer.user.last_name !== null && designer.user.last_name !== '' && (
+                                                <>
+                                                    <Col className="designers-grid mb-3" xs="4" md="3">
+                                                        {designer.user.image ?
+                                                            <div className="designers-grid-div w-100" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+designer.user.image+")"}}>
+                                                                <div className='bg-black-faded'>
+                                                                    <div className="designer-details">
+                                                                        <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name != "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name != "" ? designer.user.last_name : "-"}</h3>
+                                                                        <p className="text-white mb-0">{designer.user.occupation || "-"}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            :
+                                                            <>
+                                                                <div className="designers-grid-div w-100" style={{ backgroundImage: "url(" + (designer.user.gender === 'Female' ? FemalePlaceholder : designer.user.gender === 'Male' ? MalePlaceholder : UnknownPlaceholder) + ")" }}>
+                                                                    <div className='bg-black-faded'>
+                                                                        <div className="designer-details">
+                                                                            <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-" } {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
+                                                                            <p className="text-white mb-0">{designer.user.occupation || "-"}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        }
+                                                    </Col>
+                                                </>
+                                            )}
                                         </>
                                     ))}
                                 </Row>
