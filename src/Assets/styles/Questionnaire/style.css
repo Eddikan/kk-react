@@ -79,7 +79,7 @@ section#questionnaire .background-dashed, .modal-content .background-dashed {
 .circle-number {
     width: 30px;
     height: 30px;
-    background-color: #b5a3c5;
+    background-color:#daaf35;
     border-radius: 50%;
     color: var(--white);
     display: flex;

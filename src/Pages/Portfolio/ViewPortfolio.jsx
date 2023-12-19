@@ -12,6 +12,8 @@ import { Card, CardBody } from 'reactstrap';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import { useCookies } from 'react-cookie';
+import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
+import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 
 const ViewPortFolio = () => {
     const { portfolioId } = useParams();
@@ -105,14 +107,14 @@ const ViewPortFolio = () => {
                                                         ) : (
                                                         <div
                                                             className='designer-photo'
-                                                            style={{ backgroundImage: `url(${UserPlaceholder})` }}
+                                                            style={{ backgroundImage: `url(${portfolio.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder })` }}
                                                         ></div>
                                                     )}
                                                     <div className="designer-info mx-2">
                                                         <p className="text-black fs-18 fw-600 mb-0">{portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"}</p>
                                                         {currentUser !== portfolio.user.id ?
                                                             <>
-                                                                <a className='text-decoration-none text-primary fs-14'>Follow</a>
+                                                                <a className='text-decoration-none fs-14'>Follow</a>
                                                             </>
                                                             :
                                                             <>

@@ -19,7 +19,7 @@ const initialQuestionnaire2Data = Object.freeze({
     design_inspirations: '',
     pricing_structure: '',
     lead_time: '',
-    areas_of_specialization : '',
+    areas_of_specialization : [{ name: '', year_from: '', year_to: ''}],
     design_process: '',
     is_designer: 1,
 });
@@ -38,6 +38,7 @@ const Questionnaire2 = (props) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [imageName, setImageName] = useState('');
     const [selectedSpecialization, setSelectedSpecialization] = useState([]);
+    const [arraySpecializations, setArraySpecializations] = useState([]);
     const [portfolio, setPortfolio] = useState([]);
     const [portfolioLoading, setPortfolioLoading] = useState([]);
     const [portfolioItems, setPortfolioItems] = useState([]);
@@ -67,6 +68,13 @@ const Questionnaire2 = (props) => {
             // Handle the error, if needed
         }
     };
+
+    // Map over the array and create objects
+    const newArrayObjects = arraySpecializations.map((name) => ({
+        name,
+        year_from: "", // Provide the appropriate default value or obtain it from your data
+        year_to: "",   // Provide the appropriate default value or obtain it from your data
+    }));
 
     const savePortfolioItems = (e) => {
         if (portfolioItems && portfolioItems.length > 0) {
@@ -129,7 +137,7 @@ const Questionnaire2 = (props) => {
     async function questionnaire2Submit(e) {
         e.preventDefault();
         setQuestionnaire2Loading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?user_id=' + currentUser + '&token=' + token, {...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, post_type: postType  }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?user_id=' + currentUser + '&token=' + token, {...questionnaire2Data, areas_of_specialization: newArrayObjects, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, post_type: postType  }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 hideAll(3);
@@ -202,12 +210,13 @@ const Questionnaire2 = (props) => {
                                     </Form.Label>
                                     <Form.Group>
                                         <TagsInput
-                                            value={selectedSpecialization}
-                                            onChange={setSelectedSpecialization}
+                                            // value={selectedSpecialization}
+                                            value={arraySpecializations}
+                                            onChange={setArraySpecializations}
                                             name="areas_of_specialization"
                                             className="form-control"
                                             ref={tagsInputRef}
-                                        // placeHolder="Fabric Type"
+                                            // placeholder="Fabric Type" // uncomment if needed
                                         />
                                     </Form.Group>
                                 </CardBody>

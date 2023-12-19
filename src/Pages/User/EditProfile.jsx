@@ -14,6 +14,8 @@ import GoBack from 'Components/Shared/GoBack';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
+import { IoCloseSharp } from "react-icons/io5";
+import { GoPlus } from "react-icons/go";
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -46,7 +48,7 @@ const initialUserData = Object.freeze({
 });
 
 const initialDesignerData = Object.freeze({
-    areas_of_specialization: [""],
+    areas_of_specialization: [{ name: '', year_from: '', year_to: ''}],
 });
 
 const EditProfile = () => {
@@ -115,6 +117,25 @@ const EditProfile = () => {
         })
     };
 
+    const handleInputChange = (index, fieldName, value) => {
+        setAreaOfSpecialization((prevAreas) => {
+            const updatedAreas = [...prevAreas];
+            updatedAreas[index][fieldName] = value;
+            return updatedAreas;
+        });
+    };    
+
+    const handleAddMore = () => {
+        setAreaOfSpecialization((prevAreas) => [
+            ...prevAreas,
+            { name: '', year_from: '', year_to: '' },
+        ]);
+    };      
+
+    const handleRemove = (i) => {
+        setAreaOfSpecialization((prevAreas) => prevAreas.filter((_, index) => i !== index));
+    };
+
     async function submitProfile(e) {
         e.preventDefault();
         setProfileFormLoading(true);
@@ -138,10 +159,10 @@ const EditProfile = () => {
     }
 
     async function submitDesigner(e) {
-        if (areasOfSpecializationData.length > 0 ) {
+        if (areasOfSpecialization.length > 0 ) {
             e.preventDefault();
             setProfileFormLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/'+designer.id+'?user_id='+currentUser+'&token='+token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/'+designer.id+'?user_id='+currentUser+'&token='+token, { areas_of_specialization: areasOfSpecialization }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -162,10 +183,6 @@ const EditProfile = () => {
         }
         
     }
-
-    const handleRemove = (index) => {
-        setAreaOfSpecialization((prevAos) => prevAos.filter((item, i) => i !== index));
-    };
 
     const fetchData = async (e) => {
         try {
@@ -473,21 +490,57 @@ const EditProfile = () => {
                                             }
                                             {skillShow ?
                                                 <div className="edit-skills mt-3">
-                                                    <Form.Label className='mb-1 fs-18'>
+                                                    <Form.Label className='mb-3 fs-18'>
                                                         Areas of Specialization and Expertise
                                                     </Form.Label>
-                                                    <Form.Label className="mb-3 mt-2 small">
-                                                        Specify your areas of expertise (e.g., bridal wear, ready-to-wear women’s clothing, casual, haute couture, sustainable fashion)
-                                                    </Form.Label>
-                                                    <Form.Group>
-                                                        <TagsInput
-                                                            value={areasOfSpecializationData}
-                                                            onChange={setAreaOfSpecializationData}
-                                                            name="areas_of_specialization"
-                                                            className="form-control"
-                                                        // placeHolder="Fabric Type"
-                                                        />
-                                                    </Form.Group>
+                                                    {areasOfSpecialization.map((specialization, index) => (
+                                                        <Card key={index}>
+                                                            <Card.Body style={{ position: 'relative' }}>
+                                                                {areasOfSpecialization.length > 1 && (
+                                                                    <div className='remove-circle' onClick={() => handleRemove(index)} >
+                                                                        <IoCloseSharp />
+                                                                    </div>
+                                                                )}
+                                                                <Row>
+                                                                    <Col lg='6'>
+                                                                        <Form.Label className='fz-16'>
+                                                                            Specify your areas of expertise
+                                                                        </Form.Label>
+                                                                        <Form.Group>
+                                                                            <input value={specialization.name ?? ''} name='name'
+                                                                                className='form-control' 
+                                                                                onChange={(e) => handleInputChange( index, 'name', e.target.value)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg='6'>
+                                                                        <Form.Label className='fz-16'>Year</Form.Label>
+                                                                        <Row>
+                                                                            <Col lg='12' className='d-flex align-items-center'>
+                                                                                <Form.Group>
+                                                                                    <input type='number' value={specialization.year_from ?? ''} name='year_from'
+                                                                                        onChange={(e) => handleInputChange( index, 'year_from', e.target.value )}
+                                                                                        className='form-control'
+                                                                                    />
+                                                                                </Form.Group>
+                                                                                <span className='mx-2'>-</span>
+                                                                                <Form.Group>
+                                                                                    <input type='number' value={specialization.year_to ?? ''} name='year_to'
+                                                                                        onChange={(e) => handleInputChange( index, 'year_to', e.target.value )}
+                                                                                        className='form-control'
+                                                                                    />
+                                                                                </Form.Group>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    </Col>
+                                                                </Row>
+                                                            </Card.Body>
+                                                        </Card>
+                                                    ))}
+                                                    <div className='d-flex align-items-center mt-3'>
+                                                        <GoPlus />
+                                                        <span className='mx-1 cursor-pointer' onClick={handleAddMore}>{areasOfSpecialization.length > 0 ? "Add More" : "Add Specialization and Expertise"}</span>
+                                                    </div>
                                                     <div className="text-right mt-4 mb-5">
                                                         {profileFormLoading ?
                                                             <Button type='button' className="btn-save">Saving...</Button>

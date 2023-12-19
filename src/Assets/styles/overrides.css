@@ -1043,3 +1043,7 @@ form select::placeholder {
 .portfolio-link .save-link .action-button {
     pointer-events: auto;
 }
+
+.sort-input {
+    width: 300px;
+}

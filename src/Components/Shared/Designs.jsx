@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import toast from 'react-hot-toast';
 // import getDesignsData from 'Utils/GetDesignsData';
 import GetDesignsData from 'Utils/GetDesignsData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
+import { IoIosArrowDown } from "react-icons/io";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
+import axios from 'axios';
 
 const Designs = (props) => {
     const navigate = useNavigate();
@@ -34,6 +36,23 @@ const Designs = (props) => {
           // Handle the error, if needed
         }
     };
+
+    async function toggleAddViewCount(id) {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/'+id).then((response) => {
+            const success = response.data.status;
+            if(success == 'Success') {
+                // toast.success('Design saved as draft successfully!');
+                // setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                // setPortfolioDraftLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                // setPortfolioDraftLoading(false);
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            // setPortfolioDraftLoading(false);
+        });
+    }
 
     const handleActionClick = (index) => {
         // Toggle the selected item index
@@ -64,12 +83,25 @@ const Designs = (props) => {
                         {designs && designs.length > 0 ?
                             <>
                                 <Row className="designs-row">
+                                    <Col lg="12" className='d-flex justify-content-end'>
+                                        <div style={{ position: "relative" }}>
+                                            <select name="" id="" className='form-control mb-3 me-2 sort-input'>
+                                                <option value="">All</option>
+                                                <option value="New">Recent Design</option>
+                                                <option value="">Most Viewed</option>
+                                                <option value="">Most Liked</option>
+                                            </select>
+                                            <div style={{ position: "absolute", right: "20px", top: "10px", pointerEvents: "none" }} >
+                                                <IoIosArrowDown />
+                                            </div>
+                                        </div>
+                                    </Col>
                                     {/* <img src={object.url} className='designs-img'/> */}
                                     {designs.map((design, index) => (
                                         <>
                                             {index < 8 ?
                                                 <Col className="designs-grid mb-3" xs="4" md="3">
-                                                    <Link to={`/portfolio/${design.id}`} className='portfolio-link'>
+                                                    <Link to={`/portfolio/${design.id}`} className='portfolio-link' onClick={function() {toggleAddViewCount(design.id);}}>
                                                         <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+design.image_urls[0].image_url+")"}}>
                                                             <div className='save-link'>
                                                                 <div className="action-button bg-white me-2">
@@ -86,10 +118,10 @@ const Designs = (props) => {
                                                             <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{design.name ?? '-'}</p>
                                                             <div className='d-flex align-items-center'>
                                                                 <span className='fs-14 text-no-wrap mx-2'>
-                                                                    <IoHeartOutline /> 1.1k
+                                                                    <IoHeartOutline /> 0
                                                                 </span>
                                                                 <span className='fs-14 text-no-wrap'>
-                                                                    <IoEyeOutline /> 10.1k
+                                                                    <IoEyeOutline /> {design.views}
                                                                 </span>
                                                             </div>
                                                         </div>
