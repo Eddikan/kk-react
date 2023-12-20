@@ -91,7 +91,7 @@ const SignUp = () => {
             <Col lg='8' className='d-flex flex-column justify-content-center'>
                 <div className='sign-up-container'>
                     <h1 className='text-center'>Sign up to Kouture Konect</h1>
-                    <div className="divider-small mb-3 mt-4"></div>
+                    <div className="divider-small mb-4 mt-4"></div>
                     {/* <button className='sign-in-google mt-3'>
                         <img src={GoogleIcon}/>
                         <span className='subtitle'>Sign in with Google</span>

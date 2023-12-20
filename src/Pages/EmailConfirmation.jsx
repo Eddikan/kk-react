@@ -64,6 +64,8 @@ const EmailConfirmation = () => {
         setUser(selectedUser);
         setUserLoading(false);
         if (selectedUser.email_verified_at != "" && selectedUser.email_verified_at) {
+          const user_details = {currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at}
+          setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
           navigate("/questionnaire");
         }
       } else {
