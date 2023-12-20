@@ -82,7 +82,7 @@ const Designs = (props) => {
     return (
         <>
             <div id="profile-designs">
-                <p className="fs-18 text-center text-dark mb-3"> Looking for a Designs? <span className="text-gold">Explore now </span></p >
+                <p className="fs-18 text-center text-dark mb-3"> Looking for Designs? <span className="text-gold">Explore now </span></p >
                 <h2 className="fs-40 text-center text-black mb-30">Discover Captivating Designs.</h2>
                 {designsLoading ?
                     <>
