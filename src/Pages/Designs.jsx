@@ -42,7 +42,7 @@ const Designs = (props) => {
     };
 
     async function toggleSortDesigns(type, sort) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design?' +type+sort).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' +type+sort).then((response) => {
             const selectedDesigns = response.data.data;
             if(selectedDesigns) {
                 setDesigns(selectedDesigns);
@@ -106,11 +106,11 @@ const Designs = (props) => {
                                             onChange={(e) => {
                                                 const selectedOption = e.target.value;
                                                 if (selectedOption === "New") {
-                                                    toggleSortDesigns("date=", "desc");
+                                                    toggleSortDesigns("?date=", "desc");
                                                 } else if (selectedOption === "Most Viewed") {
-                                                    toggleSortDesigns("views=", "desc");
+                                                    toggleSortDesigns("?views=", "desc");
                                                 } else if (selectedOption === "Most Liked") {
-                                                    toggleSortDesigns("likes=", "desc");
+                                                    toggleSortDesigns("?likes=", "desc");
                                                 } else {
                                                     toggleSortDesigns("", "");
                                                 }

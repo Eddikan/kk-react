@@ -14,6 +14,7 @@ import GoBack from 'Components/Shared/GoBack';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
+import Countries from 'Utils/Countries';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -114,7 +115,6 @@ const EditProfile = () => {
             [e.target.name]: e.target.value,
         })
     };
-
 
     async function submitProfile(e) {
         e.preventDefault();
@@ -376,7 +376,15 @@ const EditProfile = () => {
                                                         <Col lg="6">
                                                             <Form.Group className='mb-4'>
                                                                 <Form.Label>Country</Form.Label>
-                                                                <FormControl type='text' name='country' value={profileFormData.country} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                                {/* <FormControl type='text' name='country' value={profileFormData.country} className='mr-sm-2' onChange={handleChange} required placeholder='' /> */}
+                                                                <Form.Control as='select' name='country' value={profileFormData.country} className='mr-sm-2' onChange={handleChange} required>
+                                                                    <option value=''>Select Country</option>
+                                                                    {Countries.map((country, index) => (
+                                                                        <option key={country+"-"+index} value={country}>
+                                                                            {country}
+                                                                        </option>
+                                                                    ))}
+                                                                </Form.Control>
                                                             </Form.Group>
                                                         </Col>
                                                         <div className="text-right mt-4 mb-5">
@@ -482,7 +490,14 @@ const EditProfile = () => {
                                                             onChange={setAreaOfSpecializationData}
                                                             name="areas_of_specialization"
                                                             className="form-control"
-                                                        // placeHolder="Fabric Type"
+                                                            isEditOnRemove={true}
+                                                            onBlur={(e) => {
+                                                                const value = e.target.value;
+                                                                if (!areasOfSpecializationData.includes(value) && value !== "") {
+                                                                    setAreaOfSpecializationData([...areasOfSpecializationData, value]);
+                                                                    e.target.value = "";
+                                                                }
+                                                            }}
                                                         />
                                                     </Form.Group>
                                                     <div className="text-right mt-4 mb-5">

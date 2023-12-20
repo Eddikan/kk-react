@@ -317,6 +317,13 @@ const EditPortfolio = (props) => {
                             onChange={setCategories}
                             name="categories"
                             className="form-control"
+                            onBlur={(e) => {
+                                const value = e.target.value;
+                                if (!categories.includes(value) && value !== "") {
+                                    setCategories([...categories, value]);
+                                    e.target.value = "";
+                                }
+                            }}
                         />
                     </Form.Group>
                     <Form.Group className='my-4'>
@@ -330,6 +337,13 @@ const EditPortfolio = (props) => {
                             onChange={setColors}
                             name="colors"
                             className="form-control"
+                            onBlur={(e) => {
+                                const value = e.target.value;
+                                if (!colors.includes(value) && value !== "") {
+                                    setColors([...colors, value]);
+                                    e.target.value = "";
+                                }
+                            }}
                         />
                     </Form.Group>
                     <Form.Group className='my-4'>
@@ -339,6 +353,13 @@ const EditPortfolio = (props) => {
                             onChange={setMaterials}
                             name="materials"
                             className="form-control"
+                            onBlur={(e) => {
+                                const value = e.target.value;
+                                if (!materials.includes(value) && value !== "") {
+                                    setMaterials([...materials, value]);
+                                    e.target.value = "";
+                                }
+                            }}
                         />
                     </Form.Group>
                     <Form.Group className='my-4'>
@@ -348,6 +369,13 @@ const EditPortfolio = (props) => {
                             onChange={setTags}
                             name="tags"
                             className="form-control"
+                            onBlur={(e) => {
+                                const value = e.target.value;
+                                if (!tags.includes(value) && value !== "") {
+                                    setTags([...tags, value]);
+                                    e.target.value = "";
+                                }
+                            }}
                         />
                     </Form.Group>
                 </Col>

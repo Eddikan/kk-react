@@ -50,6 +50,10 @@ const Questionnaire = () => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
   };
 
+  const putUser = async (data) => {
+    return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser, data);
+  };
+
   const reloadPage = (e) => {
     setReloadCount((prevReloadCount) => prevReloadCount + 1);
   };
@@ -64,6 +68,19 @@ const Questionnaire = () => {
     setQuestionnaire2Show(false);
     setQuestionnaire3Show(false);
     setStep(e);
+  }
+
+  async function toggleSetValueOne(input, value) {
+    putUser({[input]: value}).then((response) => {
+        const success = response.data.status;
+        if(success == 'Success') {
+
+        } else {
+            toast.error('An error occured. Please try again or contact the administrator.');
+        }
+    }).catch(() => {
+        toast.error('An error occured. Please try again or contact the administrator.');
+    });
   }
 
   useEffect(() => {
@@ -145,7 +162,7 @@ const Questionnaire = () => {
                   <Button className='btn-outline' onClick={function() { setStep((prevStep) => prevStep + 1); }}>No</Button>
                 </Col>
                 <Col lg='6' className='text-left'>
-                  <Button className='btn-primary' onClick={function() { setQuestionnaire2Show((prevStatus) => true); }} >Yes</Button>
+                  <Button className='btn-primary' onClick={function() { setQuestionnaire2Show((prevStatus) => true); toggleSetValueOne('is_designer', 1); }} >Yes</Button>
                 </Col>
               </Row>
             </Container>
@@ -172,7 +189,7 @@ const Questionnaire = () => {
                 <Button className='btn-outline' onClick={function() { setStep((prevStep) => prevStep + 1); }}>No</Button>
               </Col>
               <Col lg='6' className='text-left'>
-                <Button className='btn-primary' onClick={function() { setQuestionnaire3Show((prevStatus) => true); }} >Yes</Button>
+                <Button className='btn-primary' onClick={function() { setQuestionnaire3Show((prevStatus) => true); toggleSetValueOne('is_seller', 1); }} >Yes</Button>
               </Col>
             </Row>
           </Container>

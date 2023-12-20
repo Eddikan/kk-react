@@ -11,11 +11,11 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 const initialRegisterData = Object.freeze({
+  first_name: '',
+  last_name: '',
   email: '',
   password: '',
-  password_confirmation: '',
-  first_name: '',
-  last_name: ''
+  password_confirmation: ''
 });
 
 const SignUp = () => {
@@ -99,6 +99,20 @@ const SignUp = () => {
                     <hr className='mb-0 mt-5'/>
                     <p className='sign-up-with-email'>or create an account</p> */}
                     <Form onSubmit={registerSubmit}>
+                        <Row>
+                          <Col lg="6">
+                            <Form.Group className='mb-3' controlId='formBasicFirstName'>
+                              <Form.Label>First Name</Form.Label>
+                              <FormControl type='text' name='first_name' onChange={handleChange} className='mr-sm-2' required />
+                            </Form.Group>
+                          </Col>
+                          <Col lg="6">
+                            <Form.Group className='mb-3' controlId='formBasicLastName'>
+                              <Form.Label>Last Name</Form.Label>
+                              <FormControl type='text' name='last_name' onChange={handleChange} className='mr-sm-2' required />
+                            </Form.Group>
+                          </Col>
+                        </Row>
                         <Form.Group className='mb-3' controlId='formBasicEmail'>
                             <Form.Label>Email Address</Form.Label>
                             <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required />

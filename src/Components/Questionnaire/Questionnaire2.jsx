@@ -207,6 +207,14 @@ const Questionnaire2 = (props) => {
                                             name="areas_of_specialization"
                                             className="form-control"
                                             ref={tagsInputRef}
+                                            isEditOnRemove={true}
+                                            onBlur={(e) => {
+                                                const value = e.target.value;
+                                                if (!selectedSpecialization.includes(value) && value !== "") {
+                                                    setSelectedSpecialization([...selectedSpecialization, value]);
+                                                    e.target.value = "";
+                                                }
+                                            }}
                                             // placeholder="Fabric Type" // uncomment if needed
                                         />
                                     </Form.Group>
