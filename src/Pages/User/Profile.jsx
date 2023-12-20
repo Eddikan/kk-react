@@ -54,7 +54,7 @@ const initialUserData = Object.freeze({
 const initialDesignerData = Object.freeze({
     design_inspirations: '',
     design_process: '',
-    areas_of_specialization: [{ name: '', year_from: '', year_to: ''}],
+    areas_of_specialization: '',
     lead_time: '',
     pricing_structure: '',
 });
@@ -290,7 +290,7 @@ const Profile = () => {
                                                 {areasOfSpecialization && areasOfSpecialization.length > 0 ?
                                                     <>
                                                         {areasOfSpecialization.map((item, index) => (
-                                                            <span className='text-gray600 fs-14 bg-gray'>{item.name}</span>
+                                                            <span className='text-gray600 fs-14 bg-gray'>{item}</span>
                                                         ))}
                                                     </>
                                                     :

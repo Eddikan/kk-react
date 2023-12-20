@@ -37,20 +37,32 @@ const Designs = (props) => {
         }
     };
 
+    async function toggleSortDesigns(type, sort) {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design?' +type+sort).then((response) => {
+            const selectedDesigns = response.data.data;
+            if(selectedDesigns) {
+                setDesigns(selectedDesigns);
+                setDesignsLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setDesignsLoading(false);
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setDesignsLoading(false);
+        });
+    }
+
     async function toggleAddViewCount(id) {
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/'+id).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 // toast.success('Design saved as draft successfully!');
-                // setReloadCount((prevReloadCount) => prevReloadCount + 1);
-                // setPortfolioDraftLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
-                // setPortfolioDraftLoading(false);
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
-            // setPortfolioDraftLoading(false);
         });
     }
 
@@ -85,11 +97,25 @@ const Designs = (props) => {
                                 <Row className="designs-row">
                                     <Col lg="12" className='d-flex justify-content-end'>
                                         <div style={{ position: "relative" }}>
-                                            <select name="" id="" className='form-control mb-3 me-2 sort-input'>
+                                            <select
+                                                className="form-control mb-3 me-2 sort-input"
+                                                onChange={(e) => {
+                                                    const selectedOption = e.target.value;
+                                                    if (selectedOption === "New") {
+                                                        toggleSortDesigns("date=", "desc");
+                                                    } else if (selectedOption === "Most Viewed") {
+                                                        toggleSortDesigns("views=", "desc");
+                                                    } else if (selectedOption === "Most Liked") {
+                                                        toggleSortDesigns("likes=", "desc");
+                                                    } else {
+                                                        toggleSortDesigns("", "");
+                                                    }
+                                                }}
+                                            >
                                                 <option value="">All</option>
                                                 <option value="New">Recent Design</option>
-                                                <option value="">Most Viewed</option>
-                                                <option value="">Most Liked</option>
+                                                <option value="Most Viewed">Most Viewed</option>
+                                                <option value="Most Liked">Most Liked</option>
                                             </select>
                                             <div style={{ position: "absolute", right: "20px", top: "10px", pointerEvents: "none" }} >
                                                 <IoIosArrowDown />
