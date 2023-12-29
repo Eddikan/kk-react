@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import ImageSlider from 'Components/Shared/ImageSlider';
 import { Card, CardBody } from 'reactstrap';
 import LoadingPage from 'Components/Shared/LoadingPage';
-import UserPlaceholder from 'Assets/images/placeholders/user.png';
+import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import { useCookies } from 'react-cookie';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
@@ -41,7 +41,12 @@ const ViewPortFolio = () => {
             setPortfolio(portfolioData);
             setPortfolioLoading(false);
             setImages(portfolioData.image_urls);
-            setActiveImage(portfolioData.image_urls[0].image_url);
+            if (portfolioData.image_urls?.[0]?.image_url) {
+                setActiveImage(process.env.REACT_APP_STORAGE_URL+'portfolio/'+portfolioData.image_urls[0].image_url);
+            } else {
+                setActiveImage(PlaceholderImage);
+            }
+            
           } else {
             setPortfolioLoading(false);
             toast.error('Portfolio item does not exist!');
@@ -83,14 +88,14 @@ const ViewPortFolio = () => {
                             <Col lg={6}>
                                 {images && images.length > 0 ?
                                     <>
-                                        <div className="single-image-slider" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+activeImage+")"}}>
-
+                                        <div className="single-image-slider" style={{ backgroundImage: "url("+activeImage+")"}}>
                                         </div>
                                         <ImageSlider images={images} onActiveImageChange={handleActiveImageChange} />
                                     </>
-                                    
                                     :
-                                    null
+                                    <div className="single-image-slider" style={{ backgroundImage: "url("+activeImage+")"}}>
+
+                                    </div>
                                 }
                             </Col>
                             <Col lg={6}>

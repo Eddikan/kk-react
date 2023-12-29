@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import Layout from 'Components/Layout/Layout';
-import UserPlaceholder from 'Assets/images/placeholders/user.png';
+import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
 // import getDesignsData from 'Utils/GetDesignsData';
 import GetDesignsData from 'Utils/GetDesignsData';
@@ -140,46 +140,53 @@ const Designs = (props) => {
                                             <>
                                                 <Row className="designs-row">
                                                     {/* <img src={object.url} className='designs-img'/> */}
-                                                    {designs.map((design, index) => (
-                                                        <>
-                                                            <Col className="designs-grid mb-3" xs="4" md="3">
-                                                                <Link to={`/design/${design.id}`} className='portfolio-link' onClick={function() {toggleAddViewCount(design.id);}}>
-                                                                    <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+design.image_urls[0].image_url+")"}}>
-                                                                        <div className='save-link'>
-                                                                            <div className="action-button bg-white me-2">
-                                                                                <GoBookmark className="text-black" />
-                                                                            </div>
-                                                                            <div className="action-button bg-white">
-                                                                                <GoHeart className="text-black" />
+                                                    {designs.map((design, index) => {
+                                                        if (design.image_urls?.[0]?.image_url) {
+                                                            var designImage = process.env.REACT_APP_STORAGE_URL+'portfolio/'+design.image_urls[0].image_url;
+                                                        } else {
+                                                            var designImage = PlaceholderImage;
+                                                        }
+                                                        return (
+                                                            <>
+                                                                <Col className="designs-grid mb-3" xs="4" md="3">
+                                                                    <Link to={`/design/${design.id}`} className='portfolio-link' onClick={function() {toggleAddViewCount(design.id);}}>
+                                                                        <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+designImage+")"}}>
+                                                                            <div className='save-link'>
+                                                                                <div className="action-button bg-white me-2">
+                                                                                    <GoBookmark className="text-black" />
+                                                                                </div>
+                                                                                <div className="action-button bg-white">
+                                                                                    <GoHeart className="text-black" />
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
-                                                                </Link>
-                                                                <div className="design-details">
-                                                                    <div className='d-flex align-items-center justify-content-between'>
-                                                                        <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{design.name ?? '-'}</p>
-                                                                        <div className='d-flex align-items-center'>
-                                                                            <span className='fs-14 text-no-wrap mx-2'>
-                                                                                <IoHeartOutline /> 0
-                                                                            </span>
-                                                                            <span className='fs-14 text-no-wrap'>
-                                                                                <IoEyeOutline /> {design.views}
-                                                                            </span>
+                                                                    </Link>
+                                                                    <div className="design-details">
+                                                                        <div className='d-flex align-items-center justify-content-between'>
+                                                                            <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{design.name ?? '-'}</p>
+                                                                            <div className='d-flex align-items-center'>
+                                                                                <span className='fs-14 text-no-wrap mx-2'>
+                                                                                    <IoHeartOutline /> 0
+                                                                                </span>
+                                                                                <span className='fs-14 text-no-wrap'>
+                                                                                    <IoEyeOutline /> {design.views}
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div className='d-flex align-items-center mt-1'>
+                                                                            {design.user.image ?
+                                                                                <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+design.user.image+")"}} ></div>
+                                                                                :
+                                                                                <div className='designer-photo-small' style={{ backgroundImage: `url(${design.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder })`}} ></div>
+                                                                            }
+                                                                            &nbsp;&nbsp;
+                                                                            <p className="text-black fs-14 mb-0">{design.user.first_name && design.user.first_name != "" ? design.user.first_name : "-"} {design.user.last_name && design.user.last_name != "" ? design.user.last_name : "-"}</p>
                                                                         </div>
                                                                     </div>
-                                                                    <div className='d-flex align-items-center mt-1'>
-                                                                        {design.user.image ?
-                                                                            <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+design.user.image+")"}} ></div>
-                                                                            :
-                                                                            <div className='designer-photo-small' style={{ backgroundImage: `url(${design.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder })`}} ></div>
-                                                                        }
-                                                                        &nbsp;&nbsp;
-                                                                        <p className="text-black fs-14 mb-0">{design.user.first_name && design.user.first_name != "" ? design.user.first_name : "-"} {design.user.last_name && design.user.last_name != "" ? design.user.last_name : "-"}</p>
-                                                                    </div>
-                                                                </div>
-                                                            </Col>
-                                                        </>
-                                                    ))}
+                                                                </Col>
+                                                            </>
+                                                        )
+                                                    })}
                                                 </Row>
                                             </>
                                             :

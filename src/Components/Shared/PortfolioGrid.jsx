@@ -7,6 +7,7 @@ import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline } from "react-icons/io5";
+import PlaceholderImage from 'Assets/images/placeholders/image.png'
 import Loading from './Loading';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -34,6 +35,8 @@ const PortfolioGrid = (props) => {
           if (portfolioData) {
             setPortfolio(portfolioData);
             setPortfolioLoading(false);
+
+            console.log(portfolioData);
           } else {
             toast.error('An error occured. Please try again or contact the administrator.');
             setPortfolioLoading(false);
@@ -134,9 +137,15 @@ const PortfolioGrid = (props) => {
                             <>
                                 <Row className="portfolio-row">
                                     {/* <img src={object.url} className='portfolio-img'/> */}
-                                    {portfolio.map((object, index) => (
-                                        <Col className={`portfolio-grid mb-3`} xs="4" md="2">
-                                                <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+object.image_urls[0].image_url+")"}}>
+                                    {portfolio.map((object, index) => {
+                                        if (object.image_urls?.[0]?.image_url) {
+                                            var portfolioImage = process.env.REACT_APP_STORAGE_URL+'portfolio/'+object.image_urls[0].image_url;
+                                        } else {
+                                            var portfolioImage = PlaceholderImage;
+                                        }
+                                        return (
+                                            <Col className={`portfolio-grid mb-3`} xs="4" md="2">
+                                                <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url("+portfolioImage+")"}}>
                                                     <div className="portfolio-overlay">
                                                         <div className="portfolio-actions">
                                                             <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
@@ -177,8 +186,9 @@ const PortfolioGrid = (props) => {
                                                         <div className="portfolio-overlay" style={{background: 'transparent', height: '85%', bottom: 0}}></div>
                                                     </Link>
                                                 </div>
-                                        </Col>
-                                    ))}
+                                            </Col>
+                                        )
+                                    })}
                                     <Col className="portfolio-grid mb-3" xs="4" md="2">
                                         <div onClick={addNewPortfolio} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
                                             <GoPlus color="#a4a4a4" size="150px" className="mt-3" />
