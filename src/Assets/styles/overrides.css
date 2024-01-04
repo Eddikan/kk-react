@@ -260,6 +260,10 @@ a {
     border-radius: 0;
 }
 
+.modal-fullscreen .modal-content {
+    background-color: #f5f6f8;
+}
+
 .StripeElement {
     display: block;
     margin: 10px 0 20px 0;
@@ -410,6 +414,18 @@ a {
 
 .modal-dialog {
     max-width: 600px !important;
+}
+
+.modal-dialog.modal-fullscreen {
+    max-width: 100% !important;
+}
+
+.modal-open {
+    padding-right: 0 !important;
+}
+
+.modal.show {
+    padding-right: 0 !important;
 }
 
 .react-calendar__tile--now:enabled:hover, .react-calendar__tile--now:enabled:focus {

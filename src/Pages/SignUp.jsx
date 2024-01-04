@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Layout from '../Components/Layout/Layout';
 import { Container, Row, Col, Button }  from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
@@ -20,10 +20,16 @@ const initialRegisterData = Object.freeze({
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const useQuery = () => {
+    return new URLSearchParams(useLocation().search);
+  }
+  let query = useQuery();
 
+  const [signupType, setSignupType] = useState(query.get("signup_type"));
   const [registerFormData, setRegisterFormData] = useState(initialRegisterData);
   const [registerFormLoading, setRegisterFormLoading] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn','userDetails','userRole']);
+
 
   const currentUser = cookies.currentUser;
   const isLoggedIn = cookies.isLoggedIn;
@@ -51,6 +57,7 @@ const SignUp = () => {
         setCookie('userRole', JSON.stringify(user.role), { path: '/' });
         const user_details = {currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at}
         setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+        setCookie('signup_type', signupType, { path: '/' });
         setCookie('isLoggedIn', true, { path: '/' });
         setCookie('token', data.token, { path: '/' });
         setTimeout(function(){
@@ -81,6 +88,16 @@ const SignUp = () => {
       toast.error("You are already logged in!");
       navigate("/user/profile");
     }
+
+    if (!signupType) {
+      setSignupType("normal");
+    }
+
+    setRegisterFormData({
+      ...registerFormData,
+      signup_type: signupType ?? "normal",
+    });
+    
   }, []);
 
   return (
@@ -89,50 +106,53 @@ const SignUp = () => {
         <Container fluid>
           <Row className='vh-100'>
             <Col lg='8' className='d-flex flex-column justify-content-center'>
-                <div className='sign-up-container'>
-                    <h1 className='text-center'>Sign up to Kouture Konect</h1>
-                    <div className="divider-small mb-4 mt-4"></div>
-                    {/* <button className='sign-in-google mt-3'>
-                        <img src={GoogleIcon}/>
-                        <span className='subtitle'>Sign in with Google</span>
-                    </button>
-                    <hr className='mb-0 mt-5'/>
-                    <p className='sign-up-with-email'>or create an account</p> */}
-                    <Form onSubmit={registerSubmit}>
-                        <Row>
-                          <Col lg="6">
-                            <Form.Group className='mb-3' controlId='formBasicFirstName'>
-                              <Form.Label>First Name</Form.Label>
-                              <FormControl type='text' name='first_name' onChange={handleChange} className='mr-sm-2' required />
-                            </Form.Group>
-                          </Col>
-                          <Col lg="6">
-                            <Form.Group className='mb-3' controlId='formBasicLastName'>
-                              <Form.Label>Last Name</Form.Label>
-                              <FormControl type='text' name='last_name' onChange={handleChange} className='mr-sm-2' required />
-                            </Form.Group>
-                          </Col>
-                        </Row>
-                        <Form.Group className='mb-3' controlId='formBasicEmail'>
-                            <Form.Label>Email Address</Form.Label>
-                            <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required />
-                        </Form.Group>
-                        <Form.Group className='mb-3' controlId='formBasicPassword'>
-                            <Form.Label>Password</Form.Label>
-                            <FormControl type='password' name='password' onChange={handleChange} className='mr-sm-2' required />
-                        </Form.Group>
-                        <Form.Group className='mb-3' controlId='formBasicPassword'>
-                            <Form.Label>Confirm Password</Form.Label>
-                            <FormControl type='password' name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
-                        </Form.Group>
-                        {registerFormLoading ?
-                          <Button className='w-100 mt-4' variant='primary' type='submit'>Signing up...</Button>
-                          :
-                          <Button className='w-100 mt-4' variant='primary' type='submit'>Sign up</Button>
-                        }
-                        <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to='/login'>Log In</Link></p>
-                    </Form>
-                </div>
+              <div className='sign-up-container'>
+                  <h1 className='text-center'>Sign up to Kouture Konect</h1>
+                  <div className="divider-small mb-4 mt-4"></div>
+                  {/* <button className='sign-in-google mt-3'>
+                      <img src={GoogleIcon}/>
+                      <span className='subtitle'>Sign in with Google</span>
+                  </button>
+                  <hr className='mb-0 mt-5'/>
+                  <p className='sign-up-with-email'>or create an account</p> */}
+                  <Form onSubmit={registerSubmit}>
+                      <Row>
+                        <Col lg="6">
+                          <Form.Group className='mb-3' controlId='formBasicFirstName'>
+                            <Form.Label>First Name</Form.Label>
+                            <FormControl type='text' name='first_name' onChange={handleChange} className='mr-sm-2' required />
+                          </Form.Group>
+                        </Col>
+                        <Col lg="6">
+                          <Form.Group className='mb-3' controlId='formBasicLastName'>
+                            <Form.Label>Last Name</Form.Label>
+                            <FormControl type='text' name='last_name' onChange={handleChange} className='mr-sm-2' required />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Form.Group className='mb-3' controlId='formBasicEmail'>
+                          <Form.Label>Email Address</Form.Label>
+                          <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required />
+                      </Form.Group>
+                      <Form.Group className='mb-3' controlId='formBasicPassword'>
+                          <Form.Label>Password</Form.Label>
+                          <FormControl type='password' name='password' onChange={handleChange} className='mr-sm-2' required />
+                      </Form.Group>
+                      <Form.Group className='mb-3' controlId='formBasicPassword'>
+                          <Form.Label>Confirm Password</Form.Label>
+                          <FormControl type='password' name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
+                      </Form.Group>
+                      <div className="alert alert-primary mb-0 small" role="alert">
+                        As part of our ongoing commitment to security and user safety, we are requiring users to provide a valid identification document for access to certain enhanced features on our platform.
+                      </div>
+                      {registerFormLoading ?
+                        <Button className='w-100 mt-4' variant='primary' type='submit'>Signing up...</Button>
+                        :
+                        <Button className='w-100 mt-4' variant='primary' type='submit'>Sign up</Button>
+                      }
+                      <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to='/login'>Log In</Link></p>
+                  </Form>
+              </div>
             </Col>
             <Col lg="4" className='with-bg'>
             </Col>

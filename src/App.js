@@ -94,6 +94,9 @@ const App = () => {
           <Route path="/category/pants" exact element={<UnderConstruction />} />
           <Route path="/category/skirts" exact element={<UnderConstruction />} />
           
+          <Route path="/designers" exact element={<UnderConstruction />} />
+          <Route path="/fabrics" exact element={<UnderConstruction />} />
+          <Route path="/designs" exact element={<UnderConstruction />} />
 
         </Routes>
       </Suspense>

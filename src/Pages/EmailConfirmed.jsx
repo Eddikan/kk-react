@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Layout from '../Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import Logo from '../Assets/images/kouture-konect-logo.png';
@@ -18,11 +18,15 @@ const initialUserData = Object.freeze({
 
 const EmailConfirmation = () => {
     const navigate = useNavigate();
-
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    }
+    let query = useQuery();
     const [user, setUser] = useState(initialUserData);
     const [userLoading, setUserLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
+    const [signupType, setSignupType] = useState(query.get("signup_type"));
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
 
@@ -51,6 +55,9 @@ const EmailConfirmation = () => {
                 if (selectedUser.email_verified_at != "" && selectedUser.email_verified_at) {
                     const user_details = {currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at}
                     setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+                    if (selectedUser.signup_type) {
+                        setSignupType(selectedUser.signup_type);
+                    }
                 }
             } else {
                 const message = 'There has been an error getting the user, please try again!';
@@ -83,7 +90,15 @@ const EmailConfirmation = () => {
                         <Col lg='12'>
                             <h1 className='pb-2'>Email Confirmed</h1>
                             <p className='subtitle'>Thank you for confirming your email!</p>
-                            <Button href="/questionnaire" className='btn-primary fs-16' variant='primary'>Proceed</Button>
+                            {signupType == "user_designer" ?
+                                <Button href="/designers" className='btn-primary fs-16' variant='primary'>Proceed</Button>
+                            : signupType == "user_fabric" ?    
+                                <Button href="/fabrics" className='btn-primary fs-16' variant='primary'>Proceed</Button>
+                            : signupType == "user_design" ?
+                                <Button href="/designs" className='btn-primary fs-16' variant='primary'>Proceed</Button>
+                            :
+                                <Button href={`/questionnaire?signup_type=${signupType}`} className='btn-primary fs-16' variant='primary'>Proceed</Button>
+                            }
                         </Col>
                     </Row>
                 </Container>

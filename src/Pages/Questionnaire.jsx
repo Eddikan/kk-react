@@ -94,10 +94,12 @@ const Questionnaire = () => {
         } else {
           const message = 'There has been an error getting the user, please try again!';
           toast.error(message);
+          window.location.href = "/login";
         }
     }).catch((error) => {
       const message = 'There has been an error getting the user, please try again!';
       toast.error(message);
+      window.location.href = "/login";
     });
 
     return () => {

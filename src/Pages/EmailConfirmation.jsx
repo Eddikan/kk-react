@@ -66,7 +66,15 @@ const EmailConfirmation = () => {
         if (selectedUser.email_verified_at != "" && selectedUser.email_verified_at) {
           const user_details = {currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at}
           setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-          navigate("/questionnaire");
+          if (selectedUser.signup_type == "user_designer") {
+            navigate("/designers");
+          } else if (selectedUser.signup_type == "user_fabric") {
+            navigate("/fabrics");
+          } else if (selectedUser.signup_type == "user_design") {
+            navigate("/designs");
+          } else {
+            navigate("/questionnaire");
+          }
         }
       } else {
         const message = 'There has been an error getting the user, please try again!';
