@@ -14,9 +14,18 @@ section#signup .with-bg{
 }
 section#signup .sign-up-container {
     margin: 0 auto;
-    max-width: 500px;
+    max-width: 550px;
     width: 100%;
 }
+
+section#signup .sign-up-container .kouture-icon {
+    max-width: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom: 20px;
+}
+
 section#signup hr{
     border-color: var(--dgray);
     border-width: 2px;

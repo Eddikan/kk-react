@@ -51,6 +51,7 @@ const Questionnaire2 = (props) => {
 
     const token = cookies.token;
     const currentUser = cookies.currentUser;
+    const signupType = cookies.signup_type;
 
     const fetchData = async (e) => {
         try {
@@ -179,7 +180,7 @@ const Questionnaire2 = (props) => {
         return () => {
         document.removeEventListener('click', handleDocumentClick);
         };
-    }, [reloadCount]);
+    }, [reloadCount, user]);
 
     return (
         <>
@@ -226,36 +227,58 @@ const Questionnaire2 = (props) => {
                                         Portfolio Showcase
                                     </Form.Label>
                                     <Card className='background-dashed'>
-                                        <CardBody className={`${portfolioItems.length > 0 ? "pt-0" : ""}`}>
-                                            {portfolioItems.length > 0 ?
-                                                <>
-                                                    <Row>
-                                                        {portfolioItems.map((portfolioItem, index) => (
-                                                            <>
-                                                                {portfolioItem.image_urls && portfolioItem.image_urls.length > 0 ?
-                                                                    <>
-                                                                        {portfolioItem.image_urls.map((image, imageIndex) => (
-                                                                            <Col lg={4} key={image.id} className="image-preview mt-3">
-                                                                                <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")", minHeight: '190px'}}>
-                                                                                    <div className="dnd-actions-overlay"></div>
-                                                                                </div>
-                                                                            </Col>
-                                                                        ))}
-                                                                    </>
-                                                                    :
-                                                                    null
-                                                                }
-                                                            </>
-                                                        ))}
-                                                        <Col className="mt-3" lg={4}>
-                                                            <div onClick={toggleuploadFile} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed" style={{minHeight: '190px'}}>
-                                                                <GoPlus color="#a4a4a4" size="130px" className="mt-3" />
-                                                                <p className="text-dgray" style={{marginTop: '-15px'}}>Add More</p>
-                                                            </div>
+                                        {portfolioItems ?
+                                            <CardBody className={`${portfolioItems.length > 0 ? "pt-0" : ""}`}>
+                                                {portfolioItems.length > 0 ?
+                                                    <>
+                                                        <Row>
+                                                            {portfolioItems.map((portfolioItem, index) => (
+                                                                <>
+                                                                    {portfolioItem.image_urls && portfolioItem.image_urls.length > 0 ?
+                                                                        <>
+                                                                            {portfolioItem.image_urls.map((image, imageIndex) => (
+                                                                                <Col lg={4} key={image.id} className="image-preview mt-3">
+                                                                                    <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")", minHeight: '190px'}}>
+                                                                                        <div className="dnd-actions-overlay"></div>
+                                                                                    </div>
+                                                                                </Col>
+                                                                            ))}
+                                                                        </>
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </>
+                                                            ))}
+                                                            <Col className="mt-3" lg={4}>
+                                                                <div onClick={toggleuploadFile} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed" style={{minHeight: '190px'}}>
+                                                                    <GoPlus color="#a4a4a4" size="130px" className="mt-3" />
+                                                                    <p className="text-dgray" style={{marginTop: '-15px'}}>Add More</p>
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                    </>
+                                                    :
+                                                    <Row className="align-items-center text-center my-5">
+                                                        <Col>
+                                                            <Form.Label className="mb-1 fs-20">
+                                                                Upload your design
+                                                            </Form.Label>
+                                                            <Form.Label className="mb-4 fs-16 mt-1 small">
+                                                                Showcase your best work, get feedback, likes, and join a growing community.
+                                                            </Form.Label>
+                                                            <Button className='btn-primary'
+                                                                onClick={toggleuploadFile}
+                                                                type="button"
+                                                            >
+                                                                Upload Your First Shot
+                                                            </Button>
                                                         </Col>
                                                     </Row>
-                                                </>
-                                                :
+                                                }
+                                                
+                                            </CardBody>
+                                            :
+                                            <CardBody>
                                                 <Row className="align-items-center text-center my-5">
                                                     <Col>
                                                         <Form.Label className="mb-1 fs-20">
@@ -272,9 +295,8 @@ const Questionnaire2 = (props) => {
                                                         </Button>
                                                     </Col>
                                                 </Row>
-                                            }
-                                            
-                                        </CardBody>
+                                            </CardBody>
+                                        }
                                     </Card>
                                 </CardBody>
                             </Card>
@@ -360,7 +382,7 @@ const Questionnaire2 = (props) => {
                                         <Form.Control
                                             type="date"
                                             name="target_date"
-                                            value={questionnaire2Data.availability}
+                                            value={questionnaire2Data.target_date}
                                             onChange={handleChange}
                                             style={{maxWidth: '250px'}}
                                         />
@@ -372,13 +394,17 @@ const Questionnaire2 = (props) => {
                     </Row>
                     <Row>
                         <Col lg="12" className="text-right">
-                            <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(2); }}>Back</Button>
+                            {signupType == "designer" ?
+                                null
+                                :
+                                <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(2); }}>Back</Button>
+                            }
                             {questionnaire2Loading ?
                                 <Button className='btn-primary me-3' type="button">Saving...</Button>
                                 :
                                 <Button className='btn-primary me-3' type="submit">Save</Button>
                             }
-                            <span className="cursor-pointer text-black" onClick={function () { hideAll(3); }}>Skip <IoIosArrowRoundForward /></span>
+                            {/* <span className="cursor-pointer text-black" onClick={function () { hideAll(3); }}>Skip <IoIosArrowRoundForward /></span> */}
                         </Col>
                     </Row>
                 </Form>

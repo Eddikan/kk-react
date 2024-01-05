@@ -43,6 +43,7 @@ const Questionnaire3 = (props) => {
 
   const token = cookies.token;
   const currentUser = cookies.currentUser;
+  const signupType = cookies.signup_type;
 
   const toggleuploadFile = (e) => {
     e.preventDefault();
@@ -243,7 +244,7 @@ const Questionnaire3 = (props) => {
                             :
                             <Button className='btn-primary me-3' type="submit">Save</Button>
                         }
-                        <span className="cursor-pointer text-black" onClick={function() { hideAll(4); }}>Skip <IoIosArrowRoundForward /></span>
+                        {/* <span className="cursor-pointer text-black" onClick={function() { hideAll(4); }}>Skip <IoIosArrowRoundForward /></span> */}
                     </Col>
                 </Row>
             </Form>

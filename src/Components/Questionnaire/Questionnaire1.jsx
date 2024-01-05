@@ -364,7 +364,7 @@ const Questionnaire1 = (props) => {
                                 :
                                 <Button className='btn-primary me-3' type="submit">Save</Button>
                             }
-                            <span className="cursor-pointer text-black" onClick={function () { hideAll(2); }}>Skip <IoIosArrowRoundForward /></span>
+                            {/* <span className="cursor-pointer text-black" onClick={function () { hideAll(2); }}>Skip <IoIosArrowRoundForward /></span> */}
                         </Col>
                     </Row>
                 </Form>

@@ -66,6 +66,7 @@ const EmailConfirmation = () => {
         if (selectedUser.email_verified_at != "" && selectedUser.email_verified_at) {
           const user_details = {currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at}
           setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+          setCookie('signup_type', selectedUser.signup_type, { path: '/' });
           if (selectedUser.signup_type == "user_designer") {
             navigate("/designers");
           } else if (selectedUser.signup_type == "user_fabric") {

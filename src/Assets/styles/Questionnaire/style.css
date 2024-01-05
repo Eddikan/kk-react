@@ -15,6 +15,7 @@ section#questionnaire .form-title {
     font-size: 25px;
     font-weight: 600;
     color: var(--black);
+    line-height: 1.5;
 }
 section#questionnaire img{
     max-width: 150px;

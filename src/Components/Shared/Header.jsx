@@ -35,6 +35,7 @@ const Header = () => {
     removeCookie('currentUser', { path: '/' });
     removeCookie('isLoggedIn', { path: '/' });
     removeCookie('userRole', { path: '/' });
+    removeCookie('signup_type', { path: '/' });
   };
 
   // Close the dropdown when clicking outside of it
@@ -66,7 +67,6 @@ const Header = () => {
         }
       }
     }
-
     // Clean up the event listener when the component unmounts
     return () => {
       document.removeEventListener('click', handleClickOutside);
@@ -80,9 +80,11 @@ const Header = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse className="justify-content-between column-gap-10" id="responsive-navbar-nav">
           <Nav className="align-items-center column-gap-30">
-            <Nav.Link href="/find-designs">Find Designs</Nav.Link>
-            <Nav.Link href="/inspirations">Inspirations</Nav.Link>
-            <Nav.Link href="/blog">Blog</Nav.Link>
+            {/* <Nav.Link href="/find-designs">Find Designs</Nav.Link>
+            <Nav.Link href="/inspirations">Inspirations</Nav.Link> */}
+            <Nav.Link href="/about-kouture-konect">About Kouture Konect</Nav.Link>
+            <Nav.Link href="/how-it-works">How It Works</Nav.Link>
+            {/* <Nav.Link href="/blog">Blog</Nav.Link> */}
           </Nav>
           <Nav className="align-items-center d-grid-mobile">
             <Form inline className='search d-flex column-gap-70 align-items-center'>

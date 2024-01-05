@@ -9,6 +9,7 @@ import GoogleIcon from '../Assets/images/google-icon.png';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import KoutureLogo from 'Assets/images/kouture-konect-icon.png';
 
 const initialLoginData = Object.freeze({
   email: '',
@@ -46,10 +47,11 @@ const LogIn = () => {
         toast.success('Successfully signed in!');
         setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
         setCookie('userRole', JSON.stringify(user.role), { path: '/' });
-        const user_details = {currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at}
+        const user_details = {currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type}
         setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
         setCookie('isLoggedIn', true, { path: '/' });
         setCookie('token', data.token, { path: '/' });
+        setCookie('signup_type', user.signup_type, { path: '/' });
         setTimeout(function () {
           navigate("/user/profile");
         }, 1000);
@@ -75,7 +77,7 @@ const LogIn = () => {
 
   useEffect(() => {
     if (currentUser && currentUser != "") {
-      toast.error("You are already logged in!");
+      // toast.error("You are already logged in!");
       navigate("/user/profile");
     }
   }, []);
@@ -87,6 +89,9 @@ const LogIn = () => {
           <Row className='vh-100'>
             <Col id="login-column" lg='8' className='d-flex flex-column justify-content-center'>
               <div className='login-container'>
+                <Link to="/">
+                  <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect"/>
+                </Link>
                 <h1 className='text-center'>Sign in to Kouture Konect</h1>
                 <div className="divider-small mb-3 mt-4"></div>
                 {/* <button className='login-google mt-3'>

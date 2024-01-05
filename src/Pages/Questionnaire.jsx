@@ -29,6 +29,7 @@ const Questionnaire = () => {
   const [user, setUser] = useState(initialUserData);
   const [userLoading, setUserLoading] = useState(true);
   const [reloadCount, setReloadCount] = useState(0);
+  const [formStatus, setFormStatus] = useState('standby');
 
   // Questionnaires
   const [step, setStep] = useState(1);
@@ -41,6 +42,7 @@ const Questionnaire = () => {
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn','userDetails','userRole', 'token']);
 
   const currentUser = cookies.currentUser;
+  const signupType = cookies.signup_type;
   const isLoggedIn = cookies.isLoggedIn;
   const userDetails = cookies.userDetails;
   const userRole = cookies.userRole;
@@ -63,11 +65,38 @@ const Questionnaire = () => {
   };
 
   const hideAll = (e) => {
-    console.log(e);
-    setQuestionnaire1Show(false);
-    setQuestionnaire2Show(false);
-    setQuestionnaire3Show(false);
-    setStep(e);
+    if (signupType) {
+      if (signupType == "designer") {
+        setStep(4);
+      } else if (signupType == "fabric_vendor") {
+        setStep(4);
+      } else {
+        setQuestionnaire1Show(false);
+        setQuestionnaire2Show(false);
+        setQuestionnaire3Show(false);
+        setStep(e);
+      }
+    } else {
+      setQuestionnaire1Show(false);
+      setQuestionnaire2Show(false);
+      setQuestionnaire3Show(false);
+      setStep(e);
+    }
+  }
+
+  async function toggleCompleteQuestionnaire(input, value) {
+    setFormStatus('loading');
+    putUser({[input]: value}).then((response) => {
+        const success = response.data.status;
+        if(success == 'Success') {
+          navigate("/user/profile");
+          setFormStatus('standby');
+        } else {
+            toast.error('An error occured. Please try again or contact the administrator.');
+        }
+    }).catch(() => {
+        toast.error('An error occured. Please try again or contact the administrator.');
+    });
   }
 
   async function toggleSetValueOne(input, value) {
@@ -101,6 +130,16 @@ const Questionnaire = () => {
       toast.error(message);
       window.location.href = "/login";
     });
+
+    if (signupType) {
+      if (signupType == "designer") {
+        setStep(2);
+        setQuestionnaire2Show(true);
+      } else if (signupType == "fabric_vendor") {
+        setStep(3);
+        setQuestionnaire3Show(true);
+      }
+    }
 
     return () => {
         // ComponentWillUnmount logic goes here (optional)
@@ -226,11 +265,15 @@ const Questionnaire = () => {
                       &nbsp;
                       <span>Upload your work, fill out your profile, and set your work experience</span>
                     </div>
-                    <Link to="/user/profile">
+                    {formStatus != "standby" ?
                       <Button className='btn-primary mt-2' type="button">
+                        Saving your details...
+                      </Button>
+                      :
+                      <Button className='btn-primary mt-2' type="button" onClick={function() { toggleCompleteQuestionnaire('completed_questionnaire', 1); }}>
                         Take Me to My Profile
                       </Button>
-                    </Link>
+                    }
                   </Col>
                 </Row>
               </div>

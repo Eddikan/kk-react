@@ -7,7 +7,7 @@ import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline } from "react-icons/io5";
-import PlaceholderImage from 'Assets/images/placeholders/image.png'
+import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from './Loading';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';

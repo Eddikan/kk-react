@@ -9,6 +9,7 @@ import GoogleIcon from '../Assets/images/google-icon.png';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import KoutureLogo from 'Assets/images/kouture-konect-icon.png';
 
 const initialRegisterData = Object.freeze({
   first_name: '',
@@ -25,11 +26,11 @@ const SignUp = () => {
   }
   let query = useQuery();
 
-  const [signupType, setSignupType] = useState(query.get("signup_type"));
+  const [signupType, setSignupType] = useState(query.get("type"));
+  const [signupOption, setSignupOption] = useState(query.get("option"));
   const [registerFormData, setRegisterFormData] = useState(initialRegisterData);
   const [registerFormLoading, setRegisterFormLoading] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn','userDetails','userRole']);
-
 
   const currentUser = cookies.currentUser;
   const isLoggedIn = cookies.isLoggedIn;
@@ -55,14 +56,24 @@ const SignUp = () => {
         toast.success('Successfully signed up!');
         setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
         setCookie('userRole', JSON.stringify(user.role), { path: '/' });
-        const user_details = {currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at}
+        const user_details = {currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type }
         setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-        setCookie('signup_type', signupType, { path: '/' });
+        let signupTypeOption = "";
+        if (signupType == "user" && signupOption == "designers") {
+          signupTypeOption = "user_designer";
+        } else if (signupType == "user" && signupOption == "fabrics") {
+          signupTypeOption = "user_fabric";
+        } else if (signupType == "user" && signupOption == "designs") {
+          signupTypeOption = "user_design";
+        } else {
+          signupTypeOption = signupType;
+        }
+        setCookie('signup_type', signupTypeOption, { path: '/' });
         setCookie('isLoggedIn', true, { path: '/' });
         setCookie('token', data.token, { path: '/' });
         setTimeout(function(){
           navigate("/email-confirmation");
-        }, 1500);
+        }, 500);
       } else {
         const errors = response.data.errors;
         if (errors.email) {
@@ -84,31 +95,75 @@ const SignUp = () => {
   }
 
   useEffect(() => {
-    if (currentUser && currentUser != "") {
-      toast.error("You are already logged in!");
-      navigate("/user/profile");
-    }
-
-    if (!signupType) {
+    if (currentUser && currentUser !== "") {
+      // toast.error("You are already logged in!");
+      if (signupType == "user" && signupOption == "designers") {
+        navigate("/designers");
+      } else if (signupType == "user" && signupOption == "fabrics") {
+        navigate("/fabrics");
+      } else if (signupType == "user" && signupOption == "designs") {
+        navigate("/designs");
+      }
+    } else if (!signupType) {
       setSignupType("normal");
     }
 
+    let signupTypeOption = "";
+    if (signupType && signupOption) {
+      if (signupType == "user" && signupOption == "designers") {
+        signupTypeOption = "user_designer";
+      } else if (signupType == "user" && signupOption == "fabrics") {
+        signupTypeOption = "user_fabric";
+      } else if (signupType == "user" && signupOption == "designs") {
+        signupTypeOption = "user_design";
+      }
+    } else if (signupType) {
+      signupTypeOption = signupType;
+    } else {
+      signupTypeOption = "normal"
+    }
+  
     setRegisterFormData({
       ...registerFormData,
-      signup_type: signupType ?? "normal",
+      signup_type: signupTypeOption,
+      is_designer: signupType == "designer" ? 1 : 0,
+      is_seller: signupType == "fabric_vendor" ? 1 : 0,
     });
-    
-  }, []);
+  }, [currentUser, signupType]);  
 
   return (
     <Layout>
       <section id='signup' className='d-flex align-items-center'>
         <Container fluid>
           <Row className='vh-100'>
-            <Col lg='8' className='d-flex flex-column justify-content-center'>
+            <Col lg='8' className='d-flex flex-column justify-content-center py-4'>
               <div className='sign-up-container'>
-                  <h1 className='text-center'>Sign up to Kouture Konect</h1>
-                  <div className="divider-small mb-4 mt-4"></div>
+                  <Link to="/">
+                    <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect"/>
+                  </Link>
+                  {signupType == "designer" ?
+                    <>
+                      <h1 className='text-center'>Designer Registration</h1>
+                      <p className="text-center small mb-0">
+                        Thank you for your interest in becoming a designer with Kouture Konect. 
+                      </p>
+                      <div className="divider-small mb-4 mt-3"></div>
+                    </>
+                    : signupType == "fabric_vendor" ?
+                    <>
+                      <h1 className='text-center'>Fabric Vendor Registration</h1>
+                      <p className="text-center small mb-0">
+                        Thank you for your interest in becoming a vendor with Kouture Konect.
+                      </p>
+                      <div className="divider-small mb-4 mt-3"></div>
+                    </>
+                    :
+                    <>
+                      <h1 className='text-center'>Sign up to Kouture Konect</h1>
+                      <div className="divider-small mb-4 mt-4"></div>
+                    </>
+                  }
+                  
                   {/* <button className='sign-in-google mt-3'>
                       <img src={GoogleIcon}/>
                       <span className='subtitle'>Sign in with Google</span>
@@ -142,7 +197,7 @@ const SignUp = () => {
                           <Form.Label>Confirm Password</Form.Label>
                           <FormControl type='password' name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
                       </Form.Group>
-                      <div className="alert alert-primary mb-0 small" role="alert">
+                      <div className="alert alert-primary mb-0 small lh-1-7" role="alert">
                         As part of our ongoing commitment to security and user safety, we are requiring users to provide a valid identification document for access to certain enhanced features on our platform.
                       </div>
                       {registerFormLoading ?

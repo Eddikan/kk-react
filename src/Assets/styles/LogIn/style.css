@@ -14,9 +14,18 @@ section#login .with-bg {
 }
 section#login .login-container {
     margin: 0 auto;
-    max-width: 500px;
+    max-width: 550px;
     width: 100%;
 }
+
+section#login .login-container .kouture-icon {
+    max-width: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom: 20px;
+}
+
 section#login hr {
     border-color: var(--dgray);
     border-width: 2px;

@@ -34,6 +34,9 @@ const ViewPortfolio = lazy(() => import('./Pages/Portfolio/ViewPortfolio'));
 // Design
 const Designs = lazy(() => import('./Pages/Designs'));
 
+// Designers
+const Designers = lazy(() => import('./Pages/Designers'));
+
 // Under Construction
 const UnderConstruction = lazy(() => import('./Pages/UnderConstruction'));
 
@@ -93,10 +96,13 @@ const App = () => {
           <Route path="/category/dresses" exact element={<UnderConstruction />} />
           <Route path="/category/pants" exact element={<UnderConstruction />} />
           <Route path="/category/skirts" exact element={<UnderConstruction />} />
+
+          <Route path="/about-kouture-konect" exact element={<UnderConstruction />} />
+          <Route path="/how-it-works" exact element={<UnderConstruction />} />
           
-          <Route path="/designers" exact element={<UnderConstruction />} />
+          <Route path="/designers" exact element={<Designers />} />
           <Route path="/fabrics" exact element={<UnderConstruction />} />
-          <Route path="/designs" exact element={<UnderConstruction />} />
+          <Route path="/designs" exact element={<Designs />} />
 
         </Routes>
       </Suspense>

@@ -26,7 +26,7 @@ const EmailConfirmation = () => {
     const [userLoading, setUserLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
-    const [signupType, setSignupType] = useState(query.get("signup_type"));
+    const [signupType, setSignupType] = useState(query.get("type"));
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
 
@@ -53,8 +53,9 @@ const EmailConfirmation = () => {
                 setUser(selectedUser);
                 setUserLoading(false);
                 if (selectedUser.email_verified_at != "" && selectedUser.email_verified_at) {
-                    const user_details = {currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at}
+                    const user_details = { currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at, signup_type: selectedUser.signup_type }
                     setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+                    setCookie('signup_type', selectedUser.signup_type, { path: '/' });
                     if (selectedUser.signup_type) {
                         setSignupType(selectedUser.signup_type);
                     }
@@ -73,7 +74,7 @@ const EmailConfirmation = () => {
             // This will be executed before the component is unmounted
             //   console.log('Component is unmounted');
         };
-    }, [reloadCount]);
+    }, [reloadCount, currentUser]);
 
     return (
         <Layout>
@@ -97,7 +98,7 @@ const EmailConfirmation = () => {
                             : signupType == "user_design" ?
                                 <Button href="/designs" className='btn-primary fs-16' variant='primary'>Proceed</Button>
                             :
-                                <Button href={`/questionnaire?signup_type=${signupType}`} className='btn-primary fs-16' variant='primary'>Proceed</Button>
+                                <Button href={`/questionnaire?type=${signupType}`} className='btn-primary fs-16' variant='primary'>Proceed</Button>
                             }
                         </Col>
                     </Row>
