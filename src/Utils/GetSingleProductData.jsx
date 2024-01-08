@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const GetSingleProductData = async (id) => {
     try {
-        const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+id);
+        const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/'+id);
         return response.data.data;
     } catch (error) {
         // Handle the error or show a toast message

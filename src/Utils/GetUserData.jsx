@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 const getUserData = async (currentUser) => {
+    
     try {
         const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
         return response.data.data;

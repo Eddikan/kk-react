@@ -55,7 +55,7 @@ const Products = (props) => {
 
     async function ProductDraftSubmit(e) {
         setProductDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product_item/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Design saved as draft successfully!');
@@ -73,7 +73,7 @@ const Products = (props) => {
 
     async function ProductPublishSubmit(e) {
         setProductPublishLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product_item/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Design published successfully!');

@@ -52,6 +52,8 @@ const LogIn = () => {
         setCookie('isLoggedIn', true, { path: '/' });
         setCookie('token', data.token, { path: '/' });
         setCookie('signup_type', user.signup_type, { path: '/' });
+        setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
+        setCookie('token', data.token, { path: '/' });
         setTimeout(function () {
           navigate("/user/profile");
         }, 1000);

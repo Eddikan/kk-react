@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 const getCustomerData = async (currentUser) => {
+
     try {
         const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer?user_id='+currentUser);
         return response.data.data;

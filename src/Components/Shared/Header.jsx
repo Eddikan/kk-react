@@ -14,6 +14,7 @@ import { BsEnvelope } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import UserPlaceholder from 'Assets/images/user.png';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -22,10 +23,13 @@ const Header = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [userImage, setUserImage] = useState('');
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
+  const [userType, setUserType] = useState('user');
   const userRef = useRef(null);
 
   const currentUser = cookies.currentUser;
   const userDetails = cookies.userDetails;
+  const signupType = cookies.signup_type;
+  const completedQuestionnaire = cookies.completed_questionnaire;
 
   // removeCookies
   const removeCookies = () => {
@@ -54,6 +58,8 @@ const Header = () => {
     navigate('/login');
   }
 
+  let reminded = 0;
+
   useEffect(() => {
     document.addEventListener('click', handleClickOutside);
 
@@ -66,12 +72,40 @@ const Header = () => {
           navigate("/email-confirmation");
         }
       }
+
+      if (reminded == 0) {
+        if (currentUrl.includes('user')) {
+          if (!completedQuestionnaire) {
+            toast.error('Please complete the questionnaire before proceeding, thank you!');
+            setTimeout(function(){
+              navigate("/questionnaire");
+            }, 1000)
+            reminded = 1;
+          }
+        }
+      }
+
+    } else {
+      if (currentUrl.includes('user')) {
+        navigate("/login");
+      }
     }
+
+    // if (signupType == "user_designer" || signupType == "user_fabric" || signupType == "user_design") {
+    //   setUserType('user');
+    // } else {
+    //   if (signupType == "designer") {
+    //     setUserType('designer');
+    //   } else if (signupType == "fabric_vendor") {
+    //     setUserType('vendor');
+    //   }
+    // }
+
     // Clean up the event listener when the component unmounts
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, [userDetails]);
+  }, []);
 
   return (
     <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
@@ -106,7 +140,7 @@ const Header = () => {
                     }
                     {userMenuOpen && (
                       <div className="action-box user-menu">
-                        <Link to="/user/profile" className="mb-3 text-decoration-none d-block"><IoIosCog /> Profile</Link>
+                        <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog /> Profile</Link>
                         {/* <Link to="/user/portfolio" className="mb-3 text-decoration-none d-block"><IoIosImages /> Portfolio</Link> */}
                         <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower /> Logout</p>
                       </div>

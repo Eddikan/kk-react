@@ -140,6 +140,8 @@ const Profile = () => {
             const user = data.user;
             const user_details = {currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at}
             setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+            setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
+            setCookie('signup_type', user.signup_type, { path: '/' });
           } else {
             toast.error('An error occured. Please try again or contact the administrator.');
             setFormStatus("standby");

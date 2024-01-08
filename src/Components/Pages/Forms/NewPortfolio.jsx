@@ -137,14 +137,14 @@ const NewPortfolio = (props) => {
                 <Col lg='12'>
                     <Card className='mb-3'>
                         <Card.Body className='bg-lgray'>
-                            <ImageDragAndDrop onImagesChange={handleImagesChange} size={size} />
+                            <ImageDragAndDrop type="portfolio" onImagesChange={handleImagesChange} size={size} />
                         </Card.Body>
                     </Card>
                 </Col>
                 <Col lg='12'>
                     <Card>
                         <Card.Body className='bg-lgray'>
-                            <Form.Group className='my-4'>
+                            <Form.Group className='mb-4 mt-2'>
                                 <Form.Label>Name</Form.Label>
                                 <FormControl type='text' name='name' value={portfolioData.name} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>

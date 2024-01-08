@@ -89,6 +89,7 @@ const Questionnaire = () => {
     putUser({[input]: value}).then((response) => {
         const success = response.data.status;
         if(success == 'Success') {
+          setCookie('completed_questionnaire', 1, { path: '/' });
           navigate("/user/profile");
           setFormStatus('standby');
         } else {

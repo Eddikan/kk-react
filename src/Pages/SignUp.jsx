@@ -69,6 +69,7 @@ const SignUp = () => {
           signupTypeOption = signupType;
         }
         setCookie('signup_type', signupTypeOption, { path: '/' });
+        setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
         setCookie('isLoggedIn', true, { path: '/' });
         setCookie('token', data.token, { path: '/' });
         setTimeout(function(){
@@ -128,6 +129,7 @@ const SignUp = () => {
       signup_type: signupTypeOption,
       is_designer: signupType == "designer" ? 1 : 0,
       is_seller: signupType == "fabric_vendor" ? 1 : 0,
+      completed_questionnaire: signupType == "user" ? 1 : 0,
     });
   }, [currentUser, signupType]);  
 

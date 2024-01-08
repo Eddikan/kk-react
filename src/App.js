@@ -72,8 +72,8 @@ const App = () => {
           <Route path="/elements/buttons" exact element={<Buttons />} />
           <Route path="/forms" exact element={<Forms />} />
           <Route path="/customer" exact element={<CustomerPage />} />
-          <Route path="/user/profile" exact element={<UserProfile />} />
-          <Route path="/user/profile/edit" exact element={<EditUserProfile />} />
+          <Route path="/:user/profile" exact element={<UserProfile />} />
+          <Route path="/:user/profile/edit" exact element={<EditUserProfile />} />
 
           <Route path="/portfolio/add" exact element={<AddNewPortfolio />} />
           <Route path="/portfolio/:portfolioId" exact element={<ViewPortfolio />} />

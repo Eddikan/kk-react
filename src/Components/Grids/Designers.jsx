@@ -76,7 +76,7 @@ const Designers = (props) => {
                                                         <div className='bg-black-faded'>
                                                             <div className="designer-details">
                                                                 <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
-                                                                <p className="text-white mb-0">{designer.user.occupation || "-"}</p>
+                                                                <p className="text-white mb-0">{designer.user.short_bio || "-"}</p>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -86,7 +86,7 @@ const Designers = (props) => {
                                                         <div className='bg-black-faded'>
                                                             <div className="designer-details">
                                                                 <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
-                                                                <p className="text-white mb-0">{designer.user.occupation || "-"}</p>
+                                                                <p className="text-white mb-0">{designer.user.short_bio || "-"}</p>
                                                             </div>
                                                         </div>
                                                     </div>

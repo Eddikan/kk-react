@@ -15,6 +15,7 @@ const ImageDragAndDrop = (props) => {
   const [uploadStatus, setUploadStatus] = useState('standby');
   const [imageUrls, setImageUrls]  = useState([]);
   const size = props.size;
+  const type = props.type;
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
 
@@ -39,10 +40,19 @@ const ImageDragAndDrop = (props) => {
     for (const imageInfo of images) {
       const dataArray = new FormData();
       dataArray.append("image_url", imageInfo.file);
+      let imageType = "";
+
+      if (type) {
+        if (type == "portfolio") {
+          imageType = "portfolio";
+        } else if (type == "product") {
+          imageType = "product";
+        }
+      }
   
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_ENDPOINT}portfolio/image?user_id=${currentUser}&token=${token}`,
+          `${process.env.REACT_APP_API_ENDPOINT}${imageType}/image?user_id=${currentUser}&token=${token}`,
           dataArray,
           {
             headers: {
