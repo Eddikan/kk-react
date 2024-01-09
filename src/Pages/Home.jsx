@@ -168,18 +168,8 @@ const Home = () => {
         <Modal.Body>
           <Container className="h-100">
             <Row className=" align-items-center h-100">
-              <Col lg="12" id="under-construction">
-                <div className="under-construction-container text-center bg-lgray py-4">
-                  <div className="construction-content">
-                    <img
-                      src={KoutureLogo}
-                      alt="Kouture Konect"
-                      className="construction-image mb-4"
-                    />
-                    <h1>Under Construction</h1>
-                    <p>We're working on something awesome. Please check back later!</p>
-                  </div>
-                </div>
+              <Col lg="12">
+                <DesignGrid limit="20" />
                 <Col lg={12} className="text-right mt-4 mb-4">
                   <Link to={userFabricLink}>
                     <Button className="btn-primary" variant="primary">{currentUser ? "View All" : "Sign Up"}</Button>
@@ -199,7 +189,7 @@ const Home = () => {
         <Modal.Body>
           <Container>
             <Row>
-              <Col lg="12" id="under-construction">
+              <Col lg="12">
                 {/* <p className="fs-18 text-center text-dark mb-3"> Looking for Designs? <span className="text-gold">Explore now </span></p >
                 <h2 className="fs-40 text-center text-black mb-30">Discover Captivating Designs.</h2> */}
                 <DesignGrid limit="20" />

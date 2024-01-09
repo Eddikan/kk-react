@@ -202,7 +202,7 @@ const EditPortfolio = (props) => {
             }).catch(() => {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setPortfolioLoading(false);
-                formSuccess(true);
+                formSuccess(false);
             });
         } else {
             toast.error('Please upload design images!');
@@ -223,12 +223,12 @@ const EditPortfolio = (props) => {
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setPortfolioDraftLoading(false);
-                formSuccess(true);
+                formSuccess(false);
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
             setPortfolioDraftLoading(false);
-            formSuccess(true);
+            formSuccess(false);
         });
     };
 

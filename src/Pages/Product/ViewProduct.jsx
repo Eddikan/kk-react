@@ -80,7 +80,7 @@ const ViewProduct = () => {
                                         <div className="single-image-slider" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+activeImage+")"}}>
 
                                         </div>
-                                        <ImageSlider images={images} onActiveImageChange={handleActiveImageChange} />
+                                        <ImageSlider type="product" images={images} onActiveImageChange={handleActiveImageChange} />
                                     </>
                                     
                                     :
@@ -102,13 +102,13 @@ const ViewProduct = () => {
                                             <Col lg="12">
                                                 <h2 className="fw-600 fs-30">{product.name ?? "-"}</h2>
                                                 <div className="mb-4">
-                                                    {product.tags ?
+                                                    {product.categories ?
                                                         <>
-                                                            {product.tags.length > 0 ?
+                                                            {product.categories.length > 0 ?
                                                                 <>
-                                                                    {product.tags.map((tag, index) => (
+                                                                    {product.categories.map((category, index) => (
                                                                         <span className="design-tag bg-light fs-12">
-                                                                            {tag}
+                                                                            {category}
                                                                         </span>
                                                                     ))}
                                                                 </>
@@ -123,8 +123,6 @@ const ViewProduct = () => {
                                                 <p className="mb-4">
                                                     {product.description ?? "-"}
                                                 </p>
-                                                <p className="mb-2"><strong>Season</strong></p>
-                                                <p className="mb-4">{product.season ?? "-"}</p>
                                                 
                                                 <p className="mb-2"><strong>Colors</strong></p>
                                                 <div className="mb-4">
@@ -146,15 +144,15 @@ const ViewProduct = () => {
                                                         null
                                                     }
                                                 </div>
-                                                <p className="mb-2"><strong>Materials</strong></p>
+                                                <p className="mb-2"><strong>Certifications</strong></p>
                                                 <div className="mb-4">
-                                                    {product.materials ?
+                                                    {product.certifications ?
                                                         <>
-                                                            {product.materials.length > 0 ?
+                                                            {product.certifications.length > 0 ?
                                                                 <>
-                                                                    {product.materials.map((material, index) => (
+                                                                    {product.certifications.map((certification, index) => (
                                                                         <p className="mb-2">
-                                                                            - {material}
+                                                                            - {certification}
                                                                         </p>
                                                                     ))}
                                                                 </>
@@ -172,11 +170,11 @@ const ViewProduct = () => {
                                 </Card>
                             </Col>
                             <Col lg={12} className="mt-4">
-                                <p className="mb-2"><strong>Lead Time</strong></p>
-                                <p className="mb-4">{product.designer?.lead_time ?? "-"}</p>
+                                <p className="mb-2"><strong>Process Insights</strong></p>
+                                <p className="mb-4">{product.seller?.fabric_process_insights ?? "-"}</p>
 
                                 <p className="mb-2"><strong>Pricing Structure</strong></p>
-                                <p className="mb-4">{product.designer?.pricing_structure ?? "-"}</p>
+                                <p className="mb-4">{product.seller?.pricing_structure ?? "-"}</p>
                             </Col>
                             <Col lg="12" className='mt-4'>
                                 <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span>

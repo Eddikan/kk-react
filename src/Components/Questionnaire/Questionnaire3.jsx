@@ -11,16 +11,14 @@ import toast from 'react-hot-toast';
 import { TagsInput } from "react-tag-input-component";
 import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
-import NewProduct from 'Components/Pages/Forms/NewProduct';
+import NewProduct from 'Components/Forms/Product/NewProduct';
 import GetUserProductsData from 'Utils/GetUserProductsData';
 import DateTimePicker from 'Components/Shared/DateTimePicker';
 
 const initialQuestionnaire3Data = Object.freeze({
-    design_inspirations: '',
-    pricing_structure: '',
-    lead_time: '',
-    areas_of_specialization : '',
-    design_process: '',
+    types_of_fabric: '',
+    fabric_process_insights: '',
+    pricing_structure : '',
     is_seller: 1,
 });
 
@@ -37,7 +35,7 @@ const Questionnaire3 = (props) => {
     const [uploadFileShow, setUploadFileShow] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [imageName, setImageName] = useState('');
-    const [selectedSpecialization, setSelectedSpecialization] = useState([]);
+    const [typesOfFabric, setTypesOfFabric] = useState([]);
     const [products, setProducts] = useState([]);
     const [productsLoading, setProductsLoading] = useState([]);
     const [productItems, setProductItems] = useState([]);
@@ -130,7 +128,7 @@ const Questionnaire3 = (props) => {
     async function questionnaire3Submit(e) {
         e.preventDefault();
         setQuestionnaire3Loading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'seller?user_id=' + currentUser + '&token=' + token, {...questionnaire3Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, products: productItems, availability: availability, post_type: postType  }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'seller?user_id=' + currentUser + '&token=' + token, {...questionnaire3Data, types_of_fabric: typesOfFabric, user_id: currentUser, products: productItems, availability: availability, post_type: postType  }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 hideAll(4);
@@ -150,11 +148,11 @@ const Questionnaire3 = (props) => {
         if (user) {
             if (user.seller) {
                 setQuestionnaire3Data(user.seller);
-                const specialization = user.seller.areas_of_specialization;
-                const current_availability = user.seller.availability.date_time;
-                setSelectedSpecialization(specialization);
-                setCurrentAvailability(current_availability);
-                setAvailability(current_availability);
+                const types_of_fabric = user.seller.types_of_fabric;
+                // const current_availability = user.seller.availability.date_time;
+                setTypesOfFabric(types_of_fabric);
+                // setCurrentAvailability(current_availability);
+                // setAvailability(current_availability);
                 setSellerId(user.seller.id);
                 setPostType('put');
             } else {
@@ -196,23 +194,24 @@ const Questionnaire3 = (props) => {
                             <Card className='mb-4 border-white'>
                                 <CardBody>
                                     <Form.Label className='mb-1 fs-18'>
-                                        Areas of Specialization and Expertise
+                                        Type of Fabrics
                                     </Form.Label>
+                                    <br />
                                     <Form.Label className="mb-3 small mt-1">
-                                        Specify your areas of expertise (e.g., bridal wear, ready-to-wear women’s clothing, casual, haute couture, sustainable fashion)
+                                        Specify type of fabrics (e.g., linen, cotton, silk)
                                     </Form.Label>
                                     <Form.Group>
                                         <TagsInput
-                                            value={selectedSpecialization}
-                                            onChange={setSelectedSpecialization}
-                                            name="areas_of_specialization"
+                                            value={typesOfFabric}
+                                            onChange={setTypesOfFabric}
+                                            name="types_of_fabrics"
                                             className="form-control"
                                             ref={tagsInputRef}
                                             isEditOnRemove={true}
                                             onBlur={(e) => {
                                                 const value = e.target.value;
-                                                if (!selectedSpecialization.includes(value) && value !== "") {
-                                                    setSelectedSpecialization([...selectedSpecialization, value]);
+                                                if (!typesOfFabric.includes(value) && value !== "") {
+                                                    setTypesOfFabric([...typesOfFabric, value]);
                                                     e.target.value = "";
                                                 }
                                             }}
@@ -223,9 +222,6 @@ const Questionnaire3 = (props) => {
                             </Card>
                             <Card className='mb-4 border-white'>
                                 <CardBody>
-                                    <Form.Label className='mb-3 fs-18'>
-                                        Portfolio Showcase
-                                    </Form.Label>
                                     <Card className='background-dashed'>
                                         {productItems ?
                                             <CardBody className={`${productItems.length > 0 ? "pt-0" : ""}`}>
@@ -238,7 +234,7 @@ const Questionnaire3 = (props) => {
                                                                         <>
                                                                             {productItem.image_urls.map((image, imageIndex) => (
                                                                                 <Col lg={4} key={image.id} className="image-preview mt-3">
-                                                                                    <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image+")", minHeight: '190px'}}>
+                                                                                    <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '190px'}}>
                                                                                         <div className="dnd-actions-overlay"></div>
                                                                                     </div>
                                                                                 </Col>
@@ -261,10 +257,10 @@ const Questionnaire3 = (props) => {
                                                     <Row className="align-items-center text-center my-5">
                                                         <Col>
                                                             <Form.Label className="mb-1 fs-20">
-                                                                Upload your design
+                                                                Upload your fabrics
                                                             </Form.Label>
                                                             <Form.Label className="mb-4 fs-16 mt-1 small">
-                                                                Showcase your best work, get feedback, likes, and join a growing community.
+                                                                Share your fabric snapshot to uncover a realm of creative possibilities.
                                                             </Form.Label>
                                                             <Button className='btn-primary'
                                                                 onClick={toggleuploadFile}
@@ -303,17 +299,17 @@ const Questionnaire3 = (props) => {
                             <Card className='mb-4 border-white'>
                                 <CardBody>
                                     <Form.Label className='mb-1 fs-18 d-block'>
-                                        Design Process Insights
+                                        Fabric Process Insights
                                     </Form.Label>
                                     <Form.Label className="mb-3 mt-1 small">
-                                        Provider information about your design process, from ideation to creation.
+                                        Provider information about fabric.
                                     </Form.Label>
                                     <Form.Group>
                                         <Form.Control
                                             as="textarea"
-                                            name="design_process"
+                                            name="fabric_process_insights"
                                             rows={5} // You can adjust the number of rows as needed
-                                            value={questionnaire3Data.design_process}
+                                            value={questionnaire3Data.fabric_process_insights}
                                             placeholder=""
                                             onChange={handleChange}
                                         />
@@ -323,26 +319,10 @@ const Questionnaire3 = (props) => {
                             <Card className='mb-4 border-white'>
                                 <CardBody>
                                     <Form.Label className='mb-1 fs-18 d-block'>
-                                        Lead Time and Pricing Structure
+                                        Pricing Structure
                                     </Form.Label>
                                     <Form.Label className="mb-3 mt-1 small">
-                                        Provide information about the typical lead time for designing,
-                                        creating, and delivering garments, along with transparent
-                                        pricing structures, helps set expectations.
-                                    </Form.Label>
-                                    <Form.Label className="mb-3">
-                                        Lead Time (No. of days)
-                                    </Form.Label>
-                                    <Form.Group className='mb-3'>
-                                        <Form.Control
-                                            type="text"
-                                            name="lead_time"
-                                            value={questionnaire3Data.lead_time}
-                                            onChange={handleChange}
-                                        />
-                                    </Form.Group>
-                                    <Form.Label className="mb-3">
-                                        Pricing Structure
+                                        Provide information about the typical pricing structures, helps set expectations.
                                     </Form.Label>
                                     <Form.Group>
                                         <Form.Control
@@ -356,23 +336,7 @@ const Questionnaire3 = (props) => {
                                     </Form.Group>
                                 </CardBody>
                             </Card>
-                            <Card className='mb-4 border-white'>
-                                <CardBody>
-                                    <Form.Label className='mb-3 fs-18 d-block'>
-                                        Design Inspirations and Influences
-                                    </Form.Label>
-                                    <Form.Group>
-                                        <Form.Control
-                                            as="textarea"
-                                            name="design_inspirations"
-                                            rows={5} // You can adjust the number of rows as needed
-                                            value={questionnaire3Data.design_inspirations}
-                                            placeholder=""
-                                            onChange={handleChange}
-                                        />
-                                    </Form.Group>
-                                </CardBody>
-                            </Card>
+{/*                             
                             <Card className='mb-4 border-white'>
                                 <CardBody>
                                     <Form.Label className='mb-2 fs-18'>
@@ -389,7 +353,7 @@ const Questionnaire3 = (props) => {
                                         <Button className='btn-primary' onClick={toggleSchedule} type="button">Schedule</Button>
                                     </Form.Group>
                                 </CardBody>
-                            </Card>
+                            </Card> */}
                         </Col>
                     </Row>
                     <Row>

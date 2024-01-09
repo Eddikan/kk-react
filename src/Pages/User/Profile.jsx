@@ -16,6 +16,7 @@ import getUserData from 'Utils/GetUserData';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
 import PortfolioGrid from 'Components/Shared/PortfolioGrid';
+import ProductGrid from 'Components/Shared/ProductGrid';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { GoPencil } from "react-icons/go";
 import { GoAlertFill } from 'react-icons/go';
@@ -424,10 +425,7 @@ const Profile = () => {
                             null
                         }
                         {fabricShow ?
-                            <div id="profile-portfolio" className='text-center'>
-                                <GoAlertFill size="120px" color="#000000" className="mb-3 mt-3" />
-                                <p className="fs-30 text-black">Under Construction</p>
-                            </div>
+                            <ProductGrid currentUser={currentUser} reloadCount={reloadCount} />
                             :
                             null
                         }

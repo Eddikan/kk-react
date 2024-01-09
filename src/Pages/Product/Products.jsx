@@ -3,7 +3,7 @@ import Layout from 'Components/Layout/Layout';
 import { useNavigate, Link } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import toast from 'react-hot-toast';
-import GetUserProductData from 'Utils/GetUserProductData';
+import GetUserProductsData from 'Utils/GetUserProductsData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline } from "react-icons/io5";
@@ -28,7 +28,7 @@ const Products = (props) => {
 
     const fetchData = async (e) => {
         try {
-          const productData = await GetUserProductData(e);
+          const productData = await GetUserProductsData(e);
           if (productData) {
             setProducts(productData);
             setProductsLoading(false);
@@ -95,7 +95,7 @@ const Products = (props) => {
 
     return (
         <Layout>
-            {productLoading ?
+            {productsLoading ?
                 <LoadingPage />
                 :
                 <>

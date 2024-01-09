@@ -1,49 +1,50 @@
 import React, { useEffect, useState } from 'react';
-import Layout from 'Components/Layout/Layout';
 import { useNavigate, Link } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import {  Row, Col, Button } from 'react-bootstrap';
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
-import PortfolioWhiteDress from 'Assets/images/white-dress.png';
 import toast from 'react-hot-toast';
-import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
+import GetUserProductsData from 'Utils/GetUserProductsData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline } from "react-icons/io5";
+import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from './Loading';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
-const PortfolioGrid = (props) => {
+const ProductGrid = (props) => {
     const navigate = useNavigate();
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
-    const [portfolio, setPortfolio] = useState([]);
-    const [portfolioLoading, setPortfolioLoading] = useState(true);
-    const [portfolioDraftLoading, setPortfolioDraftLoading] = useState(false);
-    const [portfolioPublishLoading, setPortfolioPublishLoading] = useState(false);
-    const [portfolioDeleteLoading, setPortfolioDeleteLoading] = useState(false);
+    const [products, setProducts] = useState([]);
+    const [productsLoading, setProductsLoading] = useState(true);
+    const [productDraftLoading, setProductDraftLoading] = useState(false);
+    const [productPublishLoading, setProductPublishLoading] = useState(false);
+    const [productDeleteLoading, setProductDeleteLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
     const [deleteConfirmShow, setDeleteConfirmShow] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
-    const [portfolioId, setPortfolioId] = useState(''); 
+    const [productId, setProductId] = useState(''); 
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
 
     const fetchData = async (e) => {
-        setPortfolioLoading(true);
+        setProductsLoading(true);
         try {
-          const portfolioData = await GetUserPortfolioData(e);
-          if (portfolioData) {
-            setPortfolio(portfolioData);
-            setPortfolioLoading(false);
+          const productsData = await GetUserProductsData(e);
+          if (productsData) {
+            setProducts(productsData);
+            setProductsLoading(false);
+
+            console.log(productsData);
           } else {
             toast.error('An error occured. Please try again or contact the administrator.');
-            setPortfolioLoading(false);
+            setProductsLoading(false);
           }
           // Update state or perform other logic with userData
         } catch (error) {
             toast.error('An error occured. Please try again or contact the administrator.');
-            setPortfolioLoading(false);
+            setProductsLoading(false);
           // Handle the error, if needed
         }
     };
@@ -53,67 +54,67 @@ const PortfolioGrid = (props) => {
         setSelectedItemIndex((prevIndex) => (prevIndex === index ? null : index));
     };
 
-    const addNewPortfolio = () => {
-        navigate('/portfolio/add')
+    const addNewProduct = () => {
+        navigate('/product/add')
     };
 
     const deleteConfirm = (e) => {
         setDeleteConfirmShow(true);
-        setPortfolioId(e);
-    }
+        setProductId(e);
+    };
 
-    async function PortfolioDeleteSubmit(e) {
-        setPortfolioDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+portfolioId+'?user_id=' + currentUser + '&token=' + token).then((response) => {
+    async function ProductDeleteSubmit(e) {
+        setProductDeleteLoading(true);
+        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'?user_id=' + currentUser + '&token=' + token).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Design deleted successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
-                setPortfolioDeleteLoading(false);
+                setProductDeleteLoading(false);
                 setDeleteConfirmShow(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
-                setPortfolioDeleteLoading(false);
+                setProductDeleteLoading(false);
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
-            setPortfolioDraftLoading(false);
+            setProductDraftLoading(false);
         });
     };
 
-    async function PortfolioDraftSubmit(e) {
-        setPortfolioDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
+    async function ProductDraftSubmit(e) {
+        setProductDraftLoading(true);
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Design saved as draft successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
-                setPortfolioDraftLoading(false);
+                setProductDraftLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
-                setPortfolioDraftLoading(false);
+                setProductDraftLoading(false);
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
-            setPortfolioDraftLoading(false);
+            setProductDraftLoading(false);
         });
     };
 
-    async function PortfolioPublishSubmit(e) {
-        setPortfolioPublishLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
+    async function ProductPublishSubmit(e) {
+        setProductPublishLoading(true);
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Design published successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
-                setPortfolioPublishLoading(false);
+                setProductPublishLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
-                setPortfolioPublishLoading(false);
+                setProductPublishLoading(false);
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
-            setPortfolioPublishLoading(false);
+            setProductPublishLoading(false);
         });
     };
 
@@ -124,7 +125,7 @@ const PortfolioGrid = (props) => {
     return (
         <>
             <div id="profile-portfolio">
-                {portfolioLoading ?
+                {productsLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
                             <Loading className="bg-white" />
@@ -132,26 +133,32 @@ const PortfolioGrid = (props) => {
                     </>
                     :
                     <>
-                        {portfolio && portfolio.length > 0 ?
+                        {products && products.length > 0 ?
                             <>
                                 <Row className="portfolio-row">
                                     {/* <img src={object.url} className='portfolio-img'/> */}
-                                    {portfolio.map((object, index) => (
-                                        <Col className={`portfolio-grid mb-3`} xs="4" md="2">
-                                                <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+object.image_urls[0].image_url+")"}}>
+                                    {products.map((object, index) => {
+                                        if (object.image_urls?.[0]?.image_url) {
+                                            var productImage = process.env.REACT_APP_STORAGE_URL+'product/'+object.image_urls[0].image_url;
+                                        } else {
+                                            var productImage = PlaceholderImage;
+                                        }
+                                        return (
+                                            <Col className={`portfolio-grid mb-3`} xs="4" md="2">
+                                                <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url("+productImage+")"}}>
                                                     <div className="portfolio-overlay">
                                                         <div className="portfolio-actions">
                                                             <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
                                                             {selectedItemIndex === index && (
                                                                 <div className="action-box">
-                                                                    <Link className="text-decoration-none" to={`/portfolio/${object.id}/edit`}>
+                                                                    <Link className="text-decoration-none" to={`/product/${object.id}/edit`}>
                                                                         <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
                                                                     </Link>
                                                                     <p className="mb-3 cursor-pointer" onClick={function() { deleteConfirm(object.id); }}><GoTrash  /> Delete</p>
                                                                     {object.status != "Draft" ?
-                                                                        <p className="mb-0 cursor-pointer" onClick={function() {PortfolioDraftSubmit(object.id);}}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
+                                                                        <p className="mb-0 cursor-pointer" onClick={function() {ProductDraftSubmit(object.id);}}><IoDocumentOutline /> {productDraftLoading ? "Drafting..." : "Draft"}</p>
                                                                         :
-                                                                        <p className="mb-0 cursor-pointer" onClick={function() {PortfolioPublishSubmit(object.id);}}><IoDocumentOutline /> {portfolioPublishLoading ? "Publishing..." : "Publish"}</p>
+                                                                        <p className="mb-0 cursor-pointer" onClick={function() {ProductPublishSubmit(object.id);}}><IoDocumentOutline /> {productPublishLoading ? "Publishing..." : "Publish"}</p>
                                                                     }
                                                                     
                                                                     {/* Add other actions as needed */}
@@ -165,24 +172,29 @@ const PortfolioGrid = (props) => {
                                                                 null
                                                             }
                                                             <span className="text-white text-decoration-none portfolio-name">{object.name ?? "-"}</span>
-                                                            <div className="other-actions">
-                                                                <div className="action-button bg-white me-2">
-                                                                    <GoHeart className="text-black" />
+                                                            {currentUser ?
+                                                                <div className="other-actions">
+                                                                    <div className="action-button bg-white me-2">
+                                                                        <GoHeart className="text-black" />
+                                                                    </div>
+                                                                    <div className="action-button bg-white">
+                                                                        <GoBookmark className="text-black" />
+                                                                    </div>
                                                                 </div>
-                                                                <div className="action-button bg-white">
-                                                                    <GoBookmark className="text-black" />
-                                                                </div>
-                                                            </div>
+                                                                :
+                                                                null
+                                                            }
                                                         </div>
                                                     </div>
-                                                    <Link to={`/portfolio/${object.id}`} className="text-decoration-none">
+                                                    <Link to={`/product/${object.id}`} className="text-decoration-none">
                                                         <div className="portfolio-overlay" style={{background: 'transparent', height: '85%', bottom: 0}}></div>
                                                     </Link>
                                                 </div>
-                                        </Col>
-                                    ))}
+                                            </Col>
+                                        )
+                                    })}
                                     <Col className="portfolio-grid mb-3" xs="4" md="2">
-                                        <div onClick={addNewPortfolio} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
+                                        <div onClick={addNewProduct} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
                                             <GoPlus color="#a4a4a4" size="150px" className="mt-3" />
                                             <p className="text-dgray" style={{marginTop: '-15px'}}>Add More</p>
                                         </div>
@@ -194,7 +206,7 @@ const PortfolioGrid = (props) => {
                                 <div className="text-center">
                                     <p className="text-center mb-3 mt-3">No records found.</p>
                                     <Link to="/portfolio/add">
-                                        <Button className="btn btn-primary">Add Portfolio</Button>
+                                        <Button className="btn btn-primary">Add Fabric</Button>
                                     </Link>
                                 </div>
                             </>
@@ -218,15 +230,15 @@ const PortfolioGrid = (props) => {
                     <h4 className='text-center fs-25 fw-600'>Confirm Delete</h4>
                     <Card>
                         <CardBody className="text-center">
-                            <p className="mb-0">Are you sure you want to delete this design?</p>
+                            <p className="mb-0">Are you sure you want to delete this fabric?</p>
                         </CardBody>
                     </Card>
                     <CardFooter className="text-right mt-3">
                         <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setDeleteConfirmShow(false) } type="button" style={{minWidth: '100px', padding: '9px 20px'}}>Cancel</button>
-                        {portfolioDeleteLoading ?
+                        {productDeleteLoading ?
                             <button className="btn btn-primary" type="button" style={{minWidth: '100px', padding: '9px 20px'}}>Deleting...</button>
                             :
-                            <button className="btn btn-primary" type="button" onClick={PortfolioDeleteSubmit} style={{minWidth: '100px', padding: '9px 20px'}}>Delete</button>
+                            <button className="btn btn-primary" type="button" onClick={ProductDeleteSubmit} style={{minWidth: '100px', padding: '9px 20px'}}>Delete</button>
                         }
                         
                     </CardFooter>
@@ -236,4 +248,4 @@ const PortfolioGrid = (props) => {
     );
 };
 
-export default PortfolioGrid;
+export default ProductGrid;

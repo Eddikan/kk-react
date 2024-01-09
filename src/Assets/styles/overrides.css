@@ -87,6 +87,10 @@ h5 {
     background-color: var(--light) !important;
 }
 
+.rti--input {
+    width: 75% !important;
+}
+
 .lh-1-7 {
     line-height: 1.7;
 }

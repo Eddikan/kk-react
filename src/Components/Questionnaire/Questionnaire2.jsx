@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 import { TagsInput } from "react-tag-input-component";
 import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
-import NewPortfolio from 'Components/Pages/Forms/NewPortfolio';
+import NewPortfolio from 'Components/Forms/Portolio/NewPortfolio';
 import GetUserPortfolioData from 'Utils/GetPortfolioData';
 import DateTimePicker from 'Components/Shared/DateTimePicker';
 

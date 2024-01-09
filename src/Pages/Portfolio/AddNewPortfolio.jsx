@@ -3,15 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import GoBack from 'Components/Shared/GoBack';
-import NewPortfolio from 'Components/Pages/Forms/NewPortfolio';
+import NewPortfolio from 'Components/Forms/Portolio/NewPortfolio';
 
 const AddNewPortfolio = () => {
     const navigate = useNavigate();
 
     const addSuccess = (e) => {
-        setTimeout(function(){
-            navigate("/user/profile");
-        }, 1000);
+        if (e) {
+            setTimeout(function(){
+                navigate("/user/profile");
+            }, 1000);
+        }
     };
 
     const reloadPage = (e) => {

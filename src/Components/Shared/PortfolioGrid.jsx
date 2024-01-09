@@ -172,14 +172,18 @@ const PortfolioGrid = (props) => {
                                                                 null
                                                             }
                                                             <span className="text-white text-decoration-none portfolio-name">{object.name ?? "-"}</span>
-                                                            <div className="other-actions">
-                                                                <div className="action-button bg-white me-2">
-                                                                    <GoHeart className="text-black" />
+                                                            {currentUser ?
+                                                                <div className="other-actions">
+                                                                    <div className="action-button bg-white me-2">
+                                                                        <GoHeart className="text-black" />
+                                                                    </div>
+                                                                    <div className="action-button bg-white">
+                                                                        <GoBookmark className="text-black" />
+                                                                    </div>
                                                                 </div>
-                                                                <div className="action-button bg-white">
-                                                                    <GoBookmark className="text-black" />
-                                                                </div>
-                                                            </div>
+                                                                :
+                                                                null
+                                                            }
                                                         </div>
                                                     </div>
                                                     <Link to={`/portfolio/${object.id}`} className="text-decoration-none">

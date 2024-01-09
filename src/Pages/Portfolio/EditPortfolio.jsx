@@ -4,7 +4,7 @@ import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'Assets/styles/User/Profile/style.css';
 import GoBack from 'Components/Shared/GoBack';
-import EditPortfolio from 'Components/Pages/Forms/EditPortfolio';
+import EditPortfolio from 'Components/Forms/Portolio/EditPortfolio';
 import GetSinglePortfolioData from 'Utils/GetSinglePortfolioData';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import toast from 'react-hot-toast';
@@ -18,9 +18,11 @@ const EditPortfolioDetails = () => {
     const [reloadCount, setReloadCount] = useState(0);
 
     const editSuccess = (e) => {
-        setTimeout(function(){
-            navigate("/user/profile");
-        }, 1000);
+        if (e) {
+            setTimeout(function(){
+                navigate("/user/profile");
+            }, 1000);
+        }
     };
 
     const reloadPage = (e) => {

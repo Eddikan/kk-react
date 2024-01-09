@@ -116,7 +116,7 @@ const Header = () => {
           <Nav className="align-items-center column-gap-30">
             {/* <Nav.Link href="/find-designs">Find Designs</Nav.Link>
             <Nav.Link href="/inspirations">Inspirations</Nav.Link> */}
-            <Nav.Link href="/about-kouture-konect">About Kouture Konect</Nav.Link>
+            <Nav.Link href="/about-kouture-konect">About KK</Nav.Link>
             <Nav.Link href="/how-it-works">How It Works</Nav.Link>
             {/* <Nav.Link href="/blog">Blog</Nav.Link> */}
           </Nav>

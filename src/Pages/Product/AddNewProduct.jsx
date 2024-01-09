@@ -3,15 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import GoBack from 'Components/Shared/GoBack';
-import NewProduct from 'Components/Pages/Forms/NewProduct';
+import NewProduct from 'Components/Forms/Product/NewProduct';
 
 const AddNewProduct = () => {
     const navigate = useNavigate();
 
     const addSuccess = (e) => {
-        setTimeout(function(){
-            navigate("/user/profile");
-        }, 1000);
+        if (e) {
+            setTimeout(function(){
+                navigate("/user/profile");
+            }, 1000);
+        }
     };
 
     const reloadPage = (e) => {
@@ -28,7 +30,7 @@ const AddNewProduct = () => {
                 <Container>
                     <Row>
                         <Col lg="8" className='mb-3'>
-                            <h2 className='fs-30 mb-2'>New Design</h2>
+                            <h2 className='fs-30 mb-2'>New Fabric</h2>
                         </Col>
                         <Col lg="4" className='mb-3 text-right'>
                             <GoBack fallBack="/user/profile" />

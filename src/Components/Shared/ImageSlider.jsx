@@ -22,6 +22,9 @@ const responsive = {
 
 const ImageSlider = (props) => {
     const images = props.images;
+    const type = props.type;
+
+    const [currentType, setCurrentType] = useState('portfolio');
 
     const handleActiveImageChange = (image) => {
         props.onActiveImageChange(image);
@@ -32,6 +35,11 @@ const ImageSlider = (props) => {
         // Set the initial active image when images change
         if (images && images.length > 0) {
             props.onActiveImageChange(images[0]);
+        }
+        if (type) {
+            if (type == "product") {
+                setCurrentType('product');
+            }
         }
     }, [images]);
 
@@ -53,7 +61,7 @@ const ImageSlider = (props) => {
                 {images.map((image, index) => {
                     return (
                         <div className="slider" key={index}>
-                            <div className="slider-image" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")"}}>
+                            <div className="slider-image" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+currentType+'/'+image.image_url+")"}}>
 
                             </div>
                         </div>

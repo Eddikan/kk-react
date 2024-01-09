@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
@@ -15,13 +15,29 @@ const initialProductData = Object.freeze({
     image_urls: [],
     name: '',
     description: '',
-    season: '',
-    collection_type: 'Regular',
+    colors: [],
+    composition: '',
+    categories: [],
+    weave: '',
+    weight: 0,
+    width: 0,
+    pattern: '',
+    texture: '',
+    opacity: '',
+    stretch: '',
+    drape: '',
+    care_instructions: '',
+    price: 0,
+    quantity: 0,
+    certifications: [],
+    country: '',
+    notes: '',
 });
 
 const NewProduct = (props) => {
     const size = props.size;
     const withDraft = props.withDraft;
+    const formRef = useRef(null);
 
     const [productData, setProductData] = useState(initialProductData);
     const [productLoading, setProductLoading] = useState(false);
@@ -73,6 +89,22 @@ const NewProduct = (props) => {
         });
     }, [reloadCount]);
 
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver(() => {
+          // Your resize logic here
+        });
+    
+        if (formRef.current) {
+          resizeObserver.observe(formRef.current);
+        }
+    
+        return () => {
+          if (formRef.current) {
+            resizeObserver.unobserve(formRef.current);
+          }
+        };
+      }, []);
+
 
     async function ProductSubmit(e) {
         e.preventDefault();
@@ -80,13 +112,13 @@ const NewProduct = (props) => {
             setProductLoading(true);
             setTimeout(function(){
                 setProductLoading(false);
-                saveProductItems({...productData, colors: colors, certifications: certifications, status: 'Active' });
+                saveProductItems({...productData, colors: colors, categories: categories, certifications: certifications, status: 'Active' });
                 handleCancel();
             }, 1000);
         } else {
             if (productData.image_urls) {
                 setProductLoading(true);
-                axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+                axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, colors: colors, categories: categories, certifications: certifications, status: 'Active' }).then((response) => {
                     const success = response.data.status;
                     if(success == 'Success') {
                         toast.success('Design added successfully!');
@@ -132,7 +164,7 @@ const NewProduct = (props) => {
     };
 
     return (
-        <Form onSubmit={ProductSubmit}>
+        <Form onSubmit={ProductSubmit} ref={formRef}>
             <Row>
                 <Col lg='12'>
                     <Card className='mb-3'>
@@ -175,7 +207,7 @@ const NewProduct = (props) => {
                             </Form.Group>
                             <Form.Group className='mb-4 mt-2'>
                                 <Form.Label>Composition</Form.Label>
-                                <FormControl type='text' name='name' value={productData.composition} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                <FormControl type='text' name='composition' value={productData.composition} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-4'>
                                 <Form.Label>Categories</Form.Label>
@@ -193,7 +225,7 @@ const NewProduct = (props) => {
                                     }}
                                 />
                             </Form.Group>
-                            {/* <Form.Group className='my-4'>
+                            <Form.Group className='my-4'>
                                 <Form.Label>Weave</Form.Label>
                                 <FormControl type='text' name='weave' value={productData.weave} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
@@ -212,7 +244,7 @@ const NewProduct = (props) => {
                             <Form.Group className='my-4'>
                                 <Form.Label>Texture</Form.Label>
                                 <FormControl type='text' name='texture' value={productData.texture} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                            </Form.Group>*/}
+                            </Form.Group>
                             <Form.Group className='my-4'>
                                 <Form.Label>Opacity</Form.Label>
                                 <FormControl type='text' name='opacity' value={productData.opacity} className='mr-sm-2' onChange={handleChange} required placeholder='' />

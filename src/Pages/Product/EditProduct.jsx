@@ -4,7 +4,7 @@ import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'Assets/styles/User/Profile/style.css';
 import GoBack from 'Components/Shared/GoBack';
-import EditProduct from 'Components/Pages/Forms/EditProduct';
+import EditProduct from 'Components/Forms/Product/EditProduct';
 import GetSingleProductData from 'Utils/GetSingleProductData';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import toast from 'react-hot-toast';
@@ -18,9 +18,11 @@ const EditProductDetails = () => {
     const [reloadCount, setReloadCount] = useState(0);
 
     const editSuccess = (e) => {
-        setTimeout(function(){
-            navigate("/user/profile");
-        }, 1000);
+        if (e) {
+            setTimeout(function(){
+                navigate("/user/profile");
+            }, 1000);
+        }
     };
 
     const reloadPage = (e) => {
@@ -62,7 +64,7 @@ const EditProductDetails = () => {
                     <Container>
                         <Row>
                             <Col lg="8" className='mb-3'>
-                                <h2 className='fs-30 mb-2'>Edit Design</h2>
+                                <h2 className='fs-30 mb-2'>Edit Fabric</h2>
                             </Col>
                             <Col lg="4" className='mb-3 text-right'>
                                 <GoBack fallBack="/user/profile" />

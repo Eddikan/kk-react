@@ -33,6 +33,16 @@ const ImageDragAndDrop = (props) => {
     handleFiles(droppedFiles);
   };
 
+  let imageType = "portfolio";
+
+  if (type) {
+    if (type == "portfolio") {
+      imageType = "portfolio";
+    } else if (type == "product") {
+      imageType = "product";
+    } 
+  }
+
   const submitDocumentsSequentially = async (images) => {
     setUploadStatus("loading");
     const updatedImageUrls = [...imageUrls];
@@ -40,16 +50,7 @@ const ImageDragAndDrop = (props) => {
     for (const imageInfo of images) {
       const dataArray = new FormData();
       dataArray.append("image_url", imageInfo.file);
-      let imageType = "";
-
-      if (type) {
-        if (type == "portfolio") {
-          imageType = "portfolio";
-        } else if (type == "product") {
-          imageType = "product";
-        }
-      }
-  
+      
       try {
         const response = await axios.post(
           `${process.env.REACT_APP_API_ENDPOINT}${imageType}/image?user_id=${currentUser}&token=${token}`,
@@ -167,7 +168,7 @@ const ImageDragAndDrop = (props) => {
                       <>
                       {images.length > 3 && index > 2 ?
                         <Col lg={4} key={image.id} className="image-preview mt-3">
-                          <div className="image-dnd min" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")"}}>
+                          <div className="image-dnd min" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+imageType+'/'+image.image_url+")"}}>
                             <div className="dnd-actions-overlay">
                               <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
                             </div>
@@ -175,7 +176,7 @@ const ImageDragAndDrop = (props) => {
                         </Col>
                         :
                         <Col lg={4} key={image.id} className="image-preview">
-                          <div className="image-dnd min" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")"}}>
+                          <div className="image-dnd min" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+imageType+'/'+image.image_url+")"}}>
                             <div className="dnd-actions-overlay">
                               <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
                             </div>
@@ -188,7 +189,7 @@ const ImageDragAndDrop = (props) => {
                       <>
                         {images.length > 3 && index > 3 ?
                           <Col lg={3} key={image.id} className="image-preview mt-3">
-                            <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")"}}>
+                            <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+imageType+'/'+image.image_url+")"}}>
                               <div className="dnd-actions-overlay">
                                 <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
                               </div>
@@ -196,7 +197,7 @@ const ImageDragAndDrop = (props) => {
                           </Col>
                           :
                           <Col lg={3} key={image.id} className="image-preview">
-                            <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")"}}>
+                            <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+imageType+'/'+image.image_url+")"}}>
                               <div className="dnd-actions-overlay">
                                 <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
                               </div>
