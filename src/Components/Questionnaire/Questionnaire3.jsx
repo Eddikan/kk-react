@@ -215,6 +215,7 @@ const Questionnaire3 = (props) => {
                                                     e.target.value = "";
                                                 }
                                             }}
+                                            required
                                             // placeholder="Fabric Type" // uncomment if needed
                                         />
                                     </Form.Group>
@@ -257,7 +258,7 @@ const Questionnaire3 = (props) => {
                                                     <Row className="align-items-center text-center my-5">
                                                         <Col>
                                                             <Form.Label className="mb-1 fs-20">
-                                                                Upload your fabrics
+                                                                Upload your products
                                                             </Form.Label>
                                                             <Form.Label className="mb-4 fs-16 mt-1 small">
                                                                 Share your fabric snapshot to uncover a realm of creative possibilities.
@@ -266,7 +267,7 @@ const Questionnaire3 = (props) => {
                                                                 onClick={toggleuploadFile}
                                                                 type="button"
                                                             >
-                                                                Upload Your First Shot
+                                                                Upload
                                                             </Button>
                                                         </Col>
                                                     </Row>
@@ -358,7 +359,7 @@ const Questionnaire3 = (props) => {
                     </Row>
                     <Row>
                         <Col lg="12" className="text-right">
-                            {signupType == "fabric_vendor" ?
+                            {signupType == "seller" ?
                                 null
                                 :
                                 <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(3); }}>Back</Button>

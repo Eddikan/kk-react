@@ -22,7 +22,6 @@ import { GoPencil } from "react-icons/go";
 import { GoAlertFill } from 'react-icons/go';
 import axios from 'axios';
 
-
 const initialUserData = Object.freeze({
     is_designer: 0,
     is_tailor: 0,

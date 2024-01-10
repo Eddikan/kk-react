@@ -147,7 +147,7 @@ const NewProduct = (props) => {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
-                toast.success('Design saved as draft successfully!');
+                toast.success('Fabric saved as draft successfully!');
                 setProductDraftLoading(false);
                 reloadPage(true);
                 formSuccess(true);

@@ -86,7 +86,7 @@ const Header = () => {
       }
 
     } else {
-      if (currentUrl.includes('user')) {
+      if (currentUrl.includes('user') || currentUrl.includes('designers') || currentUrl.includes('fabrics') || currentUrl.includes('designs')) {
         navigate("/login");
       }
     }
@@ -96,7 +96,7 @@ const Header = () => {
     // } else {
     //   if (signupType == "designer") {
     //     setUserType('designer');
-    //   } else if (signupType == "fabric_vendor") {
+    //   } else if (signupType == "seller") {
     //     setUserType('vendor');
     //   }
     // }

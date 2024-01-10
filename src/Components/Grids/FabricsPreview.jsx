@@ -39,6 +39,10 @@ const Fabrics = (props) => {
         }
     };
 
+    const showSignupModal = (e) => {
+        props.onSignup(e);
+    }
+
     async function toggleSortFabrics(type, sort) {
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' +type+sort).then((response) => {
             const selectedFabrics = response.data.data;
@@ -59,7 +63,7 @@ const Fabrics = (props) => {
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/'+id).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
-                // toast.success('Fabric saved as draft successfully!');
+                // toast.success('Design saved as draft successfully!');
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
             }
@@ -106,39 +110,14 @@ const Fabrics = (props) => {
                                                 return (
                                                     <>
                                                         {index < limit ?
-                                                            <Col className="designs-grid mb-3" xs="4" md="3">
-                                                                <Link to={`/product/${fabric.id}`} className='portfolio-link' onClick={function() {toggleAddViewCount(fabric.id);}}>
-                                                                    <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+fabricImage+")"}}>
-                                                                        <div className='save-link'>
-                                                                            <div className="action-button bg-white me-2">
-                                                                                <GoBookmark className="text-black" />
-                                                                            </div>
-                                                                            <div className="action-button bg-white">
-                                                                                <GoHeart className="text-black" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </Link>
+                                                            <Col className="designs-grid mb-3 cursor-pointer" xs="4" md="3" onClick={() => showSignupModal('user_fabric')}>
+                                                                <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+fabricImage+")"}}>
+                                                                    
+                                                                </div>
                                                                 <div className="design-details">
                                                                     <div className='d-flex align-items-center justify-content-between'>
                                                                         <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{fabric.name ?? '-'}</p>
-                                                                        <div className='d-flex align-items-center'>
-                                                                            <span className='fs-14 text-no-wrap mx-2'>
-                                                                                <IoHeartOutline /> 0
-                                                                            </span>
-                                                                            <span className='fs-14 text-no-wrap'>
-                                                                                <IoEyeOutline /> {fabric.views}
-                                                                            </span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className='d-flex align-items-center mt-1'>
-                                                                        {fabric.user.image ?
-                                                                            <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
-                                                                            :
-                                                                            <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
-                                                                        }
-                                                                        &nbsp;&nbsp;
-                                                                        <p className="text-black fs-14 mb-0">{fabric.user.first_name && fabric.user.first_name != "" ? fabric.user.first_name : "-"} {fabric.user.last_name && fabric.user.last_name != "" ? fabric.user.last_name : "-"}</p>
+                                                                        
                                                                     </div>
                                                                 </div>
                                                             </Col>
@@ -161,38 +140,12 @@ const Fabrics = (props) => {
                                             return (
                                                 <>
                                                     <Col className="designs-grid mb-3" xs="4" md="3">
-                                                        <Link to={`/product/${fabric.id}`} className='portfolio-link'>
-                                                            <div className="fabrics-grid-div w-100" style={{ backgroundImage: "url("+fabricImage+")"}}>
-                                                                <div className='save-link'>
-                                                                    <div className="action-button bg-white me-2">
-                                                                        <GoBookmark className="text-black" />
-                                                                    </div>
-                                                                    <div className="action-button bg-white">
-                                                                        <GoHeart className="text-black" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </Link>
+                                                        <div className="designs-grid-div w-100 cursor-pointer" style={{ backgroundImage: "url("+fabricImage+")"}} onClick={() => showSignupModal('user_fabric')}>
+                                                            
+                                                        </div>
                                                         <div className="design-details">
                                                             <div className='d-flex align-items-center justify-content-between'>
                                                                 <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{fabric.name ?? '-'}</p>
-                                                                <div className='d-flex align-items-center'>
-                                                                    <span className='fs-14 text-no-wrap mx-2'>
-                                                                        <IoHeartOutline /> 0
-                                                                    </span>
-                                                                    <span className='fs-14 text-no-wrap'>
-                                                                        <IoEyeOutline /> {fabric.views}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                            <div className='d-flex align-items-center mt-1'>
-                                                                {fabric.user.image ?
-                                                                    <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
-                                                                    :
-                                                                    <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
-                                                                }
-                                                                &nbsp;&nbsp;
-                                                                <p className="text-black fs-14 mb-0">{fabric.user.first_name && fabric.user.first_name != "" ? fabric.user.first_name : "-"} {fabric.user.last_name && fabric.user.last_name != "" ? fabric.user.last_name : "-"}</p>
                                                             </div>
                                                         </div>
                                                     </Col>

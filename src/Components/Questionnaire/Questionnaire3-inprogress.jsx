@@ -394,7 +394,7 @@ const Questionnaire3 = (props) => {
                     </Row>
                     <Row>
                         <Col lg="12" className="text-right">
-                            {signupType == "fabric_vendor" ?
+                            {signupType == "seller" ?
                                 null
                                 :
                                 <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(3); }}>Back</Button>

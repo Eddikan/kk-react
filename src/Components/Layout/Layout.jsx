@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import Header from '../Shared/Header'
+import Footer from '../Shared/Footer'
 import toast, { Toaster } from 'react-hot-toast';
 
 const Layout = ({ children }) => {
@@ -15,7 +16,7 @@ const Layout = ({ children }) => {
       position="top-right"
       reverseOrder={false}
     />
-      <div>
+      <div style={{minHeight: '100vh'}}>
           <div id="navigation">
               <Header />
           </div>
@@ -23,7 +24,7 @@ const Layout = ({ children }) => {
               {children}
           </div>
           <div id="footer">
-
+            <Footer />
           </div>
       </div>
     </>

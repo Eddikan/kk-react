@@ -128,7 +128,7 @@ const SignUp = () => {
       ...registerFormData,
       signup_type: signupTypeOption,
       is_designer: signupType == "designer" ? 1 : 0,
-      is_seller: signupType == "fabric_vendor" ? 1 : 0,
+      is_seller: signupType == "seller" ? 1 : 0,
       completed_questionnaire: signupType == "user" ? 1 : 0,
     });
   }, [currentUser, signupType]);  
@@ -151,7 +151,7 @@ const SignUp = () => {
                       </p>
                       <div className="divider-small mb-4 mt-3"></div>
                     </>
-                    : signupType == "fabric_vendor" ?
+                    : signupType == "seller" ?
                     <>
                       <h1 className='text-center'>Fabric Vendor Registration</h1>
                       <p className="text-center small mb-0">

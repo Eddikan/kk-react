@@ -68,7 +68,7 @@ const Questionnaire = () => {
     if (signupType) {
       if (signupType == "designer") {
         setStep(4);
-      } else if (signupType == "fabric_vendor") {
+      } else if (signupType == "seller") {
         setStep(4);
       } else {
         setQuestionnaire1Show(false);
@@ -136,7 +136,7 @@ const Questionnaire = () => {
       if (signupType == "designer") {
         setStep(2);
         setQuestionnaire2Show(true);
-      } else if (signupType == "fabric_vendor") {
+      } else if (signupType == "seller") {
         setStep(3);
         setQuestionnaire3Show(true);
       }

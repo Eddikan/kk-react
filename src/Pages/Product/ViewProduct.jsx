@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
-import { GoBookmark, GoHeart, GoAlertFill } from 'react-icons/go';
+import { GoBookmark, GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import 'Assets/styles/Product/ViewProduct/style.css';
 import GoBack from 'Components/Shared/GoBack';
 import GetSingleProductData from 'Utils/GetSingleProductData';
@@ -10,6 +10,9 @@ import toast from 'react-hot-toast';
 import ImageSlider from 'Components/Shared/ImageSlider';
 import { Card, CardBody } from 'reactstrap';
 import LoadingPage from 'Components/Shared/LoadingPage';
+import { useCookies } from 'react-cookie';
+import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
+import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 
 const ViewProduct = () => {
     const { productId } = useParams();
@@ -20,6 +23,8 @@ const ViewProduct = () => {
     const [activeImage, setActiveImage] = useState('');
     const [commentsTabShow, setCommentsTabShow] = useState(true);
     const [reviewsTabShow, setReviewsTabShow] = useState(false);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const currentUser = cookies.currentUser;
 
     const navigate = useNavigate();
 
@@ -38,11 +43,13 @@ const ViewProduct = () => {
             setActiveImage(productData.image_urls[0].image_url);
           } else {
             setProductLoading(false);
-            toast.error('Product item does not exist!');
+            toast.error('Product does not exist!');
+            navigate('/user/profile');
           }
           // Update state or perform other logic with productData
         } catch (error) {
             toast.error('Product item does not exist!');
+            navigate('/user/profile');
           // Handle the error, if needed
         }
     };
@@ -91,12 +98,43 @@ const ViewProduct = () => {
                                 <Card className="h-100">
                                     <CardBody>
                                         <Row>
-                                            <Col lg="12" className="text-right">
-                                                <div className="action-button bg-smgray me-2">
-                                                    <GoHeart className="text-black" />
+                                            <Col lg="12" className="d-flex justify-content-between">
+                                                <div className='mb-3 d-flex portfolio-designer'>
+                                                    {product.user.image ? (
+                                                        <div
+                                                            className='designer-photo'
+                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${product.user.image})` }}
+                                                        ></div>
+                                                        ) : (
+                                                        <div
+                                                            className='designer-photo'
+                                                            style={{ backgroundImage: `url(${product.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder })` }}
+                                                        ></div>
+                                                    )}
+                                                    <div className="designer-info mx-2">
+                                                        <p className="text-black fs-18 fw-600 mb-0">{product.user.first_name && product.user.first_name != "" ? product.user.first_name : "-"} {product.user.last_name && product.user.last_name != "" ? product.user.last_name : "-"}</p>
+                                                        {currentUser !== product.user.id ?
+                                                            <>
+                                                                <a className='text-decoration-none fs-14'>Follow</a>
+                                                            </>
+                                                            :
+                                                            <>
+                                                                
+                                                                <a className='text-decoration-none fs-14'>You</a>
+                                                            </>
+                                                        }
+                                                    </div>
                                                 </div>
-                                                <div className="action-button bg-smgray">
-                                                    <GoBookmark className="text-black" />
+                                                <div>
+                                                    <div className="action-button bg-smgray me-2">
+                                                        <GoShareAndroid className="text-black" />
+                                                    </div>
+                                                    <div className="action-button bg-smgray me-2">
+                                                        <GoHeart className="text-black" />
+                                                    </div>
+                                                    <div className="action-button bg-smgray">
+                                                        <GoBookmark className="text-black" />
+                                                    </div>
                                                 </div>
                                             </Col>
                                             <Col lg="12">

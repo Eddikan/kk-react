@@ -50,10 +50,12 @@ const ViewPortFolio = () => {
           } else {
             setPortfolioLoading(false);
             toast.error('Portfolio item does not exist!');
+            navigate('/user/profile');
           }
           // Update state or perform other logic with portfolioData
         } catch (error) {
             toast.error('Portfolio item does not exist!');
+            navigate('/user/profile');
           // Handle the error, if needed
         }
     };

@@ -25,9 +25,9 @@ const Fabrics = (props) => {
 
     const fetchData = async (e) => {
         try {
-          const designsData = await GetFabricsData(e);
-          if (designsData) {
-            setFabrics(designsData);
+          const fabricsData = await GetFabricsData(e);
+          if (fabricsData) {
+            setFabrics(fabricsData);
             setFabricsLoading(false);
           } else {
             toast.error('An error occured. Please try again or contact the administrator.');
@@ -58,18 +58,17 @@ const Fabrics = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        // axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/'+id).then((response) => {
-        //     const success = response.data.status;
-        //     if(success == 'Success') {
-        //         // toast.success('Design saved as draft successfully!');
-        //         // setReloadCount((prevReloadCount) => prevReloadCount + 1);
-        //     } else {
-        //         toast.error('An error occured. Please try again or contact the administrator.');
-        //     }
-        // }).catch(() => {
-        //     toast.error('An error occured. Please try again or contact the administrator.');
-        // });
-        console.log(id);
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/'+id).then((response) => {
+            const success = response.data.status;
+            if(success == 'Success') {
+                // toast.success('Fabric saved as draft successfully!');
+                // setReloadCount((prevReloadCount) => prevReloadCount + 1);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+        });
     }
 
     const handleActionClick = (index) => {
@@ -87,7 +86,7 @@ const Fabrics = (props) => {
 
     return (
         <Layout>
-            {designsLoading ?
+            {fabricsLoading ?
                 <LoadingPage />
                 :
                 <>
@@ -129,7 +128,7 @@ const Fabrics = (props) => {
                                 </Col>
                             </Row>
                             <div id="profile-designs">
-                                {designsLoading ?
+                                {fabricsLoading ?
                                     <>
                                         <p className='text-center mb-3 mt-3'>
                                             Loading...
@@ -137,21 +136,21 @@ const Fabrics = (props) => {
                                     </>
                                     :
                                     <>
-                                        {designs && designs.length > 0 ?
+                                        {fabrics && fabrics.length > 0 ?
                                             <>
                                                 <Row className="designs-row">
                                                     {/* <img src={object.url} className='designs-img'/> */}
-                                                    {designs.map((design, index) => {
-                                                        if (design.image_urls?.[0]?.image_url) {
-                                                            var designImage = process.env.REACT_APP_STORAGE_URL+'portfolio/'+design.image_urls[0].image_url;
+                                                    {fabrics.map((fabric, index) => {
+                                                        if (fabric.image_urls?.[0]?.image_url) {
+                                                            var fabricImage = process.env.REACT_APP_STORAGE_URL+'product/'+fabric.image_urls[0].image_url;
                                                         } else {
-                                                            var designImage = PlaceholderImage;
+                                                            var fabricImage = PlaceholderImage;
                                                         }
                                                         return (
                                                             <>
                                                                 <Col className="designs-grid mb-3" xs="4" md="3">
-                                                                    <Link to={`/product/${design.id}`} className='portfolio-link' onClick={function() {toggleAddViewCount(design.id);}}>
-                                                                        <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+designImage+")"}}>
+                                                                    <Link to={`/product/${fabric.id}`} className='portfolio-link' onClick={function() {toggleAddViewCount(fabric.id);}}>
+                                                                        <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+fabricImage+")"}}>
                                                                             <div className='save-link'>
                                                                                 <div className="action-button bg-white me-2">
                                                                                     <GoBookmark className="text-black" />
@@ -164,24 +163,24 @@ const Fabrics = (props) => {
                                                                     </Link>
                                                                     <div className="design-details">
                                                                         <div className='d-flex align-items-center justify-content-between'>
-                                                                            <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{design.name ?? '-'}</p>
+                                                                            <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{fabric.name ?? '-'}</p>
                                                                             <div className='d-flex align-items-center'>
                                                                                 <span className='fs-14 text-no-wrap mx-2'>
                                                                                     <IoHeartOutline /> 0
                                                                                 </span>
                                                                                 <span className='fs-14 text-no-wrap'>
-                                                                                    <IoEyeOutline /> {design.views}
+                                                                                    <IoEyeOutline /> {fabric.views}
                                                                                 </span>
                                                                             </div>
                                                                         </div>
                                                                         <div className='d-flex align-items-center mt-1'>
-                                                                            {design.user.image ?
-                                                                                <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+design.user.image+")"}} ></div>
+                                                                            {fabric.user.image ?
+                                                                                <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
                                                                                 :
-                                                                                <div className='designer-photo-small' style={{ backgroundImage: `url(${design.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder })`}} ></div>
+                                                                                <div className='designer-photo-small' style={{ backgroundImage: `url(${fabric.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder })`}} ></div>
                                                                             }
                                                                             &nbsp;&nbsp;
-                                                                            <p className="text-black fs-14 mb-0">{design.user.first_name && design.user.first_name != "" ? design.user.first_name : "-"} {design.user.last_name && design.user.last_name != "" ? design.user.last_name : "-"}</p>
+                                                                            <p className="text-black fs-14 mb-0">{fabric.user.first_name && fabric.user.first_name != "" ? fabric.user.first_name : "-"} {fabric.user.last_name && fabric.user.last_name != "" ? fabric.user.last_name : "-"}</p>
                                                                         </div>
                                                                     </div>
                                                                 </Col>

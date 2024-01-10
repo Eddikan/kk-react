@@ -40,6 +40,9 @@ const ViewProduct = lazy(() => import('./Pages/Product/ViewProduct'));
 // Design
 const Designs = lazy(() => import('./Pages/Designs'));
 
+// Fabrics
+const Fabrics = lazy(() => import('./Pages/Fabrics'));
+
 // Designers
 const Designers = lazy(() => import('./Pages/Designers'));
 
@@ -114,7 +117,7 @@ const App = () => {
           <Route path="/how-it-works" exact element={<UnderConstruction />} />
           
           <Route path="/designers" exact element={<Designers />} />
-          <Route path="/fabrics" exact element={<UnderConstruction />} />
+          <Route path="/fabrics" exact element={<Fabrics />} />
           <Route path="/designs" exact element={<Designs />} />
 
         </Routes>

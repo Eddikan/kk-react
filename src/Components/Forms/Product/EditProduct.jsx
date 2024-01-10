@@ -213,7 +213,7 @@ const EditProduct = (props) => {
         axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'?user_id=' + currentUser + '&token=' + token, {...productData, image_urls: images, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
-                toast.success('Design saved as draft successfully!');
+                toast.success('Fabric saved as draft successfully!');
                 setProductDraftLoading(false);
                 reloadPage(true);
                 formSuccess(true);

@@ -2,15 +2,15 @@
 // GetUserData.js
 import axios from 'axios';
 
-const GetDesignsData = async () => {
+const GetFabricsData = async () => {
     try {
         const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/fabric');
         return response.data.data;
     } catch (error) {
         // Handle the error or show a toast message
-        console.error('Error fetching portfolio data:', error);
+        console.error('Error fetching fabric data:', error);
         throw error; // Optionally, rethrow the error if you want to handle it in the component
     }
 };
 
-export default GetDesignsData;
+export default GetFabricsData;

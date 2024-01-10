@@ -51,6 +51,14 @@ h5 {
     line-height: 1;
 }
 
+#root {
+    min-height: 100vh;
+}
+
+#main {
+    min-height: calc(100vh - 250px);
+}
+
 .text-gold {
     color: var(--gold) !important;
 }
@@ -176,6 +184,10 @@ h5 {
     font-size: 12px;
 }
 
+.fs-13 {
+    font-size: 13px;
+}
+
 .fs-14 {
     font-size: 14px;
 }
@@ -279,6 +291,11 @@ a {
 /* .modal-fullscreen .modal-content {
     background-color: #f5f6f8;
 } */
+
+.modal-fullscreen .btn-close {
+    margin-right: 20px;
+    margin-top: 0px;
+}
 
 .StripeElement {
     display: block;
@@ -1035,6 +1052,38 @@ form select::placeholder {
     display: inline-block;
     min-width: 70px;
     max-width: 100px;
+    text-align: center;
+}
+
+.pb-100 {
+    padding-bottom: 100px;
+}
+
+.pb-150 {
+    padding-bottom: 100px;
+}
+
+/* Footer */
+
+.footer-logo {
+    max-width: 150px;
+    margin-bottom: 20px;
+}
+
+.footer-social {
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.footer-link {
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 /* Icons */
@@ -1080,23 +1129,39 @@ form select::placeholder {
     width: 300px;
 }
 
+.border-solid-2 {
+ border-width: 2px !important;
+ border-style: solid !important;
+}
+
+.preview-button.fixed {
+    position: fixed;
+    width: 100%;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-top: 2px solid var(--light);
+}
+
 .user-box {
-    min-height: 200px;
+    /* min-height: 200px; */
     display: flex;
     width: 100%;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 .user-box img {
     width: 100%;
-    max-width: 110px;
-    margin-bottom: 30px;
-    margin-top: 20px;
+    max-width: 45px;
+    margin-bottom: 20px;
+    /* margin-top: 20px; */
 }
 
 .user-box h3 {
-    margin-bottom: 30px;
+    margin-bottom: 5px;
 }
 
 .text-gold {

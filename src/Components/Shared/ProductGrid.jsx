@@ -68,7 +68,7 @@ const ProductGrid = (props) => {
         axios.delete(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'?user_id=' + currentUser + '&token=' + token).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
-                toast.success('Design deleted successfully!');
+                toast.success('Fabric deleted successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
                 setProductDeleteLoading(false);
                 setDeleteConfirmShow(false);
@@ -87,7 +87,7 @@ const ProductGrid = (props) => {
         axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
-                toast.success('Design saved as draft successfully!');
+                toast.success('Fabric saved as draft successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
                 setProductDraftLoading(false);
             } else {
@@ -105,7 +105,7 @@ const ProductGrid = (props) => {
         axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
-                toast.success('Design published successfully!');
+                toast.success('Fabric published successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
                 setProductPublishLoading(false);
             } else {
