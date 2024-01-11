@@ -12,7 +12,7 @@ import SocialmediaIcon from 'Assets/images/social-media.png';
 import YoutubeIcon from 'Assets/images/youtube.png';
 import UserPlaceholder from 'Assets/images/user.png';
 import Loading from 'Assets/images/loading.gif'
-import getUserData from 'Utils/GetUserData';
+import GetUserData from 'Utils/GetUserData';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
 import PortfolioGrid from 'Components/Shared/PortfolioGrid';
@@ -190,7 +190,7 @@ const Profile = () => {
 
     const fetchData = async (e) => {
         try {
-          const userData = await getUserData(e);
+          const userData = await GetUserData(e);
           if (userData.id) {
             setUser(userData);
             setUserImage(userData.image);
@@ -203,17 +203,19 @@ const Profile = () => {
           } else {
             setUserLoading(false);
             toast.error('An error occured. Please try again or contact the administrator.');
+            console.log(userData);
           }
           // Update state or perform other logic with userData
         } catch (error) {
             setUserLoading(false);
             toast.error('An error occured. Please try again or contact the administrator.');
+            console.log(error);
           // Handle the error, if needed
         }
     };
 
     useEffect(() => {
-        fetchData(currentUser);
+        fetchData({token: token, currentUser: currentUser});
     }, [reloadCount]);
 
     return (

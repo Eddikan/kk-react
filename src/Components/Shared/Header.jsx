@@ -130,7 +130,7 @@ const Header = () => {
                 <>
                   <div className="cursor-pointer nav-link"><GoBell size={25}/></div>
                   <div className="cursor-pointer nav-link"><BsEnvelope size={25}/></div>
-                  <Nav.Link href="/wish-list"><IoIosHeartEmpty size={25}/></Nav.Link>
+                  <Nav.Link href="/wishlist"><IoIosHeartEmpty size={25}/></Nav.Link>
                   <Nav.Link href="/orders">Orders</Nav.Link>
                   <div className="user-dropdown nav-link" ref={userRef}>
                     {userImage ?

@@ -13,6 +13,7 @@ import LoadingPage from 'Components/Shared/LoadingPage';
 import { useCookies } from 'react-cookie';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
+import axios from 'axios';
 
 const ViewProduct = () => {
     const { productId } = useParams();
@@ -24,6 +25,7 @@ const ViewProduct = () => {
     const [commentsTabShow, setCommentsTabShow] = useState(true);
     const [reviewsTabShow, setReviewsTabShow] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const [userWishlist, setUserWishlist] = useState(false);
     const currentUser = cookies.currentUser;
 
     const navigate = useNavigate();
@@ -41,6 +43,8 @@ const ViewProduct = () => {
             setProductLoading(false);
             setImages(productData.image_urls);
             setActiveImage(productData.image_urls[0].image_url);
+            var wishlist_user_ids = productData.wishlist_user_ids;
+            setUserWishlist(wishlist_user_ids.includes(currentUser));
           } else {
             setProductLoading(false);
             toast.error('Product does not exist!');
@@ -62,6 +66,19 @@ const ViewProduct = () => {
             setReviewsTabShow(true);
             setCommentsTabShow(false);
         }
+    }
+
+    async function wishlistUpdate(e) {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
+          const success = response.data.status;
+          if (success == 'Success') {
+            fetchData(productId);
+          } else {
+            toast.error('Something went wrong, please contact the administrator!');
+          }
+        }).catch((error) => {
+          toast.error('Something went wrong, please contact the administrator!');
+        });
     }
 
     useEffect(() => {
@@ -99,7 +116,7 @@ const ViewProduct = () => {
                                     <CardBody>
                                         <Row>
                                             <Col lg="12" className="d-flex justify-content-between">
-                                                <div className='mb-3 d-flex portfolio-designer'>
+                                                {/* <div className='mb-3 d-flex portfolio-designer'>
                                                     {product.user.image ? (
                                                         <div
                                                             className='designer-photo'
@@ -124,21 +141,29 @@ const ViewProduct = () => {
                                                             </>
                                                         }
                                                     </div>
+                                                </div> */}
+                                                <div>
+                                                    <h2 className="fw-600 fs-30">{product.name ?? "-"}</h2>
                                                 </div>
                                                 <div>
                                                     <div className="action-button bg-smgray me-2">
                                                         <GoShareAndroid className="text-black" />
                                                     </div>
-                                                    <div className="action-button bg-smgray me-2">
-                                                        <GoHeart className="text-black" />
-                                                    </div>
+                                                    {userWishlist ?
+                                                        <div className="action-button bg-gold me-2" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: product.id}); }}>
+                                                            <GoHeart className="text-white" />
+                                                        </div>
+                                                        :
+                                                        <div className="action-button bg-smgray me-2" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: product.id}); }}>
+                                                            <GoHeart className="text-black" />
+                                                        </div>
+                                                    }
                                                     <div className="action-button bg-smgray">
                                                         <GoBookmark className="text-black" />
                                                     </div>
                                                 </div>
                                             </Col>
                                             <Col lg="12">
-                                                <h2 className="fw-600 fs-30">{product.name ?? "-"}</h2>
                                                 <div className="mb-4">
                                                     {product.categories ?
                                                         <>

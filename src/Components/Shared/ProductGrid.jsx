@@ -29,7 +29,7 @@ const ProductGrid = (props) => {
     const token = cookies.token;
 
     const fetchData = async (e) => {
-        setProductsLoading(true);
+        // setProductsLoading(true);
         try {
           const productsData = await GetUserProductsData(e);
           if (productsData) {
@@ -118,6 +118,19 @@ const ProductGrid = (props) => {
         });
     };
 
+    async function wishlistUpdate(e) {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
+          const success = response.data.status;
+          if (success == 'Success') {
+            fetchData(currentUser);
+          } else {
+            toast.error('Something went wrong, please contact the administrator!');
+          }
+        }).catch((error) => {
+          toast.error('Something went wrong, please contact the administrator!');
+        });
+    };
+
     useEffect(() => {
         fetchData(currentUser);
     }, [reloadCount]);
@@ -136,29 +149,31 @@ const ProductGrid = (props) => {
                         {products && products.length > 0 ?
                             <>
                                 <Row className="portfolio-row">
-                                    {/* <img src={object.url} className='portfolio-img'/> */}
-                                    {products.map((object, index) => {
-                                        if (object.image_urls?.[0]?.image_url) {
-                                            var productImage = process.env.REACT_APP_STORAGE_URL+'product/'+object.image_urls[0].image_url;
+                                    {/* <img src={product.url} className='portfolio-img'/> */}
+                                    {products.map((product, index) => {
+                                        if (product.image_urls?.[0]?.image_url) {
+                                            var productImage = process.env.REACT_APP_STORAGE_URL+'product/'+product.image_urls[0].image_url;
                                         } else {
                                             var productImage = PlaceholderImage;
                                         }
+                                        var wishlist_user_ids = product.wishlist_user_ids;
+                                        const userWishlist = wishlist_user_ids.includes(currentUser);
                                         return (
                                             <Col className={`portfolio-grid mb-3`} xs="4" md="2">
-                                                <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url("+productImage+")"}}>
+                                                <div className={`portfolio-grid-div w-100 ${product.collection_type == "Limited" ? "limited" : " "} ${product.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url("+productImage+")"}}>
                                                     <div className="portfolio-overlay">
                                                         <div className="portfolio-actions">
                                                             <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
                                                             {selectedItemIndex === index && (
                                                                 <div className="action-box">
-                                                                    <Link className="text-decoration-none" to={`/product/${object.id}/edit`}>
+                                                                    <Link className="text-decoration-none" to={`/product/${product.id}/edit`}>
                                                                         <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
                                                                     </Link>
-                                                                    <p className="mb-3 cursor-pointer" onClick={function() { deleteConfirm(object.id); }}><GoTrash  /> Delete</p>
-                                                                    {object.status != "Draft" ?
-                                                                        <p className="mb-0 cursor-pointer" onClick={function() {ProductDraftSubmit(object.id);}}><IoDocumentOutline /> {productDraftLoading ? "Drafting..." : "Draft"}</p>
+                                                                    <p className="mb-3 cursor-pointer" onClick={function() { deleteConfirm(product.id); }}><GoTrash  /> Delete</p>
+                                                                    {product.status != "Draft" ?
+                                                                        <p className="mb-0 cursor-pointer" onClick={function() {ProductDraftSubmit(product.id);}}><IoDocumentOutline /> {productDraftLoading ? "Drafting..." : "Draft"}</p>
                                                                         :
-                                                                        <p className="mb-0 cursor-pointer" onClick={function() {ProductPublishSubmit(object.id);}}><IoDocumentOutline /> {productPublishLoading ? "Publishing..." : "Publish"}</p>
+                                                                        <p className="mb-0 cursor-pointer" onClick={function() {ProductPublishSubmit(product.id);}}><IoDocumentOutline /> {productPublishLoading ? "Publishing..." : "Publish"}</p>
                                                                     }
                                                                     
                                                                     {/* Add other actions as needed */}
@@ -166,27 +181,33 @@ const ProductGrid = (props) => {
                                                             )}
                                                         </div>
                                                         <div className="portfolio-details">
-                                                            {object.status == "Draft" ?
+                                                            {product.status == "Draft" ?
                                                                 <span className="text-warning small fw-600">Draft</span>
                                                                 :
                                                                 null
                                                             }
-                                                            <span className="text-white text-decoration-none portfolio-name">{object.name ?? "-"}</span>
+                                                            <span className="text-white text-decoration-none portfolio-name">{product.name ?? "-"}</span>
                                                             {currentUser ?
                                                                 <div className="other-actions">
-                                                                    <div className="action-button bg-white me-2">
-                                                                        <GoHeart className="text-black" />
-                                                                    </div>
-                                                                    <div className="action-button bg-white">
+                                                                    {userWishlist ?
+                                                                        <div className="action-button bg-gold" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: product.id}); }}>
+                                                                            <GoHeart className="text-white" />
+                                                                        </div>
+                                                                        :
+                                                                        <div className="action-button bg-white" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: product.id}); }}>
+                                                                            <GoHeart className="text-black" />
+                                                                        </div>
+                                                                    }
+                                                                    {/* <div className="action-button bg-white">
                                                                         <GoBookmark className="text-black" />
-                                                                    </div>
+                                                                    </div> */}
                                                                 </div>
                                                                 :
                                                                 null
                                                             }
                                                         </div>
                                                     </div>
-                                                    <Link to={`/product/${object.id}`} className="text-decoration-none">
+                                                    <Link to={`/product/${product.id}`} className="text-decoration-none">
                                                         <div className="portfolio-overlay" style={{background: 'transparent', height: '85%', bottom: 0}}></div>
                                                     </Link>
                                                 </div>

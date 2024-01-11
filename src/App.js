@@ -25,6 +25,9 @@ const CustomerPage = lazy(() => import('./Pages/CustomerPage'));
 const UserProfile = lazy(() => import('./Pages/User/Profile'));
 const EditUserProfile = lazy(() => import('./Pages/User/EditProfile'));
 
+// Wishlist
+const Wishlists = lazy(() => import('./Pages/Wishlists'));
+
 // Portfolio
 const Portfolio = lazy(() => import('./Pages/Portfolio/Portfolio'));
 const AddNewPortfolio = lazy(() => import('./Pages/Portfolio/AddNewPortfolio'));
@@ -105,7 +108,7 @@ const App = () => {
           
           <Route path="/inspirations" exact element={<UnderConstruction />} />
           <Route path="/blog" exact element={<UnderConstruction />} />
-          <Route path="/wish-list" exact element={<UnderConstruction />} />
+          <Route path="/wishlist" exact element={<Wishlists />} />
           <Route path="/orders" exact element={<UnderConstruction />} />
 
           <Route path="/category/tops" exact element={<UnderConstruction />} />

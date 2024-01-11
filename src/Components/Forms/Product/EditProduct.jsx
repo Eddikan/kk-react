@@ -69,6 +69,13 @@ const EditProduct = (props) => {
         })
     };
 
+    const handleChangeCheckbox = (isChecked) => {
+        setProductData({
+            ...productData,
+            eco_friendly: isChecked ? 1 : 0,
+        });
+    };
+
     const handleAddMore = () => {
         // Trigger the file input when the "Add More" button is clicked
         fileInputRef.current.click();
@@ -308,6 +315,21 @@ const EditProduct = (props) => {
                             onChange={handleChange} required />
                     </Form.Group>
                     <Form.Group className='my-4'>
+                        <Form.Label>Environmentally Conscious Options</Form.Label>
+                        <Row className="mt-1">
+                            <Form.Group as={Col} lg={3}>
+                                <Form.Check
+                                    className="cursor-pointer"
+                                    type="checkbox"
+                                    label="Eco-Friendly"
+                                    name="eco_friendly"
+                                    checked={productData.eco_friendly === 1}
+                                    onChange={(e) => handleChangeCheckbox(e.target.checked)}
+                                />
+                            </Form.Group>
+                        </Row>
+                    </Form.Group>
+                    <Form.Group className='my-4'>
                         <Form.Label>Colors</Form.Label>
                         <TagsInput
                             value={colors}
@@ -327,7 +349,7 @@ const EditProduct = (props) => {
                         <Form.Label>Composition</Form.Label>
                         <FormControl type='text' name='composition' value={productData.composition} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
-                    <Form.Group className='my-4'>
+                    {/* <Form.Group className='my-4'>
                         <Form.Label>Categories</Form.Label>
                         <TagsInput
                             value={categories}
@@ -342,18 +364,18 @@ const EditProduct = (props) => {
                                 }
                             }}
                         />
-                    </Form.Group>
+                    </Form.Group> */}
                     <Form.Group className='my-4'>
                         <Form.Label>Weave</Form.Label>
                         <FormControl type='text' name='weave' value={productData.weave} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
                     <Form.Group className='my-4'>
-                        <Form.Label>Weight</Form.Label>
+                        <Form.Label>Weight (Per sq. meter)</Form.Label>
                         <FormControl type='number' name='weight' value={productData.weight} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
                     <Form.Group className='my-4'>
-                        <Form.Label>Width</Form.Label>
-                        <FormControl type='number' name='width' value={productData.weight} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                        <Form.Label>Width (Meter)</Form.Label>
+                        <FormControl type='number' name='width' value={productData.width} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Pattern</Form.Label>
@@ -369,12 +391,58 @@ const EditProduct = (props) => {
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Stretch</Form.Label>
-                        <FormControl type='text' name='stretch' value={productData.stretch} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                        <Row className="mt-1">
+                            <Form.Group as={Col} lg={3}>
+                                <Form.Check
+                                    className="cursor-pointer"
+                                    type="radio"
+                                    label="Stretch"
+                                    name="stretch"
+                                    value="Stretch"
+                                    checked={productData.stretch === 'Stretch'}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+                            <Form.Group as={Col} lg={2}>
+                                <Form.Check
+                                    className="cursor-pointer"
+                                    type="radio"
+                                    label="Rigid"
+                                    name="stretch"
+                                    value="Rigid"
+                                    checked={productData.stretch === 'Rigid'}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+                        </Row>
                     </Form.Group>
                     <Form.Group className='my-4'>
                         <Form.Label>Drape</Form.Label>
-                        <FormControl type='text' name='drape' value={productData.drape} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                    </Form.Group>
+                        <Row className="mt-1">
+                            <Form.Group as={Col} lg={3}>
+                                <Form.Check
+                                    className="cursor-pointer"
+                                    type="radio"
+                                    label="Hang"
+                                    name="drape"
+                                    value="Hang"
+                                    checked={productData.drape === 'Hang'}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+                            <Form.Group as={Col} lg={2}>
+                                <Form.Check
+                                    className="cursor-pointer"
+                                    type="radio"
+                                    label="Drapes"
+                                    name="drape"
+                                    value="Drapes"
+                                    checked={productData.drape === 'Drapes'}
+                                    onChange={handleChange}
+                                />
+                            </Form.Group>
+                        </Row>
+                    </Form.Group> 
                     <Form.Group className='my-4'>
                         <Form.Label>Care Instructions</Form.Label>
                         <FormControl as="textarea"
@@ -385,15 +453,15 @@ const EditProduct = (props) => {
                             onChange={handleChange} required />
                     </Form.Group>
                     <Form.Group className='my-4'>
-                        <Form.Label>Price</Form.Label>
+                        <Form.Label>Price (Per meter)</Form.Label>
                         <FormControl type='number' name='price' value={productData.price} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
                     <Form.Group className='my-4'>
-                        <Form.Label>Quantity</Form.Label>
+                        <Form.Label>Stock Quantity</Form.Label>
                         <FormControl type='number' name='quantity' value={productData.quantity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
                     <Form.Group className='my-4'>
-                        <Form.Label>Certifications</Form.Label>
+                        <Form.Label>Certifications (Organic, sustainable, etc)</Form.Label>
                         <TagsInput
                             value={certifications}
                             onChange={setCertifications}
@@ -409,7 +477,7 @@ const EditProduct = (props) => {
                         />
                     </Form.Group>
                     <Form.Group className='my-4'>
-                        <Form.Label>Country</Form.Label>
+                        <Form.Label>Country of Origin</Form.Label>
                         <Form.Control as='select' name='country' value={productData.country} className='mr-sm-2' onChange={handleChange} required>
                             <option value=''>Select Country</option>
                             {Countries.map((country, index) => (
@@ -420,10 +488,10 @@ const EditProduct = (props) => {
                         </Form.Control>
                     </Form.Group>
                     <Form.Group className='my-4'>
-                        <Form.Label>Notes</Form.Label>
+                        <Form.Label>Notes (Additional notes/remarks)</Form.Label>
                         <FormControl as="textarea"
                             name="notes"
-                            rows={3} // You can adjust the number of rows as needed
+                            rows={5} // You can adjust the number of rows as needed
                             value={productData.notes}
                             placeholder=''
                             onChange={handleChange} required />

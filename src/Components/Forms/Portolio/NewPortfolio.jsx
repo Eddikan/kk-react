@@ -241,30 +241,30 @@ const NewPortfolio = (props) => {
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Collections</Form.Label>
-                                    <Row className="mt-1">
-                                        <Form.Group as={Col} lg={3}>
-                                            <Form.Check
-                                                className="cursor-pointer"
-                                                type="radio"
-                                                label="Regular"
-                                                name="collection_type"
-                                                value="Regular"
-                                                checked={portfolioData.collection_type === 'Regular'}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group as={Col} lg={2}>
-                                            <Form.Check
-                                                className="cursor-pointer"
-                                                type="radio"
-                                                label="Limited"
-                                                name="collection_type"
-                                                value="Limited"
-                                                checked={portfolioData.collection_type === 'Limited'}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                    </Row>
+                                <Row className="mt-1">
+                                    <Form.Group as={Col} lg={3}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="Regular"
+                                            name="collection_type"
+                                            value="Regular"
+                                            checked={portfolioData.collection_type === 'Regular'}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={2}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="Limited"
+                                            name="collection_type"
+                                            value="Limited"
+                                            checked={portfolioData.collection_type === 'Limited'}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                </Row>
                             </Form.Group>
                         </Card.Body>
                     </Card>

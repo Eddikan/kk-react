@@ -5,6 +5,7 @@ import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import Designers from 'Components/Shared/Designers';
 import '../Assets/styles/Home/style.css'
 import Designs from 'Components/Shared/Designs';
+import Fabrics from 'Components/Shared/Fabrics';
 import HomeVideo from 'Assets/videos/kouture-homepage-video.mp4'
 import ShopByCategory from 'Components/Shared/ShopByCategory';
 import { useCookies } from 'react-cookie';
@@ -100,22 +101,16 @@ const Home = (props) => {
           </Row>
         </Container>
       </section> */}
-      {currentUser ?
-        <>
-          <section id="" className="pt-5">
-            <Container>
-              <Row>
-                <Col lg="12">
-                  <ShopByCategory />
-                </Col>
-              </Row>
-            </Container>
-          </section>
-        </>
-        :
-        null
-      }
-      <section id="designs" className="py-5">
+      <section id="fabrics" className="pt-5 mb-5">
+        <Container>
+          <Row>
+            <Col lg="12">
+              <Fabrics currentUser={currentUser} onSignup={showSignupModal} />
+            </Col>
+          </Row>
+        </Container>
+      </section>
+      <section id="designs" className="py-5 mb-5">
         <Container>
           <Row>
             <Col lg="12">
