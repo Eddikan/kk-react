@@ -16,6 +16,7 @@ import KoutureLogo from 'Assets/images/kouture-konect-logo.png';
 import DesignsPreview from 'Components/Grids/DesignsPreview';
 import FabricsPreview from 'Components/Grids/FabricsPreview';
 import Signup from 'Components/Forms/User/Signup'
+import HeroSection from 'Components/Pages/Home/HeroSection';
 
 const Home = (props) => {
   const [fullscreen, setFullscreen] = useState(true);
@@ -66,6 +67,7 @@ const Home = (props) => {
 
   return (
     <Layout>
+      {/* <HeroSection /> */}
       <section id='home' className='py-5 px-2 d-flex align-items-center mh650'>
         <video id="home-video" autoPlay muted loop>
           <source src={HomeVideo} type="video/mp4" />
@@ -91,7 +93,7 @@ const Home = (props) => {
             }
           </div>
         </Container>
-      </section>
+        </section>
       {/* <section id="designers" className="pt-5 pb-3">
         <Container>
           <Row>
