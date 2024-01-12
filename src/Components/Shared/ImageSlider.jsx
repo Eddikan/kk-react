@@ -24,9 +24,36 @@ const ImageSlider = (props) => {
     const images = props.images;
     const type = props.type ?? 'portfolio';
 
-    const handleActiveImageChange = (image) => {
-        props.onActiveImageChange(image);
-        // You can perform additional actions when the active image changes
+    const handleActiveImageChange = () => {
+        // props.onActiveImageChange(image);
+        const activeItem = document.querySelector('.react-multi-carousel-item--active');
+
+        if (activeItem) {
+            // Select the first child with class '.slider-image' within the active item
+            const sliderImage = activeItem.querySelector('.slider-image');
+        
+            // Check if there's a '.slider-image' within the active item before proceeding
+            if (sliderImage) {
+              // Get the background image of the '.slider-image'
+              const backgroundImage = window.getComputedStyle(sliderImage).backgroundImage;
+        
+                // Check if there's a background image and it's not "none"
+                if (backgroundImage && backgroundImage !== "none") {
+                    // Use regular expression to extract the URL
+                    const urlMatch = backgroundImage.match(/url\("(.+)"\)/);
+
+                    // Check if there is a match and get the URL
+                    const imageUrl = urlMatch ? urlMatch[1] : null;
+                    if (type == "product") {
+                        const imageUrlWithoutPrefix = imageUrl?.replace('https://kouture-konect.jenocabrera.online/storage/product/', '');
+                        props.onActiveImageChange(imageUrl);
+                    } else {
+                        const imageUrlWithoutPrefix = imageUrl?.replace('https://kouture-konect.jenocabrera.online/storage/portfolio/', '');
+                        props.onActiveImageChange(imageUrl);
+                    }
+                }
+            }
+        }
     };
 
     useEffect(() => {
@@ -34,13 +61,15 @@ const ImageSlider = (props) => {
         if (images && images.length > 0) {
             props.onActiveImageChange(images[0]);
         }
-    }, [images]);
+    }, []);
+    
 
     return (
         <div className="parent">
             <Carousel
+                focusOnSelect={true}
                 responsive={responsive}
-                autoPlay={true}
+                autoPlay={false}
                 autoPlaySpeed={3000}
                 swipeable={true}
                 draggable={true}
@@ -50,16 +79,17 @@ const ImageSlider = (props) => {
                 // beforeChange={(current, next) => handleActiveImageChange(images[next])}
                 removeArrowOnDeviceType={['tablet', 'mobile', 'desktop']}
                 dotListClass="custom-dot-list-style"
+                afterChange={handleActiveImageChange}
             >
                 {images.map((image, index) => {
                     return (
                         <div className="slider" key={index}>
                             {type == 'product' ?
-                                <div className="slider-image" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")"}}>
+                                <div className="slider-image cursor-pointer" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")"}}>
 
                                 </div>
                                 :
-                                <div className="slider-image" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")"}}>
+                                <div className="slider-image cursor-pointer" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")"}}>
 
                                 </div>
                             }

@@ -11,6 +11,7 @@ import ImageSlider from 'Components/Shared/ImageSlider';
 import { Card, CardBody } from 'reactstrap';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { useCookies } from 'react-cookie';
+import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import axios from 'axios';
@@ -42,7 +43,11 @@ const ViewProduct = () => {
             setProduct(productData);
             setProductLoading(false);
             setImages(productData.image_urls);
-            setActiveImage(productData.image_urls[0].image_url);
+            if (productData.image_urls?.[0]?.image_url) {
+                setActiveImage(process.env.REACT_APP_STORAGE_URL+'product/'+productData.image_urls[0].image_url);
+            } else {
+                setActiveImage(PlaceholderImage);
+            }
             var wishlist_user_ids = productData.wishlist_user_ids;
             setUserWishlist(wishlist_user_ids.includes(currentUser));
           } else {
@@ -101,14 +106,15 @@ const ViewProduct = () => {
                             <Col lg={6}>
                                 {images && images.length > 0 ?
                                     <>
-                                        <div className="single-image-slider" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+activeImage+")"}}>
+                                        <div className="single-image-slider" style={{ backgroundImage: "url("+activeImage+")"}}>
 
                                         </div>
                                         <ImageSlider type="product" images={images} onActiveImageChange={handleActiveImageChange} />
                                     </>
-                                    
                                     :
-                                    null
+                                    <div className="single-image-slider" style={{ backgroundImage: "url("+activeImage+")"}}>
+
+                                    </div>
                                 }
                             </Col>
                             <Col lg={6}>

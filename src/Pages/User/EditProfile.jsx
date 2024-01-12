@@ -191,7 +191,7 @@ const EditProfile = () => {
     };
 
     useEffect(() => {
-        fetchData(currentUser);
+        fetchData({currentUser: currentUser, token: token });
     }, [reloadCount]);
 
     return (

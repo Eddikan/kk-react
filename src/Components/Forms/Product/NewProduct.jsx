@@ -16,7 +16,6 @@ const initialProductData = Object.freeze({
     name: '',
     description: '',
     colors: [],
-    composition: '',
     weave: '',
     weight: 0,
     width: 0,
@@ -45,6 +44,10 @@ const NewProduct = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
     const [colors, setColors] = useState([]);
     const [certifications, setCertifications] = useState([]);
+    const [otherComposition, setOtherComposition] = useState('');
+    const [composition, setComposition] = useState('');
+    const [weave, setWeave] = useState('');
+    const [otherWeave, setOtherWeave] = useState('');
     const [categories, setCategories] = useState([])
 
     const currentUser = cookies.currentUser;
@@ -67,10 +70,39 @@ const NewProduct = (props) => {
     }
 
     const handleChange = (e) => {
+        var { name, value } = e.target;
+        if (name == "composition" && value != "Other") {
+            setOtherComposition("");
+            setComposition("");
+        }
         setProductData({
             ...productData,
-            [e.target.name]: e.target.value,
+            [name]: value,
         })
+    };
+
+    const handleChangeComposition = (e) => {
+        var { name, value } = e.target;
+        setOtherComposition("");
+        setComposition(value);
+        
+    };
+
+    const handleChangeOtherComposition = (e) => {
+        var { name, value } = e.target;
+        setOtherComposition(value);
+    };
+
+    const handleChangeWeave = (e) => {
+        var { name, value } = e.target;
+        setOtherWeave("");
+        setWeave(value);
+        
+    };
+
+    const handleChangeOtherWeave = (e) => {
+        var { name, value } = e.target;
+        setOtherWeave(value);
     };
 
     const handleChangeCheckbox = (isChecked) => {
@@ -118,16 +150,16 @@ const NewProduct = (props) => {
             setProductLoading(true);
             setTimeout(function(){
                 setProductLoading(false);
-                saveProductItems({...productData, colors: colors, certifications: certifications, status: 'Active' });
+                saveProductItems({...productData, composition: otherComposition ?? composition, weave: otherWeave ?? weave, colors: colors, certifications: certifications, status: 'Active' });
                 handleCancel();
             }, 1000);
         } else {
             if (productData.image_urls) {
                 setProductLoading(true);
-                axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+                axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition ?? composition, weave: otherWeave ?? weave, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
                     const success = response.data.status;
                     if(success == 'Success') {
-                        toast.success('Design added successfully!');
+                        toast.success('Fabric added successfully!');
                         setProductLoading(false);
                         reloadPage(true);
                         formSuccess(true);
@@ -150,7 +182,7 @@ const NewProduct = (props) => {
     async function ProductDraftSubmit(e) {
         e.preventDefault();
         setProductDraftLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition ?? composition, weave: otherWeave ?? weave, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
@@ -228,27 +260,41 @@ const NewProduct = (props) => {
                             </Form.Group>
                             <Form.Group className='mb-4 mt-2'>
                                 <Form.Label>Composition</Form.Label>
-                                <FormControl type='text' name='composition' value={productData.composition} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                <Form.Control as='select' name='composition' value={composition} className='mr-sm-2 mb-2' onChange={handleChangeComposition} required>
+                                    <option value=''>Select Composition</option>
+                                    <option value='Polyamide'>Polyamide</option>
+                                    <option value='Polyester'>Polyester</option>
+                                    <option value='Polyurethane'>Polyurethane</option>
+                                    <option value='Acrylic'>Acrylic</option>
+                                    <option value='Cashmere'>Cashmere</option>
+                                    <option value='Mental'>Mental</option>
+                                    <option value='Other'>Other</option>
+                                </Form.Control>
+                                {(composition != "Polyamide" && composition != "Polyester" && composition != "Acrylic" && composition != "Polyurethane" && composition != "Cashmere" && composition != "Mental" || composition == "Other") && composition != ""  ?
+                                    <FormControl type='text' name='composition' value={otherComposition} className='mr-sm-2' onChange={handleChangeOtherComposition} required placeholder='' />
+                                    :
+                                    null
+                                }
                             </Form.Group>
-                            {/* <Form.Group className='my-4'>
-                                <Form.Label>Categories</Form.Label>
-                                <TagsInput
-                                    value={categories}
-                                    onChange={setCategories}
-                                    name="categories"
-                                    className="form-control"
-                                    onBlur={(e) => {
-                                        const value = e.target.value;
-                                        if (!categories.includes(value) && value !== "") {
-                                            setCategories([...categories, value]);
-                                            e.target.value = "";
-                                        }
-                                    }}
-                                />
-                            </Form.Group> */}
-                            <Form.Group className='my-4'>
+                            <Form.Group className='mb-4 mt-2'>
                                 <Form.Label>Weave</Form.Label>
-                                <FormControl type='text' name='weave' value={productData.weave} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                <Form.Control as='select' name='weave' value={weave} className='mr-sm-2 mb-2' onChange={handleChangeWeave} required>
+                                    <option value=''>Select Weave</option>
+                                    <option value='Plain'>Plain</option>
+                                    <option value='Twill'>Twill</option>
+                                    <option value='Satin'>Satin</option>
+                                    <option value='Basket'>Basket</option>
+                                    <option value='Herringbone'>Herringbone</option>
+                                    <option value='Jacquard'>Jacquard</option>
+                                    <option value='Dobby'>Dobby</option>
+                                    <option value='Leno'>Leno</option>
+                                    <option value='Other'>Other</option>
+                                </Form.Control>
+                                {(weave != "Plain" && weave != "Twill" && weave != "Satin" && weave != "Basket" && weave != "Herringbone" && weave != "Jacquard" && weave != "Dobby" && weave != "Leno" || weave == "Other") && weave != ""  ?
+                                    <FormControl type='text' name='weave' value={otherWeave} className='mr-sm-2' onChange={handleChangeOtherWeave} required placeholder='' />
+                                    :
+                                    null
+                                }
                             </Form.Group>
                             <Form.Group className='my-4'>
                                 <Form.Label>Weight (KG Per sq. meter)</Form.Label>
