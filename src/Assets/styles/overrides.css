@@ -428,6 +428,8 @@ a {
     height: 100%;
     width: 100%;
     background: var(--gray);
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .background-dashed {

@@ -17,13 +17,19 @@ section#home {
     object-fit: cover;
 }
 
+.hero-card {
+    min-height: 100vh;
+}
+
 .hero-cards {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: fit-content;
-    min-height: 600px;
-    background-color: rgba(0,0,0, 0.5);
+    height: 100%;
+    background: transparent linear-gradient(180deg, #000000CC 0%, #00000096 100%) 0% 0% no-repeat padding-box;
+    position: absolute;
+    z-index: 2;
+    width: 100%;
 }
 
 .hero-cards-column {

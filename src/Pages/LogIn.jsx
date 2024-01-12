@@ -55,7 +55,7 @@ const LogIn = () => {
         setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
         setCookie('token', data.token, { path: '/' });
         setTimeout(function () {
-          navigate("/user/profile");
+          navigate("/");
         }, 1000);
       } else {
         const errors = response.data.errors;

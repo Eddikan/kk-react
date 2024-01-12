@@ -16,7 +16,7 @@ import KoutureLogo from 'Assets/images/kouture-konect-logo.png';
 import DesignsPreview from 'Components/Grids/DesignsPreview';
 import FabricsPreview from 'Components/Grids/FabricsPreview';
 import Signup from 'Components/Forms/User/Signup'
-import HeroSection from 'Components/Pages/Home/HeroSection';
+import HeroLoggedIn from 'Components/Pages/Home/HeroLoggedIn';
 
 const Home = (props) => {
   const [fullscreen, setFullscreen] = useState(true);
@@ -68,32 +68,36 @@ const Home = (props) => {
   return (
     <Layout>
       {/* <HeroSection /> */}
-      <section id='home' className='py-5 px-2 d-flex align-items-center mh650'>
-        <video id="home-video" autoPlay muted loop>
-          <source src={HomeVideo} type="video/mp4" />
-          {/* Add additional source elements for other formats if needed */}
-          Your browser does not support the video tag.
-        </video>
-        <Container className='text-center'>
-          <Row>
-            <Col lg='12'>
-              <h1 className="text-white mb-3">Fashion Redefined <br />Your Unique Look Starts Here</h1>
-              <p className='subtitle text-white'>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p>
-            </Col>
-          </Row>
-          <div className='narrow-750 mt-4'>
-            {currentUser ?
-              null
-              :
-              <>
-                <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>I'm Just Browsing</Button>
-                <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('designer')} >I'm a Designer</Button>
-                <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('seller')} >I'm a Fabric Vendor</Button>
-              </>
-            }
-          </div>
-        </Container>
+      {currentUser ?
+        <HeroLoggedIn />
+        :
+        <section id='home' className='py-5 px-2 d-flex align-items-center mh650'>
+          <video id="home-video" autoPlay muted loop>
+            <source src={HomeVideo} type="video/mp4" />
+            {/* Add additional source elements for other formats if needed */}
+            Your browser does not support the video tag.
+          </video>
+          <Container className='text-center'>
+            <Row>
+              <Col lg='12'>
+                <h1 className="text-white mb-3">Fashion Redefined <br />Your Unique Look Starts Here</h1>
+                <p className='subtitle text-white'>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p>
+              </Col>
+            </Row>
+            <div className='narrow-750 mt-4'>
+              {currentUser ?
+                null
+                :
+                <>
+                  <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>I'm Just Browsing</Button>
+                  <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('designer')} >I'm a Designer</Button>
+                  <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('seller')} >I'm a Fabric Vendor</Button>
+                </>
+              }
+            </div>
+          </Container>
         </section>
+      }
       {/* <section id="designers" className="pt-5 pb-3">
         <Container>
           <Row>

@@ -405,7 +405,7 @@ const EditProduct = (props) => {
                             <option value='Other'>Other</option>
                         </Form.Control>
                         {(composition != "Polyamide" && composition != "Polyester" && composition != "Acrylic" && composition != "Polyurethane" && composition != "Cashmere" && composition != "Mental" && composition != "") || composition == "Other"  ?
-                            <FormControl type='text' name='composition' value={otherComposition} className='mr-sm-2' onChange={handleChangeOtherComposition} required placeholder='' />
+                            <FormControl type='text' name='composition' value={otherComposition} className='mr-sm-2' onChange={handleChangeOtherComposition} placeholder='' />
                             :
                             null
                         }
@@ -425,7 +425,7 @@ const EditProduct = (props) => {
                             <option value='Other'>Other</option>
                         </Form.Control>
                         {(weave != "Plain" && weave != "Twill" && weave != "Satin" && weave != "Basket" && weave != "Herringbone" && weave != "Jacquard" && weave != "Dobby" && weave != "Leno" && weave != "") || weave == "Other"  ?
-                            <FormControl type='text' name='weave' value={otherWeave} className='mr-sm-2' onChange={handleChangeOtherWeave} required placeholder='' />
+                            <FormControl type='text' name='weave' value={otherWeave} className='mr-sm-2' onChange={handleChangeOtherWeave} placeholder='' />
                             :
                             null
                         }
@@ -555,7 +555,7 @@ const EditProduct = (props) => {
                             rows={5} // You can adjust the number of rows as needed
                             value={productData.notes}
                             placeholder=''
-                            onChange={handleChange} required />
+                            onChange={handleChange} />
                     </Form.Group>
                 </Col>
                 <Col lg="12" className="text-right mt-4">
