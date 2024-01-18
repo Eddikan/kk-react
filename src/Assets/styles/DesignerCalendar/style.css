@@ -1,0 +1,49 @@
+.designer-calendar-container {
+    padding-top: 50px;
+}
+
+.calendar-container {
+    background: #fff;
+    padding: 30px;
+    border-radius: 5px;
+}
+
+.designer-calendar-body {
+    background: #FAFAFA;
+}
+
+.designer-calendar-body .navbar {
+    background: #fff;
+    z-index: 10;
+}
+
+.day-header {
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'ProximaNova';
+    margin-bottom: 19px;
+}
+
+#business-hours-modal {
+    max-width: 800px !important;
+}
+
+#business-hours-modal .hours-header {
+    font-family: 'ProximaNova';
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.schedule-checkbox {
+    font-size: 14px;
+    font-family: 'ProximaNova';
+}
+
+#business-hours-modal .header {
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.plus-btn {
+    cursor: pointer;
+}

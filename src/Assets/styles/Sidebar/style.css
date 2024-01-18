@@ -1,0 +1,9 @@
+#sidebar {
+    background: #fff;
+    width: 100%;
+    max-width: 350px;
+    position: absolute;
+    height: 100%;
+    box-shadow: 0 0 5px 0 #d5d5d5;
+    padding: 20px;
+}

@@ -20,6 +20,8 @@ const Buttons = lazy(() => import('./Pages/Elements/Buttons'));
 const Forms = lazy(() => import('./Pages/Forms'));
 const Stripe = lazy(() => import('./Pages/Stripe'));
 const CustomerPage = lazy(() => import('./Pages/CustomerPage'));
+const SellerCenter = lazy(() => import('./Pages/SellerCenter'));
+const DesignersCalendar = lazy(() => import('./Pages/DesignersCalendar'));
 
 // User
 const UserProfile = lazy(() => import('./Pages/User/Profile'));
@@ -122,6 +124,8 @@ const App = () => {
           <Route path="/designers" exact element={<Designers />} />
           <Route path="/fabrics" exact element={<Fabrics />} />
           <Route path="/designs" exact element={<Designs />} />
+          <Route path="/seller-center" exact element={<SellerCenter />} />
+          <Route path="/designers-calendar" exact element={<DesignersCalendar />} />
 
         </Routes>
       </Suspense>
