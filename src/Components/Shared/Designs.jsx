@@ -12,6 +12,7 @@ import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
+import { Rating } from 'react-simple-star-rating';
 
 const Designs = (props) => {
     const navigate = useNavigate();
@@ -148,12 +149,12 @@ const Designs = (props) => {
                                                         {currentUser ?
                                                             <>
                                                                 <Link to={`/portfolio/${design.id}`} className='portfolio-link' onClick={function() {toggleAddViewCount(design.id);}}>
-                                                                    <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+designImage+")"}}>
+                                                                    <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+designImage+")", minHeight: '200px'}}>
                                                                         {currentUser ?
                                                                             <div className='save-link'>
-                                                                                <div className="action-button bg-white me-2">
+                                                                                {/* <div className="action-button bg-white me-2">
                                                                                     <GoBookmark className="text-black" />
-                                                                                </div>
+                                                                                </div> */}
                                                                                 <div className="action-button bg-white">
                                                                                     <GoHeart className="text-black" />
                                                                                 </div>
@@ -169,9 +170,9 @@ const Designs = (props) => {
                                                                <div className="designs-grid-div  cursor-pointer w-100" style={{ backgroundImage: "url("+designImage+")"}} onClick={() => showSignupModal('user_design')}>
                                                                     {currentUser ?
                                                                         <div className='save-link'>
-                                                                            <div className="action-button bg-white me-2">
+                                                                            {/* <div className="action-button bg-white me-2">
                                                                                 <GoBookmark className="text-black" />
-                                                                            </div>
+                                                                            </div> */}
                                                                             <div className="action-button bg-white">
                                                                                 <GoHeart className="text-black" />
                                                                             </div>
@@ -185,7 +186,7 @@ const Designs = (props) => {
                                                         <div className="design-details">
                                                             <div className='d-flex align-items-center justify-content-between'>
                                                                 <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{design.name ?? '-'}</p>
-                                                                {currentUser ?
+                                                                {/* {currentUser ?
                                                                     <div className='d-flex align-items-center'>
                                                                         <span className='fs-14 text-no-wrap mx-2'>
                                                                             <IoHeartOutline /> 0
@@ -196,10 +197,23 @@ const Designs = (props) => {
                                                                     </div>
                                                                     :
                                                                     null
-                                                                }   
+                                                                }    */}
                                                                 
                                                             </div>
-                                                            {currentUser ?
+                                                            <div className="star-ratings mt-1">
+                                                                <Rating 
+                                                                    initialValue={0}
+                                                                    readonly={true}
+                                                                    allowFraction={true}
+                                                                    size={20}
+                                                                    className="star-rating"
+                                                                    showTooltip={true}
+                                                                    emptyColor="#dddddd"
+                                                                    fillColor="#cea835"
+                                                                    /* Available Props */
+                                                                />
+                                                            </div>
+                                                            {/* {currentUser ?
                                                                 <div className='d-flex align-items-center mt-1'>
                                                                     {design.user.image ?
                                                                         <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+design.user.image+")"}} ></div>
@@ -211,7 +225,7 @@ const Designs = (props) => {
                                                                 </div>
                                                                 :
                                                                 null
-                                                            }
+                                                            } */}
                                                         </div>
                                                     </Col>
                                                     :

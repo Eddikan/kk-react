@@ -87,10 +87,10 @@ const ViewPortFolio = () => {
                             </Col>
                         </Row>
                         <Row>
-                            <Col lg={6}>
+                            <Col lg={5}>
                                 {images && images.length > 0 ?
                                     <>
-                                        <div className="single-image-slider" style={{ backgroundImage: "url("+activeImage+")"}}>
+                                        <div className="single-image-slider mb-4" style={{ backgroundImage: "url("+activeImage+")"}}>
                                         </div>
                                         <ImageSlider images={images} onActiveImageChange={handleActiveImageChange} />
                                     </>
@@ -100,7 +100,7 @@ const ViewPortFolio = () => {
                                     </div>
                                 }
                             </Col>
-                            <Col lg={6}>
+                            <Col lg={7}>
                                 <Card className="h-100">
                                     <CardBody>
                                         <Row>

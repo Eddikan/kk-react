@@ -59,6 +59,10 @@ h5 {
     min-height: calc(100vh - 250px);
 }
 
+.text-white-hover:hover {
+    color: var(--white) !important;
+}
+
 .text-gold {
     color: var(--gold) !important;
 }
@@ -201,7 +205,11 @@ h5 {
 }
 
 .fs-20 {
-    font-size: 20px;
+    font-size: 20px !important;
+}
+
+.fs-24 {
+    font-size: 24px !important;
 }
 
 .fs-22 {
@@ -216,12 +224,20 @@ h5 {
     font-size: 30px;
 }
 
+.fs-35 {
+    font-size: 35px;
+}
+
 .fs-40 {
     font-size: 40px;
 }
 
 .fs-50 {
     font-size: 50px;
+}
+
+.fw-400 {
+    font-weight: 400;
 }
 
 .fw-500 {
@@ -339,9 +355,9 @@ a {
     border-radius: 5px;
     right: 10px;
     top: 55px;
-    box-shadow: 0px 10px 16px 8px rgba(0,0,0,0.18);
-    -webkit-box-shadow: 0px 10px 16px 8px rgba(0,0,0,0.18);
-    -moz-box-shadow: 0px 10px 16px 8px rgba(0,0,0,0.18);
+    box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    -webkit-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    -moz-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     z-index: 10;
 }
 
@@ -471,7 +487,8 @@ a {
     padding-right: 0 !important;
 }
 
-.react-calendar__tile--now:enabled:hover, .react-calendar__tile--now:enabled:focus {
+.react-calendar__tile--now:enabled:hover,
+.react-calendar__tile--now:enabled:focus {
     background: #f5ce5a !important;
 }
 
@@ -544,7 +561,9 @@ form.search input:active {
 }
 
 form input.form-control,
-form select.form-control, .form-control, .rti--container {
+form select.form-control,
+.form-control,
+.rti--container {
     border: 2px solid var(--gray) !important;
     border-radius: 5px !important;
     padding: 10px 20px;
@@ -555,7 +574,10 @@ form select.form-control, .form-control, .rti--container {
 form input.form-control:focus,
 form input.form-control:active,
 form select.form-control:focus,
-form select.form-control:active, .form-control:focus, .form-control:active, .rti--container:focus {
+form select.form-control:active,
+.form-control:focus,
+.form-control:active,
+.rti--container:focus {
     color: var(--gray-600);
     border-color: var(--gray) !important;
     outline: 0;
@@ -759,7 +781,7 @@ form select::placeholder {
     font-size: 13px;
     z-index: 99;
 }
-  
+
 .portfolio-img {
     width: 100%;
     border-radius: 5px;
@@ -851,6 +873,7 @@ form select::placeholder {
     padding: 10px;
     z-index: 9;
 }
+
 .action-button {
     background: var(--white);
     color: var(--black);
@@ -900,7 +923,7 @@ form select::placeholder {
     font-size: 13px;
     z-index: 99;
 }
-  
+
 .product-img {
     width: 100%;
     border-radius: 5px;
@@ -1145,8 +1168,8 @@ form select::placeholder {
 }
 
 .border-solid-2 {
- border-width: 2px !important;
- border-style: solid !important;
+    border-width: 2px !important;
+    border-style: solid !important;
 }
 
 .preview-button.fixed {
@@ -1201,4 +1224,72 @@ form select::placeholder {
 
 .border-gold-hover:hover {
     border-color: var(--gold) !important;
+}
+
+/* Tooltip */
+
+.kouture-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.kouture-tooltip .kouture-tooltiptext {
+    visibility: hidden;
+    width: 140px;
+    background-color: var(--black);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 135%;
+    left: 5%;
+    margin-left: -60px;
+    transition: all ease-in-out 2s;
+}
+
+.kouture-tooltip .kouture-tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+
+.kouture-tooltip:hover .kouture-tooltiptext {
+    visibility: visible;
+}
+
+.min-width-auto {
+    min-width: auto !important;
+}
+
+.counter-input.form-control {
+    max-width: 75px;
+    padding: 8px 10px !important;
+    border-color: #000 !important;
+    border-radius: 0 !important;
+    color: #000 !important;
+}
+
+/* .star-svg path {
+    color: #cea835 !important;
+} */
+
+.react-simple-star-rating-tooltip {
+    background-color: transparent !important;
+    color: var(--black) !important;
+    margin-left: 0 !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    padding-top: 5px !important;
+    padding-bottom: 0 !important;
+}
+
+.vertical-align-middle {
+    vertical-align: middle !important;
 }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
+import FormControl from 'react-bootstrap/FormControl';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { GoBookmark, GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import 'Assets/styles/Product/ViewProduct/style.css';
@@ -19,14 +20,18 @@ import axios from 'axios';
 const ViewProduct = () => {
     const { productId } = useParams();
     const [product, setProduct] = useState('');
+    const [productPrice, setProductPrice] = useState(0.00);
     const [productLoading, setProductLoading] = useState(true);
     const [images, setImages] = useState([]);
     const [reloadCount, setReloadCount] = useState(0);
     const [activeImage, setActiveImage] = useState('');
-    const [commentsTabShow, setCommentsTabShow] = useState(true);
-    const [reviewsTabShow, setReviewsTabShow] = useState(false);
+    const [commentsTabShow, setCommentsTabShow] = useState(false);
+    const [reviewsTabShow, setReviewsTabShow] = useState(true);
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
     const [userWishlist, setUserWishlist] = useState(false);
+
+    const [meters, setMeters] = useState(1.00);
+    const [yards, setYards] = useState(1.09);
     const currentUser = cookies.currentUser;
 
     const navigate = useNavigate();
@@ -36,6 +41,24 @@ const ViewProduct = () => {
         // You can perform additional actions when the active image changes
     };
 
+    const handleChange = (e) => {
+        const {value, name} = e.target;
+        setMeters(value);
+        setYards(value * 1.09);
+    }
+
+    const handleSubtract = (e) => {
+        var newMeter = meters - 1;
+        setMeters(newMeter);
+        setYards(newMeter * 1.09)
+    }
+
+    const handleAdd = (e) => {
+        var newMeter = meters + 1;
+        setMeters(newMeter);
+        setYards(newMeter * 1.09)
+    }
+
     const fetchData = async (e) => {
         try {
           const productData = await GetSingleProductData(e);
@@ -43,6 +66,9 @@ const ViewProduct = () => {
             setProduct(productData);
             setProductLoading(false);
             setImages(productData.image_urls);
+            if (productData.price && productData.price > 0) {
+                setProductPrice(Number(productData.price).toFixed(2))
+            }
             if (productData.image_urls?.[0]?.image_url) {
                 setActiveImage(process.env.REACT_APP_STORAGE_URL+'product/'+productData.image_urls[0].image_url);
             } else {
@@ -103,13 +129,13 @@ const ViewProduct = () => {
                             </Col>
                         </Row>
                         <Row>
-                            <Col lg={6}>
+                            <Col lg={5}>
                                 {images && images.length > 0 ?
                                     <>
-                                        <div className="single-image-slider" style={{ backgroundImage: "url("+activeImage+")"}}>
+                                        <div className="single-image-slider mb-4" style={{ backgroundImage: "url("+activeImage+")"}}>
 
                                         </div>
-                                        <ImageSlider type="product" images={images} onActiveImageChange={handleActiveImageChange} />
+                                        <ImageSlider type="product" slidesToShow={4} images={images} onActiveImageChange={handleActiveImageChange} />
                                     </>
                                     :
                                     <div className="single-image-slider" style={{ backgroundImage: "url("+activeImage+")"}}>
@@ -117,7 +143,7 @@ const ViewProduct = () => {
                                     </div>
                                 }
                             </Col>
-                            <Col lg={6}>
+                            <Col lg={7}>
                                 <Card className="h-100">
                                     <CardBody>
                                         <Row>
@@ -156,21 +182,26 @@ const ViewProduct = () => {
                                                         <GoShareAndroid className="text-black" />
                                                     </div>
                                                     {userWishlist ?
-                                                        <div className="action-button bg-gold me-2" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: product.id}); }}>
-                                                            <GoHeart className="text-white" />
+                                                        <div class="kouture-tooltip">
+                                                            <div className="action-button bg-gold me-2" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: product.id}); }}>
+                                                                <GoHeart className="text-white" />
+                                                            </div>
+                                                            <div class="kouture-tooltiptext">
+                                                                Add to Wishlist
+                                                            </div>
                                                         </div>
                                                         :
                                                         <div className="action-button bg-smgray me-2" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: product.id}); }}>
                                                             <GoHeart className="text-black" />
                                                         </div>
                                                     }
-                                                    <div className="action-button bg-smgray">
+                                                    {/* <div className="action-button bg-smgray">
                                                         <GoBookmark className="text-black" />
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             </Col>
                                             <Col lg="12">
-                                                <div className="mb-4">
+                                                <div className="mb-3">
                                                     {product.categories ?
                                                         <>
                                                             {product.categories.length > 0 ?
@@ -189,9 +220,17 @@ const ViewProduct = () => {
                                                         null
                                                     }
                                                 </div>
-                                                <p className="mb-4">
-                                                    {product.description ?? "-"}
-                                                </p>
+                                                <div className="mb-3">
+                                                <p className="fw-600 fs-24">${productPrice}<span className="text-muted fs-14 d-inline-block vertical-align-middle">/meter</span></p>
+                                                </div>
+                                                <div className="">
+                                                    <p className="mb-2"><strong>Fabric Process Insight</strong></p>
+                                                    <p className="mb-4">{product.seller?.fabric_process_insights ?? "-"}</p>
+                                                </div>
+                                                <div className="">
+                                                    <p className="mb-2"><strong>Pricing Structure</strong></p>
+                                                    <p className="mb-4">{product.seller?.pricing_structure ?? "-"}</p>
+                                                </div>
                                                 
                                                 <p className="mb-2"><strong>Colors</strong></p>
                                                 <div className="mb-4">
@@ -213,7 +252,25 @@ const ViewProduct = () => {
                                                         null
                                                     }
                                                 </div>
-                                                <p className="mb-2"><strong>Certifications</strong></p>
+                                                <div>
+                                                    <Row>
+                                                        <Col lg="12">
+                                                            {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
+                                                                -
+                                                            </Button> */}
+                                                            <FormControl min="1" defaultValue="1" type='number' name='count' onChange={handleChange} className='me-3 d-inline-block w- counter-input' required />
+                                                            {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
+                                                                +
+                                                            </Button> */}
+                                                            <span className="fs-20 fw-600">{Number(meters)?.toFixed(2)} metres <span className="fs-14 fw-400 text-muted">({yards.toFixed(2)} yards)</span></span>
+                                                            <hr  className="mb-4" />
+                                                        </Col>
+                                                        <Col lg="12">
+                                                            <Button variant="primary" className="w-auto me-3">Add to Cart</Button> <span className="fw-600 fs-24">${(meters * productPrice).toFixed(2)} <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span>
+                                                        </Col>
+                                                    </Row>
+                                                </div>
+                                                {/* <p className="mb-2"><strong>Certifications</strong></p>
                                                 <div className="mb-4">
                                                     {product.certifications ?
                                                         <>
@@ -232,22 +289,19 @@ const ViewProduct = () => {
                                                         :
                                                         null
                                                     }
-                                                </div>
+                                                </div> */}
                                             </Col>
                                         </Row>
                                     </CardBody>
                                 </Card>
                             </Col>
                             <Col lg={12} className="mt-4">
-                                <p className="mb-2"><strong>Process Insights</strong></p>
-                                <p className="mb-4">{product.seller?.fabric_process_insights ?? "-"}</p>
-
-                                <p className="mb-2"><strong>Pricing Structure</strong></p>
-                                <p className="mb-4">{product.seller?.pricing_structure ?? "-"}</p>
+                                <p className="mb-2"><strong>Description</strong></p>
+                                <p className="mb-4">{product.description ?? "-"}</p>
                             </Col>
                             <Col lg="12" className='mt-4'>
-                                <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span>
-                                <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("reviews"); }}>Reviews</span>
+                                {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
+                                <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("reviews"); }}>Reviews & Ratings</span>
                                 <hr className='mt-2' />
                                 {commentsTabShow ?
                                     <>

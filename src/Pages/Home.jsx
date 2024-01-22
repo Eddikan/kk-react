@@ -107,7 +107,7 @@ const Home = (props) => {
           </Row>
         </Container>
       </section> */}
-      <section id="fabrics" className="pt-5 mb-5">
+      <section id="fabrics" className="pt-5 mb-5 mt-xl-5">
         <Container>
           <Row>
             <Col lg="12">

@@ -2,27 +2,29 @@ import React, { useState, useEffect } from "react";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import "Assets/styles/ImageSlider/style.css";
-const responsive = {
-    desktop: {
-        breakpoint: { max: 3000, min: 1024 },
-        items: 3,
-        slidesToSlide: 1 // optional, default to 1.
-    },
-    tablet: {
-        breakpoint: { max: 1024, min: 768 },
-        items: 3,
-        slidesToSlide: 1 // optional, default to 1.
-    },
-    mobile: {
-        breakpoint: { max: 767, min: 464 },
-        items: 2,
-        slidesToSlide: 1 // optional, default to 1.
-    }
-};
 
 const ImageSlider = (props) => {
     const images = props.images;
     const type = props.type ?? 'portfolio';
+    const slidesToShow = props.slidesToShow ?? 3;
+
+    const responsive = {
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 4,
+            slidesToSlide: 1 // optional, default to 1.
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 768 },
+            items: 3,
+            slidesToSlide: 1 // optional, default to 1.
+        },
+        mobile: {
+            breakpoint: { max: 767, min: 464 },
+            items: 2,
+            slidesToSlide: 1 // optional, default to 1.
+        }
+    };
 
     const handleActiveImageChange = () => {
         // props.onActiveImageChange(image);
@@ -83,7 +85,7 @@ const ImageSlider = (props) => {
             >
                 {images.map((image, index) => {
                     return (
-                        <div className="slider" key={index}>
+                        <div className="slider pt-0" key={index}>
                             {type == 'product' ?
                                 <div className="slider-image cursor-pointer" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")"}}>
 

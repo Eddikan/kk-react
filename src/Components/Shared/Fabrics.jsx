@@ -12,6 +12,7 @@ import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
+import { Rating } from 'react-simple-star-rating';
 
 const Fabrics = (props) => {
     const navigate = useNavigate();
@@ -21,6 +22,7 @@ const Fabrics = (props) => {
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [fabrics, setFabrics] = useState([]);
     const [fabricsLoading, setFabricsLoading] = useState(true);
+    const [rating, setRating] = useState(5);
 
     const fetchData = async (e) => {
         try {
@@ -95,7 +97,7 @@ const Fabrics = (props) => {
         <>
             <div id="profile-designs">
                 <p className="fs-18 text-center text-dark mb-2"> Searching for Fabrics?</p >
-                <h2 className="fs-40 fw-500 text-center text-black mb-30">Explore Premium Textiles</h2>
+                <h2 className="fs-35 fw-500 text-center text-black mb-3">Explore Premium Fabrics</h2>
                 {fabricsLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
@@ -108,7 +110,7 @@ const Fabrics = (props) => {
                             <>
                                 <Row className="designs-row">
                                     {currentUser ?
-                                        <Col lg="12" className='d-flex justify-content-end'>
+                                        <Col lg="12" className='d-flex justify-content-end mb-3'>
                                             <div style={{ position: "relative" }}>
                                                 <select
                                                     className="form-control mb-3 me-2 sort-input"
@@ -116,8 +118,8 @@ const Fabrics = (props) => {
                                                         const selectedOption = e.target.value;
                                                         if (selectedOption === "New") {
                                                             toggleSortFabrics("?date=", "desc");
-                                                        } else if (selectedOption === "Most Viewed") {
-                                                            toggleSortFabrics("?views=", "desc");
+                                                        } else if (selectedOption === "Price") {
+                                                            toggleSortFabrics("?price=", "desc");
                                                         } else if (selectedOption === "Most Liked") {
                                                             toggleSortFabrics("?likes=", "desc");
                                                         } else {
@@ -125,8 +127,9 @@ const Fabrics = (props) => {
                                                         }
                                                     }}
                                                 >
-                                                    <option value="">All</option>
-                                                    <option value="New">Recent Fabric</option>
+                                                    <option value="">Sort By</option>
+                                                    <option value="New">Date</option>
+                                                    <option value="Price">Price</option>
                                                 </select>
                                                 <div style={{ position: "absolute", right: "20px", top: "10px", pointerEvents: "none" }} >
                                                     <IoIosArrowDown />
@@ -153,7 +156,7 @@ const Fabrics = (props) => {
                                                         {currentUser ?
                                                             <>
                                                                 <div className="portfolio-link">
-                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function() {toggleAddViewCount(fabric.id); navigate('/product/'+fabric.id); }} style={{ backgroundImage: "url("+fabricImage+")"}}>
+                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function() {toggleAddViewCount(fabric.id); navigate('/product/'+fabric.id); }} style={{ backgroundImage: "url("+fabricImage+")", minHeight: '200px'}}>
                                                                         
                                                                     </div>
                                                                     {currentUser ?
@@ -196,8 +199,8 @@ const Fabrics = (props) => {
                                                         }
                                                         <div className="design-details">
                                                             <div className='d-flex align-items-center justify-content-between'>
-                                                                <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{fabric.name ?? '-'}</p>
-                                                                {currentUser ?
+                                                                <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis mt-2">{fabric.name ?? '-'}</h4>
+                                                                {/* {currentUser ?
                                                                     <div className='d-flex align-items-center'>
                                                                         <span className='fs-14 text-no-wrap mx-2'>
                                                                             <IoHeartOutline /> {fabric.wishlist_count}
@@ -208,10 +211,23 @@ const Fabrics = (props) => {
                                                                     </div>
                                                                     :
                                                                     null
-                                                                }   
-                                                                
+                                                                }    */}
                                                             </div>
-                                                            {currentUser ?
+                                                            <div className="star-ratings mt-1">
+                                                                <Rating 
+                                                                    initialValue={0}
+                                                                    readonly={true}
+                                                                    allowFraction={true}
+                                                                    size={20}
+                                                                    className="star-rating"
+                                                                    showTooltip={true}
+                                                                    emptyColor="#dddddd"
+                                                                    fillColor="#cea835"
+                                                                    /* Available Props */
+                                                                />
+                                                            </div>
+                                                            <h4 className="text-black fs-18 fw-600 mt-1 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
+                                                            {/* {currentUser ?
                                                                 <div className='d-flex align-items-center mt-1'>
                                                                     {fabric.user.image ?
                                                                         <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
@@ -223,7 +239,7 @@ const Fabrics = (props) => {
                                                                 </div>
                                                                 :
                                                                 null
-                                                            }
+                                                            } */}
                                                         </div>
                                                     </Col>
                                                     :
