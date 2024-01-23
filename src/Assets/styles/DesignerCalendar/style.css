@@ -47,3 +47,57 @@
 .plus-btn {
     cursor: pointer;
 }
+.rbc-row {
+    height: 100px;
+}
+.rbc-month-row {
+    overflow: visible !important;
+}
+.rbc-date-cell {
+    padding-left: 10px !important;
+    text-align: left !important;
+    padding-top: 10px !important;
+}
+.rbc-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px !important;
+    font-family: 'ProximaNova' !important;
+    color: #1C1B1B !important;
+}
+.rbc-toolbar {
+    margin-bottom: 20px !important;
+}
+span.rbc-toolbar-label {
+    font-size: 22px !important;
+    font-family: 'ProximaNova';
+    font-weight: 400;
+}
+.rbc-month-header {
+    height: 60px !important;
+}
+button.rbc-button-link {
+    font-family: 'ProximaNova';
+    font-size: 14px;
+}
+span.rbc-btn-group {
+    font-family: 'ProximaNova';
+}
+.form-control-hours, .rti--container {
+    border: 2px solid var(--gray) !important;
+    border-radius: 5px !important;
+    padding: 10px 10px;
+    color: var(--gray-600);
+    font-size: 14px;
+}
+.btn-cancel {
+    font-size: 15px;
+    padding: 12px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: #000;
+    background-color: #fff;
+    border-color: var(--black);
+}

@@ -1,9 +1,30 @@
 #sidebar {
     background: #fff;
     width: 100%;
-    max-width: 350px;
+    max-width: 300px;
     position: absolute;
     height: 100%;
-    box-shadow: 0 0 5px 0 #d5d5d5;
+    padding: 45px 20px 20px 20px;
+}
+.accordion-item {
+    border: none;
+}
+.accordion-body {
+    padding-left: 52px;
+}
+.portfolio, .fabrics {
     padding: 20px;
+    padding-top: 15px;
+    padding-bottom: 12px;
+}
+span.appointments,.orders,.portfolio,.fabrics {
+    font-family: 'ProximaNova';
+    font-weight: 400;
+}
+.yellow-hover:hover {
+    color: #CEA835;
+    font-weight: bold;
+}
+.side-bar-font {
+    font-family: 'ProximaNova';
 }
