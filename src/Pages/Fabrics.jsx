@@ -22,6 +22,7 @@ import Countries from 'Utils/Countries';
 import Loading from 'Components/Shared/Loading';
 import MultiRangeSlider from 'Components/Forms/MultiRangeSlider';
 import { debounce } from 'lodash';
+import { Rating } from 'react-simple-star-rating';
 
 const Fabrics = (props) => {
     const navigate = useNavigate();
@@ -297,10 +298,10 @@ const Fabrics = (props) => {
             <div className='py-5 px-2'>
                 <section>
                     <Container>
-                        <Row className='mb-3'>
+                        <Row>
                             <Col lg="12">
                                 <div className="narrow-850 text-center">
-                                    <h2 className='fs-40 text-center mb-3'>Explore Premium Textiles</h2>
+                                    <h2 className='fs-40 text-center mb-3'>Explore Premium Fabrics</h2>
                                     <p>Fabrics are versatile materials composed of fibers, either natural or synthetic, that are woven, knitted, or bonded together to form a flexible and pliable structure. </p>
                                 </div>
                             </Col>
@@ -310,7 +311,7 @@ const Fabrics = (props) => {
                         </Row>
                     </Container>
                 </section>
-                <hr className="border-black mb" />
+                {/* <hr className="border-black mb" /> */}
                 <section className="pt-3">
                     <Container>
                         <Row className="mt-2">
@@ -464,21 +465,21 @@ const Fabrics = (props) => {
 
                                                             return (
                                                                 <>
-                                                                    <Col className="designs-grid mb-3" xs="12" md="4">
+                                                                    <Col className="designs-grid mb-3" xs="12" md="3">
                                                                         <div className="portfolio-link">
-                                                                            <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }} style={{ backgroundImage: "url(" + fabricImage + ")" }}>
-
+                                                                            <div className="designs-grid-div w-100 cursor-pointer" onClick={function() {toggleAddViewCount(fabric.id); navigate('/product/'+fabric.id); }} style={{ backgroundImage: "url("+fabricImage+")", minHeight: '150px'}}>
+                                                                                
                                                                             </div>
                                                                             <div className='save-link'>
                                                                                 {/* <div className="action-button bg-white me-2">
                                                                                     <GoBookmark className="text-black" />
                                                                                 </div> */}
                                                                                 {userWishlist ?
-                                                                                    <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                    <div className="action-button bg-gold" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: fabric.id}); }}>
                                                                                         <GoHeart className="text-white" />
                                                                                     </div>
                                                                                     :
-                                                                                    <div className="action-button bg-white" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                    <div className="action-button bg-white" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: fabric.id}); }}>
                                                                                         <GoHeart className="text-black" />
                                                                                     </div>
                                                                                 }
@@ -486,26 +487,51 @@ const Fabrics = (props) => {
                                                                         </div>
                                                                         <div className="design-details">
                                                                             <div className='d-flex align-items-center justify-content-between'>
-                                                                                <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{fabric.name ?? '-'}</p>
-                                                                                <div className='d-flex align-items-center'>
-                                                                                    <span className='fs-14 text-no-wrap mx-2'>
-                                                                                        <IoHeartOutline /> {fabric.wishlist_count}
-                                                                                    </span>
-                                                                                    <span className='fs-14 text-no-wrap'>
-                                                                                        <IoEyeOutline /> {fabric.views}
-                                                                                    </span>
-                                                                                </div>
-
-                                                                            </div>
-                                                                            <div className='d-flex align-items-center mt-1'>
-                                                                                {fabric.user.image ?
-                                                                                    <div className='designer-photo-small' style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + fabric.user.image + ")" }} ></div>
+                                                                                <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis">{fabric.name ?? '-'}</h4>
+                                                                                {/* {currentUser ?
+                                                                                    <div className='d-flex align-items-center'>
+                                                                                        <span className='fs-14 text-no-wrap mx-2'>
+                                                                                            <IoHeartOutline /> {fabric.wishlist_count}
+                                                                                        </span>
+                                                                                        <span className='fs-14 text-no-wrap'>
+                                                                                            <IoEyeOutline /> {fabric.views}
+                                                                                        </span>
+                                                                                    </div>
                                                                                     :
-                                                                                    <div className='designer-photo-small' style={{ backgroundImage: "url(" + UserPlaceholder + ")" }} ></div>
-                                                                                }
-                                                                                &nbsp;&nbsp;
-                                                                                <p className="text-black fs-14 mb-0">{fabric.user.first_name && fabric.user.first_name != "" ? fabric.user.first_name : "-"} {fabric.user.last_name && fabric.user.last_name != "" ? fabric.user.last_name : "-"}</p>
+                                                                                    null
+                                                                                }    */}
                                                                             </div>
+                                                                            <div className="star-ratings mt-1">
+                                                                                <Rating 
+                                                                                    initialValue={0}
+                                                                                    readonly={true}
+                                                                                    allowFraction={true}
+                                                                                    size={20}
+                                                                                    className="star-rating"
+                                                                                    showTooltip={true}
+                                                                                    emptyColor="#dddddd"
+                                                                                    fillColor="#cea835"
+                                                                                    tooltipArray={[
+                                                                                        0,1,2,3,4,5
+                                                                                    ]}
+                                                                                    tooltipDefaultText="0.0"
+                                                                                    /* Available Props */
+                                                                                />
+                                                                            </div>
+                                                                            <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
+                                                                            {/* {currentUser ?
+                                                                                <div className='d-flex align-items-center mt-1'>
+                                                                                    {fabric.user.image ?
+                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
+                                                                                        :
+                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
+                                                                                    }
+                                                                                    &nbsp;&nbsp;
+                                                                                    <p className="text-black fs-14 mb-0">{fabric.user.first_name && fabric.user.first_name != "" ? fabric.user.first_name : "-"} {fabric.user.last_name && fabric.user.last_name != "" ? fabric.user.last_name : "-"}</p>
+                                                                                </div>
+                                                                                :
+                                                                                null
+                                                                            } */}
                                                                         </div>
                                                                     </Col>
                                                                 </>

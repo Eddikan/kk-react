@@ -223,10 +223,14 @@ const Fabrics = (props) => {
                                                                     showTooltip={true}
                                                                     emptyColor="#dddddd"
                                                                     fillColor="#cea835"
+                                                                    tooltipArray={[
+                                                                        0,1,2,3,4,5
+                                                                    ]}
+                                                                    tooltipDefaultText="0.0"
                                                                     /* Available Props */
                                                                 />
                                                             </div>
-                                                            <h4 className="text-black fs-18 fw-600 mt-1 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
+                                                            <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
                                                             {/* {currentUser ?
                                                                 <div className='d-flex align-items-center mt-1'>
                                                                     {fabric.user.image ?

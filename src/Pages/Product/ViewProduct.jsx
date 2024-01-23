@@ -2,20 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import FormControl from 'react-bootstrap/FormControl';
-import { Container, Row, Col, Button } from 'react-bootstrap';
 import { GoBookmark, GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import 'Assets/styles/Product/ViewProduct/style.css';
 import GoBack from 'Components/Shared/GoBack';
 import GetSingleProductData from 'Utils/GetSingleProductData';
 import toast from 'react-hot-toast';
 import ImageSlider from 'Components/Shared/ImageSlider';
-import { Card, CardBody } from 'reactstrap';
+import { Form, Container, Row, Col, Button, Card, Modal } from 'react-bootstrap';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { useCookies } from 'react-cookie';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import axios from 'axios';
+import Loading from 'Components/Shared/Loading';
+import { Rating } from 'react-simple-star-rating';
+import UserPlaceholder from 'Assets/images/user.png';
+
+const initialReviewData = Object.freeze({
+    rating: 0,
+    content: '',
+});
 
 const ViewProduct = () => {
     const { productId } = useParams();
@@ -27,12 +34,26 @@ const ViewProduct = () => {
     const [activeImage, setActiveImage] = useState('');
     const [commentsTabShow, setCommentsTabShow] = useState(false);
     const [reviewsTabShow, setReviewsTabShow] = useState(true);
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser','token']);
     const [userWishlist, setUserWishlist] = useState(false);
+    const [addedToCartShow, setAddedToCartShow] = useState(false);
+    const [productReviews, setProductReviews] = useState([]);
+    const [productReviewsLoading, setProductReviewsLoading] = useState(true);
+    const [productReviewsPages, setProductReviewsPages] = useState([]);
+    const [updateReview, setUpdateReview] = useState(false);
+    const [reviewId, setReviewId] = useState('');
+    const [addReviewLoading, setAddReviewLoading] = useState(false);
 
-    const [meters, setMeters] = useState(1.00);
-    const [yards, setYards] = useState(1.09);
+    const [reviewFormData, setReviewFormData] = useState(initialReviewData);
+
+    const [addReviewShow, setAddReviewShow] = useState(false);
+    const [reviewText, setReviewText] = useState('Terrible');
+
+    const [unitMeasurement, setUnitMeasurement] = useState(1.00);
+    const [yards, setYards] = useState(0.00);
     const currentUser = cookies.currentUser;
+    const token = cookies.token;
+    const userDetails = cookies.userDetails;
 
     const navigate = useNavigate();
 
@@ -41,28 +62,76 @@ const ViewProduct = () => {
         // You can perform additional actions when the active image changes
     };
 
+    // Catch Rating value
+    const handlePointerMove = (value, index) => {
+        setReviewFormData({
+            ...reviewFormData,
+            rating: value,
+        });
+    }
+
+    const handleResetRating = () => {
+        // Set the initial value
+        setReviewFormData({
+            ...reviewFormData,
+            rating: 0,
+        });
+      }
+
+    const toggleAddToCart = (e) => {
+        setAddedToCartShow(!addedToCartShow);
+    }
+
+    const toggleAddToReview = (e) => {
+        setAddReviewShow(!addReviewShow);
+    }
+
     const handleChange = (e) => {
         const {value, name} = e.target;
-        setMeters(value);
+        setUnitMeasurement(value);
         setYards(value * 1.09);
+        if (product.unit_measurement == "centimeter") {
+            setYards(value * 0.01)
+        } else if (product.unit_measurement == "meter") {
+            setYards(value * 1.096)
+        } else if (product.unit_measurement == "inch") {
+            setYards(value * 0.027)
+        } else if (product.unit_measurement == "feet") {
+            setYards(value * 0.333)
+        } else if (product.unit_measurement == "yard") {
+            setYards(value * 1)
+        }
+    }
+
+    const handleChangeReview = (e) => {
+        const {value, name} = e.target;
+        setReviewFormData({
+            ...reviewFormData,
+            [name]: value,
+        });
     }
 
     const handleSubtract = (e) => {
-        var newMeter = meters - 1;
-        setMeters(newMeter);
-        setYards(newMeter * 1.09)
+        var newUnitMeasurement = unitMeasurement - 1;
+        setUnitMeasurement(newUnitMeasurement);
+        setYards(newUnitMeasurement * 1.09)
     }
 
     const handleAdd = (e) => {
-        var newMeter = meters + 1;
-        setMeters(newMeter);
-        setYards(newMeter * 1.09)
+        var newUnitMeasurement = unitMeasurement + 1;
+        setUnitMeasurement(newUnitMeasurement);
+        setYards(newUnitMeasurement * 1.09)
     }
 
     const fetchData = async (e) => {
         try {
           const productData = await GetSingleProductData(e);
           if (productData.id) {
+            setReviewFormData({
+                ...reviewFormData,
+                product_id: productData.id,
+                user_id: currentUser
+            });
             setProduct(productData);
             setProductLoading(false);
             setImages(productData.image_urls);
@@ -76,6 +145,19 @@ const ViewProduct = () => {
             }
             var wishlist_user_ids = productData.wishlist_user_ids;
             setUserWishlist(wishlist_user_ids.includes(currentUser));
+            if (productData.unit_measurement) {
+                if (productData.unit_measurement == "centimeter") {
+                    setYards(0.01)
+                } else if (productData.unit_measurement == "meter") {
+                    setYards(1.096)
+                } else if (productData.unit_measurement == "inch") {
+                    setYards(0.027)
+                } else if (productData.unit_measurement == "feet") {
+                    setYards(0.333)
+                } else if (productData.unit_measurement == "yard") {
+                    setYards(1)
+                }
+            }
           } else {
             setProductLoading(false);
             toast.error('Product does not exist!');
@@ -112,9 +194,98 @@ const ViewProduct = () => {
         });
     }
 
+    async function reviewUpdate() {
+        setAddReviewLoading(true);
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/review/'+reviewId, reviewFormData).then((response) => {
+          const success = response.data.status;
+          if (success == 'Success') {
+            toast.success('Review updated successfully!');
+            getProductReviews();
+            setAddReviewLoading(false);
+            toggleAddToReview();
+          } else {
+            toast.error('Something went wrong, please contact the administrator!');
+          }
+        }).catch((error) => {
+          toast.error('Something went wrong, please contact the administrator!');
+        });
+    }
+
+    async function reviewAdd() {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/review', reviewFormData).then((response) => {
+          const success = response.data.status;
+          if (success == 'Success') {
+            toast.success('Review added successfully!');
+            getProductReviews();
+            setAddReviewLoading(false);
+            toggleAddToReview();
+          } else {
+            toast.error('Something went wrong, please contact the administrator!');
+          }
+        }).catch((error) => {
+          toast.error('Something went wrong, please contact the administrator!');
+        });
+    }
+
+    const getProductReview = async (e) => {
+        await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/review/'+e+'?user_id=' + currentUser + '&token=' + token)
+            .then((response) => {
+                const result = response.data.data;
+                if (result) {
+                    setReviewFormData({
+                        ...reviewFormData,
+                        rating: result.rating,
+                        content: result.content,
+                    });
+                    if (result.rating <= 1) {
+                        setReviewText('Terrible');
+                    } else if (result.rating > 1 && result.rating <= 2) {
+                        setReviewText('Bad');
+                    } else if (result.rating > 2 && result.rating <= 3) {
+                        setReviewText('Average');
+                    } else if (result.rating > 3 && result.rating <= 4) {
+                        setReviewText('Great');
+                    }else if (result.rating > 4 && result.rating <= 5) {
+                        setReviewText('Great');
+                    }
+                }
+            }).catch(() => {
+                toast.error('Something went wrong, please contact the administrator!');
+            });
+    }
+
+    const getProductReviews = async () => {
+        await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'/review?user_id=' + currentUser + '&token=' + token)
+            .then((response) => {
+                const data = response.data;
+                const result = data.data;
+                const links = data.meta.links;
+                if (result) {
+                    setProductReviewsLoading(false);
+                    setProductReviews(result);
+                    const hasCurrentUserReview = result.some(review => review.user_id == currentUser);
+                    setUpdateReview(hasCurrentUserReview);
+                    if (hasCurrentUserReview) {
+                        // Get the id of the first review with user_id equal to currentUser
+                        const currentUserReviewId = hasCurrentUserReview
+                        ? result.find(review => review.user_id === currentUser).id
+                        : null;
+                        setReviewId(currentUserReviewId)
+                    }
+
+                    if (links) {
+                        setProductReviewsPages(links);
+                    }
+                }
+            }).catch(() => {
+                toast.error('Something went wrong, please contact the administrator!');
+            });
+    }
+
     useEffect(() => {
         fetchData(productId);
-    }, [reloadCount]);
+        getProductReviews();
+    }, []);
 
     return (
         <Layout>
@@ -145,7 +316,7 @@ const ViewProduct = () => {
                             </Col>
                             <Col lg={7}>
                                 <Card className="h-100">
-                                    <CardBody>
+                                    <Card.Body>
                                         <Row>
                                             <Col lg="12" className="d-flex justify-content-between">
                                                 {/* <div className='mb-3 d-flex portfolio-designer'>
@@ -187,12 +358,17 @@ const ViewProduct = () => {
                                                                 <GoHeart className="text-white" />
                                                             </div>
                                                             <div class="kouture-tooltiptext">
-                                                                Add to Wishlist
+                                                                Remove from Wishlist
                                                             </div>
                                                         </div>
                                                         :
-                                                        <div className="action-button bg-smgray me-2" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: product.id}); }}>
-                                                            <GoHeart className="text-black" />
+                                                        <div class="kouture-tooltip">
+                                                            <div className="action-button bg-smgray me-2" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: product.id}); }}>
+                                                                <GoHeart className="text-black" />
+                                                            </div>
+                                                            <div class="kouture-tooltiptext">
+                                                                Add to Wishlist
+                                                            </div>
                                                         </div>
                                                     }
                                                     {/* <div className="action-button bg-smgray">
@@ -201,27 +377,25 @@ const ViewProduct = () => {
                                                 </div>
                                             </Col>
                                             <Col lg="12">
+                                                {product.categories && product.categories.length > 0 ?
+                                                    <div className="mb-3">
+                                                        {product.categories.length > 0 ?
+                                                            <>
+                                                                {product.categories.map((category, index) => (
+                                                                    <span className="design-tag bg-light fs-12">
+                                                                        {category}
+                                                                    </span>
+                                                                ))}
+                                                            </>
+                                                            :
+                                                            null
+                                                        }
+                                                    </div>
+                                                    :
+                                                    null
+                                                }
                                                 <div className="mb-3">
-                                                    {product.categories ?
-                                                        <>
-                                                            {product.categories.length > 0 ?
-                                                                <>
-                                                                    {product.categories.map((category, index) => (
-                                                                        <span className="design-tag bg-light fs-12">
-                                                                            {category}
-                                                                        </span>
-                                                                    ))}
-                                                                </>
-                                                                :
-                                                                null
-                                                            }
-                                                        </>
-                                                        :
-                                                        null
-                                                    }
-                                                </div>
-                                                <div className="mb-3">
-                                                <p className="fw-600 fs-24">${productPrice}<span className="text-muted fs-14 d-inline-block vertical-align-middle">/meter</span></p>
+                                                <p className="fw-600 fs-24">${productPrice}<span className="text-muted fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
                                                 </div>
                                                 <div className="">
                                                     <p className="mb-2"><strong>Fabric Process Insight</strong></p>
@@ -258,15 +432,21 @@ const ViewProduct = () => {
                                                             {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
                                                                 -
                                                             </Button> */}
-                                                            <FormControl min="1" defaultValue="1" type='number' name='count' onChange={handleChange} className='me-3 d-inline-block w- counter-input' required />
+                                                            <FormControl min="1" defaultValue="1" type='number' name='count' onChange={handleChange} className='me-3 d-inline-block counter-input' required />
                                                             {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
                                                                 +
                                                             </Button> */}
-                                                            <span className="fs-20 fw-600">{Number(meters)?.toFixed(2)} metres <span className="fs-14 fw-400 text-muted">({yards.toFixed(2)} yards)</span></span>
+                                                            <span className="fs-20 fw-600">{Number(unitMeasurement)?.toFixed(2)} {
+                                                                product.unit_measurement !== 'inch' && product.unit_measurement !== 'feet'
+                                                                    ? product.unit_measurement + 's'
+                                                                    : product.unit_measurement === 'feet'
+                                                                        ? product.unit_measurement
+                                                                        : product.unit_measurement + 'es'
+                                                            } {product.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted">({yards.toFixed(2)} yards)</span> : null }</span>
                                                             <hr  className="mb-4" />
                                                         </Col>
                                                         <Col lg="12">
-                                                            <Button variant="primary" className="w-auto me-3">Add to Cart</Button> <span className="fw-600 fs-24">${(meters * productPrice).toFixed(2)} <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span>
+                                                            <Button className="w-auto me-3 btn-primary" onClick={toggleAddToCart}>Add to Cart</Button> <span className="fw-600 fs-24">${(unitMeasurement * productPrice).toFixed(2)} <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span>
                                                         </Col>
                                                     </Row>
                                                 </div>
@@ -292,7 +472,7 @@ const ViewProduct = () => {
                                                 </div> */}
                                             </Col>
                                         </Row>
-                                    </CardBody>
+                                    </Card.Body>
                                 </Card>
                             </Col>
                             <Col lg={12} className="mt-4">
@@ -301,12 +481,20 @@ const ViewProduct = () => {
                             </Col>
                             <Col lg="12" className='mt-4'>
                                 {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
-                                <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("reviews"); }}>Reviews & Ratings</span>
-                                <hr className='mt-2' />
+                                <div className="d-flex justify-content-between w-100 align-item-center">
+                                    <p className={`text-gold cursor-pointer me-5 mt-3 fs-16 ${reviewsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews</p>
+                                    {updateReview ?
+                                        <Button className="w-auto mb-3 btn-primary" onClick={ function() { getProductReview(reviewId); toggleAddToReview(); }}>Update Review</Button>
+                                        :
+                                        <Button className="w-auto mb-3 btn-primary" onClick={ function() { toggleAddToReview(); }}>Add Review</Button>
+                                    }
+                                    
+                                </div>
+                                <hr className='mt-2 mb-4' />
                                 {commentsTabShow ?
                                     <>
                                         <div className="text-center">
-                                            <GoAlertFill size="60px" color="#000000" className="mb-3 mt-2" />
+                                            <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
                                             <p className="fs-20 text-black">No available comments at this time</p>
                                         </div>
                                     </>
@@ -315,10 +503,62 @@ const ViewProduct = () => {
                                 }
                                 {reviewsTabShow ?
                                     <>
-                                        <div className="text-center">
-                                            <GoAlertFill size="60px" color="#000000" className="mb-3 mt-2" />
-                                            <p className="fs-20 text-black">No available reviews at this time</p>
-                                        </div>
+                                        {productReviewsLoading ?
+                                            <>
+                                                <Loading />
+                                            </>
+                                            :
+                                            <>
+                                                {productReviews && productReviews.length > 0 ?
+                                                    <>
+                                                        {productReviews.map(({rating, content, user}, index) => (
+                                                            <>
+                                                                <div className="product-review-container mt-4 mb-3">
+                                                                    <div className="d-flex">
+                                                                        <div className="user">
+                                                                            {user.image && user.image != "" ?
+                                                                                <div className="profile-image small" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+user.image+")"}}></div>
+                                                                                :
+                                                                                <div className="profile-image small" style={{ backgroundImage: "url("+UserPlaceholder+")"}}></div>                            
+                                                                            }
+                                                                        </div>
+                                                                        <div className="rating">
+                                                                            <p className="text-black fs-16 mb-0 text-left">{user.first_name} {user.last_name}</p>
+                                                                            <Rating 
+                                                                                initialValue={rating}
+                                                                                readonly={true}
+                                                                                allowFraction={true}
+                                                                                size={22}
+                                                                                className="star-rating"
+                                                                                showTooltip={false}
+                                                                                emptyColor="#dddddd"
+                                                                                fillColor="#cea835"
+                                                                                /* Available Props */
+                                                                            />
+                                                                            {content && content != "" ?
+                                                                                <p className="mb-0 mt-3">{content}</p>
+                                                                                :
+                                                                                null
+                                                                            }
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                {index + 1 < productReviews.length ?
+                                                                    <hr />
+                                                                    :
+                                                                    null
+                                                                }
+                                                            </>
+                                                        ))}
+                                                    </>
+                                                    :
+                                                    <div className="text-center">
+                                                        <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
+                                                        <p className="fs-20 text-black">No available reviews at this time</p>
+                                                    </div>
+                                                }
+                                            </>
+                                        }
                                     </>
                                     :
                                     null
@@ -328,6 +568,115 @@ const ViewProduct = () => {
                     </Container> 
                 </section>
             }
+            {/* Add to Cart */}
+            <Modal
+                show={addedToCartShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="sm"
+            >
+                <Modal.Header className="py-0">
+                    <h5 className='modal-title text-uppercase text-left'></h5>
+                    <button type='button' className='close react-modal-close' onClick={toggleAddToCart} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <h4 className='text-center fs-25 fw-600 mb-3'>Added to Cart</h4>
+                    <Card>
+                        <Card.Body className="text-center py-5">
+                            <GoAlertFill size="60px" className="mb-2 text-gold" />
+                            <p className="fs-20 text-black">Under Construction</p>
+                            {/* <DateTimePicker onTimeChange={handleTimeChange} onDone={handleDoneTimeChange} availability={currentAvailability} /> */}
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+            </Modal>
+
+            {/* Add Review */}
+            <Modal
+                show={addReviewShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="lg"
+            >
+                <Modal.Header className="py-0">
+                    <h5 className='modal-title text-uppercase text-left'></h5>
+                    <button type='button' className='close react-modal-close' onClick={toggleAddToReview} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <h4 className='text-left fs-25 fw-600 mb-3'>{updateReview ? "Update Review" : "Add Review"}</h4>
+                    <Card>
+                        <Card.Header>
+                            <div className="d-flex align-items-center">
+                                <div className="user">
+                                    {product.user?.image && product.user?.image != "" ?
+                                        <div className="profile-image small" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+product.user?.image+")"}}></div>
+                                        :
+                                        <div className="profile-image small" style={{ backgroundImage: "url("+UserPlaceholder+")"}}></div>                            
+                                    }
+                                </div>
+                                <p className="text-black fs-16 mb-0 text-left">{product.user?.first_name} {product.user?.last_name}</p>
+                            </div>
+                        </Card.Header>
+                        <Card.Body className="text-center py-3">
+                            <div className="product-review-container">
+                                
+                                <div className="d-flex align-items-center">
+                                    <div className="user">
+                                        <div className="profile-image small" style={{ backgroundImage: "url("+activeImage+")", borderRadius: '10px'}}></div>
+                                    </div>
+                                    <p className="text-black fs-16 mb-0 text-left">{product.name}</p>
+                                </div>
+                                <div className="text-left mt-3">
+                                    <span className="fs-14">Product Quality:</span> <Rating 
+                                        initialValue={reviewFormData.rating}
+                                        allowFraction={true}
+                                        size={25}
+                                        className="star-rating"
+                                        showTooltip={true}
+                                        emptyColor="#dddddd"
+                                        fillColor="#cea835"
+                                        onClick={handlePointerMove}
+                                        tooltipArray={[
+                                            'Terrible',
+                                            'Terrible',
+                                            'Bad',
+                                            'Bad',
+                                            'Average',
+                                            'Average',
+                                            'Great',
+                                            'Great',
+                                            'Excellent',
+                                            'Excellent'
+                                        ]}
+                                        tooltipDefaultText={reviewText}
+                                        /* Available Props */
+                                    />
+                                    <Form.Control
+                                        as="textarea"
+                                        name="content"
+                                        rows={5} // You can adjust the number of rows as needed
+                                        value={reviewFormData.content}
+                                        placeholder="Leave a comment about the product..."
+                                        onChange={handleChangeReview}
+                                        className="mt-3"
+                                    />
+                                </div>
+                            </div>
+                        </Card.Body>
+                        <Card.Footer className="text-right">
+                            {updateReview ?
+                                <Button className="w-auto mt-2 btn-primary" onClick={ function() { reviewUpdate(); }}>{addReviewLoading ? "Updating..." : "Update"}</Button>
+                                :
+                                <Button className="w-auto mt-2 btn-primary" onClick={ function() { reviewAdd(); }}>{addReviewLoading ? "Saving..." : "Submit"}</Button>
+                            }
+                        </Card.Footer>
+                    </Card>
+                </Modal.Body>
+            </Modal>
         </Layout>
     );
 };

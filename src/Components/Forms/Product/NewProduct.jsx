@@ -10,6 +10,7 @@ import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
 import Countries from 'Utils/Countries';
+import ProductVideoDragAndDrop from 'Components/Shared/ProductVideoDragAndDrop';
 
 const initialProductData = Object.freeze({
     image_urls: [],
@@ -25,6 +26,7 @@ const initialProductData = Object.freeze({
     stretch: '',
     drape: '',
     care_instructions: '',
+    unit_measurement: '',
     price: 0,
     quantity: 0,
     certifications: [],
@@ -48,6 +50,8 @@ const NewProduct = (props) => {
     const [composition, setComposition] = useState('');
     const [weave, setWeave] = useState('');
     const [otherWeave, setOtherWeave] = useState('');
+    const [unitMeasurement, setUnitMeasurement] = useState('meter');
+    const [otherUnitMeasurement, setOtherUnitMeasurement] = useState('');
     const [categories, setCategories] = useState([])
 
     const currentUser = cookies.currentUser;
@@ -97,12 +101,23 @@ const NewProduct = (props) => {
         var { name, value } = e.target;
         setOtherWeave("");
         setWeave(value);
-        
     };
 
     const handleChangeOtherWeave = (e) => {
         var { name, value } = e.target;
         setOtherWeave(value);
+    };
+
+    const handleChangeUnitMeasurement = (e) => {
+        var { name, value } = e.target;
+        setOtherUnitMeasurement("");
+        setUnitMeasurement(value);
+        
+    };
+
+    const handleChangeOtherUnitMeasurement = (e) => {
+        var { name, value } = e.target;
+        setOtherUnitMeasurement(value);
     };
 
     const handleChangeCheckbox = (isChecked) => {
@@ -111,6 +126,13 @@ const NewProduct = (props) => {
             eco_friendly: isChecked ? 1 : 0,
         });
     };
+
+    const handleVideoChange = (url) => {
+        setProductData({
+            ...productData,
+            video_demo_url: url,
+        }); 
+    }
 
     const handleImagesChange = (images) => {
         // Use the images as needed in the parent component (e.g., for uploading)
@@ -150,13 +172,13 @@ const NewProduct = (props) => {
             setProductLoading(true);
             setTimeout(function(){
                 setProductLoading(false);
-                saveProductItems({...productData, composition: otherComposition ?? composition, weave: otherWeave ?? weave, colors: colors, certifications: certifications, status: 'Active' });
+                saveProductItems({...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' });
                 handleCancel();
             }, 1000);
         } else {
             if (productData.image_urls) {
                 setProductLoading(true);
-                axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition ?? composition, weave: otherWeave ?? weave, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+                axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
                     const success = response.data.status;
                     if(success == 'Success') {
                         toast.success('Fabric added successfully!');
@@ -182,7 +204,7 @@ const NewProduct = (props) => {
     async function ProductDraftSubmit(e) {
         e.preventDefault();
         setProductDraftLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition ?? composition, weave: otherWeave ?? weave, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
@@ -297,14 +319,6 @@ const NewProduct = (props) => {
                                 }
                             </Form.Group>
                             <Form.Group className='my-4'>
-                                <Form.Label>Weight (KG Per sq. meter)</Form.Label>
-                                <FormControl type='number' name='weight' value={productData.weight} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                            </Form.Group>
-                            <Form.Group className='my-4'>
-                                <Form.Label>Width (Meter)</Form.Label>
-                                <FormControl type='number' name='width' value={productData.width} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                            </Form.Group>
-                            <Form.Group className='my-4'>
                                 <Form.Label>Pattern</Form.Label>
                                 <FormControl type='text' name='pattern' value={productData.pattern} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
@@ -379,8 +393,33 @@ const NewProduct = (props) => {
                                     placeholder=''
                                     onChange={handleChange} required />
                             </Form.Group>
+                            <Form.Group className='mb-4 mt-2'>
+                                <Form.Label>Unit of Measurement</Form.Label>
+                                <Form.Control as='select' name='unit_measurement' value={unitMeasurement} className='mr-sm-2 mb-2' onChange={handleChangeUnitMeasurement} required>
+                                    <option value=''>Select Unit of Measurement</option>
+                                    <option value='centimeter'>Centimeter</option>
+                                    <option value='meter'>Meter</option>
+                                    <option value='inch'>Inch</option>
+                                    <option value='feet'>Feet</option>
+                                    <option value='yard'>Yard</option>
+                                    <option value='Other'>Other</option>
+                                </Form.Control>
+                                {(unitMeasurement != "centimeter" && unitMeasurement != "meter" && unitMeasurement != "inch" && unitMeasurement != "feet" && unitMeasurement != "yard" || unitMeasurement == "Other") && unitMeasurement != ""  ?
+                                    <FormControl type='text' name='unit_measurement' value={otherUnitMeasurement} className='mr-sm-2' onChange={handleChangeOtherUnitMeasurement} placeholder='' />
+                                    :
+                                    null
+                                }
+                            </Form.Group>
                             <Form.Group className='my-4'>
-                                <Form.Label>Price (Per meter)</Form.Label>
+                                <Form.Label>Width ({otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
+                                <FormControl type='number' name='width' value={productData.width} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                            </Form.Group>
+                            <Form.Group className='my-4'>
+                                <Form.Label>Weight (KG per sq. {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
+                                <FormControl type='number' name='weight' value={productData.weight} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                            </Form.Group>
+                            <Form.Group className='my-4'>
+                                <Form.Label>Price (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
                                 <FormControl type='number' name='price' value={productData.price} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-4'>
@@ -414,6 +453,24 @@ const NewProduct = (props) => {
                                     ))}
                                 </Form.Control>
                             </Form.Group>
+                            {/* <Form.Group className='my-4'>
+                                <Form.Label>Video Demonstration</Form.Label>
+                                <Form.Control as='select' name='video_demo_type' value={productData.video_demo_type} className='mr-sm-2' onChange={handleChange} required>
+                                    <option value=''>Select Type</option>
+                                    <option value='Youtube'>Youtube</option>
+                                    <option value='Vimeo'>Vimeo</option>
+                                    <option value='Upload'>Upload Video</option>
+                                </Form.Control>
+                                {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Youtube" ?
+                                    <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} required placeholder={`Insert ${productData.video_demo_type} embed link`} />
+                                    : productData.video_demo_type == "Upload" ?
+                                    <div className="mt-3">
+                                        <ProductVideoDragAndDrop type="product" onVideoChange={handleVideoChange} size={size} />
+                                    </div>
+                                    :
+                                    null
+                                }
+                            </Form.Group> */}
                             <Form.Group className='my-4'>
                                 <Form.Label>Notes (Additional notes/remarks)</Form.Label>
                                 <FormControl as="textarea"

@@ -373,7 +373,7 @@ const Questionnaire2 = (props) => {
                                     </Form.Group>
                                 </CardBody>
                             </Card>
-                            <Card className='mb-4 border-white'>
+                            {/* <Card className='mb-4 border-white'>
                                 <CardBody>
                                     <Form.Label className='mb-2 fs-18'>
                                         Calendar Availability
@@ -389,7 +389,7 @@ const Questionnaire2 = (props) => {
                                         <Button className='btn-primary' onClick={toggleSchedule} type="button">Schedule</Button>
                                     </Form.Group>
                                 </CardBody>
-                            </Card>
+                            </Card> */}
                         </Col>
                     </Row>
                     <Row>

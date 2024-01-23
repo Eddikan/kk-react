@@ -47,6 +47,8 @@ const EditProduct = (props) => {
     const [composition, setComposition] = useState('');
     const [weave, setWeave] = useState('');
     const [otherWeave, setOtherWeave] = useState('');
+    const [unitMeasurement, setUnitMeasurement] = useState('meter');
+    const [otherUnitMeasurement, setOtherUnitMeasurement] = useState('');
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -96,6 +98,17 @@ const EditProduct = (props) => {
     const handleChangeOtherWeave = (e) => {
         var { name, value } = e.target;
         setOtherWeave(value);
+    };
+
+    const handleChangeUnitMeasurement = (e) => {
+        var { name, value } = e.target;
+        setOtherUnitMeasurement("");
+        setUnitMeasurement(value);
+    };
+
+    const handleChangeOtherUnitMeasurement = (e) => {
+        var { name, value } = e.target;
+        setOtherUnitMeasurement(value);
     };
 
     const handleChangeCheckbox = (isChecked) => {
@@ -213,6 +226,15 @@ const EditProduct = (props) => {
                     setOtherWeave('');
                 }
             }
+            if (product.unit_measurement) {
+                if ((product.unit_measurement != "centimeter" && product.unit_measurement != "meter" && product.unit_measurement != "inch" && product.unit_measurement != "feet" && product.weave != "yard" && product.unit_measurement != "") || product.unit_measurement == "Other" ) {
+                    setUnitMeasurement('Other');
+                    setOtherUnitMeasurement(product.unit_measurement);
+                } else {
+                    setUnitMeasurement(product.unit_measurement);
+                    setOtherUnitMeasurement('');
+                }
+            }
             if (product.colors) {
                 setColors(product.colors);
             }
@@ -238,7 +260,7 @@ const EditProduct = (props) => {
         e.preventDefault();
         if (images) {
             setProductLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition != "" ? otherComposition : composition, weave: otherWeave != "" ? otherWeave : weave, image_urls: images, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if(success == 'Success') {
                     toast.success('Fabric updated successfully!');
@@ -264,7 +286,7 @@ const EditProduct = (props) => {
     async function ProductDraftSubmit(e) {
         e.preventDefault();
         setProductDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition ?? composition, weave: otherWeave ?? weave, image_urls: images, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
@@ -431,14 +453,6 @@ const EditProduct = (props) => {
                         }
                     </Form.Group>
                     <Form.Group className='my-4'>
-                        <Form.Label>Weight (Per sq. meter)</Form.Label>
-                        <FormControl type='number' name='weight' value={productData.weight} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                    </Form.Group>
-                    <Form.Group className='my-4'>
-                        <Form.Label>Width (Meter)</Form.Label>
-                        <FormControl type='number' name='width' value={productData.width} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                    </Form.Group>
-                    <Form.Group className='my-4'>
                         <Form.Label>Pattern</Form.Label>
                         <FormControl type='text' name='pattern' value={productData.pattern} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
@@ -513,8 +527,33 @@ const EditProduct = (props) => {
                             placeholder=''
                             onChange={handleChange} required />
                     </Form.Group>
+                    <Form.Group className='mb-4 mt-2'>
+                        <Form.Label>Unit of Measurement</Form.Label>
+                        <Form.Control as='select' name='unit_measurement' value={unitMeasurement} className='mr-sm-2 mb-2' onChange={handleChangeUnitMeasurement} required>
+                            <option value=''>Select Unit of Measurement</option>
+                            <option value='centimeter'>Centimeter</option>
+                            <option value='meter'>Meter</option>
+                            <option value='inch'>Inch</option>
+                            <option value='feet'>Feet</option>
+                            <option value='yard'>Yard</option>
+                            <option value='Other'>Other</option>
+                        </Form.Control>
+                        {(unitMeasurement != "centimeter" && unitMeasurement != "meter" && unitMeasurement != "inch" && unitMeasurement != "feet" && unitMeasurement != "yard" || unitMeasurement == "Other") && unitMeasurement != ""  ?
+                            <FormControl type='text' name='unit_measurement' value={otherUnitMeasurement} className='mr-sm-2' onChange={handleChangeOtherUnitMeasurement} placeholder='' />
+                            :
+                            null
+                        }
+                    </Form.Group>
                     <Form.Group className='my-4'>
-                        <Form.Label>Price (Per meter)</Form.Label>
+                        <Form.Label>Width ({otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
+                        <FormControl type='number' name='width' value={productData.width} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                    </Form.Group>
+                    <Form.Group className='my-4'>
+                        <Form.Label>Weight (KG per sq. {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
+                        <FormControl type='number' name='weight' value={productData.weight} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                    </Form.Group>
+                    <Form.Group className='my-4'>
+                        <Form.Label>Price (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
                         <FormControl type='number' name='price' value={productData.price} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                     </Form.Group>
                     <Form.Group className='my-4'>

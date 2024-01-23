@@ -92,7 +92,7 @@ const Designs = (props) => {
         <>
             <div id="profile-designs">
                 <p className="fs-18 text-center text-dark mb-2"> Looking for Designs? <span className="text-gold">Explore now </span></p >
-                <h2 className="fs-40 fw-500 text-center text-black mb-30">Discover Captivating Designs.</h2>
+                <h2 className="fs-35 fw-500 text-center text-black mb-3">Discover Captivating Designs.</h2>
                 {designsLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
@@ -210,6 +210,10 @@ const Designs = (props) => {
                                                                     showTooltip={true}
                                                                     emptyColor="#dddddd"
                                                                     fillColor="#cea835"
+                                                                    tooltipArray={[
+                                                                        0,1,2,3,4,5
+                                                                    ]}
+                                                                    tooltipDefaultText="0.0"
                                                                     /* Available Props */
                                                                 />
                                                             </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import Layout from 'Components/Layout/Layout';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import GetUserWishlistsData from 'Utils/GetUserWishlistsData';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import GoBack from 'Components/Shared/GoBack';
-import { GoHeart, GoBookmark } from "react-icons/go";
+import { GoHeart, GoBookmark, GoAlertFill } from "react-icons/go";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
@@ -23,6 +23,7 @@ const Wishlists = (props) => {
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [wishlists, setWishlists] = useState([]);
     const [wishlistsLoading, setWishlistsLoading] = useState(true);
+    const [connectShow, setConnectShow] = useState(false);
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
     const currentUser = cookies.currentUser;
@@ -87,6 +88,10 @@ const Wishlists = (props) => {
         navigate('/designs/add')
     }
 
+    const toggleConnectShow = (e) => {
+        setConnectShow(!connectShow);
+    }
+
     useEffect(() => {
         fetchData({currentUser: currentUser, token: token});
     }, [reloadCount]);
@@ -101,7 +106,7 @@ const Wishlists = (props) => {
                         <Container>
                             <Row className='mb-3'>
                                 <Col lg="8" className=''>
-                                    <h2 className='fs-30'>Wishlist</h2>
+                                    <h2 className='fs-30 fw-600'>Wishlist</h2>
                                 </Col>
                                 <Col lg="4" className='text-right'>
                                     <GoBack fallBack="/" />
@@ -134,41 +139,50 @@ const Wishlists = (props) => {
 
                                                         return (
                                                             <>
-                                                                <Col className="designs-grid mb-3" xs="12" md="3">
-                                                                     <div className="portfolio-link">
-                                                                        <div className="designs-grid-div w-100 cursor-pointer" onClick={function() {toggleAddViewCount(wishlist.product.id); navigate('/product/'+wishlist.product.id); }} style={{ backgroundImage: "url("+wishlistImage+")"}}>
-                                                                            
-                                                                        </div>
-                                                                        <div className='save-link'>
-                                                                            {/* <div className="action-button bg-white me-2">
-                                                                                <GoBookmark className="text-black" />
-                                                                            </div> */}
-                                                                            <div className="action-button bg-gold" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: wishlist.product.id}); removeWishlist(wishlist.product.id) }}>
-                                                                                <GoHeart className="text-white" />
+                                                                <Col className="designs-grid mb-3" xs="12" md="6">
+                                                                    <div className="bg-lgray rounded p-3">
+                                                                        <div className="portfolio-link">
+                                                                            <Row>
+                                                                                <Col lg="3" xs="12">
+                                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function() {toggleAddViewCount(wishlist.product.id); navigate('/product/'+wishlist.product.id); }} style={{ backgroundImage: "url("+wishlistImage+")", minHeight: '140px'}}>
+                                                                                    
+                                                                                    </div>
+                                                                                </Col>
+                                                                                <Col lg="9" xs="12">
+                                                                                    <div className="design-details">
+                                                                                        <div className='d-flex align-items-center justify-content-between cursor-pointer' onClick={function() {toggleAddViewCount(wishlist.product.id); navigate('/product/'+wishlist.product.id); }}>
+                                                                                            <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{wishlist.product?.name ?? '-'}</p>
+                                                                                            {/* <div className='d-flex align-items-center'>
+                                                                                                <span className='fs-14 text-no-wrap mx-2'>
+                                                                                                    <IoHeartOutline /> {wishlist.wishlist_count}
+                                                                                                </span>
+                                                                                                <span className='fs-14 text-no-wrap'>
+                                                                                                    <IoEyeOutline /> {wishlist.product?.views}
+                                                                                                </span>
+                                                                                            </div> */}
+                                                                                        </div>
+                                                                                        <div className='d-flex align-items-center mt-1' >
+                                                                                            {/* {wishlist.user.image ?
+                                                                                                <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+wishlist.user.image+")"}} ></div>
+                                                                                                :
+                                                                                                <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
+                                                                                            }
+                                                                                            &nbsp;&nbsp; */}
+                                                                                            {/* <p className="text-black fs-14 mb-0">{wishlist.user.first_name && wishlist.user.first_name != "" ? wishlist.user.first_name : "-"} {wishlist.user.last_name && wishlist.user.last_name != "" ? wishlist.user.last_name : "-"}</p> */}
+                                                                                            <p className="text-black fs-14 mb-0 wishlist-description">{wishlist.product?.description ?? '-'}</p>
+                                                                                        </div>
+                                                                                        <Button className="btn-primary w-auto fs-14 px-3 py-2 mt-3" onClick={toggleConnectShow}>Connect with Fashion Designer</Button>
+                                                                                    </div>
+                                                                                </Col>
+                                                                            </Row>
+                                                                            <div className='save-link' style={{opacity: 1, bottom: 'unset', top: '0', right: '0'}}>
+                                                                                {/* <div className="action-button bg-white me-2">
+                                                                                    <GoBookmark className="text-black" />
+                                                                                </div> */}
+                                                                                <div className="action-button bg-gold" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: wishlist.product.id}); removeWishlist(wishlist.product.id) }}>
+                                                                                    <GoHeart className="text-white" />
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="design-details">
-                                                                        <div className='d-flex align-items-center justify-content-between'>
-                                                                            <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{wishlist.product?.name ?? '-'}</p>
-                                                                            <div className='d-flex align-items-center'>
-                                                                                <span className='fs-14 text-no-wrap mx-2'>
-                                                                                    <IoHeartOutline /> {wishlist.wishlist_count}
-                                                                                </span>
-                                                                                <span className='fs-14 text-no-wrap'>
-                                                                                    <IoEyeOutline /> {wishlist.product?.views}
-                                                                                </span>
-                                                                            </div>
-                                                                            
-                                                                        </div>
-                                                                        <div className='d-flex align-items-center mt-1'>
-                                                                            {wishlist.user.image ?
-                                                                                <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+wishlist.user.image+")"}} ></div>
-                                                                                :
-                                                                                <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
-                                                                            }
-                                                                            &nbsp;&nbsp;
-                                                                            <p className="text-black fs-14 mb-0">{wishlist.user.first_name && wishlist.user.first_name != "" ? wishlist.user.first_name : "-"} {wishlist.user.last_name && wishlist.user.last_name != "" ? wishlist.user.last_name : "-"}</p>
                                                                         </div>
                                                                     </div>
                                                                 </Col>
@@ -185,6 +199,29 @@ const Wishlists = (props) => {
                             </div>
                         </Container>
                     </section>
+                    {/* Connect with Fashion Designer */}
+                    <Modal
+                        show={connectShow}
+                        className='modal-preview'
+                        fade={false}
+                        centered
+                        size="sm"
+                    >
+                        <Modal.Header className="py-0">
+                            <h5 className='modal-title text-uppercase text-left'></h5>
+                            <button type='button' className='close react-modal-close' onClick={toggleConnectShow} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                            </button>
+                        </Modal.Header>
+                        <Modal.Body>
+                            <h4 className='text-left fs-25 fw-600 mb-3'>Connect with Fashion Designer</h4>
+                            <Card>
+                                <Card.Body className="text-center py-5">
+                                    <GoAlertFill size="60px" className="mb-2 text-gold" />
+                                    <p className="fs-20 text-black">Under Construction</p>
+                                </Card.Body>
+                            </Card>
+                        </Modal.Body>
+                    </Modal>
                 </>
             }
         </Layout>

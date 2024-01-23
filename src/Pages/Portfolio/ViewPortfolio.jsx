@@ -107,14 +107,10 @@ const ViewPortFolio = () => {
                                             <Col lg="12" className="d-flex justify-content-between">
                                                 <div className='mb-3 d-flex portfolio-designer'>
                                                     {portfolio.user.image ? (
-                                                        <div
-                                                            className='designer-photo'
-                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
+                                                        <div className='designer-photo' style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
                                                         ></div>
                                                         ) : (
-                                                        <div
-                                                            className='designer-photo'
-                                                            style={{ backgroundImage: `url(${portfolio.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder })` }}
+                                                        <div className='designer-photo' style={{ backgroundImage: `url(${portfolio.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder })` }}
                                                         ></div>
                                                     )}
                                                     <div className="designer-info mx-2">
@@ -222,7 +218,7 @@ const ViewPortFolio = () => {
                                 <p className="mb-2"><strong>Pricing Structure</strong></p>
                                 <p className="mb-4">{portfolio.designer?.pricing_structure ?? "-"}</p>
                             </Col>
-                            <Col lg="12" className='mt-4'>
+                            {/* <Col lg="12" className='mt-4'>
                                 <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span>
                                 <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("reviews"); }}>Reviews</span>
                                 <hr className='mt-2' />
@@ -246,7 +242,7 @@ const ViewPortFolio = () => {
                                     :
                                     null
                                 }
-                            </Col>
+                            </Col> */}
                         </Row>
                     </Container> 
                 </section>
