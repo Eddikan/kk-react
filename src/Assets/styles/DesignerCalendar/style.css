@@ -142,3 +142,12 @@ span.rbc-btn-group {
 .padding-modal {
     padding: 25px;
 }
+span.featured-designs {
+    font-size: 16px !important;
+    font-weight: 600;
+}
+.profile-featured,.profile-top-selling {
+    padding: 20px;
+    border-radius: 5px;
+    height: 210px;
+}

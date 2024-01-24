@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
+import { useCookies } from 'react-cookie';
+import { useLocation } from 'react-router-dom';
 import 'Assets/styles/User/Profile/style.css'
 import PinIcon from 'Assets/images/pin.png';
 import UserPlaceholder from 'Assets/images/user.png';
 import Loading from 'Assets/images/loading.gif'
 import GetUserData from 'Utils/GetUserData';
-import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
 import PortfolioGrid from 'Components/Shared/PortfolioGrid';
 import ProductGrid from 'Components/Shared/ProductGrid';
 import LoadingPage from 'Components/Shared/LoadingPage';
-import { useLocation } from 'react-router-dom';
+import DesignerCalendar from 'Components/Shared/DesignerCalendar';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -52,6 +53,7 @@ const DesignerProfile = () => {
     const [aboutShow, setAboutShow] = useState(true);
     const [portfolioShow, setPortfolioShow] = useState(false);
     const [fabricShow, setFabricShow] = useState(false);
+    const [calendarShow, setCalendarShow] = useState(false);
     const [processShow, setProcessShow] = useState(false);
     const [limitedDesignShow, setLimitedDesignShow] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
@@ -59,11 +61,9 @@ const DesignerProfile = () => {
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
-
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
     }
-
     let query = useQuery();
     const user_id = query.get('user_id');
 
@@ -78,30 +78,28 @@ const DesignerProfile = () => {
             setFabricShow(false);
             setProcessShow(false);
             setLimitedDesignShow(false);
+            setCalendarShow(false);
         } else if (tab === "portfolio") {
             setPortfolioShow(true);
             setAboutShow(false);
             setFabricShow(false);
             setProcessShow(false);
             setLimitedDesignShow(false);
+            setCalendarShow(false);
         } else if (tab === "fabric") {
             setFabricShow(true);
             setPortfolioShow(false);
             setAboutShow(false);
             setProcessShow(false);
             setLimitedDesignShow(false);
-        } else if (tab === "process") {
-            setProcessShow(true);
-            setPortfolioShow(false);
-            setAboutShow(false);
-            setFabricShow(false);
-            setLimitedDesignShow(false);
-        } else if (tab === "limited_design") {
+            setCalendarShow(false);
+        } else if (tab === "calendar") {
             setLimitedDesignShow(true);
             setProcessShow(false);
             setPortfolioShow(false);
             setAboutShow(false);
             setFabricShow(false);
+            setCalendarShow(true);
         }
     }
 
@@ -138,7 +136,7 @@ const DesignerProfile = () => {
             {userLoading ?
                 <LoadingPage />
                 :
-                <section id='profile' className='py-5 px-2'>
+                <section id='designer-profile' className='py-5 px-2'>
                     <Container>
                         <Row>
                             <Col lg="6" className='mb-5'>
@@ -178,6 +176,7 @@ const DesignerProfile = () => {
                                     </div>
                                 </div>
                             </Col>
+
                             <Col lg="12" className='mt-4'>
                                 <span className={`cursor-pointer me-5 mb-3 fs-16 ${aboutShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("about"); }}>About</span>
                                 {user.is_designer == 1 && (
@@ -186,10 +185,11 @@ const DesignerProfile = () => {
                                 {user.is_seller == 1 && (
                                     <span className={`cursor-pointer me-5 mb-3 fs-16 ${fabricShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("fabric") }}>Fabrics</span>
                                 )}
-
+                                <span className={`cursor-pointer me-5 mb-3 fs-16 ${calendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("calendar"); }}>Calendar</span>
                                 <hr className='mt-2' />
                             </Col>
                         </Row>
+
                         {aboutShow ?
                             <div id="about-portfolio" className='mt-3'>
                                 <Row>
@@ -214,7 +214,6 @@ const DesignerProfile = () => {
                                                         </>
                                                         :
                                                         null
-
                                                     }
                                                 </div>
                                             </>
@@ -223,32 +222,39 @@ const DesignerProfile = () => {
                                         }
                                         <hr className='mt-2' />
                                     </Col>
+
+                                    <Col lg="6">
+                                        <div className='bg-lgray profile-featured  mb-4'>
+                                            <span className='featured-designs'>Featured Designs</span>
+                                        </div>
+                                        <div className='bg-lgray profile-top-selling '>
+                                            <span className='featured-designs'>Top Selling Fabrics</span>
+                                        </div>
+                                    </Col>
+
                                 </Row>
                             </div>
                             :
                             null
                         }
                         {portfolioShow ?
-                            <PortfolioGrid currentUser={currentUser} reloadCount={reloadCount} />
-                            :
-                            null
-                        }
-                        {fabricShow ?
-                            <ProductGrid currentUser={currentUser} reloadCount={reloadCount} />
-                            :
-                            null
-                        }
-
-                        {processShow ?
-                            <div id="profile-portfolio">
-                                <p>Under Construction</p>
+                            <div className='mt-3'>
+                                <PortfolioGrid currentUser={currentUser} reloadCount={reloadCount} />
                             </div>
                             :
                             null
                         }
-                        {limitedDesignShow ?
-                            <div id="profile-portfolio">
-                                <p>Under Construction</p>
+                        {fabricShow ?
+                            <div className='mt-3'>
+                                <ProductGrid currentUser={currentUser} reloadCount={reloadCount} />
+                            </div>
+                            :
+                            null
+                        }
+
+                        {calendarShow ?
+                            <div className='mt-3'>
+                                <DesignerCalendar />
                             </div>
                             :
                             null
@@ -257,8 +263,6 @@ const DesignerProfile = () => {
                     </Container>
                 </section>
             }
-
-
         </Layout>
     );
 };

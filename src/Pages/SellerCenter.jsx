@@ -337,7 +337,7 @@ const SellerCenter = (props) => {
                                     <h3 className="fs-30 fw-600 text-black mb-0">My Calendar</h3>
                                 </Col>
                                 <Col md={6} className="text-right">
-                                    <button className="btn-primary btn me-2" onClick={handleShowAppointmentModal}>Appointment</button>
+                                    {/* <button className="btn-primary btn me-2" onClick={handleShowAppointmentModal}>Appointment</button> */}
                                     <button className="btn-primary btn" onClick={handleShowDesignerBusinessHoursModal}>Settings</button>
                                 </Col>
                             </Row>
@@ -776,7 +776,7 @@ const SellerCenter = (props) => {
                 </Modal.Footer>
             </Modal >
 
-            <Modal show={appointmentModalShow}>
+            {/* <Modal show={appointmentModalShow}>
                 <Modal.Header>
                     <Modal.Title className='set-appointment'>Set Appointment</Modal.Title>
                     <AiOutlineClose role='button' onClick={() => setAppointmentModalShow(false)} />
@@ -880,7 +880,7 @@ const SellerCenter = (props) => {
                         }
                     </Modal.Footer>
                 </Form>
-            </Modal>
+            </Modal> */}
 
         </LayoutNoFooter >
     );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import {  Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
 import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
@@ -23,7 +23,7 @@ const PortfolioGrid = (props) => {
     const [reloadCount, setReloadCount] = useState(0);
     const [deleteConfirmShow, setDeleteConfirmShow] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
-    const [portfolioId, setPortfolioId] = useState(''); 
+    const [portfolioId, setPortfolioId] = useState('');
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -31,21 +31,21 @@ const PortfolioGrid = (props) => {
     const fetchData = async (e) => {
         setPortfolioLoading(true);
         try {
-          const portfolioData = await GetUserPortfolioData(e);
-          if (portfolioData) {
-            setPortfolio(portfolioData);
-            setPortfolioLoading(false);
+            const portfolioData = await GetUserPortfolioData(e);
+            if (portfolioData) {
+                setPortfolio(portfolioData);
+                setPortfolioLoading(false);
 
-            console.log(portfolioData);
-          } else {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setPortfolioLoading(false);
-          }
-          // Update state or perform other logic with userData
+                console.log(portfolioData);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setPortfolioLoading(false);
+            }
+            // Update state or perform other logic with userData
         } catch (error) {
             toast.error('An error occured. Please try again or contact the administrator.');
             setPortfolioLoading(false);
-          // Handle the error, if needed
+            // Handle the error, if needed
         }
     };
 
@@ -65,9 +65,9 @@ const PortfolioGrid = (props) => {
 
     async function PortfolioDeleteSubmit(e) {
         setPortfolioDeleteLoading(true);
-        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+portfolioId+'?user_id=' + currentUser + '&token=' + token).then((response) => {
+        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?user_id=' + currentUser + '&token=' + token).then((response) => {
             const success = response.data.status;
-            if(success == 'Success') {
+            if (success == 'Success') {
                 toast.success('Design deleted successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
                 setPortfolioDeleteLoading(false);
@@ -84,9 +84,9 @@ const PortfolioGrid = (props) => {
 
     async function PortfolioDraftSubmit(e) {
         setPortfolioDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
             const success = response.data.status;
-            if(success == 'Success') {
+            if (success == 'Success') {
                 toast.success('Design saved as draft successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
                 setPortfolioDraftLoading(false);
@@ -102,9 +102,9 @@ const PortfolioGrid = (props) => {
 
     async function PortfolioPublishSubmit(e) {
         setPortfolioPublishLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
             const success = response.data.status;
-            if(success == 'Success') {
+            if (success == 'Success') {
                 toast.success('Design published successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
                 setPortfolioPublishLoading(false);
@@ -139,13 +139,13 @@ const PortfolioGrid = (props) => {
                                     {/* <img src={object.url} className='portfolio-img'/> */}
                                     {portfolio.map((object, index) => {
                                         if (object.image_urls?.[0]?.image_url) {
-                                            var portfolioImage = process.env.REACT_APP_STORAGE_URL+'portfolio/'+object.image_urls[0].image_url;
+                                            var portfolioImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url;
                                         } else {
                                             var portfolioImage = PlaceholderImage;
                                         }
                                         return (
                                             <Col className={`portfolio-grid mb-3`} xs="4" md="2">
-                                                <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url("+portfolioImage+")"}}>
+                                                <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + portfolioImage + ")" }}>
                                                     <div className="portfolio-overlay">
                                                         <div className="portfolio-actions">
                                                             <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
@@ -154,13 +154,13 @@ const PortfolioGrid = (props) => {
                                                                     <Link className="text-decoration-none" to={`/portfolio/${object.id}/edit`}>
                                                                         <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
                                                                     </Link>
-                                                                    <p className="mb-3 cursor-pointer" onClick={function() { deleteConfirm(object.id); }}><GoTrash  /> Delete</p>
+                                                                    <p className="mb-3 cursor-pointer" onClick={function () { deleteConfirm(object.id); }}><GoTrash /> Delete</p>
                                                                     {object.status != "Draft" ?
-                                                                        <p className="mb-0 cursor-pointer" onClick={function() {PortfolioDraftSubmit(object.id);}}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
+                                                                        <p className="mb-0 cursor-pointer" onClick={function () { PortfolioDraftSubmit(object.id); }}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
                                                                         :
-                                                                        <p className="mb-0 cursor-pointer" onClick={function() {PortfolioPublishSubmit(object.id);}}><IoDocumentOutline /> {portfolioPublishLoading ? "Publishing..." : "Publish"}</p>
+                                                                        <p className="mb-0 cursor-pointer" onClick={function () { PortfolioPublishSubmit(object.id); }}><IoDocumentOutline /> {portfolioPublishLoading ? "Publishing..." : "Publish"}</p>
                                                                     }
-                                                                    
+
                                                                     {/* Add other actions as needed */}
                                                                 </div>
                                                             )}
@@ -187,7 +187,7 @@ const PortfolioGrid = (props) => {
                                                         </div>
                                                     </div>
                                                     <Link to={`/portfolio/${object.id}`} className="text-decoration-none">
-                                                        <div className="portfolio-overlay" style={{background: 'transparent', height: '85%', bottom: 0}}></div>
+                                                        <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
                                                     </Link>
                                                 </div>
                                             </Col>
@@ -196,7 +196,7 @@ const PortfolioGrid = (props) => {
                                     <Col className="portfolio-grid mb-3" xs="4" md="2">
                                         <div onClick={addNewPortfolio} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
                                             <GoPlus color="#a4a4a4" size="150px" className="mt-3" />
-                                            <p className="text-dgray" style={{marginTop: '-15px'}}>Add More</p>
+                                            <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
                                         </div>
                                     </Col>
                                 </Row>
@@ -223,7 +223,7 @@ const PortfolioGrid = (props) => {
             >
                 <ModalHeader className="pb-0">
                     <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={function() {setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
                 </ModalHeader>
                 <ModalBody>
@@ -234,13 +234,13 @@ const PortfolioGrid = (props) => {
                         </CardBody>
                     </Card>
                     <CardFooter className="text-right mt-3">
-                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setDeleteConfirmShow(false) } type="button" style={{minWidth: '100px', padding: '9px 20px'}}>Cancel</button>
+                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setDeleteConfirmShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
                         {portfolioDeleteLoading ?
-                            <button className="btn btn-primary" type="button" style={{minWidth: '100px', padding: '9px 20px'}}>Deleting...</button>
+                            <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Deleting...</button>
                             :
-                            <button className="btn btn-primary" type="button" onClick={PortfolioDeleteSubmit} style={{minWidth: '100px', padding: '9px 20px'}}>Delete</button>
+                            <button className="btn btn-primary" type="button" onClick={PortfolioDeleteSubmit} style={{ minWidth: '100px', padding: '9px 20px' }}>Delete</button>
                         }
-                        
+
                     </CardFooter>
                 </ModalBody>
             </Modal>
