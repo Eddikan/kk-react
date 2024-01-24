@@ -1211,6 +1211,10 @@ form select::placeholder {
     background-color: var(--gold) !important;
 }
 
+.bg-transparent-hover:hover {
+    background-color: transparent !important;
+}
+
 .border-gold {
     border-color: var(--gold) !important;
 }

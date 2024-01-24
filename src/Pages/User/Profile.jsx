@@ -21,6 +21,7 @@ import LoadingPage from 'Components/Shared/LoadingPage';
 import { GoPencil } from "react-icons/go";
 import { GoAlertFill } from 'react-icons/go';
 import axios from 'axios';
+import MyCalendar from 'Components/Shared/MyCalendar';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -70,6 +71,7 @@ const Profile = () => {
     const [fabricShow, setFabricShow] = useState(false);
     const [processShow, setProcessShow] = useState(false);
     const [limitedDesignShow, setLimitedDesignShow] = useState(false);
+    const [myCalendarShow, setMyCalendarShow] = useState(false);
     const [formStatus, setFormStatus] = useState('standby');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
     const [areasOfSpecialization, setAreaOfSpecialization] = useState([])
@@ -161,30 +163,42 @@ const Profile = () => {
             setFabricShow(false);
             setProcessShow(false);
             setLimitedDesignShow(false);
+            setMyCalendarShow(false);
         } else if (tab === "portfolio") {
             setPortfolioShow(true);
             setAboutShow(false);
             setFabricShow(false);
             setProcessShow(false);
             setLimitedDesignShow(false);
+            setMyCalendarShow(false);
         } else if (tab === "fabric") {
             setFabricShow(true);
             setPortfolioShow(false);
             setAboutShow(false);
             setProcessShow(false);
             setLimitedDesignShow(false);
+            setMyCalendarShow(false);
         } else if (tab === "process") {
             setProcessShow(true);
             setPortfolioShow(false);
             setAboutShow(false);
             setFabricShow(false);
             setLimitedDesignShow(false);
-        } else if (tab === "limited_design") {
+            setMyCalendarShow(false);
+        } else if (tab === "calendar") {
             setLimitedDesignShow(true);
             setProcessShow(false);
             setPortfolioShow(false);
             setAboutShow(false);
             setFabricShow(false);
+            setMyCalendarShow(false);
+        } else if (tab == "my_calendar") {
+            setLimitedDesignShow(false);
+            setProcessShow(false);
+            setPortfolioShow(false);
+            setAboutShow(false);
+            setFabricShow(false);
+            setMyCalendarShow(true);
         }
     }
 
@@ -269,9 +283,21 @@ const Profile = () => {
                                                 <p className='fs-16 color-light-blue'>-</p>
                                             }
                                         </div>
-                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile">Edit Profile</Button>
+                                        
                                     </div>
                                 </div>
+                            </Col>
+                            <Col lg="6" className='mb-5'>
+                                <Row className="justify-content-end">
+                                    <Col md="3" className="text-right pe-0">
+                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile">Edit Profile</Button>
+                                    </Col>
+                                    {user.is_designer == 1 && (
+                                        <Col md="3" className="text-left">
+                                            <Button href="/seller-center" type='button' id="btn-edit-profile">Seller Center</Button>
+                                        </Col>
+                                    )}
+                                </Row>
                             </Col>
                             <Col lg="12" className='mt-4'>
                                 <span className={`cursor-pointer me-5 mb-3 fs-16 ${aboutShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("about"); }}>About</span>
@@ -280,6 +306,9 @@ const Profile = () => {
                                 )}
                                 {user.is_seller == 1 && (
                                     <span className={`cursor-pointer me-5 mb-3 fs-16 ${fabricShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("fabric") }}>Fabrics</span>
+                                )}
+                                 {user.is_designer == 1 && (
+                                    <span className={`cursor-pointer me-5 mb-3 fs-16 ${myCalendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("my_calendar") }}>My Calendar</span>
                                 )}
                                 {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${processShow ? 'fw-600' : ''}`} onClick={function () { showTab("process") }}>Process</span>
                                 <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${limitedDesignShow ? 'fw-600' : ''}`} onClick={function () { showTab("limited_design"); }}>Limited Design</span> */}
@@ -441,6 +470,14 @@ const Profile = () => {
                         {limitedDesignShow ?
                             <div id="profile-portfolio">
                                 <p>Under Construction</p>
+                            </div>
+                            :
+                            null
+                        }
+
+                        {myCalendarShow ?
+                            <div id="profile-portfolio">
+                                <MyCalendar />
                             </div>
                             :
                             null

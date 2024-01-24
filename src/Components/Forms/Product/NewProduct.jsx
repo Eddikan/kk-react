@@ -453,7 +453,7 @@ const NewProduct = (props) => {
                                     ))}
                                 </Form.Control>
                             </Form.Group>
-                            {/* <Form.Group className='my-4'>
+                            <Form.Group className='my-4'>
                                 <Form.Label>Video Demonstration</Form.Label>
                                 <Form.Control as='select' name='video_demo_type' value={productData.video_demo_type} className='mr-sm-2' onChange={handleChange} required>
                                     <option value=''>Select Type</option>
@@ -461,7 +461,7 @@ const NewProduct = (props) => {
                                     <option value='Vimeo'>Vimeo</option>
                                     <option value='Upload'>Upload Video</option>
                                 </Form.Control>
-                                {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Youtube" ?
+                                {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Vimeo" ?
                                     <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} required placeholder={`Insert ${productData.video_demo_type} embed link`} />
                                     : productData.video_demo_type == "Upload" ?
                                     <div className="mt-3">
@@ -470,7 +470,7 @@ const NewProduct = (props) => {
                                     :
                                     null
                                 }
-                            </Form.Group> */}
+                            </Form.Group>
                             <Form.Group className='my-4'>
                                 <Form.Label>Notes (Additional notes/remarks)</Form.Label>
                                 <FormControl as="textarea"
