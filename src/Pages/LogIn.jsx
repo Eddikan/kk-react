@@ -47,7 +47,7 @@ const LogIn = () => {
         toast.success('Successfully signed in!');
         setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
         setCookie('userRole', JSON.stringify(user.role), { path: '/' });
-        const user_details = {currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type}
+        const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type }
         setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
         setCookie('isLoggedIn', true, { path: '/' });
         setCookie('token', data.token, { path: '/' });
@@ -92,7 +92,7 @@ const LogIn = () => {
             <Col id="login-column" lg='8' className='d-flex flex-column justify-content-center'>
               <div className='login-container'>
                 <Link to="/">
-                  <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect"/>
+                  <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" />
                 </Link>
                 <h1 className='text-center'>Sign in to Kouture Konect</h1>
                 <div className="divider-small mb-3 mt-4"></div>

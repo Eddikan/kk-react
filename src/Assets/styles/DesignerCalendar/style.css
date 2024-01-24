@@ -48,7 +48,7 @@
     cursor: pointer;
 }
 .rbc-row {
-    height: 100px;
+    height: 90px;
 }
 .rbc-month-row {
     overflow: visible !important;
@@ -74,9 +74,6 @@ span.rbc-toolbar-label {
     font-family: 'ProximaNova';
     font-weight: 400;
 }
-.rbc-month-header {
-    height: 60px !important;
-}
 button.rbc-button-link {
     font-family: 'ProximaNova';
     font-size: 14px;
@@ -100,4 +97,48 @@ span.rbc-btn-group {
     color: #000;
     background-color: #fff;
     border-color: var(--black);
+}
+.set-appointment {
+    font-size: 25px;
+    font-family: 'Rufina';
+    font-weight: bold;
+}
+
+.btn-save {
+    font-size: 15px;
+    padding: 12px 20px;
+    min-width: 120px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: var(--white);
+    background-color: var(--black);
+    border-color: var(--black);
+}
+.btn-save:hover {
+    color: #FFFFFF;
+    border-color: #000000;
+    background-color: #000000;
+}
+.cancel-btn {
+    font-size: 15px;
+    padding: 12px 20px;
+    min-width: 120px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: #000000;
+    background-color: #ffffff;
+    border-color: var(--black);
+}
+.cancel-btn:hover {
+    border-color: #000000;
+    background-color: #ffffff;
+    color: #000000;
+}
+.btn:first-child:active {
+    border-color: #000000;
+    background-color: #ffffff;
+    color: #000000;
+}
+.padding-modal {
+    padding: 25px;
 }

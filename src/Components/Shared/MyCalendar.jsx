@@ -2,169 +2,228 @@ import { Calendar, momentLocalizer, Views, DateLocalizer } from 'react-big-calen
 import { Container, CardFooter, Input, Label, UncontrolledAccordion, AccordionItem, AccordionHeader, AccordionBody, CardBody, Button, ModalHeader, ModalBody, ModalFooter, Card, Col, Modal, Table, Row, Form, } from 'reactstrap';
 import React, { useEffect, useState } from 'react';
 import { PiPencilThin, PiTrashThin } from "react-icons/pi";
-import { AiOutlinePlus, AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
 import { MdOutlinePlace } from "react-icons/md";
+import FormControl from 'react-bootstrap/FormControl';
+import { RxCross2 } from "react-icons/rx";
+import { GoPlus } from "react-icons/go";
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import PropTypes from 'prop-types'
+import '../../Assets/styles/DesignerCalendar/style.css';
 
+import axios from "axios";
+import toast from 'react-hot-toast';
+
+const initialBusinessHours = {
+    opens_at: '',
+    closes_at: '',
+    date: ''
+};
+
+const initialAppointments = {
+    title: '',
+};
 
 const localizer = momentLocalizer(moment)
 
-const MyCalendar = ({ calendarEvent, toggleEvent }) => {
-    const [calendarModal, setCalendarModal] = useState(false);
-    const [codeData, setCodeData] = useState();
-    const [dateStartData, setDateStartData] = useState();
-    const [dateEndData, setDateEndData] = useState();
-    const [eventDescriptionData, setEventDescriptionData] = useState();
-    const [eventUserData, setUserData] = useState([]);
-    const [locationData, setLocationData] = useState([]);
-    const [typeData, setTypeData] = useState([]);
-    const [eventTitleData, setEventTitleData] = useState();
-    const [eventModalShow, setEventModalShow] = useState(false);
-    const [formStatus, setFormStatus] = useState('standby');
+const MyCalendar = ({ toggleEvent }) => {
 
+    const [events, setEvents] = useState([]);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [reloadCount, setReloadCount] = useState(0);
+    const [formStatus, setFormStatus] = useState('standby');
+    const [appointmentFormData, setAppointmentFormData] = useState(initialAppointments);
+    const [times, setTimes] = useState([initialBusinessHours]);
 
 
     const toggleCalendarEvent = (calendarEvent) => {
         let timeStart = new Date('1970-01-01T' + calendarEvent.time_start + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' });
         let timeend = new Date('1970-01-01T' + calendarEvent.time_end + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' });
 
-        console.log('calendar', calendarEvent.user)
-        setCalendarModal(true);
-        setEventModalShow(true);
-        setCodeData(calendarEvent.code);
-        setDateStartData(calendarEvent.date_start);
-        setDateEndData(calendarEvent.date_end);
-        setEventDescriptionData(calendarEvent.description);
-        setEventTitleData(calendarEvent.title);
-        setUserData(calendarEvent.user);
-        setLocationData(calendarEvent.location);
-        setTypeData(calendarEvent.type);
     }
 
-    const handleClose = () => {
-        setCalendarModal(false);
+
+    const postSetAppointment = async (data) => {
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+    };
+
+
+    const handleDateClick = ({ start }) => {
+        setSelectedDate(start);
+        setModalIsOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setModalIsOpen(false);
+        setSelectedDate(null);
+    };
+
+    const handleAppointments = () => {
+        setTimes(prevtimes => [
+            ...prevtimes,
+            initialAppointments
+        ]);
     }
 
-    const toggleEventModalShow = () => {
-        setEventModalShow(true);
+    const handleRemoveAppointment = (index) => {
+        setTimes((prevtimes) => {
+            const updatedTimes = [...prevtimes];
+            updatedTimes.splice(index, 1);
+
+            return updatedTimes;
+        });
     }
 
+    const handleChangeAppointment = (e) => {
+        const { name, value } = e.target;
+        setAppointmentFormData({
+            ...appointmentFormData,
+            [name]: value,
+        });
+    }
+
+    const handleChangeTime = (e, index) => {
+        const { name, value } = e.target;
+        setTimes(prevtimes => {
+            const updatedTimes = [...prevtimes];
+            updatedTimes[index] = {
+                ...updatedTimes[index],
+                [name]: value,
+                date: selectedDate,
+            };
+
+            return updatedTimes;
+        });
+    };
+
+    const addAppointmentSubmit = (e) => {
+        e.preventDefault();
+        setFormStatus('loading');
+        postSetAppointment({ ...appointmentFormData, times: times })
+            .then(response => {
+                const status = response.data.status;
+                if (status === "Success") {
+                    setFormStatus('standby');
+                    setReloadCount(reloadCount + 1);
+                    setAppointmentFormData(initialAppointments);
+                    toast.success('Appointment added successfully!');
+                } else {
+                    setFormStatus('standby');
+                    toast.error('There has been an error saving the appointment, please try again!');
+                }
+            }).catch(() => {
+                toast.error('There has been an error saving the appointment, please try again!');
+            });
+    }
+
+    console.log(selectedDate)
 
     return (
         <>
-            <div className="myCustomHeight">
+            <div>
                 <Calendar
                     localizer={localizer}
-                    events={calendarEvent}
-                    step={30}
-                    titleAccessor="title"
-                    tooltipAccessor="title"
-                    startAccessor="date_start"
-                    endAccessor="date_end"
-                    resourceIdAccessor="id"
-                    resourceTitleAccessor="title"
-                    showMultiDayTimes
-                    onSelectSlot={toggleCalendarEvent}
-                    onSelectEvent={toggleCalendarEvent}
-                    defaultView={Views.MONTH}
+                    events={events}
+                    startAccessor="start"
+                    endAccessor="end"
+                    onSelectSlot={handleDateClick}
+                    selectable
                 />
+
+                <Modal
+                    isOpen={modalIsOpen}
+                    onRequestClose={handleModalClose}
+                    contentLabel="Date Details"
+                >
+
+                    {selectedDate && (
+                        <div>
+
+                            <Row className='padding-modal pb-0'>
+                                <Col lg="12">
+                                    <span className='set-appointment'>Set Appointment</span>
+                                </Col>
+
+                                <Col lg="12" className='mb-2 mt-4'>
+                                    <span className='title-appointment'>Title</span>
+                                </Col>
+
+                                <Col lg="12">
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        className='form-control'
+                                        value={appointmentFormData?.title}
+                                        onChange={handleChangeAppointment}
+                                    />
+                                </Col>
+
+                                <Col lg="8">
+                                    <Row className="align-items-center mt-4">
+                                        {times.map((time, index) => {
+                                            return (
+                                                <>
+                                                    {times.length > 0 && (
+                                                        <>
+                                                            {index > 0 && (
+                                                                <div className='w-100 d-flex justify-content-end mt-3'>
+                                                                    <div className='cursor-pointer' onClick={() => handleRemoveAppointment(index)}>
+                                                                        <RxCross2 color='#000000' />
+                                                                    </div>
+                                                                </div>
+                                                            )}
+
+                                                            <Col md="5" className="pe-0">
+                                                                <p className="hours-header mb-2">Opens at</p>
+                                                                <div className='mb-3'>
+                                                                    <input
+                                                                        type='time'
+                                                                        name='opens_at'
+                                                                        className='mr-sm-2 form-control-hours'
+                                                                        value={time?.opens_at}
+                                                                        onChange={e => handleChangeTime(e, index)}
+                                                                    />
+                                                                </div>
+                                                            </Col>
+
+                                                            <Col md="5" className="pe-0">
+                                                                <p className="hours-header mb-2">Closes at</p>
+                                                                <div className='mb-3'>
+                                                                    <input
+                                                                        type='time'
+                                                                        name='closes_at'
+                                                                        className='mr-sm-2 form-control-hours'
+                                                                        value={time?.closes_at}
+                                                                        onChange={e => handleChangeTime(e, index)}
+                                                                    />
+                                                                </div>
+                                                            </Col>
+                                                        </>
+                                                    )}
+                                                </>
+                                            );
+                                        })}
+                                        <Col md="2" className="px-0">
+                                            <GoPlus
+                                                size={25}
+                                                className="plus-btn mt-2"
+                                                onClick={handleAppointments}
+                                            />
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+                        </div>
+                    )}
+
+                    <div className='text-right padding-modal'>
+                        <Button className="cancel-btn me-2" onClick={handleModalClose}>Cancel</Button>
+                        <Button className="btn-save" onClick={addAppointmentSubmit}>Save</Button>
+                    </div>
+                </Modal>
             </div>
-
-            <Modal
-                isOpen={calendarModal}
-                centered
-                fade={false}
-                id="modal"
-                className="view-modal"
-                style={{ maxWidth: "600px" }}
-            >
-
-                <ModalHeader className='d-flex justify-content-end'>
-                    <button
-                        type="button"
-                        className="react-modal-close"
-                        style={{ border: "0", backgroundColor: "#fff" }}
-                        onClick={toggleEventModalShow}
-                    >
-                        <span aria-hidden="true">
-                            <PiPencilThin />
-                        </span>
-                    </button>
-                    <button
-                        type="button"
-                        className="react-modal-close"
-                        style={{ border: "0", backgroundColor: "#fff" }}
-                        onClick={handleClose}
-                    >
-                        <span aria-hidden="true"><PiTrashThin /></span>
-                    </button>
-                    <button
-                        type="button"
-                        className="react-modal-close"
-                        style={{ border: "0", backgroundColor: "#fff" }}
-                        onClick={handleClose}
-                    >
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    {/* </div>  */}
-                </ModalHeader>
-                <ModalBody>
-                    <Row>
-                        <Col lg="12">
-                            <div>
-                                <span className='ms-4'>
-                                    {typeData}
-                                </span>
-                            </div>
-                        </Col>
-                        <Col lg="12">
-                            <div>
-                                <span className='ms-4'>{new Date(dateStartData).toLocaleDateString('en-US', {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: 'numeric',
-                                    minute: 'numeric'
-                                })}
-
-                                    &nbsp;
-                                    -
-                                    &nbsp;
-                                    {new Date(dateEndData).toLocaleDateString('en-US', {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                        hour: 'numeric',
-                                        minute: 'numeric'
-                                    })}
-                                </span>
-                            </div>
-                        </Col>
-                        <Col lg="12">
-                            <MdOutlinePlace />
-                            <span className='ms-2'>{locationData}</span>
-                        </Col>
-                    </Row>
-                </ModalBody>
-                <ModalFooter className="text-right">
-                    {/* <button type="button" className="btn btn-outline-warning me-2" onClick={handleClose}>CLOSE</button> */}
-                    <button
-                        type="button"
-                        className="btn btn-outline-primary me-2"
-                        onClick={() => handleClose()}
-                    >
-                        <AiOutlineClose
-                            className="cancel-button me-1"
-                            size="20px"
-                        />
-                        Close
-                    </button>
-                </ModalFooter>
-            </Modal>
-
-
         </>
     )
 }
