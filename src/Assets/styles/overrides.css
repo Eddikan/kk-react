@@ -1401,17 +1401,18 @@ span.featured-designs {
     font-family: 'ProximaNova';
 }
 
-.action-button:hover {
-        background: #CEA835;
-        color: var(--white);
-        padding: 3px 5px 5px 5px;
-        height: 28px;
-        display: inline-block;
-        width: 28px;
-        border-radius: 50%;
-        text-align: center;
-        cursor: pointer;
-}
 .bio-short-designer {
     font-family: 'ProximaNova';
+}
+
+.heart-btn {
+    background: #CEA835;
+    color: var(--white);
+    padding: 3px 5px 5px 5px;
+    height: 28px;
+    display: inline-block;
+    width: 28px;
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Row, Col, Button } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
@@ -7,10 +7,8 @@ import GetUserProductsData from 'Utils/GetUserProductsData';
 import { GoHeart } from "react-icons/go";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from './Loading';
-import { useCookies } from 'react-cookie';
 
 const ProductGrid = (props) => {
-    const navigate = useNavigate();
     const [products, setProducts] = useState([]);
     const [productsLoading, setProductsLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
@@ -27,8 +25,6 @@ const ProductGrid = (props) => {
             if (productsData) {
                 setProducts(productsData);
                 setProductsLoading(false);
-
-                console.log(productsData);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setProductsLoading(false);
@@ -57,7 +53,7 @@ const ProductGrid = (props) => {
                         {products && products.length > 0 ?
                             <>
                                 <Row className="portfolio-row">
-                                    {products.map((product, index) => {
+                                    {products.map((product) => {
                                         if (product.image_urls?.[0]?.image_url) {
                                             var productImage = process.env.REACT_APP_STORAGE_URL + 'product/' + product.image_urls[0].image_url;
                                         } else {
@@ -73,7 +69,6 @@ const ProductGrid = (props) => {
                                                                 :
                                                                 null
                                                             }
-
                                                             {user_id ?
                                                                 <div className="other-actions">
 

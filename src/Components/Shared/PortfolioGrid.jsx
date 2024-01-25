@@ -58,7 +58,7 @@ const PortfolioGrid = (props) => {
                         {portfolio && portfolio.length > 0 ?
                             <>
                                 <Row className="portfolio-row">
-                                    {portfolio.map((object, index) => {
+                                    {portfolio.map((object) => {
                                         if (object.image_urls?.[0]?.image_url) {
                                             var portfolioImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url;
                                         } else {

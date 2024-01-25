@@ -57,7 +57,6 @@ const DesignerProfile = () => {
     const [fabricShow, setFabricShow] = useState(false);
     const [calendarShow, setCalendarShow] = useState(false);
     const [processShow, setProcessShow] = useState(false);
-    const [limitedDesignShow, setLimitedDesignShow] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
     const [areasOfSpecialization, setAreaOfSpecialization] = useState([]);
     const [portfolioItems, setPortfolioItems] = useState([]);
@@ -81,24 +80,20 @@ const DesignerProfile = () => {
             setPortfolioShow(false);
             setFabricShow(false);
             setProcessShow(false);
-            setLimitedDesignShow(false);
             setCalendarShow(false);
         } else if (tab === "portfolio") {
             setPortfolioShow(true);
             setAboutShow(false);
             setFabricShow(false);
             setProcessShow(false);
-            setLimitedDesignShow(false);
             setCalendarShow(false);
         } else if (tab === "fabric") {
             setFabricShow(true);
             setPortfolioShow(false);
             setAboutShow(false);
             setProcessShow(false);
-            setLimitedDesignShow(false);
             setCalendarShow(false);
         } else if (tab === "calendar") {
-            setLimitedDesignShow(true);
             setProcessShow(false);
             setPortfolioShow(false);
             setAboutShow(false);
