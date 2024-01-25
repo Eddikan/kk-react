@@ -1416,3 +1416,55 @@ span.featured-designs {
     text-align: center;
     cursor: pointer;
 }
+button.ask-question {
+    border: none;
+    background: none;
+    font-family: ProximaNova;
+}
+.height-portfolio {
+    height: auto;
+}
+button.schedule-consultation {
+    background: #000000;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-family: 'ProximaNova';
+    width: 100%;
+}
+.product-portfolio-image {
+    border: 1px solid #FFEAAC;
+    background: #FFFBF0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.single-image-chat {
+    width: 16%;
+    min-height: 36px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 5px;
+}
+.width-chat-card.card {
+    width: 30%;
+}
+span.name-of-portfolio {
+    font-size: 16px;
+    font-family: 'Rufina';
+    font-weight: bold;
+}
+.welcome-chat {
+    font-size: 14px;
+    font-family: 'ProximaNova';
+    color: #39393A;
+}
+a.schedule-consultation {
+    border: 1px solid #000000;
+    border-radius: 5px;
+    padding: 12px;
+    background: #000000;
+    color: #ffffff;
+    text-decoration: none;
+}

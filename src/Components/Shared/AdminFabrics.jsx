@@ -37,6 +37,7 @@ const ProductGrid = (props) => {
                 setProductsLoading(false);
 
                 console.log(productsData);
+
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setProductsLoading(false);
@@ -149,6 +150,7 @@ const ProductGrid = (props) => {
                         {products && products.length > 0 ?
                             <>
                                 <Row className="portfolio-row">
+                                    {/* <img src={product.url} className='portfolio-img'/> */}
                                     {products.map((product, index) => {
                                         if (product.image_urls?.[0]?.image_url) {
                                             var productImage = process.env.REACT_APP_STORAGE_URL + 'product/' + product.image_urls[0].image_url;
@@ -175,6 +177,7 @@ const ProductGrid = (props) => {
                                                                         <p className="mb-0 cursor-pointer" onClick={function () { ProductPublishSubmit(product.id); }}><IoDocumentOutline /> {productPublishLoading ? "Publishing..." : "Publish"}</p>
                                                                     }
 
+                                                                    {/* Add other actions as needed */}
                                                                 </div>
                                                             )}
                                                         </div>
@@ -196,6 +199,9 @@ const ProductGrid = (props) => {
                                                                             <GoHeart className="text-black" />
                                                                         </div>
                                                                     }
+                                                                    {/* <div className="action-button bg-white">
+                                                                        <GoBookmark className="text-black" />
+                                                                    </div> */}
                                                                 </div>
                                                                 :
                                                                 null
