@@ -22,6 +22,8 @@ const Stripe = lazy(() => import("./Pages/Stripe"));
 const CustomerPage = lazy(() => import("./Pages/CustomerPage"));
 const SellerCenter = lazy(() => import("./Pages/SellerCenter"));
 const DesignerProfile = lazy(() => import("./Pages/DesignerProfile"));
+const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
+
 
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
@@ -162,6 +164,7 @@ const App = () => {
           <Route path="/designs" exact element={<Designs />} />
           <Route path="/seller-center" exact element={<SellerCenter />} />
           <Route path="/designer-profile" exact element={<DesignerProfile />} />
+          <Route path="/appointment/schedule" exact element={<ScheduleConsultation />} />
         </Routes>
       </Suspense>
     </Router>

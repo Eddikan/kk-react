@@ -1,0 +1,67 @@
+#schedule-consultation {
+    padding-top: 50px;
+}
+
+#schedule-consultation h1 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.appointment-calendar-container {
+    background: #F8F9FA;
+    padding: 20px 30px;
+}
+
+.schedule-calendar-container, .time-container {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.timeslots-container {
+    height: 620px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.appointment-preview-container {
+    background-color: #F8F9FA;
+    padding: 15px;
+    height: 100%;
+}
+
+.time-container h4 {
+    font-family: ProximaNova;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.appointment-preview-container h3 {
+    font-family: ProximaNova;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.appointment-calendar-container h3 {
+    font-family: ProximaNova;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.appointment-preview-container .current-date {
+    font-weight: 500;
+    margin-left: 10px;
+}
+
+.time-container .btn-primary {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background-color: transparent;
+    margin-bottom: 10px;
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+}
