@@ -178,27 +178,29 @@ const NewProduct = (props) => {
         } else {
             if (productData.image_urls) {
                 setProductLoading(true);
-                axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
-                    const success = response.data.status;
-                    if(success == 'Success') {
-                        toast.success('Fabric added successfully!');
-                        setProductLoading(false);
-                        reloadPage(true);
-                        formSuccess(true);
-                    } else {
-                        toast.error('An error occured. Please try again or contact the administrator.');
-                        setProductLoading(false);
-                        formSuccess(false);
-                    }
-                }).catch(() => {
-                    toast.error('An error occured. Please try again or contact the administrator.');
-                    setProductLoading(false);
-                    formSuccess(false);
-                });
+                // axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+                //     const success = response.data.status;
+                //     if(success == 'Success') {
+                //         toast.success('Fabric added successfully!');
+                //         setProductLoading(false);
+                //         reloadPage(true);
+                //         formSuccess(true);
+                //     } else {
+                //         toast.error('An error occured. Please try again or contact the administrator.');
+                //         setProductLoading(false);
+                //         formSuccess(false);
+                //     }
+                // }).catch(() => {
+                //     toast.error('An error occured. Please try again or contact the administrator.');
+                //     setProductLoading(false);
+                //     formSuccess(false);
+                // });
+                
             } else {
                 toast.error('Please upload design images!');
             }
         }
+        console.log("Product Data", productData);
     };
 
     async function ProductDraftSubmit(e) {
