@@ -825,6 +825,27 @@ form select::placeholder {
     border-radius: 50%;
 }
 
+.portfolio-grid-featured,
+.portfolio-grid-selling {
+    min-height: 130px;
+    border-radius: 5px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    width: 100% !important;
+    margin-top: 10px;
+}
+
+.portfolio-grid-featured:hover .portfolio-overlay {
+    opacity: 1;
+}
+
+.portfolio-grid-selling:hover .portfolio-overlay {
+    opacity: 1;
+}
+
 .action-box {
     background: #fff;
     position: absolute;
@@ -885,6 +906,11 @@ form select::placeholder {
     border-radius: 50%;
     text-align: center;
     cursor: pointer;
+}
+
+.portfolio-name-img {
+    font-family: 'Rufina';
+    font-size: 18px;
 }
 
 .portfolio-details .other-actions {
@@ -1317,4 +1343,75 @@ form select::placeholder {
     /* Adjust the number of lines as needed */
     -webkit-line-clamp: 2;
     min-height: 37px;
+}
+
+.loading-featured-design,
+.top-selling-loading {
+    height: auto;
+}
+
+.no-records-found {
+    padding-top: 15px;
+    font-family: 'ProximaNova';
+}
+
+.view-more-featured {
+    border: none;
+    background: none;
+    font-weight: 600;
+    font-family: 'ProximaNova';
+}
+
+span.featured-designs {
+    font-size: 16px !important;
+    font-weight: bold;
+    font-family: 'ProximaNova';
+    color: #000;
+}
+
+.title-designer,
+.long-bio-title,
+.areas-specialization,
+.social-profile {
+    color: #000000;
+    font-weight: bold;
+    font-family: 'ProximaNova';
+}
+.short-bio-designer,
+.long-bio-designer {
+    font-family: 'ProximaNova';
+    color: #000;
+}
+
+.item-designer {
+    font-family: 'ProximaNova';
+    color: #39393A;
+}
+
+.place-family {
+    font-family: 'ProximaNova';
+    color: #000000;
+}
+
+.margin-img {
+    margin-top: 10px;
+}
+
+.tab-family,.information-font {
+    font-family: 'ProximaNova';
+}
+
+.action-button:hover {
+        background: #CEA835;
+        color: var(--white);
+        padding: 3px 5px 5px 5px;
+        height: 28px;
+        display: inline-block;
+        width: 28px;
+        border-radius: 50%;
+        text-align: center;
+        cursor: pointer;
+}
+.bio-short-designer {
+    font-family: 'ProximaNova';
 }

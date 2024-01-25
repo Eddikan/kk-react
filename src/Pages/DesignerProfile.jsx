@@ -10,6 +10,8 @@ import Loading from 'Assets/images/loading.gif'
 import GetUserData from 'Utils/GetUserData';
 import toast from 'react-hot-toast';
 import PortfolioGrid from 'Components/Shared/PortfolioGrid';
+import FeaturedDesign from 'Components/Shared/FeaturedDesign'
+import TopSellingFabrics from 'Components/Shared/TopSellingFabrics';
 import ProductGrid from 'Components/Shared/ProductGrid';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import DesignerCalendar from 'Components/Shared/DesignerCalendar';
@@ -57,7 +59,9 @@ const DesignerProfile = () => {
     const [processShow, setProcessShow] = useState(false);
     const [limitedDesignShow, setLimitedDesignShow] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
-    const [areasOfSpecialization, setAreaOfSpecialization] = useState([])
+    const [areasOfSpecialization, setAreaOfSpecialization] = useState([]);
+    const [portfolioItems, setPortfolioItems] = useState([]);
+    const [seller, setSeller] = useState([]);
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -113,6 +117,9 @@ const DesignerProfile = () => {
                 if (userData.designer) {
                     setDesigner(userData.designer);
                     setAreaOfSpecialization(userData.designer.areas_of_specialization);
+                    setPortfolioItems(userData.portfolio_items);
+                    setSeller(userData.seller);
+
                 }
                 setUserLoading(false);
             } else {
@@ -165,27 +172,26 @@ const DesignerProfile = () => {
                                         <div className='icons-d-flex'>
                                             <img src={PinIcon} alt="location pin" />
                                             {user.city || user.province || user.country ?
-                                                <p className='fs-16 color-light-blue'>
+                                                <p className='fs-16 place-family'>
                                                     {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""}
                                                 </p>
                                                 :
                                                 <p className='fs-16 color-light-blue'>-</p>
                                             }
                                         </div>
-
                                     </div>
                                 </div>
                             </Col>
 
                             <Col lg="12" className='mt-4'>
-                                <span className={`cursor-pointer me-5 mb-3 fs-16 ${aboutShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("about"); }}>About</span>
+                                <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${aboutShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("about"); }}>About</span>
                                 {user.is_designer == 1 && (
-                                    <span className={`cursor-pointer me-5 mb-3 fs-16 ${portfolioShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("portfolio"); }}>Portfolio</span>
+                                    <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${portfolioShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("portfolio"); }}>Portfolio</span>
                                 )}
                                 {user.is_seller == 1 && (
-                                    <span className={`cursor-pointer me-5 mb-3 fs-16 ${fabricShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("fabric") }}>Fabrics</span>
+                                    <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${fabricShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("fabric") }}>Fabrics</span>
                                 )}
-                                <span className={`cursor-pointer me-5 mb-3 fs-16 ${calendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("calendar"); }}>Calendar</span>
+                                <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${calendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("calendar"); }}>Calendar</span>
                                 <hr className='mt-2' />
                             </Col>
                         </Row>
@@ -194,22 +200,22 @@ const DesignerProfile = () => {
                             <div id="about-portfolio" className='mt-3'>
                                 <Row>
                                     <Col lg="6">
-                                        <p className='fw-600 mb-2'>Title</p>
-                                        <p className='mb-4'>
+                                        <p className='mb-2 title-designer'>Title</p>
+                                        <p className='mb-4 short-bio-designer'>
                                             {user.short_bio && user.short_bio != "" ? user.short_bio : "-"}
                                         </p>
-                                        <p className='fw-600 mb-1'>Long Bio</p>
-                                        <p className='mb-5'>
+                                        <p className='mb-1 long-bio-title'>Long Bio</p>
+                                        <p className='mb-5 long-bio-designer'>
                                             {user.long_bio && user.long_bio != "" ? user.long_bio : "-"}
                                         </p>
                                         {user.is_designer ?
                                             <>
-                                                <p className='fw-600 mb-3'>Areas of Specialization and Expertise</p>
+                                                <p className='mb-3 areas-specialization'>Areas of Specialization and Expertise</p>
                                                 <div className='mb-4'>
                                                     {areasOfSpecialization && areasOfSpecialization.length > 0 ?
                                                         <>
                                                             {areasOfSpecialization.map((item, index) => (
-                                                                <span className='text-gray600 fs-14 bg-gray'>{item}</span>
+                                                                <span className='text-gray600 fs-14 bg-gray item-designer'>{item}</span>
                                                             ))}
                                                         </>
                                                         :
@@ -220,16 +226,28 @@ const DesignerProfile = () => {
                                             :
                                             null
                                         }
-                                        <hr className='mt-2' />
                                     </Col>
 
                                     <Col lg="6">
-                                        <div className='bg-lgray profile-featured  mb-4'>
-                                            <span className='featured-designs'>Featured Designs</span>
-                                        </div>
-                                        <div className='bg-lgray profile-top-selling '>
-                                            <span className='featured-designs'>Top Selling Fabrics</span>
-                                        </div>
+                                        {user.is_designer == 1 && (
+
+                                            <div className='bg-lgray profile-featured  mb-4'>
+                                                <div className='d-flex justify-content-between'>
+                                                    <span className='featured-designs'>Featured Designs</span>
+                                                </div>
+                                                <FeaturedDesign currentUser={user_id} reloadCount={reloadCount} />
+                                            </div>
+                                        )}
+
+                                        {user.is_seller == 1 && (
+                                            <div className='bg-lgray profile-top-selling '>
+                                                <div className='d-flex justify-content-between'>
+                                                    <span className='featured-designs'>Top Selling Fabrics</span>
+                                                </div>
+                                                <TopSellingFabrics currentUser={user_id} reloadCount={reloadCount} />
+                                            </div>
+                                        )
+                                        }
                                     </Col>
 
                                 </Row>
@@ -239,14 +257,14 @@ const DesignerProfile = () => {
                         }
                         {portfolioShow ?
                             <div className='mt-3'>
-                                <PortfolioGrid currentUser={currentUser} reloadCount={reloadCount} />
+                                <PortfolioGrid currentUser={user_id} reloadCount={reloadCount} />
                             </div>
                             :
                             null
                         }
                         {fabricShow ?
                             <div className='mt-3'>
-                                <ProductGrid currentUser={currentUser} reloadCount={reloadCount} />
+                                <ProductGrid currentUser={user_id} reloadCount={reloadCount} />
                             </div>
                             :
                             null

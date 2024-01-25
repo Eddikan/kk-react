@@ -25,19 +25,19 @@ const Designers = (props) => {
 
     const fetchData = async (e) => {
         try {
-          const designersData = await GetDesignersData(e);
-          if (designersData) {
-            setDesigners(designersData);
-            setDesignersLoading(false);
-          } else {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setDesignersLoading(false);
-          }
-          // Update state or perform other logic with userData
+            const designersData = await GetDesignersData(e);
+            if (designersData) {
+                setDesigners(designersData);
+                setDesignersLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setDesignersLoading(false);
+            }
+            // Update state or perform other logic with userData
         } catch (error) {
             toast.error('An error occured. Please try again or contact the administrator.');
             setDesignersLoading(false);
-          // Handle the error, if needed
+            // Handle the error, if needed
         }
     };
 
@@ -99,20 +99,20 @@ const Designers = (props) => {
                                                 <div className='bg-black-faded'>
                                                     <div className="designer-details">
                                                         <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
-                                                        <p className="text-white mb-0">{designer.user.short_bio || "-"}</p>
+                                                        <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p>
                                                     </div>
                                                 </div>
                                             </div>
                                         ) : (
                                             <>
-                                            <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${designer.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder })` }}>
-                                                <div className='bg-black-faded'>
-                                                    <div className="designer-details">
-                                                        <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
-                                                        <p className="text-white mb-0">{designer.user.short_bio || "-"}</p>
+                                                <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${designer.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}>
+                                                    <div className='bg-black-faded'>
+                                                        <div className="designer-details">
+                                                            <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
+                                                            <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
                                             </>
                                         )}
                                     </div>
@@ -121,7 +121,7 @@ const Designers = (props) => {
                         ) : (
                             <p className="text-center mb-3 mt-3">No records found.</p>
                         )}
-                        </>
+                    </>
                 }
             </div>
         </>

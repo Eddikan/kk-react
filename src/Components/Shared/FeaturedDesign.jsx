@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Row, Col, Button } from 'react-bootstrap';
+import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
 import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
-import { useLocation } from 'react-router-dom';
-import { GoHeart } from "react-icons/go";
+import { GoPencil, GoHeart } from "react-icons/go";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
+import { useLocation } from 'react-router-dom';
 import Loading from './Loading';
+import { useCookies } from 'react-cookie';
 
 const PortfolioGrid = (props) => {
     const navigate = useNavigate();
@@ -40,6 +42,7 @@ const PortfolioGrid = (props) => {
         }
     };
 
+
     useEffect(() => {
         fetchData(user_id);
     }, [reloadCount]);
@@ -50,7 +53,7 @@ const PortfolioGrid = (props) => {
                 {portfolioLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
-                            <Loading className="bg-white" />
+                            <Loading className="bg-white loading-featured-design" />
                         </p>
                     </>
                     :
@@ -58,15 +61,17 @@ const PortfolioGrid = (props) => {
                         {portfolio && portfolio.length > 0 ?
                             <>
                                 <Row className="portfolio-row">
-                                    {portfolio.map((object, index) => {
+
+                                    {portfolio.slice(0, 3).map((object, index) => {
                                         if (object.image_urls?.[0]?.image_url) {
                                             var portfolioImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url;
                                         } else {
                                             var portfolioImage = PlaceholderImage;
                                         }
+
                                         return (
-                                            <Col className={`portfolio-grid mb-3`} xs="4" md="2">
-                                                <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + portfolioImage + ")" }}>
+                                            <Col className={`mb-0`} lg="4">
+                                                <div className={`portfolio-grid-featured w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + portfolioImage + ")" }}>
                                                     <div className="portfolio-overlay">
                                                         <div className="portfolio-details">
                                                             {object.status == "Draft" ?
@@ -77,7 +82,7 @@ const PortfolioGrid = (props) => {
 
                                                             {user_id ?
                                                                 <div className="other-actions">
-                                                                    <div className="action-button bg-white me-2">
+                                                                    <div className="action-button bg-white">
                                                                         <GoHeart className="text-black" />
                                                                     </div>
                                                                 </div>
@@ -90,29 +95,22 @@ const PortfolioGrid = (props) => {
                                                         <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
                                                     </Link>
                                                 </div>
-
-                                                <div className='margin-img'>
-                                                    <span className="text-black text-decoration-none portfolio-name-img">{object.name ?? "-"}</span>
-                                                </div>
                                             </Col>
                                         )
                                     })}
+
                                 </Row>
                             </>
                             :
                             <>
                                 <div className="text-center">
-                                    <p className="text-center mb-3 mt-3">No records found.</p>
-                                    <Link to="/portfolio/add">
-                                        <Button className="btn btn-primary">Add Portfolio</Button>
-                                    </Link>
+                                    <p className="text-center no-records-found">No records found.</p>
                                 </div>
                             </>
                         }
                     </>
                 }
             </div>
-
         </>
     );
 };

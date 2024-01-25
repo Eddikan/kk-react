@@ -1,34 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Row, Col, Button } from 'react-bootstrap';
+import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
 import toast from 'react-hot-toast';
-import { useLocation } from 'react-router-dom';
 import GetUserProductsData from 'Utils/GetUserProductsData';
-import { GoHeart } from "react-icons/go";
+import { BsThreeDots } from "react-icons/bs";
+import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
+import { IoDocumentOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from './Loading';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
 const ProductGrid = (props) => {
     const navigate = useNavigate();
+    const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [products, setProducts] = useState([]);
     const [productsLoading, setProductsLoading] = useState(true);
+    const [productDraftLoading, setProductDraftLoading] = useState(false);
+    const [productPublishLoading, setProductPublishLoading] = useState(false);
+    const [productDeleteLoading, setProductDeleteLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
+    const [deleteConfirmShow, setDeleteConfirmShow] = useState(false);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
+    const [productId, setProductId] = useState('');
 
+    const currentUser = cookies.currentUser;
+    const token = cookies.token;
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
     }
     let query = useQuery();
     const user_id = query.get('user_id');
 
+
     const fetchData = async (e) => {
+        // setProductsLoading(true);
         try {
             const productsData = await GetUserProductsData(e);
             if (productsData) {
                 setProducts(productsData);
                 setProductsLoading(false);
 
-                console.log(productsData);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setProductsLoading(false);
@@ -49,7 +63,7 @@ const ProductGrid = (props) => {
                 {productsLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
-                            <Loading className="bg-white" />
+                            <Loading className="bg-white top-selling-loading" />
                         </p>
                     </>
                     :
@@ -57,16 +71,28 @@ const ProductGrid = (props) => {
                         {products && products.length > 0 ?
                             <>
                                 <Row className="portfolio-row">
-                                    {products.map((product, index) => {
+                                    {/* <img src={product.url} className='portfolio-img'/> */}
+                                    {products.slice(0, 3).map((product, index) => {
                                         if (product.image_urls?.[0]?.image_url) {
                                             var productImage = process.env.REACT_APP_STORAGE_URL + 'product/' + product.image_urls[0].image_url;
                                         } else {
                                             var productImage = PlaceholderImage;
                                         }
+                                        var wishlist_user_ids = product.wishlist_user_ids;
+                                        const userWishlist = wishlist_user_ids.includes(currentUser);
                                         return (
-                                            <Col className={`portfolio-grid mb-3`} xs="4" md="2">
-                                                <div className={`portfolio-grid-div w-100 ${product.collection_type == "Limited" ? "limited" : " "} ${product.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + productImage + ")" }}>
+                                            <Col className={`mb-0`} lg="4">
+                                                <div className={`portfolio-grid-selling w-100 ${product.collection_type == "Limited" ? "limited" : " "} ${product.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + productImage + ")" }}>
                                                     <div className="portfolio-overlay">
+                                                        <div className="portfolio-actions">
+                                                            {selectedItemIndex === index && (
+                                                                <div className="action-box">
+                                                                    <Link className="text-decoration-none" to={`/product/${product.id}/edit`}>
+                                                                        <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
+                                                                    </Link>
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                         <div className="portfolio-details">
                                                             {product.status == "Draft" ?
                                                                 <span className="text-warning small fw-600">Draft</span>
@@ -76,16 +102,9 @@ const ProductGrid = (props) => {
 
                                                             {user_id ?
                                                                 <div className="other-actions">
-
-                                                                    {user_id ?
-                                                                        <div className="other-actions">
-                                                                            <div className="action-button bg-white">
-                                                                                <GoHeart className="text-black" />
-                                                                            </div>
-                                                                        </div>
-                                                                        :
-                                                                        null
-                                                                    }
+                                                                    <div className="action-button bg-white">
+                                                                        <GoHeart className="text-black" />
+                                                                    </div>
                                                                 </div>
                                                                 :
                                                                 null
@@ -96,10 +115,6 @@ const ProductGrid = (props) => {
                                                         <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
                                                     </Link>
                                                 </div>
-
-                                                <div className='margin-img'>
-                                                    <span className="text-black text-decoration-none portfolio-name-img">{product.name ?? "-"}</span>
-                                                </div>
                                             </Col>
                                         )
                                     })}
@@ -108,10 +123,7 @@ const ProductGrid = (props) => {
                             :
                             <>
                                 <div className="text-center">
-                                    <p className="text-center mb-3 mt-3">No records found.</p>
-                                    <Link to="/portfolio/add">
-                                        <Button className="btn btn-primary">Add Fabric</Button>
-                                    </Link>
+                                    <p className="text-center no-records-found">No records found.</p>
                                 </div>
                             </>
                         }
