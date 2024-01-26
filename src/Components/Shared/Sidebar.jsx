@@ -49,8 +49,8 @@ const Sidebar = (props) => {
                                 <p className="side-bar-font yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Review and Feedback</p>
                             </AccordionBody>
 
-                            <div className="portfolio cursor-pointer yellow-hover fs-18" onClick={() => navigate('#')}><PiBriefcase size="22" className="me-3" />Portfolio</div>
-                            <div className="fabrics cursor-pointer yellow-hover fs-18" onClick={() => navigate('#')}><HiOutlineScissors size="22" className="me-3" />Fabrics</div>
+                            <div className="portfolio cursor-pointer yellow-hover fs-18" onClick={() => navigate('/user/portfolio')}><PiBriefcase size="22" className="me-3" />Portfolio</div>
+                            <div className="fabrics cursor-pointer yellow-hover fs-18" onClick={() => navigate('/user/products')}><HiOutlineScissors size="22" className="me-3" />Fabrics</div>
 
                         </AccordionItem>
                     </UncontrolledAccordion>
