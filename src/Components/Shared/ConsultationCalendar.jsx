@@ -1,11 +1,17 @@
 import { Calendar, momentLocalizer, Views, DateLocalizer } from 'react-big-calendar';
-import { Container, CardFooter, Input, Label, UncontrolledAccordion, AccordionItem, AccordionHeader, AccordionBody, CardBody, Button, ModalHeader, ModalBody, ModalFooter, Card, Col, Modal, Table, Row, Form, } from 'reactstrap';
+import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 import React, { useEffect, useState } from 'react';
 import { FiCalendar } from "react-icons/fi";
+import { LuGlobe2 } from "react-icons/lu";
+import { FaRegUser } from "react-icons/fa";
+import { MdOutlineEmail } from "react-icons/md";
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import PropTypes from 'prop-types'
 import '../../Assets/styles/DesignerCalendar/style.css';
+import { useCookies } from 'react-cookie';
 
 import axios from "axios";
 import toast from 'react-hot-toast';
@@ -20,6 +26,17 @@ const initialAppointments = {
     title: '',
 };
 
+const intitialConsultationData = {
+    consultation_date_time: '',
+    consultation_hour_start: '',
+    consultation_hour_end: '',
+    email: '',
+    first_name: '',
+    last_name: '',
+    timezone: '',
+    consultation_details: '',
+}
+
 const localizer = momentLocalizer(moment)
 
 const ConsultationCalendar = ({ toggleEvent }) => {
@@ -27,23 +44,76 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const [events, setEvents] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState("");
+    const [selectedDate12, setSelectedDate12] = useState("");
     const [selectedHoursArray, setSelectedHoursArray] = useState([])
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
     const [appointmentFormData, setAppointmentFormData] = useState(initialAppointments);
     const [times, setTimes] = useState([initialBusinessHours]);
+    const [selectedTimeSlot, setSelectedTimeSlot] = useState();
+    const [clickedTimeslotButton, setClickedTimeslotButton] = useState();
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const currentUser = cookies.currentUser;
+    const currentUserDetails = cookies.userDetails;
+    const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
+    const [currentTimezone, setCurrentTimezone] = useState(null);
+    const [currentStep, setCurrentStep] = useState(1);
 
     const postSetAppointment = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
     };
 
 
-    const handleTimeslotClick = ({ start, end }) => {
+    const convertHoursToDatetime = (time) => {
+        const [hours, minutes, period] = time.split(/[: ]/);
+
+        // Convert hours to 24-hour format
+        const hours24 = period === 'PM' ? parseInt(hours, 10) + 12 : parseInt(hours, 10);
+    
+        const resultDatetime = new Date();
+        resultDatetime.setHours(hours24);
+        resultDatetime.setMinutes(parseInt(minutes, 10));
+
+        return resultDatetime.toISOString();
+    };
+
+    function convert12to24(time12) {
+        const [time, period] = time12.split(' ');
+      
+        let [hours, minutes] = time.split(':');
+        hours = parseInt(hours, 10);
+      
+        if (period === 'PM' && hours !== 12) {
+          hours += 12;
+        } else if (period === 'AM' && hours === 12) {
+          hours = 0;
+        }
+      
+        // Format the result in 24-hour format
+        const hours24 = hours.toString().padStart(2, '0');
+        const minutes24 = minutes.padStart(2, '0');
+      
+        return `${hours24}:${minutes24}`;
+    }
+
+    function addOneHour(time24) {
+        let [hours, minutes] = time24.split(':');
+        hours = parseInt(hours, 10);
+        minutes = parseInt(minutes, 10);
+      
+        const dateObject = new Date();
+        dateObject.setHours(hours + 1);
+        dateObject.setMinutes(minutes);
+      
+        const result = `${dateObject.getHours().toString().padStart(2, '0')}:${dateObject.getMinutes().toString().padStart(2, '0')}`;
+        return result;
+    }
+
+    const handleCalendarTimeslotClick = ({ start, end }) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
+
         const formattedDate = new Intl.DateTimeFormat('en-US', options).format(start);
         setSelectedDate(formattedDate);
-        console.log("End", end);
-        console.log("start", start);
         const timeDifference = end - start;
 
         // Convert milliseconds to hours
@@ -51,8 +121,8 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         let hoursArray = [];
         // List all hours between the two dates
         for (let i = 0; i <= hoursDifference; i++) {
-        const currentHour = new Date(start.getTime() + i * 60 * 60 * 1000);
-        hoursArray.push(currentHour.toLocaleString('en-US', { hour: 'numeric',minute: '2-digit', hour12: true }));
+            const currentHour = new Date(start.getTime() + i * 60 * 60 * 1000);
+            hoursArray.push(currentHour.toLocaleString('en-US', { hour: 'numeric',minute: '2-digit', hour12: true }));
         
         }
         setSelectedHoursArray(hoursArray);
@@ -64,12 +134,42 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         setSelectedDate(null);
     };
 
+    const handleTimeslotClick = (data) => {
+        
+        setSelectedTimeSlot(convert12to24(data.time));
+        setClickedTimeslotButton(data.index);
+    }
+
+    const handleTimeslotNextClick = () => {
+        setConsultationFormData({
+            ...consultationFormData,
+            email: currentUserDetails.email,
+            first_name: currentUserDetails.first_name,
+            last_name: currentUserDetails.last_name,
+            consultation_date_time: convertHoursToDatetime(selectedTimeSlot),
+            consultation_hour_end: addOneHour(selectedTimeSlot),
+            consultation_hour_start: selectedTimeSlot,
+            timezone: currentTimezone,
+        });
+        setCurrentStep(2);
+    }
+
     const handleAppointments = () => {
         setTimes(prevtimes => [
             ...prevtimes,
             initialAppointments
         ]);
     }
+
+    const handleChangeConsultation = (e) => {
+        const { name, value } = e.target;
+        setConsultationFormData({
+            ...consultationFormData,
+            [name]: value,
+        });
+    }
+
+    
 
     const handleRemoveAppointment = (index) => {
         setTimes((prevtimes) => {
@@ -86,6 +186,10 @@ const ConsultationCalendar = ({ toggleEvent }) => {
             ...appointmentFormData,
             [name]: value,
         });
+    }
+
+    const handleDefault = (e) => {
+        e.preventDefault();
     }
 
     const handleChangeTime = (e, index) => {
@@ -105,24 +209,31 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const addAppointmentSubmit = (e) => {
         e.preventDefault();
         setFormStatus('loading');
-        postSetAppointment({ ...appointmentFormData, times: times })
+        postSetAppointment({ ...consultationFormData })
             .then(response => {
                 const status = response.data.status;
                 if (status === "Success") {
                     setFormStatus('standby');
                     setReloadCount(reloadCount + 1);
                     setAppointmentFormData(initialAppointments);
-                    toast.success('Appointment added successfully!');
+                    toast.success('Consultation added successfully!');
                 } else {
                     setFormStatus('standby');
-                    toast.error('There has been an error saving the appointment, please try again!');
+                    toast.error('There has been an error saving the consultation, please try again!');
                 }
             }).catch(() => {
-                toast.error('There has been an error saving the appointment, please try again!');
+                toast.error('There has been an error saving the consultation, please try again!');
             });
     }
 
-    console.log("selectedHoursArray", selectedHoursArray);
+    useEffect(() => {
+        const getTimezone = () => {
+          const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+          setCurrentTimezone(timezone);
+        };
+    
+        getTimezone();
+    }, []);
 
     return (
         <>
@@ -130,44 +241,103 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                 <div className="appointment-preview-container">
                     <h3>Appointment Preview</h3>
                     <div>
+                        
                         {selectedDate != "" &&
                             <>
-                                <FiCalendar size={20} color={'#CEA835'}/><span className="fw-500 current-date">{selectedDate}</span>
+                                <p><FiCalendar size={20} color={'#CEA835'}/><span className="fw-500 current-date">{selectedDate}</span></p>
                             </> 
                         }
+                        {/* {formattedSelectedDate != "" &&
+                         <>
+                            <p><FiCalendar size={20} color={'#CEA835'}/><span className="fw-500 current-date">{formattedSelectedDate}</span></p>
+                        </> 
+                        } */}
+                        {consultationFormData.timezone != "" &&
+                            <>
+                                <p><LuGlobe2 size={20} color={'#CEA835'}/><span className="fw-500 current-date">{consultationFormData.timezone}</span></p>
+                            </> 
+                        }
+                        {consultationFormData.first_name != "" &&
+                            <>
+                                <p><FaRegUser size={20} color={'#CEA835'}/><span className="fw-500 current-date">{consultationFormData.first_name} {consultationFormData.last_name}</span></p>
+                            </>
+                        }
+                         {consultationFormData.email != "" &&
+                            <>
+                                <p><MdOutlineEmail size={20} color={'#CEA835'}/><span className="fw-500 current-date">{consultationFormData.email}</span></p>
+                            </>
+                        }
+                        
                     </div>
                 </div>
             </Col>
             <Col lg="9">
-                <div className="appointment-calendar-container">
-                    <h3>Select a Date and Time</h3>
-                    <Row>
-                        <Col lg="9">
-                            <div className="schedule-calendar-container">
-                                <Calendar
-                                    localizer={localizer}
-                                    events={events}
-                                    startAccessor="start"
-                                    endAccessor="end"
-                                    onSelectSlot={handleTimeslotClick}
-                                    selectable
-                                />
-                            </div>
-                        </Col>
-                        <Col lg="3">
-                            <div className="time-container">
-                                <h4>Time</h4>
-                                <div className="timeslots-container">
-                                    {selectedHoursArray.map((time, index) => (
-                                        <button key={index} className="btn btn-primary">{time}</button>
-                                    ))}
+                {currentStep == 1 ?
+                    <div className="appointment-calendar-container">
+                        <h3>Select a Date and Time</h3>
+                        <Row>
+                            <Col lg="8">
+                                <div className="schedule-calendar-container">
+                                    <Calendar
+                                        localizer={localizer}
+                                        events={events}
+                                        startAccessor="start"
+                                        endAccessor="end"
+                                        onSelectSlot={handleCalendarTimeslotClick}
+                                        selectable
+                                    />
                                 </div>
+                            </Col>
+                            <Col lg="4">
+                                <div className="time-container">
+                                    <h4>Time</h4>
+                                    <div className="timeslots-container">
+                                        {selectedHoursArray.map((time, index) => (
+                                            <div className="timeslots-column" key={index}>
+                                                <div>
+                                                    <button key={index} className={clickedTimeslotButton == index ? "btn btn-primary timeslot-btn":"btn btn-primary"} onClick={() => handleTimeslotClick({time, index})}>{time}</button>
+                                                </div>
+                                                <div>
+                                                    {clickedTimeslotButton == index && (
+                                                        <button key={index} className="btn btn-primary timeslot-btn" onClick={()=> handleTimeslotNextClick()}>Next</button>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            
+                                        ))}
+                                    </div>
+                                </div>
+                                
+                            </Col>
+                        </Row>
+                        
+                    </div>
+                    :
+                    <div className="appointment-calendar-container">
+                        <h3>Enter Details</h3>
+                        <Form>
+                            <Form.Group className='my-4'>
+                                <Form.Label>Provide any information regarding the details of the meeting.</Form.Label>
+                                <FormControl as="textarea"
+                                    name="consultation_details"
+                                    rows={3} // You can adjust the number of rows as needed
+                                    value={consultationFormData.consultation_details}
+                                    placeholder='I would like to discuss the design specifications, required materials, and other related details.'
+                                    onChange={handleChangeConsultation} />
+                            </Form.Group>
+                            <div className="send-btn-container">
+                                <button className="btn btn-primary" onClick={()=> setCurrentStep(1)}>Cancel</button>
+                                {formStatus != "loading" ?
+                                    <button className="btn btn-primary" onClick={addAppointmentSubmit}>Schedule Now</button>
+                                    :
+                                    <button className="btn btn-primary" onClick={handleDefault}>Loading...</button>
+                                }
                             </div>
-                            
-                        </Col>
-                    </Row>
-                    
-                </div>
+                        </Form>
+                        
+                    </div>
+                }
+                
             </Col>
         </>
     )
