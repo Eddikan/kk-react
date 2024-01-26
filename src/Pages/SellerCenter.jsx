@@ -352,7 +352,11 @@ const SellerCenter = (props) => {
                 </Container>
             </section>
 
-            <Modal show={designerBusinessHoursModalShow} onHide={() => setDesignerBusinessHoursModalShow(false)} id="business-hours-modal">
+            <Modal
+                show={designerBusinessHoursModalShow}
+                onHide={() => setDesignerBusinessHoursModalShow(false)}
+                id="business-hours-modal"
+            >
                 <Modal.Header closeButton>
                     <Modal.Title></Modal.Title>
                 </Modal.Header>
@@ -360,7 +364,7 @@ const SellerCenter = (props) => {
                     <Container className="h-100">
                         <Row className="h-100">
                             <Col lg="12">
-                                <h3 className="text-center header mb-5">Business Hours</h3>
+                                <h3 className="text-left header mb-5">Business Hours</h3>
                             </Col>
                             <Col lg="12" className="">
 

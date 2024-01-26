@@ -294,6 +294,7 @@ a {
 
 .form-check label {
     padding-top: 2px;
+    
 }
 
 .react-modal-close {
@@ -1432,23 +1433,38 @@ button.schedule-consultation {
     font-family: 'ProximaNova';
     width: 100%;
 }
+.proximanova-family {
+    font-family: 'ProximaNova';
+}
+.rufina-family {
+    font-family: 'Rufina';
+}
+.no-available,.no-wishlist {
+    font-style: italic;
+}
 .product-portfolio-image {
     border: 1px solid #FFEAAC;
     background: #FFFBF0;
-    padding: 10px;
+    padding: 5px 10px 5px 10px;
     border-radius: 5px;
 }
-
+.rating-color {
+    color: #393939;
+}
 .single-image-chat {
-    width: 16%;
+    width: 11%;
     min-height: 36px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 5px;
 }
-.width-chat-card.card {
-    width: 30%;
+.width-chat-card{
+    width: 447px;
+    border-color: #DFDFDF;
+    position: absolute;
+    bottom: 0;
+    right: 217px;
 }
 span.name-of-portfolio {
     font-size: 16px;
@@ -1467,4 +1483,36 @@ a.schedule-consultation {
     background: #000000;
     color: #ffffff;
     text-decoration: none;
+}
+.name-chat {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'ProximaNova';
+}
+.send-btn {
+    font-weight: bold;
+    font-family: 'ProximaNova';
+}
+.name-active-person {
+    font-weight: 500;
+    font-family: 'ProximaNova';
+}
+.active-now {
+    font-family: 'ProximaNova';
+    color: #AAAAAA;
+}
+.time-chat-box {
+    color: #AAAAAA;
+    font-family: 'ProximaNova';
+}
+.you-chat-box {
+    font-family: 'ProximaNova';
+    color: #39393A;
+}
+.time-chat {
+    font-family: 'ProximaNova';
+    color: #AAAAAA;
+}
+.header-chat {
+    padding: 15px 21px 15px 21px;
 }

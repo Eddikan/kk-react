@@ -10,7 +10,7 @@ const AddNewPortfolio = () => {
 
     const addSuccess = (e) => {
         if (e) {
-            setTimeout(function(){
+            setTimeout(function () {
                 navigate("/user/profile");
             }, 1000);
         }
@@ -37,7 +37,7 @@ const AddNewPortfolio = () => {
                         </Col>
                     </Row>
                     <NewPortfolio size="normal" withDraft={true} onSuccess={addSuccess} onReloadPage={reloadPage} onCancel={cancel} />
-                </Container> 
+                </Container>
             </section>
         </Layout>
     );

@@ -34,7 +34,7 @@ const ViewProduct = () => {
     const [activeImage, setActiveImage] = useState('');
     const [commentsTabShow, setCommentsTabShow] = useState(false);
     const [reviewsTabShow, setReviewsTabShow] = useState(true);
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser','token']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const [userWishlist, setUserWishlist] = useState(false);
     const [addedToCartShow, setAddedToCartShow] = useState(false);
     const [productReviews, setProductReviews] = useState([]);
@@ -76,7 +76,7 @@ const ViewProduct = () => {
             ...reviewFormData,
             rating: 0,
         });
-      }
+    }
 
     const toggleAddToCart = (e) => {
         setAddedToCartShow(!addedToCartShow);
@@ -87,7 +87,7 @@ const ViewProduct = () => {
     }
 
     const handleChange = (e) => {
-        const {value, name} = e.target;
+        const { value, name } = e.target;
         setUnitMeasurement(value);
         setYards(value * 1.09);
         if (product.unit_measurement == "centimeter") {
@@ -104,7 +104,7 @@ const ViewProduct = () => {
     }
 
     const handleChangeReview = (e) => {
-        const {value, name} = e.target;
+        const { value, name } = e.target;
         setReviewFormData({
             ...reviewFormData,
             [name]: value,
@@ -125,49 +125,49 @@ const ViewProduct = () => {
 
     const fetchData = async (e) => {
         try {
-          const productData = await GetSingleProductData(e);
-          if (productData.id) {
-            setReviewFormData({
-                ...reviewFormData,
-                product_id: productData.id,
-                user_id: currentUser
-            });
-            setProduct(productData);
-            setProductLoading(false);
-            setImages(productData.image_urls);
-            if (productData.price && productData.price > 0) {
-                setProductPrice(Number(productData.price).toFixed(2))
-            }
-            if (productData.image_urls?.[0]?.image_url) {
-                setActiveImage(process.env.REACT_APP_STORAGE_URL+'product/'+productData.image_urls[0].image_url);
-            } else {
-                setActiveImage(PlaceholderImage);
-            }
-            var wishlist_user_ids = productData.wishlist_user_ids;
-            setUserWishlist(wishlist_user_ids.includes(currentUser));
-            if (productData.unit_measurement) {
-                if (productData.unit_measurement == "centimeter") {
-                    setYards(0.01)
-                } else if (productData.unit_measurement == "meter") {
-                    setYards(1.096)
-                } else if (productData.unit_measurement == "inch") {
-                    setYards(0.027)
-                } else if (productData.unit_measurement == "feet") {
-                    setYards(0.333)
-                } else if (productData.unit_measurement == "yard") {
-                    setYards(1)
+            const productData = await GetSingleProductData(e);
+            if (productData.id) {
+                setReviewFormData({
+                    ...reviewFormData,
+                    product_id: productData.id,
+                    user_id: currentUser
+                });
+                setProduct(productData);
+                setProductLoading(false);
+                setImages(productData.image_urls);
+                if (productData.price && productData.price > 0) {
+                    setProductPrice(Number(productData.price).toFixed(2))
                 }
+                if (productData.image_urls?.[0]?.image_url) {
+                    setActiveImage(process.env.REACT_APP_STORAGE_URL + 'product/' + productData.image_urls[0].image_url);
+                } else {
+                    setActiveImage(PlaceholderImage);
+                }
+                var wishlist_user_ids = productData.wishlist_user_ids;
+                setUserWishlist(wishlist_user_ids.includes(currentUser));
+                if (productData.unit_measurement) {
+                    if (productData.unit_measurement == "centimeter") {
+                        setYards(0.01)
+                    } else if (productData.unit_measurement == "meter") {
+                        setYards(1.096)
+                    } else if (productData.unit_measurement == "inch") {
+                        setYards(0.027)
+                    } else if (productData.unit_measurement == "feet") {
+                        setYards(0.333)
+                    } else if (productData.unit_measurement == "yard") {
+                        setYards(1)
+                    }
+                }
+            } else {
+                setProductLoading(false);
+                toast.error('Product does not exist!');
+                navigate('/user/profile');
             }
-          } else {
-            setProductLoading(false);
-            toast.error('Product does not exist!');
-            navigate('/user/profile');
-          }
-          // Update state or perform other logic with productData
+            // Update state or perform other logic with productData
         } catch (error) {
             toast.error('Product item does not exist!');
             navigate('/user/profile');
-          // Handle the error, if needed
+            // Handle the error, if needed
         }
     };
 
@@ -183,52 +183,52 @@ const ViewProduct = () => {
 
     async function wishlistUpdate(e) {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
-          const success = response.data.status;
-          if (success == 'Success') {
-            fetchData(productId);
-          } else {
-            toast.error('Something went wrong, please contact the administrator!');
-          }
+            const success = response.data.status;
+            if (success == 'Success') {
+                fetchData(productId);
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
         }).catch((error) => {
-          toast.error('Something went wrong, please contact the administrator!');
+            toast.error('Something went wrong, please contact the administrator!');
         });
     }
 
     async function reviewUpdate() {
         setAddReviewLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/review/'+reviewId, reviewFormData).then((response) => {
-          const success = response.data.status;
-          if (success == 'Success') {
-            toast.success('Review updated successfully!');
-            getProductReviews();
-            setAddReviewLoading(false);
-            toggleAddToReview();
-          } else {
-            toast.error('Something went wrong, please contact the administrator!');
-          }
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/review/' + reviewId, reviewFormData).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                toast.success('Review updated successfully!');
+                getProductReviews();
+                setAddReviewLoading(false);
+                toggleAddToReview();
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
         }).catch((error) => {
-          toast.error('Something went wrong, please contact the administrator!');
+            toast.error('Something went wrong, please contact the administrator!');
         });
     }
 
     async function reviewAdd() {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/review', reviewFormData).then((response) => {
-          const success = response.data.status;
-          if (success == 'Success') {
-            toast.success('Review added successfully!');
-            getProductReviews();
-            setAddReviewLoading(false);
-            toggleAddToReview();
-          } else {
-            toast.error('Something went wrong, please contact the administrator!');
-          }
+            const success = response.data.status;
+            if (success == 'Success') {
+                toast.success('Review added successfully!');
+                getProductReviews();
+                setAddReviewLoading(false);
+                toggleAddToReview();
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
         }).catch((error) => {
-          toast.error('Something went wrong, please contact the administrator!');
+            toast.error('Something went wrong, please contact the administrator!');
         });
     }
 
     const getProductReview = async (e) => {
-        await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/review/'+e+'?user_id=' + currentUser + '&token=' + token)
+        await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/review/' + e + '?user_id=' + currentUser + '&token=' + token)
             .then((response) => {
                 const result = response.data.data;
                 if (result) {
@@ -245,7 +245,7 @@ const ViewProduct = () => {
                         setReviewText('Average');
                     } else if (result.rating > 3 && result.rating <= 4) {
                         setReviewText('Great');
-                    }else if (result.rating > 4 && result.rating <= 5) {
+                    } else if (result.rating > 4 && result.rating <= 5) {
                         setReviewText('Great');
                     }
                 }
@@ -255,7 +255,7 @@ const ViewProduct = () => {
     }
 
     const getProductReviews = async () => {
-        await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'/review?user_id=' + currentUser + '&token=' + token)
+        await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '/review?user_id=' + currentUser + '&token=' + token)
             .then((response) => {
                 const data = response.data;
                 const result = data.data;
@@ -268,8 +268,8 @@ const ViewProduct = () => {
                     if (hasCurrentUserReview) {
                         // Get the id of the first review with user_id equal to currentUser
                         const currentUserReviewId = hasCurrentUserReview
-                        ? result.find(review => review.user_id === currentUser).id
-                        : null;
+                            ? result.find(review => review.user_id === currentUser).id
+                            : null;
                         setReviewId(currentUserReviewId)
                     }
 
@@ -303,13 +303,13 @@ const ViewProduct = () => {
                             <Col lg={5}>
                                 {images && images.length > 0 ?
                                     <>
-                                        <div className="single-image-slider mb-4" style={{ backgroundImage: "url("+activeImage+")"}}>
+                                        <div className="single-image-slider mb-4" style={{ backgroundImage: "url(" + activeImage + ")" }}>
 
                                         </div>
                                         <ImageSlider type="product" slidesToShow={4} images={images} onActiveImageChange={handleActiveImageChange} />
                                     </>
                                     :
-                                    <div className="single-image-slider" style={{ backgroundImage: "url("+activeImage+")"}}>
+                                    <div className="single-image-slider" style={{ backgroundImage: "url(" + activeImage + ")" }}>
 
                                     </div>
                                 }
@@ -319,34 +319,35 @@ const ViewProduct = () => {
                                     <Card.Body>
                                         <Row>
                                             <Col lg="12" className="d-flex justify-content-between">
-                                                {/* <div className='mb-3 d-flex portfolio-designer'>
+                                                <div className='mb-3 d-flex portfolio-designer'>
                                                     {product.user.image ? (
                                                         <div
                                                             className='designer-photo'
                                                             style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${product.user.image})` }}
                                                         ></div>
-                                                        ) : (
+                                                    ) : (
                                                         <div
                                                             className='designer-photo'
-                                                            style={{ backgroundImage: `url(${product.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder })` }}
+                                                            style={{ backgroundImage: `url(${product.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}
                                                         ></div>
                                                     )}
                                                     <div className="designer-info mx-2">
-                                                        <p className="text-black fs-18 fw-600 mb-0">{product.user.first_name && product.user.first_name != "" ? product.user.first_name : "-"} {product.user.last_name && product.user.last_name != "" ? product.user.last_name : "-"}</p>
+                                                        <p className="text-black fs-16 fw-600 mb-0 proximanova-family">{product.user.first_name && product.user.first_name != "" ? product.user.first_name : "-"} {product.user.last_name && product.user.last_name != "" ? product.user.last_name : "-"}</p>
                                                         {currentUser !== product.user.id ?
                                                             <>
-                                                                <a className='text-decoration-none fs-14'>Follow</a>
+                                                                <a className='text-decoration-none fs-12 proximanova-family follow-products'>Follow</a>
                                                             </>
                                                             :
                                                             <>
-                                                                
-                                                                <a className='text-decoration-none fs-14'>You</a>
+
+                                                                <a className='text-decoration-none fs-12 proximanova-family you-products'>You</a>
                                                             </>
                                                         }
                                                     </div>
-                                                </div> */}
+                                                </div>
+
                                                 <div>
-                                                    <h2 className="fw-600 fs-30">{product.name ?? "-"}</h2>
+
                                                 </div>
                                                 <div>
                                                     <div className="action-button bg-smgray me-2">
@@ -354,7 +355,7 @@ const ViewProduct = () => {
                                                     </div>
                                                     {userWishlist ?
                                                         <div class="kouture-tooltip">
-                                                            <div className="action-button bg-gold me-2" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: product.id}); }}>
+                                                            <div className="action-button bg-gold me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
                                                                 <GoHeart className="text-white" />
                                                             </div>
                                                             <div class="kouture-tooltiptext">
@@ -363,7 +364,7 @@ const ViewProduct = () => {
                                                         </div>
                                                         :
                                                         <div class="kouture-tooltip">
-                                                            <div className="action-button bg-smgray me-2" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: product.id}); }}>
+                                                            <div className="action-button bg-smgray me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
                                                                 <GoHeart className="text-black" />
                                                             </div>
                                                             <div class="kouture-tooltiptext">
@@ -377,12 +378,13 @@ const ViewProduct = () => {
                                                 </div>
                                             </Col>
                                             <Col lg="12">
+                                                <h2 className="fw-600 fs-25 ">{product.name ?? "-"}</h2>
                                                 {product.categories && product.categories.length > 0 ?
                                                     <div className="mb-3">
                                                         {product.categories.length > 0 ?
                                                             <>
                                                                 {product.categories.map((category, index) => (
-                                                                    <span className="design-tag bg-light fs-12">
+                                                                    <span className="design-tag bg-light fs-14 proximanova-family categories-color">
                                                                         {category}
                                                                     </span>
                                                                 ))}
@@ -395,40 +397,21 @@ const ViewProduct = () => {
                                                     null
                                                 }
                                                 <div className="mb-3">
-                                                <p className="fw-600 fs-24">${productPrice}<span className="text-muted fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
+                                                    <p className="fw-600 fs-25 proximanova-family">${productPrice}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle proximanova-family">/{product.unit_measurement}</span></p>
                                                 </div>
                                                 <div className="">
-                                                    <p className="mb-2"><strong>Fabric Process Insight</strong></p>
-                                                    <p className="mb-4">{product.seller?.fabric_process_insights ?? "-"}</p>
+                                                    <p className="mb-2 proximanova-family fs-16 fw-600">Fabric Process Insight</p>
+                                                    <p className="mb-4 proximanova-family fs-16 fw-400">{product.seller?.fabric_process_insights ?? "-"}</p>
                                                 </div>
                                                 <div className="">
-                                                    <p className="mb-2"><strong>Pricing Structure</strong></p>
-                                                    <p className="mb-4">{product.seller?.pricing_structure ?? "-"}</p>
+                                                    <p className="mb-2 proximanova-family fs-16 fw-600">Pricing Structure</p>
+                                                    <p className="mb-4 proximanova-family fs-16 fw-400">{product.seller?.pricing_structure ?? "-"}</p>
                                                 </div>
-                                                
-                                                <p className="mb-2"><strong>Colors</strong></p>
-                                                <div className="mb-4">
-                                                    {product.colors ?
-                                                        <>
-                                                            {product.colors.length > 0 ?
-                                                                <>
-                                                                    {product.colors.map((color, index) => (
-                                                                        <p className="mb-2">
-                                                                            - {color}
-                                                                        </p>
-                                                                    ))}
-                                                                </>
-                                                                :
-                                                                null
-                                                            }
-                                                        </>
-                                                        :
-                                                        null
-                                                    }
-                                                </div>
+
                                                 <div>
                                                     <Row>
                                                         <Col lg="12">
+                                                            <p className="mb-2 proximanova-family fs-16 fw-600">Measurement</p>
                                                             {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
                                                                 -
                                                             </Button> */}
@@ -436,17 +419,20 @@ const ViewProduct = () => {
                                                             {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
                                                                 +
                                                             </Button> */}
-                                                            <span className="fs-20 fw-600">{Number(unitMeasurement)?.toFixed(2)} {
+
+                                                            <span className="fs-18 fw-600 proximanova-family">{Number(unitMeasurement)?.toFixed(2)} {
                                                                 product.unit_measurement !== 'inch' && product.unit_measurement !== 'feet'
                                                                     ? product.unit_measurement + 's'
                                                                     : product.unit_measurement === 'feet'
                                                                         ? product.unit_measurement
                                                                         : product.unit_measurement + 'es'
-                                                            } {product.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted">({yards.toFixed(2)} yards)</span> : null }</span>
-                                                            <hr  className="mb-4" />
+                                                            } {product.unit_measurement != "yard" ? <span className="fs-14 fw-400 proximanova-family text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span>
+                                                            <hr className="mb-4" />
                                                         </Col>
-                                                        <Col lg="12">
-                                                            <Button className="w-auto me-3 btn-primary" onClick={toggleAddToCart}>Add to Cart</Button> <span className="fw-600 fs-24">${(unitMeasurement * productPrice).toFixed(2)} <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span>
+                                                        <Col lg="12" className='text-right'>
+                                                            <Button className="w-auto me-3 btn-primary proximanova-family fs-16" onClick={toggleAddToCart}>Add to Cart</Button>
+                                                            {/* <span className="fw-600 fs-24">${(unitMeasurement * productPrice).toFixed(2)} 
+                                                            <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span> */}
                                                         </Col>
                                                     </Row>
                                                 </div>
@@ -475,20 +461,20 @@ const ViewProduct = () => {
                                     </Card.Body>
                                 </Card>
                             </Col>
-                            <Col lg={12} className="mt-4">
+                            {/* <Col lg={12} className="mt-4">
                                 <p className="mb-2"><strong>Description</strong></p>
                                 <p className="mb-4">{product.description ?? "-"}</p>
-                            </Col>
+                            </Col> */}
                             <Col lg="12" className='mt-4'>
                                 {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
                                 <div className="d-flex justify-content-between w-100 align-item-center">
-                                    <p className={`text-gold cursor-pointer me-5 mt-3 fs-16 ${reviewsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews</p>
-                                    {updateReview ?
-                                        <Button className="w-auto mb-3 btn-primary" onClick={ function() { getProductReview(reviewId); toggleAddToReview(); }}>Update Review</Button>
+                                    <p className={`text-black reviews-product cursor-pointer me-5 mt-3 mb-0 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Reviews</p>
+                                    {/* {updateReview ?
+                                        <Button className="w-auto mb-3 btn-primary" onClick={function () { getProductReview(reviewId); toggleAddToReview(); }}>Update Review</Button>
                                         :
-                                        <Button className="w-auto mb-3 btn-primary" onClick={ function() { toggleAddToReview(); }}>Add Review</Button>
-                                    }
-                                    
+                                        <Button className="w-auto mb-3 btn-primary" onClick={function () { toggleAddToReview(); }}>Add Review</Button>
+                                    } */}
+
                                 </div>
                                 <hr className='mt-2 mb-4' />
                                 {commentsTabShow ?
@@ -511,20 +497,20 @@ const ViewProduct = () => {
                                             <>
                                                 {productReviews && productReviews.length > 0 ?
                                                     <>
-                                                        {productReviews.map(({rating, content, user}, index) => (
+                                                        {productReviews.map(({ rating, content, user }, index) => (
                                                             <>
                                                                 <div className="product-review-container mt-4 mb-3">
                                                                     <div className="d-flex">
                                                                         <div className="user">
                                                                             {user.image && user.image != "" ?
-                                                                                <div className="profile-image small" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+user.image+")"}}></div>
+                                                                                <div className="profile-image small" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + user.image + ")" }}></div>
                                                                                 :
-                                                                                <div className="profile-image small" style={{ backgroundImage: "url("+UserPlaceholder+")"}}></div>                            
+                                                                                <div className="profile-image small" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                                                             }
                                                                         </div>
                                                                         <div className="rating">
                                                                             <p className="text-black fs-16 mb-0 text-left">{user.first_name} {user.last_name}</p>
-                                                                            <Rating 
+                                                                            <Rating
                                                                                 initialValue={rating}
                                                                                 readonly={true}
                                                                                 allowFraction={true}
@@ -533,7 +519,7 @@ const ViewProduct = () => {
                                                                                 showTooltip={false}
                                                                                 emptyColor="#dddddd"
                                                                                 fillColor="#cea835"
-                                                                                /* Available Props */
+                                                                            /* Available Props */
                                                                             />
                                                                             {content && content != "" ?
                                                                                 <p className="mb-0 mt-3">{content}</p>
@@ -554,7 +540,7 @@ const ViewProduct = () => {
                                                     :
                                                     <div className="text-center">
                                                         <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
-                                                        <p className="fs-20 text-black">No available reviews at this time</p>
+                                                        <p className="fs-20 text-black proximanova-family no-available">No available reviews at this time</p>
                                                     </div>
                                                 }
                                             </>
@@ -565,7 +551,7 @@ const ViewProduct = () => {
                                 }
                             </Col>
                         </Row>
-                    </Container> 
+                    </Container>
                 </section>
             }
             {/* Add to Cart */}
@@ -613,9 +599,9 @@ const ViewProduct = () => {
                             <div className="d-flex align-items-center">
                                 <div className="user">
                                     {product.user?.image && product.user?.image != "" ?
-                                        <div className="profile-image small" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+product.user?.image+")"}}></div>
+                                        <div className="profile-image small" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + product.user?.image + ")" }}></div>
                                         :
-                                        <div className="profile-image small" style={{ backgroundImage: "url("+UserPlaceholder+")"}}></div>                            
+                                        <div className="profile-image small" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                     }
                                 </div>
                                 <p className="text-black fs-16 mb-0 text-left">{product.user?.first_name} {product.user?.last_name}</p>
@@ -623,15 +609,15 @@ const ViewProduct = () => {
                         </Card.Header>
                         <Card.Body className="text-center py-3">
                             <div className="product-review-container">
-                                
+
                                 <div className="d-flex align-items-center">
                                     <div className="user">
-                                        <div className="profile-image small" style={{ backgroundImage: "url("+activeImage+")", borderRadius: '10px'}}></div>
+                                        <div className="profile-image small" style={{ backgroundImage: "url(" + activeImage + ")", borderRadius: '10px' }}></div>
                                     </div>
                                     <p className="text-black fs-16 mb-0 text-left">{product.name}</p>
                                 </div>
                                 <div className="text-left mt-3">
-                                    <span className="fs-14">Product Quality:</span> <Rating 
+                                    <span className="fs-14">Product Quality:</span> <Rating
                                         initialValue={reviewFormData.rating}
                                         allowFraction={true}
                                         size={25}
@@ -653,7 +639,7 @@ const ViewProduct = () => {
                                             'Excellent'
                                         ]}
                                         tooltipDefaultText={reviewText}
-                                        /* Available Props */
+                                    /* Available Props */
                                     />
                                     <Form.Control
                                         as="textarea"
@@ -669,9 +655,9 @@ const ViewProduct = () => {
                         </Card.Body>
                         <Card.Footer className="text-right">
                             {updateReview ?
-                                <Button className="w-auto mt-2 btn-primary" onClick={ function() { reviewUpdate(); }}>{addReviewLoading ? "Updating..." : "Update"}</Button>
+                                <Button className="w-auto mt-2 btn-primary" onClick={function () { reviewUpdate(); }}>{addReviewLoading ? "Updating..." : "Update"}</Button>
                                 :
-                                <Button className="w-auto mt-2 btn-primary" onClick={ function() { reviewAdd(); }}>{addReviewLoading ? "Saving..." : "Submit"}</Button>
+                                <Button className="w-auto mt-2 btn-primary" onClick={function () { reviewAdd(); }}>{addReviewLoading ? "Saving..." : "Submit"}</Button>
                             }
                         </Card.Footer>
                     </Card>

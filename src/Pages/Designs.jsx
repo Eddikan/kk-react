@@ -12,15 +12,14 @@ import LoadingPage from 'Components/Shared/LoadingPage';
 import GoBack from 'Components/Shared/GoBack';
 import { GoHeart, GoBookmark } from "react-icons/go";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
-import { IoIosArrowDown } from "react-icons/io";
-import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
-import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import Countries from 'Utils/Countries';
 import Loading from 'Components/Shared/Loading';
 import MultiRangeSlider from 'Components/Forms/MultiRangeSlider';
+import Desingns from '../Assets/styles/Designs/style.css'
+import { IoStar } from "react-icons/io5";
 import { debounce } from 'lodash';
 
 const Designs = (props) => {
@@ -51,28 +50,28 @@ const Designs = (props) => {
     const [sortOptions] = useState([
         { value: 'created_at', label: 'Date' },
         { value: 'views', label: 'Views' },
-      ]);
-    
+    ]);
+
     const [selectedSortField, setSelectedSortField] = useState(null);
     const [selectedSortOrder, setSelectedSortOrder] = useState(null);
 
     const getOrderOptions = () => {
         if (selectedSortField === 'price') {
-          return [
-            { value: 'desc', label: 'Highest to Lowest' },
-            { value: 'asc', label: 'Lowest to Highest' },
-          ];
+            return [
+                { value: 'desc', label: 'Highest to Lowest' },
+                { value: 'asc', label: 'Lowest to Highest' },
+            ];
         }
         if (selectedSortField === 'created_at') {
-          return [
-            { value: 'desc', label: 'Newest to Oldest' },
-            { value: 'asc', label: 'Oldest to Newest' },
-          ];
+            return [
+                { value: 'desc', label: 'Newest to Oldest' },
+                { value: 'asc', label: 'Oldest to Newest' },
+            ];
         }
         if (selectedSortField === 'views') {
             return [
-              { value: 'desc', label: 'Highest to Lowest' },
-              { value: 'asc', label: 'Lowest to Highest' },
+                { value: 'desc', label: 'Highest to Lowest' },
+                { value: 'asc', label: 'Lowest to Highest' },
             ];
         }
         return [];
@@ -81,39 +80,39 @@ const Designs = (props) => {
     const handleSortFieldChange = (field) => {
         setSelectedSortField(field);
         setSelectedSortOrder(null); // Reset order when changing field
-    
+
         // Call the API with the updated filter values and sorting parameters
         onFilterChange({
-          eco_friendly: ecoFriendly ? 1 : null,
-          composition: selectedCompositions,
-          weave: selectedWeaves,
-          colors: selectedColors,
-          price_range: priceRange,
-          sortField: field, // Only the field without order
-          sortOrder: null, // Reset order when changing field
-          search: searchValue,
+            eco_friendly: ecoFriendly ? 1 : null,
+            composition: selectedCompositions,
+            weave: selectedWeaves,
+            colors: selectedColors,
+            price_range: priceRange,
+            sortField: field, // Only the field without order
+            sortOrder: null, // Reset order when changing field
+            search: searchValue,
         });
     };
 
     const handleSortOrderChange = (order) => {
         setSelectedSortOrder(order);
-    
+
         // Call the API with the updated filter values and sorting parameters
         onFilterChange({
-          eco_friendly: ecoFriendly ? 1 : null,
-          composition: selectedCompositions,
-          weave: selectedWeaves,
-          colors: selectedColors,
-          price_range: priceRange,
-          sortField: selectedSortField,
-          sortOrder: order,
-          search: searchValue,
+            eco_friendly: ecoFriendly ? 1 : null,
+            composition: selectedCompositions,
+            weave: selectedWeaves,
+            colors: selectedColors,
+            price_range: priceRange,
+            sortField: selectedSortField,
+            sortOrder: order,
+            search: searchValue,
         });
     };
 
     async function onFilterChange(data) {
         setDesignsLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?user_id='+currentUser+'&token='+token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setDesigns(selectedDesigns);
@@ -129,7 +128,7 @@ const Designs = (props) => {
     }
 
     async function onWishlistChange(data) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?user_id='+currentUser+'&token='+token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setDesigns(selectedDesigns);
@@ -213,7 +212,7 @@ const Designs = (props) => {
                     sortField: selectedSortField,
                     sortOrder: selectedSortOrder,
                     search: searchValue,
-                  });
+                });
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
@@ -273,20 +272,20 @@ const Designs = (props) => {
     useEffect(() => {
         // Only run the filter API call after the component has mounted
         if (mounted) {
-          // Call the API with the updated filter values
-          onFilterChange({
-            eco_friendly: ecoFriendly ? 1 : null,
-            composition: selectedCompositions,
-            weave: selectedWeaves,
-            colors: selectedColors,
-            price_range: priceRange,
-            sortField: selectedSortField,
-            sortOrder: selectedSortOrder,
-            search: searchValue,
-          });
+            // Call the API with the updated filter values
+            onFilterChange({
+                eco_friendly: ecoFriendly ? 1 : null,
+                composition: selectedCompositions,
+                weave: selectedWeaves,
+                colors: selectedColors,
+                price_range: priceRange,
+                sortField: selectedSortField,
+                sortOrder: selectedSortOrder,
+                search: searchValue,
+            });
         } else {
-          // Set the component as mounted
-          setMounted(true);
+            // Set the component as mounted
+            setMounted(true);
         }
     }, [mounted, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue]);
 
@@ -299,7 +298,7 @@ const Designs = (props) => {
                             <Col lg="12">
                                 <div className="narrow-850 text-center">
                                     <h2 className='fs-40 text-center mb-3'>Explore Captivating Designs</h2>
-                                    <p>In the realm of fabric design, the designer intricately weaves together artistic concepts, skillfully navigating through color harmonies and textural nuances to conceive patterns that not only adorn but tell compelling visual stories through the medium of textiles.</p>
+                                    <p className='proximanova-family fs-16 fw-400 text-black'>In the realm of fabric design, the designer intricately weaves together artistic concepts, skillfully navigating through color harmonies and textural nuances to conceive patterns that not only adorn but tell compelling visual stories through the medium of textiles.</p>
                                 </div>
                             </Col>
                             {/* <Col lg="4" className='text-right'>
@@ -308,39 +307,224 @@ const Designs = (props) => {
                         </Row>
                     </Container>
                 </section>
+
+                <section>
+                    <Container>
+                        <div className='d-flex justify-content-between'>
+                            <div className='sample-categories'>
+                                Sample Categories
+                            </div>
+
+                            <div>
+                                <span className='sample-categories'>Sort By:</span>
+                                <span className='all-sort'>All</span>
+                            </div>
+
+                        </div>
+                    </Container>
+                </section>
+
+
                 <hr className="border-black mb" />
                 <section className="pt-3">
                     <Container>
                         <Row className="mt-2">
                             <Col lg="3">
                                 <div className="filter-sidebar pe-4">
-                                    <Form.Group className='mb-4'>
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        label={`All`}
+                                        name={`day`}
+                                        className={`categories`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        label={`Trends`}
+                                        name={`day`}
+                                        className={`categories`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        label={`Casual Wear`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Sports and Active Wear`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Formal Wear`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Outerwear`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Loungewear`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Work Wear`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Ethnic Wear`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Street Wear`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Vintage/Retro Clothing`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Loungewear`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Maternity Wear`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Swimwear`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Undergarments`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Accessories`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Uniforms`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Adaptive Clothing`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Wedding Attire`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Travel Wear`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Seasonal Clothing`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Cultural or Religious Clothing`}
+                                        name={`day`}
+                                    />
+
+                                    <Form.Check
+                                        type={`checkbox`}
+                                        id={`schedule-sunday`}
+                                        label={`Costumes`}
+                                        name={`day`}
+                                    />
+
+
+
+
+
+
+
+                                    {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Search</Form.Label>
                                         <FormControl type='text' name='search' value={search} className='mr-sm-2' onChange={handleChangeSearch} placeholder='Enter your search term...' />
                                     </Form.Group>
-                                    <hr className="border-black" />
-                                    <div style={{ position: "relative" }} className="mb-4">
+                                    <hr className="border-black" /> */}
+                                    {/* <div style={{ position: "relative" }} className="mb-4">
                                         <div>
                                             <Form.Label className="fw-600">Sort By: </Form.Label>
                                             <Form.Control as='select' onChange={(e) => handleSortFieldChange(e.target.value)}>
-                                            <option value="" disabled selected>Select Type</option>
-                                            {sortOptions.map(option => (
-                                                <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
-                                            ))}
+                                                <option value="" disabled selected>Select Type</option>
+                                                {sortOptions.map(option => (
+                                                    <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
+                                                ))}
                                             </Form.Control>
 
                                             {selectedSortField && (
-                                            <div className="mt-3">
-                                                <Form.Label className="fw-600">Order: </Form.Label>
-                                                <Form.Control as='select' onChange={(e) => handleSortOrderChange(e.target.value)}>
-                                                {getOrderOptions().map(option => (
-                                                    <option key={option.value} value={option.value} selected={option.value === selectedSortOrder}>{option.label}</option>
-                                                ))}
-                                                </Form.Control>
-                                            </div>
+                                                <div className="mt-3">
+                                                    <Form.Label className="fw-600">Order: </Form.Label>
+                                                    <Form.Control as='select' onChange={(e) => handleSortOrderChange(e.target.value)}>
+                                                        {getOrderOptions().map(option => (
+                                                            <option key={option.value} value={option.value} selected={option.value === selectedSortOrder}>{option.label}</option>
+                                                        ))}
+                                                    </Form.Control>
+                                                </div>
                                             )}
                                         </div>
-                                    </div>
+                                    </div> */}
                                     {/* <hr className="border-black" />
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Environmentally Conscious</Form.Label>
@@ -406,7 +590,7 @@ const Designs = (props) => {
                                 </div>
                             </Col>
                             <Col lg="9">
-                                
+
                                 <div id="profile-designs">
                                     {designsLoading ?
                                         <>
@@ -427,7 +611,7 @@ const Designs = (props) => {
 
                                                             return (
                                                                 <>
-                                                                    <Col className="designs-grid mb-3" xs="12" md="4">
+                                                                    <Col className="designs-grid mb-4" xs="12" md="4">
                                                                         <div className="portfolio-link">
                                                                             <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }} style={{ backgroundImage: "url(" + designImage + ")" }}>
 
@@ -443,18 +627,27 @@ const Designs = (props) => {
                                                                         </div>
                                                                         <div className="design-details">
                                                                             <div className='d-flex align-items-center justify-content-between'>
-                                                                                <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{design.name ?? '-'}</p>
-                                                                                <div className='d-flex align-items-center'>
+                                                                                <p className="text-black fs-18 fw-400 mb-0 text-ellipsis rufina-family">{design.name ?? '-'}</p>
+                                                                                {/* <div className='d-flex align-items-center'>
                                                                                     <span className='fs-14 text-no-wrap mx-2'>
                                                                                         <IoHeartOutline /> 0
                                                                                     </span>
                                                                                     <span className='fs-14 text-no-wrap'>
                                                                                         <IoEyeOutline /> {design.views}
                                                                                     </span>
-                                                                                </div>
-
+                                                                                </div> */}
                                                                             </div>
-                                                                            <div className='d-flex align-items-center mt-1'>
+                                                                            <div>
+                                                                                <span className='fs-14 text-no-wrap'>
+                                                                                    <IoStar size="17" color="#CEA835" className='me-1' />
+                                                                                    <IoStar size="17" color="#CEA835" className='me-1' />
+                                                                                    <IoStar size="17" color="#CEA835" className='me-1' />
+                                                                                    <IoStar size="17" color="#CEA835" className='me-1' />
+                                                                                    <IoStar size="17" color="#CEA835" className='me-2' />
+                                                                                    <span className='fs-14 rating-color proximanova-family'>5.0</span>
+                                                                                </span>
+                                                                            </div>
+                                                                            {/* <div className='d-flex align-items-center mt-1'>
                                                                                 {design.user.image ?
                                                                                     <div className='designer-photo-small' style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + design.user.image + ")" }} ></div>
                                                                                     :
@@ -462,7 +655,7 @@ const Designs = (props) => {
                                                                                 }
                                                                                 &nbsp;&nbsp;
                                                                                 <p className="text-black fs-14 mb-0">{design.user.first_name && design.user.first_name != "" ? design.user.first_name : "-"} {design.user.last_name && design.user.last_name != "" ? design.user.last_name : "-"}</p>
-                                                                            </div>
+                                                                            </div> */}
                                                                         </div>
                                                                     </Col>
                                                                 </>
@@ -482,7 +675,7 @@ const Designs = (props) => {
                     </Container>
                 </section>
             </div>
-        </Layout>
+        </Layout >
     );
 };
 

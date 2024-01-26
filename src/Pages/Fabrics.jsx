@@ -54,28 +54,28 @@ const Fabrics = (props) => {
         { value: 'created_at', label: 'Date' },
         { value: 'price', label: 'Price' },
         { value: 'views', label: 'Views' },
-      ]);
-    
+    ]);
+
     const [selectedSortField, setSelectedSortField] = useState(null);
     const [selectedSortOrder, setSelectedSortOrder] = useState(null);
 
     const getOrderOptions = () => {
         if (selectedSortField === 'price') {
-          return [
-            { value: 'desc', label: 'Highest to Lowest' },
-            { value: 'asc', label: 'Lowest to Highest' },
-          ];
+            return [
+                { value: 'desc', label: 'Highest to Lowest' },
+                { value: 'asc', label: 'Lowest to Highest' },
+            ];
         }
         if (selectedSortField === 'created_at') {
-          return [
-            { value: 'desc', label: 'Newest to Oldest' },
-            { value: 'asc', label: 'Oldest to Newest' },
-          ];
+            return [
+                { value: 'desc', label: 'Newest to Oldest' },
+                { value: 'asc', label: 'Oldest to Newest' },
+            ];
         }
         if (selectedSortField === 'views') {
             return [
-              { value: 'desc', label: 'Highest to Lowest' },
-              { value: 'asc', label: 'Lowest to Highest' },
+                { value: 'desc', label: 'Highest to Lowest' },
+                { value: 'asc', label: 'Lowest to Highest' },
             ];
         }
         return [];
@@ -84,39 +84,39 @@ const Fabrics = (props) => {
     const handleSortFieldChange = (field) => {
         setSelectedSortField(field);
         setSelectedSortOrder(null); // Reset order when changing field
-    
+
         // Call the API with the updated filter values and sorting parameters
         onFilterChange({
-          eco_friendly: ecoFriendly ? 1 : null,
-          composition: selectedCompositions,
-          weave: selectedWeaves,
-          colors: selectedColors,
-          price_range: priceRange,
-          sortField: field, // Only the field without order
-          sortOrder: null, // Reset order when changing field
-          search: searchValue,
+            eco_friendly: ecoFriendly ? 1 : null,
+            composition: selectedCompositions,
+            weave: selectedWeaves,
+            colors: selectedColors,
+            price_range: priceRange,
+            sortField: field, // Only the field without order
+            sortOrder: null, // Reset order when changing field
+            search: searchValue,
         });
     };
 
     const handleSortOrderChange = (order) => {
         setSelectedSortOrder(order);
-    
+
         // Call the API with the updated filter values and sorting parameters
         onFilterChange({
-          eco_friendly: ecoFriendly ? 1 : null,
-          composition: selectedCompositions,
-          weave: selectedWeaves,
-          colors: selectedColors,
-          price_range: priceRange,
-          sortField: selectedSortField,
-          sortOrder: order,
-          search: searchValue,
+            eco_friendly: ecoFriendly ? 1 : null,
+            composition: selectedCompositions,
+            weave: selectedWeaves,
+            colors: selectedColors,
+            price_range: priceRange,
+            sortField: selectedSortField,
+            sortOrder: order,
+            search: searchValue,
         });
     };
 
     async function onFilterChange(data) {
         setFabricsLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id='+currentUser+'&token='+token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setFabrics(selectedDesigns);
@@ -132,7 +132,7 @@ const Fabrics = (props) => {
     }
 
     async function onWishlistChange(data) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id='+currentUser+'&token='+token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setFabrics(selectedDesigns);
@@ -216,7 +216,7 @@ const Fabrics = (props) => {
                     sortField: selectedSortField,
                     sortOrder: selectedSortOrder,
                     search: searchValue,
-                  });
+                });
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
@@ -276,20 +276,20 @@ const Fabrics = (props) => {
     useEffect(() => {
         // Only run the filter API call after the component has mounted
         if (mounted) {
-          // Call the API with the updated filter values
-          onFilterChange({
-            eco_friendly: ecoFriendly ? 1 : null,
-            composition: selectedCompositions,
-            weave: selectedWeaves,
-            colors: selectedColors,
-            price_range: priceRange,
-            sortField: selectedSortField,
-            sortOrder: selectedSortOrder,
-            search: searchValue,
-          });
+            // Call the API with the updated filter values
+            onFilterChange({
+                eco_friendly: ecoFriendly ? 1 : null,
+                composition: selectedCompositions,
+                weave: selectedWeaves,
+                colors: selectedColors,
+                price_range: priceRange,
+                sortField: selectedSortField,
+                sortOrder: selectedSortOrder,
+                search: searchValue,
+            });
         } else {
-          // Set the component as mounted
-          setMounted(true);
+            // Set the component as mounted
+            setMounted(true);
         }
     }, [mounted, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue]);
 
@@ -326,21 +326,21 @@ const Fabrics = (props) => {
                                         <div>
                                             <Form.Label className="fw-600">Sort By: </Form.Label>
                                             <Form.Control as='select' onChange={(e) => handleSortFieldChange(e.target.value)}>
-                                            <option value="" disabled selected>Select Type</option>
-                                            {sortOptions.map(option => (
-                                                <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
-                                            ))}
+                                                <option value="" disabled selected>Select Type</option>
+                                                {sortOptions.map(option => (
+                                                    <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
+                                                ))}
                                             </Form.Control>
 
                                             {selectedSortField && (
-                                            <div className="mt-3">
-                                                <Form.Label className="fw-600">Order: </Form.Label>
-                                                <Form.Control as='select' onChange={(e) => handleSortOrderChange(e.target.value)}>
-                                                {getOrderOptions().map(option => (
-                                                    <option key={option.value} value={option.value} selected={option.value === selectedSortOrder}>{option.label}</option>
-                                                ))}
-                                                </Form.Control>
-                                            </div>
+                                                <div className="mt-3">
+                                                    <Form.Label className="fw-600">Order: </Form.Label>
+                                                    <Form.Control as='select' onChange={(e) => handleSortOrderChange(e.target.value)}>
+                                                        {getOrderOptions().map(option => (
+                                                            <option key={option.value} value={option.value} selected={option.value === selectedSortOrder}>{option.label}</option>
+                                                        ))}
+                                                    </Form.Control>
+                                                </div>
                                             )}
                                         </div>
                                     </div>
@@ -408,7 +408,7 @@ const Fabrics = (props) => {
                                         <Form.Control as='select' name='country' value={country} className='mr-sm-2' onChange={handleChangeCountry}>
                                             <option value=''>Select Country</option>
                                             {Countries.map((country, index) => (
-                                                <option key={country+"-"+index} value={country}>
+                                                <option key={country + "-" + index} value={country}>
                                                     {country}
                                                 </option>
                                             ))}
@@ -442,7 +442,7 @@ const Fabrics = (props) => {
                                 </div>
                             </Col>
                             <Col lg="9">
-                                
+
                                 <div id="profile-designs">
                                     {fabricsLoading ?
                                         <>
@@ -467,19 +467,19 @@ const Fabrics = (props) => {
                                                                 <>
                                                                     <Col className="designs-grid mb-3" xs="12" md="3">
                                                                         <div className="portfolio-link">
-                                                                            <div className="designs-grid-div w-100 cursor-pointer" onClick={function() {toggleAddViewCount(fabric.id); navigate('/product/'+fabric.id); }} style={{ backgroundImage: "url("+fabricImage+")", minHeight: '150px'}}>
-                                                                                
+                                                                            <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }} style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}>
+
                                                                             </div>
                                                                             <div className='save-link'>
                                                                                 {/* <div className="action-button bg-white me-2">
                                                                                     <GoBookmark className="text-black" />
                                                                                 </div> */}
                                                                                 {userWishlist ?
-                                                                                    <div className="action-button bg-gold" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: fabric.id}); }}>
+                                                                                    <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
                                                                                         <GoHeart className="text-white" />
                                                                                     </div>
                                                                                     :
-                                                                                    <div className="action-button bg-white" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: fabric.id}); }}>
+                                                                                    <div className="action-button bg-white" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
                                                                                         <GoHeart className="text-black" />
                                                                                     </div>
                                                                                 }
@@ -502,7 +502,7 @@ const Fabrics = (props) => {
                                                                                 }    */}
                                                                             </div>
                                                                             <div className="star-ratings mt-1">
-                                                                                <Rating 
+                                                                                <Rating
                                                                                     initialValue={0}
                                                                                     readonly={true}
                                                                                     allowFraction={true}
@@ -512,10 +512,10 @@ const Fabrics = (props) => {
                                                                                     emptyColor="#dddddd"
                                                                                     fillColor="#cea835"
                                                                                     tooltipArray={[
-                                                                                        0,1,2,3,4,5
+                                                                                        0, 1, 2, 3, 4, 5
                                                                                     ]}
                                                                                     tooltipDefaultText="0.0"
-                                                                                    /* Available Props */
+                                                                                /* Available Props */
                                                                                 />
                                                                             </div>
                                                                             <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>

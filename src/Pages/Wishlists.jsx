@@ -31,39 +31,39 @@ const Wishlists = (props) => {
 
     const fetchData = async (e) => {
         try {
-          const wishlistsData = await GetUserWishlistsData(e);
-          if (wishlistsData) {
-            setWishlists(wishlistsData);
-            setWishlistsLoading(false);
-          } else {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setWishlistsLoading(false);
-          }
-          // Update state or perform other logic with userData
+            const wishlistsData = await GetUserWishlistsData(e);
+            if (wishlistsData) {
+                setWishlists(wishlistsData);
+                setWishlistsLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setWishlistsLoading(false);
+            }
+            // Update state or perform other logic with userData
         } catch (error) {
             toast.error('An error occured. Please try again or contact the administrator.');
             setWishlistsLoading(false);
-          // Handle the error, if needed
+            // Handle the error, if needed
         }
     };
 
     async function wishlistUpdate(e) {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
-          const success = response.data.status;
-          if (success == 'Success') {
-            fetchData({currentUser: currentUser, token: token});
-          } else {
-            toast.error('Something went wrong, please contact the administrator!');
-          }
+            const success = response.data.status;
+            if (success == 'Success') {
+                fetchData({ currentUser: currentUser, token: token });
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
         }).catch((error) => {
-          toast.error('Something went wrong, please contact the administrator!');
+            toast.error('Something went wrong, please contact the administrator!');
         });
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/'+id).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/' + id).then((response) => {
             const success = response.data.status;
-            if(success == 'Success') {
+            if (success == 'Success') {
                 // toast.success('Fabric saved as draft successfully!');
                 // setReloadCount((prevReloadCount) => prevReloadCount + 1);
             } else {
@@ -93,7 +93,7 @@ const Wishlists = (props) => {
     }
 
     useEffect(() => {
-        fetchData({currentUser: currentUser, token: token});
+        fetchData({ currentUser: currentUser, token: token });
     }, [reloadCount]);
 
     return (
@@ -129,7 +129,7 @@ const Wishlists = (props) => {
                                                         if (wishlist.product?.image_urls) {
                                                             var wishlist_images = JSON.parse(wishlist.product?.image_urls);
                                                             if (wishlist_images?.[0]) {
-                                                                var wishlistImage = process.env.REACT_APP_STORAGE_URL+'product/'+wishlist_images[0].image_url;
+                                                                var wishlistImage = process.env.REACT_APP_STORAGE_URL + 'product/' + wishlist_images[0].image_url;
                                                             } else {
                                                                 var wishlistImage = PlaceholderImage;
                                                             }
@@ -144,13 +144,13 @@ const Wishlists = (props) => {
                                                                         <div className="portfolio-link">
                                                                             <Row>
                                                                                 <Col lg="3" xs="12">
-                                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function() {toggleAddViewCount(wishlist.product.id); navigate('/product/'+wishlist.product.id); }} style={{ backgroundImage: "url("+wishlistImage+")", minHeight: '140px'}}>
-                                                                                    
+                                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(wishlist.product.id); navigate('/product/' + wishlist.product.id); }} style={{ backgroundImage: "url(" + wishlistImage + ")", minHeight: '140px' }}>
+
                                                                                     </div>
                                                                                 </Col>
                                                                                 <Col lg="9" xs="12">
                                                                                     <div className="design-details">
-                                                                                        <div className='d-flex align-items-center justify-content-between cursor-pointer' onClick={function() {toggleAddViewCount(wishlist.product.id); navigate('/product/'+wishlist.product.id); }}>
+                                                                                        <div className='d-flex align-items-center justify-content-between cursor-pointer' onClick={function () { toggleAddViewCount(wishlist.product.id); navigate('/product/' + wishlist.product.id); }}>
                                                                                             <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{wishlist.product?.name ?? '-'}</p>
                                                                                             {/* <div className='d-flex align-items-center'>
                                                                                                 <span className='fs-14 text-no-wrap mx-2'>
@@ -175,11 +175,11 @@ const Wishlists = (props) => {
                                                                                     </div>
                                                                                 </Col>
                                                                             </Row>
-                                                                            <div className='save-link' style={{opacity: 1, bottom: 'unset', top: '0', right: '0'}}>
+                                                                            <div className='save-link' style={{ opacity: 1, bottom: 'unset', top: '0', right: '0' }}>
                                                                                 {/* <div className="action-button bg-white me-2">
                                                                                     <GoBookmark className="text-black" />
                                                                                 </div> */}
-                                                                                <div className="action-button bg-gold" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: wishlist.product.id}); removeWishlist(wishlist.product.id) }}>
+                                                                                <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: wishlist.product.id }); removeWishlist(wishlist.product.id) }}>
                                                                                     <GoHeart className="text-white" />
                                                                                 </div>
                                                                             </div>
@@ -192,7 +192,10 @@ const Wishlists = (props) => {
                                                 </Row>
                                             </>
                                             :
-                                            <p className="text-center mb-3 mt-3">No records found.</p>
+                                            <div className="text-center mt-5">
+                                                <GoAlertFill size="120px" className="mb-4 mt-5 text-gold" />
+                                                <p className="fs-20 text-black no-wishlist proximanova-family">No wishlist reviews at this time</p>
+                                            </div>
                                         }
                                     </>
                                 }

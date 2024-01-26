@@ -8,10 +8,15 @@ import GoBack from 'Components/Shared/GoBack';
 import GetSinglePortfolioData from 'Utils/GetSinglePortfolioData';
 import toast from 'react-hot-toast';
 import ImageSlider from 'Components/Shared/ImageSlider';
-import { Card, CardBody, ModalHeader, CardFooter, ModalBody, Modal } from 'reactstrap';
+import { Card, CardBody, ModalHeader, CardFooter, ModalBody, Modal, CardHeader } from 'reactstrap';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { AiOutlinePlus, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai';
 import { FaUserCircle } from "react-icons/fa";
+import { CiFaceSmile } from "react-icons/ci";
+import { IoCloseOutline } from "react-icons/io5";
+import { LiaSmileBeam } from "react-icons/lia";
+import { IoIosAttach } from "react-icons/io";
+import { VscSend } from "react-icons/vsc";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import { useCookies } from 'react-cookie';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
@@ -25,11 +30,12 @@ const ViewPortFolio = () => {
     const [reloadCount, setReloadCount] = useState(0);
     const [activeImage, setActiveImage] = useState('');
     const [commentsTabShow, setCommentsTabShow] = useState(true);
-    const [reviewsTabShow, setReviewsTabShow] = useState(false);
+    const [reviewsTabShow, setReviewsTabShow] = useState(true);
     const [askAQuestion, setAskAQuestion] = useState(false);
     const [formStatus, setFormStatus] = useState('standby');
     const [askQuestionShow, setAskQuestionShow] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+
 
     const currentUser = cookies.currentUser;
 
@@ -41,7 +47,7 @@ const ViewPortFolio = () => {
     };
 
     const askQuestionModal = (e) => {
-        setAskQuestionShow(true);
+        setAskAQuestion(true);
     };
 
     const fetchData = async (e) => {
@@ -115,10 +121,11 @@ const ViewPortFolio = () => {
                                     <CardBody>
                                         <Row>
                                             <Col lg="12" className="d-flex justify-content-between">
-                                                <div className='mb-3 d-flex portfolio-designer'>
-                                                    {portfolio.user.image ? (
+                                                <div className='mb-0 d-flex portfolio-designer'>
+                                                    {/* {portfolio.user.image ? (
                                                         <div className='designer-photo' style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
-                                                        ></div>
+                                                        >
+                                                        </div>
                                                     ) : (
                                                         <div className='designer-photo' style={{ backgroundImage: `url(${portfolio.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}
                                                         ></div>
@@ -135,6 +142,8 @@ const ViewPortFolio = () => {
                                                             </>
                                                         }
                                                     </div>
+                                                </div> */}
+                                                    <h2 className="fw-600 fs-30">{portfolio.name ?? "-"}</h2>
                                                 </div>
                                                 <div>
                                                     <div className="action-button bg-smgray me-2">
@@ -147,15 +156,13 @@ const ViewPortFolio = () => {
                                             </Col>
 
                                             <Col lg="12">
-                                                <div></div>
-                                                <h2 className="fw-600 fs-30">{portfolio.name ?? "-"}</h2>
                                                 <div className="mb-4">
                                                     {portfolio.tags ?
                                                         <>
                                                             {portfolio.tags.length > 0 ?
                                                                 <>
                                                                     {portfolio.tags.map((tag, index) => (
-                                                                        <span className="design-tag bg-light fs-12">
+                                                                        <span className="design-tag bg-light fs-14 proximanova-family categories-color">
                                                                             {tag}
                                                                         </span>
                                                                     ))}
@@ -168,35 +175,37 @@ const ViewPortFolio = () => {
                                                         null
                                                     }
                                                 </div>
-                                                <p className="mb-4">
+                                                <p className="mb-4 fs-16 proximanova-family">
                                                     {portfolio.description ?? "-"}
                                                 </p>
 
 
                                                 <div className='text-center mt-5' >
-                                                    <p className='ask-question mb-1 cursor-pointer' onClick={() => askQuestionModal(portfolio.id)}>Ask A Question</p>
+                                                    <p className='ask-question mb-2 cursor-pointer fs-16 proximanova-family fw-400'
+                                                        onClick={() => askQuestionModal(true)}
+                                                    >Ask A Question</p>
                                                 </div>
 
                                                 <div className='w-100'>
-                                                    <a href="/appointment/schedule" className='btn btn-primary w-100'>Schedule A Consultation</a>
+                                                    <a href="/appointment/schedule" className='btn btn-primary w-100 fs-16 proximanova-family fw-400'>Schedule A Consultation</a>
                                                 </div>
                                             </Col>
                                         </Row>
                                     </CardBody>
                                 </Card>
                             </Col>
-                            <Col lg={12} className="mt-4">
+                            {/* <Col lg={12} className="mt-4">
                                 <p className="mb-2"><strong>Lead Time</strong></p>
                                 <p className="mb-4">{portfolio.designer?.lead_time ?? "-"}</p>
 
                                 <p className="mb-2"><strong>Pricing Structure</strong></p>
                                 <p className="mb-4">{portfolio.designer?.pricing_structure ?? "-"}</p>
-                            </Col>
-                            {/* <Col lg="12" className='mt-4'>
-                                <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span>
-                                <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("reviews"); }}>Reviews</span>
+                            </Col> */}
+                            <Col lg="12" className='mt-5'>
+                                {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
+                                <span className={`text-black reviews-product cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Reviews</span>
                                 <hr className='mt-2' />
-                                {commentsTabShow ?
+                                {/* {commentsTabShow ?
                                     <>
                                         <div className="text-center">
                                             <GoAlertFill size="60px" color="#000000" className="mb-3 mt-2" />
@@ -205,52 +214,102 @@ const ViewPortFolio = () => {
                                     </>
                                     :
                                     null
-                                }
+                                } */}
                                 {reviewsTabShow ?
                                     <>
                                         <div className="text-center">
-                                            <GoAlertFill size="60px" color="#000000" className="mb-3 mt-2" />
-                                            <p className="fs-20 text-black">No available reviews at this time</p>
+                                            <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
+                                            <p className="fs-20 text-black proximanova-family no-available">No available reviews at this time</p>
                                         </div>
                                     </>
                                     :
                                     null
                                 }
-                            </Col> */}
+                            </Col>
 
-                            {/* <Card className='width-chat-card'>
-                                <CardBody>
-                                    <div>Dave Napoles</div>
-                                    <hr />
+                            {askAQuestion ?
+                                <>
 
-                                    <div className='product-portfolio-image'>
-                                        <span className='d-flex'>
-                                            {images && images.length > 0 ?
-                                                <>
-                                                    <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                    <Card className='width-chat-card px-0'>
+                                        <CardHeader className='header-chat bg-white'>
+                                            <div className='d-flex justify-content-between'>
+                                                <div>
+                                                    <span className='name-active-person'>Dave Napoles</span>
+                                                    <span className='ms-2 active-now fs-14 fw-400'>Active Now</span>
+                                                </div>
+                                                <div className="cursor-pointer" onClick={() => setAskAQuestion(false)}>
+                                                    <IoCloseOutline color="#39393A" />
+                                                </div>
+                                            </div>
+                                        </CardHeader>
+                                        <CardBody >
+                                            <div className='product-portfolio-image'>
+                                                <span className='d-flex'>
+                                                    {images && images.length > 0 ?
+                                                        <>
+                                                            <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                                            </div>
+                                                            <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
+                                                        </>
+                                                        :
+                                                        null
+                                                    }
+                                                </span>
+                                            </div>
+
+                                            <div className='mt-5 mb-4 text-right d-flex'>
+
+
+                                                <div>
+                                                    <div className='time-chat-box fs-14 fw-400'>3:30 PM
+                                                        <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
+                                                    <div className='mt-2 welcome-chat'>
+                                                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
                                                     </div>
-                                                    <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
-                                                </>
-                                                :
-                                                null
-                                            }</span>
-                                    </div>
-                                    <div className='mt-5 text-right'>
-                                        <span>3:30 PM</span>
-                                        <span className='ms-2'>You</span>
-                                        <br />
-                                        <p className='mt-2 welcome-chat'>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.</p>
-                                    </div>
+                                                </div>
 
-                                    <div>
-                                        <span>
-                                            <FaUserCircle />
-                                            <span>Dave Napoles</span>
-                                        </span>
-                                    </div>
+                                                <div className=' d-flex align-items-center portfolio-designer ms-3'>
+                                                    {portfolio.user.image && (
+                                                        <div
+                                                            className='designer-photo'
+                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
+                                                        ></div>
+                                                    )}
+                                                </div>
 
-                                </CardBody>
-                            </Card> */}
+
+                                            </div>
+
+                                            <div>
+                                                <span>
+                                                    <FaUserCircle />
+                                                    <span className='name-chat'>Dave Napoles</span>
+                                                    <span className='ms-2 time-chat fw-400 fs-14'>4:00 PM</span>
+                                                </span>
+                                            </div>
+
+                                            <div className='mt-3'>
+                                                <input type="text" className='form-control' />
+                                            </div>
+
+                                            <div className='mt-3 d-flex justify-content-between'>
+
+                                                <div className='d-flex'>
+                                                    <div className='cursor-pointer'><LiaSmileBeam className='me-2' /></div>
+                                                    <div className='cursor-pointer'><IoIosAttach /></div>
+                                                </div>
+                                                <div>
+                                                    <span className='send-btn cursor-pointer'>Send<VscSend className='ms-1' /></span></div>
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+
+                                </>
+                                :
+                                null
+                            }
+
+
                         </Row>
 
 

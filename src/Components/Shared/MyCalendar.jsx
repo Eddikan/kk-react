@@ -136,17 +136,18 @@ const MyCalendar = ({ toggleEvent }) => {
                     isOpen={modalIsOpen}
                     onRequestClose={handleModalClose}
                     contentLabel="Date Details"
+
                 >
 
                     {selectedDate && (
                         <div>
 
                             <Row className='padding-modal pb-0'>
-                                <Col lg="12">
+                                <Col lg="12" className='text-left'>
                                     <span className='set-appointment'>Set Appointment</span>
                                 </Col>
 
-                                <Col lg="12" className='mb-2 mt-4'>
+                                <Col lg="12" className='mb-2 mt-4 text-left'>
                                     <span className='title-appointment'>Title</span>
                                 </Col>
 
@@ -176,7 +177,7 @@ const MyCalendar = ({ toggleEvent }) => {
                                                             )}
 
                                                             <Col md="5" className="pe-0">
-                                                                <p className="hours-header mb-2">Opens at</p>
+                                                                <p className="hours-header mb-2 text-left">Opens at</p>
                                                                 <div className='mb-3'>
                                                                     <input
                                                                         type='time'
@@ -189,7 +190,7 @@ const MyCalendar = ({ toggleEvent }) => {
                                                             </Col>
 
                                                             <Col md="5" className="pe-0">
-                                                                <p className="hours-header mb-2">Closes at</p>
+                                                                <p className="hours-header mb-2 text-left">Closes at</p>
                                                                 <div className='mb-3'>
                                                                     <input
                                                                         type='time'

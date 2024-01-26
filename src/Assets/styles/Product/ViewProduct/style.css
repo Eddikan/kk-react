@@ -1,3 +1,22 @@
 #single-portfolio .design-tag {
     max-width: 100%;
 }
+.reviews-product {
+    font-family: 'ProximaNova';
+}
+.proximanova-family {
+    font-family: 'ProximaNova';
+}
+.follow-products,
+.you-products {
+    color: #434343;
+}
+.text-muted-product {
+    color: #8F8F8F;
+}
+.categories-color {
+    color: #39393A;
+}
+.no-available,.no-wishlist {
+    font-style: italic;
+}
