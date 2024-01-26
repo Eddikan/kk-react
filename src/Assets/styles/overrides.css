@@ -747,6 +747,22 @@ form select::placeholder {
     font-size: 14px !important;
     padding: 5px 0px !important;
     min-width: 117px !important;
+    color: #000000 !important;
+    background: #ffffff;
+}
+
+#btn-seller-profile {
+    font-size: 14px !important;
+    padding: 5px 0px !important;
+    min-width: 117px !important;
+}
+
+#btn-edit-profile:hover {
+    font-size: 14px !important;
+    padding: 5px 0px !important;
+    min-width: 117px !important;
+    color: #ffffff !important;
+    background: #000000;
 }
 
 /* Category */

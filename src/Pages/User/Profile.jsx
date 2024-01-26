@@ -15,6 +15,7 @@ import Loading from 'Assets/images/loading.gif'
 import GetUserData from 'Utils/GetUserData';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
+import { GoArrowUpRight } from "react-icons/go";
 import AdminPortfolio from 'Components/Shared/AdminPortfolio';
 import AdminFabrics from 'Components/Shared/AdminFabrics';
 import LoadingPage from 'Components/Shared/LoadingPage';
@@ -294,7 +295,7 @@ const Profile = () => {
                                     </Col>
                                     {user.is_designer == 1 && (
                                         <Col md="3" className="text-left">
-                                            <Button href="/seller-center" type='button' id="btn-edit-profile">Seller Center</Button>
+                                            <Button href="/seller-center" type='button' id="btn-seller-profile"><GoArrowUpRight /><span className='ms-1'>Seller Center</span></Button>
                                         </Col>
                                     )}
                                 </Row>

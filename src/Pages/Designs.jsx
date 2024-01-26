@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import GetDesignsData from 'Utils/GetDesignsData';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import GoBack from 'Components/Shared/GoBack';
+import { Rating } from 'react-simple-star-rating';
 import { GoHeart, GoBookmark } from "react-icons/go";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
@@ -315,9 +316,18 @@ const Designs = (props) => {
                                 Sample Categories
                             </div>
 
-                            <div>
+                            {/* <div>
                                 <span className='sample-categories'>Sort By:</span>
                                 <span className='all-sort'>All</span>
+                            </div> */}
+
+                            <div>
+                                <label htmlFor="dropdown" className='sample-categories'>Sort By: </label>
+                                <select id="sort-by" >
+                                    {sortOptions.map(option => (
+                                        <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
+                                    ))}
+                                </select>
                             </div>
 
                         </div>
@@ -325,184 +335,180 @@ const Designs = (props) => {
                 </section>
 
 
-                <hr className="border-black mb" />
+                <hr className="border-black mt-2" />
                 <section className="pt-3">
                     <Container>
                         <Row className="mt-2">
                             <Col lg="3">
-                                <div className="filter-sidebar pe-4">
+                                <div className="filter-sidebar proximanova-family pe-4">
 
                                     <Form.Check
                                         type={`checkbox`}
                                         label={`All`}
                                         name={`day`}
-                                        className={`categories`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
                                         label={`Trends`}
                                         name={`day`}
-                                        className={`categories`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
                                         label={`Casual Wear`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Sports and Active Wear`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Formal Wear`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Outerwear`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Loungewear`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Work Wear`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Ethnic Wear`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Street Wear`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Vintage/Retro Clothing`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Loungewear`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Maternity Wear`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Swimwear`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Undergarments`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Accessories`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Uniforms`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Adaptive Clothing`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Wedding Attire`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Travel Wear`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Seasonal Clothing`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Cultural or Religious Clothing`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
 
                                     <Form.Check
                                         type={`checkbox`}
-                                        id={`schedule-sunday`}
                                         label={`Costumes`}
                                         name={`day`}
+                                        className={`mb-2`}
                                     />
-
-
-
-
-
-
 
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Search</Form.Label>
                                         <FormControl type='text' name='search' value={search} className='mr-sm-2' onChange={handleChangeSearch} placeholder='Enter your search term...' />
                                     </Form.Group>
                                     <hr className="border-black" /> */}
+
                                     {/* <div style={{ position: "relative" }} className="mb-4">
                                         <div>
                                             <Form.Label className="fw-600">Sort By: </Form.Label>
@@ -637,15 +643,22 @@ const Designs = (props) => {
                                                                                     </span>
                                                                                 </div> */}
                                                                             </div>
-                                                                            <div>
-                                                                                <span className='fs-14 text-no-wrap'>
-                                                                                    <IoStar size="17" color="#CEA835" className='me-1' />
-                                                                                    <IoStar size="17" color="#CEA835" className='me-1' />
-                                                                                    <IoStar size="17" color="#CEA835" className='me-1' />
-                                                                                    <IoStar size="17" color="#CEA835" className='me-1' />
-                                                                                    <IoStar size="17" color="#CEA835" className='me-2' />
-                                                                                    <span className='fs-14 rating-color proximanova-family'>5.0</span>
-                                                                                </span>
+                                                                            <div className="star-ratings mt-1">
+                                                                                <Rating
+                                                                                    initialValue={0}
+                                                                                    readonly={true}
+                                                                                    allowFraction={true}
+                                                                                    size={20}
+                                                                                    className="star-rating"
+                                                                                    showTooltip={true}
+                                                                                    emptyColor="#CEA835"
+                                                                                    fillColor="#CEA835"
+                                                                                    tooltipArray={[
+                                                                                        0, 1, 2, 3, 4, 5
+                                                                                    ]}
+                                                                                    tooltipDefaultText="5.0"
+                                                                                /* Available Props */
+                                                                                />
                                                                             </div>
                                                                             {/* <div className='d-flex align-items-center mt-1'>
                                                                                 {design.user.image ?

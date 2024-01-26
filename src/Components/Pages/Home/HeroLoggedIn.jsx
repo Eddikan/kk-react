@@ -21,7 +21,7 @@ const HeroLoggedIn = () => {
                     <Row>
                         <Col lg='4' className="hero-cards-column cursor-pointer" onClick={() => navigate('/designers')}>
                             <div className="hero-card position-relative h-100">
-                                <video id="home-video" autoPlay={false} muted loop style={{zIndex: 1}}>
+                                <video id="home-video" autoPlay={false} muted loop style={{ zIndex: 1 }}>
                                     <source src={DesignersVideo} type="video/mp4" />
                                     {/* Add additional source elements for other formats if needed */}
                                     Your browser does not support the video tag.
@@ -33,7 +33,7 @@ const HeroLoggedIn = () => {
                         </Col>
                         <Col lg='4' className="hero-cards-column cursor-pointer" onClick={() => navigate('/fabrics')}>
                             <div className="hero-card position-relative h-100">
-                                <video id="home-video" autoPlay={false} muted loop style={{zIndex: 1}}>
+                                <video id="home-video" autoPlay={false} muted loop style={{ zIndex: 1 }}>
                                     <source src={FabricsVideo} type="video/mp4" />
                                     {/* Add additional source elements for other formats if needed */}
                                     Your browser does not support the video tag.
@@ -45,7 +45,7 @@ const HeroLoggedIn = () => {
                         </Col>
                         <Col lg='4' className="hero-cards-column cursor-pointer" onClick={() => navigate('/designs')}>
                             <div className="hero-card position-relative h-100">
-                                <video id="home-video" autoPlay={false} muted loop style={{zIndex: 1}}>
+                                <video id="home-video" autoPlay={false} muted loop style={{ zIndex: 1 }}>
                                     <source src={DesignsVideo} type="video/mp4" />
                                     {/* Add additional source elements for other formats if needed */}
                                     Your browser does not support the video tag.

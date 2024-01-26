@@ -12,9 +12,6 @@ import LoadingPage from 'Components/Shared/LoadingPage';
 import GoBack from 'Components/Shared/GoBack';
 import { GoHeart, GoBookmark } from "react-icons/go";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
-import { IoIosArrowDown } from "react-icons/io";
-import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
-import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -302,7 +299,7 @@ const Fabrics = (props) => {
                             <Col lg="12">
                                 <div className="narrow-850 text-center">
                                     <h2 className='fs-40 text-center mb-3'>Explore Premium Fabrics</h2>
-                                    <p>Fabrics are versatile materials composed of fibers, either natural or synthetic, that are woven, knitted, or bonded together to form a flexible and pliable structure. </p>
+                                    <p className='proximanova-family fs-16 fw-400 text-black'>Fabrics are versatile materials composed of fibers, either natural or synthetic, that are woven, knitted, or bonded together to form a flexible and pliable structure. </p>
                                 </div>
                             </Col>
                             {/* <Col lg="4" className='text-right'>
@@ -317,16 +314,16 @@ const Fabrics = (props) => {
                         <Row className="mt-2">
                             <Col lg="3">
                                 <div className="filter-sidebar pe-4">
-                                    <Form.Group className='mb-4'>
+                                    {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Search</Form.Label>
                                         <FormControl type='text' name='search' value={search} className='mr-sm-2' onChange={handleChangeSearch} placeholder='Enter your search term...' />
                                     </Form.Group>
-                                    <hr className="border-black" />
+                                    <hr className="border-black" /> */}
                                     <div style={{ position: "relative" }} className="mb-4">
                                         <div>
-                                            <Form.Label className="fw-600">Sort By: </Form.Label>
+                                            {/* <Form.Label className="fw-600">Sort By: </Form.Label> */}
                                             <Form.Control as='select' onChange={(e) => handleSortFieldChange(e.target.value)}>
-                                                <option value="" disabled selected>Select Type</option>
+                                                <option value="" disabled selected  >Sort By:</option>
                                                 {sortOptions.map(option => (
                                                     <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
                                                 ))}
@@ -344,19 +341,33 @@ const Fabrics = (props) => {
                                             )}
                                         </div>
                                     </div>
-                                    <hr className="border-black" />
                                     <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600">Environmentally Conscious</Form.Label>
-                                        <Form.Group>
-                                            <Form.Check
-                                                className="cursor-pointer"
-                                                type="checkbox"
-                                                label="Eco-Friendly"
-                                                name="eco_friendly"
-                                                checked={ecoFriendly}
-                                                onChange={(e) => handleChangeCheckbox(e.target.checked)}
-                                            />
-                                        </Form.Group>
+                                        {/* <Form.Label className="fw-600">Environmentally Conscious</Form.Label> */}
+                                        <Form.Label className="fw-600">Eco-Friendly</Form.Label>
+                                        <div className='d-flex'>
+                                            <div>
+                                                <Form.Check
+                                                    className="cursor-pointer"
+                                                    type="checkbox"
+                                                    label="Yes"
+                                                    name="eco_friendly"
+                                                    checked={ecoFriendly}
+                                                    onChange={(e) => handleChangeCheckbox(e.target.checked)}
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <Form.Check
+                                                    className="cursor-pointer ms-5"
+                                                    type="checkbox"
+                                                    label="No"
+                                                    name="eco_friendly"
+                                                // checked={ecoFriendly}
+                                                // onChange={(e) => handleChangeCheckbox(e.target.checked)}
+                                                />
+                                            </div>
+                                        </div>
+
                                     </Form.Group>
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Composition</Form.Label>
@@ -388,9 +399,10 @@ const Fabrics = (props) => {
                                             </Form.Group>
                                         ))}
                                     </Form.Group>
-                                    {/* <Form.Group className='mb-4'>
+                                    <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Colors</Form.Label>
-                                        {colors.map((color) => (
+                                        <input type="text" name="colors" className='form-control' />
+                                        {/* {colors.map((color) => (
                                             <Form.Group key={color}>
                                                 <Form.Check
                                                     className="cursor-pointer"
@@ -401,9 +413,10 @@ const Fabrics = (props) => {
                                                     onChange={() => handleColorChange(color)}
                                                 />
                                             </Form.Group>
-                                        ))}
-                                    </Form.Group> */}
-                                    <Form.Group className='mb-4'>
+                                        ))} */}
+                                    </Form.Group>
+
+                                    {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Origin</Form.Label>
                                         <Form.Control as='select' name='country' value={country} className='mr-sm-2' onChange={handleChangeCountry}>
                                             <option value=''>Select Country</option>
@@ -413,14 +426,29 @@ const Fabrics = (props) => {
                                                 </option>
                                             ))}
                                         </Form.Control>
-                                    </Form.Group>
-                                    <hr className="border-black" />
+                                    </Form.Group> */}
+
                                     <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Price Range</Form.Label>
+                                        <div>
+                                            <select id="sort-by" className='form-control' >
+                                                <option value=""></option>
+                                                <option value="">1000</option>
+                                                <option value="">2000</option>
+                                                <option value="">3000</option>
+                                            </select>
+                                        </div>
+                                    </Form.Group>
+
+
+                                    {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Price Range</Form.Label>
                                         <Form.Group as={Row} className="mt-3 position-relative">
                                             <MultiRangeSlider min={10} max={1000} onChange={priceRangeChange} />
                                         </Form.Group>
-                                    </Form.Group>
+                                    </Form.Group> */}
+
+
                                     {/* <h2>Price Range</h2>
                                     <div>
                                         <label htmlFor="from">From:</label>
@@ -550,8 +578,8 @@ const Fabrics = (props) => {
 
                     </Container>
                 </section>
-            </div>
-        </Layout>
+            </div >
+        </Layout >
     );
 };
 

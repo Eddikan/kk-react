@@ -9,8 +9,7 @@ import { useCookies } from 'react-cookie';
 import { RxCross2 } from "react-icons/rx";
 import Sidebar from 'Components/Shared/Sidebar';
 import { GoPlus } from "react-icons/go";
-import { PiTrashThin } from "react-icons/pi";
-import { AiOutlineClose, AiOutlineCheck } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
 import MyCalendar from 'Components/Shared/MyCalendar';
 import axios from "axios";
 import toast from 'react-hot-toast';
@@ -67,6 +66,27 @@ const SellerCenter = (props) => {
 
     const postSetAppointment = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+    };
+
+    const handleChangeAppointment = (e) => {
+        const { name, value } = e.target;
+        setAppointmentFormData({
+            ...appointmentFormData,
+            [name]: value,
+        });
+    }
+
+    const handleChangeTime = (e, index) => {
+        const { name, value } = e.target;
+        setTimes(prevtimes => {
+            const updatedTimes = [...prevtimes];
+            updatedTimes[index] = {
+                ...updatedTimes[index],
+                [name]: value,
+            };
+
+            return updatedTimes;
+        });
     };
 
     const handleShowDesignerBusinessHoursModal = () => {
@@ -302,27 +322,6 @@ const SellerCenter = (props) => {
         document.body.classList.add('designer-calendar-body');
     }, []);
 
-    const handleChangeAppointment = (e) => {
-        const { name, value } = e.target;
-        setAppointmentFormData({
-            ...appointmentFormData,
-            [name]: value,
-        });
-    }
-
-    const handleChangeTime = (e, index) => {
-        const { name, value } = e.target;
-        setTimes(prevtimes => {
-            const updatedTimes = [...prevtimes];
-            updatedTimes[index] = {
-                ...updatedTimes[index],
-                [name]: value,
-            };
-
-            return updatedTimes;
-        });
-    };
-
 
     return (
         <LayoutNoFooter>
@@ -358,20 +357,18 @@ const SellerCenter = (props) => {
                 id="business-hours-modal"
             >
                 <Modal.Header closeButton>
-                    <Modal.Title></Modal.Title>
+                    <Modal.Title>Business Hours</Modal.Title>
                 </Modal.Header>
+                <hr className="mt-0" />
                 <Modal.Body>
                     <Container className="h-100">
                         <Row className="h-100">
-                            <Col lg="12">
-                                <h3 className="text-left header mb-5">Business Hours</h3>
-                            </Col>
                             <Col lg="12" className="">
 
                                 <Row>
                                     <Col lg="2">
                                         <h4 className="day-header">Sunday</h4>
-                                        <Form.Check // prettier-ignore
+                                        <Form.Check
                                             type={`checkbox`}
                                             id={`schedule-sunday`}
                                             label={`Closed`}
@@ -459,6 +456,7 @@ const SellerCenter = (props) => {
                                                                         <FormControl type='time' name='opens_at' className='mr-sm-2 form-control-hours' />
                                                                     </Form.Group>
                                                                 </Col>
+
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Closes at</p>
                                                                     <Form.Group className='mb-3'>
@@ -522,7 +520,6 @@ const SellerCenter = (props) => {
                                                                         <FormControl type='time' name='closes_at' className='mr-sm-2 form-control-hours' />
                                                                     </Form.Group>
                                                                 </Col>
-
                                                             </>
                                                         )}
                                                     </>

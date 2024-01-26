@@ -1,6 +1,7 @@
 import { Calendar, momentLocalizer, Views, DateLocalizer } from 'react-big-calendar';
-import { Container, CardFooter, Input, Label, UncontrolledAccordion, AccordionItem, AccordionHeader, AccordionBody, CardBody, Button, ModalHeader, ModalBody, ModalFooter, Card, Col, Modal, Table, Row, Form, } from 'reactstrap';
+import { Container, CardFooter, Input, Label, UncontrolledAccordion, AccordionItem, AccordionHeader, AccordionBody, CardBody, Button, Card, Col, Modal, Table, Row, Form, } from 'reactstrap';
 import React, { useEffect, useState } from 'react';
+import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { PiPencilThin, PiTrashThin } from "react-icons/pi";
 import { AiOutlineClose } from "react-icons/ai";
 import { MdOutlinePlace } from "react-icons/md";
@@ -8,6 +9,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import { RxCross2 } from "react-icons/rx";
 import { GoPlus } from "react-icons/go";
 import moment from 'moment';
+import { IoMdClose } from "react-icons/io";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import PropTypes from 'prop-types'
 import '../../Assets/styles/DesignerCalendar/style.css';
@@ -138,90 +140,95 @@ const MyCalendar = ({ toggleEvent }) => {
                     contentLabel="Date Details"
 
                 >
+                    <div>
+                        <ModalHeader closeButton>
+                            <div className='d-flex '>
+                                <span className='set-appointment'>Business Hours</span>
+                                <span><IoMdClose onClick={handleModalClose} className='cursor-pointer' /></span>
+                            </div>
+                        </ModalHeader>
+                        <hr className="mt-0" />
 
-                    {selectedDate && (
-                        <div>
+                        {selectedDate && (
+                            <div>
 
-                            <Row className='padding-modal pb-0'>
-                                <Col lg="12" className='text-left'>
-                                    <span className='set-appointment'>Set Appointment</span>
-                                </Col>
+                                <Row className='padding-modal pb-0'>
+                                    <Col lg="12" className='mb-2 mt-4 text-left'>
+                                        <span className='title-appointment'>Title</span>
+                                    </Col>
 
-                                <Col lg="12" className='mb-2 mt-4 text-left'>
-                                    <span className='title-appointment'>Title</span>
-                                </Col>
+                                    <Col lg="12">
+                                        <input
+                                            type="text"
+                                            name="title"
+                                            className='form-control'
+                                            value={appointmentFormData?.title}
+                                            onChange={handleChangeAppointment}
+                                        />
+                                    </Col>
 
-                                <Col lg="12">
-                                    <input
-                                        type="text"
-                                        name="title"
-                                        className='form-control'
-                                        value={appointmentFormData?.title}
-                                        onChange={handleChangeAppointment}
-                                    />
-                                </Col>
-
-                                <Col lg="8">
-                                    <Row className="align-items-center mt-4">
-                                        {times.map((time, index) => {
-                                            return (
-                                                <>
-                                                    {times.length > 0 && (
-                                                        <>
-                                                            {index > 0 && (
-                                                                <div className='w-100 d-flex justify-content-end mt-3'>
-                                                                    <div className='cursor-pointer' onClick={() => handleRemoveAppointment(index)}>
-                                                                        <RxCross2 color='#000000' />
+                                    <Col lg="8">
+                                        <Row className="align-items-center mt-4">
+                                            {times.map((time, index) => {
+                                                return (
+                                                    <>
+                                                        {times.length > 0 && (
+                                                            <>
+                                                                {index > 0 && (
+                                                                    <div className='w-100 d-flex justify-content-end mt-3'>
+                                                                        <div className='cursor-pointer' onClick={() => handleRemoveAppointment(index)}>
+                                                                            <RxCross2 color='#000000' />
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            )}
+                                                                )}
 
-                                                            <Col md="5" className="pe-0">
-                                                                <p className="hours-header mb-2 text-left">Opens at</p>
-                                                                <div className='mb-3'>
-                                                                    <input
-                                                                        type='time'
-                                                                        name='opens_at'
-                                                                        className='mr-sm-2 form-control-hours'
-                                                                        value={time?.opens_at}
-                                                                        onChange={e => handleChangeTime(e, index)}
-                                                                    />
-                                                                </div>
-                                                            </Col>
+                                                                <Col md="5" className="pe-0">
+                                                                    <p className="hours-header mb-2 text-left">Opens at</p>
+                                                                    <div className='mb-3'>
+                                                                        <input
+                                                                            type='time'
+                                                                            name='opens_at'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={time?.opens_at}
+                                                                            onChange={e => handleChangeTime(e, index)}
+                                                                        />
+                                                                    </div>
+                                                                </Col>
 
-                                                            <Col md="5" className="pe-0">
-                                                                <p className="hours-header mb-2 text-left">Closes at</p>
-                                                                <div className='mb-3'>
-                                                                    <input
-                                                                        type='time'
-                                                                        name='closes_at'
-                                                                        className='mr-sm-2 form-control-hours'
-                                                                        value={time?.closes_at}
-                                                                        onChange={e => handleChangeTime(e, index)}
-                                                                    />
-                                                                </div>
-                                                            </Col>
-                                                        </>
-                                                    )}
-                                                </>
-                                            );
-                                        })}
-                                        <Col md="2" className="px-0">
-                                            <GoPlus
-                                                size={25}
-                                                className="plus-btn mt-2"
-                                                onClick={handleAppointments}
-                                            />
-                                        </Col>
-                                    </Row>
-                                </Col>
-                            </Row>
+                                                                <Col md="5" className="pe-0">
+                                                                    <p className="hours-header mb-2 text-left">Closes at</p>
+                                                                    <div className='mb-3'>
+                                                                        <input
+                                                                            type='time'
+                                                                            name='closes_at'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={time?.closes_at}
+                                                                            onChange={e => handleChangeTime(e, index)}
+                                                                        />
+                                                                    </div>
+                                                                </Col>
+                                                            </>
+                                                        )}
+                                                    </>
+                                                );
+                                            })}
+                                            <Col md="2" className="px-0">
+                                                <GoPlus
+                                                    size={25}
+                                                    className="plus-btn mt-2"
+                                                    onClick={handleAppointments}
+                                                />
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                </Row>
+                            </div>
+                        )}
+
+                        <div className='text-right padding-modal'>
+                            <Button className="cancel-btn me-2" onClick={handleModalClose}>Cancel</Button>
+                            <Button className="btn-save" onClick={addAppointmentSubmit}>Save</Button>
                         </div>
-                    )}
-
-                    <div className='text-right padding-modal'>
-                        <Button className="cancel-btn me-2" onClick={handleModalClose}>Cancel</Button>
-                        <Button className="btn-save" onClick={addAppointmentSubmit}>Save</Button>
                     </div>
                 </Modal>
             </div>

@@ -34,7 +34,7 @@ const Home = (props) => {
 
   const [signupModalShow, setSignupModalShow] = useState(false);
   const [signupType, setSignupType] = useState('');
- 
+
   const currentUser = cookies.currentUser;
 
   const handleShowUser = () => {
@@ -178,7 +178,7 @@ const Home = (props) => {
           </Container>
         </Modal.Body>
       </Modal>
-      
+
       {/* Fabrics */}
       <Modal show={fabricsModalShow} fullscreen={true} onHide={() => setFabricsModalShow(false)}>
         <Modal.Header closeButton>
@@ -193,7 +193,7 @@ const Home = (props) => {
                 <Col lg={12} className="text-right mt-4 mb-4">
                   <div className="preview-button fixed">
                     <div className="container">
-                      <Button className="btn-primary" variant="primary"  onClick={() => showSignupModal('user_fabric')}>View More</Button>
+                      <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_fabric')}>View More</Button>
                     </div>
                   </div>
                 </Col>
