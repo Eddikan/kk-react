@@ -25,26 +25,26 @@ const Designs = (props) => {
 
     const fetchData = async (e) => {
         try {
-          const designsData = await GetDesignsData(e);
-          if (designsData) {
-            setDesigns(designsData);
-            setDesignsLoading(false);
-          } else {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setDesignsLoading(false);
-          }
-          // Update state or perform other logic with userData
+            const designsData = await GetDesignsData(e);
+            if (designsData) {
+                setDesigns(designsData);
+                setDesignsLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setDesignsLoading(false);
+            }
+            // Update state or perform other logic with userData
         } catch (error) {
             toast.error('An error occured. Please try again or contact the administrator.');
             setDesignsLoading(false);
-          // Handle the error, if needed
+            // Handle the error, if needed
         }
     };
 
     async function toggleSortDesigns(type, sort) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' +type+sort).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' + type + sort).then((response) => {
             const selectedDesigns = response.data.data;
-            if(selectedDesigns) {
+            if (selectedDesigns) {
                 setDesigns(selectedDesigns);
                 setDesignsLoading(false);
             } else {
@@ -56,12 +56,12 @@ const Designs = (props) => {
             setDesignsLoading(false);
         });
     }
-    
+
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/'+id).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
             const success = response.data.status;
-            if(success == 'Success') {
+            if (success == 'Success') {
                 // toast.success('Design saved as draft successfully!');
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -91,7 +91,7 @@ const Designs = (props) => {
     return (
         <>
             <div id="profile-designs">
-                <p className="fs-18 text-center text-dark mb-2"> Looking for Designs? <span className="text-gold">Explore now </span></p >
+                <p className="fs-20 text-center text-dark mb-2 proximanova-family"> Looking for Designs? <span className="text-gold">Explore now </span></p >
                 <h2 className="fs-35 fw-500 text-center text-black mb-3">Discover Captivating Designs.</h2>
                 {designsLoading ?
                     <>
@@ -138,7 +138,7 @@ const Designs = (props) => {
                                     {/* <img src={object.url} className='designs-img'/> */}
                                     {designs.map((design, index) => {
                                         if (design.image_urls?.[0]?.image_url) {
-                                            var designImage = process.env.REACT_APP_STORAGE_URL+'portfolio/'+design.image_urls[0].image_url;
+                                            var designImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + design.image_urls[0].image_url;
                                         } else {
                                             var designImage = PlaceholderImage;
                                         }
@@ -148,8 +148,8 @@ const Designs = (props) => {
                                                     <Col className="designs-grid mb-3" xs="12" md="3">
                                                         {currentUser ?
                                                             <>
-                                                                <Link to={`/portfolio/${design.id}`} className='portfolio-link' onClick={function() {toggleAddViewCount(design.id);}}>
-                                                                    <div className="designs-grid-div w-100" style={{ backgroundImage: "url("+designImage+")", minHeight: '200px'}}>
+                                                                <Link to={`/portfolio/${design.id}`} className='portfolio-link' onClick={function () { toggleAddViewCount(design.id); }}>
+                                                                    <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}>
                                                                         {currentUser ?
                                                                             <div className='save-link'>
                                                                                 {/* <div className="action-button bg-white me-2">
@@ -167,7 +167,7 @@ const Designs = (props) => {
                                                             </>
                                                             :
                                                             <>
-                                                               <div className="designs-grid-div  cursor-pointer w-100" style={{ backgroundImage: "url("+designImage+")"}} onClick={() => showSignupModal('user_design')}>
+                                                                <div className="designs-grid-div  cursor-pointer w-100" style={{ backgroundImage: "url(" + designImage + ")" }} onClick={() => showSignupModal('user_design')}>
                                                                     {currentUser ?
                                                                         <div className='save-link'>
                                                                             {/* <div className="action-button bg-white me-2">
@@ -198,10 +198,10 @@ const Designs = (props) => {
                                                                     :
                                                                     null
                                                                 }    */}
-                                                                
+
                                                             </div>
                                                             <div className="star-ratings mt-1">
-                                                                <Rating 
+                                                                <Rating
                                                                     initialValue={0}
                                                                     readonly={true}
                                                                     allowFraction={true}
@@ -211,10 +211,10 @@ const Designs = (props) => {
                                                                     emptyColor="#dddddd"
                                                                     fillColor="#cea835"
                                                                     tooltipArray={[
-                                                                        0,1,2,3,4,5
+                                                                        0, 1, 2, 3, 4, 5
                                                                     ]}
                                                                     tooltipDefaultText="0.0"
-                                                                    /* Available Props */
+                                                                /* Available Props */
                                                                 />
                                                             </div>
                                                             {/* {currentUser ?
@@ -246,7 +246,7 @@ const Designs = (props) => {
                                             :
                                             <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_design')}>View More</Button>
                                         }
-                                        
+
                                     </Col>
                                 </Row>
                             </>

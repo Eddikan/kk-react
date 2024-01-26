@@ -141,19 +141,19 @@ const MyCalendar = ({ toggleEvent }) => {
 
                 >
                     <div>
-                        <ModalHeader closeButton>
-                            <div className='d-flex '>
-                                <span className='set-appointment'>Business Hours</span>
-                                <span><IoMdClose onClick={handleModalClose} className='cursor-pointer' /></span>
-                            </div>
+                        <ModalHeader>
+                            <h5 className='modal-title text-left set-appointment'>Set Appointment</h5>
+                            <button type='button' className='close react-appointment-close' onClick={handleModalClose} data-dismiss='modal' aria-label='Close'>
+                                <span aria-hidden='true'>&times;</span>
+                            </button>
                         </ModalHeader>
-                        <hr className="mt-0" />
+                        <hr className="mt-0 mb-2" />
 
                         {selectedDate && (
                             <div>
 
-                                <Row className='padding-modal pb-0'>
-                                    <Col lg="12" className='mb-2 mt-4 text-left'>
+                                <Row className='padding-modal pt-3 pb-3'>
+                                    <Col lg="12" className='mb-2 mt-0 text-left'>
                                         <span className='title-appointment'>Title</span>
                                     </Col>
 
@@ -224,11 +224,12 @@ const MyCalendar = ({ toggleEvent }) => {
                                 </Row>
                             </div>
                         )}
-
-                        <div className='text-right padding-modal'>
-                            <Button className="cancel-btn me-2" onClick={handleModalClose}>Cancel</Button>
-                            <Button className="btn-save" onClick={addAppointmentSubmit}>Save</Button>
-                        </div>
+                        <ModalFooter>
+                            <div className='text-right'>
+                                <Button className="cancel-btn me-2" onClick={handleModalClose}>Cancel</Button>
+                                <Button className="btn-save" onClick={addAppointmentSubmit}>Save</Button>
+                            </div>
+                        </ModalFooter>
                     </div>
                 </Modal>
             </div>

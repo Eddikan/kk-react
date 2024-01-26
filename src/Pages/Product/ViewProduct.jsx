@@ -37,6 +37,7 @@ const ViewProduct = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const [userWishlist, setUserWishlist] = useState(false);
     const [addedToCartShow, setAddedToCartShow] = useState(false);
+    const [shareModalShow, setShareModalShow] = useState(false);
     const [productReviews, setProductReviews] = useState([]);
     const [productReviewsLoading, setProductReviewsLoading] = useState(true);
     const [productReviewsPages, setProductReviewsPages] = useState([]);
@@ -80,6 +81,10 @@ const ViewProduct = () => {
 
     const toggleAddToCart = (e) => {
         setAddedToCartShow(!addedToCartShow);
+    }
+
+    const toggleShareModal = (e) => {
+        setShareModalShow(!shareModalShow);
     }
 
     const toggleAddToReview = (e) => {
@@ -351,7 +356,7 @@ const ViewProduct = () => {
                                                 </div>
                                                 <div>
                                                     <div className="action-button bg-smgray me-2">
-                                                        <GoShareAndroid className="text-black" />
+                                                        <GoShareAndroid className="text-black" onClick={toggleShareModal} />
                                                     </div>
                                                     {userWishlist ?
                                                         <div class="kouture-tooltip">
@@ -554,6 +559,32 @@ const ViewProduct = () => {
                     </Container>
                 </section>
             }
+            {/* Share to  */}
+            <Modal
+                show={shareModalShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="sm"
+            >
+                <Modal.Header className="py-0">
+                    <h5 className='modal-title text-uppercase text-left'></h5>
+                    <button type='button' className='close react-modal-close' onClick={toggleShareModal} data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <h4 className='text-center fs-25 fw-600 mb-3'>Share Product</h4>
+                    <Card>
+                        <Card.Body className="text-center py-5">
+                            <GoAlertFill size="60px" className="mb-2 text-gold" />
+                            <p className="fs-20 text-black">Under Construction</p>
+                            {/* <DateTimePicker onTimeChange={handleTimeChange} onDone={handleDoneTimeChange} availability={currentAvailability} /> */}
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+            </Modal>
+
             {/* Add to Cart */}
             <Modal
                 show={addedToCartShow}

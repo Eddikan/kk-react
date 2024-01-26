@@ -1449,6 +1449,16 @@ button.schedule-consultation {
     font-family: 'ProximaNova';
     width: 100%;
 }
+.react-appointment-close {
+    position: absolute;
+    top: 22px;
+    right: 20px;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    line-height: 1;
+    z-index: 9;
+}
 .proximanova-family {
     font-family: 'ProximaNova';
 }

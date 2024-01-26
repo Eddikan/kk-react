@@ -26,26 +26,24 @@ const Fabrics = (props) => {
 
     const fetchData = async (e) => {
         try {
-          const fabricsData = await GetFabricsData(e);
-          if (fabricsData) {
-            setFabrics(fabricsData);
-            setFabricsLoading(false);
-          } else {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setFabricsLoading(false);
-          }
-          // Update state or perform other logic with userData
+            const fabricsData = await GetFabricsData(e);
+            if (fabricsData) {
+                setFabrics(fabricsData);
+                setFabricsLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setFabricsLoading(false);
+            }
         } catch (error) {
             toast.error('An error occured. Please try again or contact the administrator.');
             setFabricsLoading(false);
-          // Handle the error, if needed
         }
     };
 
     async function toggleSortFabrics(type, sort) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/fabric' +type+sort).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/fabric' + type + sort).then((response) => {
             const selectedFabrics = response.data.data;
-            if(selectedFabrics) {
+            if (selectedFabrics) {
                 setFabrics(selectedFabrics);
                 setFabricsLoading(false);
             } else {
@@ -57,13 +55,12 @@ const Fabrics = (props) => {
             setFabricsLoading(false);
         });
     }
-    
+
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/'+id).then((response) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/view/' + id).then((response) => {
             const success = response.data.status;
-            if(success == 'Success') {
-                // toast.success('Design saved as draft successfully!');
+            if (success == 'Success') {
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
             }
@@ -78,14 +75,14 @@ const Fabrics = (props) => {
 
     async function wishlistUpdate(e) {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
-          const success = response.data.status;
-          if (success == 'Success') {
-            fetchData(currentUser);
-          } else {
-            toast.error('Something went wrong, please contact the administrator!');
-          }
+            const success = response.data.status;
+            if (success == 'Success') {
+                fetchData(currentUser);
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
         }).catch((error) => {
-          toast.error('Something went wrong, please contact the administrator!');
+            toast.error('Something went wrong, please contact the administrator!');
         });
     }
 
@@ -142,7 +139,7 @@ const Fabrics = (props) => {
                                     {/* <img src={object.url} className='designs-img'/> */}
                                     {fabrics.map((fabric, index) => {
                                         if (fabric.image_urls?.[0]?.image_url) {
-                                            var fabricImage = process.env.REACT_APP_STORAGE_URL+'product/'+fabric.image_urls[0].image_url;
+                                            var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
                                         } else {
                                             var fabricImage = PlaceholderImage;
                                         }
@@ -156,8 +153,8 @@ const Fabrics = (props) => {
                                                         {currentUser ?
                                                             <>
                                                                 <div className="portfolio-link">
-                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function() {toggleAddViewCount(fabric.id); navigate('/product/'+fabric.id); }} style={{ backgroundImage: "url("+fabricImage+")", minHeight: '200px'}}>
-                                                                        
+                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }} style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}>
+
                                                                     </div>
                                                                     {currentUser ?
                                                                         <div className='save-link'>
@@ -165,11 +162,11 @@ const Fabrics = (props) => {
                                                                                 <GoBookmark className="text-black" />
                                                                             </div> */}
                                                                             {userWishlist ?
-                                                                                <div className="action-button bg-gold" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: fabric.id}); }}>
+                                                                                <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
                                                                                     <GoHeart className="text-white" />
                                                                                 </div>
                                                                                 :
-                                                                                <div className="action-button bg-white" onClick={function() { wishlistUpdate({user_id: currentUser, product_id: fabric.id}); }}>
+                                                                                <div className="action-button bg-white" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
                                                                                     <GoHeart className="text-black" />
                                                                                 </div>
                                                                             }
@@ -181,7 +178,7 @@ const Fabrics = (props) => {
                                                             </>
                                                             :
                                                             <>
-                                                               <div className="designs-grid-div  cursor-pointer w-100" style={{ backgroundImage: "url("+fabricImage+")"}} onClick={() => showSignupModal('user_design')}>
+                                                                <div className="designs-grid-div  cursor-pointer w-100" style={{ backgroundImage: "url(" + fabricImage + ")" }} onClick={() => showSignupModal('user_design')}>
                                                                     {currentUser ?
                                                                         <div className='save-link'>
                                                                             {/* <div className="action-button bg-white me-2">
@@ -214,7 +211,7 @@ const Fabrics = (props) => {
                                                                 }    */}
                                                             </div>
                                                             <div className="star-ratings mt-1">
-                                                                <Rating 
+                                                                <Rating
                                                                     initialValue={0}
                                                                     readonly={true}
                                                                     allowFraction={true}
@@ -224,10 +221,10 @@ const Fabrics = (props) => {
                                                                     emptyColor="#dddddd"
                                                                     fillColor="#cea835"
                                                                     tooltipArray={[
-                                                                        0,1,2,3,4,5
+                                                                        0, 1, 2, 3, 4, 5
                                                                     ]}
                                                                     tooltipDefaultText="0.0"
-                                                                    /* Available Props */
+                                                                /* Available Props */
                                                                 />
                                                             </div>
                                                             <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
@@ -260,7 +257,7 @@ const Fabrics = (props) => {
                                             :
                                             <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_fabric')}>View More</Button>
                                         }
-                                        
+
                                     </Col>
                                 </Row>
                             </>
