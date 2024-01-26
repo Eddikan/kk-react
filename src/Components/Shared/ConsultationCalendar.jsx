@@ -12,6 +12,8 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import PropTypes from 'prop-types'
 import '../../Assets/styles/DesignerCalendar/style.css';
 import { useCookies } from 'react-cookie';
+import { Modal } from 'react-bootstrap';
+import { GoAlertFill } from 'react-icons/go';
 
 import axios from "axios";
 import toast from 'react-hot-toast';
@@ -58,6 +60,8 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
     const [currentTimezone, setCurrentTimezone] = useState(null);
     const [currentStep, setCurrentStep] = useState(1);
+    const [underConstructionShow, setUnderConstructionShow] = useState(false);
+    const [modalHeading, setModalHeading] = useState();
 
     const postSetAppointment = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
@@ -235,6 +239,14 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         getTimezone();
     }, []);
 
+    function toggleUnderConstruction(message) {
+        // message.preventDefault();
+        setUnderConstructionShow(!underConstructionShow);
+        setModalHeading(message);
+        console.log("Message", message);
+    }
+    
+
     return (
         <>
             <Col lg="3">
@@ -325,20 +337,46 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                     placeholder='I would like to discuss the design specifications, required materials, and other related details.'
                                     onChange={handleChangeConsultation} />
                             </Form.Group>
-                            <div className="send-btn-container">
-                                <button className="btn btn-primary" onClick={()=> setCurrentStep(1)}>Cancel</button>
+                            
+                        </Form>
+                        {/* temporary, should be inside the form */}
+                        <div className="send-btn-container">
+                                <button className="btn btn-primary bg-transparent text-black" onClick={()=> {setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate('')}}>Cancel</button>
                                 {formStatus != "loading" ?
-                                    <button className="btn btn-primary" onClick={addAppointmentSubmit}>Schedule Now</button>
+                                    // <button className="btn btn-primary" onClick={addAppointmentSubmit}>Schedule Now</button>
+                                    <button className="btn btn-primary" onClick={()=> toggleUnderConstruction("Submit Appointment")}>Schedule Now</button>
+                                    
                                     :
                                     <button className="btn btn-primary" onClick={handleDefault}>Loading...</button>
                                 }
                             </div>
-                        </Form>
-                        
                     </div>
                 }
                 
             </Col>
+            <Modal
+                show={underConstructionShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="sm"
+            >
+                <Modal.Header className="py-0">
+                <h5 className='modal-title text-uppercase text-left'></h5>
+                <button type='button' className='close react-modal-close' onClick={() => toggleUnderConstruction("")} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                </button>
+                </Modal.Header>
+                <Modal.Body>
+                <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+                <Card>
+                    <Card.Body className="text-center py-5">
+                    <GoAlertFill size="60px" className="mb-2 text-gold" />
+                    <p className="fs-20 text-black">Under Construction</p>
+                    {/* <DateTimePicker onTimeChange={handleTimeChange} onDone={handleDoneTimeChange} availability={currentAvailability} /> */}
+                    </Card.Body>
+                </Card>
+                </Modal.Body>
+            </Modal>
         </>
     )
 }

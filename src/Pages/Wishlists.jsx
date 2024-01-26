@@ -171,7 +171,10 @@ const Wishlists = (props) => {
                                                                                             {/* <p className="text-black fs-14 mb-0">{wishlist.user.first_name && wishlist.user.first_name != "" ? wishlist.user.first_name : "-"} {wishlist.user.last_name && wishlist.user.last_name != "" ? wishlist.user.last_name : "-"}</p> */}
                                                                                             <p className="text-black fs-14 mb-0 wishlist-description">{wishlist.product?.description ?? '-'}</p>
                                                                                         </div>
-                                                                                        <Button className="btn-primary w-auto fs-14 px-3 py-2 mt-3" onClick={toggleConnectShow}>Connect with Fashion Designer</Button>
+                                                                                        <a href="/appointment/schedule">
+                                                                                            <Button className="btn-primary w-auto fs-14 px-3 py-2 mt-3">Connect with Fashion Designer</Button>
+                                                                                        </a>
+                                                                                        {/* <Button className="btn-primary w-auto fs-14 px-3 py-2 mt-3" onClick={toggleConnectShow}>Connect with Fashion Designer</Button> */}
                                                                                     </div>
                                                                                 </Col>
                                                                             </Row>

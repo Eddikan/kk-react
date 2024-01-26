@@ -378,7 +378,7 @@ const SellerCenter = (props) => {
                                             onChange={handleSundayCheckboxChangeClose}
                                         />
                                     </Col>
-                                    <Col lg="5" className='d-flex justify-content-end'>
+                                    <Col lg="7" className='d-flex justify-content-end'>
                                         <Row className="align-items-center">
                                             {sundayHoursFormData.map((sunday, index) => {
                                                 return (
@@ -393,13 +393,13 @@ const SellerCenter = (props) => {
                                                                     </div>
                                                                 )}
 
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="6" className="pe-0">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl type='time' name='opens_at' className='mr-sm-2 form-control-hours' />
                                                                     </Form.Group>
                                                                 </Col>
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="6" className="pe-0">
                                                                     <p className="hours-header">Closes at</p>
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl type='time' name='closes_at' className='mr-sm-2 form-control-hours' />
@@ -411,7 +411,7 @@ const SellerCenter = (props) => {
                                                     </>
                                                 );
                                             })}
-                                            <Col md="2" className="pl-0" >
+                                            <Col md="3" className="pl-0" >
                                                 <GoPlus
                                                     size={25}
                                                     className="plus-btn mt-2"

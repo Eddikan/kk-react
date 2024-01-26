@@ -8,7 +8,7 @@ import GoBack from 'Components/Shared/GoBack';
 import GetSinglePortfolioData from 'Utils/GetSinglePortfolioData';
 import toast from 'react-hot-toast';
 import ImageSlider from 'Components/Shared/ImageSlider';
-import { Card, CardBody, ModalHeader, CardFooter, ModalBody, Modal, CardHeader } from 'reactstrap';
+import { Card, Modal } from 'react-bootstrap';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { AiOutlinePlus, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai';
 import { FaUserCircle } from "react-icons/fa";
@@ -53,8 +53,11 @@ const ViewPortFolio = () => {
     };
 
     function toggleUnderConstruction(message) {
-        setUnderConstructionShow(!underConstructionShow);
+        setUnderConstructionShow(true);
         setModalHeading(message);
+        console.log("Clicked! ", message);
+        console.log("underConstructionShow! ", underConstructionShow);
+        
     }
 
     const fetchData = async (e) => {
@@ -126,7 +129,7 @@ const ViewPortFolio = () => {
                                 </Col>
                                 <Col lg={7}>
                                     <Card className="height-portfolio">
-                                        <CardBody>
+                                        <Card.Body>
                                             <Row>
                                                 <Col lg="12" className="d-flex justify-content-between">
                                                     <div className='mb-0 d-flex portfolio-designer'>
@@ -157,10 +160,11 @@ const ViewPortFolio = () => {
                                                         <div className="action-button bg-smgray me-2" onClick={() => toggleUnderConstruction("Share Portfolio")}>
                                                             <GoShareAndroid className="text-black" />
                                                         </div>
-                                                        <div className="action-button bg-smgray">
+                                                        <div className="action-button bg-smgray" onClick={() => toggleUnderConstruction("Add to wishlist")}>
                                                             <GoHeart className="text-black" />
                                                         </div>
                                                     </div>
+                                                    
                                                 </Col>
 
                                                 <Col lg="12">
@@ -199,7 +203,7 @@ const ViewPortFolio = () => {
                                                     </div>
                                                 </Col>
                                             </Row>
-                                        </CardBody>
+                                        </Card.Body>
                                     </Card>
                                 </Col>
                                 {/* <Col lg={12} className="mt-4">
@@ -239,7 +243,7 @@ const ViewPortFolio = () => {
                                     <>
 
                                         <Card className='width-chat-card px-0'>
-                                            <CardHeader className='header-chat bg-white'>
+                                            <Card.Header className='header-chat bg-white'>
                                                 <div className='d-flex justify-content-between'>
                                                     <div>
                                                         <span className='name-active-person'>Dave Napoles</span>
@@ -249,8 +253,8 @@ const ViewPortFolio = () => {
                                                         <IoCloseOutline color="#39393A" />
                                                     </div>
                                                 </div>
-                                            </CardHeader>
-                                            <CardBody >
+                                            </Card.Header>
+                                            <Card.Body >
                                                 <div className='product-portfolio-image'>
                                                     <span className='d-flex'>
                                                         {images && images.length > 0 ?
@@ -309,7 +313,7 @@ const ViewPortFolio = () => {
                                                     <div>
                                                         <span className='send-btn cursor-pointer'>Send<VscSend className='ms-1' /></span></div>
                                                 </div>
-                                            </CardBody>
+                                            </Card.Body>
                                         </Card>
 
                                     </>
@@ -323,8 +327,8 @@ const ViewPortFolio = () => {
 
 
                         </Container>
-                    </section>
-                    <Modal
+
+                        <Modal
                         show={underConstructionShow}
                         className='modal-preview'
                         fade={false}
@@ -332,21 +336,22 @@ const ViewPortFolio = () => {
                         size="sm"
                     >
                         <Modal.Header className="py-0">
-                            <h5 className='modal-title text-uppercase text-left'></h5>
-                            <button type='button' className='close react-modal-close' onClick={() => toggleUnderConstruction("")} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
-                            </button>
+                        <h5 className='modal-title text-uppercase text-left'></h5>
+                        <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                        </button>
                         </Modal.Header>
                         <Modal.Body>
-                            <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
-                            <Card>
-                                <Card.Body className="text-center py-5">
-                                    <GoAlertFill size="60px" className="mb-2 text-gold" />
-                                    <p className="fs-20 text-black">Under Construction</p>
-                                    {/* <DateTimePicker onTimeChange={handleTimeChange} onDone={handleDoneTimeChange} availability={currentAvailability} /> */}
-                                </Card.Body>
-                            </Card>
+                        <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+                        <Card>
+                            <Card.Body className="text-center py-5">
+                            <GoAlertFill size="60px" className="mb-2 text-gold" />
+                            <p className="fs-20 text-black">Under Construction</p>
+                            </Card.Body>
+                        </Card>
                         </Modal.Body>
                     </Modal>
+                        
+                    </section>
                 </>
             }
 
