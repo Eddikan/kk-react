@@ -20,7 +20,6 @@
 .day-header {
     font-size: 16px;
     font-weight: 700;
-    font-family: 'ProximaNova';
     margin-bottom: 19px;
 }
 
@@ -29,14 +28,12 @@
 }
 
 #business-hours-modal .hours-header {
-    font-family: 'ProximaNova';
     font-size: 16px;
     margin-bottom: 5px;
 }
 
 .schedule-checkbox {
     font-size: 14px;
-    font-family: 'ProximaNova';
 }
 
 #business-hours-modal .header {
@@ -63,7 +60,6 @@
     justify-content: center;
     align-items: center;
     font-size: 18px !important;
-    font-family: 'ProximaNova' !important;
     color: #1C1B1B !important;
 }
 .rbc-toolbar {
@@ -71,15 +67,10 @@
 }
 span.rbc-toolbar-label {
     font-size: 22px !important;
-    font-family: 'ProximaNova';
     font-weight: 400;
 }
 button.rbc-button-link {
-    font-family: 'ProximaNova';
     font-size: 14px;
-}
-span.rbc-btn-group {
-    font-family: 'ProximaNova';
 }
 .form-control-hours, .rti--container {
     border: 2px solid var(--gray) !important;

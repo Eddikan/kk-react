@@ -18,6 +18,7 @@ import axios from 'axios';
 import Loading from 'Components/Shared/Loading';
 import { Rating } from 'react-simple-star-rating';
 import UserPlaceholder from 'Assets/images/user.png';
+import { BsArrowUpRightSquare } from "react-icons/bs";
 
 const initialReviewData = Object.freeze({
     rating: 0,
@@ -337,15 +338,15 @@ const ViewProduct = () => {
                                                         ></div>
                                                     )}
                                                     <div className="designer-info mx-2">
-                                                        <p className="text-black fs-16 fw-600 mb-0 proximanova-family">{product.user.first_name && product.user.first_name != "" ? product.user.first_name : "-"} {product.user.last_name && product.user.last_name != "" ? product.user.last_name : "-"}</p>
+                                                        <p className="text-black fs-16 fw-600 mb-0">{product.user.first_name && product.user.first_name != "" ? product.user.first_name : "-"} {product.user.last_name && product.user.last_name != "" ? product.user.last_name : "-"}</p>
                                                         {currentUser !== product.user.id ?
                                                             <>
-                                                                <a className='text-decoration-none fs-12 proximanova-family follow-products'>Follow</a>
+                                                                <a className='text-decoration-none fs-12 follow-products'>Follow</a>
                                                             </>
                                                             :
                                                             <>
 
-                                                                <a className='text-decoration-none fs-12 proximanova-family you-products'>You</a>
+                                                                <a className='text-decoration-none fs-12 you-products'>You</a>
                                                             </>
                                                         }
                                                     </div>
@@ -389,7 +390,7 @@ const ViewProduct = () => {
                                                         {product.categories.length > 0 ?
                                                             <>
                                                                 {product.categories.map((category, index) => (
-                                                                    <span className="design-tag bg-light fs-14 proximanova-family categories-color">
+                                                                    <span className="design-tag bg-light fs-14 categories-color">
                                                                         {category}
                                                                     </span>
                                                                 ))}
@@ -402,21 +403,21 @@ const ViewProduct = () => {
                                                     null
                                                 }
                                                 <div className="mb-3">
-                                                    <p className="fw-600 fs-25 proximanova-family">${productPrice}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle proximanova-family">/{product.unit_measurement}</span></p>
+                                                    <p className="fw-600 fs-25">${productPrice}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
                                                 </div>
                                                 <div className="">
-                                                    <p className="mb-2 proximanova-family fs-16 fw-600">Fabric Process Insight</p>
-                                                    <p className="mb-4 proximanova-family fs-16 fw-400">{product.seller?.fabric_process_insights ?? "-"}</p>
+                                                    <p className="mb-2 fs-16 fw-600">Fabric Process Insight</p>
+                                                    <p className="mb-4 fs-16 fw-400">{product.seller?.fabric_process_insights ?? "-"}</p>
                                                 </div>
                                                 <div className="">
-                                                    <p className="mb-2 proximanova-family fs-16 fw-600">Pricing Structure</p>
-                                                    <p className="mb-4 proximanova-family fs-16 fw-400">{product.seller?.pricing_structure ?? "-"}</p>
+                                                    <p className="mb-2 fs-16 fw-600">Pricing Structure</p>
+                                                    <p className="mb-4 fs-16 fw-400">{product.seller?.pricing_structure ?? "-"}</p>
                                                 </div>
 
                                                 <div>
                                                     <Row>
                                                         <Col lg="12">
-                                                            <p className="mb-2 proximanova-family fs-16 fw-600">Measurement</p>
+                                                            <p className="mb-2 fs-16 fw-600">Measurement</p>
                                                             {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
                                                                 -
                                                             </Button> */}
@@ -425,17 +426,17 @@ const ViewProduct = () => {
                                                                 +
                                                             </Button> */}
 
-                                                            <span className="fs-18 fw-600 proximanova-family">{Number(unitMeasurement)?.toFixed(2)} {
+                                                            <span className="fs-18 fw-600">{Number(unitMeasurement)?.toFixed(2)} {
                                                                 product.unit_measurement !== 'inch' && product.unit_measurement !== 'feet'
                                                                     ? product.unit_measurement + 's'
                                                                     : product.unit_measurement === 'feet'
                                                                         ? product.unit_measurement
                                                                         : product.unit_measurement + 'es'
-                                                            } {product.unit_measurement != "yard" ? <span className="fs-14 fw-400 proximanova-family text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span>
+                                                            } {product.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span>
                                                             <hr className="mb-4" />
                                                         </Col>
-                                                        <Col lg="12" className='text-right'>
-                                                            <Button className="w-auto me-3 btn-primary proximanova-family fs-16" onClick={toggleAddToCart}>Add to Cart</Button>
+                                                        <Col lg="12">
+                                                            <Button className="w-auto me-3 btn-primary fs-16" onClick={toggleAddToCart}>Add to Cart</Button>
                                                             {/* <span className="fw-600 fs-24">${(unitMeasurement * productPrice).toFixed(2)} 
                                                             <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span> */}
                                                         </Col>
@@ -473,7 +474,9 @@ const ViewProduct = () => {
                             <Col lg="12" className='mt-4'>
                                 {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
                                 <div className="d-flex justify-content-between w-100 align-item-center">
-                                    <p className={`text-black reviews-product cursor-pointer me-5 mt-3 mb-0 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Reviews</p>
+                                    <p className={`text-black cursor-pointer me-5 mt-3 mb-0 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews
+                                        <BsArrowUpRightSquare className='ms-2' color="#caa533" />
+                                    </p>
                                     {/* {updateReview ?
                                         <Button className="w-auto mb-3 btn-primary" onClick={function () { getProductReview(reviewId); toggleAddToReview(); }}>Update Review</Button>
                                         :
@@ -545,7 +548,7 @@ const ViewProduct = () => {
                                                     :
                                                     <div className="text-center">
                                                         <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
-                                                        <p className="fs-20 text-black proximanova-family no-available">No available reviews at this time</p>
+                                                        <p className="fs-20 text-black no-available">No available reviews at this time</p>
                                                     </div>
                                                 }
                                             </>

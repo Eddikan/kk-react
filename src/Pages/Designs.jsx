@@ -299,7 +299,7 @@ const Designs = (props) => {
                             <Col lg="12">
                                 <div className="narrow-850 text-center">
                                     <h2 className='fs-40 text-center mb-3'>Explore Captivating Designs</h2>
-                                    <p className='proximanova-family fs-16 fw-400 text-black'>In the realm of fabric design, the designer intricately weaves together artistic concepts, skillfully navigating through color harmonies and textural nuances to conceive patterns that not only adorn but tell compelling visual stories through the medium of textiles.</p>
+                                    <p className='fs-16 fw-400 text-black'>In the realm of fabric design, the designer intricately weaves together artistic concepts, skillfully navigating through color harmonies and textural nuances to conceive patterns that not only adorn but tell compelling visual stories through the medium of textiles.</p>
                                 </div>
                             </Col>
                             {/* <Col lg="4" className='text-right'>
@@ -313,17 +313,12 @@ const Designs = (props) => {
                     <Container>
                         <div className='d-flex justify-content-between'>
                             <div className='sample-categories'>
-                                Sample Categories
+                                Categories
                             </div>
-
-                            {/* <div>
-                                <span className='sample-categories'>Sort By:</span>
-                                <span className='all-sort'>All</span>
-                            </div> */}
 
                             <div>
                                 <label htmlFor="dropdown" className='sample-categories'>Sort By: </label>
-                                <select id="sort-by" >
+                                <select id="sort-by" onChange={(e) => handleSortFieldChange(e.target.value)}>
                                     {sortOptions.map(option => (
                                         <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
                                     ))}
@@ -340,7 +335,7 @@ const Designs = (props) => {
                     <Container>
                         <Row className="mt-2">
                             <Col lg="3">
-                                <div className="filter-sidebar proximanova-family pe-4">
+                                <div className="filter-sidebar pe-4">
 
                                     <Form.Check
                                         type={`checkbox`}
@@ -626,9 +621,9 @@ const Designs = (props) => {
                                                                                 {/* <div className="action-button bg-white me-2">
                                                                                     <GoBookmark className="text-black" />
                                                                                 </div> */}
-                                                                                <div className="action-button bg-white">
+                                                                                {/* <div className="action-button bg-white">
                                                                                     <GoHeart className="text-black" />
-                                                                                </div>
+                                                                                </div> */}
                                                                             </div>
                                                                         </div>
                                                                         <div className="design-details">

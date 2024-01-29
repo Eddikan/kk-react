@@ -94,7 +94,7 @@ const Fabrics = (props) => {
         <>
             <div id="profile-designs">
                 <p className="fs-18 text-center text-dark mb-2"> Searching for Fabrics?</p >
-                <h2 className="fs-35 fw-500 text-center text-black mb-3">Explore Premium Fabrics</h2>
+                <h2 className="fs-35 fw-500 text-center text-black explore-premium-fabrics">Explore Premium Fabrics</h2>
                 {fabricsLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
@@ -106,7 +106,7 @@ const Fabrics = (props) => {
                         {fabrics && fabrics.length > 0 ?
                             <>
                                 <Row className="designs-row">
-                                    {currentUser ?
+                                    {/* {currentUser ?
                                         <Col lg="12" className='d-flex justify-content-end mb-3'>
                                             <div style={{ position: "relative" }}>
                                                 <select
@@ -135,9 +135,9 @@ const Fabrics = (props) => {
                                         </Col>
                                         :
                                         null
-                                    }
+                                    } */}
                                     {/* <img src={object.url} className='designs-img'/> */}
-                                    {fabrics.map((fabric, index) => {
+                                    {fabrics.slice(0, 8).map((fabric, index) => {
                                         if (fabric.image_urls?.[0]?.image_url) {
                                             var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
                                         } else {

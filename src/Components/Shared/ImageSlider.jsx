@@ -33,12 +33,12 @@ const ImageSlider = (props) => {
         if (activeItem) {
             // Select the first child with class '.slider-image' within the active item
             const sliderImage = activeItem.querySelector('.slider-image');
-        
+
             // Check if there's a '.slider-image' within the active item before proceeding
             if (sliderImage) {
-              // Get the background image of the '.slider-image'
-              const backgroundImage = window.getComputedStyle(sliderImage).backgroundImage;
-        
+                // Get the background image of the '.slider-image'
+                const backgroundImage = window.getComputedStyle(sliderImage).backgroundImage;
+
                 // Check if there's a background image and it's not "none"
                 if (backgroundImage && backgroundImage !== "none") {
                     // Use regular expression to extract the URL
@@ -64,7 +64,7 @@ const ImageSlider = (props) => {
             props.onActiveImageChange(images[0]);
         }
     }, []);
-    
+
 
     return (
         <div className="parent">
@@ -87,15 +87,15 @@ const ImageSlider = (props) => {
                     return (
                         <div className="slider pt-0" key={index}>
                             {type == 'product' ?
-                                <div className="slider-image cursor-pointer" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")"}}>
+                                <div className="slider-image cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")" }}>
 
                                 </div>
                                 :
-                                <div className="slider-image cursor-pointer" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")"}}>
+                                <div className="slider-image cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")" }}>
 
                                 </div>
                             }
-                            
+
                         </div>
                     );
                 })}

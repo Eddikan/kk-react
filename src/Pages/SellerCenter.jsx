@@ -48,6 +48,8 @@ const SellerCenter = (props) => {
     const [isFridayChecked, setIsFridayChecked] = useState(false);
     const [isSaturdayChecked, setIsSaturdayChecked] = useState(false);
 
+    const [designerId, setDesignerId] = useState([]);
+
 
     const [sundayHoursFormData, setSundayHoursFormData] = useState([initialBusinessHours]);
     const [mondayHoursFormData, setMondayHoursFormData] = useState([initialBusinessHours]);
@@ -64,8 +66,16 @@ const SellerCenter = (props) => {
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
 
-    const postSetAppointment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+    // const postSetAppointment = async (data) => {
+    //     return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/calendar/availability', data);
+    // };
+
+    const postBusinessHours = async (data) => {
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + currentUser + '/availability', data);
+    };
+
+    const getBusinessHours = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + currentUser + '/availability');
     };
 
     const handleChangeAppointment = (e) => {
@@ -298,16 +308,36 @@ const SellerCenter = (props) => {
         });
     }
 
-    const addAppointmentSubmit = (e) => {
+    // const addAppointmentSubmit = (e) => {
+    //     e.preventDefault();
+    //     setFormStatus('loading');
+    //     postSetAppointment({ ...appointmentFormData, times: times }).then(response => {
+    //         const status = response.data.status;
+    //         if (status === "Success") {
+    //             setFormStatus('standby');
+    //             setReloadCount(reloadCount + 1);
+    //             setAppointmentModalShow(false);
+    //             setAppointmentFormData(initialAppointments);
+    //             toast.success('Appointment added successfully!');
+    //         } else {
+    //             setFormStatus('standby');
+    //             toast.error('There has been an error saving the appointment, please try again!');
+    //         }
+    //     }).catch(() => {
+    //         toast.error('There has been an error saving the appointment, please try again!');
+    //     });
+    // }
+
+    const addBusinessHoursSubmit = (e) => {
         e.preventDefault();
         setFormStatus('loading');
-        postSetAppointment({ ...appointmentFormData, times: times }).then(response => {
+        postBusinessHours({ ...appointmentFormData, times: times }).then(response => {
             const status = response.data.status;
             if (status === "Success") {
                 setFormStatus('standby');
                 setReloadCount(reloadCount + 1);
                 setAppointmentModalShow(false);
-                setAppointmentFormData(initialAppointments);
+                setSundayHoursFormData(initialBusinessHours);
                 toast.success('Appointment added successfully!');
             } else {
                 setFormStatus('standby');
@@ -321,6 +351,26 @@ const SellerCenter = (props) => {
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
     }, []);
+
+
+    useEffect(() => {
+        getBusinessHours()
+            .then((response) => {
+                const selectedTime = response.data.data;
+                if (selectedTime) {
+                    setTimes(selectedTime);
+                } else {
+                    toast.error('There has been an error saving the appointment, please try again!');
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error saving the appointment, please try again!');
+            });
+
+    }, [reloadCount]);
+
+
+
 
 
     return (
@@ -378,7 +428,7 @@ const SellerCenter = (props) => {
                                             onChange={handleSundayCheckboxChangeClose}
                                         />
                                     </Col>
-                                    <Col lg="7" className='d-flex justify-content-end'>
+                                    <Col lg="5" className='d-flex justify-content-end'>
                                         <Row className="align-items-center">
                                             {sundayHoursFormData.map((sunday, index) => {
                                                 return (
@@ -393,16 +443,26 @@ const SellerCenter = (props) => {
                                                                     </div>
                                                                 )}
 
-                                                                <Col md="6" className="pe-0">
+                                                                <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='opens_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='opens_at'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={sundayHoursFormData?.opens_at}
+                                                                            onChange={e => handleChangeTime(e, index)} />
                                                                     </Form.Group>
                                                                 </Col>
-                                                                <Col md="6" className="pe-0">
+                                                                <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Closes at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='closes_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='closes_at'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={sundayHoursFormData?.closes_at}
+                                                                            onChange={e => handleChangeTime(e, index)} />
                                                                     </Form.Group>
                                                                 </Col>
 
@@ -411,7 +471,7 @@ const SellerCenter = (props) => {
                                                     </>
                                                 );
                                             })}
-                                            <Col md="3" className="pl-0" >
+                                            <Col md="2" className="pl-0" >
                                                 <GoPlus
                                                     size={25}
                                                     className="plus-btn mt-2"
@@ -773,7 +833,7 @@ const SellerCenter = (props) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button className="btn-cancel" variant="primary" onClick={() => setDesignerBusinessHoursModalShow(false)}>Cancel</Button>
-                    <Button className="btn-primary" variant="primary">Save</Button>
+                    <Button className="btn-primary" variant="primary" onClick={addBusinessHoursSubmit}>Save</Button>
                 </Modal.Footer>
             </Modal >
 

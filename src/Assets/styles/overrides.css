@@ -1382,7 +1382,6 @@ form select::placeholder {
 span.featured-designs {
     font-size: 16px !important;
     font-weight: bold;
-    font-family: 'ProximaNova';
     color: #000;
 }
 
@@ -1392,34 +1391,22 @@ span.featured-designs {
 .social-profile {
     color: #000000;
     font-weight: bold;
-    font-family: 'ProximaNova';
 }
 .short-bio-designer,
 .long-bio-designer {
-    font-family: 'ProximaNova';
     color: #000;
 }
 
 .item-designer {
-    font-family: 'ProximaNova';
     color: #39393A;
 }
 
 .place-family {
-    font-family: 'ProximaNova';
     color: #000000;
 }
 
 .margin-img {
     margin-top: 10px;
-}
-
-.tab-family,.information-font {
-    font-family: 'ProximaNova';
-}
-
-.bio-short-designer {
-    font-family: 'ProximaNova';
 }
 
 .heart-btn {
@@ -1436,7 +1423,6 @@ span.featured-designs {
 button.ask-question {
     border: none;
     background: none;
-    font-family: ProximaNova;
 }
 .height-portfolio {
     height: auto;
@@ -1446,7 +1432,6 @@ button.schedule-consultation {
     color: #ffffff;
     padding: 12px 20px;
     border-radius: 5px;
-    font-family: 'ProximaNova';
     width: 100%;
 }
 .react-appointment-close {
@@ -1459,8 +1444,9 @@ button.schedule-consultation {
     line-height: 1;
     z-index: 9;
 }
-.proximanova-family {
-    font-family: 'ProximaNova';
+.explore-premium-fabrics,
+.discover-design {
+    margin-bottom: 40px;
 }
 .rufina-family {
     font-family: 'Rufina';
@@ -1499,7 +1485,6 @@ span.name-of-portfolio {
 }
 .welcome-chat {
     font-size: 14px;
-    font-family: 'ProximaNova';
     color: #39393A;
 }
 a.schedule-consultation {
@@ -1513,30 +1498,20 @@ a.schedule-consultation {
 .name-chat {
     font-size: 14px;
     font-weight: bold;
-    font-family: 'ProximaNova';
 }
 .send-btn {
     font-weight: bold;
-    font-family: 'ProximaNova';
-}
-.name-active-person {
-    font-weight: 500;
-    font-family: 'ProximaNova';
 }
 .active-now {
-    font-family: 'ProximaNova';
     color: #AAAAAA;
 }
 .time-chat-box {
     color: #AAAAAA;
-    font-family: 'ProximaNova';
 }
 .you-chat-box {
-    font-family: 'ProximaNova';
     color: #39393A;
 }
 .time-chat {
-    font-family: 'ProximaNova';
     color: #AAAAAA;
 }
 .header-chat {

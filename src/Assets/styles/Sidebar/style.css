@@ -18,13 +18,9 @@
     padding-bottom: 12px;
 }
 span.appointments,.orders,.portfolio,.fabrics {
-    font-family: 'ProximaNova';
     font-weight: 400;
 }
 .yellow-hover:hover {
     color: #CEA835;
     font-weight: bold;
-}
-.side-bar-font {
-    font-family: 'ProximaNova';
 }

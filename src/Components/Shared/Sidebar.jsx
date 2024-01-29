@@ -32,21 +32,21 @@ const Sidebar = (props) => {
                             </AccordionHeader>
 
                             <AccordionBody accordionId="1">
-                                <p className="yellow-hover cursor-pointer fs-18 side-bar-font" onClick={() => navigate('#')}>Appointment Lists</p>
-                                <p className="yellow-hover cursor-pointer fs-18 side-bar-font" onClick={() => navigate('#')}>Calendar</p>
+                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Appointment Lists</p>
+                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Calendar</p>
                             </AccordionBody>
 
                             <AccordionHeader targetId="2"><PiShoppingCartSimple size="22" className="me-3" />
-                                <span className="orders cursor-pointer fs-18 side-bar-font">Orders</span>
+                                <span className="orders cursor-pointer fs-18">Orders</span>
                             </AccordionHeader>
 
                             <AccordionBody accordionId="2">
-                                <p className="side-bar-font yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>All</p>
-                                <p className="side-bar-font yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Active</p>
-                                <p className="side-bar-font yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Processing</p>
-                                <p className="side-bar-font yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Shipped</p>
-                                <p className="side-bar-font yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Delivered</p>
-                                <p className="side-bar-font yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Review and Feedback</p>
+                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>All</p>
+                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Active</p>
+                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Processing</p>
+                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Shipped</p>
+                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Delivered</p>
+                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Review and Feedback</p>
                             </AccordionBody>
 
                             <div className="portfolio cursor-pointer yellow-hover fs-18" onClick={() => navigate('/user/portfolio')}><PiBriefcase size="22" className="me-3" />Portfolio</div>

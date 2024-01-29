@@ -92,7 +92,7 @@ const Designs = (props) => {
         <>
             <div id="profile-designs">
                 <p className="fs-20 text-center text-dark mb-2 proximanova-family"> Looking for Designs? <span className="text-gold">Explore now </span></p >
-                <h2 className="fs-35 fw-500 text-center text-black mb-3">Discover Captivating Designs.</h2>
+                <h2 className="fs-35 fw-500 text-center text-black discover-design">Discover Captivating Designs</h2>
                 {designsLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
@@ -104,7 +104,7 @@ const Designs = (props) => {
                         {designs && designs.length > 0 ?
                             <>
                                 <Row className="designs-row">
-                                    {currentUser ?
+                                    {/* {currentUser ?
                                         <Col lg="12" className='d-flex justify-content-end'>
                                             <div style={{ position: "relative" }}>
                                                 <select
@@ -134,9 +134,9 @@ const Designs = (props) => {
                                         </Col>
                                         :
                                         null
-                                    }
+                                    } */}
                                     {/* <img src={object.url} className='designs-img'/> */}
-                                    {designs.map((design, index) => {
+                                    {designs.slice(0, 8).map((design, index) => {
                                         if (design.image_urls?.[0]?.image_url) {
                                             var designImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + design.image_urls[0].image_url;
                                         } else {
@@ -150,36 +150,36 @@ const Designs = (props) => {
                                                             <>
                                                                 <Link to={`/portfolio/${design.id}`} className='portfolio-link' onClick={function () { toggleAddViewCount(design.id); }}>
                                                                     <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}>
-                                                                        {currentUser ?
+                                                                        {/* {currentUser ?
                                                                             <div className='save-link'>
-                                                                                {/* <div className="action-button bg-white me-2">
+                                                                                <div className="action-button bg-white me-2">
                                                                                     <GoBookmark className="text-black" />
-                                                                                </div> */}
+                                                                                </div>
                                                                                 <div className="action-button bg-white">
                                                                                     <GoHeart className="text-black" />
                                                                                 </div>
                                                                             </div>
                                                                             :
                                                                             null
-                                                                        }
+                                                                        } */}
                                                                     </div>
                                                                 </Link>
                                                             </>
                                                             :
                                                             <>
                                                                 <div className="designs-grid-div  cursor-pointer w-100" style={{ backgroundImage: "url(" + designImage + ")" }} onClick={() => showSignupModal('user_design')}>
-                                                                    {currentUser ?
+                                                                    {/* {currentUser ?
                                                                         <div className='save-link'>
-                                                                            {/* <div className="action-button bg-white me-2">
+                                                                            <div className="action-button bg-white me-2">
                                                                                 <GoBookmark className="text-black" />
-                                                                            </div> */}
+                                                                            </div>
                                                                             <div className="action-button bg-white">
                                                                                 <GoHeart className="text-black" />
                                                                             </div>
                                                                         </div>
                                                                         :
                                                                         null
-                                                                    }
+                                                                    } */}
                                                                 </div>
                                                             </>
                                                         }
@@ -200,8 +200,9 @@ const Designs = (props) => {
                                                                 }    */}
 
                                                             </div>
+
                                                             <div className="star-ratings mt-1">
-                                                                <Rating
+                                                                {/* <Rating
                                                                     initialValue={0}
                                                                     readonly={true}
                                                                     allowFraction={true}
@@ -214,9 +215,10 @@ const Designs = (props) => {
                                                                         0, 1, 2, 3, 4, 5
                                                                     ]}
                                                                     tooltipDefaultText="0.0"
-                                                                /* Available Props */
-                                                                />
+                                                                /> */}
                                                             </div>
+
+
                                                             {/* {currentUser ?
                                                                 <div className='d-flex align-items-center mt-1'>
                                                                     {design.user.image ?

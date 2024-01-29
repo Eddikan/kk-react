@@ -210,7 +210,7 @@ const DesignerProfile = () => {
                                                     {areasOfSpecialization && areasOfSpecialization.length > 0 ?
                                                         <>
                                                             {areasOfSpecialization.map((item, index) => (
-                                                                <span className='text-gray600 fs-14 bg-gray item-designer'>{item}</span>
+                                                                <span className='text-gray 600 fs-14 bg-gray item-designer'>{item}</span>
                                                             ))}
                                                         </>
                                                         :

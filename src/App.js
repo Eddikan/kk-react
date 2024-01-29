@@ -24,7 +24,6 @@ const SellerCenter = lazy(() => import("./Pages/SellerCenter"));
 const DesignerProfile = lazy(() => import("./Pages/DesignerProfile"));
 const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
 
-
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
 const EditUserProfile = lazy(() => import("./Pages/User/EditProfile"));
@@ -152,11 +151,7 @@ const App = () => {
             element={<UnderConstruction />}
           />
 
-          <Route
-            path="/about-kouture-konect"
-            exact
-            element={<UnderConstruction />}
-          />
+          <Route path="/about-kouture-konect" exact element={<About />} />
           <Route path="/how-it-works" exact element={<UnderConstruction />} />
 
           <Route path="/designers" exact element={<Designers />} />
@@ -164,7 +159,11 @@ const App = () => {
           <Route path="/designs" exact element={<Designs />} />
           <Route path="/seller-center" exact element={<SellerCenter />} />
           <Route path="/designer-profile" exact element={<DesignerProfile />} />
-          <Route path="/appointment/schedule" exact element={<ScheduleConsultation />} />
+          <Route
+            path="/appointment/schedule"
+            exact
+            element={<ScheduleConsultation />}
+          />
         </Routes>
       </Suspense>
     </Router>

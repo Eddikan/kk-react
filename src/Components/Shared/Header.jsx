@@ -125,8 +125,8 @@ const Header = () => {
             <Nav className="align-items-center column-gap-30">
               {/* <Nav.Link href="/find-designs">Find Designs</Nav.Link>
             <Nav.Link href="/inspirations">Inspirations</Nav.Link> */}
-              <Nav.Link href="/about-kouture-konect" className='proximanova-family'>About KK</Nav.Link>
-              <Nav.Link href="/how-it-works" className='proximanova-family'>How It Works</Nav.Link>
+              <Nav.Link href="/about-kouture-konect">About KK</Nav.Link>
+              <Nav.Link href="/how-it-works" >How It Works</Nav.Link>
               {/* <Nav.Link href="/blog">Blog</Nav.Link> */}
             </Nav>
             <Nav className="align-items-center d-grid-mobile">
@@ -140,7 +140,7 @@ const Header = () => {
                     <div className="cursor-pointer nav-link"><GoBell size={25} onClick={() => toggleUnderConstruction("Notifications")} /></div>
                     <div className="cursor-pointer nav-link"><BsEnvelope size={25} onClick={() => toggleUnderConstruction("Messages")} /></div>
                     <Nav.Link href="/wishlist"><IoIosHeartEmpty size={25} /></Nav.Link>
-                    <Nav.Link href="/orders" className='proximanova-family fs-16'>Orders</Nav.Link>
+                    <Nav.Link href="/orders" className='fs-16'>Orders</Nav.Link>
                     <div className="user-dropdown nav-link" ref={userRef}>
                       {userImage ?
                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>

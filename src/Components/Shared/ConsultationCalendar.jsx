@@ -73,7 +73,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
         // Convert hours to 24-hour format
         const hours24 = period === 'PM' ? parseInt(hours, 10) + 12 : parseInt(hours, 10);
-    
+
         const resultDatetime = new Date();
         resultDatetime.setHours(hours24);
         resultDatetime.setMinutes(parseInt(minutes, 10));
@@ -83,20 +83,20 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
     function convert12to24(time12) {
         const [time, period] = time12.split(' ');
-      
+
         let [hours, minutes] = time.split(':');
         hours = parseInt(hours, 10);
-      
+
         if (period === 'PM' && hours !== 12) {
-          hours += 12;
+            hours += 12;
         } else if (period === 'AM' && hours === 12) {
-          hours = 0;
+            hours = 0;
         }
-      
+
         // Format the result in 24-hour format
         const hours24 = hours.toString().padStart(2, '0');
         const minutes24 = minutes.padStart(2, '0');
-      
+
         return `${hours24}:${minutes24}`;
     }
 
@@ -104,11 +104,11 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         let [hours, minutes] = time24.split(':');
         hours = parseInt(hours, 10);
         minutes = parseInt(minutes, 10);
-      
+
         const dateObject = new Date();
         dateObject.setHours(hours + 1);
         dateObject.setMinutes(minutes);
-      
+
         const result = `${dateObject.getHours().toString().padStart(2, '0')}:${dateObject.getMinutes().toString().padStart(2, '0')}`;
         return result;
     }
@@ -126,11 +126,12 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         // List all hours between the two dates
         for (let i = 0; i <= hoursDifference; i++) {
             const currentHour = new Date(start.getTime() + i * 60 * 60 * 1000);
-            hoursArray.push(currentHour.toLocaleString('en-US', { hour: 'numeric',minute: '2-digit', hour12: true }));
-        
+            hoursArray.push(currentHour.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }));
+
         }
         setSelectedHoursArray(hoursArray);
         // console.log("hoursArray", hoursArray);
+        console.log("formattedDate", formattedDate);
     };
 
     const handleModalClose = () => {
@@ -139,7 +140,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     };
 
     const handleTimeslotClick = (data) => {
-        
+
         setSelectedTimeSlot(convert12to24(data.time));
         setClickedTimeslotButton(data.index);
     }
@@ -173,7 +174,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         });
     }
 
-    
+
 
     const handleRemoveAppointment = (index) => {
         setTimes((prevtimes) => {
@@ -232,10 +233,10 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
     useEffect(() => {
         const getTimezone = () => {
-          const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-          setCurrentTimezone(timezone);
+            const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+            setCurrentTimezone(timezone);
         };
-    
+
         getTimezone();
     }, []);
 
@@ -245,7 +246,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         setModalHeading(message);
         console.log("Message", message);
     }
-    
+
 
     return (
         <>
@@ -253,11 +254,11 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                 <div className="appointment-preview-container">
                     <h3>Appointment Preview</h3>
                     <div>
-                        
+
                         {selectedDate != "" &&
                             <>
-                                <p><FiCalendar size={20} color={'#CEA835'}/><span className="fw-500 current-date">{selectedDate}</span></p>
-                            </> 
+                                <p><FiCalendar size={20} color={'#CEA835'} /><span className="fw-500 current-date">{selectedDate}</span></p>
+                            </>
                         }
                         {/* {formattedSelectedDate != "" &&
                          <>
@@ -266,20 +267,20 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                         } */}
                         {consultationFormData.timezone != "" &&
                             <>
-                                <p><LuGlobe2 size={20} color={'#CEA835'}/><span className="fw-500 current-date">{consultationFormData.timezone}</span></p>
-                            </> 
+                                <p><LuGlobe2 size={20} color={'#CEA835'} /><span className="fw-500 current-date">{consultationFormData.timezone}</span></p>
+                            </>
                         }
                         {consultationFormData.first_name != "" &&
                             <>
-                                <p><FaRegUser size={20} color={'#CEA835'}/><span className="fw-500 current-date">{consultationFormData.first_name} {consultationFormData.last_name}</span></p>
+                                <p><FaRegUser size={20} color={'#CEA835'} /><span className="fw-500 current-date">{consultationFormData.first_name} {consultationFormData.last_name}</span></p>
                             </>
                         }
-                         {consultationFormData.email != "" &&
+                        {consultationFormData.email != "" &&
                             <>
-                                <p><MdOutlineEmail size={20} color={'#CEA835'}/><span className="fw-500 current-date">{consultationFormData.email}</span></p>
+                                <p><MdOutlineEmail size={20} color={'#CEA835'} /><span className="fw-500 current-date">{consultationFormData.email}</span></p>
                             </>
                         }
-                        
+
                     </div>
                 </div>
             </Col>
@@ -307,22 +308,22 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                         {selectedHoursArray.map((time, index) => (
                                             <div className="timeslots-column" key={index}>
                                                 <div>
-                                                    <button key={index} className={clickedTimeslotButton == index ? "btn btn-primary timeslot-btn":"btn btn-primary"} onClick={() => handleTimeslotClick({time, index})}>{time}</button>
+                                                    <button key={index} className={clickedTimeslotButton == index ? "btn btn-primary timeslot-btn" : "btn btn-primary"} onClick={() => handleTimeslotClick({ time, index })}>{time}</button>
                                                 </div>
                                                 <div>
                                                     {clickedTimeslotButton == index && (
-                                                        <button key={index} className="btn btn-primary timeslot-btn" onClick={()=> handleTimeslotNextClick()}>Next</button>
+                                                        <button key={index} className="btn btn-primary timeslot-btn" onClick={() => handleTimeslotNextClick()}>Next</button>
                                                     )}
                                                 </div>
                                             </div>
-                                            
+
                                         ))}
                                     </div>
                                 </div>
-                                
+
                             </Col>
                         </Row>
-                        
+
                     </div>
                     :
                     <div className="appointment-calendar-container">
@@ -332,27 +333,27 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                 <Form.Label>Provide any information regarding the details of the meeting.</Form.Label>
                                 <FormControl as="textarea"
                                     name="consultation_details"
-                                    rows={3} // You can adjust the number of rows as needed
+                                    rows={5} // You can adjust the number of rows as needed
                                     value={consultationFormData.consultation_details}
                                     placeholder='I would like to discuss the design specifications, required materials, and other related details.'
                                     onChange={handleChangeConsultation} />
                             </Form.Group>
-                            
+
                         </Form>
                         {/* temporary, should be inside the form */}
                         <div className="send-btn-container">
-                                <button className="btn btn-primary bg-transparent text-black" onClick={()=> {setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate('')}}>Cancel</button>
-                                {formStatus != "loading" ?
-                                    // <button className="btn btn-primary" onClick={addAppointmentSubmit}>Schedule Now</button>
-                                    <button className="btn btn-primary" onClick={()=> toggleUnderConstruction("Submit Appointment")}>Schedule Now</button>
-                                    
-                                    :
-                                    <button className="btn btn-primary" onClick={handleDefault}>Loading...</button>
-                                }
-                            </div>
+                            <button className="btn btn-primary bg-transparent text-black" onClick={() => { setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate('') }}>Cancel</button>
+                            {formStatus != "loading" ?
+                                // <button className="btn btn-primary" onClick={addAppointmentSubmit}>Schedule Now</button>
+                                <button className="btn btn-primary" onClick={() => toggleUnderConstruction("Submit Appointment")}>Schedule Now</button>
+
+                                :
+                                <button className="btn btn-primary" onClick={handleDefault}>Loading...</button>
+                            }
+                        </div>
                     </div>
                 }
-                
+
             </Col>
             <Modal
                 show={underConstructionShow}
@@ -362,19 +363,19 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                 size="sm"
             >
                 <Modal.Header className="py-0">
-                <h5 className='modal-title text-uppercase text-left'></h5>
-                <button type='button' className='close react-modal-close' onClick={() => toggleUnderConstruction("")} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
-                </button>
+                    <h5 className='modal-title text-uppercase text-left'></h5>
+                    <button type='button' className='close react-modal-close' onClick={() => toggleUnderConstruction("")} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
                 </Modal.Header>
                 <Modal.Body>
-                <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
-                <Card>
-                    <Card.Body className="text-center py-5">
-                    <GoAlertFill size="60px" className="mb-2 text-gold" />
-                    <p className="fs-20 text-black">Under Construction</p>
-                    {/* <DateTimePicker onTimeChange={handleTimeChange} onDone={handleDoneTimeChange} availability={currentAvailability} /> */}
-                    </Card.Body>
-                </Card>
+                    <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+                    <Card>
+                        <Card.Body className="text-center py-5">
+                            <GoAlertFill size="60px" className="mb-2 text-gold" />
+                            <p className="fs-20 text-black">Under Construction</p>
+                            {/* <DateTimePicker onTimeChange={handleTimeChange} onDone={handleDoneTimeChange} availability={currentAvailability} /> */}
+                        </Card.Body>
+                    </Card>
                 </Modal.Body>
             </Modal>
         </>

@@ -28,19 +28,19 @@ const Products = (props) => {
 
     const fetchData = async (e) => {
         try {
-          const productData = await GetUserProductsData(e);
-          if (productData) {
-            setProducts(productData);
-            setProductsLoading(false);
-          } else {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setProductsLoading(false);
-          }
-          // Update state or perform other logic with userData
+            const productData = await GetUserProductsData(e);
+            if (productData) {
+                setProducts(productData);
+                setProductsLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setProductsLoading(false);
+            }
+            // Update state or perform other logic with userData
         } catch (error) {
             toast.error('An error occured. Please try again or contact the administrator.');
             setProductsLoading(false);
-          // Handle the error, if needed
+            // Handle the error, if needed
         }
     };
 
@@ -55,9 +55,9 @@ const Products = (props) => {
 
     async function ProductDraftSubmit(e) {
         setProductDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + e + '?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
             const success = response.data.status;
-            if(success == 'Success') {
+            if (success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
                 setProductDraftLoading(false);
@@ -73,9 +73,9 @@ const Products = (props) => {
 
     async function ProductPublishSubmit(e) {
         setProductPublishLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + e + '?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
             const success = response.data.status;
-            if(success == 'Success') {
+            if (success == 'Success') {
                 toast.success('Fabric published successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
                 setProductPublishLoading(false);
@@ -115,48 +115,48 @@ const Products = (props) => {
                                         {/* <img src={object.url} className='product-img'/> */}
                                         {products.map((object, index) => (
                                             <Col className={`product-grid mb-3`} xs="4" md="2">
-                                                    <div className={`product-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+object.image_urls[0].image_url+")"}}>
-                                                        <div className="product-overlay">
-                                                            <div className="product-actions">
-                                                                <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
-                                                                {selectedItemIndex === index && (
-                                                                    <div className="action-box">
-                                                                        <Link className="text-decoration-none" to={`/product/${object.id}/edit`}>
-                                                                            <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
-                                                                        </Link>
-                                                                        <p className="mb-3"><GoTrash  /> Delete</p>
-                                                                        {object.status != "Draft" ?
-                                                                            <p className="mb-0 cursor-pointer" onClick={function() { ProductDraftSubmit(object.id);}}><IoDocumentOutline /> {productDraftLoading ? "Drafting..." : "Draft"}</p>
-                                                                            :
-                                                                            <p className="mb-0 cursor-pointer" onClick={function() { ProductPublishSubmit(object.id);}}><IoDocumentOutline /> {productPublishLoading ? "Publishing..." : "Publish"}</p>
-                                                                        }
-                                                                        
-                                                                        {/* Add other actions as needed */}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            <div className="product-details">
-                                                                <span className="text-white text-decoration-none">{object.name ?? "-"}</span>
-                                                                <div className="other-actions">
-                                                                    <div className="action-button bg-white me-2">
-                                                                        <GoHeart className="text-black" />
-                                                                    </div>
-                                                                    <div className="action-button bg-white">
-                                                                        <GoBookmark className="text-black" />
-                                                                    </div>
+                                                <div className={`product-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + object.image_urls[0].image_url + ")" }}>
+                                                    <div className="product-overlay">
+                                                        <div className="product-actions">
+                                                            <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
+                                                            {selectedItemIndex === index && (
+                                                                <div className="action-box">
+                                                                    <Link className="text-decoration-none" to={`/product/${object.id}/edit`}>
+                                                                        <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
+                                                                    </Link>
+                                                                    <p className="mb-3"><GoTrash /> Delete</p>
+                                                                    {object.status != "Draft" ?
+                                                                        <p className="mb-0 cursor-pointer" onClick={function () { ProductDraftSubmit(object.id); }}><IoDocumentOutline /> {productDraftLoading ? "Drafting..." : "Draft"}</p>
+                                                                        :
+                                                                        <p className="mb-0 cursor-pointer" onClick={function () { ProductPublishSubmit(object.id); }}><IoDocumentOutline /> {productPublishLoading ? "Publishing..." : "Publish"}</p>
+                                                                    }
+
+                                                                    {/* Add other actions as needed */}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <div className="product-details">
+                                                            <span className="text-white text-decoration-none">{object.name ?? "-"}</span>
+                                                            <div className="other-actions">
+                                                                <div className="action-button bg-white me-2">
+                                                                    <GoHeart className="text-black" />
+                                                                </div>
+                                                                <div className="action-button bg-white">
+                                                                    <GoBookmark className="text-black" />
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <Link to={`/product/${object.id}`} className="text-decoration-none">
-                                                            <div className="product-overlay" style={{background: 'transparent', height: '85%', bottom: 0}}></div>
-                                                        </Link>
                                                     </div>
+                                                    <Link to={`/product/${object.id}`} className="text-decoration-none">
+                                                        <div className="product-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
+                                                    </Link>
+                                                </div>
                                             </Col>
                                         ))}
                                         <Col className="product-grid mb-3" xs="4" md="2">
                                             <div onClick={addNewProduct} className="product-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
                                                 <GoPlus color="#a4a4a4" size="150px" className="mt-3" />
-                                                <p className="text-dgray" style={{marginTop: '-15px'}}>Add More</p>
+                                                <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
                                             </div>
                                         </Col>
                                     </Row>
@@ -171,7 +171,7 @@ const Products = (props) => {
                                     </div>
                                 </>
                             }
-                        </Container> 
+                        </Container>
                     </section>
                 </>
             }

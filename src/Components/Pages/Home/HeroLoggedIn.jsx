@@ -19,41 +19,53 @@ const HeroLoggedIn = () => {
             <section id='home-loggedin'>
                 <Container className='text-center'>
                     <Row>
-                        <Col lg='4' className="hero-cards-column cursor-pointer" onClick={() => navigate('/designers')}>
-                            <div className="hero-card position-relative h-100">
-                                <video id="home-video" autoPlay={false} muted loop style={{ zIndex: 1 }}>
-                                    <source src={DesignersVideo} type="video/mp4" />
-                                    {/* Add additional source elements for other formats if needed */}
-                                    Your browser does not support the video tag.
-                                </video>
-                                <div className="hero-cards">
-                                    <h2 className="mb-3 text-white">Designers</h2>
+                        <Col lg="6">
+                            <Col lg='12' className="hero-cards-column cursor-pointer" onClick={() => navigate('/designers')}>
+                                <div className="hero-card-designers position-relative h-100">
+                                    <video id="home-video" autoPlay={false} muted loop style={{ zIndex: 1 }}>
+                                        <source src={DesignersVideo} type="video/mp4" />
+                                        {/* Add additional source elements for other formats if needed */}
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <div className="hero-cards">
+                                        <h2 className="mb-3 text-white">Designers</h2>
+                                    </div>
                                 </div>
-                            </div>
+                            </Col>
                         </Col>
-                        <Col lg='4' className="hero-cards-column cursor-pointer" onClick={() => navigate('/fabrics')}>
-                            <div className="hero-card position-relative h-100">
-                                <video id="home-video" autoPlay={false} muted loop style={{ zIndex: 1 }}>
-                                    <source src={FabricsVideo} type="video/mp4" />
-                                    {/* Add additional source elements for other formats if needed */}
-                                    Your browser does not support the video tag.
-                                </video>
-                                <div className="hero-cards">
-                                    <h2 className="mb-3 text-white">Fabrics</h2>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col lg='4' className="hero-cards-column cursor-pointer" onClick={() => navigate('/designs')}>
-                            <div className="hero-card position-relative h-100">
-                                <video id="home-video" autoPlay={false} muted loop style={{ zIndex: 1 }}>
-                                    <source src={DesignsVideo} type="video/mp4" />
-                                    {/* Add additional source elements for other formats if needed */}
-                                    Your browser does not support the video tag.
-                                </video>
-                                <div className="hero-cards">
-                                    <h2 className="mb-3 text-white">Designs</h2>
-                                </div>
-                            </div>
+
+                        <Col lg="6">
+
+                            <Row className='mb-4'>
+                                <Col lg='12' className="hero-cards-column cursor-pointer" onClick={() => navigate('/designs')}>
+                                    <div className="hero-card-design position-relative h-100">
+                                        <video id="home-video" autoPlay={false} muted loop style={{ zIndex: 1 }}>
+                                            <source src={DesignsVideo} type="video/mp4" />
+                                            {/* Add additional source elements for other formats if needed */}
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <div className="hero-cards">
+                                            <h2 className="mb-3 text-white">Designs</h2>
+                                        </div>
+                                    </div>
+                                </Col>
+                            </Row>
+
+                            <Row>
+                                <Col lg='12' className="hero-cards-column cursor-pointer" onClick={() => navigate('/fabrics')}>
+                                    <div className="hero-card-fabrics position-relative h-100">
+                                        <video id="home-video" autoPlay={false} muted loop style={{ zIndex: 1 }}>
+                                            <source src={FabricsVideo} type="video/mp4" />
+                                            {/* Add additional source elements for other formats if needed */}
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        <div className="hero-cards">
+                                            <h2 className="mb-3 text-white">Fabrics</h2>
+                                        </div>
+                                    </div>
+                                </Col>
+                            </Row>
+
                         </Col>
                     </Row>
                 </Container>

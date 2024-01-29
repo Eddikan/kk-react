@@ -21,6 +21,8 @@ import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import { useCookies } from 'react-cookie';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
+import { BsArrowUpRightSquare } from "react-icons/bs";
+import { AiOutlineMessage } from "react-icons/ai";
 
 const ViewPortFolio = () => {
     const { portfolioId } = useParams();
@@ -57,7 +59,7 @@ const ViewPortFolio = () => {
         setModalHeading(message);
         console.log("Clicked! ", message);
         console.log("underConstructionShow! ", underConstructionShow);
-        
+
     }
 
     const fetchData = async (e) => {
@@ -157,14 +159,14 @@ const ViewPortFolio = () => {
                                                         <h2 className="fw-600 fs-30">{portfolio.name ?? "-"}</h2>
                                                     </div>
                                                     <div>
-                                                        <div className="action-button bg-smgray me-2" onClick={() => toggleUnderConstruction("Share Portfolio")}>
+                                                        <div className="action-button bg-smgray" onClick={() => toggleUnderConstruction("Share Portfolio")}>
                                                             <GoShareAndroid className="text-black" />
                                                         </div>
-                                                        <div className="action-button bg-smgray" onClick={() => toggleUnderConstruction("Add to wishlist")}>
+                                                        {/* <div className="action-button bg-smgray" onClick={() => toggleUnderConstruction("Add to wishlist")}>
                                                             <GoHeart className="text-black" />
-                                                        </div>
+                                                        </div> */}
                                                     </div>
-                                                    
+
                                                 </Col>
 
                                                 <Col lg="12">
@@ -174,7 +176,7 @@ const ViewPortFolio = () => {
                                                                 {portfolio.tags.length > 0 ?
                                                                     <>
                                                                         {portfolio.tags.map((tag, index) => (
-                                                                            <span className="design-tag bg-light fs-14 proximanova-family categories-color">
+                                                                            <span className="design-tag bg-light fs-14 categories-color">
                                                                                 {tag}
                                                                             </span>
                                                                         ))}
@@ -187,25 +189,68 @@ const ViewPortFolio = () => {
                                                             null
                                                         }
                                                     </div>
-                                                    <p className="mb-4 fs-16 proximanova-family">
+                                                    <p className="mb-4 fs-16">
                                                         {portfolio.description ?? "-"}
                                                     </p>
-
-
-                                                    <div className='mt-5'>
-                                                        <p className='btn btn-primary mb-2 cursor-pointer fs-16 proximanova-family fw-400 bg-transparent text-black'
-                                                            onClick={() => askQuestionModal(true)}
-                                                         style={{minWidth: '216px'}}>Ask A Question</p>
-                                                    </div>
-
-                                                    <div className='w-100'>
-                                                        <a href="/appointment/schedule" className='btn btn-primary fs-16 proximanova-family fw-400'>Schedule A Consultation</a>
-                                                    </div>
                                                 </Col>
                                             </Row>
                                         </Card.Body>
                                     </Card>
+
+                                    <Col lg={12} className='mt-3'>
+                                        <Card className="height-portfolio">
+                                            <Card.Body>
+                                                <div className='d-flex justify-content-between'>
+                                                    <div className='mb-0 d-flex portfolio-designer'>
+                                                        {portfolio.user.image ? (
+                                                            <div className='designer-photo' style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
+                                                            >
+                                                            </div>
+                                                        ) : (
+                                                            <div className='designer-photo' style={{ backgroundImage: `url(${portfolio.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}
+                                                            ></div>
+                                                        )}
+                                                        <div className="designer-info mx-2">
+                                                            <p className="text-black fs-18 fw-600 mb-0">{portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"}</p>
+                                                            {currentUser !== portfolio.user.id ?
+                                                                <>
+                                                                    <a className='text-decoration-none fs-14'>Follow</a>
+                                                                </>
+                                                                :
+                                                                <>
+                                                                    <a className='text-decoration-none fs-14'>You</a>
+                                                                </>
+                                                            }
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <div>
+                                                            <div className="cursor-pointer" onClick={() => toggleUnderConstruction("Chat Designer")}>
+                                                                <AiOutlineMessage className='me-2' color='#caa533' />Chat Designer
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <span>
+                                                    <p className='btn btn-primary mt-4 mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black'
+                                                        onClick={() => askQuestionModal(true)}
+                                                        style={{ minWidth: '216px' }}>Request A Quote</p>
+                                                </span>
+
+                                                <span className='w-100'>
+                                                    <a href="/appointment/schedule" className='btn mt-4 ms-3 btn-primary fs-16 fw-400'>Schedule A Consultation</a>
+                                                </span>
+
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
                                 </Col>
+
+
                                 {/* <Col lg={12} className="mt-4">
                                 <p className="mb-2"><strong>Lead Time</strong></p>
                                 <p className="mb-4">{portfolio.designer?.lead_time ?? "-"}</p>
@@ -215,7 +260,14 @@ const ViewPortFolio = () => {
                             </Col> */}
                                 <Col lg="12" className='mt-5'>
                                     {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
-                                    <span className={`text-black reviews-product cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Reviews</span>
+                                    <span className={`text-black reviews-product cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews
+
+
+                                        <span className="cursor-pointer" onClick={() => toggleUnderConstruction("Review Item")}>
+                                            <BsArrowUpRightSquare className='ms-2' color="#caa533" />
+                                        </span>
+
+                                    </span>
                                     <hr className='mt-2' />
                                     {/* {commentsTabShow ?
                                     <>
@@ -231,7 +283,7 @@ const ViewPortFolio = () => {
                                         <>
                                             <div className="text-center">
                                                 <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
-                                                <p className="fs-20 text-black proximanova-family no-available">No available reviews at this time</p>
+                                                <p className="fs-20 text-black no-available">No available reviews at this time</p>
                                             </div>
                                         </>
                                         :
@@ -246,7 +298,7 @@ const ViewPortFolio = () => {
                                             <Card.Header className='header-chat bg-white'>
                                                 <div className='d-flex justify-content-between'>
                                                     <div>
-                                                        <span className='name-active-person'>Dave Napoles</span>
+                                                        <span className='fw-500'>Dave Napoles</span>
                                                         <span className='ms-2 active-now fs-14 fw-400'>Active Now</span>
                                                     </div>
                                                     <div className="cursor-pointer" onClick={() => setAskAQuestion(false)}>
@@ -311,7 +363,10 @@ const ViewPortFolio = () => {
                                                         <div className='cursor-pointer'><IoIosAttach /></div>
                                                     </div>
                                                     <div>
-                                                        <span className='send-btn cursor-pointer'>Send<VscSend className='ms-1' /></span></div>
+                                                        <div className="cursor-pointer" onClick={() => toggleUnderConstruction("Send Message")}>
+                                                            Send<VscSend className='ms-1' />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </Card.Body>
                                         </Card>
@@ -329,28 +384,28 @@ const ViewPortFolio = () => {
                         </Container>
 
                         <Modal
-                        show={underConstructionShow}
-                        className='modal-preview'
-                        fade={false}
-                        centered
-                        size="sm"
-                    >
-                        <Modal.Header className="py-0">
-                        <h5 className='modal-title text-uppercase text-left'></h5>
-                        <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
-                        </button>
-                        </Modal.Header>
-                        <Modal.Body>
-                        <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
-                        <Card>
-                            <Card.Body className="text-center py-5">
-                            <GoAlertFill size="60px" className="mb-2 text-gold" />
-                            <p className="fs-20 text-black">Under Construction</p>
-                            </Card.Body>
-                        </Card>
-                        </Modal.Body>
-                    </Modal>
-                        
+                            show={underConstructionShow}
+                            className='modal-preview'
+                            fade={false}
+                            centered
+                            size="sm"
+                        >
+                            <Modal.Header className="py-0">
+                                <h5 className='modal-title text-uppercase text-left'></h5>
+                                <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                                </button>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+                                <Card>
+                                    <Card.Body className="text-center py-5">
+                                        <GoAlertFill size="60px" className="mb-2 text-gold" />
+                                        <p className="fs-20 text-black">Under Construction</p>
+                                    </Card.Body>
+                                </Card>
+                            </Modal.Body>
+                        </Modal>
+
                     </section>
                 </>
             }

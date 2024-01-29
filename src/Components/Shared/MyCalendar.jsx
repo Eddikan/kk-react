@@ -47,8 +47,8 @@ const MyCalendar = ({ toggleEvent }) => {
     }
 
 
-    const postSetAppointment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+    const postSetAppointment = async (id, data) => {
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + id + '/set/appointment', data);
     };
 
 

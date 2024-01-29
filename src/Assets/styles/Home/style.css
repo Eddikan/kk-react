@@ -21,6 +21,15 @@ section#home {
     min-height: 100vh;
 }
 
+.hero-card-designers {
+    min-height: 786px;
+}
+
+.hero-card-fabrics,
+.hero-card-design {
+    min-height: 381px;
+}
+
 .hero-cards {
     display: flex;
     align-items: center;
@@ -39,6 +48,7 @@ section#home {
 
 #home-loggedin {
     background: #fff;
+    padding-top: 50px;
 }
 
 section#home h1 {
