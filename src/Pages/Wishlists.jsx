@@ -197,7 +197,7 @@ const Wishlists = (props) => {
                                             :
                                             <div className="text-center mt-5">
                                                 <GoAlertFill size="120px" className="mb-4 mt-5 text-gold" />
-                                                <p className="fs-20 text-black no-wishlist">No wishlist reviews at this time</p>
+                                                <p className="fs-20 text-black no-wishlist">No wishlist at this time</p>
                                             </div>
                                         }
                                     </>

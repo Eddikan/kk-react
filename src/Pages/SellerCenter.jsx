@@ -354,18 +354,18 @@ const SellerCenter = (props) => {
 
 
     useEffect(() => {
-        getBusinessHours()
-            .then((response) => {
-                const selectedTime = response.data.data;
-                if (selectedTime) {
-                    setTimes(selectedTime);
-                } else {
-                    toast.error('There has been an error saving the appointment, please try again!');
-                }
-            })
-            .catch((error) => {
-                toast.error('There has been an error saving the appointment, please try again!');
-            });
+        // getBusinessHours()
+        //     .then((response) => {
+        //         const selectedTime = response.data.data;
+        //         if (selectedTime) {
+        //             setTimes(selectedTime);
+        //         } else {
+        //             toast.error('There has been an error saving the appointment, please try again!');
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         toast.error('There has been an error saving the appointment, please try again!');
+        //     });
 
     }, [reloadCount]);
 

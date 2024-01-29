@@ -24,3 +24,7 @@ span.appointments,.orders,.portfolio,.fabrics {
     color: #CEA835;
     font-weight: bold;
 }
+
+.sidebar-menu .accordion-header {
+    font-family: 'Poppins' !important;
+}
