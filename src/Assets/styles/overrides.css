@@ -1517,3 +1517,28 @@ a.schedule-consultation {
 .header-chat {
     padding: 15px 21px 15px 21px;
 }
+.eco-col {
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.btn-explore-now {
+    font-size: 15px;
+    padding: 12px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: var(--white);
+    background-color: rgba(0, 0, 0, 0.075);
+    border-color: #fff;
+}
+
+.btn-explore-now:hover {
+    background-color: var(--gold) !important;
+    border-color: var(--gold) !important;
+}
+.explore-now {
+    margin-top: 35px;
+}

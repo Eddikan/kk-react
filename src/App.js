@@ -157,10 +157,14 @@ const App = () => {
           <Route path="/designers" exact element={<Designers />} />
           <Route path="/fabrics" exact element={<Fabrics />} />
           <Route path="/designs" exact element={<Designs />} />
-          <Route path="/seller-center" exact element={<SellerCenter />} />
+          <Route
+            path="/seller-center/:designerId"
+            exact
+            element={<SellerCenter />}
+          />
           <Route path="/designer-profile" exact element={<DesignerProfile />} />
           <Route
-            path="/appointment/schedule"
+            path="/appointment/schedule/:designerId"
             exact
             element={<ScheduleConsultation />}
           />

@@ -23,6 +23,7 @@ import { GoPencil } from "react-icons/go";
 import { GoAlertFill } from 'react-icons/go';
 import axios from 'axios';
 import MyCalendar from 'Components/Shared/MyCalendar';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -88,6 +89,8 @@ const Profile = () => {
     const handleClickImg = event => {
         hiddenFileInputImg.current.click();
     };
+
+    const navigate = useNavigate();
 
     const handleChangeImg = ({ target }) => {
         if (target.files < 1 || !target.validity.valid) {
@@ -295,7 +298,7 @@ const Profile = () => {
                                     </Col>
                                     {user.is_designer == 1 && (
                                         <Col md="3" className="text-left">
-                                            <Button href="/seller-center" type='button' id="btn-seller-profile"><GoArrowUpRight /><span className='ms-1'>Seller Center</span></Button>
+                                            <Button href={`/seller-center/${user.designer.id}`} type='button' id="btn-seller-profile"><GoArrowUpRight /><span className='ms-1'>Seller Center</span></Button>
                                         </Col>
                                     )}
                                 </Row>
@@ -485,11 +488,11 @@ const Profile = () => {
                         }
 
                     </Container>
-                </section>
+                </section >
             }
 
 
-        </Layout>
+        </Layout >
     );
 };
 

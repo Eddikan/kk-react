@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
-import { Link } from 'react-router-dom';
 import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
@@ -13,11 +12,12 @@ import { AiOutlineClose } from "react-icons/ai";
 import MyCalendar from 'Components/Shared/MyCalendar';
 import axios from "axios";
 import toast from 'react-hot-toast';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 
 const initialBusinessHours = {
-    opens_at: '',
-    closes_at: ''
+    start: '',
+    end: ''
 };
 
 const initialAppointments = {
@@ -37,6 +37,8 @@ const ToastCss = {
 const SellerCenter = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
+    const userDetails = cookies.userDetails;
+    const { designerId } = useParams();
     const [designerBusinessHoursModalShow, setDesignerBusinessHoursModalShow] = useState(false);
     const [appointmentModalShow, setAppointmentModalShow] = useState(false);
 
@@ -48,7 +50,7 @@ const SellerCenter = (props) => {
     const [isFridayChecked, setIsFridayChecked] = useState(false);
     const [isSaturdayChecked, setIsSaturdayChecked] = useState(false);
 
-    const [designerId, setDesignerId] = useState([]);
+    const [selectedDate, setSelectedDate] = useState(null);
 
 
     const [sundayHoursFormData, setSundayHoursFormData] = useState([initialBusinessHours]);
@@ -59,6 +61,8 @@ const SellerCenter = (props) => {
     const [fridayHoursFormData, setFridayHoursFormData] = useState([initialBusinessHours]);
     const [saturdayHoursFormData, setSaturdayHoursFormData] = useState([initialBusinessHours]);
     const [appointmentFormData, setAppointmentFormData] = useState(initialAppointments);
+
+    const [businessHoursFormData, setBusinessHoursFormData] = useState([initialBusinessHours]);
 
     const [times, setTimes] = useState([initialBusinessHours]);
 
@@ -71,11 +75,11 @@ const SellerCenter = (props) => {
     // };
 
     const postBusinessHours = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + currentUser + '/availability', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/availability', data);
     };
 
     const getBusinessHours = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + currentUser + '/availability');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability');
     };
 
     const handleChangeAppointment = (e) => {
@@ -86,9 +90,87 @@ const SellerCenter = (props) => {
         });
     }
 
-    const handleChangeTime = (e, index) => {
+    const handleChangeTimeSunday = (e, index) => {
         const { name, value } = e.target;
-        setTimes(prevtimes => {
+        setSundayHoursFormData(prevtimes => {
+            const updatedTimes = [...prevtimes];
+            updatedTimes[index] = {
+                ...updatedTimes[index],
+                [name]: value,
+            };
+
+            return updatedTimes;
+        });
+    };
+
+    const handleChangeTimeMonday = (e, index) => {
+        const { name, value } = e.target;
+        setMondayHoursFormData(prevtimes => {
+            const updatedTimes = [...prevtimes];
+            updatedTimes[index] = {
+                ...updatedTimes[index],
+                [name]: value,
+            };
+
+            return updatedTimes;
+        });
+    };
+
+    const handleChangeTimeTuesday = (e, index) => {
+        const { name, value } = e.target;
+        setTuesdayHoursFormData(prevtimes => {
+            const updatedTimes = [...prevtimes];
+            updatedTimes[index] = {
+                ...updatedTimes[index],
+                [name]: value,
+            };
+
+            return updatedTimes;
+        });
+    };
+
+    const handleChangeTimeWednesday = (e, index) => {
+        const { name, value } = e.target;
+        setWednesdayHoursFormData(prevtimes => {
+            const updatedTimes = [...prevtimes];
+            updatedTimes[index] = {
+                ...updatedTimes[index],
+                [name]: value,
+            };
+
+            return updatedTimes;
+        });
+    };
+
+    const handleChangeTimeThursday = (e, index) => {
+        const { name, value } = e.target;
+        setThursdayHoursFormData(prevtimes => {
+            const updatedTimes = [...prevtimes];
+            updatedTimes[index] = {
+                ...updatedTimes[index],
+                [name]: value,
+            };
+
+            return updatedTimes;
+        });
+    };
+
+    const handleChangeTimeFriday = (e, index) => {
+        const { name, value } = e.target;
+        setFridayHoursFormData(prevtimes => {
+            const updatedTimes = [...prevtimes];
+            updatedTimes[index] = {
+                ...updatedTimes[index],
+                [name]: value,
+            };
+
+            return updatedTimes;
+        });
+    };
+
+    const handleChangeTimeSaturday = (e, index) => {
+        const { name, value } = e.target;
+        setSaturdayHoursFormData(prevtimes => {
             const updatedTimes = [...prevtimes];
             updatedTimes[index] = {
                 ...updatedTimes[index],
@@ -308,37 +390,46 @@ const SellerCenter = (props) => {
         });
     }
 
-    // const addAppointmentSubmit = (e) => {
-    //     e.preventDefault();
-    //     setFormStatus('loading');
-    //     postSetAppointment({ ...appointmentFormData, times: times }).then(response => {
-    //         const status = response.data.status;
-    //         if (status === "Success") {
-    //             setFormStatus('standby');
-    //             setReloadCount(reloadCount + 1);
-    //             setAppointmentModalShow(false);
-    //             setAppointmentFormData(initialAppointments);
-    //             toast.success('Appointment added successfully!');
-    //         } else {
-    //             setFormStatus('standby');
-    //             toast.error('There has been an error saving the appointment, please try again!');
-    //         }
-    //     }).catch(() => {
-    //         toast.error('There has been an error saving the appointment, please try again!');
-    //     });
-    // }
-
     const addBusinessHoursSubmit = (e) => {
         e.preventDefault();
         setFormStatus('loading');
-        postBusinessHours({ ...appointmentFormData, times: times }).then(response => {
+        const content = [
+            {
+                day: 'sunday',
+                availabilities: sundayHoursFormData
+            },
+            {
+                day: 'monday',
+                availabilities: mondayHoursFormData
+            },
+            {
+                day: 'tuesday',
+                availabilities: tuesdayHoursFormData
+            },
+            {
+                day: 'wednesday',
+                availabilities: wednesdayHoursFormData
+            },
+            {
+                day: 'thursday',
+                availabilities: thursdayHoursFormData
+            },
+            {
+                day: 'friday',
+                availabilities: fridayHoursFormData
+            },
+            {
+                day: 'saturday',
+                availabilities: saturdayHoursFormData
+            },
+        ];
+        postBusinessHours({ content, designer_id: designerId, }).then(response => {
             const status = response.data.status;
             if (status === "Success") {
                 setFormStatus('standby');
                 setReloadCount(reloadCount + 1);
-                setAppointmentModalShow(false);
-                setSundayHoursFormData(initialBusinessHours);
-                toast.success('Appointment added successfully!');
+                setBusinessHoursFormData(initialBusinessHours);
+                toast.success('Availability added successfully!');
             } else {
                 setFormStatus('standby');
                 toast.error('There has been an error saving the appointment, please try again!');
@@ -347,6 +438,9 @@ const SellerCenter = (props) => {
             toast.error('There has been an error saving the appointment, please try again!');
         });
     }
+
+    console.log("sundayHoursFormData", sundayHoursFormData);
+    console.log("designerId", designerId);
 
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
@@ -357,21 +451,23 @@ const SellerCenter = (props) => {
         // getBusinessHours()
         //     .then((response) => {
         //         const selectedTime = response.data.data;
-        //         if (selectedTime) {
-        //             setTimes(selectedTime);
-        //         } else {
-        //             toast.error('There has been an error saving the appointment, please try again!');
+        //         const status = response.data.status;
+        //         if (status == "Fail") {
+        //             toast.error('There has no availabilty found!');
+        //         }
+        //         else {
+        //             if (selectedTime) {
+        //                 setTimes(selectedTime);
+        //             } else {
+        //                 toast.error('There has been an error getting the appointment, please try again!');
+        //             }
         //         }
         //     })
         //     .catch((error) => {
-        //         toast.error('There has been an error saving the appointment, please try again!');
+        //         toast.error('There has been an error getting the appointment, please try again!');
         //     });
 
     }, [reloadCount]);
-
-
-
-
 
     return (
         <LayoutNoFooter>
@@ -448,10 +544,10 @@ const SellerCenter = (props) => {
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
                                                                             type='time'
-                                                                            name='opens_at'
+                                                                            name='start'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={sundayHoursFormData?.opens_at}
-                                                                            onChange={e => handleChangeTime(e, index)} />
+                                                                            value={businessHoursFormData?.start}
+                                                                            onChange={e => handleChangeTimeSunday(e, index)} />
                                                                     </Form.Group>
                                                                 </Col>
                                                                 <Col md="5" className="pe-0">
@@ -459,10 +555,10 @@ const SellerCenter = (props) => {
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
                                                                             type='time'
-                                                                            name='closes_at'
+                                                                            name='end'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={sundayHoursFormData?.closes_at}
-                                                                            onChange={e => handleChangeTime(e, index)} />
+                                                                            value={businessHoursFormData?.end}
+                                                                            onChange={e => handleChangeTimeSunday(e, index)} />
                                                                     </Form.Group>
                                                                 </Col>
 
@@ -513,14 +609,26 @@ const SellerCenter = (props) => {
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='opens_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='start'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={businessHoursFormData?.start}
+                                                                            onChange={e => handleChangeTimeMonday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
 
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Closes at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='closes_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='end'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={businessHoursFormData?.end}
+                                                                            onChange={e => handleChangeTimeMonday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
                                                             </>
@@ -571,13 +679,25 @@ const SellerCenter = (props) => {
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='opens_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='start'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={businessHoursFormData?.start}
+                                                                            onChange={e => handleChangeTimeTuesday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Closes at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='closes_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='end'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={businessHoursFormData?.end}
+                                                                            onChange={e => handleChangeTimeTuesday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
                                                             </>
@@ -628,13 +748,25 @@ const SellerCenter = (props) => {
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='opens_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='start'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={businessHoursFormData?.start}
+                                                                            onChange={e => handleChangeTimeWednesday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Closes at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='closes_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='end'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={businessHoursFormData?.end}
+                                                                            onChange={e => handleChangeTimeWednesday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
 
@@ -686,13 +818,25 @@ const SellerCenter = (props) => {
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='opens_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='start'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={businessHoursFormData?.start}
+                                                                            onChange={e => handleChangeTimeThursday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Closes at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='closes_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='end'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={businessHoursFormData?.end}
+                                                                            onChange={e => handleChangeTimeThursday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
 
@@ -744,13 +888,25 @@ const SellerCenter = (props) => {
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='opens_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='start'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={businessHoursFormData?.start}
+                                                                            onChange={e => handleChangeTimeFriday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Closes at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='closes_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='end'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={businessHoursFormData?.end}
+                                                                            onChange={e => handleChangeTimeFriday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
 
@@ -802,13 +958,25 @@ const SellerCenter = (props) => {
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='opens_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='start'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={businessHoursFormData?.start}
+                                                                            onChange={e => handleChangeTimeSaturday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Closes at</p>
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl type='time' name='closes_at' className='mr-sm-2 form-control-hours' />
+                                                                        <FormControl
+                                                                            type='time'
+                                                                            name='end'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={businessHoursFormData?.end}
+                                                                            onChange={e => handleChangeTimeSaturday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
                                                             </>

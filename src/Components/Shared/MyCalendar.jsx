@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { PiPencilThin, PiTrashThin } from "react-icons/pi";
 import { AiOutlineClose } from "react-icons/ai";
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import { MdOutlinePlace } from "react-icons/md";
 import FormControl from 'react-bootstrap/FormControl';
 import { RxCross2 } from "react-icons/rx";
@@ -24,12 +26,24 @@ const initialBusinessHours = {
 };
 
 const initialAppointments = {
-    title: '',
+    consultation_date_time: '',
+    consultation_hour_start: '',
+    consultation_hour_end: '',
+    email: '',
+    first_name: '',
+    last_name: '',
+    timezone: '',
+    consultation_details: '',
 };
 
 const localizer = momentLocalizer(moment)
 
 const MyCalendar = ({ toggleEvent }) => {
+
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const currentUser = cookies.currentUser;
+    const userDetails = cookies.userDetails;
+    const { designerId } = useParams();
 
     const [events, setEvents] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -37,7 +51,7 @@ const MyCalendar = ({ toggleEvent }) => {
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
     const [appointmentFormData, setAppointmentFormData] = useState(initialAppointments);
-    const [times, setTimes] = useState([initialBusinessHours]);
+    const [times, setTimes] = useState([initialAppointments]);
 
 
     const toggleCalendarEvent = (calendarEvent) => {
@@ -47,8 +61,8 @@ const MyCalendar = ({ toggleEvent }) => {
     }
 
 
-    const postSetAppointment = async (id, data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + id + '/set/appointment', data);
+    const postSetAppointment = async (data) => {
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment', data);
     };
 
 
@@ -93,7 +107,7 @@ const MyCalendar = ({ toggleEvent }) => {
             updatedTimes[index] = {
                 ...updatedTimes[index],
                 [name]: value,
-                date: selectedDate,
+                consultation_date_time: selectedDate,
             };
 
             return updatedTimes;
@@ -103,7 +117,7 @@ const MyCalendar = ({ toggleEvent }) => {
     const addAppointmentSubmit = (e) => {
         e.preventDefault();
         setFormStatus('loading');
-        postSetAppointment({ ...appointmentFormData, times: times })
+        postSetAppointment({ times: times })
             .then(response => {
                 const status = response.data.status;
                 if (status === "Success") {
@@ -113,10 +127,10 @@ const MyCalendar = ({ toggleEvent }) => {
                     toast.success('Appointment added successfully!');
                 } else {
                     setFormStatus('standby');
-                    toast.error('There has been an error saving the appointment, please try again!');
+                    toast.error('There has been an error adding the appointment, please try again!');
                 }
             }).catch(() => {
-                toast.error('There has been an error saving the appointment, please try again!');
+                toast.error('There has been an error adding the appointment, please try again!');
             });
     }
 
@@ -151,7 +165,6 @@ const MyCalendar = ({ toggleEvent }) => {
 
                         {selectedDate && (
                             <div>
-
                                 <Row className='padding-modal pt-3 pb-3'>
                                     <Col lg="12" className='mb-2 mt-0 text-left'>
                                         <span className='title-appointment'>Title</span>
@@ -187,9 +200,9 @@ const MyCalendar = ({ toggleEvent }) => {
                                                                     <div className='mb-3'>
                                                                         <input
                                                                             type='time'
-                                                                            name='opens_at'
+                                                                            name='consultation_hour_start'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={time?.opens_at}
+                                                                            value={time?.consultation_hour_start}
                                                                             onChange={e => handleChangeTime(e, index)}
                                                                         />
                                                                     </div>
@@ -200,9 +213,9 @@ const MyCalendar = ({ toggleEvent }) => {
                                                                     <div className='mb-3'>
                                                                         <input
                                                                             type='time'
-                                                                            name='closes_at'
+                                                                            name='consultation_hour_end'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={time?.closes_at}
+                                                                            value={time?.consultation_hour_end}
                                                                             onChange={e => handleChangeTime(e, index)}
                                                                         />
                                                                     </div>
@@ -227,7 +240,9 @@ const MyCalendar = ({ toggleEvent }) => {
                         <ModalFooter>
                             <div className='text-right'>
                                 <Button className="cancel-btn me-2" onClick={handleModalClose}>Cancel</Button>
-                                <Button className="btn-save" onClick={addAppointmentSubmit}>Save</Button>
+                                <Button className="btn-save"
+                                // onClick={addAppointmentSubmit}
+                                >Save</Button>
                             </div>
                         </ModalFooter>
                     </div>

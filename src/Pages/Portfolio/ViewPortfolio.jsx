@@ -22,7 +22,9 @@ import { useCookies } from 'react-cookie';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import { BsArrowUpRightSquare } from "react-icons/bs";
-import { AiOutlineMessage } from "react-icons/ai";
+import { AiFillMessage } from "react-icons/ai";
+import { IoVideocam } from "react-icons/io5";
+import { PiNotepadFill } from "react-icons/pi";
 
 const ViewPortFolio = () => {
     const { portfolioId } = useParams();
@@ -228,7 +230,7 @@ const ViewPortFolio = () => {
                                                     <div>
                                                         <div>
                                                             <div className="cursor-pointer" onClick={() => toggleUnderConstruction("Chat Designer")}>
-                                                                <AiOutlineMessage className='me-2' color='#caa533' />Chat Designer
+                                                                <AiFillMessage className='me-2 mb-1' color='#caa533' />Chat Designer
                                                             </div>
                                                         </div>
 
@@ -238,11 +240,15 @@ const ViewPortFolio = () => {
                                                 <span>
                                                     <p className='btn btn-primary mt-4 mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black'
                                                         onClick={() => askQuestionModal(true)}
-                                                        style={{ minWidth: '216px' }}>Request A Quote</p>
+                                                        style={{ minWidth: '216px' }}><PiNotepadFill color="#000000" className='me-2' size="20" />Request A Quote</p>
                                                 </span>
 
                                                 <span className='w-100'>
-                                                    <a href="/appointment/schedule" className='btn mt-4 ms-3 btn-primary fs-16 fw-400'>Schedule A Consultation</a>
+                                                    <a
+                                                        href={`/appointment/schedule/${portfolio.designer.id}`}
+                                                        className='btn mt-4 ms-3 btn-primary fs-16 fw-400'
+                                                    >
+                                                        <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
                                                 </span>
 
                                             </Card.Body>

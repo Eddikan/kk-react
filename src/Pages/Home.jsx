@@ -6,6 +6,7 @@ import Designers from 'Components/Shared/Designers';
 import '../Assets/styles/Home/style.css'
 import Designs from 'Components/Shared/Designs';
 import Fabrics from 'Components/Shared/Fabrics';
+import EcoFriendly from 'Components/Shared/EcoFriendly';
 import HomeVideo from 'Assets/videos/kouture-homepage-video.mp4'
 import ShopByCategory from 'Components/Shared/ShopByCategory';
 import { useCookies } from 'react-cookie';
@@ -116,6 +117,15 @@ const Home = (props) => {
           </Row>
         </Container>
       </section>
+
+      <section id="eco" className="py-5 mb-5">
+        <Row>
+          <Col lg="12">
+            <EcoFriendly currentUser={currentUser} onSignup={showSignupModal} />
+          </Col>
+        </Row>
+      </section>
+
       <section id="designs" className="py-5 mb-5">
         <Container>
           <Row>

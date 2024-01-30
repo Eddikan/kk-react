@@ -14,6 +14,7 @@ import '../../Assets/styles/DesignerCalendar/style.css';
 import { useCookies } from 'react-cookie';
 import { Modal } from 'react-bootstrap';
 import { GoAlertFill } from 'react-icons/go';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 import axios from "axios";
 import toast from 'react-hot-toast';
@@ -42,6 +43,12 @@ const intitialConsultationData = {
 const localizer = momentLocalizer(moment)
 
 const ConsultationCalendar = ({ toggleEvent }) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const currentUser = cookies.currentUser;
+    const currentUserDetails = cookies.userDetails;
+    const userDetails = cookies.userDetails;
+    const { designerId } = useParams();
+
 
     const [events, setEvents] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -54,17 +61,19 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const [times, setTimes] = useState([initialBusinessHours]);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState();
     const [clickedTimeslotButton, setClickedTimeslotButton] = useState();
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const currentUser = cookies.currentUser;
-    const currentUserDetails = cookies.userDetails;
     const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
     const [currentTimezone, setCurrentTimezone] = useState(null);
     const [currentStep, setCurrentStep] = useState(1);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
+    const [youAreScheduleShow, setYouAreScheduleShow] = useState(false);
     const [modalHeading, setModalHeading] = useState();
 
     const postSetAppointment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment', data);
+    };
+
+    const getSetAppointment = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability?date=' + selectedDate);
     };
 
 
@@ -212,14 +221,26 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     };
 
     const addAppointmentSubmit = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         setFormStatus('loading');
-        postSetAppointment({ ...consultationFormData })
+
+        const content = {
+            consultation_date_time: selectedTimeSlot,
+            consultation_details: consultationFormData.consultation_details,
+            consultation_hour_end: selectedTimeSlot,
+            consultation_hour_start: selectedTimeSlot,
+            email: consultationFormData.email,
+            first_name: consultationFormData.first_name,
+            last_name: consultationFormData.last_name,
+            timezone: consultationFormData.timezone,
+        };
+        postSetAppointment({ content })
             .then(response => {
                 const status = response.data.status;
                 if (status === "Success") {
                     setFormStatus('standby');
                     setReloadCount(reloadCount + 1);
+                    setYouAreScheduleShow(!youAreScheduleShow);
                     setAppointmentFormData(initialAppointments);
                     toast.success('Consultation added successfully!');
                 } else {
@@ -246,6 +267,39 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         setModalHeading(message);
         console.log("Message", message);
     }
+
+    function toggleSchedule(message) {
+        // message.preventDefault();
+        setYouAreScheduleShow(!youAreScheduleShow);
+        setModalHeading(message);
+        console.log("Message", message);
+    }
+
+
+    useEffect(() => {
+        // getSetAppointment()
+        //     .then((response) => {
+        //         const selectedDate = response.data.data;
+        //         const status = response.data.status;
+        //         if (status == "Fail") {
+        //             toast.error('This designer have not yet set their available hours');
+        //         }
+        //         else {
+        //             if (selectedDate) {
+        //                 setSelectedDate(selectedDate);
+        //             } else {
+        //                 toast.error('There has been an error getting the schedule, please try again!');
+        //             }
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         toast.error('There has been an error getting the schedule, please try again!');
+        //     });
+
+    }, [reloadCount]);
+
+    console.log("clickedTimeslotButton", clickedTimeslotButton);
+    console.log("selectedDate", selectedDate);
 
 
     return (
@@ -345,7 +399,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                             <button className="btn btn-primary bg-transparent text-black" onClick={() => { setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate('') }}>Cancel</button>
                             {formStatus != "loading" ?
                                 // <button className="btn btn-primary" onClick={addAppointmentSubmit}>Schedule Now</button>
-                                <button className="btn btn-primary" onClick={() => toggleUnderConstruction("Submit Appointment")}>Schedule Now</button>
+                                <button className="btn btn-primary" onClick={() => toggleUnderConstruction("You are Scheduled!")}>Schedule Now</button>
 
                                 :
                                 <button className="btn btn-primary" onClick={handleDefault}>Loading...</button>
@@ -378,6 +432,59 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                     </Card>
                 </Modal.Body>
             </Modal>
+
+            <Modal
+                show={youAreScheduleShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="sm"
+            >
+                <Modal.Header className="py-0">
+                    <h5 className='modal-title text-uppercase text-left'></h5>
+                    <button type='button' className='close react-modal-close' onClick={() => toggleSchedule("")} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body className='pt-4'>
+                    <h4 className='fs-25 fw-600 mb-3 text-center'>{modalHeading}</h4>
+                    <div className='sent-email text-center text-black mb-3'>An invite has been sent to your email. See you then!</div>
+                    <div className='d-flex justify-content-center align-items-center'>
+                        <Card className='w-75'>
+                            <Card.Body className='pb-0'>
+                                <div>
+
+                                    {selectedDate != "" &&
+                                        <>
+                                            <p><FiCalendar size={20} color={'#CEA835'} /><span className="fw-500 current-date ms-2">{selectedDate}</span></p>
+                                        </>
+                                    }
+
+                                    {consultationFormData.timezone != "" &&
+                                        <>
+                                            <p><LuGlobe2 size={20} color={'#CEA835'} /><span className="fw-500 current-date ms-2">{consultationFormData.timezone}</span></p>
+                                        </>
+                                    }
+                                    {consultationFormData.first_name != "" &&
+                                        <>
+                                            <p><FaRegUser size={20} color={'#CEA835'} /><span className="fw-500 current-date ms-2">{consultationFormData.first_name} {consultationFormData.last_name}</span></p>
+                                        </>
+                                    }
+                                    {consultationFormData.email != "" &&
+                                        <>
+                                            <p><MdOutlineEmail size={20} color={'#CEA835'} /><span className="fw-500 current-date ms-2">{consultationFormData.email}</span></p>
+                                        </>
+                                    }
+                                </div>
+                            </Card.Body>
+                        </Card>
+                    </div>
+                    <div className='text-center mt-2'>
+                        <button className='btn btn-primary mt-3'>Ok</button>
+                    </div>
+                </Modal.Body>
+            </Modal>
+
+
         </>
     )
 }

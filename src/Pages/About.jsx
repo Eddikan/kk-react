@@ -40,13 +40,13 @@ const About = () => {
               <Card className='h-100 border-none'>
                 <CardBody className='problem-card-body'>
                   <div className='rufina-family fs-40 mb-3 text-black the-problem'>The Problem We Are Solving</div>
-                  <p className='mb-0 problem-solving text-black content-center'>Kouture Konect addresses the challenges faced by those seeking access to top-tier
+                  <p className='mb-0 body-height  text-black content-center'>Kouture Konect addresses the challenges faced by those seeking access to top-tier
                     fashion designers and the struggles encountered by designers aiming to showcase
                     their craftsmanship globally. We bridge these gaps by providing a platform that
                     empowers a global community of fashion enthusiasts and creators, fostering
                     connections, creativity, and collaboration.</p>
 
-                  {/* <p className='problem-solving proximanova-family'>Feel free to explore our platform and join us in redefining the future of personalized,
+                  {/* <p className='body-height  proximanova-family'>Feel free to explore our platform and join us in redefining the future of personalized,
                     global fashion.</p> */}
                 </CardBody>
               </Card>
@@ -54,9 +54,9 @@ const About = () => {
 
             <Col lg="4" className='mission-col'>
               <Card className='black-card h-100 '>
-                <CardBody>
+                <CardBody className='mission-cb'>
                   <div className='rufina-family fs-40 mb-3 text-white mission'>Mission</div>
-                  <p className='mb-0 problem-solving text-white content-center'>At Kouture Konect, our mission is to bridge the gap between fashion enthusiasts and
+                  <p className='mb-0 body-height  text-white content-center'>At Kouture Konect, our mission is to bridge the gap between fashion enthusiasts and
                     gifted designers worldwide. We strive to empower a global community of fashion
                     lovers and creators by facilitating seamless connections, fostering creativity, and
                     transforming sartorial dreams into reality.</p>
@@ -66,9 +66,9 @@ const About = () => {
 
             <Col lg="4" className='vision-col'>
               <Card className='black-card h-100'>
-                <CardBody>
+                <CardBody className='vision-cb'>
                   <div className='rufina-family fs-40 mb-3 text-white vision'>Vision</div>
-                  <p className='mb-0 problem-solving text-white content-center'>We envision a future where personalized, global fashion collaboration is the norm.
+                  <p className='mb-0 body-height  text-white content-center'>We envision a future where personalized, global fashion collaboration is the norm.
                     Kouture Konect aspires to be the leading platform that transcends geographical
                     boundaries, providing a curated selection of pre-qualified designers and empowering
                     clients to choose their creative partners from around the world.</p>
@@ -92,9 +92,9 @@ const About = () => {
                     <img src={Professionalism} className='core-values-icon' />
                   </div>
 
-                  <div className='rufina-family fw-600 fs-25 mb-0 professionalism'>Professionalism</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 professionalism height-twenty-four'>Professionalism</div>
 
-                  <p className='mb-0 fs-16 problem-solving'>Upholding high standards in all interactions.</p>
+                  <p className='mb-0 fs-16 body-height  content-card'>Upholding high standards in all interactions.</p>
                 </CardBody>
               </Card>
             </Col>
@@ -106,9 +106,9 @@ const About = () => {
                     <img src={Integrity} className='core-values-icon' />
                   </div>
 
-                  <div className='rufina-family fw-600 fs-25 mb-2 integrity'>Integrity</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 integrity height-twenty-four'>Integrity</div>
 
-                  <p className='mb-0 fs-16 problem-solving'>Operating with honesty and transparency.</p>
+                  <p className='mb-0 fs-16 body-height  content-card'>Operating with honesty and transparency.</p>
                 </CardBody>
               </Card>
             </Col>
@@ -120,9 +120,9 @@ const About = () => {
                     <img src={Speed} className='core-values-icon' />
                   </div>
 
-                  <div className='rufina-family fw-600 fs-25 mb-2 speed'>Speed</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 speed height-twenty-four'>Speed</div>
 
-                  <p className='mb-0 fs-16 problem-solving'>Ensuring timely responses and delivery.</p>
+                  <p className='mb-0 fs-16 body-height  content-card'>Ensuring timely responses and delivery.</p>
                 </CardBody>
               </Card>
             </Col>
@@ -134,9 +134,9 @@ const About = () => {
                     <img src={Reliability} className='core-values-icon' />
                   </div>
 
-                  <div className='rufina-family fw-600 fs-25 mb-2 reliability'>Reliability</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 reliability height-twenty-four'>Reliability</div>
 
-                  <p className='mb-0 fs-16 problem-solving'>Consistency in meeting commitments.</p>
+                  <p className='mb-0 fs-16 body-height  content-card'>Consistency in meeting commitments.</p>
                 </CardBody>
               </Card>
             </Col>
@@ -148,9 +148,9 @@ const About = () => {
                     <img src={Excellence} className='core-values-icon' />
                   </div>
 
-                  <div className='rufina-family fw-600 fs-25 mb-2 excellence'>Excellence</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 excellence height-twenty-four'>Excellence</div>
 
-                  <p className='mb-0 fs-16 problem-solving'>Striving for top-quality, custom-made designs.</p>
+                  <p className='mb-0 fs-16 body-height  content-card'>Striving for top-quality, custom-made designs.</p>
                 </CardBody>
               </Card>
             </Col>
@@ -162,21 +162,21 @@ const About = () => {
                     <img src={SuperiorQuality} className='core-values-icon' />
                   </div>
 
-                  <div className='rufina-family fw-600 fs-25 mb-2 superior'>Superior Quality</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 superior height-twenty-four'>Superior Quality</div>
 
-                  <p className='mb-0 fs-16 problem-solving '>Commitment to the highest standards.</p>
+                  <p className='mb-0 fs-16 body-height  content-card'>Commitment to the highest standards.</p>
                 </CardBody>
               </Card>
             </Col>
 
-            <Col lg="3" className='mb-4 card-left-right'>
+            <Col lg="3" className='card-left-right'>
               <Card className='h-100 border-color'>
                 <CardBody>
                   <div className='mb-2'>
                     <img src={CustomerExperience} className='core-values-icon' />
                   </div>
-                  <div className='rufina-family fw-600 fs-25 mb-2 exceptional'>Exceptional Customer Experience</div>
-                  <p className='mb-0 fs-16 problem-solving'>Going the extra mile for satisfaction.</p>
+                  <div className='rufina-family fw-600 fs-25 mb-2 exceptional height-twenty-four'>Exceptional Customer Experience</div>
+                  <p className='mb-0 fs-16 body-height  content-card'>Going the extra mile for satisfaction.</p>
                 </CardBody>
               </Card>
             </Col>

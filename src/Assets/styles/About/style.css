@@ -17,8 +17,8 @@ section.height-section {
     padding-top: 50px;
     padding-bottom: 50px;
 }
-.problem-solving {
-    line-height: 1.5;
+.body-height {
+    line-height: 24px;
 }
 .black-card.card {
     background: #000;
@@ -44,7 +44,10 @@ section.section3 {
 }
 .about-kouture {
     width: 71%;
-    line-height: 1.5;
+    line-height: 24px;
+}
+.height-twenty-four {
+    line-height: 24px;
 }
 .left-right-padding {
     padding-left: 150px;
@@ -57,18 +60,20 @@ section.section3 {
 @media screen and (max-width: 768px){
     section.height-section {
         height: 100%;
-        padding-top: 80px;
-        padding-bottom: 55px;   
+        padding-top: 50px;
+        padding-bottom: 25px;   
     }
 
     section.section2 {
         padding-top: 0px;
         height: 100%;
-        padding-bottom: 30px;
+        padding-bottom: 15px;
     }
 
     section.section3 {
         height: 100%;
+        padding-top: 10px;
+        padding-bottom: 35px;
     }
 
     .mission-col {
@@ -90,6 +95,10 @@ section.section3 {
     .vision,
     .core-values {
         font-size: 30px;
+        text-align: center !important;
+    }
+    .content-center {
+        text-align: center !important;
     }
     .problem-col {
         padding-bottom: 5px;
@@ -101,7 +110,7 @@ section.section3 {
     .excellence,
     .superior,
     .exceptional{
-        margin-bottom: 0px !important;
+        margin-bottom: 5px !important;
     }
 }
 
@@ -111,6 +120,9 @@ section.section3 {
     }
     .about-kouture {
         width: 100%;
+    }
+    .content-card {
+        margin-top: 5px;
     }
     .problem-col {
         padding-left: 0px;
@@ -143,6 +155,8 @@ section.section3 {
     .the-problem, .mission, .vision, .core-values {
         font-size: 25px;
         text-align: center;
+        text-align: '-webkit-center';
+
     }
     section.section3 {
         padding-top: 0px;
@@ -153,7 +167,7 @@ section.section3 {
         padding-bottom: 20px;
     }
     .content-center {
-        text-align: center;
+        text-align: center !important;
     }
     .problem-card-body {
         display: flex;
@@ -161,4 +175,34 @@ section.section3 {
         align-items: center;
         flex-direction: column;
     }
+}
+
+@media screen and (max-width: 500px){
+        .professionalism, .integrity, .speed, .reliability, .excellence, .superior, .exceptional {
+            margin-bottom: 5px !important;
+        }
+        img.core-values-icon {
+            width: 7%;
+        }
+        section.section3 {
+            padding-top: 0px;
+            padding-bottom: 40px;
+        }
+        .problem-card-body {
+            padding-bottom: 15px;
+        }
+        .about-kouture {
+            width: 100%;
+        }
+        section.height-section {
+            padding-top: 40px;
+            padding-bottom: 15px;
+        }
+        .mission-cb,.vision-cb {
+            padding-top: 20px;
+            padding-bottom: 25px;
+        }
+        .core-values {
+            margin-top: 10px;
+        }
 }

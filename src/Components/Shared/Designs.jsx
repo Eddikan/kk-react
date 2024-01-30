@@ -185,7 +185,7 @@ const Designs = (props) => {
                                                         }
                                                         <div className="design-details">
                                                             <div className='d-flex align-items-center justify-content-between'>
-                                                                <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{design.name ?? '-'}</p>
+                                                                <p className="text-black fs-18 fw-600 mb-0 text-ellipsis rufina-family">{design.name ?? '-'}</p>
                                                                 {/* {currentUser ?
                                                                     <div className='d-flex align-items-center'>
                                                                         <span className='fs-14 text-no-wrap mx-2'>
