@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import FormControl from 'react-bootstrap/FormControl';
 import { GoBookmark, GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
@@ -436,7 +436,9 @@ const ViewProduct = () => {
                                                             <hr className="mb-4" />
                                                         </Col>
                                                         <Col lg="12">
-                                                            <Button className="w-auto me-3 btn-primary fs-16" onClick={toggleAddToCart}>Add to Cart</Button>
+                                                            <Link to="/cart">
+                                                                <Button className="w-auto me-3 btn-primary fs-16" onClick={toggleAddToCart}>Add to Cart</Button>
+                                                            </Link>
                                                             {/* <span className="fw-600 fs-24">${(unitMeasurement * productPrice).toFixed(2)} 
                                                             <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span> */}
                                                         </Col>

@@ -116,8 +116,8 @@ button.rbc-button-link {
     min-width: 120px;
     border-radius: 5px;
     border-width: 2px;
-    color: #000000;
-    background-color: #ffffff;
+    color: #000000 !important;
+    background-color: #ffffff !important;
     border-color: var(--black);
 }
 .cancel-btn:hover {

@@ -1,0 +1,21 @@
+.total-price {
+    color: #CEA835;
+}
+.name-user {
+    color: #656565;
+}
+img.placeholder-cart {
+    width: 15%;
+}
+.check-box {
+    width: 18px;
+    height: 20px;
+    margin-left: 20px !important;
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 3px;
+   
+}
+.accented {
+    accent-color: #CEA835;
+}

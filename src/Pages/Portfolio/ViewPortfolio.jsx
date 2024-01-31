@@ -4,16 +4,19 @@ import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { GoBookmark, GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import 'Assets/styles/Portfolio/ViewPortFolio/style.css';
+import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import GoBack from 'Components/Shared/GoBack';
 import GetSinglePortfolioData from 'Utils/GetSinglePortfolioData';
 import toast from 'react-hot-toast';
+import { Rating } from 'react-simple-star-rating';
+import { SlCloudUpload } from 'react-icons/sl';
 import ImageSlider from 'Components/Shared/ImageSlider';
 import { Card, Modal } from 'react-bootstrap';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { AiOutlinePlus, AiOutlineCheck, AiOutlineClose } from 'react-icons/ai';
 import { FaUserCircle } from "react-icons/fa";
 import { CiFaceSmile } from "react-icons/ci";
-import { IoCloseOutline } from "react-icons/io5";
+import { IoCloseOutline, IoVideocam } from "react-icons/io5";
 import { LiaSmileBeam } from "react-icons/lia";
 import { IoIosAttach } from "react-icons/io";
 import { VscSend } from "react-icons/vsc";
@@ -23,7 +26,6 @@ import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import { BsArrowUpRightSquare } from "react-icons/bs";
 import { AiFillMessage } from "react-icons/ai";
-import { IoVideocam } from "react-icons/io5";
 import { PiNotepadFill } from "react-icons/pi";
 
 const ViewPortFolio = () => {
@@ -40,6 +42,11 @@ const ViewPortFolio = () => {
     const [askQuestionShow, setAskQuestionShow] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
+    const [reviewItemModal, setReviewItemModal] = useState(false);
+    const [requestAQuuoteModal, setRequestAQuuoteModal] = useState(false);
+
+
+
     const [modalHeading, setModalHeading] = useState('');
 
 
@@ -61,6 +68,17 @@ const ViewPortFolio = () => {
         setModalHeading(message);
         console.log("Clicked! ", message);
         console.log("underConstructionShow! ", underConstructionShow);
+
+    }
+
+    function toggleReviewItem(message) {
+        setReviewItemModal(true);
+        setModalHeading(message);
+    }
+
+    function toggleRequestAQuote(message) {
+        setRequestAQuuoteModal(true);
+        setModalHeading(message);
 
     }
 
@@ -229,7 +247,7 @@ const ViewPortFolio = () => {
 
                                                     <div>
                                                         <div>
-                                                            <div className="cursor-pointer" onClick={() => toggleUnderConstruction("Chat Designer")}>
+                                                            <div className="cursor-pointer" onClick={() => askQuestionModal("Chat Designer")}>
                                                                 <AiFillMessage className='me-2 mb-1' color='#caa533' />Chat Designer
                                                             </div>
                                                         </div>
@@ -238,15 +256,18 @@ const ViewPortFolio = () => {
                                                 </div>
 
                                                 <span>
-                                                    <p className='btn btn-primary mt-4 mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black'
-                                                        onClick={() => askQuestionModal(true)}
-                                                        style={{ minWidth: '216px' }}><PiNotepadFill color="#000000" className='me-2' size="20" />Request A Quote</p>
+                                                    <p className='btn request-quote-btn mt-4 mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black request-a-quote'
+                                                        onClick={() => toggleRequestAQuote(true)}
+                                                    >
+                                                        <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
+                                                        Request A Quote
+                                                    </p>
                                                 </span>
 
                                                 <span className='w-100'>
                                                     <a
                                                         href={`/appointment/schedule/${portfolio.designer.id}`}
-                                                        className='btn mt-4 ms-3 btn-primary fs-16 fw-400'
+                                                        className='btn mt-4 ms-3 btn-primary fs-16 fw-400 consultation-btn'
                                                     >
                                                         <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
                                                 </span>
@@ -269,7 +290,10 @@ const ViewPortFolio = () => {
                                     <span className={`text-black reviews-product cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews
 
 
-                                        <span className="cursor-pointer" onClick={() => toggleUnderConstruction("Review Item")}>
+                                        <span className="cursor-pointer reviews-tooltip" onClick={() => toggleReviewItem()}>
+                                            <div className='tooltip-content'>
+                                                <span className="reviews-tooltiptext fs-14">Write Review</span>
+                                            </div>
                                             <BsArrowUpRightSquare className='ms-2' color="#caa533" />
                                         </span>
 
@@ -369,8 +393,12 @@ const ViewPortFolio = () => {
                                                         <div className='cursor-pointer'><IoIosAttach /></div>
                                                     </div>
                                                     <div>
-                                                        <div className="cursor-pointer" onClick={() => toggleUnderConstruction("Send Message")}>
-                                                            Send<VscSend className='ms-1' />
+                                                        <div
+                                                            className="cursor-pointer fw-500"
+                                                            onClick={() => toggleUnderConstruction("Send Message")}
+                                                        >
+                                                            Send
+                                                            <VscSend className='ms-1' />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -381,12 +409,7 @@ const ViewPortFolio = () => {
                                     :
                                     null
                                 }
-
-
                             </Row>
-
-
-
                         </Container>
 
                         <Modal
@@ -412,10 +435,142 @@ const ViewPortFolio = () => {
                             </Modal.Body>
                         </Modal>
 
+                        <Modal
+                            show={reviewItemModal}
+                            className='modal-preview'
+                            fade={false}
+                            size="sm"
+                        >
+                            <ModalHeader className='pt-2 pb-2'>
+                                <h5 className='modal-title text-left fs-25 rufina-family fw-600 '>Review Item</h5>
+                                <button type='button' className='close react-review-items-close' data-dismiss='modal' aria-label='Close'>
+                                    <span aria-hidden='true'>&times;</span>
+                                </button>
+                            </ModalHeader>
+                            <hr className="mt-0 mb-2" />
+                            <Modal.Body className='pt-4 pb-2'>
+                                <div className='product-portfolio-image mb-4'>
+                                    <span className='d-flex'>
+                                        {images && images.length > 0 ?
+                                            <>
+                                                <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                                </div>
+                                                <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
+                                            </>
+                                            :
+                                            null
+                                        }
+                                    </span>
+                                </div>
+
+                                <div className='d-flex mb-2'>
+                                    <div className='d-flex justify-content-center align-items-center'>
+                                        Product Quality:
+                                    </div>
+
+                                    <div className='mx-4'>
+                                        <Rating
+                                            // initialValue={rating}
+                                            readonly={true}
+                                            allowFraction={true}
+                                            size={30}
+                                            className="star-rating"
+                                            showTooltip={false}
+                                            emptyColor="#cea835"
+                                            fillColor="#cea835"
+                                        />
+                                    </div>
+
+                                    <div className='d-flex justify-content-center align-items-center'>
+                                        Excellent
+                                    </div>
+                                </div>
+                                <div className='mb-4'>
+                                    <textarea
+                                        type="text"
+                                        name="description"
+                                        className="d-block form-control bg-white"
+                                        placeholder='Leave a comment about the product...'
+                                    />
+                                </div>
+                            </Modal.Body>
+                            <ModalFooter className=''>
+                                <div className='text-right'>
+                                    <Button className="cancel-btn me-2" onClick={() => setReviewItemModal(false)}>Cancel</Button>
+                                    <Button className="btn-save" onClick={() => { toggleUnderConstruction("Submit"); setReviewItemModal(false); }}>Submit</Button>
+                                </div>
+                            </ModalFooter>
+                        </Modal>
+
+                        <Modal
+                            show={requestAQuuoteModal}
+                            className='modal-preview'
+                            fade={false}
+                            size="sm"
+                        >
+                            <ModalHeader className='pt-2 pb-2'>
+                                <h5 className='modal-title text-left fs-25 rufina-family fw-600 '>New Quote</h5>
+                                <button type='button' className='close react-review-items-close' data-dismiss='modal' aria-label='Close'>
+                                    <span aria-hidden='true'>&times;</span>
+                                </button>
+                            </ModalHeader>
+                            <hr className="mt-0 mb-2" />
+                            <Modal.Body className='pt-4 pb-2'>
+                                <Row>
+                                    <Col>
+                                        <div>Title</div>
+                                        <div>
+                                            <input type="text" className='form-control' name="title" />
+                                        </div>
+
+                                        <div className='mt-3'>Details</div>
+                                        <div>
+                                            <textarea
+                                                type="text"
+                                                name="description"
+                                                className="d-block form-control bg-white"
+                                            />
+                                        </div>
+
+                                        <div
+                                            className="image-drop-container-quote cursor-pointer mt-4"
+                                        // onDrop={handleDrop}
+                                        // onDragOver={handleDragOver}
+                                        >
+                                            <input
+                                                // type="file"
+                                                // key={fileInputKey} // Add a key to the file input
+                                                id="fileInput"
+                                                // onChange={handleFileInput}
+                                                className="file-input d-block opacity-0"
+                                                accept="image/*"
+                                                multiple
+                                            />
+                                            <label htmlFor="fileInput" className="file-label d-block text-center cursor-pointer">
+                                                <p className="text-black rufina-family fs-18 mb-3 fw-600">Design Preference</p>
+                                                <p className="text-black fs-16 mb-3">Share your design preferences to the designer.</p>
+                                                <button
+                                                    className="btn btn-primary mb-4"
+                                                    onClick={() => { toggleUnderConstruction("Upload Design"); setRequestAQuuoteModal(false); }}
+                                                >
+                                                    Upload Design
+                                                </button>
+                                            </label>
+                                        </div>
+                                    </Col>
+                                </Row>
+
+                            </Modal.Body>
+                            <ModalFooter className='mt-4'>
+                                <div className='text-right'>
+                                    <Button className="cancel-btn me-2" onClick={() => setRequestAQuuoteModal(false)}>Cancel</Button>
+                                    <Button className="btn-save" onClick={() => { toggleUnderConstruction("Request a Quote"); setRequestAQuuoteModal(false); }}>Request a Quote</Button>
+                                </div>
+                            </ModalFooter>
+                        </Modal>
                     </section>
                 </>
             }
-
         </Layout>
     );
 };

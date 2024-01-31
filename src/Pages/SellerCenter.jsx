@@ -64,7 +64,9 @@ const SellerCenter = (props) => {
 
     const [businessHoursFormData, setBusinessHoursFormData] = useState([initialBusinessHours]);
 
-    const [times, setTimes] = useState([initialBusinessHours]);
+    const [times, setTimes] = useState([]);
+
+    const [availability, setAvailability] = useState([]);
 
 
     const [reloadCount, setReloadCount] = useState(0);
@@ -75,11 +77,15 @@ const SellerCenter = (props) => {
     // };
 
     const postBusinessHours = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/availability', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/user_id=' + currentUser, data);
+    };
+
+    const putBusinessHourss = async (data) => {
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId, data);
     };
 
     const getBusinessHours = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId);
     };
 
     const handleChangeAppointment = (e) => {
@@ -102,6 +108,7 @@ const SellerCenter = (props) => {
             return updatedTimes;
         });
     };
+
 
     const handleChangeTimeMonday = (e, index) => {
         const { name, value } = e.target;
@@ -183,6 +190,107 @@ const SellerCenter = (props) => {
 
     const handleShowDesignerBusinessHoursModal = () => {
         setDesignerBusinessHoursModalShow(true);
+
+        getBusinessHours()
+            .then((response) => {
+                const selectedTime = response.data.data;
+                const status = response.data.status;
+                if (status == "Fail") {
+                    toast.error('There has no availabilty found!');
+                }
+                else {
+                    if (selectedTime) {
+                        console.log(selectedTime.content)
+                        setTimes(selectedTime.content);
+                        if (selectedTime && selectedTime.content && selectedTime.content.length > 0) {
+
+                            const sundayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'sunday');
+                            const mondayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'monday');
+                            const tuesdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'tuesday');
+                            const wednesdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'wednesday');
+                            const thursdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'thursday');
+                            const fridayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'friday');
+                            const saturdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'saturday');
+
+                            if (sundayEntry && mondayEntry && tuesdayEntry) {
+                                const sundayAvailabilities = sundayEntry.availabilities || [];
+
+                                const mappedSundayBusinessHours = sundayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const mondayAvailabilities = mondayEntry.availabilities || [];
+
+                                const mappedMondayBusinessHours = mondayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const tuesdayAvailabilities = tuesdayEntry.availabilities || [];
+
+                                const mappedTuesdayBusinessHours = tuesdayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const wednesdayAvailabilities = wednesdayEntry.availabilities || [];
+
+                                const mappedWednesdayBusinessHours = wednesdayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const thursdayAvailabilities = thursdayEntry.availabilities || [];
+
+                                const mappedThursdayBusinessHours = thursdayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const fridayAvailabilities = fridayEntry.availabilities || [];
+
+                                const mappedFridayBusinessHours = fridayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const saturdayAvailabilities = saturdayEntry.availabilities || [];
+
+                                const mappedSaturdayBusinessHours = saturdayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                setMondayHoursFormData(mappedMondayBusinessHours);
+                                setTuesdayHoursFormData(mappedTuesdayBusinessHours);
+                                setWednesdayHoursFormData(mappedWednesdayBusinessHours);
+                                setThursdayHoursFormData(mappedThursdayBusinessHours);
+                                setFridayHoursFormData(mappedFridayBusinessHours);
+                                setSaturdayHoursFormData(mappedSaturdayBusinessHours);
+                                setSundayHoursFormData(mappedSundayBusinessHours);
+                            } else {
+                                setSundayHoursFormData(initialBusinessHours);
+                            }
+
+                        }
+                        setBusinessHoursFormData(initialBusinessHours);
+                    } else {
+                        toast.error('There has been an error getting the appointment, please try again!');
+                    }
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the appointment, please try again!');
+            });
+
     }
 
     const handleShowAppointmentModal = () => {
@@ -390,8 +498,8 @@ const SellerCenter = (props) => {
         });
     }
 
-    const addBusinessHoursSubmit = (e) => {
-        e.preventDefault();
+    const addBusinessHoursSubmitPost = (e) => {
+        // e.preventDefault();
         setFormStatus('loading');
         const content = [
             {
@@ -448,26 +556,57 @@ const SellerCenter = (props) => {
 
 
     useEffect(() => {
-        // getBusinessHours()
-        //     .then((response) => {
-        //         const selectedTime = response.data.data;
-        //         const status = response.data.status;
-        //         if (status == "Fail") {
-        //             toast.error('There has no availabilty found!');
-        //         }
-        //         else {
-        //             if (selectedTime) {
-        //                 setTimes(selectedTime);
-        //             } else {
-        //                 toast.error('There has been an error getting the appointment, please try again!');
-        //             }
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         toast.error('There has been an error getting the appointment, please try again!');
-        //     });
 
     }, [reloadCount]);
+
+    const addBusinessHoursSubmitPut = (e) => {
+        // e.preventDefault();
+        setFormStatus('loading');
+        const content = [
+            {
+                day: 'sunday',
+                availabilities: sundayHoursFormData
+            },
+            {
+                day: 'monday',
+                availabilities: mondayHoursFormData
+            },
+            {
+                day: 'tuesday',
+                availabilities: tuesdayHoursFormData
+            },
+            {
+                day: 'wednesday',
+                availabilities: wednesdayHoursFormData
+            },
+            {
+                day: 'thursday',
+                availabilities: thursdayHoursFormData
+            },
+            {
+                day: 'friday',
+                availabilities: fridayHoursFormData
+            },
+            {
+                day: 'saturday',
+                availabilities: saturdayHoursFormData
+            },
+        ];
+        putBusinessHourss({ content, designer_id: designerId, }).then(response => {
+            const status = response.data.status;
+            if (status === "Success") {
+                setFormStatus('standby');
+                setReloadCount(reloadCount + 1);
+                setBusinessHoursFormData(initialBusinessHours);
+                toast.success('Availability added successfully!');
+            } else {
+                setFormStatus('standby');
+                toast.error('There has been an error saving the appointment, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error saving the appointment, please try again!');
+        });
+    }
 
     return (
         <LayoutNoFooter>
@@ -533,7 +672,7 @@ const SellerCenter = (props) => {
                                                             <>
                                                                 {index > 0 && (
                                                                     <div className='w-100 d-flex justify-content-end mt-3'>
-                                                                        <div className='cursor-pointer' onClick={() => handleRemoveSundayHours(index)}>
+                                                                        <div className='cursor-pointer' onClick={() => handleRemoveMondayHours(index)}>
                                                                             <RxCross2 color='#000000' />
                                                                         </div>
                                                                     </div>
@@ -546,10 +685,12 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='start'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.start}
-                                                                            onChange={e => handleChangeTimeSunday(e, index)} />
+                                                                            value={sunday?.start}
+                                                                            onChange={e => handleChangeTimeSunday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
+
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Closes at</p>
                                                                     <Form.Group className='mb-3'>
@@ -557,11 +698,11 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='end'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.end}
-                                                                            onChange={e => handleChangeTimeSunday(e, index)} />
+                                                                            value={sunday?.end}
+                                                                            onChange={e => handleChangeTimeSunday(e, index)}
+                                                                        />
                                                                     </Form.Group>
                                                                 </Col>
-
                                                             </>
                                                         )}
                                                     </>
@@ -613,7 +754,7 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='start'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.start}
+                                                                            value={monday?.start}
                                                                             onChange={e => handleChangeTimeMonday(e, index)}
                                                                         />
                                                                     </Form.Group>
@@ -626,7 +767,7 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='end'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.end}
+                                                                            value={monday?.end}
                                                                             onChange={e => handleChangeTimeMonday(e, index)}
                                                                         />
                                                                     </Form.Group>
@@ -683,7 +824,7 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='start'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.start}
+                                                                            value={tuesday?.start}
                                                                             onChange={e => handleChangeTimeTuesday(e, index)}
                                                                         />
                                                                     </Form.Group>
@@ -695,7 +836,7 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='end'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.end}
+                                                                            value={tuesday?.end}
                                                                             onChange={e => handleChangeTimeTuesday(e, index)}
                                                                         />
                                                                     </Form.Group>
@@ -752,7 +893,7 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='start'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.start}
+                                                                            value={wednesday?.start}
                                                                             onChange={e => handleChangeTimeWednesday(e, index)}
                                                                         />
                                                                     </Form.Group>
@@ -764,7 +905,7 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='end'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.end}
+                                                                            value={wednesday?.end}
                                                                             onChange={e => handleChangeTimeWednesday(e, index)}
                                                                         />
                                                                     </Form.Group>
@@ -822,7 +963,7 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='start'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.start}
+                                                                            value={thursday?.start}
                                                                             onChange={e => handleChangeTimeThursday(e, index)}
                                                                         />
                                                                     </Form.Group>
@@ -834,7 +975,7 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='end'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.end}
+                                                                            value={thursday?.end}
                                                                             onChange={e => handleChangeTimeThursday(e, index)}
                                                                         />
                                                                     </Form.Group>
@@ -892,7 +1033,7 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='start'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.start}
+                                                                            value={friday?.start}
                                                                             onChange={e => handleChangeTimeFriday(e, index)}
                                                                         />
                                                                     </Form.Group>
@@ -904,7 +1045,7 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='end'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.end}
+                                                                            value={friday?.end}
                                                                             onChange={e => handleChangeTimeFriday(e, index)}
                                                                         />
                                                                     </Form.Group>
@@ -962,7 +1103,7 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='start'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.start}
+                                                                            value={saturday?.start}
                                                                             onChange={e => handleChangeTimeSaturday(e, index)}
                                                                         />
                                                                     </Form.Group>
@@ -974,7 +1115,7 @@ const SellerCenter = (props) => {
                                                                             type='time'
                                                                             name='end'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={businessHoursFormData?.end}
+                                                                            value={saturday?.end}
                                                                             onChange={e => handleChangeTimeSaturday(e, index)}
                                                                         />
                                                                     </Form.Group>
@@ -1001,7 +1142,22 @@ const SellerCenter = (props) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button className="btn-cancel" variant="primary" onClick={() => setDesignerBusinessHoursModalShow(false)}>Cancel</Button>
-                    <Button className="btn-primary" variant="primary" onClick={addBusinessHoursSubmit}>Save</Button>
+                    {/* <Button className="btn-primary" variant="primary" onClick={() => {
+                        if (times) {
+                            addBusinessHoursSubmits
+                        } else {
+                            addBusinessHoursSubmit
+                        }
+                    }}>Save</Button> */}
+
+                    <Button className="btn-primary" variant="primary" onClick={() => {
+                        if (times) {
+                            addBusinessHoursSubmitPut()
+                        } else {
+                            addBusinessHoursSubmitPost()
+                        }
+                    }}>Save</Button>
+
                 </Modal.Footer>
             </Modal >
 

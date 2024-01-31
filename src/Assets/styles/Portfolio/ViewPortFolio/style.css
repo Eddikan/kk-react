@@ -1,3 +1,130 @@
 #single-portfolio .design-tag {
     max-width: 100%;
 }
+.cancel-btn {
+    font-size: 15px;
+    padding: 12px 20px;
+    min-width: 120px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: #000000 !important;
+    background-color: #ffffff !important;
+    border-color: var(--black);
+}
+.btn-save {
+    font-size: 15px;
+    padding: 12px 20px;
+    min-width: 120px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: var(--white);
+    background-color: var(--black);
+    border-color: var(--black);
+}
+.cancel-btn:hover {
+    border-color: #000000;
+    background-color: #ffffff;
+    color: #000000;
+}
+.react-review-items-close {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    line-height: 1;
+    z-index: 9;
+}
+.reviews-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.reviews-tooltip .reviews-tooltiptext {
+    visibility: hidden;
+    width: 125px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 34px;
+    left: 10%;
+    margin-left: -51px;
+}
+
+.reviews-tooltip .reviews-tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 45%;
+    margin-left: -5px;
+    border-width: 13px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
+}
+
+.reviews-tooltip:hover .reviews-tooltiptext {
+    visibility: visible;
+}
+
+.request-quote-btn {
+    font-size: 15px;
+    padding: 12px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: var(--white);
+    background-color: var(--black);
+    border-color: var(--black);
+}
+
+.request-quote-btn:hover {
+    color: var(--white);
+    background-color: var(--black);
+    border-color: var(--black);
+}
+
+.image-drop-container-quote {
+    background-image: url(data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%233332' stroke-width='3' stroke-dasharray='12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e);
+    border: none;
+    padding: 25px;
+}
+
+@media screen and (max-width: 768px) {
+    .parent {
+        margin-bottom: 23px;
+    }
+    section#single-portfolio {
+        padding-top: 30px !important;
+        padding-bottom: 10px !important;
+    }
+}
+@media screen and (max-width: 500px) {
+    .request-a-quote {
+        width: 100% !important;
+    }
+    .consultation-btn {
+        width: 100% !important;
+        margin-left: 0px !important;
+    }
+    .no-available {
+        font-size: 16px !important;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .request-a-quote {
+        width: 100% !important;
+    }
+    .consultation-btn {
+        width: 100% !important;
+        margin-left: 0px !important;
+    }
+    .no-available {
+        font-size: 16px !important;
+    }
+}

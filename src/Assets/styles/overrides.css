@@ -155,6 +155,7 @@ h5 {
     color: var(--white) !important;
     background-color: var(--black) !important;
     border-color: var(--black) !important;
+    
 }
 
 .btn-outline {
@@ -1518,7 +1519,7 @@ a.schedule-consultation {
     padding: 15px 21px 15px 21px;
 }
 .eco-col {
-    height: 300px;
+    height: 350px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1542,3 +1543,4 @@ a.schedule-consultation {
 .explore-now {
     margin-top: 35px;
 }
+

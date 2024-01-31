@@ -83,7 +83,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         // Convert hours to 24-hour format
         const hours24 = period === 'PM' ? parseInt(hours, 10) + 12 : parseInt(hours, 10);
 
-        const resultDatetime = new Date();
+        const resultDatetime = new Date(selectedDate);
         resultDatetime.setHours(hours24);
         resultDatetime.setMinutes(parseInt(minutes, 10));
 
@@ -168,6 +168,8 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         setCurrentStep(2);
     }
 
+    console.log("selectedTimeSlot", selectedTimeSlot);
+
     const handleAppointments = () => {
         setTimes(prevtimes => [
             ...prevtimes,
@@ -223,18 +225,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const addAppointmentSubmit = (e) => {
         // e.preventDefault();
         setFormStatus('loading');
-
-        const content = {
-            consultation_date_time: selectedTimeSlot,
-            consultation_details: consultationFormData.consultation_details,
-            consultation_hour_end: selectedTimeSlot,
-            consultation_hour_start: selectedTimeSlot,
-            email: consultationFormData.email,
-            first_name: consultationFormData.first_name,
-            last_name: consultationFormData.last_name,
-            timezone: consultationFormData.timezone,
-        };
-        postSetAppointment({ content })
+        postSetAppointment({ ...consultationFormData })
             .then(response => {
                 const status = response.data.status;
                 if (status === "Success") {
@@ -245,10 +236,10 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                     toast.success('Consultation added successfully!');
                 } else {
                     setFormStatus('standby');
-                    toast.error('There has been an error saving the consultation, please try again!');
+                    toast.error('Designer is not available at this time');
                 }
             }).catch(() => {
-                toast.error('There has been an error saving the consultation, please try again!');
+                toast.error('Designer is not available at this time');
             });
     }
 
@@ -399,7 +390,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                             <button className="btn btn-primary bg-transparent text-black" onClick={() => { setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate('') }}>Cancel</button>
                             {formStatus != "loading" ?
                                 // <button className="btn btn-primary" onClick={addAppointmentSubmit}>Schedule Now</button>
-                                <button className="btn btn-primary" onClick={() => toggleUnderConstruction("You are Scheduled!")}>Schedule Now</button>
+                                <button className="btn btn-primary" onClick={() => addAppointmentSubmit("You are Scheduled!")}>Schedule Now</button>
 
                                 :
                                 <button className="btn btn-primary" onClick={handleDefault}>Loading...</button>
@@ -479,7 +470,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                         </Card>
                     </div>
                     <div className='text-center mt-2'>
-                        <button className='btn btn-primary mt-3'>Ok</button>
+                        <button className='btn btn-primary mt-3' onClick={() => toggleSchedule("")}>Ok</button>
                     </div>
                 </Modal.Body>
             </Modal>

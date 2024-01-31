@@ -7,6 +7,7 @@ import "Assets/styles/overrides.css";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import PortfolioGrid from "Components/Shared/PortfolioGrid";
+import EcoFriendly from "Components/Shared/EcoFriendly";
 const stripePromise = loadStripe("pk_test_NuJ5XLTawKbspF46LKSgwDbk");
 
 const Home = lazy(() => import("./Pages/Home"));
@@ -21,6 +22,8 @@ const Forms = lazy(() => import("./Pages/Forms"));
 const Stripe = lazy(() => import("./Pages/Stripe"));
 const CustomerPage = lazy(() => import("./Pages/CustomerPage"));
 const SellerCenter = lazy(() => import("./Pages/SellerCenter"));
+const Cart = lazy(() => import("./Pages/Cart"));
+const EcoFriendlyFabrics = lazy(() => import("./Pages/EcoFriendlyFabrics"));
 const DesignerProfile = lazy(() => import("./Pages/DesignerProfile"));
 const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
 
@@ -157,6 +160,8 @@ const App = () => {
           <Route path="/designers" exact element={<Designers />} />
           <Route path="/fabrics" exact element={<Fabrics />} />
           <Route path="/designs" exact element={<Designs />} />
+          <Route path="/eco-friendly" exact element={<EcoFriendlyFabrics />} />
+          <Route path="/cart" exact element={<Cart />} />
           <Route
             path="/seller-center/:designerId"
             exact
