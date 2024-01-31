@@ -77,7 +77,7 @@ const SellerCenter = (props) => {
     // };
 
     const postBusinessHours = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/user_id=' + currentUser, data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/availability?user_id=' + currentUser, data);
     };
 
     const putBusinessHourss = async (data) => {
@@ -1142,19 +1142,13 @@ const SellerCenter = (props) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button className="btn-cancel" variant="primary" onClick={() => setDesignerBusinessHoursModalShow(false)}>Cancel</Button>
-                    {/* <Button className="btn-primary" variant="primary" onClick={() => {
-                        if (times) {
-                            addBusinessHoursSubmits
-                        } else {
-                            addBusinessHoursSubmit
-                        }
-                    }}>Save</Button> */}
+
 
                     <Button className="btn-primary" variant="primary" onClick={() => {
-                        if (times) {
-                            addBusinessHoursSubmitPut()
-                        } else {
+                        if (!times.length) {
                             addBusinessHoursSubmitPost()
+                        } else {
+                            addBusinessHoursSubmitPut()
                         }
                     }}>Save</Button>
 
