@@ -886,7 +886,9 @@ form select::placeholder {
 .portfolio-grid-div:hover .portfolio-overlay {
     opacity: 1;
 }
-
+.line-height-24 {
+    line-height: 24px;
+}
 .portfolio-overlay {
     height: 100%;
     position: absolute;
@@ -1464,6 +1466,7 @@ button.schedule-consultation {
 .rating-color {
     color: #393939;
 }
+
 .single-image-chat {
     width: 11%;
     min-height: 36px;

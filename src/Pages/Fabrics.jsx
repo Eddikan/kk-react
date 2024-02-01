@@ -299,7 +299,7 @@ const Fabrics = (props) => {
                             <Col lg="12">
                                 <div className="narrow-850 text-center">
                                     <h2 className='fs-40 text-center mb-3'>Explore Premium Fabrics</h2>
-                                    <p className='fs-16 fw-400 text-black'>Fabrics are versatile materials composed of fibers, either natural or synthetic, that are woven, knitted, or bonded together to form a flexible and pliable structure. </p>
+                                    <p className='fs-16 fw-400 text-black line-height-24'>Fabrics are versatile materials composed of fibers, either natural or synthetic, that are woven, knitted, or bonded together to form a flexible and pliable structure. </p>
                                 </div>
                             </Col>
                             {/* <Col lg="4" className='text-right'>

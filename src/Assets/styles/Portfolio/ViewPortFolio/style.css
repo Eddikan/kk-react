@@ -55,7 +55,9 @@
     left: 10%;
     margin-left: -51px;
 }
-
+.name-of-user-chat {
+    color: #39393A;
+}
 .reviews-tooltip .reviews-tooltiptext::after {
     content: "";
     position: absolute;
@@ -66,13 +68,31 @@
     border-style: solid;
     border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
 }
-
+img.placeholder-chat {
+    width: 8%;
+    height: 1%;
+}
 .reviews-tooltip:hover .reviews-tooltiptext {
     visibility: visible;
 }
+.time-chat {
+    color: #AAAAAA;
+}
+.follow,.you {
+    color: #434343;
+}
+.portfolio-designer-chat .designer-photo {
+    min-width: 30px;
+    min-height: 30px;
+    max-width: 30px;
+    max-height: 30px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}
 
 .request-quote-btn {
-    font-size: 15px;
     padding: 12px 20px;
     min-width: 190px;
     border-radius: 5px;

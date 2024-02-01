@@ -108,7 +108,7 @@ const SignUp = (props) => {
                             <Card>
                                 <Card.Body>
                                     <Link to="/">
-                                        <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" style={{maxWidth: '50px'}} />
+                                        <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" style={{ maxWidth: '50px' }} />
                                     </Link>
                                     {signupType == "designer" ?
                                         <>

@@ -9,6 +9,7 @@ import '../Assets/styles/Cart/style.css';
 import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import User from '../Assets/images/user.png';
+import { GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
 
 
 const ToastCss = {
@@ -29,8 +30,13 @@ const Cart = (props) => {
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
     const [radioButtonValue, setRadioButtonValue] = useState(0);
+    const [underConstructionShow, setUnderConstructionShow] = useState(false);
+    const [modalHeading, setModalHeading] = useState('');
 
-
+    function toggleUnderConstruction(message) {
+        setUnderConstructionShow(true);
+        setModalHeading(message);
+    }
 
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
@@ -158,7 +164,7 @@ const Cart = (props) => {
                             <Card>
                                 <Card.Body>
                                     <div className='fs-22 rufina-family fw-600'>Payment Info</div>
-                                    <hr />
+                                    <hr className='mt-2' />
                                     <div>Payment Method</div>
                                     <div className='mt-3 d-flex'>
                                         <div className='d-flex'>
@@ -200,7 +206,7 @@ const Cart = (props) => {
 
                                         </div>
                                     }
-                                    <div className='text-center mt-4'>
+                                    <div className='text-center mt-4' onClick={() => toggleUnderConstruction("Check Out")}>
                                         <button className='btn btn-primary w-100'>Check Out</button>
                                     </div>
                                 </Card.Body>
@@ -209,6 +215,31 @@ const Cart = (props) => {
                     </Row>
                 </Container>
             </section>
+
+            <Modal
+                show={underConstructionShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="sm"
+            >
+                <Modal.Header className="py-0">
+                    <h5 className='modal-title text-uppercase text-left'></h5>
+                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+                    <Card>
+                        <Card.Body className="text-center py-5">
+                            <GoAlertFill size="60px" className="mb-2 text-gold" />
+                            <p className="fs-20 text-black">Under Construction</p>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+            </Modal>
 
         </LayoutNoFooter >
     );

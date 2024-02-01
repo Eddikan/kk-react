@@ -75,7 +75,7 @@ const PortfolioGrid = (props) => {
                                                                 null
                                                             }
 
-                                                            {user_id ?
+                                                            {/* {user_id ?
                                                                 <div className="other-actions">
                                                                     <div className="action-button bg-white me-2">
                                                                         <GoHeart className="text-black" />
@@ -83,7 +83,7 @@ const PortfolioGrid = (props) => {
                                                                 </div>
                                                                 :
                                                                 null
-                                                            }
+                                                            } */}
                                                         </div>
                                                     </div>
                                                     <Link to={`/portfolio/${object.id}`} className="text-decoration-none">

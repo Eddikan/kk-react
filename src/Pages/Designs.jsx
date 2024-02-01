@@ -298,8 +298,8 @@ const Designs = (props) => {
                         <Row className='mb-3'>
                             <Col lg="12">
                                 <div className="narrow-850 text-center">
-                                    <h2 className='fs-40 text-center mb-3'>Explore Captivating Designs</h2>
-                                    <p className='fs-16 fw-400 text-black'>In the realm of fabric design, the designer intricately weaves together artistic concepts, skillfully navigating through color harmonies and textural nuances to conceive patterns that not only adorn but tell compelling visual stories through the medium of textiles.</p>
+                                    <h2 className='fs-40 text-center mb-3'>Discover Captivating Designs.</h2>
+                                    <p className='fs-16 fw-400 text-black line-height-24'>In the realm of fabric design, the designer intricately weaves together artistic concepts, skillfully navigating through color harmonies and textural nuances to conceive patterns that not only adorn but tell compelling visual stories through the medium of textiles.</p>
                                 </div>
                             </Col>
                             {/* <Col lg="4" className='text-right'>
@@ -328,7 +328,6 @@ const Designs = (props) => {
                         </div>
                     </Container>
                 </section>
-
 
                 <hr className="border-black mt-2" />
                 <section className="pt-3">
@@ -638,7 +637,7 @@ const Designs = (props) => {
                                                                                     </span>
                                                                                 </div> */}
                                                                             </div>
-                                                                            <div className="star-ratings mt-1">
+                                                                            {/* <div className="star-ratings mt-1">
                                                                                 <Rating
                                                                                     initialValue={0}
                                                                                     readonly={true}
@@ -652,9 +651,8 @@ const Designs = (props) => {
                                                                                         0, 1, 2, 3, 4, 5
                                                                                     ]}
                                                                                     tooltipDefaultText="5.0"
-                                                                                /* Available Props */
                                                                                 />
-                                                                            </div>
+                                                                            </div> */}
                                                                             {/* <div className='d-flex align-items-center mt-1'>
                                                                                 {design.user.image ?
                                                                                     <div className='designer-photo-small' style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + design.user.image + ")" }} ></div>

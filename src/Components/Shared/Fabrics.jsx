@@ -252,7 +252,7 @@ const Fabrics = (props) => {
                                     <Col lg={12} className="text-center mt-4">
                                         {currentUser ?
                                             <Link to="/fabrics">
-                                                <Button className="btn-primary" variant="primary">View More</Button>
+                                                <Button className="btn-primary" variant="primary">View All</Button>
                                             </Link>
                                             :
                                             <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_fabric')}>View More</Button>

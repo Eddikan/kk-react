@@ -119,49 +119,49 @@ const EditProfile = () => {
     async function submitProfile(e) {
         e.preventDefault();
         setProfileFormLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser+'?user_id='+currentUser+'&token='+token, profileFormData).then((response) => {
-          const success = response.data.status;
-          if (success == 'Success') {
-            const data = response.data.data;
-            const user = data.user;
-            const user_details = {currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at}
-            setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-            toast.success('Profile updated successfully!');
-            setReloadCount((prevReloadCount) => prevReloadCount + 1);
-          } else {
-            const errors = response.data.errors;
-          }
-          setProfileFormLoading(false);
-        }).catch((error) => {
-          setProfileFormLoading(false);
-          toast.error('Something went wrong, please contact the administrator!');
-        });
-    }
-
-    async function submitDesigner(e) {
-        if (areasOfSpecializationData.length > 0 ) {
-            e.preventDefault();
-            setProfileFormLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/'+designer.id+'?user_id='+currentUser+'&token='+token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, profileFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
                 const user = data.user;
+                const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
+                setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
                 toast.success('Profile updated successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
             } else {
                 const errors = response.data.errors;
             }
             setProfileFormLoading(false);
-            }).catch((error) => {
+        }).catch((error) => {
             setProfileFormLoading(false);
             toast.error('Something went wrong, please contact the administrator!');
+        });
+    }
+
+    async function submitDesigner(e) {
+        if (areasOfSpecializationData.length > 0) {
+            e.preventDefault();
+            setProfileFormLoading(true);
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer.id + '?user_id=' + currentUser + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
+                const success = response.data.status;
+                if (success == 'Success') {
+                    const data = response.data.data;
+                    const user = data.user;
+                    toast.success('Profile updated successfully!');
+                    setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                } else {
+                    const errors = response.data.errors;
+                }
+                setProfileFormLoading(false);
+            }).catch((error) => {
+                setProfileFormLoading(false);
+                toast.error('Something went wrong, please contact the administrator!');
             });
         } else {
             setProfileFormLoading(false);
             toast.error('Please insert your specialization and experties!');
         }
-        
+
     }
 
     const fetchData = async (e) => {
@@ -191,7 +191,7 @@ const EditProfile = () => {
     };
 
     useEffect(() => {
-        fetchData({currentUser: currentUser, token: token });
+        fetchData({ currentUser: currentUser, token: token });
     }, [reloadCount]);
 
     return (
@@ -207,9 +207,9 @@ const EditProfile = () => {
                                     <div className="d-flex column-gap-20">
                                         <div>
                                             {userImage ?
-                                                <div className="profile-image" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+userImage+")"}}></div>
+                                                <div className="profile-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                                 :
-                                                <div className="profile-image" style={{ backgroundImage: "url("+UserPlaceholder+")"}}></div>
+                                                <div className="profile-image" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                             }
                                         </div>
                                         <div>
@@ -224,7 +224,7 @@ const EditProfile = () => {
                                                 <img src={PinIcon} />
                                                 {user.city || user.province || user.country ?
                                                     <p className='fs-16 color-light-blue'>
-                                                        {user.city ? user.city+',' : ""} {user.province ? user.province+"," : ""} {user.country ? user.country : ""}
+                                                        {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""}
                                                     </p>
                                                     :
                                                     <p className='fs-16 color-light-blue'>-</p>
@@ -380,7 +380,7 @@ const EditProfile = () => {
                                                                 <Form.Control as='select' name='country' value={profileFormData.country} className='mr-sm-2' onChange={handleChange} required>
                                                                     <option value=''>Select Country</option>
                                                                     {Countries.map((country, index) => (
-                                                                        <option key={country+"-"+index} value={country}>
+                                                                        <option key={country + "-" + index} value={country}>
                                                                             {country}
                                                                         </option>
                                                                     ))}
@@ -519,7 +519,7 @@ const EditProfile = () => {
                     </Container>
                 </section>
             }
-            
+
         </Layout>
     );
 };

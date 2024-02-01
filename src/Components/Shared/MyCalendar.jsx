@@ -15,10 +15,20 @@ import { IoMdClose } from "react-icons/io";
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import PropTypes from 'prop-types'
 import '../../Assets/styles/DesignerCalendar/style.css';
-
 import axios from "axios";
 import toast from 'react-hot-toast';
 
+
+const intitialConsultationData = {
+    consultation_date_time: '',
+    consultation_hour_start: '',
+    consultation_hour_end: '',
+    email: '',
+    first_name: '',
+    last_name: '',
+    timezone: '',
+    consultation_details: '',
+}
 const initialBusinessHours = {
     opens_at: '',
     closes_at: '',
@@ -38,9 +48,10 @@ const initialAppointments = {
 
 const localizer = momentLocalizer(moment)
 
-const MyCalendar = ({ toggleEvent }) => {
+const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const currentUserDetails = cookies.userDetails;
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const { designerId } = useParams();
@@ -49,22 +60,44 @@ const MyCalendar = ({ toggleEvent }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
     const [reloadCount, setReloadCount] = useState(0);
+    const [selectedTimeSlot, setSelectedTimeSlot] = useState();
     const [formStatus, setFormStatus] = useState('standby');
     const [appointmentFormData, setAppointmentFormData] = useState(initialAppointments);
     const [times, setTimes] = useState([initialAppointments]);
-
-
-    const toggleCalendarEvent = (calendarEvent) => {
-        let timeStart = new Date('1970-01-01T' + calendarEvent.time_start + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' });
-        let timeend = new Date('1970-01-01T' + calendarEvent.time_end + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' });
-
-    }
+    const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
+    const [currentTimezone, setCurrentTimezone] = useState(null);
 
 
     const postSetAppointment = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment', data);
     };
 
+    // const getAppointment = async () => {
+    //     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
+    // };
+
+    const toggleCalendar = (calendarAppointment) => {
+
+
+    }
+
+
+
+    const handleChangeConsultation = (e) => {
+        const { name, value } = e.target;
+        setConsultationFormData({
+            ...consultationFormData,
+            [name]: value,
+
+            email: currentUserDetails.email,
+            first_name: currentUserDetails.first_name,
+            last_name: currentUserDetails.last_name,
+            timezone: currentTimezone,
+            consultation_date_time: selectedDate,
+            consultation_details: currentUserDetails.consultation_details,
+
+        });
+    }
 
     const handleDateClick = ({ start }) => {
         setSelectedDate(start);
@@ -92,38 +125,16 @@ const MyCalendar = ({ toggleEvent }) => {
         });
     }
 
-    const handleChangeAppointment = (e) => {
-        const { name, value } = e.target;
-        setAppointmentFormData({
-            ...appointmentFormData,
-            [name]: value,
-        });
-    }
-
-    const handleChangeTime = (e, index) => {
-        const { name, value } = e.target;
-        setTimes(prevtimes => {
-            const updatedTimes = [...prevtimes];
-            updatedTimes[index] = {
-                ...updatedTimes[index],
-                [name]: value,
-                consultation_date_time: selectedDate,
-            };
-
-            return updatedTimes;
-        });
-    };
-
     const addAppointmentSubmit = (e) => {
         e.preventDefault();
         setFormStatus('loading');
-        postSetAppointment({ times: times })
+        postSetAppointment({ ...consultationFormData })
             .then(response => {
                 const status = response.data.status;
                 if (status === "Success") {
                     setFormStatus('standby');
                     setReloadCount(reloadCount + 1);
-                    setAppointmentFormData(initialAppointments);
+                    setConsultationFormData(intitialConsultationData);
                     toast.success('Appointment added successfully!');
                 } else {
                     setFormStatus('standby');
@@ -134,7 +145,42 @@ const MyCalendar = ({ toggleEvent }) => {
             });
     }
 
-    console.log(selectedDate)
+    useEffect(() => {
+        const getTimezone = () => {
+            const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+            setCurrentTimezone(timezone);
+        };
+
+        getTimezone();
+    }, []);
+
+    const [appointments, setAppointments] = useState([]);
+    useEffect(() => {
+        // getAppointment()
+        //     .then((response) => {
+        //         const selectedDate = response.data.data.data;
+        //         const status = response.data.status;
+        //         if (status == "Fail") {
+        //             toast.error('This designer have not yet set their available hours');
+        //         }
+        //         else {
+        //             if (selectedDate) {
+        //                 setSelectedDate(selectedDate);
+        //                 setAppointments(selectedDate.designer_appointments);
+
+        //                 console.log("selectedDate.designer_appointments", selectedDate.designer_appointments);
+        //             } else {
+        //                 toast.error('There has been an error getting the schedule, please try again!');
+        //             }
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         toast.error('There has been an error getting the schedule, please try again!');
+        //     });
+
+    }, [reloadCount]);
+
+
 
     return (
         <>
@@ -175,8 +221,8 @@ const MyCalendar = ({ toggleEvent }) => {
                                             type="text"
                                             name="title"
                                             className='form-control'
-                                            value={appointmentFormData?.title}
-                                            onChange={handleChangeAppointment}
+                                            value={consultationFormData.title}
+                                            onChange={handleChangeConsultation}
                                         />
                                     </Col>
 
@@ -188,7 +234,7 @@ const MyCalendar = ({ toggleEvent }) => {
                                                         {times.length > 0 && (
                                                             <>
                                                                 {index > 0 && (
-                                                                    <div className='w-100 d-flex justify-content-end mt-3'>
+                                                                    <div className='w-75 ms-4 d-flex justify-content-end mt-3'>
                                                                         <div className='cursor-pointer' onClick={() => handleRemoveAppointment(index)}>
                                                                             <RxCross2 color='#000000' />
                                                                         </div>
@@ -202,8 +248,8 @@ const MyCalendar = ({ toggleEvent }) => {
                                                                             type='time'
                                                                             name='consultation_hour_start'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={time?.consultation_hour_start}
-                                                                            onChange={e => handleChangeTime(e, index)}
+                                                                            value={consultationFormData?.consultation_hour_start}
+                                                                            onChange={e => handleChangeConsultation(e, index)}
                                                                         />
                                                                     </div>
                                                                 </Col>
@@ -215,8 +261,8 @@ const MyCalendar = ({ toggleEvent }) => {
                                                                             type='time'
                                                                             name='consultation_hour_end'
                                                                             className='mr-sm-2 form-control-hours'
-                                                                            value={time?.consultation_hour_end}
-                                                                            onChange={e => handleChangeTime(e, index)}
+                                                                            value={consultationFormData?.consultation_hour_end}
+                                                                            onChange={e => handleChangeConsultation(e, index)}
                                                                         />
                                                                     </div>
                                                                 </Col>
@@ -241,7 +287,7 @@ const MyCalendar = ({ toggleEvent }) => {
                             <div className='text-right'>
                                 <Button className="cancel-btn me-2" onClick={handleModalClose}>Cancel</Button>
                                 <Button className="btn-save"
-                                // onClick={addAppointmentSubmit}
+                                    onClick={addAppointmentSubmit}
                                 >Save</Button>
                             </div>
                         </ModalFooter>

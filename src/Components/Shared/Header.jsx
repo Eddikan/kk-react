@@ -9,6 +9,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import Logo from 'Assets/images/kouture-konect-logo.png';
 import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoIosHeartEmpty, IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
+import { IoCalendarClearOutline } from "react-icons/io5";
 import { GoBell } from "react-icons/go";
 import { BsEnvelope } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
@@ -140,6 +141,9 @@ const Header = () => {
                     <div className="cursor-pointer nav-link"><GoBell size={25} onClick={() => toggleUnderConstruction("Notifications")} /></div>
                     <div className="cursor-pointer nav-link"><BsEnvelope size={25} onClick={() => toggleUnderConstruction("Messages")} /></div>
                     <Nav.Link href="/wishlist"><IoIosHeartEmpty size={25} /></Nav.Link>
+
+                    <Nav.Link href="/appointments"><IoCalendarClearOutline size={25} /></Nav.Link>
+
                     <Nav.Link href="/orders" className='fs-16'>Orders</Nav.Link>
                     <div className="user-dropdown nav-link" ref={userRef}>
                       {userImage ?

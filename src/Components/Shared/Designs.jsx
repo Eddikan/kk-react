@@ -5,8 +5,7 @@ import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import toast from 'react-hot-toast';
 // import getDesignsData from 'Utils/GetDesignsData';
 import GetDesignsData from 'Utils/GetDesignsData';
-import { BsThreeDots } from "react-icons/bs";
-import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
+import { GoHeart, GoBookmark } from "react-icons/go";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
@@ -91,7 +90,7 @@ const Designs = (props) => {
     return (
         <>
             <div id="profile-designs">
-                <p className="fs-20 text-center text-dark mb-2 proximanova-family"> Looking for Designs? <span className="text-gold">Explore now </span></p >
+                <p className="fs-20 text-center text-dark mb-2 proximanova-family"> Looking for Designs? <span className="text-dark">Explore now </span></p >
                 <h2 className="fs-35 fw-500 text-center text-black discover-design">Discover Captivating Designs</h2>
                 {designsLoading ?
                     <>
@@ -243,7 +242,7 @@ const Designs = (props) => {
                                     <Col lg={12} className="text-center mt-4">
                                         {currentUser ?
                                             <Link to="/designs">
-                                                <Button className="btn-primary" variant="primary">View More</Button>
+                                                <Button className="btn-primary" variant="primary">View All</Button>
                                             </Link>
                                             :
                                             <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_design')}>View More</Button>

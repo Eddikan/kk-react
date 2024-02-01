@@ -41,7 +41,6 @@ const SellerCenter = (props) => {
     const { designerId } = useParams();
     const [designerBusinessHoursModalShow, setDesignerBusinessHoursModalShow] = useState(false);
     const [appointmentModalShow, setAppointmentModalShow] = useState(false);
-
     const [isSundayChecked, setIsSundayChecked] = useState(false);
     const [isMondayChecked, setIsMondayChecked] = useState(false);
     const [isTuesdayChecked, setIsTuesdayChecked] = useState(false);
@@ -49,10 +48,6 @@ const SellerCenter = (props) => {
     const [isThursdayChecked, setIsThursdayChecked] = useState(false);
     const [isFridayChecked, setIsFridayChecked] = useState(false);
     const [isSaturdayChecked, setIsSaturdayChecked] = useState(false);
-
-    const [selectedDate, setSelectedDate] = useState(null);
-
-
     const [sundayHoursFormData, setSundayHoursFormData] = useState([initialBusinessHours]);
     const [mondayHoursFormData, setMondayHoursFormData] = useState([initialBusinessHours]);
     const [tuesdayHoursFormData, setTuesdayHoursFormData] = useState([initialBusinessHours]);
@@ -61,11 +56,9 @@ const SellerCenter = (props) => {
     const [fridayHoursFormData, setFridayHoursFormData] = useState([initialBusinessHours]);
     const [saturdayHoursFormData, setSaturdayHoursFormData] = useState([initialBusinessHours]);
     const [appointmentFormData, setAppointmentFormData] = useState(initialAppointments);
-
     const [businessHoursFormData, setBusinessHoursFormData] = useState([initialBusinessHours]);
-
+    const [calendarAppointment, setCalendarAppointment] = useState([]);
     const [times, setTimes] = useState([]);
-
     const [availability, setAvailability] = useState([]);
 
 
@@ -291,10 +284,6 @@ const SellerCenter = (props) => {
                 toast.error('There has been an error getting the appointment, please try again!');
             });
 
-    }
-
-    const handleShowAppointmentModal = () => {
-        setAppointmentModalShow(true);
     }
 
     const handleAppointments = () => {
@@ -621,13 +610,12 @@ const SellerCenter = (props) => {
                                     <h3 className="fs-30 fw-600 text-black mb-0">My Calendar</h3>
                                 </Col>
                                 <Col md={6} className="text-right">
-                                    {/* <button className="btn-primary btn me-2" onClick={handleShowAppointmentModal}>Appointment</button> */}
                                     <button className="btn-primary btn" onClick={handleShowDesignerBusinessHoursModal}>Settings</button>
                                 </Col>
                             </Row>
                             <div className="calendar-container">
                                 <MyCalendar
-                                // calendarAppointment={calendarAppointment}
+                                    calendarAppointment={calendarAppointment}
                                 />
                             </div>
 
@@ -1133,7 +1121,6 @@ const SellerCenter = (props) => {
                                                 />
                                             </Col>
                                         </Row>
-
                                     </Col>
                                 </Row>
                             </Col>
@@ -1143,14 +1130,15 @@ const SellerCenter = (props) => {
                 <Modal.Footer>
                     <Button className="btn-cancel" variant="primary" onClick={() => setDesignerBusinessHoursModalShow(false)}>Cancel</Button>
 
-
                     <Button className="btn-primary" variant="primary" onClick={() => {
                         if (!times.length) {
                             addBusinessHoursSubmitPost()
                         } else {
                             addBusinessHoursSubmitPut()
                         }
-                    }}>Save</Button>
+                    }}>
+                        Save
+                    </Button>
 
                 </Modal.Footer>
             </Modal >

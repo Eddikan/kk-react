@@ -19,6 +19,7 @@ import Loading from 'Components/Shared/Loading';
 import { Rating } from 'react-simple-star-rating';
 import UserPlaceholder from 'Assets/images/user.png';
 import { BsArrowUpRightSquare } from "react-icons/bs";
+import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const initialReviewData = Object.freeze({
     rating: 0,
@@ -26,16 +27,15 @@ const initialReviewData = Object.freeze({
 });
 
 const ViewProduct = () => {
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const { productId } = useParams();
     const [product, setProduct] = useState('');
     const [productPrice, setProductPrice] = useState(0.00);
     const [productLoading, setProductLoading] = useState(true);
     const [images, setImages] = useState([]);
-    const [reloadCount, setReloadCount] = useState(0);
     const [activeImage, setActiveImage] = useState('');
     const [commentsTabShow, setCommentsTabShow] = useState(false);
     const [reviewsTabShow, setReviewsTabShow] = useState(true);
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const [userWishlist, setUserWishlist] = useState(false);
     const [addedToCartShow, setAddedToCartShow] = useState(false);
     const [shareModalShow, setShareModalShow] = useState(false);
@@ -45,23 +45,22 @@ const ViewProduct = () => {
     const [updateReview, setUpdateReview] = useState(false);
     const [reviewId, setReviewId] = useState('');
     const [addReviewLoading, setAddReviewLoading] = useState(false);
-
     const [reviewFormData, setReviewFormData] = useState(initialReviewData);
-
+    const [reviewItemModal, setReviewItemModal] = useState(false);
     const [addReviewShow, setAddReviewShow] = useState(false);
     const [reviewText, setReviewText] = useState('Terrible');
-
+    const [modalHeading, setModalHeading] = useState('');
+    const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [unitMeasurement, setUnitMeasurement] = useState(1.00);
     const [yards, setYards] = useState(0.00);
+
     const currentUser = cookies.currentUser;
     const token = cookies.token;
     const userDetails = cookies.userDetails;
-
     const navigate = useNavigate();
 
     const handleActiveImageChange = (image) => {
         setActiveImage(image);
-        // You can perform additional actions when the active image changes
     };
 
     // Catch Rating value
@@ -90,6 +89,16 @@ const ViewProduct = () => {
 
     const toggleAddToReview = (e) => {
         setAddReviewShow(!addReviewShow);
+    }
+
+    function toggleReviewItem(message) {
+        setReviewItemModal(true);
+        setModalHeading(message);
+    }
+
+    function toggleUnderConstruction(message) {
+        setUnderConstructionShow(true);
+        setModalHeading(message);
     }
 
     const handleChange = (e) => {
@@ -353,7 +362,6 @@ const ViewProduct = () => {
                                                 </div>
 
                                                 <div>
-
                                                 </div>
                                                 <div>
                                                     <div className="action-button bg-smgray me-2">
@@ -407,11 +415,11 @@ const ViewProduct = () => {
                                                 </div>
                                                 <div className="">
                                                     <p className="mb-2 fs-16 fw-600">Fabric Process Insight</p>
-                                                    <p className="mb-4 fs-16 fw-400">{product.seller?.fabric_process_insights ?? "-"}</p>
+                                                    <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.fabric_process_insights ?? "-"}</p>
                                                 </div>
                                                 <div className="">
                                                     <p className="mb-2 fs-16 fw-600">Pricing Structure</p>
-                                                    <p className="mb-4 fs-16 fw-400">{product.seller?.pricing_structure ?? "-"}</p>
+                                                    <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.pricing_structure ?? "-"}</p>
                                                 </div>
 
                                                 <div>
@@ -475,17 +483,34 @@ const ViewProduct = () => {
                             </Col> */}
                             <Col lg="12" className='mt-4'>
                                 {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
-                                <div className="d-flex justify-content-between w-100 align-item-center">
+                                {/* <div className="d-flex justify-content-between w-100 align-item-center">
                                     <p className={`text-black cursor-pointer me-5 mt-3 mb-0 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews
                                         <BsArrowUpRightSquare className='ms-2' color="#caa533" />
                                     </p>
-                                    {/* {updateReview ?
+                                    {updateReview ?
                                         <Button className="w-auto mb-3 btn-primary" onClick={function () { getProductReview(reviewId); toggleAddToReview(); }}>Update Review</Button>
                                         :
                                         <Button className="w-auto mb-3 btn-primary" onClick={function () { toggleAddToReview(); }}>Add Review</Button>
-                                    } */}
+                                    }
 
-                                </div>
+                                </div> */}
+
+
+                                <span
+                                    className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`}
+                                    onClick={function () { showTab("reviews"); }}
+                                >
+                                    Customer Reviews
+
+                                    <span className="cursor-pointer reviews-tooltip" onClick={() => toggleReviewItem()}>
+                                        <div className='tooltip-content'>
+                                            <span className="reviews-tooltiptext fs-14">Write Review</span>
+                                        </div>
+                                        <BsArrowUpRightSquare className='ms-2' color="#caa533" />
+                                    </span>
+
+                                </span>
+
                                 <hr className='mt-2 mb-4' />
                                 {commentsTabShow ?
                                     <>
@@ -529,7 +554,6 @@ const ViewProduct = () => {
                                                                                 showTooltip={false}
                                                                                 emptyColor="#dddddd"
                                                                                 fillColor="#cea835"
-                                                                            /* Available Props */
                                                                             />
                                                                             {content && content != "" ?
                                                                                 <p className="mb-0 mt-3">{content}</p>
@@ -550,7 +574,7 @@ const ViewProduct = () => {
                                                     :
                                                     <div className="text-center">
                                                         <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
-                                                        <p className="fs-20 text-black no-available">No available reviews at this time</p>
+                                                        <p className="fs-20 text-black">No available reviews at this time</p>
                                                     </div>
                                                 }
                                             </>
@@ -579,7 +603,7 @@ const ViewProduct = () => {
                     </button>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4 className='text-center fs-25 fw-600 mb-3'>Share Product</h4>
+                    <h4 className='fs-25 fw-600 mb-3'>Share Product</h4>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />
@@ -696,6 +720,101 @@ const ViewProduct = () => {
                                 <Button className="w-auto mt-2 btn-primary" onClick={function () { reviewAdd(); }}>{addReviewLoading ? "Saving..." : "Submit"}</Button>
                             }
                         </Card.Footer>
+                    </Card>
+                </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={reviewItemModal}
+                className='modal-preview'
+                fade={false}
+                size="sm"
+            >
+                <ModalHeader className='pt-2 pb-2'>
+                    <h5 className='modal-title text-left fs-25 rufina-family fw-600 '>Review Item</h5>
+                    <button
+                        type='button'
+                        className='close react-review-items-close'
+                        data-dismiss='modal' aria-label='Close'
+                        onClick={() => setReviewItemModal(false)}
+                    >
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </ModalHeader>
+                <hr className="mt-0 mb-2" />
+                <Modal.Body className='pt-4 pb-2'>
+                    <div className='product-portfolio-image mb-4'>
+                        <span className='d-flex'>
+                            {images && images.length > 0 ?
+                                <>
+                                    <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                    </div>
+                                    <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{product.name ?? "-"}</span>
+                                </>
+                                :
+                                null
+                            }
+                        </span>
+                    </div>
+
+                    <div className='d-flex mb-2'>
+                        <div className='d-flex justify-content-center align-items-center'>
+                            Product Quality:
+                        </div>
+
+                        <div className='mx-4'>
+                            <Rating
+                                // initialValue={rating}
+                                readonly={true}
+                                allowFraction={true}
+                                size={30}
+                                className="star-rating"
+                                showTooltip={false}
+                                emptyColor="#cea835"
+                                fillColor="#cea835"
+                            />
+                        </div>
+
+                        <div className='d-flex justify-content-center align-items-center'>
+                            Excellent
+                        </div>
+                    </div>
+                    <div className='mb-4'>
+                        <textarea
+                            type="text"
+                            name="description"
+                            className="d-block form-control bg-white"
+                            placeholder='Leave a comment about the product...'
+                        />
+                    </div>
+                </Modal.Body>
+                <ModalFooter className=''>
+                    <div className='text-right'>
+                        <Button className="cancel-btn me-2" onClick={() => setReviewItemModal(false)}>Cancel</Button>
+                        <Button className="btn-save" onClick={() => { toggleUnderConstruction("Review Item"); setReviewItemModal(false); }}>Submit</Button>
+                    </div>
+                </ModalFooter>
+            </Modal>
+
+            <Modal
+                show={underConstructionShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="sm"
+            >
+                <Modal.Header className="py-0">
+                    <h5 className='modal-title text-uppercase text-left'></h5>
+                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+                    <Card>
+                        <Card.Body className="text-center py-5">
+                            <GoAlertFill size="60px" className="mb-2 text-gold" />
+                            <p className="fs-20 text-black">Under Construction</p>
+                        </Card.Body>
                     </Card>
                 </Modal.Body>
             </Modal>

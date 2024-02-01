@@ -118,7 +118,7 @@ const Home = (props) => {
         </Container>
       </section>
 
-      <section id="eco" className="py-5 mb-5">
+      <section id="eco" className="py-5 mb-0">
         <Row>
           <Col lg="12">
             <EcoFriendly currentUser={currentUser} onSignup={showSignupModal} />

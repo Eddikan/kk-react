@@ -1,0 +1,43 @@
+.request-quote-btn {
+    font-size: 15px;
+    padding: 12px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: var(--white);
+    background-color: var(--black);
+    border-color: var(--black);
+}
+
+.request-quote-btn:hover {
+    color: var(--white);
+    background-color: var(--black);
+    border-color: var(--black);
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+    border-radius: 50%;
+}
+
+.react-review-items-close {
+    position: absolute;
+    top: 14px;
+    right: 20px;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    line-height: 1;
+    z-index: 9;
+}
+
+.image-drop-container-quote {
+    background-image: url(data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%233332' stroke-width='3' stroke-dasharray='12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e);
+    border: none;
+    padding: 25px;
+}
