@@ -12,6 +12,7 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import GoBack from 'Components/Shared/GoBack';
+import Sidebar from 'Components/Shared/Sidebar';
 
 const Portfolio = (props) => {
     const navigate = useNavigate();
@@ -28,19 +29,19 @@ const Portfolio = (props) => {
 
     const fetchData = async (e) => {
         try {
-          const portfolioData = await GetUserPortfolioData(e);
-          if (portfolioData) {
-            setPortfolio(portfolioData);
-            setPortfolioLoading(false);
-          } else {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setPortfolioLoading(false);
-          }
-          // Update state or perform other logic with userData
+            const portfolioData = await GetUserPortfolioData(e);
+            if (portfolioData) {
+                setPortfolio(portfolioData);
+                setPortfolioLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setPortfolioLoading(false);
+            }
+            // Update state or perform other logic with userData
         } catch (error) {
             toast.error('An error occured. Please try again or contact the administrator.');
             setPortfolioLoading(false);
-          // Handle the error, if needed
+            // Handle the error, if needed
         }
     };
 
@@ -55,9 +56,9 @@ const Portfolio = (props) => {
 
     async function PortfolioDraftSubmit(e) {
         setPortfolioDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?user_id=' + currentUser + '&token=' + token, { status: 'Draft' }).then((response) => {
             const success = response.data.status;
-            if(success == 'Success') {
+            if (success == 'Success') {
                 toast.success('Design saved as draft successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
                 setPortfolioDraftLoading(false);
@@ -73,9 +74,9 @@ const Portfolio = (props) => {
 
     async function PortfolioPublishSubmit(e) {
         setPortfolioPublishLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+e+'?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?user_id=' + currentUser + '&token=' + token, { status: 'Active' }).then((response) => {
             const success = response.data.status;
-            if(success == 'Success') {
+            if (success == 'Success') {
                 toast.success('Design published successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
                 setPortfolioPublishLoading(false);
@@ -95,6 +96,7 @@ const Portfolio = (props) => {
 
     return (
         <Layout>
+            <Sidebar />
             {portfolioLoading ?
                 <LoadingPage />
                 :
@@ -115,48 +117,48 @@ const Portfolio = (props) => {
                                         {/* <img src={object.url} className='portfolio-img'/> */}
                                         {portfolio.map((object, index) => (
                                             <Col className={`portfolio-grid mb-3`} xs="4" md="2">
-                                                    <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+object.image_urls[0].image_url+")"}}>
-                                                        <div className="portfolio-overlay">
-                                                            <div className="portfolio-actions">
-                                                                <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
-                                                                {selectedItemIndex === index && (
-                                                                    <div className="action-box">
-                                                                        <Link className="text-decoration-none" to={`/portfolio/${object.id}/edit`}>
-                                                                            <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
-                                                                        </Link>
-                                                                        <p className="mb-3"><GoTrash  /> Delete</p>
-                                                                        {object.status != "Draft" ?
-                                                                            <p className="mb-0 cursor-pointer" onClick={function() { PortfolioDraftSubmit(object.id);}}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
-                                                                            :
-                                                                            <p className="mb-0 cursor-pointer" onClick={function() { PortfolioPublishSubmit(object.id);}}><IoDocumentOutline /> {portfolioPublishLoading ? "Publishing..." : "Publish"}</p>
-                                                                        }
-                                                                        
-                                                                        {/* Add other actions as needed */}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            <div className="portfolio-details">
-                                                                <span className="text-white text-decoration-none">{object.name ?? "-"}</span>
-                                                                <div className="other-actions">
-                                                                    <div className="action-button bg-white me-2">
-                                                                        <GoHeart className="text-black" />
-                                                                    </div>
-                                                                    <div className="action-button bg-white">
-                                                                        <GoBookmark className="text-black" />
-                                                                    </div>
+                                                <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url + ")" }}>
+                                                    <div className="portfolio-overlay">
+                                                        <div className="portfolio-actions">
+                                                            <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
+                                                            {selectedItemIndex === index && (
+                                                                <div className="action-box">
+                                                                    <Link className="text-decoration-none" to={`/portfolio/${object.id}/edit`}>
+                                                                        <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
+                                                                    </Link>
+                                                                    <p className="mb-3"><GoTrash /> Delete</p>
+                                                                    {object.status != "Draft" ?
+                                                                        <p className="mb-0 cursor-pointer" onClick={function () { PortfolioDraftSubmit(object.id); }}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
+                                                                        :
+                                                                        <p className="mb-0 cursor-pointer" onClick={function () { PortfolioPublishSubmit(object.id); }}><IoDocumentOutline /> {portfolioPublishLoading ? "Publishing..." : "Publish"}</p>
+                                                                    }
+
+                                                                    {/* Add other actions as needed */}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <div className="portfolio-details">
+                                                            <span className="text-white text-decoration-none">{object.name ?? "-"}</span>
+                                                            <div className="other-actions">
+                                                                <div className="action-button bg-white me-2">
+                                                                    <GoHeart className="text-black" />
+                                                                </div>
+                                                                <div className="action-button bg-white">
+                                                                    <GoBookmark className="text-black" />
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <Link to={`/portfolio/${object.id}`} className="text-decoration-none">
-                                                            <div className="portfolio-overlay" style={{background: 'transparent', height: '85%', bottom: 0}}></div>
-                                                        </Link>
                                                     </div>
+                                                    <Link to={`/portfolio/${object.id}`} className="text-decoration-none">
+                                                        <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
+                                                    </Link>
+                                                </div>
                                             </Col>
                                         ))}
                                         <Col className="portfolio-grid mb-3" xs="4" md="2">
                                             <div onClick={addNewPortfolio} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
                                                 <GoPlus color="#a4a4a4" size="150px" className="mt-3" />
-                                                <p className="text-dgray" style={{marginTop: '-15px'}}>Add More</p>
+                                                <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
                                             </div>
                                         </Col>
                                     </Row>
@@ -171,7 +173,7 @@ const Portfolio = (props) => {
                                     </div>
                                 </>
                             }
-                        </Container> 
+                        </Container>
                     </section>
                 </>
             }

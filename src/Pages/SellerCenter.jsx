@@ -403,6 +403,7 @@ const SellerCenter = (props) => {
         }
     };
 
+
     const handleFridayCheckboxChangeClose = () => {
         setIsFridayChecked(!isFridayChecked);
 
@@ -536,9 +537,6 @@ const SellerCenter = (props) => {
         });
     }
 
-    console.log("sundayHoursFormData", sundayHoursFormData);
-    console.log("designerId", designerId);
-
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
     }, []);
@@ -549,7 +547,6 @@ const SellerCenter = (props) => {
     }, [reloadCount]);
 
     const addBusinessHoursSubmitPut = (e) => {
-        // e.preventDefault();
         setFormStatus('loading');
         const content = [
             {

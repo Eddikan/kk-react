@@ -10,7 +10,14 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import User from '../Assets/images/user.png';
 import { GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
+import axios from "axios";
+import toast from 'react-hot-toast';
 
+const initialCheckOut = {
+    card_name: '',
+    card_number: '',
+    date: ''
+};
 
 const ToastCss = {
     position: "top-right",
@@ -32,19 +39,66 @@ const Cart = (props) => {
     const [radioButtonValue, setRadioButtonValue] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
+    const [checkOutFormData, setCheckOutFormData] = useState(initialCheckOut);
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
     }
 
+    const getAddCarts = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
+    };
+
+    const postCheckOut = async (data) => {
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+    };
+
+    const handleChangePaymentInfo = (e) => {
+        const { name, value } = e.target;
+        setCheckOutFormData({
+            ...checkOutFormData,
+            [name]: value,
+        });
+    }
+
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
     }, []);
 
+    const addBusinessHoursSubmitPost = (e) => {
+        // e.preventDefault();
+        setFormStatus('loading');
+        postCheckOut(checkOutFormData).then(response => {
+            const status = response.data.status;
+            if (status === "Success") {
+                setFormStatus('standby');
+                setReloadCount(reloadCount + 1);
+                setCheckOutFormData(initialCheckOut);
+                toast.success('Availability added successfully!');
+            } else {
+                setFormStatus('standby');
+                toast.error('There has been an error saving the appointment, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error saving the appointment, please try again!');
+        });
+    }
+
 
     useEffect(() => {
-
+        // getAddCarts()
+        //     .then((response) => {
+        //         const selectedOrders = response.data.data;
+        //         if (selectedOrders) {
+        //             setOrders(selectedOrders);
+        //         } else {
+        //             toast.error('There has been an error getting the date, please try again!');
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         toast.error('There has been an error getting the date, please try again!');
+        //     });
     }, [reloadCount]);
 
     return (
@@ -103,7 +157,7 @@ const Cart = (props) => {
                                         <Col lg={1}>
                                             <input
                                                 type="checkbox"
-                                                className="cursor-pointer check-box me-2 ms-3"
+                                                className="cursor-pointer check-box accented me-2 ms-3"
                                             />
                                         </Col>
                                         <Col lg={3}>
@@ -190,18 +244,38 @@ const Cart = (props) => {
 
                                             <div className='mb-4'>
                                                 <div className='mb-2'>Card Name:</div>
-                                                <input type="text" className='form-control' />
+                                                <input
+                                                    type="text"
+                                                    className='form-control'
+                                                    name="card_name"
+                                                    value={checkOutFormData.card_name}
+                                                    onChange={handleChangePaymentInfo}
+                                                />
                                             </div>
                                             <hr />
 
                                             <div>
                                                 <div className='mb-2'>Card Number:</div>
-                                                <input type="text" className='form-control mb-2' />
+                                                <input
+                                                    type="text"
+                                                    name="card_number"
+                                                    className='form-control mb-2'
+                                                    value={checkOutFormData.card_number}
+                                                    onChange={handleChangePaymentInfo}
+                                                    maxLength={15}
+                                                    pattern="[0-9]*"
+                                                />
                                             </div>
 
                                             <div className='mt-3'>
                                                 <div className='mb-2'>Expiration Date:</div>
-                                                <input type="date" className='form-control' />
+                                                <input
+                                                    type="date"
+                                                    className='form-control'
+                                                    name="date"
+                                                    value={checkOutFormData.date}
+                                                    onChange={handleChangePaymentInfo}
+                                                />
                                             </div>
 
                                         </div>

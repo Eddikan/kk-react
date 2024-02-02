@@ -93,7 +93,7 @@ const Fabrics = (props) => {
     return (
         <>
             <div id="profile-designs">
-                <p className="fs-18 text-center text-dark mb-2"> Searching for Fabrics?</p >
+                <p className="fs-20 text-center text-dark mb-2"> Searching for Fabrics?</p >
                 <h2 className="fs-35 fw-500 text-center text-black explore-premium-fabrics">Explore Premium Fabrics</h2>
                 {fabricsLoading ?
                     <>

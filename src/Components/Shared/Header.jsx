@@ -4,7 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import { Container, Button } from 'react-bootstrap';
+import { Container, Button, Dropdown } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import Logo from 'Assets/images/kouture-konect-logo.png';
 import { HiOutlineShoppingBag } from "react-icons/hi2";
@@ -17,13 +17,17 @@ import UserPlaceholder from 'Assets/images/user.png';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Card, Modal } from 'react-bootstrap';
+import User from '../../Assets/images/user.png';
 import { GoAlertFill } from 'react-icons/go';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const currentUrl = window.location.href;
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [userBellOpen, setUserBellOpen] = useState(false);
+  const [userEnvelopOpen, setUserEnvelopOpen] = useState(false);
   const [userImage, setUserImage] = useState('');
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
   const [userType, setUserType] = useState('user');
@@ -56,6 +60,16 @@ const Header = () => {
   const toggleUserMenu = () => {
     setUserMenuOpen(!userMenuOpen);
   };
+
+  const toggleBellMenu = () => {
+    setUserBellOpen(!userBellOpen);
+  };
+
+  const toggleEnvelopMenu = () => {
+    setUserEnvelopOpen(!userEnvelopOpen);
+  };
+
+
 
   const logOut = () => {
     removeCookies();
@@ -138,13 +152,75 @@ const Header = () => {
               <div className="d-flex column-gap-10 align-items-center">
                 {currentUser && currentUser != "" ?
                   <>
-                    <div className="cursor-pointer nav-link"><GoBell size={25} onClick={() => toggleUnderConstruction("Notifications")} /></div>
-                    <div className="cursor-pointer nav-link"><BsEnvelope size={25} onClick={() => toggleUnderConstruction("Messages")} /></div>
-                    <Nav.Link href="/wishlist"><IoIosHeartEmpty size={25} /></Nav.Link>
 
+                    <div className="user-dropdown nav-link" ref={userRef}>
+                      {userImage ?
+                        <div className="cursor-pointer nav-link"><GoBell size={25} onClick={toggleBellMenu} /></div>
+                        :
+                        <div className="cursor-pointer nav-link"><GoBell size={25} onClick={toggleBellMenu} /></div>
+                      }
+                      {userBellOpen && (
+
+                        <div className="action-box-bell user-menu-bell">
+                          <div className='d-flex'>
+                            <div>Icon</div>
+                            <div className='ms-3 fs-14 body-text-bell'>You have a new order and instructions from Mike. Get Started
+                              sed diam nonumy eirmod tempor invidunt ut labore et dolore
+                              magna.
+                              <div className='hours-bell mt-1'>1hr ago - 9:00 AM</div>
+                            </div>
+                          </div>
+                          <hr />
+
+                          <div className='d-flex'>
+                            <div>Icon</div>
+                            <div className='ms-3 fs-14 body-text-bell'>"New buyer set an appointment. Go check it out"
+                              <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
+                            </div>
+                          </div>
+                          <hr />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="user-dropdown nav-link" ref={userRef}>
+                      {userImage ?
+                        <div className="cursor-pointer nav-link"><BsEnvelope size={25} onClick={toggleEnvelopMenu} /></div>
+                        :
+                        <div className="cursor-pointer nav-link"><BsEnvelope size={25} onClick={toggleEnvelopMenu} /></div>
+                      }
+                      {userEnvelopOpen && (
+
+                        <div className="action-box-envelop user-menu-envelop">
+                          <div className='d-flex'>
+                            <div><img src={User} className='user-placeholder-header' /></div>
+                            <div className='fs-14 body-text-bell'>Jeans Lorem Pants
+                              <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et...</div>
+                              <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
+                            </div>
+                          </div>
+                          <hr />
+
+                          <div className='d-flex'>
+                            <div><img src={User} className='user-placeholder-header' /></div>
+                            <div className='ms-3 fs-14 body-text-bell'>Marie Salazar
+                              <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div>
+                              <div className='hours-bell mt-1'>1 day ago - 3:25 PM</div>
+                            </div>
+                          </div>
+                          <hr />
+
+                          <div className='text-right text-gold fs-14 cursor-pointer'
+                            onClick={() => toggleUnderConstruction("View All Message")}>View All Message</div>
+                        </div>
+
+                      )}
+                    </div>
+                    <Nav.Link href="/wishlist"><IoIosHeartEmpty size={25} /></Nav.Link>
                     <Nav.Link href="/appointments"><IoCalendarClearOutline size={25} /></Nav.Link>
 
                     <Nav.Link href="/orders" className='fs-16'>Orders</Nav.Link>
+
                     <div className="user-dropdown nav-link" ref={userRef}>
                       {userImage ?
                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>

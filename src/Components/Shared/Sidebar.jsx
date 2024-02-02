@@ -32,7 +32,7 @@ const Sidebar = (props) => {
                             </AccordionHeader>
 
                             <AccordionBody accordionId="1">
-                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Appointment Lists</p>
+                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('/appointment-list')}>Appointment Lists</p>
                                 <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Calendar</p>
                             </AccordionBody>
 
@@ -41,7 +41,7 @@ const Sidebar = (props) => {
                             </AccordionHeader>
 
                             <AccordionBody accordionId="2">
-                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>All</p>
+                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('/orders-seller')}>All</p>
                                 <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Active</p>
                                 <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Processing</p>
                                 <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Shipped</p>

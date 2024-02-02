@@ -12,6 +12,7 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import GoBack from 'Components/Shared/GoBack';
+import Sidebar from 'Components/Shared/Sidebar';
 
 const Products = (props) => {
     const navigate = useNavigate();
@@ -95,6 +96,7 @@ const Products = (props) => {
 
     return (
         <Layout>
+            <Sidebar />
             {productsLoading ?
                 <LoadingPage />
                 :
