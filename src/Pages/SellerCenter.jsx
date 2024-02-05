@@ -489,7 +489,6 @@ const SellerCenter = (props) => {
     }
 
     const addBusinessHoursSubmitPost = (e) => {
-        // e.preventDefault();
         setFormStatus('loading');
         const content = [
             {
@@ -526,6 +525,7 @@ const SellerCenter = (props) => {
             if (status === "Success") {
                 setFormStatus('standby');
                 setReloadCount(reloadCount + 1);
+                setDesignerBusinessHoursModalShow(false);
                 setBusinessHoursFormData(initialBusinessHours);
                 toast.success('Availability added successfully!');
             } else {
@@ -583,6 +583,7 @@ const SellerCenter = (props) => {
             if (status === "Success") {
                 setFormStatus('standby');
                 setReloadCount(reloadCount + 1);
+                setDesignerBusinessHoursModalShow(false);
                 setBusinessHoursFormData(initialBusinessHours);
                 toast.success('Availability added successfully!');
             } else {

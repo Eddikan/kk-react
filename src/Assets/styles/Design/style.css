@@ -10,3 +10,10 @@ span.all-sort {
 select#sort-by {
     border: none;
 }
+
+.sort-by-border {
+    border: 1px solid;
+    padding: 6px;
+    border-radius: 5px;
+    border-color: #DFDFDF;
+}

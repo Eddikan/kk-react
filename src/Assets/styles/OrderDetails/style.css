@@ -1,0 +1,166 @@
+img.user-placeholder-order {
+    width: 8%;
+}
+img.placeholder-chat {
+    width: 8%;
+    height: 1%;
+}
+
+.base-timeline {
+    list-style-type: none;
+    /* counter-reset: number;  */
+    position: relative;
+    display: block;
+    z-index: 2;
+    width: 100%; /* change or remove*/
+  
+}
+
+.base-timeline::before {
+      content: '';
+      width: 100%;
+      border-top: 5px solid #CEA835;
+      display: inline-block;
+      position: absolute;
+      top: 50%;
+      z-index: -1;
+
+}
+.truck-icon {
+    position: absolute;
+    margin-left: 9px;
+    z-index: 1;
+    top: 7px;
+    color: #ffffff;
+}
+.processing-icon {
+    position: absolute;
+    margin-left: 8px;
+    z-index: 1;
+    top: 8px;
+    color: #ffffff;
+}
+
+.order-placed-icon {
+    position: absolute;
+    margin-left: 7px;
+    z-index: 1;
+    top: 8px;
+    color: #ffffff;
+}
+.for-review-icon {
+    position: absolute;
+    margin-left: 8px;
+    z-index: 1;
+    top: 7px;
+    color: #ffffff;
+}
+
+.delivered-icon {
+    position: absolute;
+    margin-left: 8px;
+    z-index: 1;
+    top: 6px;
+    color: #ffffff;
+}
+
+.left-right-padding {
+    padding-left: 70px;
+    padding-right: 70px;
+}
+
+.order {
+    position: absolute;
+    bottom: -2em;
+    left: -30px;
+}
+
+.processing {
+    position: absolute;
+    bottom: -2em;
+    left: -22px;
+}
+
+.order-shipped {
+    position: absolute;
+    bottom: -2em;
+    left: -32px;
+}
+
+.delivered {
+    position: absolute;
+    bottom: -2em;
+    left: -16px;
+}
+
+.review {
+    position: absolute;
+    bottom: -2em;
+    left: -22px;
+    text-wrap: nowrap;
+}
+
+/* set width of time-line this can be px, percentage or other unit
+3 is the number of list items minus 1 when using percentage
+*/
+.timeline-circle {
+    position: relative;
+    display: inline-block;
+    width: calc(100% / 4 - 9px);
+}
+
+.timeline-circle::before {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        counter-increment: number; /* number -1*/
+        content: counter(number) ''; 
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        background-color: #CEA835;
+        color: white;
+        font-weight: bold;
+        transition: all 0.6s ease-in-out;
+        box-sizing: border-box;
+        
+}
+
+/* modifier with use of the data-year attribute */
+.timeline-circle--data::before {
+  content: attr(data-year);
+  width: 40px;
+  height: 40px;
+}
+
+/* hover element */
+.timeline-circle:hover::before {
+     /* background-color: rgba( 225, 114, 114, .9); */
+     /* transform: scale(2); */
+      
+}
+
+.timeline-circle--active::before {
+      background-color: #CEA835;
+      border: 2px solid;
+      border-color: #CEA835;
+      
+      
+}
+
+.timeline-circle:last-child {
+      width: 0;
+}
+
+/* summary text is optional and can be anything */
+
+.timeline-text {
+      position: absolute;
+      bottom: -2em; 
+      left:0px;
+}
+.date-details {
+    position: absolute;
+    top: 73px;
+    left: -41px;
+}

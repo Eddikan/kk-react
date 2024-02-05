@@ -7,7 +7,6 @@ import FormControl from 'react-bootstrap/FormControl';
 import { Container, Button, Dropdown } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import Logo from 'Assets/images/kouture-konect-logo.png';
-import { HiOutlineShoppingBag } from "react-icons/hi2";
 import { IoIosHeartEmpty, IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { GoBell } from "react-icons/go";
@@ -18,8 +17,9 @@ import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Card, Modal } from 'react-bootstrap';
 import User from '../../Assets/images/user.png';
+import PlaceholderSquare from '../../Assets/images/square-placeholder.jpg';
 import { GoAlertFill } from 'react-icons/go';
-import NavDropdown from 'react-bootstrap/NavDropdown';
+import '../../Assets/styles/Headers/style.css';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -28,6 +28,7 @@ const Header = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [userBellOpen, setUserBellOpen] = useState(false);
   const [userEnvelopOpen, setUserEnvelopOpen] = useState(false);
+  const [userOrdersOpen, setUserOrdersOpen] = useState(false);
   const [userImage, setUserImage] = useState('');
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
   const [userType, setUserType] = useState('user');
@@ -54,6 +55,9 @@ const Header = () => {
   const handleClickOutside = (event) => {
     if (userRef.current && !userRef.current.contains(event.target)) {
       setUserMenuOpen(false);
+      // setUserBellOpen(false);
+      // setUserEnvelopOpen(false);
+      // setUserOrdersOpen(false);
     }
   };
 
@@ -69,6 +73,9 @@ const Header = () => {
     setUserEnvelopOpen(!userEnvelopOpen);
   };
 
+  const toggleOrdersMenu = () => {
+    setUserOrdersOpen(!userOrdersOpen);
+  };
 
 
   const logOut = () => {
@@ -219,7 +226,52 @@ const Header = () => {
                     <Nav.Link href="/wishlist"><IoIosHeartEmpty size={25} /></Nav.Link>
                     <Nav.Link href="/appointments"><IoCalendarClearOutline size={25} /></Nav.Link>
 
-                    <Nav.Link href="/orders" className='fs-16'>Orders</Nav.Link>
+
+                    <div className="user-dropdown nav-link" ref={userRef}>
+                      {userImage ?
+                        <div className="cursor-pointer nav-link" onClick={toggleOrdersMenu}>Orders</div>
+                        :
+                        <div className="cursor-pointer nav-link" onClick={toggleOrdersMenu}>Orders</div>
+                      }
+                      {userOrdersOpen && (
+                        <div className="action-box-orders user-menu-orders">
+                          <div className='d-flex cursor-pointer' >
+                            <img src={PlaceholderSquare} className='item-placeholder-header ' alt="User" />
+                            <div className='fs-14 body-text-bell'>
+                              Crystal Cascade SleeveGuard
+                              <div className='mt-1'>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et...
+                              </div>
+                              <div className='mt-1'>
+                                <span className='price-color-orders'>$10.30</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>To Ship</span>
+                              </div>
+                            </div>
+                          </div>
+                          <hr />
+
+                          <div className='d-flex cursor-pointer'>
+                            <img src={PlaceholderSquare} className='item-placeholder-header ' alt="User" />
+                            <div className='fs-14 body-text-bell'>
+                              Retro Rendezvous T-Shirt
+                              <div className='mt-1'>
+                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et...
+                              </div>
+                              <div className='mt-1'>
+                                <span className='price-color-orders'>$22.75</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>Unpaid</span>
+                              </div>
+                            </div>
+                          </div>
+                          <hr />
+
+                          <div className='text-right'>
+                            <a href="/orders" className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All</a>
+                          </div>
+                        </div>
+                      )}
+
+                    </div>
+
+                    {/* <Nav.Link href="/orders" className='fs-16'>Orders</Nav.Link> */}
 
                     <div className="user-dropdown nav-link" ref={userRef}>
                       {userImage ?
@@ -246,7 +298,7 @@ const Header = () => {
             </Nav>
           </Navbar.Collapse>
         </Container>
-      </Navbar>
+      </Navbar >
       <Modal
         show={underConstructionShow}
         className='modal-preview'

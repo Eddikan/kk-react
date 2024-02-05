@@ -1,0 +1,36 @@
+img.user-placeholder-order {
+    width: 8%;
+}
+.user-placeholder {
+    width: 20% !important;
+}
+.order-user {
+    color: #656565;
+}
+.order-id {
+    color: #656565;
+}
+img.placeholder-chat {
+    width: 8%;
+    height: 1%;
+}
+.p-right {
+    padding-right: 0px;
+}
+.order-chat {
+    border-bottom-color: #eeeeee;
+}
+.order-id {
+    margin-right: 30px;
+    display: flex;
+    align-items: center;
+}
+.write-review-decoration {
+    text-decoration: none;
+}
+.square-placeholder {
+    width: 30%;
+}
+img.item-placeholder-chatbox {
+    width: 10%;
+}

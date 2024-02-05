@@ -515,7 +515,7 @@ const EcoFriendlyFabrics = (props) => {
                                                                                         {fabric.certifications != null && fabric.certifications != '' && (
                                                                                             <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
                                                                                                 <div className='tooltip-content'>
-                                                                                                    <span className="green-leaf-tooltiptext">Echo-friendly fabric</span>
+                                                                                                    <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
                                                                                                 </div>
                                                                                                 <ImLeaf color="#55d140" />
                                                                                             </span>

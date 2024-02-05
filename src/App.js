@@ -29,7 +29,10 @@ const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
 const Appointments = lazy(() => import("./Pages/Appointments"));
 const AppointmentList = lazy(() => import("./Pages/AppointmentList"));
 const OrdersSeller = lazy(() => import("./Pages/OrdersSeller"));
+const Orders = lazy(() => import("./Pages/Orders"));
 const Messages = lazy(() => import("./Pages/Messages"));
+const RateReview = lazy(() => import("./Pages/RateReview"));
+const OrderDetails = lazy(() => import("./Pages/OrderDetails"));
 
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
@@ -143,7 +146,7 @@ const App = () => {
           <Route path="/inspirations" exact element={<UnderConstruction />} />
           <Route path="/blog" exact element={<UnderConstruction />} />
           <Route path="/wishlist" exact element={<Wishlists />} />
-          <Route path="/orders" exact element={<UnderConstruction />} />
+          <Route path="/orders" exact element={<Orders />} />
 
           <Route path="/category/tops" exact element={<UnderConstruction />} />
           <Route
@@ -175,6 +178,8 @@ const App = () => {
           <Route path="/appointments" exact element={<Appointments />} />
           <Route path="/orders-seller" exact element={<OrdersSeller />} />
           <Route path="/messages" exact element={<Messages />} />
+          <Route path="/rate-review" exact element={<RateReview />} />
+          <Route path="/order-details" exact element={<OrderDetails />} />
           <Route path="/appointment-list" exact element={<AppointmentList />} />
           <Route
             path="/appointment/schedule/:designerId"

@@ -1,0 +1,48 @@
+img.user-placeholder-order {
+    width: 8%;
+}
+.user-placeholder {
+    width: 20% !important;
+}
+.order-user {
+    color: #656565;
+}
+.order-id {
+    color: #656565;
+}
+#rate-review {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+.delivered-date {
+    color: #8F8F8F;
+}
+.top-border-color {
+    border-top-color: #eeeeee;
+}
+img.placeholder-chat {
+    width: 8%;
+    height: 1%;
+}
+.p-right {
+    padding-right: 0px;
+}
+.rate-review-btn {
+    font-size: 15px;
+    padding: 12px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: var(--black);
+    background-color: var(--white);
+    border-color: var(--black);
+}
+
+.rate-review-btn:hover {
+    color: var(--black);
+    background-color: var(--white);
+    border-color: var(--black);
+}
+img.square-placeholder {
+    width: 3%;
+}

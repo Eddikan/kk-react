@@ -125,7 +125,6 @@ const Cart = (props) => {
                                             <input
                                                 type="checkbox"
                                                 className="cursor-pointer check-box accented me-2 ms-3"
-
                                             />
                                         </Col>
                                         <Col lg={3}>

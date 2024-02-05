@@ -3,23 +3,27 @@ import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
+import GoBack from 'Components/Shared/GoBack';
+import '../Assets/styles/Cart/style.css';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import User from '../Assets/images/user.png';
+import { AiFillMessage } from "react-icons/ai";
+import { IoEyeOutline } from "react-icons/io5";
 import { GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import '../Assets/styles/Order/style.css';
-import { FaUserCircle } from "react-icons/fa";
-import User from '../Assets/images/user.png';
+import { IoCloseOutline, IoVideocam } from "react-icons/io5";
+import PlaceholderSquare from '../Assets/images/square-placeholder.jpg';
+import { IoMdStarOutline, IoIosAttach } from "react-icons/io";
 import { LiaSmileBeam } from "react-icons/lia";
 import { VscSend } from "react-icons/vsc";
-import { IoIosAttach } from "react-icons/io";
-import { IoCloseOutline } from "react-icons/io5";
-import { AiFillMessage } from "react-icons/ai";
-import Sidebar from 'Components/Shared/Sidebar';
-import { CiSearch, CiBookmark, CiSettings } from 'react-icons/ci';
-import '../Assets/styles/AppointmentList/style.css';
-import { MdKeyboardArrowDown } from "react-icons/md";
-import { IoEyeOutline } from "react-icons/io5";
-import toast from 'react-hot-toast';
 import axios from "axios";
+import toast from 'react-hot-toast';
 
+const initialCheckOut = {
+    card_name: '',
+    card_number: '',
+    date: ''
+};
 
 const ToastCss = {
     position: "top-right",
@@ -31,14 +35,17 @@ const ToastCss = {
     progress: undefined,
 };
 
-const OrdersSeller = (props) => {
+const Orders = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const currentUser = cookies.currentUser;
+    const userDetails = cookies.userDetails;
+    const { designerId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
-    const [askAQuestion, setAskAQuestion] = useState(false);
+    const [formStatus, setFormStatus] = useState('standby');
+    const [radioButtonValue, setRadioButtonValue] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
-    const [appointmentList, setAppointmentList] = useState('');
-    const [inputClicked, setInputClicked] = useState(false);
+    const [checkOutFormData, setCheckOutFormData] = useState(initialCheckOut);
 
     const [allShow, setAllShow] = useState(true);
     const [activeShow, setActiveShow] = useState(false);
@@ -46,33 +53,9 @@ const OrdersSeller = (props) => {
     const [shippedShow, setShippedShow] = useState(false);
     const [deliveredShow, setDeliveredShow] = useState(false);
     const [reviewShow, setReviewShow] = useState(false);
-
-
-
-    const [orders, setOrders] = useState('');
+    const [completedShow, setCompletedShow] = useState(false);
     const [chatBox, setChatBox] = useState(false);
-    const [query, setQuery] = useState('');
 
-    const siteCookies = cookies[0];
-    // const currentUser = siteCookies.currentUser;
-
-    const getAllOrders = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
-    };
-
-    const chatBoxModal = (e) => {
-        setChatBox(true);
-    };
-
-    const askQuestionModal = (e) => {
-        setAskAQuestion(true);
-    };
-
-    function toggleUnderConstruction(message) {
-        setUnderConstructionShow(true);
-        setModalHeading(message);
-
-    }
 
     const showTab = (tab) => {
         if (tab == "all") {
@@ -82,6 +65,7 @@ const OrdersSeller = (props) => {
             setShippedShow(false);
             setDeliveredShow(false);
             setReviewShow(false);
+            setCompletedShow(false);
 
         } else if (tab === "active") {
             setAllShow(false);
@@ -90,6 +74,7 @@ const OrdersSeller = (props) => {
             setShippedShow(false);
             setDeliveredShow(false);
             setReviewShow(false);
+            setCompletedShow(false);
 
         } else if (tab === "processing") {
             setAllShow(false);
@@ -98,6 +83,7 @@ const OrdersSeller = (props) => {
             setShippedShow(false);
             setDeliveredShow(false);
             setReviewShow(false);
+            setCompletedShow(false);
 
         } else if (tab === "shipped") {
             setAllShow(false);
@@ -106,6 +92,7 @@ const OrdersSeller = (props) => {
             setShippedShow(true);
             setDeliveredShow(false);
             setReviewShow(false);
+            setCompletedShow(false);
 
         } else if (tab === "delivered") {
             setAllShow(false);
@@ -114,6 +101,7 @@ const OrdersSeller = (props) => {
             setShippedShow(false);
             setDeliveredShow(true);
             setReviewShow(false);
+            setCompletedShow(false);
 
         } else if (tab === "review") {
             setAllShow(false);
@@ -122,116 +110,88 @@ const OrdersSeller = (props) => {
             setShippedShow(false);
             setDeliveredShow(false);
             setReviewShow(true);
+            setCompletedShow(false);
+
+        } else if (tab === "completed") {
+            setAllShow(false);
+            setActiveShow(false);
+            setProcessShow(false);
+            setShippedShow(false);
+            setDeliveredShow(false);
+            setReviewShow(false);
+            setCompletedShow(true);
         }
     }
 
-    // useEffect(() => {
-    //     if (inputClicked) {
-    //         fetchAppointmentList();
-    //     }
-    // }, [query, inputClicked]);
 
-    // const fetchAppointmentList = async () => {
-    //     try {
-    //         const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user?user_id=' + currentUser, {
-    //             params: {
-    //                 query: query
-    //             }
-    //         });
+    function toggleUnderConstruction(message) {
+        setUnderConstructionShow(true);
+        setModalHeading(message);
+    }
 
-    //         setAppointmentList(response.data.data);
-    //     } catch (error) {
-    //         console.error('Error fetching appointment:', error);
-    //     }
-    // };
+    const getAddCarts = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
+    };
+
+    const postCheckOut = async (data) => {
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+    };
+
+    const chatBoxModal = () => {
+        setChatBox(true);
+    }
+
+    const handleChangePaymentInfo = (e) => {
+        const { name, value } = e.target;
+        setCheckOutFormData({
+            ...checkOutFormData,
+            [name]: value,
+        });
+    }
 
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
     }, []);
 
+    const addBusinessHoursSubmitPost = (e) => {
+        // e.preventDefault();
+        setFormStatus('loading');
+        postCheckOut(checkOutFormData).then(response => {
+            const status = response.data.status;
+            if (status === "Success") {
+                setFormStatus('standby');
+                setReloadCount(reloadCount + 1);
+                setCheckOutFormData(initialCheckOut);
+                toast.success('Availability added successfully!');
+            } else {
+                setFormStatus('standby');
+                toast.error('There has been an error saving the appointment, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error saving the appointment, please try again!');
+        });
+    }
+
 
     useEffect(() => {
-        // getAllOrders()
-        //     .then((response) => {
-        //         const selectedOrders = response.data.data;
-        //         if (selectedOrders) {
-        //             setOrders(selectedOrders);
-        //         } else {
-        //             toast.error('There has been an error getting the date, please try again!');
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         toast.error('There has been an error getting the date, please try again!');
-        //     });
     }, [reloadCount]);
 
     return (
         <LayoutNoFooter>
-            <Sidebar />
             <section>
                 <Container>
                     <Row>
                         <Col lg={12} className="designer-calendar-container">
                             <Row className="pb-4">
-                                <Col md={12} className='d-flex justify-content-left align-items-center'>
-                                    <h3 className="fs-30 fw-600 text-black mb-0">All Orders</h3>
+                                <Col md={6} className='d-flex justify-content-left align-items-center'>
+                                    <h3 className="fs-30 fw-600 text-black mb-0">Orders</h3>
                                 </Col>
-                            </Row>
-
-                            <Row className="mb-4">
-                                <Col lg='8'>
-                                    <div className='w-100 d-flex'>
-                                        <div className='d-flex justify-content-center align-items-center'>
-                                            <div className='appointment-date fs-16 text-nowrap me-2 text-black'>Date Created</div>
-                                        </div>
-
-                                        <div className='w-100 d-flex'>
-                                            <input
-                                                type="date"
-                                                className='form-control w-25 color-date'
-                                                value="to"
-                                            />
-                                            &nbsp;
-                                            <div className='d-flex justify-content-center align-items-center'>-</div>
-                                            &nbsp;
-                                            <input
-                                                type="date"
-                                                className='form-control w-25 color-date'
-                                                value="from"
-                                            />
-                                        </div>
-
-                                    </div>
-                                </Col>
-
-                                <Col lg='4'>
-                                    <div
-                                        className='d-flex align-items-end w-100 justify-content-end'
-                                        style={{ position: 'relative' }}
-                                    >
-
-                                        <input
-                                            className='search-bar'
-                                            type="text"
-                                            placeholder="Search"
-                                            value={query}
-                                            onChange={(e) => { setQuery(e.target.value); setInputClicked(true); }}
-                                        />
-
-                                        <CiSearch size="20px"
-                                            style={{
-                                                position: 'absolute',
-                                                top: '50%',
-                                                left: '92%',
-                                                transform: 'translateY(-50%)',
-                                            }}
-                                        />
-                                    </div>
+                                <Col md={6} className="text-right">
+                                    <GoBack fallBack="/#" />
                                 </Col>
                             </Row>
                         </Col>
                     </Row>
-
                     <Row>
                         <Col lg={12}>
                             <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${allShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("all"); }}>All</span>
@@ -240,12 +200,13 @@ const OrdersSeller = (props) => {
                             <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${shippedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("shipped"); }}>Shipped</span>
                             <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${deliveredShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("delivered"); }}>Delivered</span>
                             <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${reviewShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("review"); }}>Review and Feedback</span>
+                            <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${completedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("completed"); }}>Completed</span>
                             <hr />
                         </Col>
                     </Row>
 
                     <Row>
-                        <Col lg={12}>
+                        <Col>
                             <Card>
                                 <Card.Body className='bg-light'>
                                     <Row>
@@ -266,10 +227,10 @@ const OrdersSeller = (props) => {
                                         </Col>
 
                                         <Col lg={2}>
-                                            <span className='fw-500 text-black'>Status <MdKeyboardArrowDown /></span>
+                                            <span className='fw-500 text-black'>Status</span>
                                         </Col>
 
-                                        <Col lg={2} className='text-end'>
+                                        <Col lg={2}>
                                             <span className='fw-500 text-black'>Action</span>
                                         </Col>
                                     </Row>
@@ -278,19 +239,18 @@ const OrdersSeller = (props) => {
                         </Col>
                     </Row>
 
+
                     {allShow ?
                         <Row>
                             <Col lg={12}>
                                 <Card className='mt-2'>
-                                    <Card.Header className='header-chat bg-light d-flex justify-content-between'>
+                                    <Card.Header className='order-chat bg-light d-flex justify-content-between'>
                                         <span>
-                                            <span>
-                                                <img src={User} className='user-placeholder-order me-2 order-user' />Dave Napoles
-                                                <AiFillMessage className='ms-2 text-gold' />
-                                            </span>
+                                            <img src={User} className='user-placeholder-order me-2 order-user' />Dave Napoles
+                                            <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
                                         </span>
 
-                                        <div>
+                                        <div className='order-id'>
                                             Order ID: 11002345CT
                                         </div>
                                     </Card.Header>
@@ -301,7 +261,7 @@ const OrdersSeller = (props) => {
                                             </Col>
 
                                             <Col lg={2} className='d-flex'>
-                                                <img src={User} className='user-placeholder' />
+                                                <img src={PlaceholderSquare} className='square-placeholder me-2' />
                                                 <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
                                             </Col>
 
@@ -317,8 +277,8 @@ const OrdersSeller = (props) => {
                                                 <span className='text-black'>To Ship</span>
                                             </Col>
 
-                                            <Col lg={2} className='d-flex justify-content-end'>
-                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                            <Col lg={2}>
+                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Check Details")}>
                                                     <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                 </div>
                                             </Col>
@@ -335,11 +295,11 @@ const OrdersSeller = (props) => {
                         <Row>
                             <Col lg={12}>
                                 <Card className='mt-2'>
-                                    <Card.Header className='header-chat bg-light d-flex justify-content-between'>
+                                    <Card.Header className='order-chat bg-light d-flex justify-content-between'>
                                         <span>
                                             <span>
-                                                <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
-                                                <AiFillMessage className='ms-2 text-gold' />
+                                                <img src={User} className='user-placeholder-order me-2 order-user' />David Taylor
+                                                <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
                                             </span>
                                         </span>
 
@@ -354,7 +314,7 @@ const OrdersSeller = (props) => {
                                             </Col>
 
                                             <Col lg={2} className='d-flex'>
-                                                <img src={User} className='user-placeholder' />
+                                                <img src={PlaceholderSquare} className='square-placeholder me-2' />
                                                 <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
                                             </Col>
 
@@ -370,8 +330,8 @@ const OrdersSeller = (props) => {
                                                 <span className='text-black'>New</span>
                                             </Col>
 
-                                            <Col lg={2} className='d-flex justify-content-end'>
-                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                            <Col lg={2}>
+                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Check Details")}>
                                                     <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                 </div>
                                             </Col>
@@ -388,11 +348,11 @@ const OrdersSeller = (props) => {
                         <Row>
                             <Col lg={12}>
                                 <Card className='mt-2'>
-                                    <Card.Header className='header-chat bg-light d-flex justify-content-between'>
+                                    <Card.Header className='order-chat bg-light d-flex justify-content-between'>
                                         <span>
                                             <span>
-                                                <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
-                                                <AiFillMessage className='ms-2 text-gold' />
+                                                <img src={User} className='user-placeholder-order me-2 order-user' />David Taylor
+                                                <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
                                             </span>
                                         </span>
 
@@ -407,7 +367,7 @@ const OrdersSeller = (props) => {
                                             </Col>
 
                                             <Col lg={2} className='d-flex'>
-                                                <img src={User} className='user-placeholder' />
+                                                <img src={PlaceholderSquare} className='square-placeholder me-2' />
                                                 <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
                                             </Col>
 
@@ -423,8 +383,8 @@ const OrdersSeller = (props) => {
                                                 <span className='text-black'>Processing</span>
                                             </Col>
 
-                                            <Col lg={2} className='d-flex justify-content-end'>
-                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                            <Col lg={2}>
+                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Check Details")}>
                                                     <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                 </div>
                                             </Col>
@@ -441,11 +401,11 @@ const OrdersSeller = (props) => {
                         <Row>
                             <Col lg={12}>
                                 <Card className='mt-2'>
-                                    <Card.Header className='header-chat bg-light d-flex justify-content-between'>
+                                    <Card.Header className='order-chat bg-light d-flex justify-content-between'>
                                         <span>
                                             <span>
-                                                <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
-                                                <AiFillMessage className='ms-2 text-gold' />
+                                                <img src={User} className='user-placeholder-order me-2 order-user' />David Taylor
+                                                <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
                                             </span>
                                         </span>
 
@@ -460,7 +420,7 @@ const OrdersSeller = (props) => {
                                             </Col>
 
                                             <Col lg={2} className='d-flex'>
-                                                <img src={User} className='user-placeholder' />
+                                                <img src={PlaceholderSquare} className='square-placeholder me-2' />
                                                 <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
                                             </Col>
 
@@ -476,8 +436,8 @@ const OrdersSeller = (props) => {
                                                 <span className='text-black'>Shipped</span>
                                             </Col>
 
-                                            <Col lg={2} className='d-flex justify-content-end'>
-                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                            <Col lg={2}>
+                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Check Details")}>
                                                     <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                 </div>
                                             </Col>
@@ -494,11 +454,11 @@ const OrdersSeller = (props) => {
                         <Row>
                             <Col lg={12}>
                                 <Card className='mt-2'>
-                                    <Card.Header className='header-chat bg-light d-flex justify-content-between'>
+                                    <Card.Header className='order-chat bg-light d-flex justify-content-between'>
                                         <span>
                                             <span>
-                                                <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
-                                                <AiFillMessage className='ms-2 text-gold' />
+                                                <img src={User} className='user-placeholder-order me-2 order-user' />David Taylor
+                                                <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
                                             </span>
                                         </span>
 
@@ -513,7 +473,7 @@ const OrdersSeller = (props) => {
                                             </Col>
 
                                             <Col lg={2} className='d-flex'>
-                                                <img src={User} className='user-placeholder' />
+                                                <img src={PlaceholderSquare} className='square-placeholder me-2' />
                                                 <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
                                             </Col>
 
@@ -529,8 +489,8 @@ const OrdersSeller = (props) => {
                                                 <span className='text-black'>Delivered</span>
                                             </Col>
 
-                                            <Col lg={2} className='d-flex justify-content-end'>
-                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                            <Col lg={2}>
+                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Check Details")}>
                                                     <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                 </div>
                                             </Col>
@@ -547,11 +507,11 @@ const OrdersSeller = (props) => {
                         <Row>
                             <Col lg={12}>
                                 <Card className='mt-2'>
-                                    <Card.Header className='header-chat bg-light d-flex justify-content-between'>
+                                    <Card.Header className='order-chat bg-light d-flex justify-content-between'>
                                         <span>
                                             <span>
-                                                <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
-                                                <AiFillMessage className='ms-2 text-gold' />
+                                                <img src={User} className='user-placeholder-order me-2 order-user' />David Taylor
+                                                <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
                                             </span>
                                         </span>
 
@@ -566,7 +526,7 @@ const OrdersSeller = (props) => {
                                             </Col>
 
                                             <Col lg={2} className='d-flex'>
-                                                <img src={User} className='user-placeholder' />
+                                                <img src={PlaceholderSquare} className='square-placeholder me-2' />
                                                 <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
                                             </Col>
 
@@ -579,13 +539,13 @@ const OrdersSeller = (props) => {
                                             </Col>
 
                                             <Col lg={2}>
-                                                <span className='text-black'>Complete</span>
+                                                <span className='text-black'>Completed</span>
                                             </Col>
 
-                                            <Col lg={2} className='d-flex justify-content-end'>
-                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
-                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                </div>
+                                            <Col lg={2}>
+                                                <a className="cursor-pointer write-review-decoration" href="/rate-review">
+                                                    <span className='text-gold'><IoMdStarOutline className='me-2' size={20} />Write Review</span>
+                                                </a>
                                             </Col>
                                         </Row>
                                     </Card.Body>
@@ -596,17 +556,74 @@ const OrdersSeller = (props) => {
                         null
                     }
 
+                    {completedShow ?
+                        <Row>
+                            <Col lg={12}>
+                                <Card className='mt-2'>
+                                    <Card.Header className='order-chat bg-light d-flex justify-content-between'>
+                                        <span>
+                                            <span>
+                                                <img src={User} className='user-placeholder-order me-2 order-user' />David Taylor
+                                                <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
+                                            </span>
+                                        </span>
+
+                                        <div className='order-id'>
+                                            Order ID: 11002345CT
+                                        </div>
+                                    </Card.Header>
+                                    <Card.Body className='bg-white'>
+                                        <Row>
+                                            <Col lg={2}>
+                                                <span className='text-black'>December 6, 2023</span>
+                                            </Col>
+
+                                            <Col lg={2} className='d-flex'>
+                                                <img src={PlaceholderSquare} className='square-placeholder me-2' />
+                                                <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
+                                            </Col>
+
+                                            <Col lg={2}>
+                                                <span className='text-black'>December 25, 2023</span>
+                                            </Col>
+
+                                            <Col lg={2}>
+                                                <span className='text-black'>$10.30</span>
+                                            </Col>
+
+                                            <Col lg={2}>
+                                                <span className='text-black'>Completed</span>
+                                            </Col>
+
+                                            <Col lg={2} onClick={() => toggleUnderConstruction("Buy Again")}>
+                                                <button className='btn btn-primary'>Buy Again</button>
+                                            </Col>
+
+                                            {/* <Col lg={2}>
+                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                </div>
+                                            </Col> */}
+                                        </Row>
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
+                        :
+                        null
+                    }
 
                     {chatBox ?
                         <>
                             <Card className='width-chat-card px-0'>
-                                <Card.Header className='header-chat bg-white'>
+                                <Card.Header className='order-chat bg-white'>
                                     <div className='d-flex justify-content-between'>
                                         <div>
                                             <span className="fs-14 fw-500 mb-0 name-of-user-chat">
-                                                Dave Napoles
+                                                {/* {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} &nbsp;
+                                                {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"} */}
                                             </span>
-                                            <span className='ms-3 active-now fs-14 fw-400 text-gold'>Active Now</span>
+                                            <span className='ms-3 active-now fs-14 fw-400'>Active Now</span>
                                         </div>
                                         <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                             <IoCloseOutline color="#39393A" />
@@ -615,67 +632,49 @@ const OrdersSeller = (props) => {
                                 </Card.Header>
 
                                 <Card.Body >
-                                    <div className='height-cb'>
-                                    </div>
+                                    {/* <div className='product-portfolio-image'>
+                                        <span className='d-flex'>
+
+                                            {images && images.length > 0 ?
+                                                    <>
+                                                        <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                                        </div>
+                                                        <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
+                                                    </>
+                                                    :
+                                                    null
+                                                }
+                                        </span>
+                                    </div> */}
 
                                     <div>
-                                        <input type="text" className='form-control' />
-                                        <div className='mt-3  d-flex justify-content-between'>
-                                            <div className='d-flex'>
-                                                <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' size={20} /></div>
-                                                <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
-                                            </div>
-                                            <div>
-                                                <div
-                                                    className="cursor-pointer fw-500"
-                                                    onClick={() => toggleUnderConstruction("Send Message")}
-                                                >
-                                                    Send
-                                                    <VscSend className='ms-1' />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-                        </>
-                        :
-                        null
-                    }
-
-                    {askAQuestion ?
-                        <>
-
-                            <Card className='width-chat-card px-0'>
-                                <Card.Header className='header-chat bg-white'>
-                                    <div className='d-flex justify-content-between'>
-                                        <div>
-                                            <span className='fw-500'>Dave Napoles</span>
-                                            <span className='ms-2 active-now fs-14 fw-400'>Active Now</span>
-                                        </div>
-                                        <div className="cursor-pointer" onClick={() => setAskAQuestion(false)}>
-                                            <IoCloseOutline color="#39393A" />
-                                        </div>
-                                    </div>
-                                </Card.Header>
-                                <Card.Body >
-                                    <div className='product-portfolio-image'>
-                                        <span className='d-flex'>
-                                            {/* {images && images.length > 0 ?
-                                                <>
-                                                    <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                        <div className='mt-0 d-flex portfolio-designer-chat'>
+                                            {/* {portfolio.user.image && (
+                                                    <div
+                                                        className='designer-photo'
+                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
+                                                    >
                                                     </div>
-                                                    <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
-                                                </>
-                                                :
-                                                null
-                                            } */}
-                                        </span>
+                                                )} */}
+
+                                            <div className="designer-info mx-2">
+
+                                                <div>
+                                                    <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">
+                                                        {/* {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"} */}
+
+                                                        <span className=''>Dave Napoles</span>
+                                                        <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
+                                                    </p>
+                                                </div>
+
+                                                <div className='fs-14 ms-2 mt-2 name-of-user-chat'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</div>
+                                            </div>
+
+                                        </div>
                                     </div>
 
                                     <div className='mt-5 mb-4 text-right d-flex'>
-
-
                                         <div>
                                             <div className='time-chat-box fs-14 fw-400'>3:30 PM
                                                 <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
@@ -684,23 +683,7 @@ const OrdersSeller = (props) => {
                                             </div>
                                         </div>
 
-                                        <div className=' d-flex align-items-center portfolio-designer ms-3'>
-                                            {/* {portfolio.user.image && (
-                                                <div
-                                                    className='designer-photo'
-                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
-                                                >
-                                                </div>
-                                            )} */}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <span>
-                                            <FaUserCircle />
-                                            <span className='name-chat'>Dave Napoles</span>
-                                            <span className='ms-2 time-chat fw-400 fs-14'>4:00 PM</span>
-                                        </span>
+                                        <img src={User} className='placeholder-chat ms-3' />
                                     </div>
 
                                     <div className='mt-3'>
@@ -708,10 +691,9 @@ const OrdersSeller = (props) => {
                                     </div>
 
                                     <div className='mt-3 d-flex justify-content-between'>
-
                                         <div className='d-flex'>
-                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' /></div>
-                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach /></div>
+                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' size={20} /></div>
+                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
                                         </div>
                                         <div>
                                             <div
@@ -725,13 +707,12 @@ const OrdersSeller = (props) => {
                                     </div>
                                 </Card.Body>
                             </Card>
-
                         </>
                         :
                         null
                     }
                 </Container>
-            </section >
+            </section>
 
             <Modal
                 show={underConstructionShow}
@@ -742,9 +723,11 @@ const OrdersSeller = (props) => {
             >
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>
+
                 <Modal.Body>
                     <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
                     <Card>
@@ -756,9 +739,8 @@ const OrdersSeller = (props) => {
                 </Modal.Body>
             </Modal>
 
-
         </LayoutNoFooter >
     );
 };
 
-export default OrdersSeller;
+export default Orders;

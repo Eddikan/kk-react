@@ -19,8 +19,7 @@ import { useCookies } from 'react-cookie';
 import Countries from 'Utils/Countries';
 import Loading from 'Components/Shared/Loading';
 import MultiRangeSlider from 'Components/Forms/MultiRangeSlider';
-import Desingns from '../Assets/styles/Designs/style.css'
-import { IoStar } from "react-icons/io5";
+import Design from '../Assets/styles/Design/style.css';
 import { debounce } from 'lodash';
 
 const Designs = (props) => {
@@ -316,7 +315,7 @@ const Designs = (props) => {
                                 Categories
                             </div>
 
-                            <div>
+                            <div className='sort-by-border'>
                                 <label htmlFor="dropdown" className='sample-categories'>Sort By: </label>
                                 <select id="sort-by" onChange={(e) => handleSortFieldChange(e.target.value)}>
                                     {sortOptions.map(option => (

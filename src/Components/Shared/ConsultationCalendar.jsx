@@ -72,8 +72,8 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment', data);
     };
 
-    const getSetAppointment = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability?date=' + selectedDate);
+    const getSetAppointment = async (e) => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability?date=' + e);
     };
 
 
@@ -109,6 +109,15 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         return `${hours24}:${minutes24}`;
     }
 
+    function convertTo12HourFormat(time24) {
+        const [hours, minutes] = time24.split(':');
+        let hours12 = parseInt(hours, 10);
+        const ampm = hours12 >= 12 ? 'PM' : 'AM';
+        hours12 = hours12 % 12 || 12;
+        return `${hours12}:${minutes} ${ampm}`;
+    }
+
+
     function addOneHour(time24) {
         let [hours, minutes] = time24.split(':');
         hours = parseInt(hours, 10);
@@ -122,6 +131,10 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         return result;
     }
 
+    function convertArrayTo12HourFormat(hoursArray) {
+        return hoursArray.map(hour => convertTo12HourFormat(hour));
+    }
+
     const handleCalendarTimeslotClick = ({ start, end }) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -131,27 +144,29 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
         // Convert milliseconds to hours
         const hoursDifference = timeDifference / (1000 * 60 * 60);
-        let hoursArray = [];
-        // List all hours between the two dates
-        for (let i = 0; i <= hoursDifference; i++) {
-            const currentHour = new Date(start.getTime() + i * 60 * 60 * 1000);
-            hoursArray.push(currentHour.toLocaleString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }));
 
-        }
-        setSelectedHoursArray(hoursArray);
-        // console.log("hoursArray", hoursArray);
-        console.log("formattedDate", formattedDate);
-    };
-
-    const handleModalClose = () => {
-        setModalIsOpen(false);
-        setSelectedDate(null);
+        getSetAppointment(formattedDate).then((response) => {
+            const selectedHours = response.data.data.available_hours;
+            const status = response.data.status;
+            if (status == "Fail") {
+                toast.error('This designer have not yet set their available hours');
+            } else {
+                if (selectedHours) {
+                    let hoursArray = convertArrayTo12HourFormat(selectedHours);
+                    setSelectedHoursArray(hoursArray);
+                } else {
+                    toast.error('There has been an error getting the schedule, please try again!');
+                }
+            }
+        }).catch((error) => {
+            toast.error('There has been an error getting the schedule, please try again!');
+        });
     };
 
     const handleTimeslotClick = (data) => {
-
         setSelectedTimeSlot(convert12to24(data.time));
         setClickedTimeslotButton(data.index);
+        console.log("data.time", convert12to24(data.time));
     }
 
     const handleTimeslotNextClick = () => {
@@ -168,15 +183,6 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         setCurrentStep(2);
     }
 
-    console.log("selectedTimeSlot", selectedTimeSlot);
-
-    const handleAppointments = () => {
-        setTimes(prevtimes => [
-            ...prevtimes,
-            initialAppointments
-        ]);
-    }
-
     const handleChangeConsultation = (e) => {
         const { name, value } = e.target;
         setConsultationFormData({
@@ -185,45 +191,11 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         });
     }
 
-
-
-    const handleRemoveAppointment = (index) => {
-        setTimes((prevtimes) => {
-            const updatedTimes = [...prevtimes];
-            updatedTimes.splice(index, 1);
-
-            return updatedTimes;
-        });
-    }
-
-    const handleChangeAppointment = (e) => {
-        const { name, value } = e.target;
-        setAppointmentFormData({
-            ...appointmentFormData,
-            [name]: value,
-        });
-    }
-
     const handleDefault = (e) => {
         e.preventDefault();
     }
 
-    const handleChangeTime = (e, index) => {
-        const { name, value } = e.target;
-        setTimes(prevtimes => {
-            const updatedTimes = [...prevtimes];
-            updatedTimes[index] = {
-                ...updatedTimes[index],
-                [name]: value,
-                date: selectedDate,
-            };
-
-            return updatedTimes;
-        });
-    };
-
     const addAppointmentSubmit = (e) => {
-        // e.preventDefault();
         setFormStatus('loading');
         postSetAppointment({ ...consultationFormData })
             .then(response => {
@@ -253,44 +225,16 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     }, []);
 
     function toggleUnderConstruction(message) {
-        // message.preventDefault();
         setUnderConstructionShow(!underConstructionShow);
         setModalHeading(message);
         console.log("Message", message);
     }
 
     function toggleSchedule(message) {
-        // message.preventDefault();
         setYouAreScheduleShow(!youAreScheduleShow);
         setModalHeading(message);
         console.log("Message", message);
     }
-
-
-    useEffect(() => {
-        // getSetAppointment()
-        //     .then((response) => {
-        //         const selectedDate = response.data.data;
-        //         const status = response.data.status;
-        //         if (status == "Fail") {
-        //             toast.error('This designer have not yet set their available hours');
-        //         }
-        //         else {
-        //             if (selectedDate) {
-        //                 setSelectedDate(selectedDate);
-        //             } else {
-        //                 toast.error('There has been an error getting the schedule, please try again!');
-        //             }
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         toast.error('There has been an error getting the schedule, please try again!');
-        //     });
-
-    }, [reloadCount]);
-
-    console.log("clickedTimeslotButton", clickedTimeslotButton);
-    console.log("selectedDate", selectedDate);
 
 
     return (

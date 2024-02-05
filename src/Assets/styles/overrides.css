@@ -1437,6 +1437,12 @@ button.schedule-consultation {
     border-radius: 5px;
     width: 100%;
 }
+video#home-video {
+    border-radius: 10px;
+}
+.hero-cards {
+    border-radius: 10px;
+}
 .react-appointment-close {
     position: absolute;
     top: 22px;
@@ -1469,7 +1475,7 @@ button.schedule-consultation {
 img.user-placeholder-header {
     width: 70%;
 }
-.user-menu-envelop.action-box-envelop {
+/* .user-menu-envelop.action-box-envelop {
     background: #fff;
     position: absolute;
     width: 560px;
@@ -1481,20 +1487,22 @@ img.user-placeholder-header {
     -webkit-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     -moz-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     z-index: 10;
-}
-.user-menu-bell.action-box-bell {
+} */
+
+.user-menu-orders.action-box-orders {
     background: #fff;
     position: absolute;
     width: 560px;
     padding: 30px;
     border-radius: 5px;
-    right: 320px;
+    right: 100px;
     top: 55px;
     box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     -webkit-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     -moz-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     z-index: 10;
 }
+
 .hours-bell {
     color: #919191;
 }
