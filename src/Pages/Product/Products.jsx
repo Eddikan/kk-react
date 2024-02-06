@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 import GetUserProductsData from 'Utils/GetUserProductsData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
-import { IoDocumentOutline } from "react-icons/io5";
+import { IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 import Loading from 'Components/Shared/Loading';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -152,6 +152,12 @@ const Products = (props) => {
                                                     <Link to={`/product/${object.id}`} className="text-decoration-none">
                                                         <div className="product-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
                                                     </Link>
+                                                </div>
+
+                                                <div className='d-flex mt-2'>
+                                                    <div className="text-black text-decoration-none ellipsis rufina-family fs-18">{object.name ?? "-"}</div>
+                                                    <div><GoHeart className="text-black ms-2" /></div>
+                                                    <div><IoEyeOutline className="text-black ms-2" /> {object.views}</div>
                                                 </div>
                                             </Col>
                                         ))}

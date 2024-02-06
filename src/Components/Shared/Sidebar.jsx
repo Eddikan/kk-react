@@ -58,13 +58,12 @@ const Sidebar = (props) => {
                             </AccordionHeader>
 
                             <AccordionBody accordionId="1">
-                                <a className="yellow-hover cursor-pointer fs-18"
-                                    // onClick={() => navigate('/appointment-list')}
+                                <a className="yellow-hover cursor-pointer fs-18 text-decoration"
                                     href={`/appointment-list/${designerId}`}
                                 >
                                     Appointment Lists
                                 </a>
-                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Calendar</p>
+                                <p className="yellow-hover cursor-pointer mt-3 fs-18" onClick={() => navigate('#')}>Calendar</p>
                             </AccordionBody>
 
                             <AccordionHeader targetId="2"><PiShoppingCartSimple size="22" className="me-3" />

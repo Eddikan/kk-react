@@ -255,7 +255,7 @@ const Header = () => {
                     </div>
                     <Nav.Link href="/wishlist"><IoIosHeartEmpty size={25} /></Nav.Link>
                     <Nav.Link
-                      href={`/appointments/${designerId}`}
+                      href={`/appointments/${currentUser}`}
                     >
                       <IoCalendarClearOutline size={25} />
                     </Nav.Link>

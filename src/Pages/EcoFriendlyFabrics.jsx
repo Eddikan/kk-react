@@ -28,6 +28,8 @@ const EcoFriendlyFabrics = (props) => {
     const [mounted, setMounted] = useState(false);
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [fabrics, setFabrics] = useState([]);
+    const [ecofabrics, setEcofabrics] = useState([]);
+    const [ecoFabricsLoading, setEcoFabricsLoading] = useState(true);
     const [fabricsLoading, setFabricsLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
 
@@ -114,19 +116,19 @@ const EcoFriendlyFabrics = (props) => {
     };
 
     async function onFilterChange(data) {
-        setFabricsLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
+        setEcoFabricsLoading(true);
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
-                setFabrics(selectedDesigns);
-                setFabricsLoading(false);
+                setEcofabrics(selectedDesigns);
+                setEcoFabricsLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
-                setFabricsLoading(false);
+                setEcoFabricsLoading(false);
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
-            setFabricsLoading(false);
+            setEcoFabricsLoading(false);
         });
     }
 
@@ -134,15 +136,15 @@ const EcoFriendlyFabrics = (props) => {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
-                setFabrics(selectedDesigns);
-                setFabricsLoading(false);
+                setEcofabrics(selectedDesigns);
+                setEcoFabricsLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
-                setFabricsLoading(false);
+                setEcoFabricsLoading(false);
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
-            setFabricsLoading(false);
+            setEcoFabricsLoading(false);
         });
     }
 
@@ -246,15 +248,15 @@ const EcoFriendlyFabrics = (props) => {
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/fabric' + type + sort).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
-                setFabrics(selectedDesigns);
-                setFabricsLoading(false);
+                setEcofabrics(selectedDesigns);
+                setEcoFabricsLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
-                setFabricsLoading(false);
+                setEcoFabricsLoading(false);
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
-            setFabricsLoading(false);
+            setEcoFabricsLoading(false);
         });
     }
 
@@ -463,17 +465,17 @@ const EcoFriendlyFabrics = (props) => {
                             <Col lg="9">
 
                                 <div id="profile-designs">
-                                    {fabricsLoading ?
+                                    {ecoFabricsLoading ?
                                         <>
                                             <Loading className="bg-white" />
                                         </>
                                         :
                                         <>
-                                            {fabrics && fabrics.length > 0 ?
+                                            {ecofabrics && ecofabrics.length > 0 ?
                                                 <>
                                                     <Row className="designs-row">
                                                         {/* <img src={object.url} className='designs-img'/> */}
-                                                        {fabrics.map((fabric, index) => {
+                                                        {ecofabrics.map((fabric, index) => {
                                                             if (fabric.image_urls?.[0]?.image_url) {
                                                                 var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
                                                             } else {

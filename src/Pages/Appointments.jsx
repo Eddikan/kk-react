@@ -5,6 +5,8 @@ import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import { CiCreditCard2 } from "react-icons/ci";
+import FemalePlaceholder from '../Assets/images/placeholders/female-placeholder.jpg';
+import MalePlaceholder from '../Assets/images/placeholders/male-placeholder.jpg';
 import { GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import '../Assets/styles/Appointments/style.css';
 import { FaUserCircle } from "react-icons/fa";
@@ -13,8 +15,8 @@ import { LiaSmileBeam } from "react-icons/lia";
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { VscSend } from "react-icons/vsc";
 import { IoMdVideocam, IoIosAttach } from "react-icons/io";
-import { IoCloseOutline } from "react-icons/io5";
-import { AiFillMessage } from "react-icons/ai";
+import { IoCloseOutline, IoEyeOutline } from "react-icons/io5";
+import { AiOutlineMessage, AiFillMessage } from "react-icons/ai";
 import axios from "axios";
 import toast from 'react-hot-toast';
 
@@ -30,26 +32,26 @@ const ToastCss = {
 
 const Appointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const { designerId } = useParams();
+    // const { designerId } = useParams();
+    const currentUser = cookies.currentUser;
     const [reloadCount, setReloadCount] = useState(0);
     const [askAQuestion, setAskAQuestion] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [appointments, setAppointments] = useState('');
+    const [designerId, setDesignerId] = useState('');
+    const [users, setUsers] = useState('');
 
+    const [portfolio, setPortfolio] = useState('');
+    const [images, setImages] = useState([]);
 
-    const getAppointments = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
-    };
-
-    const askQuestionModal = (e) => {
-        setAskAQuestion(true);
+    const getUser = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment');
     };
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
-
     }
 
     useEffect(() => {
@@ -58,19 +60,21 @@ const Appointments = (props) => {
 
 
     useEffect(() => {
-        getAppointments()
-            .then((response) => {
-                const selectedAppointments = response.data.data;
-                if (selectedAppointments) {
-                    setAppointments(selectedAppointments);
-                } else {
+        if (currentUser) {
+            getUser()
+                .then((response) => {
+                    const selectedUser = response.data.data;
+                    if (selectedUser) {
+                        setUsers(selectedUser);
+                        setImages(selectedUser.image);
+                    } else {
+                        toast.error('There has been an error getting the date, please try again!');
+                    }
+                })
+                .catch((error) => {
                     toast.error('There has been an error getting the date, please try again!');
-                }
-            })
-            .catch((error) => {
-                toast.error('There has been an error getting the date, please try again!');
-            });
-
+                });
+        }
     }, [reloadCount]);
 
     return (
@@ -94,15 +98,15 @@ const Appointments = (props) => {
                                 <Card.Body className='bg-light'>
                                     <Row>
                                         <Col lg={4}>
-                                            <span>Fashion Designer</span>
+                                            <span className='fw-500'>Fashion Designer</span>
                                         </Col>
 
                                         <Col lg={4}>
-                                            <span>Appointment Date & Time</span>
+                                            <span className='fw-500'>Appointment Date & Time</span>
                                         </Col>
 
                                         <Col lg={2}>
-                                            <span>Status</span>
+                                            <span className='fw-500'>Status</span>
                                         </Col>
 
                                         <Col lg={2}>
@@ -113,7 +117,138 @@ const Appointments = (props) => {
                             </Card>
                         </Col>
 
-                        <Col lg={12}>
+                        <>
+                            {users ?
+                                <>
+                                    {users.length > 0 ?
+                                        <>
+                                            {users.map((user) => {
+
+                                                const options = {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                };
+                                                const today = (new Date(user.created_at)).toLocaleDateString('en-ES', options);
+                                                const formattedDate = (new Date(user.consultation_date_time)).toLocaleString('en-US', {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                    hour: 'numeric',
+                                                    minute: 'numeric',
+                                                    timeZone: 'UTC', // Optional, adjust based on your needs
+                                                });
+
+                                                return (
+                                                    <Col lg={12}>
+                                                        <Card className='mt-2'>
+                                                            <Card.Body className='bg-white'>
+                                                                <Row>
+                                                                    <Col lg={4}>
+                                                                        <div className='d-flex user-image'>
+                                                                            {user.image && (
+                                                                                <div
+                                                                                    className='user-photo'
+                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${user.image})` }}
+                                                                                >
+                                                                                </div>
+                                                                            )}
+
+                                                                            <div>
+                                                                                <span className='d-flex ms-3 mt-1 mb-2 fs-18 text-black'>
+                                                                                    {user.first_name}
+                                                                                    &nbsp;
+                                                                                    {user.last_name}
+                                                                                </span>
+                                                                                <div className='ms-3 fs-16 text-black'>
+                                                                                    Date Created:&nbsp;{today}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </Col>
+
+                                                                    <Col lg={4}>
+                                                                        <span className='text-black'>{formattedDate}</span>
+                                                                    </Col>
+
+                                                                    <Col lg={2}>
+                                                                        <span className='text-black'>Scheduled</span>
+                                                                    </Col>
+
+                                                                    <Col lg={2} className='d-flex justify-content-end'>
+                                                                        <div className="cursor-pointer appointments-tooltip" onClick={() => toggleUnderConstruction("Enter video conferencing")}>
+                                                                            <span className="icon-tooltiptext fs-14">Enter video conferencing</span>
+                                                                            <IoMdVideocam className='video-cam me-3' size={20} />
+                                                                        </div>
+
+                                                                        <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Chat Designer")}>
+                                                                            <span><AiFillMessage size={20} /></span>
+                                                                        </div>
+                                                                    </Col>
+                                                                </Row>
+                                                            </Card.Body>
+                                                        </Card>
+                                                    </Col>
+
+
+                                                    // <Col lg={12}>
+                                                    //     <Card className='mt-2 border-appointment-list'>
+                                                    //         <Card.Body className='bg-white'>
+                                                    //             <Row>
+                                                    //                 <Col lg={3}>
+                                                    //                     <span>{today}</span>
+                                                    //                 </Col>
+
+                                                    //                 <Col lg={3} className='d-flex'>
+                                                    //                     <img src={User} className='user-placeholder' />
+                                                    //                     <span className='d-flex justify-content-center align-items-center ms-2 mt-1'>
+                                                    //                         {appointment.first_name}
+                                                    //                         &nbsp;
+                                                    //                         {appointment.last_name}
+                                                    //                     </span>
+                                                    //                 </Col>
+
+                                                    //                 <Col lg={3}>
+                                                    //                     <span>{formattedDate}</span>
+                                                    //                 </Col>
+
+                                                    //                 <Col lg={2}>
+                                                    //                     <span>Appointed</span>
+                                                    //                 </Col>
+
+                                                    //                 <Col lg={1} className='d-flex justify-content-end'>
+                                                    //                     <div className="cursor-pointer"
+                                                    //                     // onClick={() => chatBoxModal(appointment.first_name, appointment.last_name)}
+                                                    //                     >
+                                                    //                         <AiOutlineMessage className='me-2' size={20} />
+                                                    //                     </div>
+
+                                                    //                     <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                    //                         <span><IoEyeOutline size={20} /></span>
+                                                    //                     </div>
+                                                    //                 </Col>
+                                                    //             </Row>
+                                                    //         </Card.Body>
+                                                    //     </Card>
+                                                    // </Col>
+                                                );
+                                            })}
+
+                                        </>
+                                        :
+                                        <>
+
+                                        </>
+                                    }
+                                </>
+                                :
+                                <>
+
+                                </>
+                            }
+                        </>
+
+                        {/* <Col lg={12}>
                             <Card className='mt-2'>
                                 <Card.Body className='bg-white'>
                                     <Row>
@@ -151,7 +286,7 @@ const Appointments = (props) => {
                                     </Row>
                                 </Card.Body>
                             </Card>
-                        </Col>
+                        </Col> */}
                     </Row>
 
                     {askAQuestion ?

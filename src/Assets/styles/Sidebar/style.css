@@ -28,3 +28,6 @@ span.appointments,.orders,.portfolio,.fabrics {
 .sidebar-menu .accordion-header {
     font-family: 'Poppins' !important;
 }
+.text-decoration {
+    text-decoration: none;
+}

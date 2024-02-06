@@ -141,9 +141,9 @@ const Portfolio = (props) => {
                                                         <div className="portfolio-details">
                                                             {/* <span className="text-white text-decoration-none">{object.name ?? "-"}</span> */}
                                                             <div className="other-actions">
-                                                                <div className="action-button bg-white me-2">
+                                                                {/* <div className="action-button bg-white me-2">
                                                                     <GoHeart className="text-black" />
-                                                                </div>
+                                                                </div> */}
                                                                 <div className="action-button bg-white">
                                                                     <GoBookmark className="text-black" />
                                                                 </div>
