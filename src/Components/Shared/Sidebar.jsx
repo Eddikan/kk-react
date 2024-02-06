@@ -1,4 +1,5 @@
-import React from "react";
+
+import React, { useState, useRef, useEffect } from 'react';
 import {
     Container, CardFooter, Input, CardBody, Label, ModalHeader, ModalBody, ModalFooter, Card, Col, Modal, Table, Row, Accordion,
     AccordionBody,
@@ -11,13 +12,38 @@ import '../../Assets/styles/Sidebar/style.css'
 import { HiOutlineScissors } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom';
 import { PiShoppingCartSimple, PiSuitcaseSimple, PiBriefcase } from "react-icons/pi";
+import axios from "axios";
+import toast from 'react-hot-toast';
 
 
 const Sidebar = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
+    const [user, setUser] = useState('');
+    const reloadCount = props.reloadCount;
+    const [designerId, setDesignerId] = useState('');
 
     const navigate = useNavigate();
+
+    const getUser = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+    };
+
+    useEffect(() => {
+        getUser()
+            .then((response) => {
+                const selectedUser = response.data.data;
+                if (selectedUser) {
+                    setUser(selectedUser);
+                    setDesignerId(selectedUser.designer.id);
+                } else {
+                    toast.error('There has been an error getting the date, please try again!');
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the date, please try again!');
+            });
+    }, [reloadCount]);
 
     return (
         <>
@@ -32,7 +58,12 @@ const Sidebar = (props) => {
                             </AccordionHeader>
 
                             <AccordionBody accordionId="1">
-                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('/appointment-list')}>Appointment Lists</p>
+                                <a className="yellow-hover cursor-pointer fs-18"
+                                    // onClick={() => navigate('/appointment-list')}
+                                    href={`/appointment-list/${designerId}`}
+                                >
+                                    Appointment Lists
+                                </a>
                                 <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Calendar</p>
                             </AccordionBody>
 

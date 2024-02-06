@@ -25,7 +25,7 @@ img.placeholder-chat {
     display: flex;
     align-items: center;
 }
-.write-review-decoration {
+.write-review-decoration,.check-datails-decoration {
     text-decoration: none;
 }
 .square-placeholder {

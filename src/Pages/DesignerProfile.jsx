@@ -226,6 +226,7 @@ const DesignerProfile = () => {
 
                                 <span className='w-100'>
                                     <a
+                                        // onClick={() => toggleUnderConstruction("Schedule A Consultation")}
                                         href={`/appointment/schedule/${designer.id}`}
                                         className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn'
                                     >

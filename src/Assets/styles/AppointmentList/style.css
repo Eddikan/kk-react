@@ -16,3 +16,6 @@ img.user-placeholder {
 .height-cb {
     height: 300px !important;
 }
+.border-appointment-list {
+    border: none;
+}

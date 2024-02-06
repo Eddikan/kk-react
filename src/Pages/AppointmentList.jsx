@@ -5,7 +5,7 @@ import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import { GoAlertFill } from 'react-icons/go';
-import '../Assets/styles/Appointments/style.css';
+// import '../Assets/styles/Appointments/style.css';
 import { FaUserCircle } from "react-icons/fa";
 import User from '../Assets/images/user.png';
 import { LiaSmileBeam } from "react-icons/lia";
@@ -19,40 +19,46 @@ import '../Assets/styles/AppointmentList/style.css';
 import { IoEyeOutline } from "react-icons/io5";
 import toast from 'react-hot-toast';
 import axios from "axios";
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
-
-const ToastCss = {
-    position: "top-right",
-    autoClose: 1500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-};
 
 const AppointmentList = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const [reloadCount, setReloadCount] = useState(0);
+    const currentUser = cookies.currentUser;
+    const { designerId } = useParams();
     const [askAQuestion, setAskAQuestion] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [appointmentList, setAppointmentList] = useState('');
     const [inputClicked, setInputClicked] = useState(false);
 
+    const [user, setUser] = useState('');
+    const [dateTo, setDateTo] = useState('');
+    const [dateFrom, setDateFrom] = useState('');
+    const [appointments, setAppointments] = useState('');
+
     const [date, setDate] = useState('');
     const [chatBox, setChatBox] = useState(false);
     const [query, setQuery] = useState('');
+    const [chatName, setChatName] = useState('');
 
     const siteCookies = cookies[0];
     // const currentUser = siteCookies.currentUser;
+
+
+    const getAppointments = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
+    };
+
 
     const getDate = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
     };
 
-    const chatBoxModal = (e) => {
+    const chatBoxModal = (first_name, last_name) => {
         setChatBox(true);
+        setChatName(first_name + ' ' + last_name);
     };
 
     const askQuestionModal = (e) => {
@@ -65,25 +71,25 @@ const AppointmentList = (props) => {
 
     }
 
-    // useEffect(() => {
-    //     if (inputClicked) {
-    //         fetchAppointmentList();
-    //     }
-    // }, [query, inputClicked]);
+    useEffect(() => {
+        if (inputClicked) {
+            fetchAppointmentList();
+        }
+    }, [query, inputClicked]);
 
-    // const fetchAppointmentList = async () => {
-    //     try {
-    //         const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user?user_id=' + currentUser, {
-    //             params: {
-    //                 query: query
-    //             }
-    //         });
+    const fetchAppointmentList = async () => {
+        try {
+            const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#' + currentUser, {
+                params: {
+                    query: query
+                }
+            });
 
-    //         setAppointmentList(response.data.data);
-    //     } catch (error) {
-    //         console.error('Error fetching appointment:', error);
-    //     }
-    // };
+            setAppointments(response.data.data);
+        } catch (error) {
+            console.error('Error fetching appointment:', error);
+        }
+    };
 
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
@@ -91,6 +97,19 @@ const AppointmentList = (props) => {
 
 
     useEffect(() => {
+        getAppointments()
+            .then((response) => {
+                const selectedAppointments = response.data.data;
+                if (selectedAppointments) {
+                    setAppointments(selectedAppointments);
+                } else {
+                    toast.error('There has been an error getting the date, please try again!');
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the date, please try again!');
+            });
+
         // getDate()
         //     .then((response) => {
         //         const selectedDate = response.data.data;
@@ -103,10 +122,11 @@ const AppointmentList = (props) => {
         //     .catch((error) => {
         //         toast.error('There has been an error getting the date, please try again!');
         //     });
+
+
     }, [reloadCount]);
 
-    const [dateTo, setDateTo] = useState('');
-    const [dateFrom, setDateFrom] = useState('');
+
 
     return (
         <LayoutNoFooter>
@@ -176,26 +196,26 @@ const AppointmentList = (props) => {
                         </Col>
 
                         <Col lg={12}>
-                            <Card>
+                            <Card className='border-appointment-list'>
                                 <Card.Body className='bg-white'>
                                     <Row>
                                         <Col lg={3}>
-                                            <span>Date Created</span>
+                                            <span className='fw-500'>Date Created</span>
                                         </Col>
 
                                         <Col lg={3}>
-                                            <span>Fashion Designer</span>
+                                            <span className='fw-500'>Name</span>
                                         </Col>
 
                                         <Col lg={3}>
-                                            <span>Appointment Date & Time</span>
+                                            <span className='fw-500'>Appointment Date & Time</span>
                                         </Col>
 
                                         <Col lg={2}>
-                                            <span>Status</span>
+                                            <span className='fw-500'>Status</span>
                                         </Col>
 
-                                        <Col lg={1} className='text-end'>
+                                        <Col lg={1} className='text-end fw-500'>
                                             <span>Action</span>
                                         </Col>
                                     </Row>
@@ -203,40 +223,83 @@ const AppointmentList = (props) => {
                             </Card>
                         </Col>
 
-                        <Col lg={12}>
-                            <Card className='mt-2'>
-                                <Card.Body className='bg-white'>
-                                    <Row>
-                                        <Col lg={3}>
-                                            <span>December 8, 2023</span>
-                                        </Col>
+                        <>
+                            {appointments ?
+                                <>
+                                    {appointments.length > 0 ?
+                                        <>
+                                            {appointments.map((appointment) => {
 
-                                        <Col lg={3} className='d-flex'>
-                                            <img src={User} className='user-placeholder' />
-                                            <span className='d-flex justify-content-center align-items-center ms-2'>Dave Napoles</span>
-                                        </Col>
+                                                const options = {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                };
+                                                const today = (new Date(appointment.created_at)).toLocaleDateString('en-ES', options);
+                                                const formattedDate = (new Date(appointment.consultation_date_time)).toLocaleString('en-US', {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                    timeZone: 'UTC', // Optional, adjust based on your needs
+                                                });
+                                                return (
 
-                                        <Col lg={3}>
-                                            <span>December 13, 2023</span>
-                                        </Col>
+                                                    <Col lg={12}>
+                                                        <Card className='mt-2 border-appointment-list'>
+                                                            <Card.Body className='bg-white'>
+                                                                <Row>
+                                                                    <Col lg={3}>
+                                                                        <span>{today}</span>
+                                                                    </Col>
 
-                                        <Col lg={2}>
-                                            <span>Appointed</span>
-                                        </Col>
+                                                                    <Col lg={3} className='d-flex'>
+                                                                        <img src={User} className='user-placeholder' />
+                                                                        <span className='d-flex justify-content-center align-items-center ms-2 mt-1'>
+                                                                            {appointment.first_name}
+                                                                            &nbsp;
+                                                                            {appointment.last_name}
+                                                                        </span>
+                                                                    </Col>
 
-                                        <Col lg={1} className='d-flex justify-content-end'>
-                                            <div className="cursor-pointer" onClick={() => chatBoxModal("Enter video conferencing")}>
-                                                <AiOutlineMessage className='me-2' size={20} />
-                                            </div>
+                                                                    <Col lg={3}>
+                                                                        <span>{formattedDate}</span>
+                                                                    </Col>
 
-                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
-                                                <span><IoEyeOutline size={20} /></span>
-                                            </div>
-                                        </Col>
-                                    </Row>
-                                </Card.Body>
-                            </Card>
-                        </Col>
+                                                                    <Col lg={2}>
+                                                                        <span>Appointed</span>
+                                                                    </Col>
+
+                                                                    <Col lg={1} className='d-flex justify-content-end'>
+                                                                        <div className="cursor-pointer" onClick={() => chatBoxModal(appointment.first_name, appointment.last_name)}>
+                                                                            <AiOutlineMessage className='me-2' size={20} />
+                                                                        </div>
+
+                                                                        <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                                            <span><IoEyeOutline size={20} /></span>
+                                                                        </div>
+                                                                    </Col>
+                                                                </Row>
+                                                            </Card.Body>
+                                                        </Card>
+                                                    </Col>
+                                                );
+                                            })}
+
+                                        </>
+                                        :
+                                        <>
+
+                                        </>
+                                    }
+                                </>
+                                :
+                                <>
+
+                                </>
+                            }
+                        </>
+
+
                     </Row>
 
                     {chatBox ?
@@ -246,7 +309,7 @@ const AppointmentList = (props) => {
                                     <div className='d-flex justify-content-between'>
                                         <div>
                                             <span className="fs-14 fw-500 mb-0 name-of-user-chat">
-                                                Dave Napoles
+                                                {chatName}
                                             </span>
                                             <span className='ms-3 active-now fs-14 fw-400 text-gold'>Active Now</span>
                                         </div>
@@ -373,7 +436,7 @@ const AppointmentList = (props) => {
                         null
                     }
                 </Container>
-            </section>
+            </section >
 
             <Modal
                 show={underConstructionShow}

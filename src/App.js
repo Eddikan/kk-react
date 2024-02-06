@@ -175,12 +175,20 @@ const App = () => {
             element={<SellerCenter />}
           />
           <Route path="/designer-profile" exact element={<DesignerProfile />} />
-          <Route path="/appointments" exact element={<Appointments />} />
+          <Route
+            path="/appointments/:designerId"
+            exact
+            element={<Appointments />}
+          />
           <Route path="/orders-seller" exact element={<OrdersSeller />} />
           <Route path="/messages" exact element={<Messages />} />
           <Route path="/rate-review" exact element={<RateReview />} />
           <Route path="/order-details" exact element={<OrderDetails />} />
-          <Route path="/appointment-list" exact element={<AppointmentList />} />
+          <Route
+            path="/appointment-list/:designerId"
+            exact
+            element={<AppointmentList />}
+          />
           <Route
             path="/appointment/schedule/:designerId"
             exact

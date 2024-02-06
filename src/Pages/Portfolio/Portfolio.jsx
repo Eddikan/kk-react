@@ -6,8 +6,9 @@ import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
-import { IoDocumentOutline } from "react-icons/io5";
+import { IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 import Loading from 'Components/Shared/Loading';
+import '../../Assets/styles/Portfolio/ViewPortFolio/style.css';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import LoadingPage from 'Components/Shared/LoadingPage';
@@ -138,7 +139,7 @@ const Portfolio = (props) => {
                                                             )}
                                                         </div>
                                                         <div className="portfolio-details">
-                                                            <span className="text-white text-decoration-none">{object.name ?? "-"}</span>
+                                                            {/* <span className="text-white text-decoration-none">{object.name ?? "-"}</span> */}
                                                             <div className="other-actions">
                                                                 <div className="action-button bg-white me-2">
                                                                     <GoHeart className="text-black" />
@@ -149,9 +150,16 @@ const Portfolio = (props) => {
                                                             </div>
                                                         </div>
                                                     </div>
+
                                                     <Link to={`/portfolio/${object.id}`} className="text-decoration-none">
                                                         <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
                                                     </Link>
+                                                </div>
+
+                                                <div className='d-flex mt-2'>
+                                                    <div className="text-black text-decoration-none ellipsis rufina-family fs-18">{object.name ?? "-"}</div>
+                                                    <div><GoHeart className="text-black ms-2" /></div>
+                                                    <div><IoEyeOutline className="text-black ms-2" /> {object.views}</div>
                                                 </div>
                                             </Col>
                                         ))}

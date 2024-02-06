@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
-import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
+import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import '../Assets/styles/Cart/style.css';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import User from '../Assets/images/user.png';
 import { AiFillMessage } from "react-icons/ai";
 import { IoEyeOutline } from "react-icons/io5";
-import { GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
+import { GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import '../Assets/styles/Order/style.css';
-import { IoCloseOutline, IoVideocam } from "react-icons/io5";
+import { IoCloseOutline } from "react-icons/io5";
 import PlaceholderSquare from '../Assets/images/square-placeholder.jpg';
 import { IoMdStarOutline, IoIosAttach } from "react-icons/io";
 import { LiaSmileBeam } from "react-icons/lia";
@@ -25,24 +25,11 @@ const initialCheckOut = {
     date: ''
 };
 
-const ToastCss = {
-    position: "top-right",
-    autoClose: 1500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-};
 
 const Orders = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const currentUser = cookies.currentUser;
-    const userDetails = cookies.userDetails;
-    const { designerId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
-    const [radioButtonValue, setRadioButtonValue] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [checkOutFormData, setCheckOutFormData] = useState(initialCheckOut);
@@ -141,20 +128,8 @@ const Orders = (props) => {
         setChatBox(true);
     }
 
-    const handleChangePaymentInfo = (e) => {
-        const { name, value } = e.target;
-        setCheckOutFormData({
-            ...checkOutFormData,
-            [name]: value,
-        });
-    }
-
-    useEffect(() => {
-        document.body.classList.add('designer-calendar-body');
-    }, []);
 
     const addBusinessHoursSubmitPost = (e) => {
-        // e.preventDefault();
         setFormStatus('loading');
         postCheckOut(checkOutFormData).then(response => {
             const status = response.data.status;
@@ -171,6 +146,10 @@ const Orders = (props) => {
             toast.error('There has been an error saving the appointment, please try again!');
         });
     }
+
+    useEffect(() => {
+        document.body.classList.add('designer-calendar-body');
+    }, []);
 
 
     useEffect(() => {
@@ -278,9 +257,9 @@ const Orders = (props) => {
                                             </Col>
 
                                             <Col lg={2}>
-                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Check Details")}>
+                                                <a href="/order-details" className="cursor-pointer check-datails-decoration" >
                                                     <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                </div>
+                                                </a>
                                             </Col>
                                         </Row>
                                     </Card.Body>
@@ -331,9 +310,9 @@ const Orders = (props) => {
                                             </Col>
 
                                             <Col lg={2}>
-                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Check Details")}>
+                                                <a href="/order-details" className="cursor-pointer check-datails-decoration" >
                                                     <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                </div>
+                                                </a>
                                             </Col>
                                         </Row>
                                     </Card.Body>
@@ -384,9 +363,12 @@ const Orders = (props) => {
                                             </Col>
 
                                             <Col lg={2}>
-                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Check Details")}>
-                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                </div>
+                                                <a href="/order-details" className="cursor-pointer check-datails-decoration" >
+                                                    <span className='text-gold'>
+                                                        <IoEyeOutline className='me-2' size={20} />
+                                                        Check Details
+                                                    </span>
+                                                </a>
                                             </Col>
                                         </Row>
                                     </Card.Body>
@@ -437,9 +419,12 @@ const Orders = (props) => {
                                             </Col>
 
                                             <Col lg={2}>
-                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Check Details")}>
-                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                </div>
+                                                <a href="/order-details" className="cursor-pointer check-datails-decoration" >
+                                                    <span className='text-gold'>
+                                                        <IoEyeOutline className='me-2' size={20} />
+                                                        Check Details
+                                                    </span>
+                                                </a>
                                             </Col>
                                         </Row>
                                     </Card.Body>
@@ -490,9 +475,12 @@ const Orders = (props) => {
                                             </Col>
 
                                             <Col lg={2}>
-                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Check Details")}>
-                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                </div>
+                                                <a href="/order-details" className="cursor-pointer check-datails-decoration" >
+                                                    <span className='text-gold'>
+                                                        <IoEyeOutline className='me-2' size={20} />
+                                                        Check Details
+                                                    </span>
+                                                </a>
                                             </Col>
                                         </Row>
                                     </Card.Body>
@@ -544,7 +532,10 @@ const Orders = (props) => {
 
                                             <Col lg={2}>
                                                 <a className="cursor-pointer write-review-decoration" href="/rate-review">
-                                                    <span className='text-gold'><IoMdStarOutline className='me-2' size={20} />Write Review</span>
+                                                    <span className='text-gold'>
+                                                        <IoMdStarOutline className='me-2' size={20} />
+                                                        Write Review
+                                                    </span>
                                                 </a>
                                             </Col>
                                         </Row>
@@ -599,11 +590,6 @@ const Orders = (props) => {
                                                 <button className='btn btn-primary'>Buy Again</button>
                                             </Col>
 
-                                            {/* <Col lg={2}>
-                                                <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
-                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                </div>
-                                            </Col> */}
                                         </Row>
                                     </Card.Body>
                                 </Card>

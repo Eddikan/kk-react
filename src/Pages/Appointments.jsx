@@ -10,10 +10,13 @@ import '../Assets/styles/Appointments/style.css';
 import { FaUserCircle } from "react-icons/fa";
 import User from '../Assets/images/user.png';
 import { LiaSmileBeam } from "react-icons/lia";
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { VscSend } from "react-icons/vsc";
 import { IoMdVideocam, IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
+import axios from "axios";
+import toast from 'react-hot-toast';
 
 const ToastCss = {
     position: "top-right",
@@ -27,10 +30,17 @@ const ToastCss = {
 
 const Appointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const { designerId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
     const [askAQuestion, setAskAQuestion] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
+    const [appointments, setAppointments] = useState('');
+
+
+    const getAppointments = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
+    };
 
     const askQuestionModal = (e) => {
         setAskAQuestion(true);
@@ -48,6 +58,18 @@ const Appointments = (props) => {
 
 
     useEffect(() => {
+        getAppointments()
+            .then((response) => {
+                const selectedAppointments = response.data.data;
+                if (selectedAppointments) {
+                    setAppointments(selectedAppointments);
+                } else {
+                    toast.error('There has been an error getting the date, please try again!');
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the date, please try again!');
+            });
 
     }, [reloadCount]);
 

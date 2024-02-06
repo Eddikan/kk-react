@@ -125,10 +125,10 @@ const OrderDetails = (props) => {
 
     return (
         <LayoutNoFooter>
-            <section>
+            <section id="details-order">
                 <Container>
                     <Row>
-                        <Col lg={12} className="designer-calendar-container">
+                        <Col lg={12}>
                             <Row className="pb-4">
                                 <Col md={6} className='d-flex justify-content-left align-items-center'>
                                     <h3 className="fs-30 fw-600 text-black mb-0">Order Details</h3>
@@ -173,30 +173,27 @@ const OrderDetails = (props) => {
                                     <div className="review fw-600">For Review</div>
                                     <div className="date-details text-nowrap fs-14">December 13, 2023</div>
                                 </div>
-
-
                             </div>
                         </Col>
-
                     </Row>
 
                     <Row className='mt-5'>
                         <Col lg={12} className='mt-4'>
-                            <Card className='mt-2'>
-                                <Card.Header className='order-chat bg-light d-flex justify-content-between'>
+                            <Card className='mt-2 card-details-border'>
+                                <Card.Header className='order-chat card-border bg-header d-flex justify-content-between'>
                                     <span>
                                         <img src={User} className='user-placeholder-order me-2 order-user' />Dave Napoles
                                         <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
                                     </span>
 
-                                    <div className='order-id d-flex align-items-center'>
+                                    <div className='order-id-details d-flex align-items-center'>
                                         Order ID: 11002345CT
                                     </div>
                                 </Card.Header>
                                 <Card.Body className='bg-white'>
                                     <div className='text-black fs-18 rufina-family fw-600 mb-4'>Delivery Address</div>
                                     <Row>
-                                        <Col lg={6} className='mt-2'>
+                                        <Col lg={5} className='mt-2 border-right'>
                                             <div>
                                                 <BsTelephone className='text-gold me-3' />
                                                 +63999 999 1234
@@ -208,22 +205,77 @@ const OrderDetails = (props) => {
                                             </div>
                                         </Col>
 
-                                        {/* <Col lg={6}>
-                                            <div className='d-flex'>
-                                                <div className='text-black me-4'>December 6, 2023</div>
-                                                <div>Completed</div>
-                                            </div>
+                                        <Col lg={7}>
+                                            <div class="wrap">
+                                                <ul class="timeline">
 
-                                            <div className='d-flex'>
-                                                <div className='text-black me-4'>December 6, 2023</div>
-                                                <div>Order Received</div>
-                                            </div>
+                                                    <li>
+                                                        <div className='d-flex'>
+                                                            <div className="me-3 completed">December 26, 2023</div>
+                                                            <div className='color-order'>Completed</div>
+                                                        </div>
+                                                    </li>
 
-                                            <div className='d-flex'>
-                                                <div className='text-black me-4'>December 6, 2023</div>
-                                                <div>Completed</div>
+                                                    <li>
+                                                        <div className='d-flex'>
+                                                            <div className="me-3">December 26, 2023</div>
+                                                            <div className='color-order'>Order Received<br />
+                                                                <span className='fs-14'>The order has been delivered.
+                                                                    <span className='view-proof ms-1'>View Proof of Delivery</span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div className='d-flex'>
+                                                            <div className="me-3">December 26, 2023</div>
+                                                            <div className='color-order'>Order Ship Out
+                                                                <br />
+                                                                <span className='fs-14'>The order is out tor delivery.</span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
+                                                    <li>
+                                                        <div className='d-flex'>
+                                                            <div className="me-3">December 20, 2023</div>
+                                                            <div className='color-order fs-14s'>The order is prepared for delivery.</div>
+                                                        </div>
+                                                    </li>
+
+                                                    <li>
+                                                        <div className='d-flex'>
+                                                            <div className="me-3">December 13, 2023</div>
+                                                            <div className='color-order'>Processing
+                                                                <br />
+                                                                <span className='fs-14'>The order is being process.</span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
+
+
+                                                    <li>
+                                                        <div className='d-flex'>
+                                                            <div className="me-3">December 13, 2023</div>
+                                                            <div className='color-order fs-14'>Payment has been received.</div>
+                                                        </div>
+                                                    </li>
+
+                                                    <li>
+                                                        <div className='d-flex'>
+                                                            <div className="me-3">December 13, 2023</div>
+                                                            <div className='color-order'>Order Placed
+                                                                <br />
+                                                                <span className='fs-14'>Order Placed.</span>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+
+
+                                                </ul>
                                             </div>
-                                        </Col> */}
+                                        </Col>
 
                                     </Row>
                                 </Card.Body>

@@ -20,6 +20,7 @@ import User from '../../Assets/images/user.png';
 import PlaceholderSquare from '../../Assets/images/square-placeholder.jpg';
 import { GoAlertFill } from 'react-icons/go';
 import '../../Assets/styles/Headers/style.css';
+import axios from "axios";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -30,6 +31,11 @@ const Header = () => {
   const [userEnvelopOpen, setUserEnvelopOpen] = useState(false);
   const [userOrdersOpen, setUserOrdersOpen] = useState(false);
   const [userImage, setUserImage] = useState('');
+  const [user, setUser] = useState('');
+  const [reloadCount, setReloadCount] = useState(0);
+  const [designerId, setDesignerId] = useState('');
+
+
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
   const [userType, setUserType] = useState('user');
   const userRef = useRef(null);
@@ -39,6 +45,10 @@ const Header = () => {
   const userDetails = cookies.userDetails;
   const signupType = cookies.signup_type;
   const completedQuestionnaire = cookies.completed_questionnaire;
+
+  const getUser = async () => {
+    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+  };
 
   // removeCookies
   const removeCookies = () => {
@@ -137,6 +147,26 @@ const Header = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (currentUser) {
+      getUser()
+        .then((response) => {
+          const selectedUser = response.data.data;
+          if (selectedUser) {
+            setUser(selectedUser);
+            setDesignerId(selectedUser.designer.id);
+          } else {
+            toast.error('There has been an error getting the date, please try again!');
+          }
+        })
+        .catch((error) => {
+          toast.error('There has been an error getting the date, please try again!');
+        });
+    }
+
+
+  }, [reloadCount]);
+
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
@@ -224,7 +254,11 @@ const Header = () => {
                       )}
                     </div>
                     <Nav.Link href="/wishlist"><IoIosHeartEmpty size={25} /></Nav.Link>
-                    <Nav.Link href="/appointments"><IoCalendarClearOutline size={25} /></Nav.Link>
+                    <Nav.Link
+                      href={`/appointments/${designerId}`}
+                    >
+                      <IoCalendarClearOutline size={25} />
+                    </Nav.Link>
 
 
                     <div className="user-dropdown nav-link" ref={userRef}>
