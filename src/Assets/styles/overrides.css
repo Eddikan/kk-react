@@ -675,10 +675,7 @@ form select::placeholder {
 }
 
 .bg-gray {
-    background-color: #EEEEEE;
-    padding: 9px;
-    margin-right: 10px;
-    border-radius: 5px;
+    background-color: var(--gray) !important;
 }
 
 .bg-smgray {
@@ -716,6 +713,12 @@ form select::placeholder {
 
 .text-lgray {
     color: var(--lgray) !important;
+}
+
+.pill-span {
+    padding: 9px;
+    margin-right: 10px;
+    border-radius: 5px;
 }
 
 .profile-details.social {

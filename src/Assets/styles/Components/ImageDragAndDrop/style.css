@@ -16,6 +16,10 @@
 .image-dnd.min {
     min-height: 125px;
 }
+
+.image-dnd.normal {
+    min-height: 225px;
+}
   
 .image-preview {
     position: relative;

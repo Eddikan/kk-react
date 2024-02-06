@@ -23,7 +23,7 @@ const initialProductData = Object.freeze({
     collection_type: 'Regular',
 });
 
-const EditProduct = (props) => {
+const EditProductNormal = (props) => {
     const size = props.size;
     const withDraft = props.withDraft;
     const product = props.product;
@@ -647,4 +647,4 @@ const EditProduct = (props) => {
     );
 };
 
-export default EditProduct;
+export default EditProductNormal;

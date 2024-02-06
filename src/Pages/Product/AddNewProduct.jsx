@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import GoBack from 'Components/Shared/GoBack';
-import NewProduct from 'Components/Forms/Product/NewProduct';
+import NewProductNormal from 'Components/Forms/Product/NewProductNormal';
 
 const AddNewProduct = () => {
     const navigate = useNavigate();
@@ -36,7 +36,7 @@ const AddNewProduct = () => {
                             <GoBack fallBack="/user/profile" />
                         </Col>
                     </Row>
-                    <NewProduct size="normal" withDraft={true} onSuccess={addSuccess} onReloadPage={reloadPage} onCancel={cancel} />
+                    <NewProductNormal size="normal" withDraft={true} onSuccess={addSuccess} onReloadPage={reloadPage} onCancel={cancel} />
                 </Container> 
             </section>
         </Layout>

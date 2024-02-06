@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import 'Assets/styles/Components/ProductVideoDragAndDrop/style.css'; // Add your styling here
+import React, { useState, useRef, useEffect } from 'react';
+import 'Assets/styles/Components/VideoDragAndDrop/style.css'; // Add your styling here
 import { SlCloudUpload } from 'react-icons/sl';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
@@ -8,19 +8,30 @@ import axios from 'axios';
 import { FaTimesCircle } from "react-icons/fa";
 import { Card, CardBody } from 'reactstrap';
 import Loading from './Loading';
+import ResponsiveVideo from './ResponsiveVideo';
 
-const ProductVideoDragAndDrop = (props) => {
+const VideoDragAndDrop = (props) => {
+  const fileInputRef = useRef(null);
+
   const [video, setVideo] = useState([]);
   const [videoInputKey, setFileInputKey] = useState(Date.now());
   const [uploadStatus, setUploadStatus] = useState('standby');
-  const [videoUrls, setVideoUrl]  = useState([]);
+  const [videoUrl, setVideoUrl] = useState('');
   const size = props.size;
   const type = props.type;
+  const videoLink = props.videoLink;
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
 
   const token = cookies.token;
   const currentUser = cookies.currentUser;
+
+  const clearFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''; // Clear the value of the input
+    }
+  };
+  
 
   const fileUploaded = (e) => {
     props.onVideoChange(e);
@@ -33,6 +44,13 @@ const ProductVideoDragAndDrop = (props) => {
     handleFiles(droppedFiles);
   };
 
+  const handleRemove = (e) => {
+    e.preventDefault();
+    setVideo([]);
+    setVideoUrl('');
+    clearFileInput();
+  }
+
   let videoType = "portfolio";
 
   if (type) {
@@ -40,17 +58,17 @@ const ProductVideoDragAndDrop = (props) => {
       videoType = "portfolio";
     } else if (type == "product") {
       videoType = "product";
-    } 
+    }
   }
 
   const submitDocumentsSequentially = async (video) => {
     setUploadStatus("loading");
-    const updatedVideoUrls = [...videoUrls];
-  
+    const updatedVideoUrls = [...videoUrl];
+
     for (const videoInfo of video) {
       const dataArray = new FormData();
       dataArray.append("url", videoInfo.file);
-      
+
       try {
         const response = await axios.post(
           `${process.env.REACT_APP_API_ENDPOINT}${videoType}/video/upload?user_id=${currentUser}&token=${token}`,
@@ -61,7 +79,7 @@ const ProductVideoDragAndDrop = (props) => {
             }
           }
         );
-  
+
         if (response.data.status === "Success") {
           const video = response.data.data.url;
           const videoUrlObject = video;
@@ -71,7 +89,7 @@ const ProductVideoDragAndDrop = (props) => {
           setVideoUrl(videoUrlObject);
 
           let reader = new FileReader();
-  
+
           reader.onloadend = () => {
             // Do something with the uploaded video, if needed
             // For example, update state or perform additional actions
@@ -80,7 +98,7 @@ const ProductVideoDragAndDrop = (props) => {
             //   { media_id: mediaId, name: videoInfo.file.name, url: reader.result, type: videoInfo.file.type }
             // ]);
           };
-  
+
           reader.readAsDataURL(videoInfo.file);
         } else {
           const errors = response.data.errors;
@@ -99,7 +117,7 @@ const ProductVideoDragAndDrop = (props) => {
         // Handle error if needed
       }
     }
-  
+
     // All video have been uploaded
     setUploadStatus("standby");
   };
@@ -124,6 +142,13 @@ const ProductVideoDragAndDrop = (props) => {
     handleFiles(selectedFiles);
   };
 
+  useEffect(() => {
+    if (videoLink && videoLink != "") {
+      setVideoUrl(videoLink);
+    }
+    
+}, [videoLink]);
+
   return (
     <div
       className="image-drop-container cursor-pointer"
@@ -137,6 +162,7 @@ const ProductVideoDragAndDrop = (props) => {
         onChange={handleFileInput}
         className="file-input d-block opacity-0"
         accept="video/*"
+        ref={fileInputRef}
       />
       <label htmlFor="videoInput" className="file-label d-block text-center cursor-pointer">
         <SlCloudUpload className="d-block mx-auto text-mgray mb-2" size="50px" />
@@ -144,26 +170,27 @@ const ProductVideoDragAndDrop = (props) => {
         <p className="text-mgray mb-2">Or</p>
         <p>Browse File</p>
       </label>
-      {video.length > 0 ?
+      {video.length > 0 || videoLink ?
         <>
           <p>Uploaded Video: </p>
           <Card>
             <CardBody>
               <Row>
                 {uploadStatus != "standby" ?
-                    <>
-                        {video.length > 3 ?
-                            <Col lg={12} className="video-preview mt-3" style={{minHeight: '150px'}}>
-                                <Loading />
-                            </Col>
-                            :
-                            <Col lg={12} className="video-preview" style={{minHeight: '150px'}}>
-                                <Loading />
-                            </Col>
-                        }
-                    </>
+                  <>
+                    <Col lg={12} className="video-preview " style={{ minHeight: '150px' }}>
+                      <Loading />
+                    </Col>
+                  </>
                   :
-                  null
+                  <Col lg={12}>
+                    <div className='image-dnd' style={{minHeight: 140}}>
+                      <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL+'products/videos/'+videoUrl} />
+                      <div className="dnd-actions-overlay" style={{top: 0}}>
+                        <FaTimesCircle size="25px" onClick={(e) => handleRemove(e)} className="remove-icon cursor-pointer text-danger" />
+                      </div>
+                    </div>
+                  </Col>
                 }
               </Row>
             </CardBody>
@@ -176,4 +203,4 @@ const ProductVideoDragAndDrop = (props) => {
   );
 };
 
-export default ProductVideoDragAndDrop;
+export default VideoDragAndDrop;
