@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'Assets/styles/Components/ImageDragAndDrop/style.css'; // Add your styling here
 import { SlCloudUpload } from 'react-icons/sl';
 import { Container, Row, Col, Button } from 'react-bootstrap';
@@ -14,6 +14,7 @@ const ImageDragAndDrop = (props) => {
   const [fileInputKey, setFileInputKey] = useState(Date.now());
   const [uploadStatus, setUploadStatus] = useState('standby');
   const [imageUrls, setImageUrls]  = useState([]);
+  const propImages = props.images;
   const size = props.size;
   const type = props.type;
 
@@ -135,6 +136,14 @@ const ImageDragAndDrop = (props) => {
     handleFiles(selectedFiles);
   };
 
+  
+  useEffect(() => {
+    if (propImages) {
+      setImageUrls(propImages);
+    }
+    console.log(propImages);
+}, [propImages]);
+
   return (
     <div
       className="image-drop-container cursor-pointer"
@@ -156,7 +165,7 @@ const ImageDragAndDrop = (props) => {
         <p className="text-mgray mb-2">Or</p>
         <p>Browse File</p>
       </label>
-      {images.length > 0 ?
+      {images.length > 0 || imageUrls.length > 0 ?
         <>
           <p>Uploaded files: </p>
           <Card>

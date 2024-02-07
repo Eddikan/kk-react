@@ -532,7 +532,7 @@ const EditProductNormal = (props) => {
                             </Form.Group>
                             <Form.Label>Measurements</Form.Label>
                             <Card className="mb-3">
-                                <Card.Body className='bg-light'>
+                                <Card.Body className='bg-mdgray'>
                                     <Row>
                                         <Col lg="4">
                                             <Form.Group className="my-1">
@@ -570,7 +570,7 @@ const EditProductNormal = (props) => {
                             </Card>
                             <Form.Label>Pricing</Form.Label>
                             <Card>
-                                <Card.Body className='bg-light'>
+                                <Card.Body className='bg-mdgray'>
                                     <Row>
                                         <Col lg="6">
                                             <Form.Group className='my-1'>
@@ -785,7 +785,7 @@ const EditProductNormal = (props) => {
                             </Form.Group>
                             <Form.Label>Video Demonstration</Form.Label>
                             <Card className='mb-3'>
-                                <Card.Body className='bg-light'>
+                                <Card.Body className='bg-mdgray'>
                                     <Row>
                                         <Col lg="12">
                                             <Form.Group className='my-1'>

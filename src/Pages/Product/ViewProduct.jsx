@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import FormControl from 'react-bootstrap/FormControl';
-import { GoBookmark, GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
+import { GoBookmark, GoHeart, GoAlertFill, GoShareAndroid, GoPencil } from 'react-icons/go';
 import 'Assets/styles/Product/ViewProduct/style.css';
 import GoBack from 'Components/Shared/GoBack';
 import GetSingleProductData from 'Utils/GetSingleProductData';
@@ -20,6 +20,8 @@ import { Rating } from 'react-simple-star-rating';
 import UserPlaceholder from 'Assets/images/user.png';
 import { BsArrowUpRightSquare } from "react-icons/bs";
 import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
+import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
 
 const initialReviewData = Object.freeze({
     rating: 0,
@@ -328,6 +330,23 @@ const ViewProduct = () => {
 
                                     </div>
                                 }
+                                {product.video_demo_type && product.video_demo_type != "" && product.video_demo_url && product.video_demo_url != "" && (
+                                    <div className="mt-4">
+                                        <>
+                                            {
+                                                product.video_demo_type == "Youtube" || product.video_demo_type == "Vimeo" ?
+                                                <>
+                                                    <ResponsiveEmbedVideo src={product.video_demo_url} title={product.name} />
+                                                </>
+                                                :
+                                                <>
+                                                    <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL+'products/videos/'+product.video_demo_url} />
+                                                </>
+                                            }
+                                        </>
+                                        
+                                    </div>
+                                )}
                             </Col>
                             <Col lg={7}>
                                 <Card className="h-100">
@@ -364,6 +383,16 @@ const ViewProduct = () => {
                                                 <div>
                                                 </div>
                                                 <div>
+                                                    <Link to={`/product/${product.id}/edit`} className="text-decoration-none">
+                                                        <div class="kouture-tooltip">
+                                                            <div className="action-button bg-smgray me-2">
+                                                                <GoPencil  className="text-black" />
+                                                            </div>
+                                                            <div class="kouture-tooltiptext">
+                                                                Edit
+                                                            </div>
+                                                        </div>
+                                                    </Link>
                                                     <div className="action-button bg-smgray me-2">
                                                         <GoShareAndroid className="text-black" onClick={toggleShareModal} />
                                                     </div>

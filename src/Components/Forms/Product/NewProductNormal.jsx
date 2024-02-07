@@ -286,7 +286,7 @@ const NewProductNormal = (props) => {
                                     </Form.Group>
                                     <Form.Label>Measurements</Form.Label>
                                     <Card className="mb-3">
-                                        <Card.Body className='bg-light'>
+                                        <Card.Body className='bg-mdgray'>
                                             <Row>
                                                 <Col lg="4">
                                                     <Form.Group className="my-1">
@@ -324,7 +324,7 @@ const NewProductNormal = (props) => {
                                     </Card>
                                     <Form.Label>Pricing</Form.Label>
                                     <Card>
-                                        <Card.Body className='bg-light'>
+                                        <Card.Body className='bg-mdgray'>
                                             <Row>
                                                 <Col lg="6">
                                                     <Form.Group className='my-1'>
@@ -369,7 +369,6 @@ const NewProductNormal = (props) => {
                                 </Card.Body>
                             </Card>
                         </div>
-                        <FormBuilder />
                         <div className="text-left mt-5">
                             <Button className='btn-outline me-3' type="button" onClick={handleCancel}>Cancel</Button>
                             {productLoading ?
@@ -541,7 +540,7 @@ const NewProductNormal = (props) => {
                                 </Form.Group>
                                 <Form.Label>Video Demonstration</Form.Label>
                                 <Card className='mb-3'>
-                                    <Card.Body className='bg-light'>
+                                    <Card.Body className='bg-mdgray'>
                                         <Row>
                                             <Col lg="12">
                                                 <Form.Group className='my-1'>
@@ -572,27 +571,7 @@ const NewProductNormal = (props) => {
                     </Col>
                 </Row>
             </Form>
-            {/* <Modal
-                show={guideModalShow} 
-                onHide={toggleGuideModal}
-                className='modal-preview'
-                fade={false}
-                size="lg"
-                centered
-            >
-                <Modal.Header className="pb-0">
-                    <h4 className='text-left fs-25 fw-600'>Measurement Guide</h4>
-                    <button type='button' className='close react-modal-close' onClick={toggleGuideModal} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
-                    </button>
-                </Modal.Header>
-                <Modal.Body>
-                    <Card>
-                        <Card.Body>
-                            <FormBuilder />
-                        </Card.Body>
-                    </Card>
-                </Modal.Body>
-            </Modal> */}
+            
         </>
     );
 };

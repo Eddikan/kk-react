@@ -21,6 +21,7 @@
     --black: #000000;
     --white: #ffffff;
     --gray: #F3F3F3;
+    --mdgray: #F4F4F4;
     --lgray: #F8F9FA;
     --dgray: #959595;
     --mgray: #8F8F8F;
@@ -155,7 +156,12 @@ h5 {
     color: var(--white) !important;
     background-color: var(--black) !important;
     border-color: var(--black) !important;
-    
+}
+
+.btn-primary:disabled {
+    color: var(--white) !important;
+    background-color: var(--black) !important;
+    border-color: var(--black) !important;
 }
 
 .btn-outline {
@@ -473,6 +479,10 @@ a {
     padding: 10px 6.6667px;
 }
 
+#measurement-guide.modal-dialog {
+    max-width: 935px !important;
+}
+
 .modal-dialog {
     max-width: 600px !important;
 }
@@ -709,6 +719,11 @@ form select::placeholder {
 
 .bg-lgray {
     background-color: var(--lgray) !important;
+}
+
+
+.bg-mdgray {
+    background-color: var(--mdgray) !important;
 }
 
 .text-lgray {
@@ -1584,6 +1599,7 @@ a.schedule-consultation {
 .header-chat {
     padding: 15px 21px 15px 21px;
 }
+
 .eco-col {
     height: 350px;
     display: flex;
