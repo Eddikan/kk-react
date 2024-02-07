@@ -4,7 +4,7 @@ import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'Assets/styles/User/Profile/style.css';
 import GoBack from 'Components/Shared/GoBack';
-import EditPortfolio from 'Components/Forms/Portolio/EditPortfolio';
+import EditPortfolioNormal from 'Components/Forms/Portolio/EditPortfolioNormal';
 import GetSinglePortfolioData from 'Utils/GetSinglePortfolioData';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import toast from 'react-hot-toast';
@@ -70,7 +70,7 @@ const EditPortfolioDetails = () => {
                                 <GoBack fallBack="/user/profile" />
                             </Col>
                         </Row>
-                        <EditPortfolio size="normal" portfolioId={portfolioId} portfolio={portfolio} images={images} withDraft={true} onSuccess={editSuccess} onReloadPage={reloadPage} onCancel={cancel} />
+                        <EditPortfolioNormal size="normal" portfolioId={portfolioId} portfolio={portfolio} images={images} withDraft={true} onSuccess={editSuccess} onReloadPage={reloadPage} onCancel={cancel} />
                     </Container> 
                 </section>
             }

@@ -146,7 +146,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         const hoursDifference = timeDifference / (1000 * 60 * 60);
 
         getSetAppointment(formattedDate).then((response) => {
-            const selectedHours = response.data.data.available_hours;
+            const selectedHours = response.data.data?.available_hours;
             const status = response.data.status;
             if (status == "Fail") {
                 toast.error('This designer have not yet set their available hours');
@@ -155,10 +155,19 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                     let hoursArray = convertArrayTo12HourFormat(selectedHours);
                     setSelectedHoursArray(hoursArray);
                 } else {
-                    toast.error('There has been an error getting the schedule, please try again!');
+                    const errors = response.data.errors;
+                    if (errors && errors.length > 0) {
+                        errors.map((error, index) => {
+                            toast.error(error);
+                            return null; // React requires a return value, so we return null here
+                        });
+                    } else {
+                        toast.error('There has been an error getting the schedule, please try again!');
+                    }
                 }
             }
         }).catch((error) => {
+            console.log(error);
             toast.error('There has been an error getting the schedule, please try again!');
         });
     };

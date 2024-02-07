@@ -31,6 +31,7 @@ const EditProduct = (props) => {
     const productId = props.productId;
 
     const fileInputRef = useRef(null);
+    const formRef = useRef(null);
     
     const [productData, setProductData] = useState(initialProductData);
     const [images, setImages] = useState([]);
@@ -263,6 +264,21 @@ const EditProduct = (props) => {
         }
     }, [reloadCount]);
 
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver(() => {
+          // Your resize logic here
+        });
+    
+        if (formRef.current) {
+          resizeObserver.observe(formRef.current);
+        }
+    
+        return () => {
+          if (formRef.current) {
+            resizeObserver.unobserve(formRef.current);
+          }
+        };
+    }, []);
 
     async function ProductSubmit(e) {
         e.preventDefault();
@@ -314,7 +330,7 @@ const EditProduct = (props) => {
     };
 
     return (
-        <Form onSubmit={ProductSubmit}>
+        <Form onSubmit={ProductSubmit} ref={formRef}>
             <Row>
                 <Col lg='12'>
                     <Form.Group className='my-4'>

@@ -37,6 +37,8 @@ const OrderDetails = lazy(() => import("./Pages/OrderDetails"));
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
 const EditUserProfile = lazy(() => import("./Pages/User/EditProfile"));
+const UserMeasurementGuide = lazy(() => import("./Pages/User/MeasurementGuide"));
+// const UserProducts = lazy(() => import("./Pages/User/Products"));
 
 // Wishlist
 const Wishlists = lazy(() => import("./Pages/Wishlists"));
@@ -107,6 +109,12 @@ const App = () => {
             exact
             element={<EditUserProfile />}
           />
+          {/* User Products */}
+          <Route path="/user/products" exact element={<Products />} />
+
+          {/* User Measurement Guide */}
+          <Route path="/user/measurement-guide" exact element={<UserMeasurementGuide />} />
+          
 
           {/* Portfolio */}
           <Route path="/portfolio/add" exact element={<AddNewPortfolio />} />
@@ -130,7 +138,6 @@ const App = () => {
             exact
             element={<EditProduct />}
           />
-          <Route path="/user/products" exact element={<Products />} />
 
           {/* Designs */}
           <Route path="/find-designs" exact element={<Designs />} />

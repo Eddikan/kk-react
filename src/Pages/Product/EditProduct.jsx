@@ -4,7 +4,7 @@ import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'Assets/styles/User/Profile/style.css';
 import GoBack from 'Components/Shared/GoBack';
-import EditProduct from 'Components/Forms/Product/EditProduct';
+import EditProductNormal from 'Components/Forms/Product/EditProductNormal';
 import GetSingleProductData from 'Utils/GetSingleProductData';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import toast from 'react-hot-toast';
@@ -60,7 +60,7 @@ const EditProductDetails = () => {
             {productLoading ?
                 <LoadingPage />
                 :
-                <section className='py-5 px-2'>
+                <section className='py-5 px-2 bg-white'>
                     <Container>
                         <Row>
                             <Col lg="8" className='mb-3'>
@@ -70,7 +70,7 @@ const EditProductDetails = () => {
                                 <GoBack fallBack="/user/profile" />
                             </Col>
                         </Row>
-                        <EditProduct size="normal" productId={productId} product={product} images={images} withDraft={true} onSuccess={editSuccess} onReloadPage={reloadPage} onCancel={cancel} />
+                        <EditProductNormal size="normal" productId={productId} product={product} images={images} withDraft={true} onSuccess={editSuccess} onReloadPage={reloadPage} onCancel={cancel} />
                     </Container> 
                 </section>
             }

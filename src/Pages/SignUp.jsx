@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import Layout from '../Components/Layout/Layout';
+import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button }  from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
@@ -134,10 +134,10 @@ const SignUp = () => {
   }, [currentUser, signupType]);  
 
   return (
-    <Layout>
+    <LayoutNoFooter>
       <section id='signup' className='d-flex align-items-center'>
         <Container fluid>
-          <Row className='vh-100'>
+          <Row style={{minHeight: '100vh'}}>
             <Col lg='8' className='d-flex flex-column justify-content-center py-4'>
               <div className='sign-up-container'>
                   <Link to="/">
@@ -216,8 +216,7 @@ const SignUp = () => {
           </Row>
         </Container>
       </section>
-      
-    </Layout>
+    </LayoutNoFooter>
   );
 };
 

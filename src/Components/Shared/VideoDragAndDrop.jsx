@@ -150,6 +150,7 @@ const VideoDragAndDrop = (props) => {
 }, [videoLink]);
 
   return (
+    <>
     <div
       className="image-drop-container cursor-pointer"
       onDrop={handleDrop}
@@ -170,36 +171,37 @@ const VideoDragAndDrop = (props) => {
         <p className="text-mgray mb-2">Or</p>
         <p>Browse File</p>
       </label>
-      {video.length > 0 || videoLink ?
-        <>
-          <p>Uploaded Video: </p>
-          <Card>
-            <CardBody>
-              <Row>
-                {uploadStatus != "standby" ?
-                  <>
-                    <Col lg={12} className="video-preview " style={{ minHeight: '150px' }}>
-                      <Loading />
-                    </Col>
-                  </>
-                  :
-                  <Col lg={12}>
-                    <div className='image-dnd' style={{minHeight: 140}}>
-                      <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL+'products/videos/'+videoUrl} />
-                      <div className="dnd-actions-overlay" style={{top: 0}}>
-                        <FaTimesCircle size="25px" onClick={(e) => handleRemove(e)} className="remove-icon cursor-pointer text-danger" />
-                      </div>
-                    </div>
-                  </Col>
-                }
-              </Row>
-            </CardBody>
-          </Card>
-        </>
-        :
-        null
-      }
     </div>
+    {video.length > 0 || videoLink ?
+      <>
+        <p className="mt-3">Uploaded Video: </p>
+        <Card>
+          <CardBody>
+            <Row>
+              {uploadStatus != "standby" ?
+                <>
+                  <Col lg={12} className="video-preview " style={{ minHeight: '150px' }}>
+                    <Loading />
+                  </Col>
+                </>
+                :
+                <Col lg={12}>
+                  <div className='image-dnd' style={{minHeight: 140}}>
+                    <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL+'products/videos/'+videoUrl} />
+                    <div className="dnd-actions-overlay" style={{top: 0}}>
+                      <FaTimesCircle size="25px" onClick={(e) => handleRemove(e)} className="remove-icon cursor-pointer text-danger" />
+                    </div>
+                  </div>
+                </Col>
+              }
+            </Row>
+          </CardBody>
+        </Card>
+      </>
+      :
+      null
+    }
+    </>
   );
 };
 

@@ -102,7 +102,7 @@ const SignUp = (props) => {
     return (
         <section id='signup' className='d-flex align-items-center' ref={formRef}>
             <Container fluid>
-                <Row className='vh-100'>
+                <Row style={{minHeight: '100vh'}}>
                     <Col lg='12' className='d-flex flex-column justify-content-center pb-4'>
                         <div className='sign-up-container'>
                             <Card>
