@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import {
-    Container, CardFooter, Input, CardBody, Label, ModalHeader, ModalBody, ModalFooter, Card, Col, Modal, Table, Row, Accordion,
+    CardFooter, Input, CardBody, Label, ModalHeader, ModalBody, ModalFooter, Card, Col, Modal, Table, Row, Accordion,
     AccordionBody,
     AccordionHeader,
     AccordionItem,
@@ -13,15 +13,18 @@ import { HiOutlineScissors } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom';
 import { PiShoppingCartSimple, PiSuitcaseSimple, PiBriefcase } from "react-icons/pi";
 import axios from "axios";
+import Container from 'react-bootstrap/Container';
 import toast from 'react-hot-toast';
+import { IoIosArrowDown } from "react-icons/io";
 
 
-const Sidebar = (props) => {
+const Sidebar = ({ currentTab }) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const [user, setUser] = useState('');
-    const reloadCount = props.reloadCount;
     const [designerId, setDesignerId] = useState('');
+    const [allShow, setAllShow] = useState(true);
+    const [show, setShow] = useState(false);
 
     const navigate = useNavigate();
 
@@ -43,49 +46,53 @@ const Sidebar = (props) => {
             .catch((error) => {
                 toast.error('There has been an error getting the date, please try again!');
             });
-    }, [reloadCount]);
+    }, []);
+
 
     return (
         <>
+
             <div id="sidebar">
+                <UncontrolledAccordion>
+                    <AccordionItem className='padding-sidebar'>
+                        <AccordionHeader targetId="1">
+                            <span><PiSuitcaseSimple size="22" className="me-2 text-black" /></span>
+                            <span className="appointments cursor-pointer fs-18 text-black">Appointments<IoIosArrowDown className='ms-3 text-black' /></span>
+                        </AccordionHeader>
 
-                <div className="sidebar-menu">
-                    <UncontrolledAccordion>
-                        <AccordionItem>
-                            <AccordionHeader targetId="1">
-                                <PiSuitcaseSimple size="22" className="me-3" />
-                                <span className="appointments cursor-pointer yellow-hover fs-18">Appointments</span>
-                            </AccordionHeader>
+                        <AccordionBody accordionId="1">
+                            <a className="yellow-hover cursor-pointer fs-18 text-decoration text-black"
+                                href={`/appointment-list/${designerId}`}
+                            >
+                                Appointment Lists
+                            </a>
+                            <p className="yellow-hover cursor-pointer mt-3 fs-18 text-black" onClick={() => navigate('/seller-center')}>Calendar</p>
+                        </AccordionBody>
 
-                            <AccordionBody accordionId="1">
-                                <a className="yellow-hover cursor-pointer fs-18 text-decoration"
-                                    href={`/appointment-list/${designerId}`}
-                                >
-                                    Appointment Lists
-                                </a>
-                                <p className="yellow-hover cursor-pointer mt-3 fs-18" onClick={() => navigate('#')}>Calendar</p>
-                            </AccordionBody>
+                        <AccordionHeader targetId="2" className='mt-2 text-black'>
+                            <span><PiShoppingCartSimple size="22" className="me-2" /></span>
+                            <span className="orders cursor-pointer fs-18 mt-3 text-black">Orders <IoIosArrowDown className='ms-3' /></span>
+                        </AccordionHeader>
 
-                            <AccordionHeader targetId="2"><PiShoppingCartSimple size="22" className="me-3" />
-                                <span className="orders cursor-pointer fs-18">Orders</span>
-                            </AccordionHeader>
+                        <AccordionBody accordionId="2">
+                            <p className={`yellow-hover cursor-pointer fs-18 ${allShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={() => navigate('/orders-seller')}>All</p>
+                            {/* <p className="yellow-hover cursor-pointer fs-18 " onClick={() => navigate('#')}>{currentTab}Active</p> */}
+                            <p className={`yellow-hover cursor-pointer fs-18 ${show === 'Active' ? 'active-class' : ''}`} >Active</p>
 
-                            <AccordionBody accordionId="2">
-                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('/orders-seller')}>All</p>
-                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Active</p>
-                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Processing</p>
-                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Shipped</p>
-                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Delivered</p>
-                                <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Review and Feedback</p>
-                            </AccordionBody>
+                            <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>{currentTab}Processing</p>
+                            <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Shipped</p>
+                            <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Delivered</p>
+                            <p className="yellow-hover cursor-pointer fs-18" onClick={() => navigate('#')}>Review and Feedback</p>
+                        </AccordionBody>
 
-                            <div className="portfolio cursor-pointer yellow-hover fs-18" onClick={() => navigate('/user/portfolio')}><PiBriefcase size="22" className="me-3" />Portfolio</div>
-                            <div className="fabrics cursor-pointer yellow-hover fs-18" onClick={() => navigate('/user/products')}><HiOutlineScissors size="22" className="me-3" />Fabrics</div>
+                        <div className="portfolio cursor-pointer yellow-hover mt-3 fs-18 " onClick={() => navigate('/user/portfolio')}><PiBriefcase size="22" className="me-2" />Portfolio</div>
+                        <div className="fabrics cursor-pointer yellow-hover mt-3 fs-18 " onClick={() => navigate('/user/products')}><HiOutlineScissors size="22" className="me-2" />Fabrics</div>
 
-                        </AccordionItem>
-                    </UncontrolledAccordion>
-                </div>
-
+                        <div>
+                            <h2>{currentTab}</h2>
+                        </div>
+                    </AccordionItem>
+                </UncontrolledAccordion>
             </div>
         </>
     )

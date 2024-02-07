@@ -31,7 +31,13 @@
     line-height: 1;
     z-index: 9;
 }
-
+.col-right {
+    padding-right: 60px;
+    padding-left: 0px;
+}
+.bg-product {
+    background-color: #FAFAFA;
+}
 .cancel-btn {
     font-size: 15px;
     padding: 12px 20px;

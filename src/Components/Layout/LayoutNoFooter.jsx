@@ -3,7 +3,7 @@ import Header from '../Shared/Header'
 import toast, { Toaster } from 'react-hot-toast';
 
 const LayoutNoFooter = ({ children }) => {
-  
+
   useEffect(() => {
     // Scroll to the top when the component mounts or updates
     window.scrollTo(0, 0);
@@ -11,20 +11,20 @@ const LayoutNoFooter = ({ children }) => {
 
   return (
     <>
-    <Toaster 
-      position="top-right"
-      reverseOrder={false}
-    />
-      <div style={{minHeight: '100vh'}}>
-          <div id="navigation">
-              <Header />
-          </div>
-          <div id="main">
-              {children}
-          </div>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+      />
+      <div style={{ minHeight: '100vh' }}>
+        <div id="navigation">
+          <Header />
+        </div>
+        <div id="main">
+          {children}
+        </div>
       </div>
     </>
   );
 }
 
-export default LayoutNoFooter;
+export default LayoutNoFooter;  

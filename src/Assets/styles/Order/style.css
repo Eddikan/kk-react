@@ -34,3 +34,7 @@ img.placeholder-chat {
 img.item-placeholder-chatbox {
     width: 10%;
 }
+.col-right-order {
+    padding-right: 60px;
+    padding-left: 40px;
+}

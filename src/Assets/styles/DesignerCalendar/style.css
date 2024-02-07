@@ -94,7 +94,10 @@ button.rbc-button-link {
     font-family: 'Rufina';
     font-weight: bold;
 }
-
+.col-right-calendar {
+    padding-right: 60px;
+    padding-left: 40px;
+}
 .btn-save {
     font-size: 15px;
     padding: 12px 20px;

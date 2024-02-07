@@ -2,23 +2,18 @@
     background: #fff;
     width: 100%;
     max-width: 300px;
-    position: absolute;
-    height: 100%;
-    padding: 45px 20px 20px 20px;
+    height: 100vh;
 }
 .accordion-item {
     border: none;
 }
 .accordion-body {
-    padding-left: 52px;
+    padding-left: 28px;
 }
-.portfolio, .fabrics {
-    padding: 20px;
-    padding-top: 15px;
-    padding-bottom: 12px;
-}
+
 span.appointments,.orders,.portfolio,.fabrics {
     font-weight: 400;
+    font-family: 'Poppins';
 }
 .yellow-hover:hover {
     color: #CEA835;
@@ -30,4 +25,7 @@ span.appointments,.orders,.portfolio,.fabrics {
 }
 .text-decoration {
     text-decoration: none;
+}
+.padding-sidebar {
+    padding: 35px 0px 8px 40px;
 }

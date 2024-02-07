@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
+import Container from 'react-bootstrap/Container';
 import { useNavigate, Link } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { BsThreeDots } from "react-icons/bs";
@@ -14,6 +15,7 @@ import { useCookies } from 'react-cookie';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import GoBack from 'Components/Shared/GoBack';
 import Sidebar from 'Components/Shared/Sidebar';
+import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 
 const Portfolio = (props) => {
     const navigate = useNavigate();
@@ -96,79 +98,84 @@ const Portfolio = (props) => {
     }, [reloadCount]);
 
     return (
-        <Layout>
-            <Sidebar />
+        <LayoutSellerCenter>
+
             {portfolioLoading ?
                 <LoadingPage />
                 :
                 <>
-                    <section className='py-5 px-2'>
-                        <Container>
-                            <Row className='mb-3'>
-                                <Col lg="8" className='mb-3'>
-                                    <h2 className='fs-30 mb-2'>Portfolio</h2>
-                                </Col>
-                                <Col lg="4" className='mb-3 text-right'>
-                                    <GoBack fallBack="/" />
-                                </Col>
-                            </Row>
+                    <section>
+                        <Container fluid className='p-0'>
                             {portfolio && portfolio.length > 0 ?
                                 <>
-                                    <Row className="portfolio-row">
-                                        {/* <img src={object.url} className='portfolio-img'/> */}
-                                        {portfolio.map((object, index) => (
-                                            <Col className={`portfolio-grid mb-3`} xs="4" md="2">
-                                                <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url + ")" }}>
-                                                    <div className="portfolio-overlay">
-                                                        <div className="portfolio-actions">
-                                                            <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
-                                                            {selectedItemIndex === index && (
-                                                                <div className="action-box">
-                                                                    <Link className="text-decoration-none" to={`/portfolio/${object.id}/edit`}>
-                                                                        <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
-                                                                    </Link>
-                                                                    <p className="mb-3"><GoTrash /> Delete</p>
-                                                                    {object.status != "Draft" ?
-                                                                        <p className="mb-0 cursor-pointer" onClick={function () { PortfolioDraftSubmit(object.id); }}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
-                                                                        :
-                                                                        <p className="mb-0 cursor-pointer" onClick={function () { PortfolioPublishSubmit(object.id); }}><IoDocumentOutline /> {portfolioPublishLoading ? "Publishing..." : "Publish"}</p>
-                                                                    }
+                                    <Row className="portfolio-row bg-portfolio">
+                                        <Col lg={2}>
+                                            <Sidebar />
+                                        </Col>
 
-                                                                    {/* Add other actions as needed */}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                        <div className="portfolio-details">
-                                                            {/* <span className="text-white text-decoration-none">{object.name ?? "-"}</span> */}
-                                                            <div className="other-actions">
-                                                                {/* <div className="action-button bg-white me-2">
+                                        <Col lg={10} className='mt-5 col-right'>
+                                            <div>
+                                                <h2 className='fs-30 mb-2 ms-4'>Portfolio</h2>
+                                                <Row className='ms-4'>
+                                                    {portfolio.map((object, index) => (
+                                                        <Col className={`portfolio-grid mb-3`} xs="4" md="2">
+                                                            <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url + ")" }}>
+                                                                <div className="portfolio-overlay">
+                                                                    <div className="portfolio-actions">
+                                                                        <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
+                                                                        {selectedItemIndex === index && (
+                                                                            <div className="action-box">
+                                                                                <Link className="text-decoration-none" to={`/portfolio/${object.id}/edit`}>
+                                                                                    <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
+                                                                                </Link>
+                                                                                <p className="mb-3"><GoTrash /> Delete</p>
+                                                                                {object.status != "Draft" ?
+                                                                                    <p className="mb-0 cursor-pointer" onClick={function () { PortfolioDraftSubmit(object.id); }}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
+                                                                                    :
+                                                                                    <p className="mb-0 cursor-pointer" onClick={function () { PortfolioPublishSubmit(object.id); }}><IoDocumentOutline /> {portfolioPublishLoading ? "Publishing..." : "Publish"}</p>
+                                                                                }
+
+                                                                                {/* Add other actions as needed */}
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="portfolio-details">
+                                                                        {/* <span className="text-white text-decoration-none">{object.name ?? "-"}</span> */}
+                                                                        <div className="other-actions">
+                                                                            {/* <div className="action-button bg-white me-2">
                                                                     <GoHeart className="text-black" />
                                                                 </div> */}
-                                                                <div className="action-button bg-white">
-                                                                    <GoBookmark className="text-black" />
+                                                                            <div className="action-button bg-white">
+                                                                                <GoBookmark className="text-black" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
+
+                                                                <Link to={`/portfolio/${object.id}`} className="text-decoration-none">
+                                                                    <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
+                                                                </Link>
                                                             </div>
+
+                                                            <div className='d-flex mt-2'>
+                                                                <div className="text-black text-decoration-none ellipsis rufina-family fs-18">{object.name ?? "-"}</div>
+                                                                <div><GoHeart className="text-black ms-2" /></div>
+                                                                <div><IoEyeOutline className="text-black ms-2" /> {object.views}</div>
+                                                            </div>
+                                                        </Col>
+                                                    ))}
+
+                                                    <Col className="portfolio-grid mb-3" xs="4" md="2">
+                                                        <div onClick={addNewPortfolio} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
+                                                            <GoPlus color="#a4a4a4" size="150px" className="mt-3" />
+                                                            <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
                                                         </div>
-                                                    </div>
+                                                    </Col>
 
-                                                    <Link to={`/portfolio/${object.id}`} className="text-decoration-none">
-                                                        <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
-                                                    </Link>
-                                                </div>
-
-                                                <div className='d-flex mt-2'>
-                                                    <div className="text-black text-decoration-none ellipsis rufina-family fs-18">{object.name ?? "-"}</div>
-                                                    <div><GoHeart className="text-black ms-2" /></div>
-                                                    <div><IoEyeOutline className="text-black ms-2" /> {object.views}</div>
-                                                </div>
-                                            </Col>
-                                        ))}
-                                        <Col className="portfolio-grid mb-3" xs="4" md="2">
-                                            <div onClick={addNewPortfolio} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
-                                                <GoPlus color="#a4a4a4" size="150px" className="mt-3" />
-                                                <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
+                                                </Row>
                                             </div>
                                         </Col>
+
                                     </Row>
                                 </>
                                 :
@@ -185,7 +192,7 @@ const Portfolio = (props) => {
                     </section>
                 </>
             }
-        </Layout>
+        </LayoutSellerCenter >
     );
 };
 

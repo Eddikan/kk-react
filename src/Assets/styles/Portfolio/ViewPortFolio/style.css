@@ -26,6 +26,10 @@
     background-color: #ffffff;
     color: #000000;
 }
+.col-right {
+    padding-right: 60px;
+    padding-left: 0px;
+}
 .react-review-items-close {
     position: absolute;
     top: 14px;
@@ -101,7 +105,9 @@ img.placeholder-chat {
     background-color: var(--black);
     border-color: var(--black);
 }
-
+.bg-portfolio {
+    background-color: #FAFAFA;
+}
 .request-quote-btn:hover {
     color: var(--white);
     background-color: var(--black);

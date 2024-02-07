@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
-import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
+import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import { RxCross2 } from "react-icons/rx";
+import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
 import { GoPlus } from "react-icons/go";
 import { AiOutlineClose } from "react-icons/ai";
 import MyCalendar from 'Components/Shared/MyCalendar';
 import axios from "axios";
 import toast from 'react-hot-toast';
+import LayoutSellerCenter from '../Components/Layout/LayoutSellerCenter';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 
 
@@ -596,27 +598,33 @@ const SellerCenter = (props) => {
     }
 
     return (
-        <LayoutNoFooter>
-            <Sidebar />
+        <LayoutSellerCenter>
             <section>
-                <Container>
+                <Container fluid>
                     <Row>
-                        <Col lg={2}></Col>
-                        <Col lg={10} className="designer-calendar-container">
-                            <Row className="pb-4">
-                                <Col md={6} className='d-flex justify-content-left align-items-center'>
-                                    <h3 className="fs-30 fw-600 text-black mb-0">My Calendar</h3>
-                                </Col>
-                                <Col md={6} className="text-right">
-                                    <button className="btn-primary btn" onClick={handleShowDesignerBusinessHoursModal}>Settings</button>
+                        <Col lg={2} className='p-0'>
+                            <Sidebar />
+                        </Col>
+
+                        <Col lg={10} className='col-right-calendar'>
+                            <Row>
+                                <Col lg={12} className="designer-calendar-container">
+                                    <Row className="pb-4">
+                                        <Col md={6} className='d-flex justify-content-left align-items-center'>
+                                            <h3 className="fs-30 fw-600 text-black mb-0">My Calendar</h3>
+                                        </Col>
+                                        <Col md={6} className="text-right">
+                                            <button className="btn-primary btn" onClick={handleShowDesignerBusinessHoursModal}>Settings</button>
+                                        </Col>
+                                    </Row>
+                                    <div className="calendar-container">
+                                        <MyCalendar
+                                            calendarAppointment={calendarAppointment}
+                                        />
+                                    </div>
+
                                 </Col>
                             </Row>
-                            <div className="calendar-container">
-                                <MyCalendar
-                                    calendarAppointment={calendarAppointment}
-                                />
-                            </div>
-
                         </Col>
                     </Row>
                 </Container>
@@ -1247,7 +1255,7 @@ const SellerCenter = (props) => {
                 </Form>
             </Modal> */}
 
-        </LayoutNoFooter >
+        </LayoutSellerCenter >
     );
 };
 

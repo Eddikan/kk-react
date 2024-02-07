@@ -829,7 +829,9 @@ form select::placeholder {
     position: relative;
     overflow: hidden;
 }
-
+.bg-product {
+    background-color: #FAFAFA;
+}
 .portfolio-actions .action-menu {
     position: absolute;
     right: 10px;
@@ -1606,5 +1608,8 @@ a.schedule-consultation {
 }
 .explore-now {
     margin-top: 35px;
+}
+.accordion-button {
+    display: contents;
 }
 

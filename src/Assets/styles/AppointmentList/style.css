@@ -19,3 +19,11 @@ img.user-placeholder {
 .border-appointment-list {
     border: none;
 }
+.col-right {
+    padding-right: 60px;
+    padding-left: 0px;
+}
+.center-name {
+    display: flex;
+    align-items: center;
+}
