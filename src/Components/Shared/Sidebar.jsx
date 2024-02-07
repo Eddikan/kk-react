@@ -70,7 +70,7 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                             >
                                 Appointment Lists
                             </a>
-                            <p className="yellow-hover cursor-pointer mt-3 fs-18" onClick={() => navigate('/seller-center')}>Calendar</p>
+                            <p className="yellow-hover cursor-pointer mt-3 fs-18" onClick={() => navigate('/seller-center/' + designerId)}>Calendar</p>
                         </AccordionBody>
 
                         <AccordionHeader targetId="2" className='mt-2 text-black' onClick={() => navigate('/orders-seller')}>
