@@ -502,7 +502,7 @@ const ViewProduct = () => {
                                 >
                                     Customer Reviews
 
-                                    <span className="cursor-pointer reviews-tooltip" onClick={() => toggleReviewItem()}>
+                                    <span className="cursor-pointer reviews-tooltip" onClick={() => toggleAddToReview()}>
                                         <div className='tooltip-content'>
                                             <span className="reviews-tooltiptext fs-14">Write Review</span>
                                         </div>
@@ -652,10 +652,10 @@ const ViewProduct = () => {
                     <button type='button' className='close react-modal-close' onClick={toggleAddToReview} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>
-                <Modal.Body>
-                    <h4 className='text-left fs-25 fw-600 mb-3'>{updateReview ? "Update Review" : "Add Review"}</h4>
-                    <Card>
-                        <Card.Header>
+                <Modal.Body className='padding-card-review'>
+                    <h4 className='text-left fs-25 fw-600 mb-3'>{updateReview ? "Update Review" : "Review Item"}</h4>
+                    <Card className='review-card'>
+                        {/* <Card.Header>
                             <div className="d-flex align-items-center">
                                 <div className="user">
                                     {product.user?.image && product.user?.image != "" ?
@@ -666,18 +666,32 @@ const ViewProduct = () => {
                                 </div>
                                 <p className="text-black fs-16 mb-0 text-left">{product.user?.first_name} {product.user?.last_name}</p>
                             </div>
-                        </Card.Header>
-                        <Card.Body className="text-center py-3">
+                        </Card.Header> */}
+                        <Card.Body className="text-center py-3 p-0">
                             <div className="product-review-container">
 
-                                <div className="d-flex align-items-center">
+                                <div className='product-portfolio-image mb-4'>
+                                    <span className='d-flex'>
+                                        {images && images.length > 0 ?
+                                            <>
+                                                <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                                </div>
+                                                <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{product.name ?? "-"}</span>
+                                            </>
+                                            :
+                                            null
+                                        }
+                                    </span>
+                                </div>
+
+                                {/* <div className="d-flex align-items-center">
                                     <div className="user">
                                         <div className="profile-image small" style={{ backgroundImage: "url(" + activeImage + ")", borderRadius: '10px' }}></div>
                                     </div>
                                     <p className="text-black fs-16 mb-0 text-left">{product.name}</p>
-                                </div>
+                                </div> */}
                                 <div className="text-left mt-3">
-                                    <span className="fs-14">Product Quality:</span> <Rating
+                                    <span className="fs-14 me-3">Product Quality:</span> <Rating
                                         initialValue={reviewFormData.rating}
                                         allowFraction={true}
                                         size={25}
@@ -713,7 +727,8 @@ const ViewProduct = () => {
                                 </div>
                             </div>
                         </Card.Body>
-                        <Card.Footer className="text-right">
+                        <Card.Footer className="text-right bg-white footer-top-border px-0">
+                            <Button className="w-auto mt-2 btn-primary-cancel me-3" onClick={() => setAddReviewShow(false)}>Cancel</Button>
                             {updateReview ?
                                 <Button className="w-auto mt-2 btn-primary" onClick={function () { reviewUpdate(); }}>{addReviewLoading ? "Updating..." : "Update"}</Button>
                                 :

@@ -36,5 +36,8 @@ img.item-placeholder-chatbox {
 }
 .col-right-order {
     padding-right: 60px;
-    padding-left: 40px;
+    padding-left: 0px;
+}
+.top-padding {
+    padding-top: 50px;
 }

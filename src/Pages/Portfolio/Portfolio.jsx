@@ -106,19 +106,19 @@ const Portfolio = (props) => {
                 <>
                     <section>
                         <Container fluid className='p-0'>
-                            {portfolio && portfolio.length > 0 ?
-                                <>
-                                    <Row className="portfolio-row bg-portfolio">
-                                        <Col lg={2}>
-                                            <Sidebar />
-                                        </Col>
+                            <Row className="portfolio-row bg-portfolio">
+                                <Col lg={2}>
+                                    <Sidebar />
+                                </Col>
 
+                                {portfolio && portfolio.length > 0 ?
+                                    <>
                                         <Col lg={10} className='mt-5 col-right'>
-                                            <div>
-                                                <h2 className='fs-30 mb-2 ms-4'>Portfolio</h2>
-                                                <Row className='ms-4'>
+                                            <div className='ms-5'>
+                                                <h2 className='fs-30 mb-3'>Portfolio</h2>
+                                                <Row>
                                                     {portfolio.map((object, index) => (
-                                                        <Col className={`portfolio-grid mb-3`} xs="4" md="2">
+                                                        <Col className={`portfolio-grid-image mb-3`} xs="4" md="2">
                                                             <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url + ")" }}>
                                                                 <div className="portfolio-overlay">
                                                                     <div className="portfolio-actions">
@@ -176,18 +176,19 @@ const Portfolio = (props) => {
                                             </div>
                                         </Col>
 
-                                    </Row>
-                                </>
-                                :
-                                <>
-                                    <div className="text-center">
-                                        <p className="text-center mb-3 mt-3">No records found.</p>
-                                        <Link to="/portfolio/add">
-                                            <Button className="btn btn-primary">Add Portfolio</Button>
-                                        </Link>
-                                    </div>
-                                </>
-                            }
+
+                                    </>
+                                    :
+                                    <>
+                                        <div className="text-center">
+                                            <p className="text-center mb-3 mt-3">No records found.</p>
+                                            <Link to="/portfolio/add">
+                                                <Button className="btn btn-primary">Add Portfolio</Button>
+                                            </Link>
+                                        </div>
+                                    </>
+                                }
+                            </Row>
                         </Container>
                     </section>
                 </>

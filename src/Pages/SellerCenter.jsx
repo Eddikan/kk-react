@@ -272,11 +272,11 @@ const SellerCenter = (props) => {
                                 setSaturdayHoursFormData(mappedSaturdayBusinessHours);
                                 setSundayHoursFormData(mappedSundayBusinessHours);
                             } else {
-                                setSundayHoursFormData(initialBusinessHours);
+                                setSundayHoursFormData([initialBusinessHours]);
                             }
 
                         }
-                        setBusinessHoursFormData(initialBusinessHours);
+                        setBusinessHoursFormData([initialBusinessHours]);
                     } else {
                         toast.error('There has been an error getting the appointment, please try again!');
                     }

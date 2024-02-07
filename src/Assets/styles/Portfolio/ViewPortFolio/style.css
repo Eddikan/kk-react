@@ -44,7 +44,9 @@
     position: relative;
     display: inline-block;
 }
-
+.portfolio-grid-image {
+    width: 300px;
+}
 .reviews-tooltip .reviews-tooltiptext {
     visibility: hidden;
     width: 125px;

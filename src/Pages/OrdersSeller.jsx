@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LayoutSellerCenter from '../Components/Layout/LayoutSellerCenter';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
-import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import { GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import '../Assets/styles/Order/style.css';
@@ -15,7 +14,6 @@ import { IoCloseOutline } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
 import Sidebar from 'Components/Shared/Sidebar';
 import { CiSearch, CiBookmark, CiSettings } from 'react-icons/ci';
-import '../Assets/styles/AppointmentList/style.css';
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
 import toast from 'react-hot-toast';
@@ -48,7 +46,7 @@ const OrdersSeller = (props) => {
     const [deliveredShow, setDeliveredShow] = useState(false);
     const [reviewShow, setReviewShow] = useState(false);
 
-    const [currentTab, setCurrentTab] = useState('');
+    const [currentTab, setCurrentTab] = useState('all');
     const [active, setActive] = useState(false);
 
     const [count, setCount] = useState(0);
@@ -177,467 +175,556 @@ const OrdersSeller = (props) => {
                 <Container fluid>
                     <Row>
                         <Col lg={2} className='p-0'>
-                            <Sidebar currentTab={currentTab} />
+                            <Sidebar currentTab={currentTab} onChangeTab={(e) => setCurrentTab(e)} />
 
                         </Col>
 
-                        <Col lg={10} className='col-right-order'>
+                        <Col lg={10} className='col-right-order top-padding'>
+                            <div className='ms-5'>
+                                <Row>
+                                    <Col lg={12}>
+                                        <Row className="pb-4">
+                                            <Col md={12} className='d-flex justify-content-left align-items-center'>
+                                                <h3 className="fs-30 fw-600 text-black mb-0">All Orders</h3>
+                                            </Col>
+                                        </Row>
 
-                            <Row>
-                                <Col lg={12} className="designer-calendar-container">
-                                    <Row className="pb-4">
-                                        <Col md={12} className='d-flex justify-content-left align-items-center'>
-                                            <h3 className="fs-30 fw-600 text-black mb-0">All Orders</h3>
-                                        </Col>
-                                    </Row>
-
-                                    <Row className="mb-4">
-                                        <Col lg='8'>
-                                            <div className='w-100 d-flex'>
-                                                <div className='d-flex justify-content-center align-items-center'>
-                                                    <div className='appointment-date fs-16 text-nowrap me-2 text-black'>Date Created</div>
-                                                </div>
-
+                                        <Row className="mb-4">
+                                            <Col lg='8'>
                                                 <div className='w-100 d-flex'>
+                                                    <div className='d-flex justify-content-center align-items-center'>
+                                                        <div className='appointment-date fs-16 text-nowrap me-2 text-black'>Date Created</div>
+                                                    </div>
+
+                                                    <div className='w-100 d-flex'>
+                                                        <input
+                                                            type="date"
+                                                            className='form-control w-25 color-date'
+                                                            value="to"
+                                                        />
+                                                        &nbsp;
+                                                        <div className='d-flex justify-content-center align-items-center'>-</div>
+                                                        &nbsp;
+                                                        <input
+                                                            type="date"
+                                                            className='form-control w-25 color-date'
+                                                            value="from"
+                                                        />
+                                                    </div>
+
+                                                </div>
+                                            </Col>
+
+                                            <Col lg='4'>
+                                                <div
+                                                    className='d-flex align-items-end w-100 justify-content-end'
+                                                    style={{ position: 'relative' }}
+                                                >
+
                                                     <input
-                                                        type="date"
-                                                        className='form-control w-25 color-date'
-                                                        value="to"
+                                                        className='search-bar form-control'
+                                                        type="text"
+                                                        placeholder="Search"
+                                                        value={query}
+                                                        onChange={(e) => { setQuery(e.target.value); setInputClicked(true); }}
                                                     />
-                                                    &nbsp;
-                                                    <div className='d-flex justify-content-center align-items-center'>-</div>
-                                                    &nbsp;
-                                                    <input
-                                                        type="date"
-                                                        className='form-control w-25 color-date'
-                                                        value="from"
+
+                                                    <CiSearch size="20px"
+                                                        style={{
+                                                            position: 'absolute',
+                                                            top: '50%',
+                                                            left: '92%',
+                                                            transform: 'translateY(-50%)',
+                                                        }}
                                                     />
                                                 </div>
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                </Row>
 
-                                            </div>
-                                        </Col>
+                                <Row>
+                                    <Col lg={12}>
+                                        <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "all" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("all"); }}>All</span>
+                                        <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "active" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("active"); }}>Active</span>
+                                        <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "processing" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("processing"); }}>Processing</span>
+                                        <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "shipped" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("shipped"); }}>Shipped</span>
+                                        <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "delivered" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("delivered"); }}>Delivered</span>
+                                        <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "review" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("review"); }}>Review and Feedback</span>
 
-                                        <Col lg='4'>
-                                            <div
-                                                className='d-flex align-items-end w-100 justify-content-end'
-                                                style={{ position: 'relative' }}
-                                            >
+                                        <hr />
+                                    </Col>
+                                </Row>
 
-                                                <input
-                                                    className='search-bar'
-                                                    type="text"
-                                                    placeholder="Search"
-                                                    value={query}
-                                                    onChange={(e) => { setQuery(e.target.value); setInputClicked(true); }}
-                                                />
+                                <Row>
+                                    <Col lg={12}>
+                                        <Card>
+                                            <Card.Body className='bg-light'>
+                                                <Row>
+                                                    <Col lg={2}>
+                                                        <span className='fw-500 text-black'>Date Created</span>
+                                                    </Col>
 
-                                                <CiSearch size="20px"
-                                                    style={{
-                                                        position: 'absolute',
-                                                        top: '50%',
-                                                        left: '92%',
-                                                        transform: 'translateY(-50%)',
-                                                    }}
-                                                />
-                                            </div>
+                                                    <Col lg={2}>
+                                                        <span className='fw-500 text-black'>Item Title</span>
+                                                    </Col>
+
+                                                    <Col lg={2}>
+                                                        <span className='fw-500 text-black'>Order Date</span>
+                                                    </Col>
+
+                                                    <Col lg={2}>
+                                                        <span className='fw-500 text-black'>Total</span>
+                                                    </Col>
+
+                                                    <Col lg={2}>
+                                                        <span className='fw-500 text-black'>Status <MdKeyboardArrowDown /></span>
+                                                    </Col>
+
+                                                    <Col lg={2} className='text-end'>
+                                                        <span className='fw-500 text-black'>Action</span>
+                                                    </Col>
+                                                </Row>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                </Row>
+
+                                {currentTab == 'all' ?
+                                    <Row>
+                                        <Col lg={12}>
+                                            <Card className='mt-2'>
+                                                <Card.Header className='header-chat bg-light d-flex justify-content-between'>
+
+                                                    <span>
+                                                        <span>
+                                                            <img src={User} className='user-placeholder-order me-2 order-user' />Dave Napoles
+                                                            <AiFillMessage className='ms-2 text-gold' />
+                                                        </span>
+                                                    </span>
+
+                                                    <div>
+                                                        Order ID: 11002345CT
+                                                    </div>
+                                                </Card.Header>
+                                                <Card.Body className='bg-white'>
+                                                    <Row>
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>December 8, 2023</span>
+                                                        </Col>
+
+                                                        <Col lg={2} className='d-flex'>
+                                                            <img src={User} className='user-placeholder' />
+                                                            <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>December 25, 2023</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>$10.30</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>To Ship</span>
+                                                        </Col>
+
+                                                        <Col lg={2} className='d-flex justify-content-end'>
+                                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                                <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
+                                                </Card.Body>
+                                            </Card>
                                         </Col>
                                     </Row>
-                                </Col>
-                            </Row>
+                                    :
+                                    null
+                                }
 
-                            <Row>
-                                <Col lg={12}>
-                                    <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${allShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("all"); setCurrentTab("all"); }}>All</span>
-                                    <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${activeShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("active"); setCurrentTab("active"); }}>Active</span>
-                                    <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${processShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("processing"); setCurrentTab("processing"); }}>Processing</span>
-                                    <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${shippedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("shipped"); setCurrentTab("shipped"); }}>Shipped</span>
-                                    <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${deliveredShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("delivered"); setCurrentTab("delivered"); }}>Delivered</span>
-                                    <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${reviewShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("review"); setCurrentTab("review"); }}>Review and Feedback</span>
-                                    <hr />
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col lg={12}>
-                                    <Card>
-                                        <Card.Body className='bg-light'>
-                                            <Row>
-                                                <Col lg={2}>
-                                                    <span className='fw-500 text-black'>Date Created</span>
-                                                </Col>
-
-                                                <Col lg={2}>
-                                                    <span className='fw-500 text-black'>Item Title</span>
-                                                </Col>
-
-                                                <Col lg={2}>
-                                                    <span className='fw-500 text-black'>Order Date</span>
-                                                </Col>
-
-                                                <Col lg={2}>
-                                                    <span className='fw-500 text-black'>Total</span>
-                                                </Col>
-
-                                                <Col lg={2}>
-                                                    <span className='fw-500 text-black'>Status <MdKeyboardArrowDown /></span>
-                                                </Col>
-
-                                                <Col lg={2} className='text-end'>
-                                                    <span className='fw-500 text-black'>Action</span>
-                                                </Col>
-                                            </Row>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            </Row>
-
-                            {allShow ?
-                                <Row>
-                                    <Col lg={12}>
-                                        <Card className='mt-2'>
-                                            <Card.Header className='header-chat bg-light d-flex justify-content-between'>
-
-                                                <span>
+                                {currentTab == 'active' ?
+                                    <Row>
+                                        <Col lg={12}>
+                                            <Card className='mt-2'>
+                                                <Card.Header className='header-chat bg-light d-flex justify-content-between'>
                                                     <span>
-                                                        <img src={User} className='user-placeholder-order me-2 order-user' />Dave Napoles
-                                                        <AiFillMessage className='ms-2 text-gold' />
+                                                        <span>
+                                                            <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
+                                                            <AiFillMessage className='ms-2 text-gold' />
+                                                        </span>
                                                     </span>
-                                                </span>
+
+                                                    <div className='order-id'>
+                                                        Order ID: 11002345CT
+                                                    </div>
+                                                </Card.Header>
+                                                <Card.Body className='bg-white'>
+                                                    <Row>
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>December 6, 2023</span>
+                                                        </Col>
+
+                                                        <Col lg={2} className='d-flex'>
+                                                            <img src={User} className='user-placeholder' />
+                                                            <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>December 25, 2023</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>-</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>New</span>
+                                                        </Col>
+
+                                                        <Col lg={2} className='d-flex justify-content-end'>
+                                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                                <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </Row>
+                                    :
+                                    null
+                                }
+
+                                {currentTab == 'processing' ?
+                                    <Row>
+                                        <Col lg={12}>
+                                            <Card className='mt-2'>
+                                                <Card.Header className='header-chat bg-light d-flex justify-content-between'>
+                                                    <span>
+                                                        <span>
+                                                            <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
+                                                            <AiFillMessage className='ms-2 text-gold' />
+                                                        </span>
+                                                    </span>
+
+                                                    <div className='order-id'>
+                                                        Order ID: 11002345CT
+                                                    </div>
+                                                </Card.Header>
+                                                <Card.Body className='bg-white'>
+                                                    <Row>
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>December 6, 2023</span>
+                                                        </Col>
+
+                                                        <Col lg={2} className='d-flex'>
+                                                            <img src={User} className='user-placeholder' />
+                                                            <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>December 25, 2023</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>-</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>Processing</span>
+                                                        </Col>
+
+                                                        <Col lg={2} className='d-flex justify-content-end'>
+                                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                                <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </Row>
+                                    :
+                                    null
+                                }
+
+                                {currentTab == 'shipped' ?
+                                    <Row>
+                                        <Col lg={12}>
+                                            <Card className='mt-2'>
+                                                <Card.Header className='header-chat bg-light d-flex justify-content-between'>
+                                                    <span>
+                                                        <span>
+                                                            <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
+                                                            <AiFillMessage className='ms-2 text-gold' />
+                                                        </span>
+                                                    </span>
+
+                                                    <div className='order-id'>
+                                                        Order ID: 11002345CT
+                                                    </div>
+                                                </Card.Header>
+                                                <Card.Body className='bg-white'>
+                                                    <Row>
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>December 6, 2023</span>
+                                                        </Col>
+
+                                                        <Col lg={2} className='d-flex'>
+                                                            <img src={User} className='user-placeholder' />
+                                                            <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>December 25, 2023</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>$10.30 </span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>Shipped</span>
+                                                        </Col>
+
+                                                        <Col lg={2} className='d-flex justify-content-end'>
+                                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                                <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </Row>
+                                    :
+                                    null
+                                }
+
+                                {currentTab == 'delivered' ?
+                                    <Row>
+                                        <Col lg={12}>
+                                            <Card className='mt-2'>
+                                                <Card.Header className='header-chat bg-light d-flex justify-content-between'>
+                                                    <span>
+                                                        <span>
+                                                            <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
+                                                            <AiFillMessage className='ms-2 text-gold' />
+                                                        </span>
+                                                    </span>
+
+                                                    <div className='order-id'>
+                                                        Order ID: 11002345CT
+                                                    </div>
+                                                </Card.Header>
+                                                <Card.Body className='bg-white'>
+                                                    <Row>
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>December 6, 2023</span>
+                                                        </Col>
+
+                                                        <Col lg={2} className='d-flex'>
+                                                            <img src={User} className='user-placeholder' />
+                                                            <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>December 25, 2023</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>$10.30</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>Delivered</span>
+                                                        </Col>
+
+                                                        <Col lg={2} className='d-flex justify-content-end'>
+                                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                                <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </Row>
+                                    :
+                                    null
+                                }
+
+                                {currentTab == 'review' ?
+                                    <Row>
+                                        <Col lg={12}>
+                                            <Card className='mt-2'>
+                                                <Card.Header className='header-chat bg-light d-flex justify-content-between'>
+                                                    <span>
+                                                        <span>
+                                                            <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
+                                                            <AiFillMessage className='ms-2 text-gold' />
+                                                        </span>
+                                                    </span>
+
+                                                    <div className='order-id'>
+                                                        Order ID: 11002345CT
+                                                    </div>
+                                                </Card.Header>
+                                                <Card.Body className='bg-white'>
+                                                    <Row>
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>December 6, 2023</span>
+                                                        </Col>
+
+                                                        <Col lg={2} className='d-flex'>
+                                                            <img src={User} className='user-placeholder' />
+                                                            <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>December 25, 2023</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>$10.30</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='text-black'>Complete</span>
+                                                        </Col>
+
+                                                        <Col lg={2} className='d-flex justify-content-end'>
+                                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                                <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                            </div>
+                                                        </Col>
+                                                    </Row>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    </Row>
+                                    :
+                                    null
+                                }
+
+
+                                {chatBox ?
+                                    <>
+                                        <Card className='width-chat-card px-0'>
+                                            <Card.Header className='header-chat bg-white'>
+                                                <div className='d-flex justify-content-between'>
+                                                    <div>
+                                                        <span className="fs-14 fw-500 mb-0 name-of-user-chat">
+                                                            Dave Napoles
+                                                        </span>
+                                                        <span className='ms-3 active-now fs-14 fw-400 text-gold'>Active Now</span>
+                                                    </div>
+                                                    <div className="cursor-pointer" onClick={() => setChatBox(false)}>
+                                                        <IoCloseOutline color="#39393A" />
+                                                    </div>
+                                                </div>
+                                            </Card.Header>
+
+                                            <Card.Body >
+                                                <div className='height-cb'>
+                                                </div>
 
                                                 <div>
-                                                    Order ID: 11002345CT
-                                                </div>
-                                            </Card.Header>
-                                            <Card.Body className='bg-white'>
-                                                <Row>
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>December 8, 2023</span>
-                                                    </Col>
-
-                                                    <Col lg={2} className='d-flex'>
-                                                        <img src={User} className='user-placeholder' />
-                                                        <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>December 25, 2023</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>$10.30</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>To Ship</span>
-                                                    </Col>
-
-                                                    <Col lg={2} className='d-flex justify-content-end'>
-                                                        <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
-                                                            <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                    <input type="text" className='form-control' />
+                                                    <div className='mt-3  d-flex justify-content-between'>
+                                                        <div className='d-flex'>
+                                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' size={20} /></div>
+                                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
                                                         </div>
-                                                    </Col>
-                                                </Row>
+                                                        <div>
+                                                            <div
+                                                                className="cursor-pointer fw-500"
+                                                                onClick={() => toggleUnderConstruction("Send Message")}
+                                                            >
+                                                                Send
+                                                                <VscSend className='ms-1' />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </Card.Body>
                                         </Card>
-                                    </Col>
-                                </Row>
-                                :
-                                null
-                            }
+                                    </>
+                                    :
+                                    null
+                                }
 
-                            {activeShow ?
-                                <Row>
-                                    <Col lg={12}>
-                                        <Card className='mt-2'>
-                                            <Card.Header className='header-chat bg-light d-flex justify-content-between'>
-                                                <span>
-                                                    <span>
-                                                        <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
-                                                        <AiFillMessage className='ms-2 text-gold' />
+                                {askAQuestion ?
+                                    <>
+
+                                        <Card className='width-chat-card px-0'>
+                                            <Card.Header className='header-chat bg-white'>
+                                                <div className='d-flex justify-content-between'>
+                                                    <div>
+                                                        <span className='fw-500'>Dave Napoles</span>
+                                                        <span className='ms-2 active-now fs-14 fw-400'>Active Now</span>
+                                                    </div>
+                                                    <div className="cursor-pointer" onClick={() => setAskAQuestion(false)}>
+                                                        <IoCloseOutline color="#39393A" />
+                                                    </div>
+                                                </div>
+                                            </Card.Header>
+                                            <Card.Body >
+                                                <div className='product-portfolio-image'>
+                                                    <span className='d-flex'>
+                                                        {/* {images && images.length > 0 ?
+                                                <>
+                                                    <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                                    </div>
+                                                    <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
+                                                </>
+                                                :
+                                                null
+                                            } */}
                                                     </span>
-                                                </span>
-
-                                                <div className='order-id'>
-                                                    Order ID: 11002345CT
                                                 </div>
-                                            </Card.Header>
-                                            <Card.Body className='bg-white'>
-                                                <Row>
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>December 6, 2023</span>
-                                                    </Col>
 
-                                                    <Col lg={2} className='d-flex'>
-                                                        <img src={User} className='user-placeholder' />
-                                                        <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
-                                                    </Col>
+                                                <div className='mt-5 mb-4 text-right d-flex'>
 
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>December 25, 2023</span>
-                                                    </Col>
 
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>-</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>New</span>
-                                                    </Col>
-
-                                                    <Col lg={2} className='d-flex justify-content-end'>
-                                                        <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
-                                                            <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                    <div>
+                                                        <div className='time-chat-box fs-14 fw-400'>3:30 PM
+                                                            <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
+                                                        <div className='mt-2 welcome-chat'>
+                                                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
                                                         </div>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                </Row>
-                                :
-                                null
-                            }
+                                                    </div>
 
-                            {processShow ?
-                                <Row>
-                                    <Col lg={12}>
-                                        <Card className='mt-2'>
-                                            <Card.Header className='header-chat bg-light d-flex justify-content-between'>
-                                                <span>
-                                                    <span>
-                                                        <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
-                                                        <AiFillMessage className='ms-2 text-gold' />
-                                                    </span>
-                                                </span>
-
-                                                <div className='order-id'>
-                                                    Order ID: 11002345CT
+                                                    <div className=' d-flex align-items-center portfolio-designer ms-3'>
+                                                        {/* {portfolio.user.image && (
+                                                <div
+                                                    className='designer-photo'
+                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
+                                                >
                                                 </div>
-                                            </Card.Header>
-                                            <Card.Body className='bg-white'>
-                                                <Row>
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>December 6, 2023</span>
-                                                    </Col>
-
-                                                    <Col lg={2} className='d-flex'>
-                                                        <img src={User} className='user-placeholder' />
-                                                        <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>December 25, 2023</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>-</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>Processing</span>
-                                                    </Col>
-
-                                                    <Col lg={2} className='d-flex justify-content-end'>
-                                                        <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
-                                                            <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                        </div>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                </Row>
-                                :
-                                null
-                            }
-
-                            {shippedShow ?
-                                <Row>
-                                    <Col lg={12}>
-                                        <Card className='mt-2'>
-                                            <Card.Header className='header-chat bg-light d-flex justify-content-between'>
-                                                <span>
-                                                    <span>
-                                                        <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
-                                                        <AiFillMessage className='ms-2 text-gold' />
-                                                    </span>
-                                                </span>
-
-                                                <div className='order-id'>
-                                                    Order ID: 11002345CT
+                                            )} */}
+                                                    </div>
                                                 </div>
-                                            </Card.Header>
-                                            <Card.Body className='bg-white'>
-                                                <Row>
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>December 6, 2023</span>
-                                                    </Col>
 
-                                                    <Col lg={2} className='d-flex'>
-                                                        <img src={User} className='user-placeholder' />
-                                                        <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>December 25, 2023</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>$10.30 </span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>Shipped</span>
-                                                    </Col>
-
-                                                    <Col lg={2} className='d-flex justify-content-end'>
-                                                        <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
-                                                            <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                        </div>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                </Row>
-                                :
-                                null
-                            }
-
-                            {deliveredShow ?
-                                <Row>
-                                    <Col lg={12}>
-                                        <Card className='mt-2'>
-                                            <Card.Header className='header-chat bg-light d-flex justify-content-between'>
-                                                <span>
-                                                    <span>
-                                                        <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
-                                                        <AiFillMessage className='ms-2 text-gold' />
-                                                    </span>
-                                                </span>
-
-                                                <div className='order-id'>
-                                                    Order ID: 11002345CT
-                                                </div>
-                                            </Card.Header>
-                                            <Card.Body className='bg-white'>
-                                                <Row>
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>December 6, 2023</span>
-                                                    </Col>
-
-                                                    <Col lg={2} className='d-flex'>
-                                                        <img src={User} className='user-placeholder' />
-                                                        <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>December 25, 2023</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>$10.30</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>Delivered</span>
-                                                    </Col>
-
-                                                    <Col lg={2} className='d-flex justify-content-end'>
-                                                        <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
-                                                            <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                        </div>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                </Row>
-                                :
-                                null
-                            }
-
-                            {reviewShow ?
-                                <Row>
-                                    <Col lg={12}>
-                                        <Card className='mt-2'>
-                                            <Card.Header className='header-chat bg-light d-flex justify-content-between'>
-                                                <span>
-                                                    <span>
-                                                        <img src={User} className='user-placeholder-order me-2 order-user' />Olivia Miller
-                                                        <AiFillMessage className='ms-2 text-gold' />
-                                                    </span>
-                                                </span>
-
-                                                <div className='order-id'>
-                                                    Order ID: 11002345CT
-                                                </div>
-                                            </Card.Header>
-                                            <Card.Body className='bg-white'>
-                                                <Row>
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>December 6, 2023</span>
-                                                    </Col>
-
-                                                    <Col lg={2} className='d-flex'>
-                                                        <img src={User} className='user-placeholder' />
-                                                        <span className='d-flex justify-content-center text-black align-items-center ms-2'>Crystal Cascade SleeveGuard</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>December 25, 2023</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>$10.30</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='text-black'>Complete</span>
-                                                    </Col>
-
-                                                    <Col lg={2} className='d-flex justify-content-end'>
-                                                        <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
-                                                            <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                        </div>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                </Row>
-                                :
-                                null
-                            }
-
-
-                            {chatBox ?
-                                <>
-                                    <Card className='width-chat-card px-0'>
-                                        <Card.Header className='header-chat bg-white'>
-                                            <div className='d-flex justify-content-between'>
                                                 <div>
-                                                    <span className="fs-14 fw-500 mb-0 name-of-user-chat">
-                                                        Dave Napoles
+                                                    <span>
+                                                        <FaUserCircle />
+                                                        <span className='name-chat'>Dave Napoles</span>
+                                                        <span className='ms-2 time-chat fw-400 fs-14'>4:00 PM</span>
                                                     </span>
-                                                    <span className='ms-3 active-now fs-14 fw-400 text-gold'>Active Now</span>
                                                 </div>
-                                                <div className="cursor-pointer" onClick={() => setChatBox(false)}>
-                                                    <IoCloseOutline color="#39393A" />
+
+                                                <div className='mt-3'>
+                                                    <input type="text" className='form-control' />
                                                 </div>
-                                            </div>
-                                        </Card.Header>
 
-                                        <Card.Body >
-                                            <div className='height-cb'>
-                                            </div>
+                                                <div className='mt-3 d-flex justify-content-between'>
 
-                                            <div>
-                                                <input type="text" className='form-control' />
-                                                <div className='mt-3  d-flex justify-content-between'>
                                                     <div className='d-flex'>
-                                                        <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' size={20} /></div>
-                                                        <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
+                                                        <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' /></div>
+                                                        <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach /></div>
                                                     </div>
                                                     <div>
                                                         <div
@@ -649,101 +736,14 @@ const OrdersSeller = (props) => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </Card.Body>
-                                    </Card>
-                                </>
-                                :
-                                null
-                            }
+                                            </Card.Body>
+                                        </Card>
 
-                            {askAQuestion ?
-                                <>
-
-                                    <Card className='width-chat-card px-0'>
-                                        <Card.Header className='header-chat bg-white'>
-                                            <div className='d-flex justify-content-between'>
-                                                <div>
-                                                    <span className='fw-500'>Dave Napoles</span>
-                                                    <span className='ms-2 active-now fs-14 fw-400'>Active Now</span>
-                                                </div>
-                                                <div className="cursor-pointer" onClick={() => setAskAQuestion(false)}>
-                                                    <IoCloseOutline color="#39393A" />
-                                                </div>
-                                            </div>
-                                        </Card.Header>
-                                        <Card.Body >
-                                            <div className='product-portfolio-image'>
-                                                <span className='d-flex'>
-                                                    {/* {images && images.length > 0 ?
-                                                <>
-                                                    <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-                                                    </div>
-                                                    <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
-                                                </>
-                                                :
-                                                null
-                                            } */}
-                                                </span>
-                                            </div>
-
-                                            <div className='mt-5 mb-4 text-right d-flex'>
-
-
-                                                <div>
-                                                    <div className='time-chat-box fs-14 fw-400'>3:30 PM
-                                                        <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
-                                                    <div className='mt-2 welcome-chat'>
-                                                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
-                                                    </div>
-                                                </div>
-
-                                                <div className=' d-flex align-items-center portfolio-designer ms-3'>
-                                                    {/* {portfolio.user.image && (
-                                                <div
-                                                    className='designer-photo'
-                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
-                                                >
-                                                </div>
-                                            )} */}
-                                                </div>
-                                            </div>
-
-                                            <div>
-                                                <span>
-                                                    <FaUserCircle />
-                                                    <span className='name-chat'>Dave Napoles</span>
-                                                    <span className='ms-2 time-chat fw-400 fs-14'>4:00 PM</span>
-                                                </span>
-                                            </div>
-
-                                            <div className='mt-3'>
-                                                <input type="text" className='form-control' />
-                                            </div>
-
-                                            <div className='mt-3 d-flex justify-content-between'>
-
-                                                <div className='d-flex'>
-                                                    <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' /></div>
-                                                    <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach /></div>
-                                                </div>
-                                                <div>
-                                                    <div
-                                                        className="cursor-pointer fw-500"
-                                                        onClick={() => toggleUnderConstruction("Send Message")}
-                                                    >
-                                                        Send
-                                                        <VscSend className='ms-1' />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </Card.Body>
-                                    </Card>
-
-                                </>
-                                :
-                                null
-                            }
+                                    </>
+                                    :
+                                    null
+                                }
+                            </div>
                         </Col>
                     </Row>
                 </Container>

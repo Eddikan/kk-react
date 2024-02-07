@@ -20,7 +20,15 @@
 .no-available,.no-wishlist {
     font-style: italic;
 }
-
+.review-card {
+    border: none;
+}
+.footer-top-border {
+    border-top: none;
+}
+.padding-card-review {
+    padding: 20px 25px 10px 25px;
+}
 .react-review-items-close {
     position: absolute;
     top: 14px;
@@ -92,4 +100,27 @@
 
 .reviews-tooltip:hover .reviews-tooltiptext {
     visibility: visible;
+}
+
+.btn-primary-cancel {
+    font-size: 15px;
+    padding: 12px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: var(--black);
+    background-color: var(--white);
+    border-color: var(--black);
+}
+
+.single-image-chat {
+    width: 9%;
+    min-height: 36px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 5px;
+}
+.product-grid-image {
+    width: 300px;
 }

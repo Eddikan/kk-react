@@ -17,7 +17,7 @@ span.appointments,.orders,.portfolio,.fabrics {
 }
 .yellow-hover:hover {
     color: #CEA835;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .sidebar-menu .accordion-header {

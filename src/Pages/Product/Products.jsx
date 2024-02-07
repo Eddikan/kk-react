@@ -106,6 +106,7 @@ const Products = (props) => {
                 <>
                     <section>
                         <Container fluid className='p-0'>
+
                             {products && products.length > 0 ?
                                 <>
                                     <Row className="portfolio-row bg-product">
@@ -114,11 +115,11 @@ const Products = (props) => {
                                         </Col>
 
                                         <Col lg={10} className='mt-5  col-right'>
-                                            <div>
-                                                <h2 className='fs-30 mb-2 ms-4'>Portfolio</h2>
-                                                <Row className='ms-4'>
+                                            <div className='ms-5'>
+                                                <h2 className='fs-30 mb-3'>Products</h2>
+                                                <Row>
                                                     {products.map((object, index) => (
-                                                        <Col className={`product-grid mb-3`} xs="4" md="2">
+                                                        <Col className={`product-grid-image mb-3`} xs="4" md="2">
                                                             <div className={`product-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + object.image_urls[0].image_url + ")" }}>
                                                                 <div className="product-overlay">
                                                                     <div className="product-actions">
@@ -140,7 +141,7 @@ const Products = (props) => {
                                                                         )}
                                                                     </div>
                                                                     <div className="product-details">
-                                                                        <span className="text-white text-decoration-none">{object.name ?? "-"}</span>
+                                                                        {/* <span className="text-white text-decoration-none">{object.name ?? "-"}</span> */}
                                                                         <div className="other-actions">
                                                                             <div className="action-button bg-white me-2">
                                                                                 <GoHeart className="text-black" />

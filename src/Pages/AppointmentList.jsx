@@ -139,8 +139,8 @@ const AppointmentList = (props) => {
                         </Col>
 
                         <Col lg={10} className='col-right'>
-                            <div>
-                                <Row className='ms-4'>
+                            <div className='ms-5'>
+                                <Row>
                                     <Col lg={12} className="designer-calendar-container">
                                         <Row className="pb-4">
                                             <Col md={12} className='d-flex justify-content-left align-items-center'>
