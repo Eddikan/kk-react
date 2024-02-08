@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button, Form } from 'react-bootstrap';
-import UserPlaceholder from 'Assets/images/placeholders/user.png';
+import { Container, Row, Col, Button, Form, ModalFooter, ModalHeader, Card } from 'react-bootstrap';
 import toast from 'react-hot-toast';
-// import getDesignsData from 'Utils/GetFabricsData';
 import GetFabricsData from 'Utils/GetFabricsData';
-import { BsThreeDots } from "react-icons/bs";
-import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
-import { IoIosArrowDown } from "react-icons/io";
-import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
+import Carousel from 'react-multi-carousel';
+import PinIcon from '../../Assets/images/pin.png';
+import { GoHeart, GoAlertFill } from "react-icons/go";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
-import { useCookies } from 'react-cookie';
+import ImageSlider from 'Components/Shared/ImageSlider';
+import { IoShareSocial, IoInformationOutline, IoVideocam } from "react-icons/io5";
+import { AiFillMessage } from "react-icons/ai";
+import { PiNotepadFill } from "react-icons/pi";
+import '../../Assets/styles/FabricsHomePage/style.css';
 import axios from 'axios';
+import Modal from 'react-bootstrap/Modal';
 import { Rating } from 'react-simple-star-rating';
 
 const Fabrics = (props) => {
@@ -22,7 +24,43 @@ const Fabrics = (props) => {
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [fabrics, setFabrics] = useState([]);
     const [fabricsLoading, setFabricsLoading] = useState(true);
+    const [productsImage, setProductsImage] = useState(false);
     const [rating, setRating] = useState(5);
+    const [messageShow, setMessageShow] = useState(false);
+    const [modalHeading, setModalHeading] = useState('');
+    const [underConstructionShow, setUnderConstructionShow] = useState(false);
+    const [activeImage, setActiveImage] = useState('');
+    const [singleFabric, setSingleFabric] = useState('');
+    const [fabricImages, setFabricImages] = useState([]);
+
+    function toggleMessage() {
+        setMessageShow(true);
+    }
+
+    function toggleUnderConstruction() {
+        setUnderConstructionShow(true);
+    }
+
+    function toggleProductsImage(id, first_name, last_name, image_urls, image, address_line_1, province) {
+        setProductsImage(true);
+        setSingleFabric({
+            id: id ?? 0,
+            first_name: first_name ?? '-',
+            last_name: last_name ?? '-',
+            image: image ?? '-',
+            address_line_1: address_line_1 ?? '-',
+            province: province ?? '-'
+
+        })
+        setFabricImages([image_urls]);
+        console.log("image_urls", image_urls);
+
+        if (image_urls?.[0]?.image_url) {
+            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url);
+        } else {
+            setActiveImage(PlaceholderImage);
+        }
+    }
 
     const fetchData = async (e) => {
         try {
@@ -90,6 +128,10 @@ const Fabrics = (props) => {
         fetchData(currentUser);
     }, [reloadCount]);
 
+    const handleActiveImageChange = (fabricImage) => {
+        setActiveImage(fabricImage);
+    };
+
     return (
         <>
             <div id="profile-designs">
@@ -153,7 +195,7 @@ const Fabrics = (props) => {
                                                         {currentUser ?
                                                             <>
                                                                 <div className="portfolio-link">
-                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }} style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}>
+                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleProductsImage(fabric.id, fabric.user.first_name, fabric.user.last_name, fabric.image_urls, fabric.user.image, fabric.user.address_line_1, fabric.user.province); }} style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}>
 
                                                                     </div>
                                                                     {currentUser ?
@@ -257,7 +299,6 @@ const Fabrics = (props) => {
                                             :
                                             <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_fabric')}>View More</Button>
                                         }
-
                                     </Col>
                                 </Row>
                             </>
@@ -267,6 +308,256 @@ const Fabrics = (props) => {
                     </>
                 }
             </div>
+
+
+            <Modal
+                show={productsImage}
+                fade={false}
+                className='modal-full-width'
+            >
+                <ModalHeader className='pt-2 pb-3 bg-black'>
+
+                    <div className='d-flex user-image'>
+                        {singleFabric.image && (
+                            <div
+                                className='user-photo'
+                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleFabric.image})` }}
+                            >
+                            </div>
+                        )}
+
+                        <div className='ms-3'>
+                            <div className='modal-title text-left fs-20 fw-600 text-white'>{singleFabric.first_name} {singleFabric.last_name}</div>
+                            <div className='fashion-designer fs-16'>Fashion Designer</div>
+                        </div>
+                    </div>
+                    <button type='button' className='close modal-close' aria-label='Close' onClick={() => setProductsImage(false)}>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </ModalHeader>
+                <Modal.Body className='p-0'>
+                    <Row>
+                        <Col lg={11} className='bg-black image-fabrics'>
+                            {/* <Carousel
+                                    responsive={{
+                                        superLargeDesktop: {
+                                            breakpoint: { max: 4000, min: 3000 },
+                                            items: 5,
+                                        },
+                                        desktop: {
+                                            breakpoint: { max: 3000, min: 1024 },
+                                            items: 4,
+                                        },
+                                        tablet: {
+                                            breakpoint: { max: 1024, min: 464 },
+                                            items: 2,
+                                        },
+                                        mobile: {
+                                            breakpoint: { max: 464, min: 0 },
+                                            items: 1,
+                                        },
+                                    }}
+                                    slidesToSlide={1}
+                                    infinite={true}
+                                    autoPlay={true}
+                                    autoPlaySpeed={5000}
+                                >
+                                    {fabricImages.map((fabricimage, index) => (
+                                        <div key={index} className="designers-grid mb-3">
+                                            {fabricImages.image_url ? (
+                                                <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabricimage.image_url})` }}>
+
+                                                </div>
+                                            ) : (
+                                                <>
+                                                </>
+                                            )}
+                                        </div>
+                                    ))}
+                                </Carousel> */}
+                            <div>
+                                {fabricImages && fabricImages.length > 0 ?
+                                    <>
+                                        <div className="single-image-slider-fabrics"
+                                            style={{
+                                                backgroundImage: "url(" + activeImage + ")"
+                                            }}
+                                        >
+                                        </div>
+                                        {/* <ImageSlider type="product" images={fabricImages} onActiveImageChange={handleActiveImageChange} /> */}
+                                    </>
+                                    :
+                                    <>
+                                    </>
+                                }
+
+                                <div>
+                                    <div className='text-white book-consultation-bar w-100 d-flex justify-content-center'>
+                                        <p className='request d-flex justify-content-between mb-4'>
+                                            <div className='d-flex justify-content-center align-items-center user-image'>
+                                                {singleFabric.image && (
+                                                    <div
+                                                        className='user-photo'
+                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleFabric.image})` }}
+                                                    >
+                                                    </div>
+                                                )}
+
+                                                <div className='ms-3'>
+                                                    <div className='modal-title text-left fs-20 fw-600 text-white'>{singleFabric.first_name} {singleFabric.last_name}</div>
+                                                    <div className='fashion-designer fs-16'>Fashion Designer</div>
+                                                </div>
+                                            </div>
+
+                                            <div className='btn-book-bar'>
+                                                <a href={`/appointment/schedule/${singleFabric.id}`}>
+                                                    <button className='btn btn-book-consultation'>Book a Consultation</button>
+                                                </a>
+                                            </div>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </Col>
+
+                        <Col lg={1} className='bg-black'>
+                            <div>
+                                <div>
+                                    <div className='user-image-side thumbnail-table'>
+                                        {singleFabric.image && (
+                                            <div
+                                                className='user-photo-side mb-4 '
+                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleFabric.image})` }}
+                                            >
+                                            </div>
+                                        )}
+
+                                        <Card className="table_content file-action">
+                                            <Card.Body className="action_container font-weight">
+                                                <Row>
+                                                    <Col>
+                                                        {singleFabric.image && (
+                                                            <div
+                                                                className='user-photo-card mb-2 '
+                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleFabric.image})` }}
+                                                            >
+                                                            </div>
+                                                        )}
+                                                        <div className='modal-title text-center fs-20 fw-600 text-gold'>{singleFabric.first_name} {singleFabric.last_name}</div>
+                                                        <div className='fs-14 text-center mt-2'><img src={PinIcon} alt="location pin" className='me-2' />{singleFabric.address_line_1}{singleFabric.province}</div>
+                                                        <div className='fs-18 fw-600 text-center mt-2'>Specialization and Expertise</div>
+
+                                                        <hr />
+                                                        <div className='text-center'>
+                                                            <a className='book-consultation btn-book btn'
+                                                                href={`/appointment/schedule/${singleFabric.id}`}
+                                                            ><IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
+                                                        </div>
+
+                                                        <div className='text-center mt-2' onClick={() => toggleUnderConstruction()}>
+                                                            <a className='book-consultation btn-message-designer btn'
+                                                            // href={`/appointment/schedule/${singleFabric.designer.id}`}
+                                                            ><AiFillMessage className="me-2" />Message Designer</a>
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                            </Card.Body>
+                                        </Card>
+                                    </div>
+                                </div>
+
+                                <div className='text-center mb-3' onClick={() => toggleUnderConstruction()}>
+                                    <div className="action-button-fabrics bg-white">
+                                        <PiNotepadFill className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
+                                </div>
+
+                                <div className='text-center mb-3' onClick={toggleMessage}>
+                                    <div className="action-button-fabrics bg-white">
+                                        <AiFillMessage className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
+                                </div>
+
+                                <div className='text-center mb-3' onClick={() => toggleUnderConstruction()}>
+                                    <div className="action-button-fabrics bg-white">
+                                        <IoShareSocial className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
+                                </div>
+
+                                <div className='text-center mb-3' onClick={() => toggleUnderConstruction()}>
+                                    <div className="action-button-fabrics bg-white">
+                                        <IoInformationOutline className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Description</div>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                </Modal.Body>
+            </Modal >
+
+            <Modal
+                show={messageShow}
+                className='modal-preview'
+                fade={false}
+                size="sm"
+            >
+                <Modal.Header className="py-0">
+                    <button type='button' className='close react-modal-close' onClick={() => setMessageShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Card className='border-none'>
+                        <Card.Body className="text-center py-5 pt-2 pb-2">
+                            <div className='user-image-message thumbnail-table'>
+                                {singleFabric.image && (
+                                    <div
+                                        className='user-photo-message mb-2 '
+                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleFabric.image})` }}
+                                    >
+                                    </div>
+                                )}
+                            </div>
+                            <div className='modal-title text-center fs-20 fw-600 text-black mb-3'>{singleFabric.first_name} {singleFabric.last_name}</div>
+                            <textarea className='form-control text-height' placeholder='Your message'></textarea>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+
+                <ModalFooter>
+                    <div className='text-right'>
+                        <Button className="btn-cancel-message btn me-2" onClick={() => { setMessageShow(false); }}>Cancel</Button>
+                        <Button className="btn-primary btn" onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}>Send Message</Button>
+                    </div>
+                </ModalFooter>
+            </Modal>
+
+            <Modal
+                show={underConstructionShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="sm"
+            >
+                <Modal.Header className="py-0">
+                    <h5 className='modal-title text-uppercase text-left'></h5>
+                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Card>
+                        <Card.Body className="text-center py-5">
+                            <GoAlertFill size="60px" className="mb-2 text-gold" />
+                            <p className="fs-20 text-black">Under Construction</p>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+            </Modal>
         </>
     );
 };

@@ -65,7 +65,6 @@ const ViewPortFolio = () => {
     function toggleRequestAQuote(message) {
         setRequestAQuoteModal(true);
         setModalHeading(message);
-
     }
 
     const fetchData = async (e) => {
@@ -229,10 +228,8 @@ const ViewPortFolio = () => {
                                                     </div>
 
                                                     <div>
-                                                        <div>
-                                                            <div className="cursor-pointer" onClick={() => chatBoxModal("Chat Designer")}>
-                                                                <AiFillMessage className='me-2 mb-1' color='#caa533' />Chat Designer
-                                                            </div>
+                                                        <div className="cursor-pointer" onClick={() => chatBoxModal("Chat Designer")}>
+                                                            <AiFillMessage className='me-2 mb-1' color='#caa533' />Chat Designer
                                                         </div>
                                                     </div>
                                                 </div>
@@ -247,10 +244,7 @@ const ViewPortFolio = () => {
                                                 </span>
 
                                                 <span className='w-100'>
-                                                    <a
-                                                        href={`/appointment/schedule/${portfolio.designer.id}`}
-                                                        className='btn mt-4 ms-3 btn-primary fs-16 fw-400 consultation-btn'
-                                                    >
+                                                    <a href={`/appointment/schedule/${portfolio.designer.id}`} className='btn mt-4 ms-3 btn-primary fs-16 fw-400 consultation-btn'>
                                                         <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
                                                 </span>
 

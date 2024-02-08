@@ -1,7 +1,6 @@
 #sidebar {
     background: #fff;
-    width: 100%;
-    max-width: 300px;
+    width: 84%;
     height: 100vh;
 }
 .accordion-item {
@@ -27,5 +26,5 @@ span.appointments,.orders,.portfolio,.fabrics {
     text-decoration: none;
 }
 .padding-sidebar {
-    padding: 35px 0px 8px 40px;
+    padding: 35px 0px 8px 15px;
 }
