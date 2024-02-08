@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Header from '../Shared/Header'
 import HeaderSeller from "Components/Shared/HeaderSeller";
+import Footer from '../Shared/Footer'
 import toast, { Toaster } from 'react-hot-toast';
 
 const LayoutSellerCenter = ({ children }) => {
@@ -22,6 +23,9 @@ const LayoutSellerCenter = ({ children }) => {
                 </div>
                 <div id="main">
                     {children}
+                </div>
+                <div id="footer">
+                    <Footer />
                 </div>
             </div>
         </>

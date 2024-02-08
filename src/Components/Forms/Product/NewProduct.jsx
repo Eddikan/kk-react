@@ -254,7 +254,7 @@ const NewProduct = (props) => {
                             <Form.Group className='my-4'>
                                 <Form.Label>Environmentally Conscious Options</Form.Label>
                                 <Row className="mt-1">
-                                    <Form.Group as={Col} lg={3}>
+                                    <Form.Group as={Col} lg={12}>
                                         <Form.Check
                                             className="cursor-pointer"
                                             type="checkbox"

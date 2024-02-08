@@ -783,13 +783,12 @@ const EditProductNormal = (props) => {
                                     </Form.Group>
                                 </Row>
                             </Form.Group>
-                            <Form.Label>Video Demonstration</Form.Label>
                             <Card className='mb-3'>
                                 <Card.Body className='bg-mdgray'>
                                     <Row>
                                         <Col lg="12">
                                             <Form.Group className='my-1'>
-                                                <Form.Label>Video</Form.Label>
+                                                <Form.Label>Video Demonstration</Form.Label>
                                                 <Form.Control as='select' name='video_demo_type' value={productData.video_demo_type} className='mr-sm-2' onChange={handleChangeVideoType} required>
                                                     <option value=''>Select Type</option>
                                                     <option value='Youtube'>Youtube</option>

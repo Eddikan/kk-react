@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import 'Assets/styles/Components/ImageDragAndDrop/style.css'; // Add your styling here
 import { SlCloudUpload } from 'react-icons/sl';
 import { Container, Row, Col, Button } from 'react-bootstrap';
@@ -17,6 +17,7 @@ const ImageDragAndDrop = (props) => {
   const propImages = props.images;
   const size = props.size;
   const type = props.type;
+  const fileInputRef = useRef(null);
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
 
@@ -136,12 +137,16 @@ const ImageDragAndDrop = (props) => {
     handleFiles(selectedFiles);
   };
 
+  const handleAdd = () => {
+    // Trigger the file input when the "Add More" button is clicked
+    fileInputRef.current.click();
+  };
+
   
   useEffect(() => {
     if (propImages) {
       setImageUrls(propImages);
     }
-    console.log(propImages);
 }, [propImages]);
 
   return (
@@ -153,13 +158,14 @@ const ImageDragAndDrop = (props) => {
       <input
         type="file"
         key={fileInputKey} // Add a key to the file input
-        id="fileInput"
+        id=""
         onChange={handleFileInput}
-        className="file-input d-block opacity-0"
+        className="file-input d-block opacity-0 d-none"
+        ref={fileInputRef}
         accept="image/*"
         multiple
       />
-      <label htmlFor="fileInput" className="file-label d-block text-center cursor-pointer">
+      <label htmlFor="" onClick={handleAdd} className="file-label d-block text-center cursor-pointer">
         <SlCloudUpload className="d-block mx-auto text-mgray mb-2" size="50px" />
         <p className="text-mgray mb-2">Drag and drop file here</p>
         <p className="text-mgray mb-2">Or</p>
@@ -195,7 +201,7 @@ const ImageDragAndDrop = (props) => {
                       </>
                       : size == "normal" ?
                       <>
-                        {images.length > 3 && index > 3 ?
+                        {images.length > 3 && index+1 > 3 ?
                           <Col lg={4} key={image.id} className="image-preview mt-3">
                             <div className="image-dnd normal" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+imageType+'/'+image.image_url+")"}}>
                               <div className="dnd-actions-overlay">

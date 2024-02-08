@@ -173,13 +173,13 @@ const OrdersSeller = (props) => {
         <LayoutSellerCenter>
             <section>
                 <Container fluid>
-                    <Row>
-                        <Col lg={2} className='p-0'>
+                    <Row className='bg-product'>
+                        <Col lg={3} className='p-0'>
                             <Sidebar currentTab={currentTab} onChangeTab={(e) => setCurrentTab(e)} />
 
                         </Col>
 
-                        <Col lg={10} className='col-right-order top-padding'>
+                        <Col lg={9} className='col-right-order top-padding mx-auto' style={{maxWidth: '1440px'}}>
                             <div className='ms-5'>
                                 <Row>
                                     <Col lg={12}>

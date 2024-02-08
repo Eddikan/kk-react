@@ -138,7 +138,7 @@ const AppointmentList = (props) => {
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='col-right'>
+                        <Col lg={10} className='col-right mx-auto' style={{maxWidth: '1440px'}}>
                             <div className='ms-5'>
                                 <Row>
                                     <Col lg={12} className="designer-calendar-container">

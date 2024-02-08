@@ -1,7 +1,9 @@
 #sidebar {
     background: #fff;
-    width: 84%;
-    height: 100vh;
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    max-width: 300px;
 }
 .accordion-item {
     border: none;

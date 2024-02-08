@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
-import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import { Container, Row, Col, Button, Card, Modal } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
 import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
@@ -9,6 +9,11 @@ import FormControl from 'react-bootstrap/FormControl';
 import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
+import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
+import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
+import VideoDragAndDrop from 'Components/Shared/VideoDragAndDrop';
+import DetailBuilder from 'Components/Shared/DetailBuilder';
+import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 
 const initialPortfolioData = Object.freeze({
     image_urls: [],
@@ -30,7 +35,12 @@ const NewPortfolio = (props) => {
     const [colors, setColors] = useState([]);
     const [tags, setTags] = useState([]);
     const [materials, setMaterials] = useState([]);
-    const [categories, setCategories] = useState([])
+    const [categories, setCategories] = useState([]);
+
+    const [guideModalShow, setGuideModalShow] = useState(false);
+    const [guidePreviewModalShow, setGuidePreviewModalShow] = useState(false);
+    const [elements, setElements] = useState([]);
+    const [actionType, setActionType] = useState('add');
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -65,6 +75,23 @@ const NewPortfolio = (props) => {
             image_urls: images,
         });
     };
+
+     // Measurement Guide
+     const handleAddElement = (e) => {
+        setElements(e);
+    }
+
+    const toggleGuideModal = (e) => {
+        setGuideModalShow(!guideModalShow);
+    }
+
+    const toggleGuidePreviewModal = (e) => {
+        setGuidePreviewModalShow(!guidePreviewModalShow);
+    }
+
+    const handleActionType = (e) => {
+        setActionType(e);
+    }
 
     useEffect(() => {
         setPortfolioData({
@@ -101,7 +128,7 @@ const NewPortfolio = (props) => {
                 }).catch(() => {
                     toast.error('An error occured. Please try again or contact the administrator.');
                     setPortfolioLoading(false);
-                    formSuccess(true);
+                    formSuccess(false);
                 });
             } else {
                 toast.error('Please upload design images!');
@@ -112,7 +139,7 @@ const NewPortfolio = (props) => {
     async function PortfolioDraftSubmit(e) {
         e.preventDefault();
         setPortfolioDraftLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Draft' }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, measurement_guide: elements, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Design saved as draft successfully!');
@@ -122,16 +149,18 @@ const NewPortfolio = (props) => {
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setPortfolioDraftLoading(false);
-                formSuccess(true);
+                formSuccess(false);
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
             setPortfolioDraftLoading(false);
-            formSuccess(true);
+            formSuccess(false);
         });
     };
 
     return (
+        <>
+        
         <Form onSubmit={PortfolioSubmit}>
             <Row>
                 <Col lg='8'>
@@ -156,6 +185,18 @@ const NewPortfolio = (props) => {
                                         placeholder=''
                                         onChange={handleChange} required />
                                 </Form.Group>
+                                {/* <Form.Group className='my-3'>
+                                    <Form.Label>Measurement Guide</Form.Label>
+                                    <div className='mt-2'>
+                                        {elements && elements.length > 0 && (
+                                            <Button className='btn-primary bg-transparent border-black text-black bg-black-hover border-black-hover text-white-hover me-3' type="button" onClick={() => { toggleGuideModal(); handleActionType("edit"); }}><GoPencil size="30px" className='me-2' /> Edit Elements</Button>
+                                        )}
+                                        <Button className='btn-primary bg-gold-hover border-gold-hover text-white-hover' type="button" onClick={() => { toggleGuideModal(); handleActionType("add"); }}><GoPlus size="30px" className='me-2' /> Add Element</Button>
+                                        {elements && elements.length > 0 && (
+                                            <span className="fw-600 cursor-pointer text-gold ms-3" onClick={toggleGuidePreviewModal}>Preview<HiOutlineArrowLongRight className="align-text-center"/></span>
+                                        )}
+                                    </div>
+                                </Form.Group> */}
                             </Card.Body>
                         </Card>
                         <div lg="12" className="text-left mt-5">
@@ -296,6 +337,108 @@ const NewPortfolio = (props) => {
                 </Col>
             </Row>
         </Form>
+        <Modal
+                show={guideModalShow} 
+                onHide={toggleGuideModal}
+                className='modal-preview'
+                fade={false}
+                size="lg"
+                id="measurement-guide"
+            >
+                <Modal.Header className="pb-0">
+                    <h4 className='text-left fs-25 fw-600 px-2'>{actionType == "add" ? "Add Element" : "Edit Elements"}</h4>
+                    <button type='button' className='close react-modal-close' onClick={toggleGuideModal} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card className='border-0'>
+                        <Card.Body className='p-2'>
+                            <DetailBuilder size="normal" addElement={handleAddElement} closeModal={toggleGuideModal} elements={elements} actionType={actionType} />
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+            </Modal>
+            <Modal
+                show={guidePreviewModalShow} 
+                onHide={toggleGuidePreviewModal}
+                className='modal-preview'
+                fade={false}
+                size="lg"
+                id="measurement-guide"
+            >
+                <Modal.Header className="pb-0">
+                    <h4 className='text-left fs-25 fw-600 px-2'>Preview</h4>
+                    <button type='button' className='close react-modal-close' onClick={toggleGuidePreviewModal} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card className='border-0'>
+                        <Card.Body className='p-2'>
+                            <Card>
+                                <Card.Body>
+                                    <div>
+                                        {elements && elements.length > 0 ?
+                                            <>
+                                                {/* Preview based on selected input type */}
+                                                {elements.map((element, index) => (
+                                                    <>
+                                                        {element.type == "Heading" ?
+                                                            <h3 className='fw-600 mb-4' key={index}>{element.value}</h3>
+                                                            : element.type == "Paragraph" ?
+                                                            <p key={index}>{element.value}</p>
+                                                            : element.type == "Image" ?
+                                                                <>
+                                                                    {element.value && element.value.length > 0 && element.value != "" ?
+                                                                        <>
+                                                                            {element.value.map((image, imageIndex) => (
+                                                                                <img key={imageIndex} src={process.env.REACT_APP_STORAGE_URL+'product/'+image?.image_url} className="w-100 h-auto mb-3" alt="" />
+                                                                            ))}
+                                                                        </>
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </>
+                                                            :
+                                                            <>
+                                                                {(element.type == "YouTube Embed Link" || element.type == "Vimeo Embed Link") && element.value != "" ?
+                                                                    <>
+                                                                        <div className="mb-3">
+                                                                            <ResponsiveEmbedVideo src={element.value} title={element.type} />
+                                                                        </div>
+                                                                    </>
+                                                                    : element.type == "Video" && element.value != "" ?
+                                                                    <>
+                                                                        <div className="mb-3">
+                                                                            <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL+'products/videos/'+element.value} />
+                                                                        </div>
+                                                                    </>
+                                                                    : element.type == "Line Break" ?
+                                                                    <p className="py-4 mb-0"></p>
+                                                                    :
+                                                                    null
+                                                                }
+                                                            </>
+                                                        }
+                                                        
+                                                    </>
+                                                ))}
+                                            </>
+                                            :
+                                            <Card className="mb-3 mt-3">
+                                                <Card.Body className="bg-lgray">
+                                                    <p className="text-center mb-0">No measurement guide added.</p>
+                                                </Card.Body>
+                                            </Card>
+                                            
+                                        }
+                                    </div>
+                                </Card.Body>
+                            </Card>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+            </Modal>
+        </>
     );
 };
 

@@ -60,6 +60,10 @@ h5 {
     min-height: calc(100vh - 250px);
 }
 
+p {
+    line-height: 1.7;
+}
+
 .text-white-hover:hover {
     color: var(--white) !important;
 }
@@ -480,7 +484,7 @@ a {
 }
 
 #measurement-guide.modal-dialog {
-    max-width: 935px !important;
+    max-width: 1000px !important;
 }
 
 .modal-dialog {

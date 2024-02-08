@@ -10,8 +10,10 @@ import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
 import Countries from 'Utils/Countries';
+import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
+import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
 import VideoDragAndDrop from 'Components/Shared/VideoDragAndDrop';
-import FormBuilder from 'Components/Shared/FormBuilder';
+import DetailBuilder from 'Components/Shared/DetailBuilder';
 
 
 const initialProductData = Object.freeze({
@@ -59,7 +61,6 @@ const NewProductNormal = (props) => {
     const [unitMeasurement, setUnitMeasurement] = useState('meter');
     const [otherUnitMeasurement, setOtherUnitMeasurement] = useState('');
     const [categories, setCategories] = useState([]);
-    const [guideModalShow, setGuideModalShow] = useState(true)
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -83,10 +84,6 @@ const NewProductNormal = (props) => {
     const measurementGuideSave = (e) => {
         setMeasurementGuide(e);
         console.log(e);
-    }
-
-    const toggleGuideModal = (e) => {
-        setGuideModalShow(false);
     }
 
     const handleChange = (e) => {
@@ -381,7 +378,7 @@ const NewProductNormal = (props) => {
                                     {productDraftLoading ?
                                         <span className="cursor-pointer text-black ms-3">Saving as Draft...</span>
                                         :
-                                        <span className="cursor-pointer text-black ms-3" onClick={ProductDraftSubmit}>Save as Draft <HiOutlineArrowLongRight className="align-text-bottom"/></span>
+                                        <span className="cursor-pointer text-black ms-3" onClick={ProductDraftSubmit}>Save as Draft <HiOutlineArrowLongRight className="align-text-center"/></span>
                                     }
                                 </>
                                 :
@@ -538,13 +535,12 @@ const NewProductNormal = (props) => {
                                         </Form.Group>
                                     </Row>
                                 </Form.Group>
-                                <Form.Label>Video Demonstration</Form.Label>
                                 <Card className='mb-3'>
                                     <Card.Body className='bg-mdgray'>
                                         <Row>
                                             <Col lg="12">
                                                 <Form.Group className='my-1'>
-                                                    <Form.Label>Video</Form.Label>
+                                                    <Form.Label>Video Demonstration</Form.Label>
                                                     <Form.Control as='select' name='video_demo_type' value={productData.video_demo_type} className='mr-sm-2' onChange={handleChangeVideoType} required>
                                                         <option value=''>Select Type</option>
                                                         <option value='Youtube'>Youtube</option>
@@ -571,7 +567,6 @@ const NewProductNormal = (props) => {
                     </Col>
                 </Row>
             </Form>
-            
         </>
     );
 };

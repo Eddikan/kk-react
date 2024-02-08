@@ -206,8 +206,8 @@ const OrderDetails = (props) => {
                                         </Col>
 
                                         <Col lg={7}>
-                                            <div class="wrap">
-                                                <ul class="timeline">
+                                            <div className="wrap">
+                                                <ul className="timeline">
 
                                                     <li>
                                                         <div className='d-flex'>

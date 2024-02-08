@@ -31,7 +31,6 @@ const VideoDragAndDrop = (props) => {
       fileInputRef.current.value = ''; // Clear the value of the input
     }
   };
-  
 
   const fileUploaded = (e) => {
     props.onVideoChange(e);
@@ -49,6 +48,7 @@ const VideoDragAndDrop = (props) => {
     setVideo([]);
     setVideoUrl('');
     clearFileInput();
+    fileUploaded('');
   }
 
   let videoType = "portfolio";
@@ -69,9 +69,16 @@ const VideoDragAndDrop = (props) => {
       const dataArray = new FormData();
       dataArray.append("url", videoInfo.file);
 
+      let apiLink = "";
+      if (videoType == "portfolio") {
+        apiLink = process.env.REACT_APP_API_ENDPOINT + 'portfolio/items/video/upload?user_id=' + currentUser + '&token=' + token;
+      } else {
+        apiLink = process.env.REACT_APP_API_ENDPOINT + 'product/video/upload?user_id=' + currentUser + '&token=' + token;
+      }
+
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_API_ENDPOINT}${videoType}/video/upload?user_id=${currentUser}&token=${token}`,
+          `${apiLink}`,
           dataArray,
           {
             headers: {
@@ -146,61 +153,61 @@ const VideoDragAndDrop = (props) => {
     if (videoLink && videoLink != "") {
       setVideoUrl(videoLink);
     }
-    
-}, [videoLink]);
+
+  }, [videoLink]);
 
   return (
     <>
-    <div
-      className="image-drop-container cursor-pointer"
-      onDrop={handleDrop}
-      onDragOver={handleDragOver}
-    >
-      <input
-        type="file"
-        key={videoInputKey} // Add a key to the file input
-        id="videoInput"
-        onChange={handleFileInput}
-        className="file-input d-block opacity-0"
-        accept="video/*"
-        ref={fileInputRef}
-      />
-      <label htmlFor="videoInput" className="file-label d-block text-center cursor-pointer">
-        <SlCloudUpload className="d-block mx-auto text-mgray mb-2" size="50px" />
-        <p className="text-mgray mb-2">Drag and drop file here</p>
-        <p className="text-mgray mb-2">Or</p>
-        <p>Browse File</p>
-      </label>
-    </div>
-    {video.length > 0 || videoLink ?
-      <>
-        <p className="mt-3">Uploaded Video: </p>
-        <Card>
-          <CardBody>
-            <Row>
-              {uploadStatus != "standby" ?
-                <>
-                  <Col lg={12} className="video-preview " style={{ minHeight: '150px' }}>
-                    <Loading />
-                  </Col>
-                </>
-                :
-                <Col lg={12}>
-                  <div className='image-dnd' style={{minHeight: 140}}>
-                    <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL+'products/videos/'+videoUrl} />
-                    <div className="dnd-actions-overlay" style={{top: 0}}>
-                      <FaTimesCircle size="25px" onClick={(e) => handleRemove(e)} className="remove-icon cursor-pointer text-danger" />
+      <div
+        className="image-drop-container cursor-pointer"
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+      >
+        <input
+          type="file"
+          key={videoInputKey} // Add a key to the file input
+          id="videoInput"
+          onChange={handleFileInput}
+          className="file-input d-block opacity-0"
+          accept="video/*"
+          ref={fileInputRef}
+        />
+        <label htmlFor="videoInput" className="file-label d-block text-center cursor-pointer">
+          <SlCloudUpload className="d-block mx-auto text-mgray mb-2" size="50px" />
+          <p className="text-mgray mb-2">Drag and drop file here</p>
+          <p className="text-mgray mb-2">Or</p>
+          <p>Browse File</p>
+        </label>
+      </div>
+      {video.length > 0 || videoUrl ?
+        <>
+          <p className="mt-3">Uploaded Video: </p>
+          <Card>
+            <CardBody>
+              <Row>
+                {uploadStatus != "standby" ?
+                  <>
+                    <Col lg={12} className="video-preview " style={{ minHeight: '150px' }}>
+                      <Loading />
+                    </Col>
+                  </>
+                  :
+                  <Col lg={12}>
+                    <div className='image-dnd' style={{ minHeight: 140 }}>
+                      <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL + 'products/videos/' + videoUrl} />
+                      <div className="dnd-actions-overlay" style={{ top: 0 }}>
+                        <FaTimesCircle size="25px" onClick={(e) => handleRemove(e)} className="remove-icon cursor-pointer text-danger" />
+                      </div>
                     </div>
-                  </div>
-                </Col>
-              }
-            </Row>
-          </CardBody>
-        </Card>
-      </>
-      :
-      null
-    }
+                  </Col>
+                }
+              </Row>
+            </CardBody>
+          </Card>
+        </>
+        :
+        null
+      }
     </>
   );
 };

@@ -111,11 +111,11 @@ const FormBuilder = (props) => {
                                                 </Form.Group>
                                             </Col>
                                             <Col lg={1}>
-                                                <div class="kouture-tooltip mt-5">
+                                                <div className="kouture-tooltip mt-5">
                                                     <div className="action-button bg-danger me-2"  onClick={() => handleRemoveElement(index)}>
                                                         <GoX className="text-white" />
                                                     </div>
-                                                    <div class="kouture-tooltiptext">
+                                                    <div className="kouture-tooltiptext">
                                                         Remove
                                                     </div>
                                                 </div>

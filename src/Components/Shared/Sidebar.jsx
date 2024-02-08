@@ -61,7 +61,7 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                     <AccordionItem className='padding-sidebar'>
                         <AccordionHeader targetId="1">
                             <span><PiSuitcaseSimple size="22" className="me-2 text-black" /></span>
-                            <span className="appointments cursor-pointer fs-18 text-black">Appointments<IoIosArrowDown className='ms-3 text-black' /></span>
+                            <span className="appointments cursor-pointer fs-16 text-black">Appointments<IoIosArrowDown className='ms-3 text-black' /></span>
                         </AccordionHeader>
 
                         <AccordionBody accordionId="1">
