@@ -176,6 +176,7 @@ const MeasurementGuide = (props) => {
                                                         <div>
                                                             {elements && elements.length > 0 ?
                                                                 <>
+                                                                    <hr />
                                                                     {/* Preview based on selected input type */}
                                                                     {elements.map((element, index) => (
                                                                         <>

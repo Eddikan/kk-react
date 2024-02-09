@@ -24,6 +24,8 @@ import { LiaSmileBeam } from "react-icons/lia";
 import { IoIosAttach } from "react-icons/io";
 import { VscSend } from "react-icons/vsc";
 import { FaUserCircle } from "react-icons/fa";
+import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
+import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -75,10 +77,12 @@ const DesignerProfile = () => {
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [activeImage, setActiveImage] = useState('');
+    const [elements, setElements] = useState([]);
 
     const [portfolio, setPortfolio] = useState('');
     const [images, setImages] = useState([]);
 
+    const [guidePreviewModalShow, setGuidePreviewModalShow] = useState(false);
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -100,12 +104,12 @@ const DesignerProfile = () => {
     function toggleRequestAQuote(message) {
         setRequestAQuoteModal(true);
         setModalHeading(message);
-    }
+    };
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
-    }
+    };
 
 
     const showTab = (tab) => {
@@ -134,7 +138,7 @@ const DesignerProfile = () => {
             setFabricShow(false);
             setCalendarShow(true);
         }
-    }
+    };
 
     const fetchData = async (e) => {
         try {
@@ -144,6 +148,10 @@ const DesignerProfile = () => {
                 setUserImage(userData.image);
                 setImages(userData.image_urls);
                 setCookie('userDetails', JSON.stringify(userData), { path: '/' });
+                if (userData.measurement_guide) {
+                    const measurementGuide = JSON.parse(userData.measurement_guide);
+                    setElements(measurementGuide);
+                }
                 if (userData.designer) {
                     setDesigner(userData.designer);
                     setAreaOfSpecialization(userData.designer.areas_of_specialization);
@@ -162,6 +170,10 @@ const DesignerProfile = () => {
             console.log(error);
         }
     };
+
+    const toggleGuidePreviewModal = (e) => {
+        setGuidePreviewModalShow(!guidePreviewModalShow);
+    }
 
     useEffect(() => {
         fetchData({ token: token, currentUser: user_id });
@@ -243,6 +255,9 @@ const DesignerProfile = () => {
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${fabricShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("fabric") }}>Fabrics</span>
                                 )}
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${calendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("calendar"); }}>Calendar</span>
+                                {elements && (
+                                    <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${guidePreviewModalShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { toggleGuidePreviewModal(); }}>Measurement Guide</span>
+                                )}
                                 <hr className='mt-2' />
                             </Col>
                         </Row>
@@ -521,6 +536,87 @@ const DesignerProfile = () => {
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />
                             <p className="fs-20 text-black">Under Construction</p>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={guidePreviewModalShow} 
+                onHide={toggleGuidePreviewModal}
+                className='modal-preview'
+                fade={false}
+                size="lg"
+                id="measurement-guide"
+            >
+                <Modal.Header className="pb-0">
+                    <h4 className='text-left fs-25 fw-600 px-2'>Measurement Guide</h4>
+                    <button type='button' className='close react-modal-close' onClick={toggleGuidePreviewModal} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card className='border-0'>
+                        <Card.Body className='p-2'>
+                            <Card>
+                                <Card.Body>
+                                    <div>
+                                        {elements && elements.length > 0 ?
+                                            <>
+                                                {/* Preview based on selected input type */}
+                                                {elements.map((element, index) => (
+                                                    <>
+                                                        {element.type == "Heading" ?
+                                                            <h3 className='fw-600 mb-4' key={index}>{element.value}</h3>
+                                                            : element.type == "Paragraph" ?
+                                                            <p key={index}>{element.value}</p>
+                                                            : element.type == "Image" ?
+                                                                <>
+                                                                    {element.value && element.value.length > 0 && element.value != "" ?
+                                                                        <>
+                                                                            {element.value.map((image, imageIndex) => (
+                                                                                <img key={imageIndex} src={process.env.REACT_APP_STORAGE_URL+'product/'+image?.image_url} className="w-100 h-auto mb-3" alt="" />
+                                                                            ))}
+                                                                        </>
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </>
+                                                            :
+                                                            <>
+                                                                {(element.type == "YouTube Embed Link" || element.type == "Vimeo Embed Link") && element.value != "" ?
+                                                                    <>
+                                                                        <div className="mb-3">
+                                                                            <ResponsiveEmbedVideo src={element.value} title={element.type} />
+                                                                        </div>
+                                                                    </>
+                                                                    : element.type == "Video" && element.value != "" ?
+                                                                    <>
+                                                                        <div className="mb-3">
+                                                                            <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL+'products/videos/'+element.value} />
+                                                                        </div>
+                                                                    </>
+                                                                    : element.type == "Line Break" ?
+                                                                    <p className="py-4 mb-0"></p>
+                                                                    :
+                                                                    null
+                                                                }
+                                                            </>
+                                                        }
+                                                        
+                                                    </>
+                                                ))}
+                                            </>
+                                            :
+                                            <Card className="mb-3 mt-3">
+                                                <Card.Body className="bg-lgray">
+                                                    <p className="text-center mb-0">No measurement guide added.</p>
+                                                </Card.Body>
+                                            </Card>
+                                            
+                                        }
+                                    </div>
+                                </Card.Body>
+                            </Card>
                         </Card.Body>
                     </Card>
                 </Modal.Body>
