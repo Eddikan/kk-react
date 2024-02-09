@@ -338,43 +338,6 @@ const Fabrics = (props) => {
                 <Modal.Body className='p-0'>
                     <Row>
                         <Col lg={11} className='bg-black image-fabrics'>
-                            {/* <Carousel
-                                    responsive={{
-                                        superLargeDesktop: {
-                                            breakpoint: { max: 4000, min: 3000 },
-                                            items: 5,
-                                        },
-                                        desktop: {
-                                            breakpoint: { max: 3000, min: 1024 },
-                                            items: 4,
-                                        },
-                                        tablet: {
-                                            breakpoint: { max: 1024, min: 464 },
-                                            items: 2,
-                                        },
-                                        mobile: {
-                                            breakpoint: { max: 464, min: 0 },
-                                            items: 1,
-                                        },
-                                    }}
-                                    slidesToSlide={1}
-                                    infinite={true}
-                                    autoPlay={true}
-                                    autoPlaySpeed={5000}
-                                >
-                                    {fabricImages.map((fabricimage, index) => (
-                                        <div key={index} className="designers-grid mb-3">
-                                            {fabricImages.image_url ? (
-                                                <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabricimage.image_url})` }}>
-
-                                                </div>
-                                            ) : (
-                                                <>
-                                                </>
-                                            )}
-                                        </div>
-                                    ))}
-                                </Carousel> */}
                             <div>
                                 {fabricImages && fabricImages.length > 0 ?
                                     <>
@@ -384,7 +347,6 @@ const Fabrics = (props) => {
                                             }}
                                         >
                                         </div>
-                                        {/* <ImageSlider type="product" images={fabricImages} onActiveImageChange={handleActiveImageChange} /> */}
                                     </>
                                     :
                                     <>
@@ -445,7 +407,7 @@ const Fabrics = (props) => {
                                                         )}
                                                         <div className='modal-title text-center fs-20 fw-600 text-gold'>{singleFabric.first_name} {singleFabric.last_name}</div>
                                                         <div className='fs-14 text-center mt-2'><img src={PinIcon} alt="location pin" className='me-2' />{singleFabric.address_line_1}{singleFabric.province}</div>
-                                                        <div className='fs-18 fw-600 text-center mt-2'>Specialization and Expertise</div>
+                                                        <div className='fs-18 fw-600 text-center mt-3'>Specialization and Expertise</div>
 
                                                         <hr />
                                                         <div className='text-center'>
@@ -454,9 +416,8 @@ const Fabrics = (props) => {
                                                             ><IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
                                                         </div>
 
-                                                        <div className='text-center mt-2' onClick={() => toggleUnderConstruction()}>
+                                                        <div className='text-center mt-2' onClick={() => toggleMessage()}>
                                                             <a className='book-consultation btn-message-designer btn'
-                                                            // href={`/appointment/schedule/${singleFabric.designer.id}`}
                                                             ><AiFillMessage className="me-2" />Message Designer</a>
                                                         </div>
                                                     </Col>

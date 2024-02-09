@@ -138,10 +138,10 @@ const AppointmentList = (props) => {
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='col-right mx-auto' style={{maxWidth: '1440px'}}>
+                        <Col lg={10} className='col-right mx-auto top-bottom' style={{maxWidth: '1440px'}}>
                             <div className='ms-5'>
                                 <Row>
-                                    <Col lg={12} className="designer-calendar-container">
+                                    <Col lg={12}>
                                         <Row className="pb-4">
                                             <Col md={12} className='d-flex justify-content-left align-items-center'>
                                                 <h3 className="fs-30 fw-600 text-black mb-0">Appointments</h3>
@@ -260,7 +260,15 @@ const AppointmentList = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={3} className='d-flex'>
-                                                                                    <img src={User} className='user-placeholder' />
+                                                                                <div className='d-flex user-image'>
+                                                                                        {appointment.image && (
+                                                                                            <div
+                                                                                                className='user-photo'
+                                                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.image})` }}
+                                                                                            >
+                                                                                            </div>
+                                                                                        )}
+                                                                                        </div>
                                                                                     <span className='d-flex justify-content-center align-items-center ms-2 mt-1'>
                                                                                         {appointment.first_name}
                                                                                         &nbsp;
@@ -277,11 +285,11 @@ const AppointmentList = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={1} className='d-flex justify-content-end'>
-                                                                                    <div className="cursor-pointer" onClick={() => chatBoxModal(appointment.first_name, appointment.last_name)}>
+                                                                                    <div className="cursor-pointer d-flex justify-content-center align-items-center" onClick={() => chatBoxModal(appointment.first_name, appointment.last_name)}>
                                                                                         <AiOutlineMessage className='me-2' size={20} />
                                                                                     </div>
 
-                                                                                    <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                                                    <div className="cursor-pointer icon-tooltiptext d-flex justify-content-center align-items-center" onClick={() => toggleUnderConstruction("")}>
                                                                                         <span><IoEyeOutline size={20} /></span>
                                                                                     </div>
                                                                                 </Col>

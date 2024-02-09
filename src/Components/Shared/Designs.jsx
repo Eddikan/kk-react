@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button, Form } from 'react-bootstrap';
+import { Row, Col, Button, Form, ModalHeader ,Card, ModalFooter  } from 'react-bootstrap';
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import toast from 'react-hot-toast';
-// import getDesignsData from 'Utils/GetDesignsData';
 import GetDesignsData from 'Utils/GetDesignsData';
-import { GoHeart, GoBookmark } from "react-icons/go";
+import { GoHeart, GoAlertFill } from "react-icons/go";
 import { IoIosArrowDown } from "react-icons/io";
+import PinIcon from '../../Assets/images/pin.png';  
+import Modal from 'react-bootstrap/Modal';
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
-import { useCookies } from 'react-cookie';
+import { AiFillMessage } from "react-icons/ai";
+import { PiNotepadFill } from "react-icons/pi";
+import '../../Assets/styles/Design/style.css';
+import { IoShareSocial, IoInformationOutline, IoVideocam } from "react-icons/io5";
 import axios from 'axios';
 import { Rating } from 'react-simple-star-rating';
 
@@ -18,9 +22,47 @@ const Designs = (props) => {
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
     const limit = props.limit ?? 16;
-    const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [designs, setDesigns] = useState([]);
     const [designsLoading, setDesignsLoading] = useState(true);
+
+    const [portfoliosImage, setPortfolioImage] = useState(false);
+    const [underConstructionShow, setUnderConstructionShow] = useState(false);
+    const [singleDesign, setSingleDesign] = useState('');
+    const [designImages, setDesignImages] = useState([]);
+    const [activeImage, setActiveImage] = useState('');
+    const [messageShow, setMessageShow] = useState(false);
+
+    const showSignupModal = (e) => {
+        props.onSignup(e);
+    }
+
+    function toggleMessage() {
+        setMessageShow(true);
+    }
+
+    function toggleUnderConstruction() {
+        setUnderConstructionShow(true);
+    }   
+
+    function togglePortfolioImage(id, first_name, last_name, image_urls, image, address_line_1, province, tags) {
+        setPortfolioImage(true);
+        setSingleDesign({
+            id: id ?? 0,
+            first_name: first_name ?? '-',
+            last_name: last_name ?? '-',
+            image: image ?? '-',
+            address_line_1: address_line_1 ?? '-',
+            province: province ?? '-',
+            tags: tags ?? '-'
+
+        })
+        setDesignImages([image_urls]);
+        if (image_urls?.[0]?.image_url) {
+            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
+        } else {
+            setActiveImage(PlaceholderImage);
+        }
+    }
 
     const fetchData = async (e) => {
         try {
@@ -32,11 +74,9 @@ const Designs = (props) => {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setDesignsLoading(false);
             }
-            // Update state or perform other logic with userData
         } catch (error) {
             toast.error('An error occured. Please try again or contact the administrator.');
             setDesignsLoading(false);
-            // Handle the error, if needed
         }
     };
 
@@ -68,19 +108,6 @@ const Designs = (props) => {
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
         });
-    }
-
-    const handleActionClick = (index) => {
-        // Toggle the selected item index
-        setSelectedItemIndex((prevIndex) => (prevIndex === index ? null : index));
-    };
-
-    const addDesigner = () => {
-        navigate('/designs/add')
-    }
-
-    const showSignupModal = (e) => {
-        props.onSignup(e);
     }
 
     useEffect(() => {
@@ -125,7 +152,7 @@ const Designs = (props) => {
                                                     <option value="New">Recent Design</option>
                                                     <option value="Most Viewed">Most Viewed</option>
                                                     <option value="Most Liked">Most Liked</option>
-                                                </select>
+                                                </select>   
                                                 <div style={{ position: "absolute", right: "20px", top: "10px", pointerEvents: "none" }} >
                                                     <IoIosArrowDown />
                                                 </div>
@@ -147,7 +174,7 @@ const Designs = (props) => {
                                                     <Col className="designs-grid mb-3" xs="12" md="3">
                                                         {currentUser ?
                                                             <>
-                                                                <Link to={`/portfolio/${design.id}`} className='portfolio-link' onClick={function () { toggleAddViewCount(design.id); }}>
+                                                                <div className='portfolio-link cursor-pointer' onClick={function () { togglePortfolioImage(design.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags); }}>
                                                                     <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}>
                                                                         {/* {currentUser ?
                                                                             <div className='save-link'>
@@ -162,11 +189,11 @@ const Designs = (props) => {
                                                                             null
                                                                         } */}
                                                                     </div>
-                                                                </Link>
+                                                                </div>
                                                             </>
                                                             :
                                                             <>
-                                                                <div className="designs-grid-div  cursor-pointer w-100" style={{ backgroundImage: "url(" + designImage + ")" }} onClick={() => showSignupModal('user_design')}>
+                                                                <div className="designs-grid-div cursor-pointer w-100" style={{ backgroundImage: "url(" + designImage + ")" }} onClick={() => showSignupModal('user_design')}>
                                                                     {/* {currentUser ?
                                                                         <div className='save-link'>
                                                                             <div className="action-button bg-white me-2">
@@ -197,7 +224,6 @@ const Designs = (props) => {
                                                                     :
                                                                     null
                                                                 }    */}
-
                                                             </div>
 
                                                             <div className="star-ratings mt-1">
@@ -216,7 +242,6 @@ const Designs = (props) => {
                                                                     tooltipDefaultText="0.0"
                                                                 /> */}
                                                             </div>
-
 
                                                             {/* {currentUser ?
                                                                 <div className='d-flex align-items-center mt-1'>
@@ -257,6 +282,240 @@ const Designs = (props) => {
                     </>
                 }
             </div>
+
+            <Modal
+                show={portfoliosImage}
+                fade={false}
+                className='modal-full-width'
+            >
+                <ModalHeader className='pt-2 pb-3 bg-black'>
+                    <div className='d-flex user-image'>
+                        {singleDesign.image && (
+                            <div
+                                className='user-photo'
+                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                            >
+                            </div>
+                        )}
+
+                        <div className='ms-3'>
+                            <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                            <div className='fashion-designer fs-16'>Fashion Designer</div>
+                        </div>
+                    </div>
+                    <button type='button' className='close modal-close' aria-label='Close' onClick={() => setPortfolioImage(false)}>
+                        <span aria-hidden='true'>&times;</span>
+                    </button>
+                </ModalHeader>
+
+                <Modal.Body className='p-0'>
+                    <Row>
+                        <Col lg={11} className='bg-black image-fabrics'>
+                            <div>
+                                {designImages && designImages.length > 0 ?
+                                    <>
+                                        <div className="single-image-slider-fabrics"
+                                            style={{
+                                                backgroundImage: "url(" + activeImage + ")"
+                                            }}
+                                        >
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                    </>
+                                }
+
+                                <div>
+                                    <div className='text-white book-consultation-bar w-100 d-flex justify-content-center'>
+                                        <p className='request d-flex justify-content-between mb-4'>
+                                            <div className='d-flex justify-content-center align-items-center user-image'>
+                                                {singleDesign.image && (
+                                                    <div
+                                                        className='user-photo'
+                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                    >
+                                                    </div>
+                                                )}
+                                                <div className='ms-3'>
+                                                    <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                                                    <div className='fashion-designer fs-16'>Fashion Designer</div>
+                                                </div>
+                                            </div>
+
+                                            <div className='btn-book-bar'>
+                                                <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                                    <button className='btn btn-book-consultation'>Book a Consultation</button>
+                                                </a>
+                                            </div>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </Col>
+
+                        <Col lg={1} className='bg-black'>
+                            <div>
+                                <div>
+                                    <div className='user-image-side thumbnail-table'>
+                                        {singleDesign.image && (
+                                            <div
+                                                className='user-photo-side mb-4 '
+                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                            >
+                                            </div>
+                                        )}
+
+                                        <Card className="table_content file-action">
+                                            <Card.Body className="action_container font-weight">
+                                                <Row>
+                                                    <Col>
+                                                        {singleDesign.image && (
+                                                            <div
+                                                                className='user-photo-card mb-2 '
+                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                            >
+                                                            </div>
+                                                        )}
+                                                        <div className='modal-title text-center fs-20 fw-600 text-gold'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                                                        <div className='fs-14 text-center mt-2'>
+                                                            <img src={PinIcon} alt="location pin" className='me-2' />
+                                                            {singleDesign.address_line_1}{singleDesign.province}</div>
+                                                        <div className='fs-18 fw-600 text-center mt-3'>Specialization and Expertise</div>
+                                                        <div className="mb-2 text-center">
+                                                        {singleDesign.tags ?
+                                                            <>
+                                                                {singleDesign.tags.length > 0 ?
+                                                                    <>
+                                                                        {singleDesign.tags.map((tag, index) => (
+                                                                            <span className="design-tags bg-light fs-14 categories-color">
+                                                                                {tag}
+                                                                            </span>
+                                                                        ))}
+                                                                    </>
+                                                                    :
+                                                                    null
+                                                                }
+                                                            </>
+                                                            :
+                                                            null
+                                                        }
+                                                    </div>
+
+                                                        <hr />
+                                                        <div className='text-center'>
+                                                            <a className='book-consultation btn-book btn'
+                                                                href={`/appointment/schedule/${singleDesign.id}`}
+                                                            ><IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
+                                                        </div>
+
+                                                        <div className='text-center mt-2' 
+                                                        onClick={() => toggleMessage()}
+                                                        >
+                                                            <a className='book-consultation btn-message-designer btn'
+                                                            ><AiFillMessage className="me-2" />Message Designer</a>
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                            </Card.Body>
+                                        </Card>
+                                    </div>
+                                </div>
+
+                                <div className='text-center mb-3' >
+                                    <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                    <div className="action-button-designs bg-white">
+                                        <PiNotepadFill className="text-black mt-2" size={30} />
+                                    </div>
+                                    </a>
+                                    <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
+                                </div>
+
+                                <div className='text-center mb-3'onClick={toggleMessage}>
+                                    <div className="action-button-designs bg-white">
+                                        <AiFillMessage className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
+                                </div>
+
+                                <div className='text-center mb-3' onClick={() => toggleUnderConstruction()}>
+                                    <div className="action-button-designs bg-white">
+                                        <IoShareSocial className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
+                                </div>
+
+                                <div className='text-center mb-3' onClick={() => toggleUnderConstruction()}>
+                                    <div className="action-button-designs bg-white">
+                                        <IoInformationOutline className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Description</div>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={messageShow}
+                className='modal-preview'
+                fade={false}
+                size="sm"
+            >
+                <Modal.Header className="py-0">
+                    <button type='button' className='close react-modal-close' onClick={() => setMessageShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Card className='border-none'>
+                        <Card.Body className="text-center py-5 pt-2 pb-2">
+                            <div className='user-image-message thumbnail-table'>
+                                {singleDesign.image && (
+                                    <div
+                                        className='user-photo-message mb-2 '
+                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                    >
+                                    </div>
+                                )}
+                            </div>
+                            <div className='modal-title text-center fs-20 fw-600 text-black mb-3'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                            <textarea className='form-control text-height' placeholder='Your message'></textarea>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+
+                <ModalFooter>
+                    <div className='text-right'>
+                        <Button className="btn-cancel-message btn me-2" onClick={() => { setMessageShow(false); }}>Cancel</Button>
+                        <Button className="btn-primary btn" onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}>Send Message</Button>
+                    </div>
+                </ModalFooter>
+            </Modal>
+
+            <Modal
+                show={underConstructionShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="sm"
+            >
+                <Modal.Header className="py-0">
+                    <h5 className='modal-title text-uppercase text-left'></h5>
+                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Card>
+                        <Card.Body className="text-center py-5">
+                            <GoAlertFill size="60px" className="mb-2 text-gold" />
+                            <p className="fs-20 text-black">Under Construction</p>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+            </Modal>
         </>
     );
 };

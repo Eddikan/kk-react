@@ -107,7 +107,7 @@ img.placeholder-chat {
 .timeline-circle {
     position: relative;
     display: inline-block;
-    width: calc(100% / 4 - 9px);
+    width: calc(100% / 4 - 64px);
 }
 
 .timeline-circle::before {
@@ -212,7 +212,7 @@ img.placeholder-chat {
       background-color: #8F8F8F;
       border: 7px solid #8F8F8F;
       top: 5px;
-      left: -44px;
+      left: -43px;
       border-radius: 100%;
     }
 
@@ -239,9 +239,25 @@ img.placeholder-chat {
   .border-right {
     border-right: 2px solid #DFDFDF;
 }
+.the-order {
+    font-weight: 400;
+}
 section#details-order {
     padding-top: 50px;
     padding-bottom: 50px;
 }
+.order-received {
+    position: absolute;
+    bottom: -2em;
+    left: -39px;
+}
+.order-complete {
+    position: absolute;
+    bottom: -2em;
+    left: -43px;
+    text-wrap: nowrap;
+}
+
+
   
  

@@ -75,7 +75,6 @@ const OrdersSeller = (props) => {
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
-
     }
 
     const showTab = (tab) => {
@@ -176,7 +175,6 @@ const OrdersSeller = (props) => {
                     <Row className='bg-product'>
                         <Col lg={3} className='p-0'>
                             <Sidebar currentTab={currentTab} onChangeTab={(e) => setCurrentTab(e)} />
-
                         </Col>
 
                         <Col lg={9} className='col-right-order top-padding mx-auto' style={{maxWidth: '1440px'}}>
@@ -331,9 +329,11 @@ const OrdersSeller = (props) => {
                                                         </Col>
 
                                                         <Col lg={2} className='d-flex justify-content-end'>
-                                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                        <a href='/order-details' className='check-details'>
+                                                            <div className="cursor-pointer icon-tooltiptext">
                                                                 <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                             </div>
+                                                            </a>
                                                         </Col>
                                                     </Row>
                                                 </Card.Body>
@@ -384,9 +384,11 @@ const OrdersSeller = (props) => {
                                                         </Col>
 
                                                         <Col lg={2} className='d-flex justify-content-end'>
-                                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                        <a href='/order-details' className='check-details'>
+                                                            <div className="cursor-pointer icon-tooltiptext">
                                                                 <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                             </div>
+                                                            </a>
                                                         </Col>
                                                     </Row>
                                                 </Card.Body>
@@ -437,9 +439,11 @@ const OrdersSeller = (props) => {
                                                         </Col>
 
                                                         <Col lg={2} className='d-flex justify-content-end'>
-                                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                        <a href='/order-details' className='check-details'>
+                                                            <div className="cursor-pointer icon-tooltiptext">
                                                                 <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                             </div>
+                                                            </a>
                                                         </Col>
                                                     </Row>
                                                 </Card.Body>
@@ -490,9 +494,11 @@ const OrdersSeller = (props) => {
                                                         </Col>
 
                                                         <Col lg={2} className='d-flex justify-content-end'>
-                                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                        <a href='/order-details' className='check-details'>
+                                                            <div className="cursor-pointer icon-tooltiptext">
                                                                 <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                             </div>
+                                                            </a>
                                                         </Col>
                                                     </Row>
                                                 </Card.Body>
@@ -543,9 +549,11 @@ const OrdersSeller = (props) => {
                                                         </Col>
 
                                                         <Col lg={2} className='d-flex justify-content-end'>
-                                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                            <a href='/order-details' className='check-details'>
+                                                            <div className="cursor-pointer icon-tooltiptext">
                                                                 <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                             </div>
+                                                            </a>
                                                         </Col>
                                                     </Row>
                                                 </Card.Body>
@@ -596,9 +604,11 @@ const OrdersSeller = (props) => {
                                                         </Col>
 
                                                         <Col lg={2} className='d-flex justify-content-end'>
-                                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
+                                                        <a href='/order-details' className='check-details'>
+                                                            <div className="cursor-pointer icon-tooltiptext">
                                                                 <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                             </div>
+                                                            </a>
                                                         </Col>
                                                     </Row>
                                                 </Card.Body>

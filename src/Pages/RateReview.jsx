@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
-import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
+import { Container, Row, Col, Button, Modal, Card ,Form} from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import { CiCreditCard2 } from "react-icons/ci";
@@ -193,38 +193,43 @@ const RateReview = (props) => {
                                                             </span>
                                                         </div> */}
 
-                                                        <div className='d-flex mb-2 mt-3'>
-                                                            <div className='d-flex justify-content-center align-items-center'>
-                                                                Product Quality:
-                                                            </div>
+                                                <div className="text-left mt-3">
+                                                    <span className="fs-16 me-3">Product Quality:</span> <Rating
+                                                        // initialValue={reviewFormData.rating}
+                                                        allowFraction={true}
+                                                        size={25}
+                                                        className="star-rating fs-16"
+                                                        showTooltip={true}
+                                                        emptyColor="#dddddd"
+                                                        fillColor="#cea835"
+                                                        // onClick={handlePointerMove}
+                                                        tooltipArray={[
+                                                            'Terrible',
+                                                            'Terrible',
+                                                            'Bad',
+                                                            'Bad',
+                                                            'Average',
+                                                            'Average',
+                                                            'Great',
+                                                            'Great',
+                                                            'Excellent',
+                                                            'Excellent'
+                                                        ]}
+                                                        // tooltipDefaultText={reviewText}
+                                                    /* Available Props */
+                                                    />
+                                                    <Form.Control
+                                                        as="textarea"
+                                                        name="content"
+                                                        rows={5} // You can adjust the number of rows as needed
+                                                        // value={reviewFormData.content}
+                                                        placeholder="Leave a comment about the product..."
+                                                        // onChange={handleChangeReview}
+                                                        className="mt-3"
+                                                    />
+                                                </div>
 
-                                                            <div className='mx-4'>
-                                                                <Rating
-                                                                    // initialValue={rating}
-                                                                    readonly={true}
-                                                                    allowFraction={true}
-                                                                    size={30}
-                                                                    className="star-rating"
-                                                                    showTooltip={false}
-                                                                    emptyColor="#cea835"
-                                                                    fillColor="#cea835"
-                                                                />
-                                                            </div>
-
-                                                            <div className='d-flex justify-content-center align-items-center'>
-                                                                Excellent
-                                                            </div>
-                                                        </div>
-                                                        <div className='mb-4'>
-                                                            <textarea
-                                                                type="text"
-                                                                name="description"
-                                                                className="d-block form-control bg-white"
-                                                                placeholder='Leave a comment about the product...'
-                                                            />
-                                                        </div>
-
-                                                        <div className='mb-3' onClick={() => toggleUnderConstruction("Upload File")}>
+                                                        <div className='mb-3 mt-3' onClick={() => toggleUnderConstruction("Upload File")}>
                                                             <button className="btn btn-primary">Upload File</button>
                                                         </div>
                                                     </Col>

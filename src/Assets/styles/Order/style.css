@@ -2,13 +2,17 @@ img.user-placeholder-order {
     width: 8%;
 }
 .user-placeholder {
-    width: 20% !important;
+    height: 77%;
+    width: 29% !important;
 }
 .order-user {
     color: #656565;
 }
 .order-id {
     color: #656565;
+}
+.check-details {
+    text-decoration: none;
 }
 img.placeholder-chat {
     width: 8%;

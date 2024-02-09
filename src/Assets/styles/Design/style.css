@@ -17,3 +17,199 @@ select#sort-by {
     border-radius: 5px;
     border-color: #DFDFDF;
 }
+.design-tags {
+    padding: 5px 15px;
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    display: inline-block;
+    min-width: 70px;
+    max-width: 120px;
+    text-align: center;
+}
+.modal-full-width .modal-dialog {
+    max-width: 1200px !important;
+}
+.modal-full-width {
+    background: #000;
+}
+.modal-full-width .modal-dialog {
+    max-width: 1200px !important;
+}
+.modal-full-width {
+    background: #000;
+}
+.action-button-designs {
+    background: var(--white);
+    color: var(--black);
+    padding: 3px 5px 5px 5px;
+    height: 52px;
+    display: inline-block;
+    width: 50px;
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
+}
+.icon-name-color {
+    color: #595959;
+}
+.user-image .user-photo {
+    min-width: 60px;
+    min-height: 65px;
+    max-width: 45px;
+    max-height: 45px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}
+
+.user-image-side .user-photo-side {
+    min-width: 54px;
+    min-height: 54px;
+    max-width: 45px;
+    max-height: 45px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.thumbnail-table:hover .table_content {
+    visibility: visible !important;
+}
+.fashion-designer {
+    color: #d3b668;
+}
+.thumbnail-table .table_content {
+    visibility: hidden;
+    width: 350px;
+    padding: 0;
+    right: 79px;
+    top: 0px;
+    position: absolute;
+    z-index: 1;
+}
+.user-image-side .user-photo-card {
+    min-width: 90px;
+    min-height: 90px;
+    max-width: 45px;
+    max-height: 45px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-message-designer {
+    font-size: 15px;
+    padding: 5px 46px;
+    min-width: 221px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: var(--black);
+    background-color: var(--white);
+    border-color: var(--black);
+}
+
+.btn-message-designer:hover {
+    color: var(--black);
+    background-color: var(--white);
+    border-color: var(--black);
+}
+
+.btn-book {
+    font-size: 15px;
+    padding: 5px 40px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: var(--white);
+    background-color: var(--black);
+    border-color: var(--black);
+}
+.text-height {
+    height: 240px;
+}
+.btn-book:hover {
+    color: var(--white);
+    background-color: var(--black);
+    border-color: var(--black);
+}
+.user-image-message .user-photo-message{
+    min-width: 90px;
+    min-height: 90px;
+    max-width: 45px;
+    max-height: 45px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.btn-cancel-message {
+    font-size: 15px;
+    padding: 12px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: var(--black);
+    background-color: var(--white);
+    border-color: var(--black);
+}
+.btn-cancel-message:hover {
+    color: var(--black);
+    background-color: var(--white);
+    border-color: var(--black);
+}
+.modal-close {
+    border: none;
+    color: #ffffff;
+    background: none;
+}
+
+.single-image-slider-fabrics {
+    width: 100%;
+    min-height: 620px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 5px;
+}
+.book-consultation-bar {
+    position: absolute;
+    bottom: 0;
+}
+.image-fabrics {
+    position: relative;
+}
+p.request {
+    padding: 10px 20px 10px 20px;
+    width: 670px;
+    background: #4c475bd1;
+    border: none;
+    border-radius: 7px;
+}
+.btn-book-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.btn-book-consultation {
+    font-size: 15px;
+    padding: 5px 13px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 2px;
+    color: var(--black);
+    background-color: var(--white);
+}
+.btn-book-consultation:hover {
+    color: var(--black);
+    background-color: var(--white);
+}

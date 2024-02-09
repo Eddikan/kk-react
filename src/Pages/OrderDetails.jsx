@@ -4,26 +4,22 @@ import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
-import { CiCreditCard2 } from "react-icons/ci";
 import '../Assets/styles/Cart/style.css';
-import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import User from '../Assets/images/user.png';
-import { GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
+import { GoAlertFill } from 'react-icons/go';
 import { AiFillMessage } from "react-icons/ai";
 import { CiSaveDown2 } from "react-icons/ci";
+import { GiMagnifyingGlass } from "react-icons/gi";
 import { PiCircleDashedLight, PiTruckThin } from "react-icons/pi";
 import { PiStarLight } from "react-icons/pi";
-import PinIcon from '../Assets/images/pin.png';
-import { BsTruck } from "react-icons/bs";
 import { PiNotepadLight } from "react-icons/pi";
 import { TfiLocationPin } from "react-icons/tfi";
 import { BsTelephone } from "react-icons/bs";
-import { IoMdStarOutline, IoIosAttach } from "react-icons/io";
+import {  IoIosAttach } from "react-icons/io";
 import { LiaSmileBeam } from "react-icons/lia";
 import { VscSend } from "react-icons/vsc";
-import { IoEyeOutline } from "react-icons/io5";
-import { IoCloseOutline, IoVideocam } from "react-icons/io5";
+import { IoCloseOutline } from "react-icons/io5";
 import '../Assets/styles/OrderDetails/style.css';
 import axios from "axios";
 import toast from 'react-hot-toast';
@@ -46,12 +42,9 @@ const ToastCss = {
 
 const OrderDetails = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const currentUser = cookies.currentUser;
-    const userDetails = cookies.userDetails;
     const { designerId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
-    const [radioButtonValue, setRadioButtonValue] = useState(0);
     const [chatBox, setChatBox] = useState(false);
 
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
@@ -107,7 +100,6 @@ const OrderDetails = (props) => {
         });
     }
 
-
     useEffect(() => {
         // getAddCarts()
         //     .then((response) => {
@@ -156,22 +148,26 @@ const OrderDetails = (props) => {
                                     <div className="date-details fs-14">December 13, 2023</div>
                                 </div>
 
+                                <GiMagnifyingGlass  className='processing-icon' size={25} />
+                                <div className="timeline-circle timeline-circle--data timeline-circle--active">
+                                    <div className="processing fw-600">For Review</div>
+                                    <div className="date-details fs-14">December 18, 2023</div>
+                                </div>
+
                                 <PiTruckThin className='truck-icon' size={25} />
                                 <div className="timeline-circle timeline-circle--data">
-                                    <div className="order-shipped fw-600">Order Shipped</div>
-                                    <div className="date-details fs-14">December 13, 2023</div>
+                                    <div className="order-shipped fw-600">Order Ship Out</div>
+                                    <div className="date-details fs-14">December 25, 2023</div>
                                 </div>
 
                                 <CiSaveDown2 className='delivered-icon' size={25} />
                                 <div className="timeline-circle timeline-circle--data">
-                                    <div className="delivered fw-600">Delivered</div>
-                                    <div className="date-details fs-14">December 13, 2023</div>
+                                    <div className="order-received fw-600">Order Received</div>
                                 </div>
 
                                 <PiStarLight className='for-review-icon' size={25} />
                                 <div className="timeline-circle timeline-circle--data">
-                                    <div className="review fw-600">For Review</div>
-                                    <div className="date-details text-nowrap fs-14">December 13, 2023</div>
+                                    <div className="order-complete fw-600">Order Complete</div>
                                 </div>
                             </div>
                         </Col>
@@ -211,54 +207,46 @@ const OrderDetails = (props) => {
 
                                                     <li>
                                                         <div className='d-flex'>
-                                                            <div className="me-3 completed">December 26, 2023</div>
-                                                            <div className='color-order'>Completed</div>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div className='d-flex'>
-                                                            <div className="me-3">December 26, 2023</div>
-                                                            <div className='color-order'>Order Received<br />
-                                                                <span className='fs-14'>The order has been delivered.
-                                                                    <span className='view-proof ms-1'>View Proof of Delivery</span>
+                                                            <div className="me-3 completed">December 25, 2023</div>
+                                                            <div className='text-black fs-16 fw-600'>Order Ship Out
+                                                            <br />
+                                                                <span className='fs-14 the-order'>The order is out for delivery.
                                                                 </span>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div className='d-flex'>
-                                                            <div className="me-3">December 26, 2023</div>
-                                                            <div className='color-order'>Order Ship Out
-                                                                <br />
-                                                                <span className='fs-14'>The order is out tor delivery.</span>
-                                                            </div>
+                                                                </div>
                                                         </div>
                                                     </li>
 
                                                     <li>
                                                         <div className='d-flex'>
                                                             <div className="me-3">December 20, 2023</div>
-                                                            <div className='color-order fs-14s'>The order is prepared for delivery.</div>
+                                                            <div className='color-order'>The order is prepared for delivery.
+                                                            </div>
                                                         </div>
                                                     </li>
-
                                                     <li>
                                                         <div className='d-flex'>
-                                                            <div className="me-3">December 13, 2023</div>
-                                                            <div className='color-order'>Processing
+                                                            <div className="me-3">December 18, 2023</div>
+                                                            <div className='color-order'>For Review
                                                                 <br />
-                                                                <span className='fs-14'>The order is being process.</span>
+                                                                <span className='fs-14'>The current order is under review.</span>
                                                             </div>
                                                         </div>
                                                     </li>
 
-
+                                                    <li>
+                                                        <div className='d-flex'>
+                                                            <div className="me-3">December 13, 2023</div>
+                                                            <div className='color-order fs-14'>Processing
+                                                            <br />
+                                                                <span className='fs-14'>The order is being processed.</span></div>
+                                                        </div>
+                                                    </li>
 
                                                     <li>
                                                         <div className='d-flex'>
                                                             <div className="me-3">December 13, 2023</div>
-                                                            <div className='color-order fs-14'>Payment has been received.</div>
+                                                            <div className='color-order'>Payment has been received.
+                                                            </div>
                                                         </div>
                                                     </li>
 
@@ -271,12 +259,9 @@ const OrderDetails = (props) => {
                                                             </div>
                                                         </div>
                                                     </li>
-
-
                                                 </ul>
                                             </div>
                                         </Col>
-
                                     </Row>
                                 </Card.Body>
                             </Card>
@@ -329,11 +314,9 @@ const OrderDetails = (props) => {
                                                 )} */}
 
                                             <div className="designer-info mx-2">
-
                                                 <div>
                                                     <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">
                                                         {/* {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"} */}
-
                                                         <span className=''>Dave Napoles</span>
                                                         <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
                                                     </p>
@@ -341,7 +324,6 @@ const OrderDetails = (props) => {
 
                                                 <div className='fs-14 ms-2 mt-2 name-of-user-chat'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</div>
                                             </div>
-
                                         </div>
                                     </div>
 
