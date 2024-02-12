@@ -27,17 +27,20 @@ select#sort-by {
     max-width: 120px;
     text-align: center;
 }
-.modal-full-width .modal-dialog {
-    max-width: 1200px !important;
-}
-.modal-full-width {
-    background: #000;
+.bg-transparent {
+    background-color: transparent!important;
 }
 .modal-full-width .modal-dialog {
     max-width: 1200px !important;
 }
 .modal-full-width {
-    background: #000;
+    background: #000000ab !important;
+}
+.modal-full-width .modal-dialog {
+    max-width: 1200px !important;
+}
+.modal-full-width {
+    background: #000000ab !important;
 }
 .action-button-designs {
     background: var(--white);
@@ -141,8 +144,8 @@ select#sort-by {
     border-color: var(--black);
 }
 .user-image-message .user-photo-message{
-    min-width: 90px;
-    min-height: 90px;
+    min-width: 80px;
+    min-height: 80px;
     max-width: 45px;
     max-height: 45px;
     background-size: cover;
@@ -184,14 +187,15 @@ select#sort-by {
 .book-consultation-bar {
     position: absolute;
     bottom: 0;
+    right: 0;
 }
 .image-fabrics {
     position: relative;
 }
-p.request {
+.request {
     padding: 10px 20px 10px 20px;
     width: 670px;
-    background: #4c475bd1;
+    background: #202a44a3 !important;
     border: none;
     border-radius: 7px;
 }
@@ -213,3 +217,27 @@ p.request {
     color: var(--black);
     background-color: var(--white);
 }
+#bg-transparent-card .modal-content {
+    background-color: transparent!important;
+    border: none;
+}
+.card-description {
+    background: #0000005e;
+    border: none;
+    width: 900px;
+    border-radius: 5px;
+}
+#description-card .modal-content {
+    right: 205px;
+    position: absolute;
+    top: 190px;
+    background: transparent;
+    border: none;
+}
+.description-close {
+    left: 865px;
+    font-size: 30px;
+    color: #fff;
+    top: 8px;
+}
+

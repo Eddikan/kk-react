@@ -1,41 +1,34 @@
-img.placeholder-appointments {
-    width: 8%;
-    height: 1%;
-}
-.video-cam:hover {
-    color: #CEA835;
-}
-.appointments-tooltip {
+.green-leaf-tooltip {
     position: relative;
     display: inline-block;
 }
 
-.appointments-tooltip .icon-tooltiptext {
+.green-leaf-tooltip .green-leaf-tooltiptext {
     visibility: hidden;
-    width: 193px;
+    width: 175px;
     background-color: rgba(0, 0, 0, 0.5);
     color: #fff;
     text-align: center;
     border-radius: 6px;
-    padding: 8px 0;
+    padding: 5px 0;
     position: absolute;
     z-index: 1;
-    bottom: 71px;
+    bottom: 34px;
     left: 10%;
-    margin-left: -90px;
+    margin-left: -126px;
 }
 
-.appointments-tooltip .icon-tooltiptext::after {
+.green-leaf-tooltip .green-leaf-tooltiptext::after {
     content: "";
     position: absolute;
     top: 100%;
-    left: 45%;
+    left: 70%;
     margin-left: -5px;
     border-width: 13px;
     border-style: solid;
     border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
 }
 
-.appointments-tooltip:hover .icon-tooltiptext {
+.green-leaf-tooltip:hover .green-leaf-tooltiptext {
     visibility: visible;
 }

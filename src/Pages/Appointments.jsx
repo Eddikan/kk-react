@@ -41,6 +41,8 @@ const Appointments = (props) => {
     const [appointments, setAppointments] = useState('');
     const [designerId, setDesignerId] = useState('');
     const [users, setUsers] = useState('');
+    const [nameDesigner, setNameDesigner] = useState('');
+
 
     const [portfolio, setPortfolio] = useState('');
     const [images, setImages] = useState([]);
@@ -52,6 +54,15 @@ const Appointments = (props) => {
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
+    }
+
+    function toggleChatbox(first_name, last_name, image) {
+        setAskAQuestion(true);
+        setNameDesigner({
+            first_name: first_name ?? '-',
+            last_name: last_name ?? '-',
+            image: image ?? '-'
+        })
     }
 
     useEffect(() => {
@@ -136,7 +147,7 @@ const Appointments = (props) => {
                                                     day: 'numeric',
                                                     hour: 'numeric',
                                                     minute: 'numeric',
-                                                    timeZone: 'UTC', // Optional, adjust based on your needs
+                                                    timeZone: 'UTC',
                                                 });
 
                                                 return (
@@ -155,13 +166,13 @@ const Appointments = (props) => {
                                                                             )}
 
                                                                             <div>
-                                                                                <span className='d-flex ms-3 mt-1 mb-2 fs-18 text-black'>
+                                                                                <span className='d-flex ms-3 mt-0 mb-2 fs-18 text-black'>
                                                                                     {user.first_name}
                                                                                     &nbsp;
                                                                                     {user.last_name}
                                                                                 </span>
                                                                                 <div className='ms-3 fs-16 text-black'>
-                                                                                    Date Created:&nbsp;{today}
+                                                                                    <span className='fw-600 me-1'>Date Created:</span>&nbsp;{today}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -181,56 +192,17 @@ const Appointments = (props) => {
                                                                             <IoMdVideocam className='video-cam me-3' size={20} />
                                                                         </div>
 
-                                                                        <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Chat Designer")}>
-                                                                            <span><AiFillMessage size={20} /></span>
+                                                                        <div className="cursor-pointer icon-tooltiptext"
+                                                                            // onClick={() => toggleChatbox("Chat Designer")}
+                                                                            onClick={function () { toggleChatbox(user.first_name, user.last_name, user.image); }}
+                                                                        >
+                                                                            <span><AiFillMessage className='video-cam' size={20} /></span>
                                                                         </div>
                                                                     </Col>
                                                                 </Row>
                                                             </Card.Body>
                                                         </Card>
                                                     </Col>
-
-
-                                                    // <Col lg={12}>
-                                                    //     <Card className='mt-2 border-appointment-list'>
-                                                    //         <Card.Body className='bg-white'>
-                                                    //             <Row>
-                                                    //                 <Col lg={3}>
-                                                    //                     <span>{today}</span>
-                                                    //                 </Col>
-
-                                                    //                 <Col lg={3} className='d-flex'>
-                                                    //                     <img src={User} className='user-placeholder' />
-                                                    //                     <span className='d-flex justify-content-center align-items-center ms-2 mt-1'>
-                                                    //                         {appointment.first_name}
-                                                    //                         &nbsp;
-                                                    //                         {appointment.last_name}
-                                                    //                     </span>
-                                                    //                 </Col>
-
-                                                    //                 <Col lg={3}>
-                                                    //                     <span>{formattedDate}</span>
-                                                    //                 </Col>
-
-                                                    //                 <Col lg={2}>
-                                                    //                     <span>Appointed</span>
-                                                    //                 </Col>
-
-                                                    //                 <Col lg={1} className='d-flex justify-content-end'>
-                                                    //                     <div className="cursor-pointer"
-                                                    //                     // onClick={() => chatBoxModal(appointment.first_name, appointment.last_name)}
-                                                    //                     >
-                                                    //                         <AiOutlineMessage className='me-2' size={20} />
-                                                    //                     </div>
-
-                                                    //                     <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("")}>
-                                                    //                         <span><IoEyeOutline size={20} /></span>
-                                                    //                     </div>
-                                                    //                 </Col>
-                                                    //             </Row>
-                                                    //         </Card.Body>
-                                                    //     </Card>
-                                                    // </Col>
                                                 );
                                             })}
 
@@ -247,56 +219,15 @@ const Appointments = (props) => {
                                 </>
                             }
                         </>
-
-                        {/* <Col lg={12}>
-                            <Card className='mt-2'>
-                                <Card.Body className='bg-white'>
-                                    <Row>
-                                        <Col lg={4}>
-                                            <div className='d-flex'>
-                                                <img src={User} className='placeholder-appointments' />
-
-                                                <div>
-                                                    <div className='ms-3 mb-1 fs-18'>Dave Napoles</div>
-                                                    <div className='ms-3 fs-16'>
-                                                        Date Created: December 23, 2023
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </Col>
-
-                                        <Col lg={4}>
-                                            February 8, 2024 10:00 AM
-                                        </Col>
-
-                                        <Col lg={2}>
-                                            Scheduled
-                                        </Col>
-
-                                        <Col lg={2} className='d-flex justify-content-end'>
-                                            <div className="cursor-pointer appointments-tooltip" onClick={() => toggleUnderConstruction("Enter video conferencing")}>
-                                                <span className="icon-tooltiptext fs-14">Enter video conferencing</span>
-                                                <IoMdVideocam className='video-cam me-3' size={20} />
-                                            </div>
-
-                                            <div className="cursor-pointer icon-tooltiptext" onClick={() => toggleUnderConstruction("Chat Designer")}>
-                                                <span><AiFillMessage size={20} /></span>
-                                            </div>
-                                        </Col>
-                                    </Row>
-                                </Card.Body>
-                            </Card>
-                        </Col> */}
                     </Row>
 
                     {askAQuestion ?
                         <>
-
                             <Card className='width-chat-card px-0'>
                                 <Card.Header className='header-chat bg-white'>
                                     <div className='d-flex justify-content-between'>
                                         <div>
-                                            <span className='fw-500'>Dave Napoles</span>
+                                            <span className='fw-500'>{nameDesigner.first_name} {nameDesigner.last_name}</span>
                                             <span className='ms-2 active-now fs-14 fw-400'>Active Now</span>
                                         </div>
                                         <div className="cursor-pointer" onClick={() => setAskAQuestion(false)}>
@@ -342,9 +273,15 @@ const Appointments = (props) => {
                                     </div>
 
                                     <div>
-                                        <span>
-                                            <FaUserCircle />
-                                            <span className='name-chat'>Dave Napoles</span>
+                                        <span className='d-flex user-image'>
+                                            {nameDesigner.image && (
+                                                <div
+                                                    className='user-photo'
+                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${nameDesigner.image})` }}
+                                                >
+                                                </div>
+                                            )}
+                                            <span className='name-chat'>{nameDesigner.first_name} {nameDesigner.last_name}</span>
                                             <span className='ms-2 time-chat fw-400 fs-14'>4:00 PM</span>
                                         </span>
                                     </div>

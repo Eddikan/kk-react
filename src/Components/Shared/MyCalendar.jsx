@@ -72,6 +72,10 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment', data);
     };
 
+    const getSetAppointment = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment');
+    };
+
     // const getAppointment = async () => {
     //     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
     // };
@@ -156,7 +160,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
 
     const [appointments, setAppointments] = useState([]);
     useEffect(() => {
-        // getAppointment()
+        // getSetAppointment()
         //     .then((response) => {
         //         const selectedDate = response.data.data.data;
         //         const status = response.data.status;

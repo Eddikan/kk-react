@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button, Card,Modal } from 'react-bootstrap';
+import { Container, Row, Col, Button, Card, Modal } from 'react-bootstrap';
 import Layout from 'Components/Layout/Layout';
 import FormControl from 'react-bootstrap/FormControl';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
 // import getDesignsData from 'Utils/GetDesignsData';
 import GetDesignsData from 'Utils/GetDesignsData';
-import { Form, ModalHeader , ModalFooter  } from 'react-bootstrap';
+import { Form, ModalHeader, ModalFooter } from 'react-bootstrap';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import GoBack from 'Components/Shared/GoBack';
 import { Rating } from 'react-simple-star-rating';
@@ -24,6 +24,7 @@ import Loading from 'Components/Shared/Loading';
 import '../Assets/styles/FabricsHomePage/style.css';
 import MultiRangeSlider from 'Components/Forms/MultiRangeSlider';
 import '../Assets/styles/Design/style.css';
+import Carousel from 'react-multi-carousel';
 import { debounce } from 'lodash';
 
 const Designs = (props) => {
@@ -49,6 +50,7 @@ const Designs = (props) => {
     const [singleDesign, setSingleDesign] = useState('');
     const [designImages, setDesignImages] = useState([]);
     const [activeImage, setActiveImage] = useState('');
+    const [descriptionShow, setDescriptionShow] = useState(false);
     const [messageShow, setMessageShow] = useState(false);
 
     const compositions = ['Polyamide', 'Polyester', 'Polyurethane', 'Acrylic', 'Cashmere', 'Mental']; // Replace with your array of composition options
@@ -92,9 +94,13 @@ const Designs = (props) => {
         setMessageShow(true);
     }
 
+    function toggleDescription() {
+        setDescriptionShow(true);
+    }
+
     function toggleUnderConstruction() {
         setUnderConstructionShow(true);
-    }  
+    }
 
     const handleSortFieldChange = (field) => {
         setSelectedSortField(field);
@@ -258,6 +264,27 @@ const Designs = (props) => {
         setSearch(value);
     };
 
+    function togglePortfolioImage(id, first_name, last_name, image_urls, image, address_line_1, province, tags, description) {
+        setPortfolioImage(true);
+        setSingleDesign({
+            id: id ?? 0,
+            first_name: first_name ?? '-',
+            last_name: last_name ?? '-',
+            image: image ?? '-',
+            address_line_1: address_line_1 ?? '-',
+            province: province ?? '-',
+            tags: tags ?? '-',
+            description: description ?? '-'
+
+        })
+        setDesignImages([image_urls]);
+        if (image_urls?.[0]?.image_url) {
+            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
+        } else {
+            setActiveImage(PlaceholderImage);
+        }
+    }
+
     async function toggleSortDesigns(type, sort) {
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/design' + type + sort).then((response) => {
             const selectedDesigns = response.data.data;
@@ -308,25 +335,23 @@ const Designs = (props) => {
         }
     }, [mounted, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue]);
 
-    function togglePortfolioImage(id, first_name, last_name, image_urls, image, address_line_1, province, tags) {
-        setPortfolioImage(true);
-        setSingleDesign({
-            id: id ?? 0,
-            first_name: first_name ?? '-',
-            last_name: last_name ?? '-',
-            image: image ?? '-',
-            address_line_1: address_line_1 ?? '-',
-            province: province ?? '-',
-            tags: tags ?? '-'
-
-        })
-        setDesignImages([image_urls]);
-        if (image_urls?.[0]?.image_url) {
-            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
-        } else {
-            setActiveImage(PlaceholderImage);
+    const responsive = {
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 1,
+            slidesToSlide: 1 // optional, default to 1.
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 464 },
+            items: 1,
+            slidesToSlide: 1 // optional, default to 1.
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+            slidesToSlide: 1 // optional, default to 1.
         }
-    }
+    };
 
     return (
         <Layout>
@@ -651,7 +676,7 @@ const Designs = (props) => {
                                                                 <>
                                                                     <Col className="designs-grid mb-4" xs="12" md="4">
                                                                         <div className="portfolio-link">
-                                                                            <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { togglePortfolioImage(design.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags); }} style={{ backgroundImage: "url(" + designImage + ")" }}>
+                                                                            <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { togglePortfolioImage(design.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description); }} style={{ backgroundImage: "url(" + designImage + ")" }}>
 
                                                                             </div>
                                                                             <div className='save-link'>
@@ -716,7 +741,7 @@ const Designs = (props) => {
                             </Col>
                         </Row>
 
-                    
+
 
                     </Container>
                 </section>
@@ -726,8 +751,9 @@ const Designs = (props) => {
                 show={portfoliosImage}
                 fade={false}
                 className='modal-full-width'
+                id="bg-transparent-card"
             >
-                <ModalHeader className='pt-2 pb-3 bg-black'>
+                <ModalHeader className='pt-2 pb-3 bg-transparent-card'>
 
                     <div className='d-flex user-image'>
                         {singleDesign.image && (
@@ -749,9 +775,9 @@ const Designs = (props) => {
                 </ModalHeader>
                 <Modal.Body className='p-0'>
                     <Row>
-                        <Col lg={11} className='bg-black image-fabrics'>
+                        <Col lg={11} className='image-fabrics'>
                             <div>
-                                {designImages && designImages.length > 0 ?
+                                {/* {designImages && designImages.length > 0 ?
                                     <>
                                         <div className="single-image-slider-fabrics"
                                             style={{
@@ -763,11 +789,44 @@ const Designs = (props) => {
                                     :
                                     <>
                                     </>
+                                } */}
+
+                                {designImages && designImages.length > 0 ?
+                                    <>
+                                        <Carousel
+                                            swipeable={false}
+                                            draggable={false}
+                                            responsive={responsive}
+                                            ssr={true}
+                                            infinite={true}
+                                            autoPlaySpeed={1000}
+                                        >
+                                            {designImages.map((image, index) => {
+
+                                                return (
+                                                    <>
+                                                        <div className="single-image-slider-fabrics"
+                                                            // style={{
+                                                            //     backgroundImage:
+                                                            //         `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
+                                                            // }}
+                                                            style={{ backgroundImage: "url(" + activeImage + ")" }}
+                                                        >
+                                                        </div>
+                                                    </>
+                                                )
+                                            })}
+                                        </Carousel>;
+                                    </>
+                                    :
+                                    <>
+
+                                    </>
                                 }
 
                                 <div>
                                     <div className='text-white book-consultation-bar w-100 d-flex justify-content-center'>
-                                        <p className='request d-flex justify-content-between mb-4'>
+                                        <p className='request d-flex justify-content-between mb-5'>
                                             <div className='d-flex justify-content-center align-items-center user-image'>
                                                 {singleDesign.image && (
                                                     <div
@@ -794,7 +853,7 @@ const Designs = (props) => {
                             </div>
                         </Col>
 
-                        <Col lg={1} className='bg-black'>
+                        <Col lg={1}>
                             <div>
                                 <div>
                                     <div className='user-image-side thumbnail-table'>
@@ -823,37 +882,39 @@ const Designs = (props) => {
                                                             {singleDesign.address_line_1}{singleDesign.province}</div>
                                                         <div className='fs-18 fw-600 text-center mt-3'>Specialization and Expertise</div>
                                                         <div className="mb-2 text-center">
-                                                        {singleDesign.tags ?
-                                                            <>
-                                                                {singleDesign.tags.length > 0 ?
-                                                                    <>
-                                                                        {singleDesign.tags.map((tag, index) => (
-                                                                            <span className="design-tags bg-light fs-14 categories-color">
-                                                                                {tag}
-                                                                            </span>
-                                                                        ))}
-                                                                    </>
-                                                                    :
-                                                                    null
-                                                                }
-                                                            </>
-                                                            :
-                                                            null
-                                                        }
-                                                    </div>
+                                                            {singleDesign.tags ?
+                                                                <>
+                                                                    {singleDesign.tags.length > 0 ?
+                                                                        <>
+                                                                            {singleDesign.tags.map((tag, index) => (
+                                                                                <span className="design-tags bg-light fs-14 categories-color">
+                                                                                    {tag}
+                                                                                </span>
+                                                                            ))}
+                                                                        </>
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </>
+                                                                :
+                                                                null
+                                                            }
+                                                        </div>
 
                                                         <hr />
                                                         <div className='text-center'>
                                                             <a className='book-consultation btn-book btn'
                                                                 href={`/appointment/schedule/${singleDesign.id}`}
-                                                            ><IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
+                                                            >
+                                                                <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
                                                         </div>
 
-                                                        <div className='text-center mt-2' 
-                                                        onClick={() => toggleMessage()}
+                                                        <div className='text-center mt-2'
+                                                            onClick={() => toggleMessage()}
                                                         >
                                                             <a className='book-consultation btn-message-designer btn'
-                                                            ><AiFillMessage className="me-2" />Message Designer</a>
+                                                            >
+                                                                <AiFillMessage className="me-2" />Message Designer</a>
                                                         </div>
                                                     </Col>
                                                 </Row>
@@ -864,9 +925,9 @@ const Designs = (props) => {
 
                                 <div className='text-center mb-3' >
                                     <a href={`/appointment/schedule/${singleDesign.id}`}>
-                                    <div className="action-button-designs bg-white">
-                                        <PiNotepadFill className="text-black mt-2" size={30} />
-                                    </div>
+                                        <div className="action-button-designs bg-white">
+                                            <PiNotepadFill className="text-black mt-2" size={30} />
+                                        </div>
                                     </a>
                                     <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                 </div>
@@ -885,7 +946,7 @@ const Designs = (props) => {
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
                                 </div>
 
-                                <div className='text-center mb-3' onClick={toggleUnderConstruction}>
+                                <div className='text-center mb-3' onClick={toggleDescription}>
                                     <div className="action-button-designs bg-white">
                                         <IoInformationOutline className="text-black mt-2" size={30} />
                                     </div>
@@ -954,6 +1015,22 @@ const Designs = (props) => {
                             <p className="fs-20 text-black">Under Construction</p>
                         </Card.Body>
                     </Card>
+                </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={descriptionShow}
+                fade={false}
+                centered
+                id="description-card"
+            >
+                <Modal.Header className="py-0">
+                    <button type='button' className='close react-modal-close description-close' onClick={() => setDescriptionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body className='card-description d-flex align-items-center'>
+                    <p className='text-white fw-400 p-3 fs-14 mb-0'>{singleDesign.description}</p>
                 </Modal.Body>
             </Modal>
         </Layout >

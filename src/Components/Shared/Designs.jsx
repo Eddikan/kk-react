@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Row, Col, Button, Form, ModalHeader ,Card, ModalFooter  } from 'react-bootstrap';
+import { Row, Col, Button, Form, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import toast from 'react-hot-toast';
 import GetDesignsData from 'Utils/GetDesignsData';
 import { GoHeart, GoAlertFill } from "react-icons/go";
 import { IoIosArrowDown } from "react-icons/io";
-import PinIcon from '../../Assets/images/pin.png';  
+import PinIcon from '../../Assets/images/pin.png';
 import Modal from 'react-bootstrap/Modal';
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
@@ -16,6 +16,8 @@ import '../../Assets/styles/Design/style.css';
 import { IoShareSocial, IoInformationOutline, IoVideocam } from "react-icons/io5";
 import axios from 'axios';
 import { Rating } from 'react-simple-star-rating';
+import Carousel from 'react-multi-carousel';
+import ImageSlider from '../../Components/Shared/ImageSlider';
 
 const Designs = (props) => {
     const navigate = useNavigate();
@@ -31,9 +33,15 @@ const Designs = (props) => {
     const [designImages, setDesignImages] = useState([]);
     const [activeImage, setActiveImage] = useState('');
     const [messageShow, setMessageShow] = useState(false);
+    const [descriptionShow, setDescriptionShow] = useState(false);
+
 
     const showSignupModal = (e) => {
         props.onSignup(e);
+    }
+
+    function toggleDescription() {
+        setDescriptionShow(true);
     }
 
     function toggleMessage() {
@@ -42,9 +50,9 @@ const Designs = (props) => {
 
     function toggleUnderConstruction() {
         setUnderConstructionShow(true);
-    }   
+    }
 
-    function togglePortfolioImage(id, first_name, last_name, image_urls, image, address_line_1, province, tags) {
+    function togglePortfolioImage(id, first_name, last_name, image_urls, image, address_line_1, province, tags, description) {
         setPortfolioImage(true);
         setSingleDesign({
             id: id ?? 0,
@@ -53,7 +61,8 @@ const Designs = (props) => {
             image: image ?? '-',
             address_line_1: address_line_1 ?? '-',
             province: province ?? '-',
-            tags: tags ?? '-'
+            tags: tags ?? '-',
+            description: description ?? '-'
 
         })
         setDesignImages([image_urls]);
@@ -96,7 +105,6 @@ const Designs = (props) => {
         });
     }
 
-
     async function toggleAddViewCount(id) {
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
             const success = response.data.status;
@@ -113,6 +121,24 @@ const Designs = (props) => {
     useEffect(() => {
         fetchData(currentUser);
     }, [reloadCount]);
+
+    const responsive = {
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 1,
+            slidesToSlide: 1 // optional, default to 1.
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 464 },
+            items: 1,
+            slidesToSlide: 1 // optional, default to 1.
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+            slidesToSlide: 1 // optional, default to 1.
+        }
+    };
 
     return (
         <>
@@ -174,7 +200,7 @@ const Designs = (props) => {
                                                     <Col className="designs-grid mb-3" xs="12" md="3">
                                                         {currentUser ?
                                                             <>
-                                                                <div className='portfolio-link cursor-pointer' onClick={function () { togglePortfolioImage(design.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags); }}>
+                                                                <div className='portfolio-link cursor-pointer' onClick={function () { togglePortfolioImage(design.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description); }}>
                                                                     <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}>
                                                                         {/* {currentUser ?
                                                                             <div className='save-link'>
@@ -287,9 +313,10 @@ const Designs = (props) => {
                 show={portfoliosImage}
                 fade={false}
                 className='modal-full-width'
+                id="bg-transparent-card"
             >
-                <ModalHeader className='pt-2 pb-3 bg-black'>
-                    <div className='d-flex user-image'>
+                <ModalHeader className='pt-2 pb-3 bg-transparent-card'>
+                    <div className='d-flex justify-content-center align-items-center user-image'>
                         {singleDesign.image && (
                             <div
                                 className='user-photo'
@@ -310,25 +337,46 @@ const Designs = (props) => {
 
                 <Modal.Body className='p-0'>
                     <Row>
-                        <Col lg={11} className='bg-black image-fabrics'>
+                        <Col lg={11} className='image-fabrics'>
                             <div>
                                 {designImages && designImages.length > 0 ?
                                     <>
-                                        <div className="single-image-slider-fabrics"
-                                            style={{
-                                                backgroundImage: "url(" + activeImage + ")"
-                                            }}
+                                        <Carousel
+                                            swipeable={false}
+                                            draggable={false}
+                                            responsive={responsive}
+                                            ssr={true}
+                                            infinite={true}
+                                            autoPlaySpeed={1000}
                                         >
-                                        </div>
+                                            {designImages.map((image, index) => {
+
+                                                return (
+                                                    <>
+                                                        <div className="single-image-slider-fabrics"
+                                                            // style={{
+                                                            //     backgroundImage:
+                                                            //         `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
+                                                            // }}
+                                                            style={{ backgroundImage: "url(" + activeImage + ")" }}
+                                                        >
+                                                        </div>
+
+                                                    </>
+                                                )
+                                            })}
+                                        </Carousel>;
                                     </>
                                     :
                                     <>
+                                        <div className="single-image-slider" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                        </div>
                                     </>
                                 }
 
                                 <div>
                                     <div className='text-white book-consultation-bar w-100 d-flex justify-content-center'>
-                                        <p className='request d-flex justify-content-between mb-4'>
+                                        <p className='request d-flex justify-content-between mb-5'>
                                             <div className='d-flex justify-content-center align-items-center user-image'>
                                                 {singleDesign.image && (
                                                     <div
@@ -354,7 +402,7 @@ const Designs = (props) => {
                             </div>
                         </Col>
 
-                        <Col lg={1} className='bg-black'>
+                        <Col lg={1}>
                             <div>
                                 <div>
                                     <div className='user-image-side thumbnail-table'>
@@ -383,24 +431,24 @@ const Designs = (props) => {
                                                             {singleDesign.address_line_1}{singleDesign.province}</div>
                                                         <div className='fs-18 fw-600 text-center mt-3'>Specialization and Expertise</div>
                                                         <div className="mb-2 text-center">
-                                                        {singleDesign.tags ?
-                                                            <>
-                                                                {singleDesign.tags.length > 0 ?
-                                                                    <>
-                                                                        {singleDesign.tags.map((tag, index) => (
-                                                                            <span className="design-tags bg-light fs-14 categories-color">
-                                                                                {tag}
-                                                                            </span>
-                                                                        ))}
-                                                                    </>
-                                                                    :
-                                                                    null
-                                                                }
-                                                            </>
-                                                            :
-                                                            null
-                                                        }
-                                                    </div>
+                                                            {singleDesign.tags ?
+                                                                <>
+                                                                    {singleDesign.tags.length > 0 ?
+                                                                        <>
+                                                                            {singleDesign.tags.map((tag, index) => (
+                                                                                <span className="design-tags bg-light fs-14 categories-color">
+                                                                                    {tag}
+                                                                                </span>
+                                                                            ))}
+                                                                        </>
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </>
+                                                                :
+                                                                null
+                                                            }
+                                                        </div>
 
                                                         <hr />
                                                         <div className='text-center'>
@@ -409,8 +457,8 @@ const Designs = (props) => {
                                                             ><IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
                                                         </div>
 
-                                                        <div className='text-center mt-2' 
-                                                        onClick={() => toggleMessage()}
+                                                        <div className='text-center mt-2'
+                                                            onClick={() => toggleMessage()}
                                                         >
                                                             <a className='book-consultation btn-message-designer btn'
                                                             ><AiFillMessage className="me-2" />Message Designer</a>
@@ -424,14 +472,14 @@ const Designs = (props) => {
 
                                 <div className='text-center mb-3' >
                                     <a href={`/appointment/schedule/${singleDesign.id}`}>
-                                    <div className="action-button-designs bg-white">
-                                        <PiNotepadFill className="text-black mt-2" size={30} />
-                                    </div>
+                                        <div className="action-button-designs bg-white">
+                                            <PiNotepadFill className="text-black mt-2" size={30} />
+                                        </div>
                                     </a>
                                     <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                 </div>
 
-                                <div className='text-center mb-3'onClick={toggleMessage}>
+                                <div className='text-center mb-3' onClick={toggleMessage}>
                                     <div className="action-button-designs bg-white">
                                         <AiFillMessage className="text-black mt-2" size={30} />
                                     </div>
@@ -445,7 +493,7 @@ const Designs = (props) => {
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
                                 </div>
 
-                                <div className='text-center mb-3' onClick={() => toggleUnderConstruction()}>
+                                <div className='text-center mb-3' onClick={toggleDescription} >
                                     <div className="action-button-designs bg-white">
                                         <IoInformationOutline className="text-black mt-2" size={30} />
                                     </div>
@@ -455,7 +503,7 @@ const Designs = (props) => {
                         </Col>
                     </Row>
                 </Modal.Body>
-            </Modal>
+            </Modal >
 
             <Modal
                 show={messageShow}
@@ -514,6 +562,22 @@ const Designs = (props) => {
                             <p className="fs-20 text-black">Under Construction</p>
                         </Card.Body>
                     </Card>
+                </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={descriptionShow}
+                fade={false}
+                centered
+                id="description-card"
+            >
+                <Modal.Header className="py-0">
+                    <button type='button' className='close react-modal-close description-close' onClick={() => setDescriptionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body className='card-description d-flex align-items-center'>
+                    <p className='text-white fw-400 p-3 fs-14 mb-0'>{singleDesign.description}</p>
                 </Modal.Body>
             </Modal>
         </>

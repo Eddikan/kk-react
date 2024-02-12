@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 // import getDesignsData from 'Utils/GetFabricsData';
 import GetFabricsData from 'Utils/GetFabricsData';
 import LoadingPage from 'Components/Shared/LoadingPage';
+import { ImLeaf } from "react-icons/im";
 import GoBack from 'Components/Shared/GoBack';
 import { GoHeart, GoBookmark } from "react-icons/go";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
@@ -19,6 +20,7 @@ import Countries from 'Utils/Countries';
 import Loading from 'Components/Shared/Loading';
 import MultiRangeSlider from 'Components/Forms/MultiRangeSlider';
 import { debounce } from 'lodash';
+import '../Assets/styles/FabricsListView/style.css'
 import { Rating } from 'react-simple-star-rating';
 
 const Fabrics = (props) => {
@@ -30,7 +32,8 @@ const Fabrics = (props) => {
     const [reloadCount, setReloadCount] = useState(0);
 
     // Filter
-    const [ecoFriendly, setEcoFriendly] = useState();
+    const [ecoFriendly, setEcoFriendly] = useState(0);
+    const [notEcoFriendly, setNotEcoFriendly] = useState(0);
     const [selectedCompositions, setSelectedCompositions] = useState([]);
     const [selectedWeaves, setSelectedWeaves] = useState([]);
     const [selectedColors, setSelectedColors] = useState([]);
@@ -196,6 +199,11 @@ const Fabrics = (props) => {
         setEcoFriendly(isChecked ? 1 : 0);
     };
 
+    const handleChangeCheckboxNonEco = (isChecked) => {
+        setEcoFriendly(isChecked ? 0 : 1);
+    };
+
+
     const handleChangeCountry = (e) => {
         setCountry(e.target.value);
     };
@@ -356,16 +364,16 @@ const Fabrics = (props) => {
                                                 />
                                             </div>
 
-                                            <div>
+                                            {/* <div>
                                                 <Form.Check
                                                     className="cursor-pointer ms-5"
                                                     type="checkbox"
                                                     label="No"
                                                     name="eco_friendly"
-                                                // checked={ecoFriendly}
-                                                // onChange={(e) => handleChangeCheckbox(e.target.checked)}
+                                                    checked={ecoFriendly}
+                                                    onChange={(e) => handleChangeCheckboxNonEco(e.target.checked)}
                                                 />
-                                            </div>
+                                            </div> */}
                                         </div>
 
                                     </Form.Group>
@@ -488,35 +496,54 @@ const Fabrics = (props) => {
                                                             } else {
                                                                 var fabricImage = PlaceholderImage;
                                                             }
+
+
                                                             var wishlist_user_ids = fabric.wishlist_user_ids;
                                                             const userWishlist = wishlist_user_ids.includes(currentUser);
 
                                                             return (
                                                                 <>
-                                                                    <Col className="designs-grid mb-3" xs="12" md="3">
-                                                                        <div className="portfolio-link">
-                                                                            <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }} style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}>
+                                                                    {ecoFriendly == 1 && fabric.eco_friendly == 1 && (
+                                                                        <>
+                                                                            <Col className="designs-grid mb-3" xs="12" md="3">
+                                                                                <div className="portfolio-link">
+                                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }} style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}>
 
-                                                                            </div>
-                                                                            <div className='save-link'>
-                                                                                {/* <div className="action-button bg-white me-2">
+                                                                                    </div>
+                                                                                    <div className='save-link'>
+                                                                                        {/* <div className="action-button bg-white me-2">
                                                                                     <GoBookmark className="text-black" />
                                                                                 </div> */}
-                                                                                {userWishlist ?
-                                                                                    <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
-                                                                                        <GoHeart className="text-white" />
+                                                                                        {userWishlist ?
+                                                                                            <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                                <GoHeart className="text-white" />
+                                                                                            </div>
+                                                                                            :
+                                                                                            <div className="action-button bg-white" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                                <GoHeart className="text-black" />
+                                                                                            </div>
+                                                                                        }
                                                                                     </div>
-                                                                                    :
-                                                                                    <div className="action-button bg-white" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
-                                                                                        <GoHeart className="text-black" />
-                                                                                    </div>
-                                                                                }
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="design-details">
-                                                                            <div className='d-flex align-items-center justify-content-between'>
-                                                                                <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis">{fabric.name ?? '-'}</h4>
-                                                                                {/* {currentUser ?
+                                                                                </div>
+                                                                                <div className="design-details">
+                                                                                    <div className='d-flex'>
+                                                                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis">{fabric.name ?? '-'}</h4>
+
+                                                                                        {currentUser ?
+                                                                                            <div className='d-flex align-items-center'>
+                                                                                                {fabric.eco_friendly != null && fabric.eco_friendly != '' && (
+                                                                                                    <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
+                                                                                                        <div className='tooltip-content'>
+                                                                                                            <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
+                                                                                                        </div>
+                                                                                                        <ImLeaf color="#55d140" />
+                                                                                                    </span>
+                                                                                                )}
+                                                                                            </div>
+                                                                                            :
+                                                                                            null
+                                                                                        }
+                                                                                        {/* {currentUser ?
                                                                                     <div className='d-flex align-items-center'>
                                                                                         <span className='fs-14 text-no-wrap mx-2'>
                                                                                             <IoHeartOutline /> {fabric.wishlist_count}
@@ -528,26 +555,26 @@ const Fabrics = (props) => {
                                                                                     :
                                                                                     null
                                                                                 }    */}
-                                                                            </div>
-                                                                            <div className="star-ratings mt-1">
-                                                                                <Rating
-                                                                                    initialValue={0}
-                                                                                    readonly={true}
-                                                                                    allowFraction={true}
-                                                                                    size={20}
-                                                                                    className="star-rating"
-                                                                                    showTooltip={true}
-                                                                                    emptyColor="#dddddd"
-                                                                                    fillColor="#cea835"
-                                                                                    tooltipArray={[
-                                                                                        0, 1, 2, 3, 4, 5
-                                                                                    ]}
-                                                                                    tooltipDefaultText="0.0"
-                                                                                /* Available Props */
-                                                                                />
-                                                                            </div>
-                                                                            <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
-                                                                            {/* {currentUser ?
+                                                                                    </div>
+                                                                                    <div className="star-ratings mt-1">
+                                                                                        <Rating
+                                                                                            initialValue={0}
+                                                                                            readonly={true}
+                                                                                            allowFraction={true}
+                                                                                            size={20}
+                                                                                            className="star-rating"
+                                                                                            showTooltip={true}
+                                                                                            emptyColor="#dddddd"
+                                                                                            fillColor="#cea835"
+                                                                                            tooltipArray={[
+                                                                                                0, 1, 2, 3, 4, 5
+                                                                                            ]}
+                                                                                            tooltipDefaultText="0.0"
+                                                                                        /* Available Props */
+                                                                                        />
+                                                                                    </div>
+                                                                                    <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
+                                                                                    {/* {currentUser ?
                                                                                 <div className='d-flex align-items-center mt-1'>
                                                                                     {fabric.user.image ?
                                                                                         <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
@@ -560,9 +587,101 @@ const Fabrics = (props) => {
                                                                                 :
                                                                                 null
                                                                             } */}
-                                                                        </div>
-                                                                    </Col>
+                                                                                </div>
+                                                                            </Col>
+                                                                        </>
+                                                                    )}
+
+                                                                    {ecoFriendly == 0 && (
+                                                                        <>
+                                                                            <Col className="designs-grid mb-3" xs="12" md="3">
+                                                                                <div className="portfolio-link">
+                                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }} style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}>
+
+                                                                                    </div>
+                                                                                    <div className='save-link'>
+                                                                                        {/* <div className="action-button bg-white me-2">
+                                                                                    <GoBookmark className="text-black" />
+                                                                                </div> */}
+                                                                                        {userWishlist ?
+                                                                                            <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                                <GoHeart className="text-white" />
+                                                                                            </div>
+                                                                                            :
+                                                                                            <div className="action-button bg-white" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                                <GoHeart className="text-black" />
+                                                                                            </div>
+                                                                                        }
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div className="design-details">
+                                                                                    <div className='d-flex'>
+                                                                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis">{fabric.name ?? '-'}</h4>
+
+                                                                                        {currentUser ?
+                                                                                            <div className='d-flex align-items-center'>
+                                                                                                {fabric.eco_friendly != null && fabric.eco_friendly != '' && (
+                                                                                                    <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
+                                                                                                        <div className='tooltip-content'>
+                                                                                                            <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
+                                                                                                        </div>
+                                                                                                        <ImLeaf color="#55d140" />
+                                                                                                    </span>
+                                                                                                )}
+                                                                                            </div>
+                                                                                            :
+                                                                                            null
+                                                                                        }
+                                                                                        {/* {currentUser ?
+                                                                                    <div className='d-flex align-items-center'>
+                                                                                        <span className='fs-14 text-no-wrap mx-2'>
+                                                                                            <IoHeartOutline /> {fabric.wishlist_count}
+                                                                                        </span>
+                                                                                        <span className='fs-14 text-no-wrap'>
+                                                                                            <IoEyeOutline /> {fabric.views}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    :
+                                                                                    null
+                                                                                }    */}
+                                                                                    </div>
+                                                                                    <div className="star-ratings mt-1">
+                                                                                        <Rating
+                                                                                            initialValue={0}
+                                                                                            readonly={true}
+                                                                                            allowFraction={true}
+                                                                                            size={20}
+                                                                                            className="star-rating"
+                                                                                            showTooltip={true}
+                                                                                            emptyColor="#dddddd"
+                                                                                            fillColor="#cea835"
+                                                                                            tooltipArray={[
+                                                                                                0, 1, 2, 3, 4, 5
+                                                                                            ]}
+                                                                                            tooltipDefaultText="0.0"
+                                                                                        /* Available Props */
+                                                                                        />
+                                                                                    </div>
+                                                                                    <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
+                                                                                    {/* {currentUser ?
+                                                                                <div className='d-flex align-items-center mt-1'>
+                                                                                    {fabric.user.image ?
+                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
+                                                                                        :
+                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
+                                                                                    }
+                                                                                    &nbsp;&nbsp;
+                                                                                    <p className="text-black fs-14 mb-0">{fabric.user.first_name && fabric.user.first_name != "" ? fabric.user.first_name : "-"} {fabric.user.last_name && fabric.user.last_name != "" ? fabric.user.last_name : "-"}</p>
+                                                                                </div>
+                                                                                :
+                                                                                null
+                                                                            } */}
+                                                                                </div>
+                                                                            </Col>
+                                                                        </>
+                                                                    )}
                                                                 </>
+
                                                             )
                                                         })}
                                                     </Row>

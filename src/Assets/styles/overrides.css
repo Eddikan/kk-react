@@ -1321,7 +1321,7 @@ form select::placeholder {
 
 .kouture-tooltip .kouture-tooltiptext {
     visibility: hidden;
-    width: 200px;
+    width: 155px;
     background-color: var(--black);
     color: #fff;
     text-align: center;
@@ -1330,7 +1330,7 @@ form select::placeholder {
     position: absolute;
     z-index: 1;
     bottom: 135%;
-    left: -75%;
+    left: -10%;
     margin-left: -60px;
     transition: all ease-in-out 2s;
 }

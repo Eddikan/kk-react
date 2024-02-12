@@ -335,16 +335,16 @@ const ViewProduct = () => {
                                         <>
                                             {
                                                 product.video_demo_type == "Youtube" || product.video_demo_type == "Vimeo" ?
-                                                <>
-                                                    <ResponsiveEmbedVideo src={product.video_demo_url} title={product.name} />
-                                                </>
-                                                :
-                                                <>
-                                                    <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL+'products/videos/'+product.video_demo_url} />
-                                                </>
+                                                    <>
+                                                        <ResponsiveEmbedVideo src={product.video_demo_url} title={product.name} />
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL + 'products/videos/' + product.video_demo_url} />
+                                                    </>
                                             }
                                         </>
-                                        
+
                                     </div>
                                 )}
                             </Col>
@@ -386,15 +386,20 @@ const ViewProduct = () => {
                                                     <Link to={`/product/${product.id}/edit`} className="text-decoration-none">
                                                         <div class="kouture-tooltip">
                                                             <div className="action-button bg-smgray me-2">
-                                                                <GoPencil  className="text-black" />
+                                                                <GoPencil className="text-black" />
                                                             </div>
                                                             <div class="kouture-tooltiptext">
                                                                 Edit
                                                             </div>
                                                         </div>
                                                     </Link>
-                                                    <div className="action-button bg-smgray me-2">
-                                                        <GoShareAndroid className="text-black" onClick={toggleShareModal} />
+                                                    <div class="kouture-tooltip">
+                                                        <div className="action-button bg-smgray me-2">
+                                                            <GoShareAndroid className="text-black" onClick={toggleShareModal} />
+                                                        </div>
+                                                        <div class="kouture-tooltiptext">
+                                                            Share
+                                                        </div>
                                                     </div>
                                                     {userWishlist ?
                                                         <div class="kouture-tooltip">

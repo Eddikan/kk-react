@@ -195,14 +195,17 @@ const Fabrics = (props) => {
                                                         {currentUser ?
                                                             <>
                                                                 <div className="portfolio-link">
-                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleProductsImage(fabric.id, fabric.user.first_name, fabric.user.last_name, fabric.image_urls, fabric.user.image, fabric.user.address_line_1, fabric.user.province); }} style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}>
-
-                                                                    </div>
+                                                                    <Link to={`/product/${fabric.id}`}>
+                                                                        <div className="designs-grid-div w-100 cursor-pointer"
+                                                                            onClick={function () { toggleAddViewCount(fabric.id); }}
+                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}>
+                                                                        </div>
+                                                                    </Link>
                                                                     {currentUser ?
                                                                         <div className='save-link'>
                                                                             {/* <div className="action-button bg-white me-2">
-                                                                                <GoBookmark className="text-black" />
-                                                                            </div> */}
+                                                                                        <GoBookmark className="text-black" />
+                                                                                    </div> */}
                                                                             {userWishlist ?
                                                                                 <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
                                                                                     <GoHeart className="text-white" />
@@ -284,7 +287,7 @@ const Fabrics = (props) => {
                                                                 null
                                                             } */}
                                                         </div>
-                                                    </Col>
+                                                    </Col >
                                                     :
                                                     null
                                                 }
@@ -307,7 +310,7 @@ const Fabrics = (props) => {
                         }
                     </>
                 }
-            </div>
+            </div >
 
 
             <Modal

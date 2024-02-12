@@ -606,7 +606,7 @@ const SellerCenter = (props) => {
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='col-right-calendar mx-auto' style={{maxWidth: '1440px'}}>
+                        <Col lg={10} className='col-right-calendar mx-auto' style={{ maxWidth: '1440px' }}>
                             <Row>
                                 <Col lg={12} className="designer-calendar-container">
                                     <Row className="pb-4">
