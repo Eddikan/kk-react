@@ -327,7 +327,6 @@ const ViewProduct = () => {
                                     </>
                                     :
                                     <div className="single-image-slider" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-
                                     </div>
                                 }
                                 {product.video_demo_type && product.video_demo_type != "" && product.video_demo_url && product.video_demo_url != "" && (
@@ -344,12 +343,12 @@ const ViewProduct = () => {
                                                     </>
                                             }
                                         </>
-
                                     </div>
                                 )}
                             </Col>
+
                             <Col lg={7}>
-                                <Card className="h-100">
+                                <Card>
                                     <Card.Body>
                                         <Row>
                                             <Col lg="12" className="d-flex justify-content-between">

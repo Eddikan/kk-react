@@ -41,3 +41,17 @@ img.user-placeholder {
     padding-top: 50px;
     padding-bottom: 50px;
 }
+.user-image-appointment .user-photo {
+    min-width: 35px;
+    min-height: 35px;
+    max-width: 45px;
+    max-height: 45px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}
+
+.bg-color-page {
+    background-color: #FAFAFA !important;
+}

@@ -45,3 +45,15 @@ img.item-placeholder-chatbox {
 .top-padding {
     padding-top: 50px;
 }
+.order-border {
+    border-color: #DFDFDF;
+}
+.header-chat {
+    padding: 15px 21px 15px 21px;
+     border-bottom-color: #DFDFDF;
+}
+.all-order-id {
+    color: #656565;
+    display: flex;
+    align-items: center;
+}

@@ -4,11 +4,9 @@ import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import Container from 'react-bootstrap/Container';
-import GoBack from 'Components/Shared/GoBack';
 import { GoAlertFill } from 'react-icons/go';
 // import '../Assets/styles/Appointments/style.css';
 import { FaUserCircle } from "react-icons/fa";
-import User from '../Assets/images/user.png';
 import { LiaSmileBeam } from "react-icons/lia";
 import { VscSend } from "react-icons/vsc";
 import { IoIosAttach } from "react-icons/io";
@@ -31,27 +29,20 @@ const AppointmentList = (props) => {
     const [askAQuestion, setAskAQuestion] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
-    const [appointmentList, setAppointmentList] = useState('');
     const [inputClicked, setInputClicked] = useState(false);
 
-    const [user, setUser] = useState('');
     const [dateTo, setDateTo] = useState('');
     const [dateFrom, setDateFrom] = useState('');
     const [appointments, setAppointments] = useState('');
-
     const [date, setDate] = useState('');
     const [chatBox, setChatBox] = useState(false);
     const [query, setQuery] = useState('');
     const [chatName, setChatName] = useState('');
-
     const siteCookies = cookies[0];
-    // const currentUser = siteCookies.currentUser;
-
 
     const getAppointments = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
     };
-
 
     const getDate = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
@@ -62,39 +53,35 @@ const AppointmentList = (props) => {
         setChatName(first_name + ' ' + last_name);
     };
 
-    const askQuestionModal = (e) => {
-        setAskAQuestion(true);
-    };
-
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
 
     }
 
-    useEffect(() => {
-        if (inputClicked) {
-            fetchAppointmentList();
-        }
-    }, [query, inputClicked]);
+    // useEffect(() => {
+    //     if (inputClicked) {
+    //         fetchAppointmentList();
+    //     }
+    // }, [query, inputClicked]);
 
-    const fetchAppointmentList = async () => {
-        try {
-            const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#' + currentUser, {
-                params: {
-                    query: query
-                }
-            });
+    // const fetchAppointmentList = async () => {
+    //     try {
+    //         const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment?user_id=' + currentUser, {
+    //             params: {
+    //                 query: query
+    //             }
+    //         });
 
-            setAppointments(response.data.data);
-        } catch (error) {
-            console.error('Error fetching appointment:', error);
-        }
-    };
+    //         setAppointments(response.data.data);
+    //     } catch (error) {
+    //         console.error('Error fetching appointment:', error);
+    //     }
+    // };
 
-    useEffect(() => {
-        document.body.classList.add('designer-calendar-body');
-    }, []);
+    // useEffect(() => {
+    //     document.body.classList.add('designer-calendar-body');
+    // }, []);
 
 
     useEffect(() => {
@@ -127,18 +114,16 @@ const AppointmentList = (props) => {
 
     }, [reloadCount]);
 
-
-
     return (
         <LayoutSellerCenter>
             <section>
                 <Container fluid>
-                    <Row>
+                    <Row className='bg-color-page'>
                         <Col lg={2} className='p-0'>
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='col-right mx-auto top-bottom' style={{maxWidth: '1440px'}}>
+                        <Col lg={10} className='col-right mx-auto top-bottom' style={{ maxWidth: '1440px' }}>
                             <div className='ms-5'>
                                 <Row>
                                     <Col lg={12}>
@@ -180,13 +165,12 @@ const AppointmentList = (props) => {
                                                     className='d-flex align-items-end w-100 justify-content-end'
                                                     style={{ position: 'relative' }}
                                                 >
-
                                                     <input
                                                         className='search-bar'
                                                         type="text"
                                                         placeholder="Search"
-                                                        value={query}
-                                                        onChange={(e) => { setQuery(e.target.value); setInputClicked(true); }}
+                                                    // value={query}
+                                                    // onChange={(e) => { setQuery(e.target.value); setInputClicked(true); }}
                                                     />
 
                                                     <CiSearch size="20px"
@@ -236,7 +220,6 @@ const AppointmentList = (props) => {
                                                 {appointments.length > 0 ?
                                                     <>
                                                         {appointments.map((appointment) => {
-
                                                             const options = {
                                                                 year: 'numeric',
                                                                 month: 'long',
@@ -247,7 +230,7 @@ const AppointmentList = (props) => {
                                                                 year: 'numeric',
                                                                 month: 'long',
                                                                 day: 'numeric',
-                                                                timeZone: 'UTC', // Optional, adjust based on your needs
+                                                                timeZone: 'UTC',
                                                             });
                                                             return (
 
@@ -260,7 +243,7 @@ const AppointmentList = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={3} className='d-flex'>
-                                                                                <div className='d-flex user-image'>
+                                                                                    <div className='d-flex user-image-appointment'>
                                                                                         {appointment.image && (
                                                                                             <div
                                                                                                 className='user-photo'
@@ -268,7 +251,7 @@ const AppointmentList = (props) => {
                                                                                             >
                                                                                             </div>
                                                                                         )}
-                                                                                        </div>
+                                                                                    </div>
                                                                                     <span className='d-flex justify-content-center align-items-center ms-2 mt-1'>
                                                                                         {appointment.first_name}
                                                                                         &nbsp;
@@ -281,7 +264,7 @@ const AppointmentList = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={2} className='center-name'>
-                                                                                    <span>Appointed</span>
+                                                                                    <span>{appointment.status}</span>
                                                                                 </Col>
 
                                                                                 <Col lg={1} className='d-flex justify-content-end'>
@@ -290,7 +273,9 @@ const AppointmentList = (props) => {
                                                                                     </div>
 
                                                                                     <div className="cursor-pointer icon-tooltiptext d-flex justify-content-center align-items-center" onClick={() => toggleUnderConstruction("")}>
-                                                                                        <span><IoEyeOutline size={20} /></span>
+                                                                                        <span>
+                                                                                            <IoEyeOutline size={20} />
+                                                                                        </span>
                                                                                     </div>
                                                                                 </Col>
                                                                             </Row>
@@ -313,8 +298,6 @@ const AppointmentList = (props) => {
                                             </>
                                         }
                                     </>
-
-
                                 </Row>
                             </div>
                         </Col>
@@ -396,8 +379,6 @@ const AppointmentList = (props) => {
                                         </div>
 
                                         <div className='mt-5 mb-4 text-right d-flex'>
-
-
                                             <div>
                                                 <div className='time-chat-box fs-14 fw-400'>3:30 PM
                                                     <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
@@ -447,7 +428,6 @@ const AppointmentList = (props) => {
                                         </div>
                                     </Card.Body>
                                 </Card>
-
                             </>
                             :
                             null

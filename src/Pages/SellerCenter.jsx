@@ -490,7 +490,7 @@ const SellerCenter = (props) => {
         });
     }
 
-    const addBusinessHoursSubmitPost = (e) => {
+    const BusinessHoursSubmitPost = (e) => {
         setFormStatus('loading');
         const content = [
             {
@@ -548,7 +548,7 @@ const SellerCenter = (props) => {
 
     }, [reloadCount]);
 
-    const addBusinessHoursSubmitPut = (e) => {
+    const BusinessHoursSubmitPut = (e) => {
         setFormStatus('loading');
         const content = [
             {
@@ -622,7 +622,6 @@ const SellerCenter = (props) => {
                                             calendarAppointment={calendarAppointment}
                                         />
                                     </div>
-
                                 </Col>
                             </Row>
                         </Col>
@@ -795,6 +794,7 @@ const SellerCenter = (props) => {
                                             onChange={handleTuesdayCheckboxChangeClose}
                                         />
                                     </Col>
+
                                     <Col lg="5" className='d-flex justify-content-end'>
                                         <Row className="align-items-center">
                                             {tuesdayHoursFormData.map((tuesday, index) => {
@@ -823,6 +823,7 @@ const SellerCenter = (props) => {
                                                                         />
                                                                     </Form.Group>
                                                                 </Col>
+
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header">Closes at</p>
                                                                     <Form.Group className='mb-3'>
@@ -840,6 +841,7 @@ const SellerCenter = (props) => {
                                                     </>
                                                 );
                                             })}
+
                                             <Col md="2" className="pl-0" >
                                                 <GoPlus
                                                     size={25}
@@ -1138,9 +1140,9 @@ const SellerCenter = (props) => {
 
                     <Button className="btn-primary" variant="primary" onClick={() => {
                         if (!times.length) {
-                            addBusinessHoursSubmitPost()
+                            BusinessHoursSubmitPost()
                         } else {
-                            addBusinessHoursSubmitPut()
+                            BusinessHoursSubmitPut()
                         }
                     }}>
                         Save

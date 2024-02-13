@@ -15,6 +15,8 @@ import { useCookies } from 'react-cookie';
 import UserPlaceholder from 'Assets/images/user.png';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import NewOrder from '../../Assets/images/new-order-icon.png';
+import NewAppointment from '../../Assets/images/new-appointment-icon.png';
 import { Card, Modal } from 'react-bootstrap';
 import User from '../../Assets/images/user.png';
 import PlaceholderSquare from '../../Assets/images/square-placeholder.jpg';
@@ -34,7 +36,6 @@ const Header = () => {
   const [user, setUser] = useState('');
   const [reloadCount, setReloadCount] = useState(0);
   const [designerId, setDesignerId] = useState('');
-
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
   const [userType, setUserType] = useState('user');
@@ -66,7 +67,7 @@ const Header = () => {
     if (userRef.current && !userRef.current.contains(event.target)) {
       setUserMenuOpen(false);
       // setUserBellOpen(false);
-      // setUserEnvelopOpen(false);
+      setUserEnvelopOpen(false);
       // setUserOrdersOpen(false);
     }
   };
@@ -163,8 +164,6 @@ const Header = () => {
           toast.error('There has been an error getting the date, please try again!');
         });
     }
-
-
   }, [reloadCount]);
 
   return (
@@ -192,16 +191,20 @@ const Header = () => {
 
                     <div className="user-dropdown nav-link" ref={userRef}>
                       {userImage ?
-                        <div className="cursor-pointer nav-link"><GoBell size={25} onClick={toggleBellMenu} /></div>
+                        <div className="cursor-pointer nav-link">
+                          <GoBell size={25} onClick={toggleBellMenu} />
+                        </div>
                         :
-                        <div className="cursor-pointer nav-link"><GoBell size={25} onClick={toggleBellMenu} /></div>
+                        <div className="cursor-pointer nav-link">
+                          <GoBell size={25} onClick={toggleBellMenu} />
+                        </div>
                       }
                       {userBellOpen && (
 
                         <div className="action-box-bell user-menu-bell">
-                          <div className='d-flex'>
-                            <div>Icon</div>
-                            <div className='ms-3 fs-14 body-text-bell'>You have a new order and instructions from Mike. Get Started
+                          <div className='d-flex p-3'>
+                            <img src={NewOrder} className='new-order-image' />
+                            <div className='ms-4 fs-14 body-text-bell'>You have a new order and instructions from Mike. Get Started
                               sed diam nonumy eirmod tempor invidunt ut labore et dolore
                               magna.
                               <div className='hours-bell mt-1'>1hr ago - 9:00 AM</div>
@@ -209,8 +212,8 @@ const Header = () => {
                           </div>
                           <hr />
 
-                          <div className='d-flex'>
-                            <div>Icon</div>
+                          <div className='d-flex p-3'>
+                            <img src={NewAppointment} className='new-appointment-image' />
                             <div className='ms-3 fs-14 body-text-bell'>"New buyer set an appointment. Go check it out"
                               <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
                             </div>

@@ -4,19 +4,14 @@ import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
-import { CiCreditCard2 } from "react-icons/ci";
-import FemalePlaceholder from '../Assets/images/placeholders/female-placeholder.jpg';
-import MalePlaceholder from '../Assets/images/placeholders/male-placeholder.jpg';
-import { GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
+import { GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import '../Assets/styles/Appointments/style.css';
-import { FaUserCircle } from "react-icons/fa";
-import User from '../Assets/images/user.png';
 import { LiaSmileBeam } from "react-icons/lia";
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { VscSend } from "react-icons/vsc";
 import { IoMdVideocam, IoIosAttach } from "react-icons/io";
-import { IoCloseOutline, IoEyeOutline } from "react-icons/io5";
-import { AiOutlineMessage, AiFillMessage } from "react-icons/ai";
+import { IoCloseOutline } from "react-icons/io5";
+import { AiFillMessage } from "react-icons/ai";
 import axios from "axios";
 import toast from 'react-hot-toast';
 
@@ -38,13 +33,8 @@ const Appointments = (props) => {
     const [askAQuestion, setAskAQuestion] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
-    const [appointments, setAppointments] = useState('');
-    const [designerId, setDesignerId] = useState('');
     const [users, setUsers] = useState('');
     const [nameDesigner, setNameDesigner] = useState('');
-
-
-    const [portfolio, setPortfolio] = useState('');
     const [images, setImages] = useState([]);
 
     const getUser = async () => {
@@ -70,6 +60,27 @@ const Appointments = (props) => {
     }, []);
 
 
+    // useEffect(() => {
+    //     if (inputClicked) {
+    //         fetchAppointmentList();
+    //     }
+    // }, [query, inputClicked]);
+
+    // const fetchAppointmentList = async () => {
+    //     try {
+    //         const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment?user_id=' + currentUser, {
+    //             params: {
+    //                 query: query
+    //             }
+    //         });
+
+    //         setAppointments(response.data.data);
+    //     } catch (error) {
+    //         console.error('Error fetching appointment:', error);
+    //     }
+    // };
+
+
     useEffect(() => {
         if (currentUser) {
             getUser()
@@ -79,11 +90,11 @@ const Appointments = (props) => {
                         setUsers(selectedUser);
                         setImages(selectedUser.image);
                     } else {
-                        toast.error('There has been an error getting the date, please try again!');
+                        toast.error('There has been an error getting the user, please try again!');
                     }
                 })
                 .catch((error) => {
-                    toast.error('There has been an error getting the date, please try again!');
+                    toast.error('There has been an error getting the user, please try again!');
                 });
         }
     }, [reloadCount]);
@@ -164,7 +175,6 @@ const Appointments = (props) => {
                                                                                 >
                                                                                 </div>
                                                                             )}
-
                                                                             <div>
                                                                                 <span className='d-flex ms-3 mt-0 mb-2 fs-18 text-black'>
                                                                                     {user.first_name}
@@ -183,7 +193,7 @@ const Appointments = (props) => {
                                                                     </Col>
 
                                                                     <Col lg={2}>
-                                                                        <span className='text-black'>Scheduled</span>
+                                                                        <span className='text-black'>{user.status}</span>
                                                                     </Col>
 
                                                                     <Col lg={2} className='d-flex justify-content-end'>
@@ -193,7 +203,6 @@ const Appointments = (props) => {
                                                                         </div>
 
                                                                         <div className="cursor-pointer icon-tooltiptext"
-                                                                            // onClick={() => toggleChatbox("Chat Designer")}
                                                                             onClick={function () { toggleChatbox(user.first_name, user.last_name, user.image); }}
                                                                         >
                                                                             <span><AiFillMessage className='video-cam' size={20} /></span>
@@ -251,8 +260,6 @@ const Appointments = (props) => {
                                     </div>
 
                                     <div className='mt-5 mb-4 text-right d-flex'>
-
-
                                         <div>
                                             <div className='time-chat-box fs-14 fw-400'>3:30 PM
                                                 <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
@@ -293,9 +300,15 @@ const Appointments = (props) => {
                                     <div className='mt-3 d-flex justify-content-between'>
 
                                         <div className='d-flex'>
-                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' /></div>
-                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach /></div>
+                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}>
+                                                <LiaSmileBeam className='me-2' />
+                                            </div>
+
+                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}>
+                                                <IoIosAttach />
+                                            </div>
                                         </div>
+
                                         <div>
                                             <div
                                                 className="cursor-pointer fw-500"
@@ -308,7 +321,6 @@ const Appointments = (props) => {
                                     </div>
                                 </Card.Body>
                             </Card>
-
                         </>
                         :
                         null
@@ -325,7 +337,8 @@ const Appointments = (props) => {
             >
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>
                 <Modal.Body>

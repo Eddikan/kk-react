@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
-import { Container, Row, Col, Button, Modal, Card ,Form} from 'react-bootstrap';
+import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import { CiCreditCard2 } from "react-icons/ci";
@@ -142,7 +142,7 @@ const RateReview = (props) => {
                 <Container>
                     <Row>
                         <Col lg={12} className="designer-calendar-container">
-                            <Row className="pb-4">
+                            <Row className="pb-0">
                                 <Col md={6} className='d-flex justify-content-left align-items-center'>
                                     <h3 className="fs-30 fw-600 text-black mb-0">Rate and Review</h3>
                                 </Col>
@@ -156,8 +156,8 @@ const RateReview = (props) => {
                             <Col>
                                 <Row>
                                     <Col lg={12} className='p-right'>
-                                        <Card className='mt-2'>
-                                            <Card.Header className='header-chat bg-light d-flex justify-content-between'>
+                                        <Card className='mt-2 rate-review-card'>
+                                            <Card.Header className='header-chat bg-light d-flex justify-content-between border-bottom'>
                                                 <span>
                                                     <span>
                                                         <img src={User} className='user-placeholder-order me-2 order-user' />Dave Napoles
@@ -165,7 +165,7 @@ const RateReview = (props) => {
                                                     </span>
                                                 </span>
 
-                                                <div>
+                                                <div className='all-order-id'>
                                                     Order ID: 11002345CT
                                                 </div>
                                             </Card.Header>
@@ -193,41 +193,41 @@ const RateReview = (props) => {
                                                             </span>
                                                         </div> */}
 
-                                                <div className="text-left mt-3">
-                                                    <span className="fs-16 me-3">Product Quality:</span> <Rating
-                                                        // initialValue={reviewFormData.rating}
-                                                        allowFraction={true}
-                                                        size={25}
-                                                        className="star-rating fs-16"
-                                                        showTooltip={true}
-                                                        emptyColor="#dddddd"
-                                                        fillColor="#cea835"
-                                                        // onClick={handlePointerMove}
-                                                        tooltipArray={[
-                                                            'Terrible',
-                                                            'Terrible',
-                                                            'Bad',
-                                                            'Bad',
-                                                            'Average',
-                                                            'Average',
-                                                            'Great',
-                                                            'Great',
-                                                            'Excellent',
-                                                            'Excellent'
-                                                        ]}
-                                                        // tooltipDefaultText={reviewText}
-                                                    /* Available Props */
-                                                    />
-                                                    <Form.Control
-                                                        as="textarea"
-                                                        name="content"
-                                                        rows={5} // You can adjust the number of rows as needed
-                                                        // value={reviewFormData.content}
-                                                        placeholder="Leave a comment about the product..."
-                                                        // onChange={handleChangeReview}
-                                                        className="mt-3"
-                                                    />
-                                                </div>
+                                                        <div className="text-left mt-3">
+                                                            <span className="fs-16 me-3">Product Quality:</span> <Rating
+                                                                // initialValue={reviewFormData.rating}
+                                                                allowFraction={true}
+                                                                size={25}
+                                                                className="star-rating fs-16"
+                                                                showTooltip={true}
+                                                                emptyColor="#dddddd"
+                                                                fillColor="#cea835"
+                                                                // onClick={handlePointerMove}
+                                                                tooltipArray={[
+                                                                    'Terrible',
+                                                                    'Terrible',
+                                                                    'Bad',
+                                                                    'Bad',
+                                                                    'Average',
+                                                                    'Average',
+                                                                    'Great',
+                                                                    'Great',
+                                                                    'Excellent',
+                                                                    'Excellent'
+                                                                ]}
+                                                            // tooltipDefaultText={reviewText}
+                                                            /* Available Props */
+                                                            />
+                                                            <Form.Control
+                                                                as="textarea"
+                                                                name="content"
+                                                                rows={5} // You can adjust the number of rows as needed
+                                                                // value={reviewFormData.content}
+                                                                placeholder="Leave a comment about the product..."
+                                                                // onChange={handleChangeReview}
+                                                                className="mt-3"
+                                                            />
+                                                        </div>
 
                                                         <div className='mb-3 mt-3' onClick={() => toggleUnderConstruction("Upload File")}>
                                                             <button className="btn btn-primary">Upload File</button>
@@ -267,19 +267,6 @@ const RateReview = (props) => {
                                     </Card.Header>
 
                                     <Card.Body >
-                                        <div className='product-portfolio-image'>
-                                            <span className='d-flex'>
-                                                {/* {images && images.length > 0 ?
-                                                    <>
-                                                        <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-                                                        </div>
-                                                        <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
-                                                    </>
-                                                    :
-                                                    null
-                                                } */}
-                                            </span>
-                                        </div>
 
                                         <div>
                                             <div className='mt-4 d-flex portfolio-designer-chat'>

@@ -7,9 +7,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import { ImLeaf } from "react-icons/im";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
-import GoBack from 'Components/Shared/GoBack';
-import { GoHeart, GoBookmark } from "react-icons/go";
-import UserPlaceholder from 'Assets/images/placeholders/user.png';
+import { GoHeart } from "react-icons/go";
 import { useCookies } from 'react-cookie';
 import Countries from 'Utils/Countries';
 import Loading from 'Components/Shared/Loading';
@@ -299,13 +297,10 @@ const EcoFriendlyFabrics = (props) => {
                                     <p className='fs-16 fw-400 text-black eco-body'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea </p>
                                 </div>
                             </Col>
-                            {/* <Col lg="4" className='text-right'>
-                                <GoBack fallBack="/" />
-                            </Col> */}
                         </Row>
                     </Container>
                 </section>
-                {/* <hr className="border-black mb" /> */}
+
                 <section className="pt-3">
                     <Container>
                         <Row className="mt-2">
@@ -318,7 +313,6 @@ const EcoFriendlyFabrics = (props) => {
                                     <hr className="border-black" /> */}
                                     <div style={{ position: "relative" }} className="mb-4">
                                         <div>
-                                            {/* <Form.Label className="fw-600">Sort By: </Form.Label> */}
                                             <Form.Control as='select' onChange={(e) => handleSortFieldChange(e.target.value)}>
                                                 <option value="" disabled selected  >Sort By:</option>
                                                 {sortOptions.map(option => (
@@ -339,7 +333,6 @@ const EcoFriendlyFabrics = (props) => {
                                         </div>
                                     </div>
                                     <Form.Group className='mb-4'>
-                                        {/* <Form.Label className="fw-600">Environmentally Conscious</Form.Label> */}
                                         <Form.Label className="fw-600">Eco-Friendly</Form.Label>
                                         <div className='d-flex'>
                                             <div>
@@ -533,22 +526,8 @@ const EcoFriendlyFabrics = (props) => {
                                                                                         />
                                                                                     </div>
                                                                                     <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
-                                                                                    {/* {currentUser ?
-                                                                                <div className='d-flex align-items-center mt-1'>
-                                                                                    {fabric.user.image ?
-                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
-                                                                                        :
-                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
-                                                                                    }
-                                                                                    &nbsp;&nbsp;
-                                                                                    <p className="text-black fs-14 mb-0">{fabric.user.first_name && fabric.user.first_name != "" ? fabric.user.first_name : "-"} {fabric.user.last_name && fabric.user.last_name != "" ? fabric.user.last_name : "-"}</p>
-                                                                                </div>
-                                                                                :
-                                                                                null
-                                                                            } */}
                                                                                 </div>
                                                                             </Col>
-                                                                            {/* )} */}
                                                                         </>
                                                                     )}
                                                                 </>
@@ -564,7 +543,6 @@ const EcoFriendlyFabrics = (props) => {
                                 </div>
                             </Col>
                         </Row>
-
                     </Container>
                 </section>
             </div >

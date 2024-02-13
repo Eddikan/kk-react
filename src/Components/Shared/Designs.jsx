@@ -17,7 +17,6 @@ import { IoShareSocial, IoInformationOutline, IoVideocam } from "react-icons/io5
 import axios from 'axios';
 import { Rating } from 'react-simple-star-rating';
 import Carousel from 'react-multi-carousel';
-import ImageSlider from '../../Components/Shared/ImageSlider';
 
 const Designs = (props) => {
     const navigate = useNavigate();
@@ -35,6 +34,23 @@ const Designs = (props) => {
     const [messageShow, setMessageShow] = useState(false);
     const [descriptionShow, setDescriptionShow] = useState(false);
 
+    const responsive = {
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 1,
+            slidesToSlide: 1
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 464 },
+            items: 1,
+            slidesToSlide: 1
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+            slidesToSlide: 1
+        }
+    };
 
     const showSignupModal = (e) => {
         props.onSignup(e);
@@ -65,7 +81,7 @@ const Designs = (props) => {
             description: description ?? '-'
 
         })
-        setDesignImages([image_urls]);
+        setDesignImages(image_urls);
         if (image_urls?.[0]?.image_url) {
             setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
         } else {
@@ -121,24 +137,6 @@ const Designs = (props) => {
     useEffect(() => {
         fetchData(currentUser);
     }, [reloadCount]);
-
-    const responsive = {
-        desktop: {
-            breakpoint: { max: 3000, min: 1024 },
-            items: 1,
-            slidesToSlide: 1 // optional, default to 1.
-        },
-        tablet: {
-            breakpoint: { max: 1024, min: 464 },
-            items: 1,
-            slidesToSlide: 1 // optional, default to 1.
-        },
-        mobile: {
-            breakpoint: { max: 464, min: 0 },
-            items: 1,
-            slidesToSlide: 1 // optional, default to 1.
-        }
-    };
 
     return (
         <>
@@ -315,7 +313,7 @@ const Designs = (props) => {
                 className='modal-full-width'
                 id="bg-transparent-card"
             >
-                <ModalHeader className='pt-2 pb-3 bg-transparent-card'>
+                <ModalHeader className='pt-2 pb-3 bg-transparent-card d-flex align-items-start'>
                     <div className='d-flex justify-content-center align-items-center user-image'>
                         {singleDesign.image && (
                             <div
@@ -330,7 +328,8 @@ const Designs = (props) => {
                             <div className='fashion-designer fs-16'>Fashion Designer</div>
                         </div>
                     </div>
-                    <button type='button' className='close modal-close' aria-label='Close' onClick={() => setPortfolioImage(false)}>
+
+                    <button type='button' className='close modal-close close-button-image bg-black' aria-label='Close' onClick={() => setPortfolioImage(false)}>
                         <span aria-hidden='true'>&times;</span>
                     </button>
                 </ModalHeader>
@@ -346,19 +345,18 @@ const Designs = (props) => {
                                             draggable={false}
                                             responsive={responsive}
                                             ssr={true}
-                                            infinite={true}
                                             autoPlaySpeed={1000}
                                         >
                                             {designImages.map((image, index) => {
-
+                                                console.log('Image in carousel: ' + image.image_url)
                                                 return (
                                                     <>
-                                                        <div className="single-image-slider-fabrics"
-                                                            // style={{
-                                                            //     backgroundImage:
-                                                            //         `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
-                                                            // }}
-                                                            style={{ backgroundImage: "url(" + activeImage + ")" }}
+                                                        <div key={index} className="single-image-slider-fabrics"
+                                                            style={{
+                                                                backgroundImage:
+                                                                    `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
+                                                            }}
+                                                        // style={{ backgroundImage: "url(" + activeImage + ")" }}
                                                         >
                                                         </div>
 
@@ -425,11 +423,11 @@ const Designs = (props) => {
                                                             >
                                                             </div>
                                                         )}
-                                                        <div className='modal-title text-center fs-20 fw-600 text-gold'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                                                        <div className='modal-title text-center fs-20 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
                                                         <div className='fs-14 text-center mt-2'>
                                                             <img src={PinIcon} alt="location pin" className='me-2' />
                                                             {singleDesign.address_line_1}{singleDesign.province}</div>
-                                                        <div className='fs-18 fw-600 text-center mt-3'>Specialization and Expertise</div>
+                                                        <div className='fs-18 fw-600 text-center mt-3 mb-1 specialization'>Specialization and Expertise</div>
                                                         <div className="mb-2 text-center">
                                                             {singleDesign.tags ?
                                                                 <>
@@ -470,34 +468,34 @@ const Designs = (props) => {
                                     </div>
                                 </div>
 
-                                <div className='text-center mb-3' >
+                                <div className='text-center mb-4' >
                                     <a href={`/appointment/schedule/${singleDesign.id}`}>
                                         <div className="action-button-designs bg-white">
                                             <PiNotepadFill className="text-black mt-2" size={30} />
                                         </div>
                                     </a>
-                                    <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
+                                    <div className='icon-name-color fs-12 mt-2 fw-400'>Consultation</div>
                                 </div>
 
-                                <div className='text-center mb-3' onClick={toggleMessage}>
+                                <div className='text-center mb-4' onClick={toggleMessage}>
                                     <div className="action-button-designs bg-white">
                                         <AiFillMessage className="text-black mt-2" size={30} />
                                     </div>
-                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-400'>Message</div>
                                 </div>
 
-                                <div className='text-center mb-3' onClick={() => toggleUnderConstruction()}>
+                                <div className='text-center mb-4' onClick={() => toggleUnderConstruction()}>
                                     <div className="action-button-designs bg-white">
                                         <IoShareSocial className="text-black mt-2" size={30} />
                                     </div>
-                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-400'>Share</div>
                                 </div>
 
-                                <div className='text-center mb-3' onClick={toggleDescription} >
+                                <div className='text-center mb-4' onClick={toggleDescription} >
                                     <div className="action-button-designs bg-white">
                                         <IoInformationOutline className="text-black mt-2" size={30} />
                                     </div>
-                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Description</div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-400'>Description</div>
                                 </div>
                             </div>
                         </Col>

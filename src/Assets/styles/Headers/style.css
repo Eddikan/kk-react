@@ -32,3 +32,12 @@ img.item-placeholder-header {
     width: 16%;
     margin-right: 25px;
 }
+
+img.new-order-image {
+    min-width: 52px;
+    height: 50px;
+}
+img.new-appointment-image {
+    min-width: 60px;
+    height: 55px;
+}

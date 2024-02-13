@@ -16,7 +16,7 @@ import { PiStarLight } from "react-icons/pi";
 import { PiNotepadLight } from "react-icons/pi";
 import { TfiLocationPin } from "react-icons/tfi";
 import { BsTelephone } from "react-icons/bs";
-import {  IoIosAttach } from "react-icons/io";
+import { IoIosAttach } from "react-icons/io";
 import { LiaSmileBeam } from "react-icons/lia";
 import { VscSend } from "react-icons/vsc";
 import { IoCloseOutline } from "react-icons/io5";
@@ -46,7 +46,6 @@ const OrderDetails = (props) => {
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
     const [chatBox, setChatBox] = useState(false);
-
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [checkOutFormData, setCheckOutFormData] = useState(initialCheckOut);
@@ -80,25 +79,6 @@ const OrderDetails = (props) => {
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
     }, []);
-
-    const addBusinessHoursSubmitPost = (e) => {
-        // e.preventDefault();
-        setFormStatus('loading');
-        postCheckOut(checkOutFormData).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setFormStatus('standby');
-                setReloadCount(reloadCount + 1);
-                setCheckOutFormData(initialCheckOut);
-                toast.success('Availability added successfully!');
-            } else {
-                setFormStatus('standby');
-                toast.error('There has been an error saving the appointment, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the appointment, please try again!');
-        });
-    }
 
     useEffect(() => {
         // getAddCarts()
@@ -148,26 +128,28 @@ const OrderDetails = (props) => {
                                     <div className="date-details fs-14">December 13, 2023</div>
                                 </div>
 
-                                <GiMagnifyingGlass  className='processing-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data timeline-circle--active">
-                                    <div className="processing fw-600">For Review</div>
-                                    <div className="date-details fs-14">December 18, 2023</div>
-                                </div>
-
                                 <PiTruckThin className='truck-icon' size={25} />
                                 <div className="timeline-circle timeline-circle--data">
-                                    <div className="order-shipped fw-600">Order Ship Out</div>
+                                    <div className="order-shipped fw-600">Order Shipped</div>
                                     <div className="date-details fs-14">December 25, 2023</div>
                                 </div>
 
                                 <CiSaveDown2 className='delivered-icon' size={25} />
                                 <div className="timeline-circle timeline-circle--data">
-                                    <div className="order-received fw-600">Order Received</div>
+                                    <div className="order-received fw-600">Delivered</div>
+                                    <div className="date-details fs-14">December 25, 2023</div>
                                 </div>
 
                                 <PiStarLight className='for-review-icon' size={25} />
                                 <div className="timeline-circle timeline-circle--data">
-                                    <div className="order-complete fw-600">Order Complete</div>
+                                    <div className="order-complete fw-600">For Review</div>
+                                    <div className="date-details fs-14">December 25, 2023</div>
+                                </div>
+
+                                {/* <GiMagnifyingGlass className='processing-icon' size={25} /> */}
+                                <div className="timeline-circle timeline-circle--data timeline-circle--active">
+                                    <div className="processing fw-600">Completed</div>
+                                    <div className="date-details fs-14">December 26, 2023</div>
                                 </div>
                             </div>
                         </Col>
@@ -208,27 +190,27 @@ const OrderDetails = (props) => {
                                                     <li>
                                                         <div className='d-flex'>
                                                             <div className="me-3 completed">December 25, 2023</div>
-                                                            <div className='text-black fs-16 fw-600'>Order Ship Out
-                                                            <br />
-                                                                <span className='fs-14 the-order'>The order is out for delivery.
-                                                                </span>
-                                                                </div>
+                                                            <div className='text-black fs-16 fw-600'>Completed
+                                                            </div>
                                                         </div>
                                                     </li>
 
                                                     <li>
                                                         <div className='d-flex'>
                                                             <div className="me-3">December 20, 2023</div>
-                                                            <div className='color-order'>The order is prepared for delivery.
+                                                            <div className='color-order'>Order Received
+                                                                <br />
+                                                                <span className='fs-14'>The order has been delivered.<span className='text-gold'> View Proof of Delivery</span></span>
                                                             </div>
                                                         </div>
                                                     </li>
+
                                                     <li>
                                                         <div className='d-flex'>
                                                             <div className="me-3">December 18, 2023</div>
-                                                            <div className='color-order'>For Review
+                                                            <div className='color-order'>Order Ship Out
                                                                 <br />
-                                                                <span className='fs-14'>The current order is under review.</span>
+                                                                <span className='fs-14'>The order is out for delivery.</span>
                                                             </div>
                                                         </div>
                                                     </li>
@@ -237,8 +219,9 @@ const OrderDetails = (props) => {
                                                         <div className='d-flex'>
                                                             <div className="me-3">December 13, 2023</div>
                                                             <div className='color-order fs-14'>Processing
-                                                            <br />
-                                                                <span className='fs-14'>The order is being processed.</span></div>
+                                                                <br />
+                                                                <span className='fs-14'>The order is being processed.</span>
+                                                            </div>
                                                         </div>
                                                     </li>
 

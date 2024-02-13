@@ -1,5 +1,5 @@
 img.user-placeholder-order {
-    width: 8%;
+    width: 6%;
 }
 .user-placeholder {
     width: 20% !important;
@@ -45,4 +45,15 @@ img.placeholder-chat {
 }
 img.square-placeholder {
     width: 3%;
+}
+.rate-review-card {
+    border-color: #DFDFDF;
+}
+.border-bottom {
+    border-bottom-color: #DFDFDF;
+}
+.all-order-id {
+    color: #656565;
+    display: flex;
+    align-items: center;
 }

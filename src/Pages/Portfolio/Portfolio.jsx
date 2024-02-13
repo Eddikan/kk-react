@@ -113,7 +113,7 @@ const Portfolio = (props) => {
 
                                 {portfolio && portfolio.length > 0 ?
                                     <>
-                                        <Col lg={10} className='mt-5 col-right mx-auto' style={{maxWidth: '1440px'}}>
+                                        <Col lg={10} className='mt-5 col-right mx-auto' style={{ maxWidth: '1440px' }}>
                                             <div className='ms-5'>
                                                 <h2 className='fs-30 mb-3'>Portfolio</h2>
                                                 <Row>
@@ -142,11 +142,13 @@ const Portfolio = (props) => {
                                                                     <div className="portfolio-details">
                                                                         {/* <span className="text-white text-decoration-none">{object.name ?? "-"}</span> */}
                                                                         <div className="other-actions">
-                                                                            {/* <div className="action-button bg-white me-2">
-                                                                    <GoHeart className="text-black" />
-                                                                </div> */}
-                                                                            <div className="action-button bg-white">
+
+                                                                            <div className="action-button bg-white me-2">
                                                                                 <GoBookmark className="text-black" />
+                                                                            </div>
+
+                                                                            <div className="action-button bg-white">
+                                                                                <GoHeart className="text-black" />
                                                                             </div>
                                                                         </div>
                                                                     </div>

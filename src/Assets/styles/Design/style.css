@@ -54,7 +54,7 @@ select#sort-by {
     cursor: pointer;
 }
 .icon-name-color {
-    color: #595959;
+    color: #878787 !important;
 }
 .user-image .user-photo {
     min-width: 60px;
@@ -236,8 +236,23 @@ select#sort-by {
 }
 .description-close {
     left: 865px;
-    font-size: 30px;
+    font-size: 24px;
     color: #fff;
     top: 8px;
+}
+.close-button-image {
+    background: var(--white);
+    color: var(--white);
+    padding: 0px 5px 5px 5px;
+    height: 30px;
+    display: inline-block;
+    width: 30px;
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
+    font-size: 24px;
+}
+.specialization {
+color:#F6D46D;
 }
 

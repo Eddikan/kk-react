@@ -249,12 +249,12 @@ section#details-order {
 .order-received {
     position: absolute;
     bottom: -2em;
-    left: -39px;
+    left: -19px;
 }
 .order-complete {
     position: absolute;
     bottom: -2em;
-    left: -43px;
+    left: -23px;
     text-wrap: nowrap;
 }
 

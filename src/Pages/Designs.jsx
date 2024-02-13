@@ -15,7 +15,7 @@ import { PiNotepadFill } from "react-icons/pi";
 import { GoHeart, GoAlertFill } from "react-icons/go";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
-import axios from 'axios';
+import PinIcon from '../Assets/images/pin.png';
 import { IoShareSocial, IoInformationOutline, IoVideocam } from "react-icons/io5";
 import { useCookies } from 'react-cookie';
 import Countries from 'Utils/Countries';
@@ -26,6 +26,7 @@ import MultiRangeSlider from 'Components/Forms/MultiRangeSlider';
 import '../Assets/styles/Design/style.css';
 import Carousel from 'react-multi-carousel';
 import { debounce } from 'lodash';
+import axios from 'axios';
 
 const Designs = (props) => {
     const navigate = useNavigate();
@@ -52,6 +53,8 @@ const Designs = (props) => {
     const [activeImage, setActiveImage] = useState('');
     const [descriptionShow, setDescriptionShow] = useState(false);
     const [messageShow, setMessageShow] = useState(false);
+    const [selectedSortField, setSelectedSortField] = useState(null);
+    const [selectedSortOrder, setSelectedSortOrder] = useState(null);
 
     const compositions = ['Polyamide', 'Polyester', 'Polyurethane', 'Acrylic', 'Cashmere', 'Mental']; // Replace with your array of composition options
     const weaves = ['Plain', 'Twill', 'Satin', 'Basket', 'Herringbone', 'Jacquard', 'Dobby', 'Leno']; // Replace with your array of weave options
@@ -64,9 +67,6 @@ const Designs = (props) => {
         { value: 'created_at', label: 'Date' },
         { value: 'views', label: 'Views' },
     ]);
-
-    const [selectedSortField, setSelectedSortField] = useState(null);
-    const [selectedSortOrder, setSelectedSortOrder] = useState(null);
 
     const getOrderOptions = () => {
         if (selectedSortField === 'price') {
@@ -264,6 +264,24 @@ const Designs = (props) => {
         setSearch(value);
     };
 
+    const responsive = {
+        desktop: {
+            breakpoint: { max: 3000, min: 1024 },
+            items: 1,
+            slidesToSlide: 1
+        },
+        tablet: {
+            breakpoint: { max: 1024, min: 464 },
+            items: 1,
+            slidesToSlide: 1
+        },
+        mobile: {
+            breakpoint: { max: 464, min: 0 },
+            items: 1,
+            slidesToSlide: 1
+        }
+    };
+
     function togglePortfolioImage(id, first_name, last_name, image_urls, image, address_line_1, province, tags, description) {
         setPortfolioImage(true);
         setSingleDesign({
@@ -277,7 +295,8 @@ const Designs = (props) => {
             description: description ?? '-'
 
         })
-        setDesignImages([image_urls]);
+        setDesignImages(image_urls);
+        console.log('These are image urls: ', image_urls);
         if (image_urls?.[0]?.image_url) {
             setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
         } else {
@@ -335,24 +354,6 @@ const Designs = (props) => {
         }
     }, [mounted, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue]);
 
-    const responsive = {
-        desktop: {
-            breakpoint: { max: 3000, min: 1024 },
-            items: 1,
-            slidesToSlide: 1 // optional, default to 1.
-        },
-        tablet: {
-            breakpoint: { max: 1024, min: 464 },
-            items: 1,
-            slidesToSlide: 1 // optional, default to 1.
-        },
-        mobile: {
-            breakpoint: { max: 464, min: 0 },
-            items: 1,
-            slidesToSlide: 1 // optional, default to 1.
-        }
-    };
-
     return (
         <Layout>
             <div className='py-5 px-2'>
@@ -365,9 +366,6 @@ const Designs = (props) => {
                                     <p className='fs-16 fw-400 text-black line-height-24'>In the realm of fabric design, the designer intricately weaves together artistic concepts, skillfully navigating through color harmonies and textural nuances to conceive patterns that not only adorn but tell compelling visual stories through the medium of textiles.</p>
                                 </div>
                             </Col>
-                            {/* <Col lg="4" className='text-right'>
-                                <GoBack fallBack="/" />
-                            </Col> */}
                         </Row>
                     </Container>
                 </section>
@@ -753,8 +751,7 @@ const Designs = (props) => {
                 className='modal-full-width'
                 id="bg-transparent-card"
             >
-                <ModalHeader className='pt-2 pb-3 bg-transparent-card'>
-
+                <ModalHeader className='pt-2 pb-3 bg-transparent-card d-flex align-items-start'>
                     <div className='d-flex user-image'>
                         {singleDesign.image && (
                             <div
@@ -769,7 +766,7 @@ const Designs = (props) => {
                             <div className='fashion-designer fs-16'>Fashion Designer</div>
                         </div>
                     </div>
-                    <button type='button' className='close modal-close' aria-label='Close' onClick={() => setPortfolioImage(false)}>
+                    <button type='button' className='close modal-close close-button-image bg-black' aria-label='Close' onClick={() => setPortfolioImage(false)}>
                         <span aria-hidden='true'>&times;</span>
                     </button>
                 </ModalHeader>
@@ -777,20 +774,6 @@ const Designs = (props) => {
                     <Row>
                         <Col lg={11} className='image-fabrics'>
                             <div>
-                                {/* {designImages && designImages.length > 0 ?
-                                    <>
-                                        <div className="single-image-slider-fabrics"
-                                            style={{
-                                                backgroundImage: "url(" + activeImage + ")"
-                                            }}
-                                        >
-                                        </div>
-                                    </>
-                                    :
-                                    <>
-                                    </>
-                                } */}
-
                                 {designImages && designImages.length > 0 ?
                                     <>
                                         <Carousel
@@ -798,19 +781,17 @@ const Designs = (props) => {
                                             draggable={false}
                                             responsive={responsive}
                                             ssr={true}
-                                            infinite={true}
                                             autoPlaySpeed={1000}
                                         >
                                             {designImages.map((image, index) => {
 
                                                 return (
                                                     <>
-                                                        <div className="single-image-slider-fabrics"
-                                                            // style={{
-                                                            //     backgroundImage:
-                                                            //         `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
-                                                            // }}
-                                                            style={{ backgroundImage: "url(" + activeImage + ")" }}
+                                                        <div key={index} className="single-image-slider-fabrics"
+                                                            style={{
+                                                                backgroundImage:
+                                                                    `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
+                                                            }}
                                                         >
                                                         </div>
                                                     </>
@@ -876,11 +857,11 @@ const Designs = (props) => {
                                                             >
                                                             </div>
                                                         )}
-                                                        <div className='modal-title text-center fs-20 fw-600 text-gold'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                                                        <div className='modal-title text-center fs-20 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
                                                         <div className='fs-14 text-center mt-2'>
-                                                            {/* <img src={PinIcon} alt="location pin" className='me-2' /> */}
+                                                            <img src={PinIcon} alt="location pin" className='me-2' />
                                                             {singleDesign.address_line_1}{singleDesign.province}</div>
-                                                        <div className='fs-18 fw-600 text-center mt-3'>Specialization and Expertise</div>
+                                                        <div className='fs-18 fw-600 text-center mt-3 mb-1 specialization'>Specialization and Expertise</div>
                                                         <div className="mb-2 text-center">
                                                             {singleDesign.tags ?
                                                                 <>
@@ -923,7 +904,7 @@ const Designs = (props) => {
                                     </div>
                                 </div>
 
-                                <div className='text-center mb-3' >
+                                <div className='text-center mb-4' >
                                     <a href={`/appointment/schedule/${singleDesign.id}`}>
                                         <div className="action-button-designs bg-white">
                                             <PiNotepadFill className="text-black mt-2" size={30} />
@@ -932,21 +913,21 @@ const Designs = (props) => {
                                     <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                 </div>
 
-                                <div className='text-center mb-3' onClick={toggleMessage}>
+                                <div className='text-center mb-4' onClick={toggleMessage}>
                                     <div className="action-button-designs bg-white">
                                         <AiFillMessage className="text-black mt-2" size={30} />
                                     </div>
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
                                 </div>
 
-                                <div className='text-center mb-3' onClick={toggleUnderConstruction}>
+                                <div className='text-center mb-4' onClick={toggleUnderConstruction}>
                                     <div className="action-button-designs bg-white">
                                         <IoShareSocial className="text-black mt-2" size={30} />
                                     </div>
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
                                 </div>
 
-                                <div className='text-center mb-3' onClick={toggleDescription}>
+                                <div className='text-center mb-4' onClick={toggleDescription}>
                                     <div className="action-button-designs bg-white">
                                         <IoInformationOutline className="text-black mt-2" size={30} />
                                     </div>
@@ -971,7 +952,7 @@ const Designs = (props) => {
 
                 <Modal.Body>
                     <Card className='border-none'>
-                        <Card.Body className="text-center py-5 pt-2 pb-2">
+                        <Card.Body className="text-center px-0 pt-2 pb-2">
                             <div className='user-image-message thumbnail-table'>
                                 {singleDesign.image && (
                                     <div

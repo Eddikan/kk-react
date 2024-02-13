@@ -158,11 +158,18 @@ const Messages = (props) => {
                                                         <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div>
                                                     </div>
                                                 </div>
+                                                <hr />
                                             </Col>
                                         </Col>
 
                                         <Col lg={7}>
-                                            ewqeqw
+                                            <Col>
+                                                Cristopher Baruda
+                                            </Col>
+
+                                            <Col>
+                                                Cristopher Baruda
+                                            </Col>
                                         </Col>
                                     </Row>
                                 </Card.Body>

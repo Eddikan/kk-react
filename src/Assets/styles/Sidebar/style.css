@@ -15,6 +15,7 @@
 span.appointments,.orders,.portfolio,.fabrics {
     font-weight: 400;
     font-family: 'Poppins';
+    font-size: 15px;
 }
 .yellow-hover:hover {
     color: #CEA835;
