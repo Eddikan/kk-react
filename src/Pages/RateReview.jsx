@@ -20,6 +20,7 @@ import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import PlaceholderSquare from 'Assets/images/square-placeholder.jpg';
 import axios from "axios";
 import toast from 'react-hot-toast';
+import ChatBox from '../Components/Shared/ChatBox';
 
 const initialCheckOut = {
     card_name: '',
@@ -54,6 +55,7 @@ const RateReview = (props) => {
     const [portfolio, setPortfolio] = useState('');
     const [chatBox, setChatBox] = useState(false);
     const [portfolioLoading, setPortfolioLoading] = useState(true);
+    const [currentTab, setCurrentTab] = useState(false);
 
 
     const navigate = useNavigate();
@@ -78,11 +80,6 @@ const RateReview = (props) => {
             [name]: value,
         });
     }
-
-    const chatBoxModal = (e) => {
-        setChatBox(true);
-    };
-
 
     // const fetchData = async (e) => {
     //     try {
@@ -161,7 +158,7 @@ const RateReview = (props) => {
                                                 <span>
                                                     <span>
                                                         <img src={User} className='user-placeholder-order me-2 order-user' />Dave Napoles
-                                                        <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={() => chatBoxModal("Chat Box")} />
+                                                        <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={() => setChatBox(true)} />
                                                     </span>
                                                 </span>
 
@@ -248,15 +245,15 @@ const RateReview = (props) => {
                             </Col>
                         </Row>
 
-                        {chatBox ?
+                        {/* {chatBox ?
                             <>
                                 <Card className='width-chat-card px-0'>
                                     <Card.Header className='header-chat bg-white'>
                                         <div className='d-flex justify-content-between'>
                                             <div>
                                                 <span className="fs-14 fw-500 mb-0 name-of-user-chat">
-                                                    {/* {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} &nbsp;
-                                                    {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"} */}
+                                                    {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} &nbsp;
+                                                    {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"}
                                                 </span>
                                                 <span className='ms-3 active-now fs-14 fw-400'>Active Now</span>
                                             </div>
@@ -270,17 +267,17 @@ const RateReview = (props) => {
 
                                         <div>
                                             <div className='mt-4 d-flex portfolio-designer-chat'>
-                                                {/* {portfolio.user.image && (
+                                                {portfolio.user.image && (
                                                     <div
                                                         className='designer-photo'
                                                         style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
                                                     >
                                                     </div>
-                                                )} */}
+                                                )}
                                                 <div className="designer-info mx-2">
                                                     <div>
                                                         <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">
-                                                            {/* {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"} */}
+                                                            {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"}
                                                             <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
                                                         </p>
                                                     </div>
@@ -327,7 +324,9 @@ const RateReview = (props) => {
                             </>
                             :
                             null
-                        }
+                        } */}
+
+                        <ChatBox chatBox={chatBox} onCloseChat={() => setCurrentTab(false)} />
                     </Row>
                 </Container>
             </section>

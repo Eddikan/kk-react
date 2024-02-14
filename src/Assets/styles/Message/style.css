@@ -1,0 +1,39 @@
+.message-width {
+    width: 45%;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+}
+input.search-bar {
+    width: 92%;
+    margin-left: 20px;
+}
+img.user-placeholder-message {
+    width: 57%;
+}
+.user-placeholder-chat {
+    width: 48%;
+}
+.date-day {
+    color: #919191;
+    font-size: 14px;
+}
+.body-chat {
+    color: #39393A;
+    font-size: 14px;
+}
+.chat-box-width {
+    width: 55%;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+}
+.user-placeholder-you {
+    width: 9%;
+}
+.chat-type {
+    border: 2px solid var(--gray) !important;
+    border-radius: 5px !important;
+    padding: 10px 20px;
+    color: var(--gray-600);
+    font-size: 14px;
+    width: 95%;
+}

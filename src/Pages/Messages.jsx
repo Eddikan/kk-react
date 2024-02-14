@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Modal, Card, CardBody } from 'react-bootstrap';
-import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import { CiCreditCard2 } from "react-icons/ci";
-import '../Assets/styles/Cart/style.css';
 import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import User from '../Assets/images/user.png';
+import { LiaSmileBeam } from "react-icons/lia";
+import { VscSend } from "react-icons/vsc";
+import { IoIosAttach } from "react-icons/io";
 import { GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import { CiSearch, CiBookmark, CiSettings } from 'react-icons/ci';
+import '../Assets/styles/Message/style.css';
 import axios from "axios";
 import toast from 'react-hot-toast';
 
@@ -121,64 +123,173 @@ const Messages = (props) => {
                     </Row>
 
                     <Row>
-                        <Col lg={12}>
-                            <Card>
-                                <Card.Body>
+                        <Col lg={12} className='d-flex'>
+                            <Card className='message-width'>
+                                <Card.Body className='px-0'>
                                     <Row>
-                                        <Col lg={5}>
-                                            <Col lg={12}>
-                                                <div
-                                                    className=' w-100'
-                                                    style={{ position: 'relative' }}
-                                                >
+                                        <Col lg={12}>
+                                            <div
+                                                className=' w-100'
+                                                style={{ position: 'relative' }}
+                                            >
 
-                                                    <input
-                                                        className='search-bar form-control'
-                                                        type="text"
-                                                        placeholder="Search"
-                                                    />
+                                                <input
+                                                    className='search-bar form-control'
+                                                    type="text"
+                                                    placeholder="Search"
+                                                />
 
-                                                    <CiSearch size="20px"
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: '50%',
-                                                            left: '92%',
-                                                            transform: 'translateY(-50%)',
-                                                        }}
-                                                    />
-                                                </div>
-                                            </Col>
+                                                <CiSearch size="20px"
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: '50%',
+                                                        left: '88%',
+                                                        transform: 'translateY(-50%)',
+                                                    }}
+                                                />
+                                            </div>
+                                        </Col>
+                                    </Row>
 
-                                            <Col lg={12} className='mt-3'>
-                                                <div className='d-flex'>
-                                                    <div className='d-flex justify-content-center align-items-center'>
-                                                        <img src={User} className='user-placeholder-header' />
+                                    <hr className='mb-1' />
+                                    <Row>
+                                        <Col lg={12} className='mt-3'>
+                                            <Row>
+                                                <Col lg={2} className='d-flex justify-content-center align-items-center'>
+                                                    <img src={User} className='user-placeholder-message ms-3' />
+                                                </Col>
+
+                                                <Col lg={10}>
+                                                    <div className='w-100 d-flex justify-content-between'>
+                                                        <div className='fs-14 body-text-bell'>Marie Salazar</div>
+                                                        <div className='date-day me-3'>1 day ago - 3:25 PM</div>
                                                     </div>
-                                                    <div className='ms-3 fs-14 body-text-bell'>Marie Salazar<span className='hours-bell mt-1'>1 day ago - 3:25 PM</span>
-                                                        <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div>
+                                                    <div className='body-chat me-3 mt-2'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy et...</div>
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+
+
+                                    <hr className='mb-1' />
+                                    <Row>
+                                        <Col lg={12} className='mt-3'>
+                                            <Row>
+                                                <Col lg={2}>
+                                                    <img src={User} className='user-placeholder-message ms-3' />
+                                                </Col>
+
+                                                <Col lg={10}>
+                                                    <div className='w-100 d-flex justify-content-between'>
+                                                        <div className='fs-14 body-text-bell'>Jeric Tolentno</div>
+                                                        <div className='date-day me-3'>1 day ago - 3:25 PM</div>
                                                     </div>
-                                                </div>
-                                                <hr />
-                                            </Col>
+                                                    <div className='body-chat me-3 mt-2'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy et...</div>
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+
+                                    <hr className='mb-1' />
+
+                                    <Row>
+                                        <Col lg={12} className='mt-3'>
+                                            <Row>
+                                                <Col lg={2}>
+                                                    <img src={User} className='user-placeholder-message ms-3' />
+                                                </Col>
+
+                                                <Col lg={10}>
+                                                    <div className='w-100 d-flex justify-content-between'>
+                                                        <div className='fs-14 body-text-bell'>Ronald Randal</div>
+                                                        <div className='date-day me-3'>1 day ago - 3:25 PM</div>
+                                                    </div>
+                                                    <div className='body-chat me-3 mt-2'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy et...</div>
+                                                </Col>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                </Card.Body>
+                            </Card>
+
+
+                            <Card className='chat-box-width'>
+                                <Card.Body className='px-0'>
+                                    <Row>
+                                        <Col lg={12} className='ms-3'>
+                                            <div className='mb-1 fs-14'>
+                                                Cristopher Baruda
+                                            </div>
+                                            <div className='date-day'>
+                                                Last seen 5hrs ago - 2:23 AM
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                    <hr className='mt-3 mb-4' />
+
+                                    <Row>
+                                        <Col lg={2} className='text-center'>
+                                            <img src={User} className='user-placeholder-chat ms-3' />
                                         </Col>
 
-                                        <Col lg={7}>
-                                            <Col>
-                                                Cristopher Baruda
-                                            </Col>
+                                        <Col lg={10}>
+                                            <div className='fs-14 body-text-bell fw-600'>Cristopher Baruda</div>
+                                            <div className='body-chat me-4 mt-2'>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                                                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</div>
+                                        </Col>
 
-                                            <Col>
-                                                Cristopher Baruda
-                                            </Col>
+                                        <Col lg={12}>
+                                            <div className='mt-5 mb-4 text-right d-flex'>
+                                                <div>
+                                                    <div className='time-chat-box fs-14 fw-400'>3:30 PM
+                                                        <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
+                                                    <div className='mt-2 welcome-chat ms-4 '>
+                                                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
+                                                    </div>
+                                                </div>
+
+                                                <img src={User} className='user-placeholder-you ms-3' />
+                                            </div>
+                                        </Col>
+
+                                        <Col>
+                                            <input className='chat-type ms-3' type="text" />
+
+                                        </Col>
+
+                                        <Col lg={12}>
+                                            <div className='mt-3 ms-3 me-3 d-flex justify-content-between'>
+                                                <div className='d-flex'>
+                                                    <div className='cursor-pointer'
+                                                    // onClick={() => toggleUnderConstruction("")}
+                                                    >
+                                                        <LiaSmileBeam className='me-2' size={20} />
+                                                    </div>
+
+                                                    <div className='cursor-pointer'
+                                                    // onClick={() => toggleUnderConstruction("")}
+                                                    >
+                                                        <IoIosAttach size={20} />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div
+                                                        className="cursor-pointer fw-500"
+                                                    // onClick={() => toggleUnderConstruction("Send Message")}
+                                                    >
+                                                        Send
+                                                        <VscSend className='ms-1' />
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </Col>
                                     </Row>
                                 </Card.Body>
                             </Card>
                         </Col>
                     </Row>
-
                 </Container>
-            </section>
+            </section >
 
             <Modal
                 show={underConstructionShow}

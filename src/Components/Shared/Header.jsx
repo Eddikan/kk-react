@@ -36,6 +36,8 @@ const Header = () => {
   const [user, setUser] = useState('');
   const [reloadCount, setReloadCount] = useState(0);
   const [designerId, setDesignerId] = useState('');
+  const [fabrics, setFabrics] = useState('');
+
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
   const [userType, setUserType] = useState('user');
@@ -49,6 +51,10 @@ const Header = () => {
 
   const getUser = async () => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+  };
+
+  const getFabrics = async () => {
+    return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/product/fabric' + currentUser);
   };
 
   // removeCookies
@@ -66,9 +72,6 @@ const Header = () => {
   const handleClickOutside = (event) => {
     if (userRef.current && !userRef.current.contains(event.target)) {
       setUserMenuOpen(false);
-      // setUserBellOpen(false);
-      setUserEnvelopOpen(false);
-      // setUserOrdersOpen(false);
     }
   };
 
@@ -164,6 +167,19 @@ const Header = () => {
           toast.error('There has been an error getting the date, please try again!');
         });
     }
+
+    getFabrics()
+      .then((response) => {
+        const selectedFabrics = response.data.data;
+        if (selectedFabrics) {
+          setFabrics(selectedFabrics);
+        } else {
+          toast.error('There has been an error getting the date, please try again!');
+        }
+      })
+      .catch((error) => {
+        toast.error('There has been an error getting the date, please try again!');
+      });
   }, [reloadCount]);
 
   return (
@@ -250,8 +266,10 @@ const Header = () => {
                           </div>
                           <hr />
 
-                          <div className='text-right text-gold fs-14 cursor-pointer'
-                            onClick={() => toggleUnderConstruction("View All Message")}>View All Message</div>
+
+                          <div className='text-right'>
+                            <a href="/messages" className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All Message</a>
+                          </div>
                         </div>
 
                       )}
@@ -271,6 +289,8 @@ const Header = () => {
                         <div className="cursor-pointer nav-link" onClick={toggleOrdersMenu}>Orders</div>
                       }
                       {userOrdersOpen && (
+
+
                         <div className="action-box-orders user-menu-orders">
                           <div className='d-flex cursor-pointer' >
                             <img src={PlaceholderSquare} className='item-placeholder-header ' alt="User" />
