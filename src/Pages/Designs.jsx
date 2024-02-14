@@ -141,6 +141,7 @@ const Designs = (props) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setDesigns(selectedDesigns);
+                console.log("selectedDesigns", selectedDesigns);
                 setDesignsLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -297,6 +298,7 @@ const Designs = (props) => {
         })
         setDesignImages(image_urls);
         console.log('These are image urls: ', image_urls);
+        console.log('id ', id);
         if (image_urls?.[0]?.image_url) {
             setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
         } else {
@@ -674,7 +676,7 @@ const Designs = (props) => {
                                                                 <>
                                                                     <Col className="designs-grid mb-4" xs="12" md="4">
                                                                         <div className="portfolio-link">
-                                                                            <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { togglePortfolioImage(design.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description); }} style={{ backgroundImage: "url(" + designImage + ")" }}>
+                                                                            <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { togglePortfolioImage(design.designer.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description); }} style={{ backgroundImage: "url(" + designImage + ")" }}>
 
                                                                             </div>
                                                                             <div className='save-link'>

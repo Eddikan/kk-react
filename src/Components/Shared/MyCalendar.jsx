@@ -1,6 +1,6 @@
 import { Calendar, momentLocalizer, Views, DateLocalizer } from 'react-big-calendar';
 import { Container, CardFooter, Input, Label, UncontrolledAccordion, AccordionItem, AccordionHeader, AccordionBody, CardBody, Button, Card, Col, Modal, Table, Row, Form, } from 'reactstrap';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { PiPencilThin, PiTrashThin } from "react-icons/pi";
 import { AiOutlineClose } from "react-icons/ai";
@@ -17,6 +17,10 @@ import PropTypes from 'prop-types'
 import '../../Assets/styles/DesignerCalendar/style.css';
 import axios from "axios";
 import toast from 'react-hot-toast';
+import { FiCalendar } from "react-icons/fi";
+import { LuGlobe2 } from "react-icons/lu";
+import { FaRegUser } from "react-icons/fa";
+import { MdOutlineEmail } from "react-icons/md";
 
 
 const intitialConsultationData = {
@@ -58,6 +62,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
 
     const [events, setEvents] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [appointmentModalIsOpen, setAppointmentModalIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
     const [reloadCount, setReloadCount] = useState(0);
     const [selectedTimeSlot, setSelectedTimeSlot] = useState();
@@ -66,6 +71,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
     const [times, setTimes] = useState([initialAppointments]);
     const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
     const [currentTimezone, setCurrentTimezone] = useState(null);
+    const [selectedEvent, setSelectedEvent] = useState(null);
 
 
     const postSetAppointment = async (data) => {
@@ -76,16 +82,48 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment');
     };
 
-    // const getAppointment = async () => {
-    //     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
-    // };
+    const getDesignerAppointment = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
+    };
+    
 
-    const toggleCalendar = (calendarAppointment) => {
+    const convertHoursToDatetime = (time, selectedDate) => {
+        const [hours, minutes, period] = time.split(/[: ]/);
+
+        // Convert hours to 24-hour format
+        const hours24 = period === 'PM' ? parseInt(hours, 10) + 12 : parseInt(hours, 10);
+
+        const resultDatetime = new Date(selectedDate);
+        resultDatetime.setHours(hours24);
+        resultDatetime.setMinutes(parseInt(minutes, 10));
+
+        return resultDatetime.toISOString();
+    };
 
 
+
+    const handleSelectEvent = useCallback((event) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+        const formattedDateStart = new Intl.DateTimeFormat('en-US', options).format(event.start);
+        const formattedDateEnd = new Intl.DateTimeFormat('en-US', options).format(event.end);
+        setSelectedEvent({
+            ...selectedEvent,
+            title: event.title,
+            start: formattedDateStart,
+            end: formattedDateEnd,
+            desc: event.desc,
+
+        });
+        setAppointmentModalIsOpen(true);
+        console.log("formattedDateStart", formattedDateStart);
+        console.log("formattedDateEnd", formattedDateEnd);
+        
+      }, []);
+
+    const closeAppointmentModal = () => {
+        setAppointmentModalIsOpen(false);
+        setSelectedEvent(null);
     }
-
-
 
     const handleChangeConsultation = (e) => {
         const { name, value } = e.target;
@@ -98,7 +136,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
             last_name: currentUserDetails.last_name,
             timezone: currentTimezone,
             consultation_date_time: selectedDate,
-            consultation_details: currentUserDetails.consultation_details,
+            consultation_details: 'Self added Appointment',
 
         });
     }
@@ -141,8 +179,16 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
                     setConsultationFormData(intitialConsultationData);
                     toast.success('Appointment added successfully!');
                 } else {
-                    setFormStatus('standby');
-                    toast.error('There has been an error adding the appointment, please try again!');
+                    if(status == "Fail") {
+                        const errors = response.data.errors;
+                        if (errors && errors.length > 0) {
+                            errors.map((error, index) => {
+                                toast.error(error);
+                                return null; // React requires a return value, so we return null here
+                            })
+                        }
+                        setFormStatus('standby');
+                    }
                 }
             }).catch(() => {
                 toast.error('There has been an error adding the appointment, please try again!');
@@ -157,30 +203,54 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
 
         getTimezone();
     }, []);
-
-    const [appointments, setAppointments] = useState([]);
     useEffect(() => {
-        // getSetAppointment()
-        //     .then((response) => {
-        //         const selectedDate = response.data.data.data;
-        //         const status = response.data.status;
-        //         if (status == "Fail") {
-        //             toast.error('This designer have not yet set their available hours');
-        //         }
-        //         else {
-        //             if (selectedDate) {
-        //                 setSelectedDate(selectedDate);
-        //                 setAppointments(selectedDate.designer_appointments);
-
-        //                 console.log("selectedDate.designer_appointments", selectedDate.designer_appointments);
-        //             } else {
-        //                 toast.error('There has been an error getting the schedule, please try again!');
-        //             }
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         toast.error('There has been an error getting the schedule, please try again!');
-        //     });
+        getDesignerAppointment().then((response) => {
+            const appointments = response.data?.data;
+            const status = response.data.status;
+            console.log("appointments", appointments);
+            console.log("status", status);
+            if (status == "Fail") {
+                const errors = response.data.errors;
+                if (errors && errors.length > 0) {
+                    errors.map((error, index) => {
+                        toast.error(error);
+                        return null; // React requires a return value, so we return null here
+                    })
+                }
+            } else {
+                if (appointments) {
+                    const apiEventDataArray = [];
+                    for (let i = 0; i < appointments.length; i++) {
+                      const appointment = appointments[i];
+                      const appointmentDateTime = appointment.consultation_date_time;
+                      const appointmentStartIso = convertHoursToDatetime(appointment.consultation_hour_start, appointmentDateTime);
+                      const appointmentEndIso = convertHoursToDatetime(appointment.consultation_hour_end, appointmentDateTime);
+                      const eventData = {
+                        id: appointment.id,
+                        title: 'Appointment with ' + appointment.first_name + ' ' + appointment.last_name,
+                        start: new Date(appointmentStartIso),
+                        end: new Date(appointmentEndIso),
+                        desc: appointment.consultation_details,
+                      };
+                      apiEventDataArray.push(eventData);
+                    }
+                    setEvents(apiEventDataArray);
+                    // console.log("apiEventDataArray", apiEventDataArray);
+                  } else {
+                    const errors = response.data.errors;
+                    if (errors && errors.length > 0) {
+                      errors.forEach((error) => {
+                        toast.error(error);
+                      });
+                    } else {
+                      toast.error('There has been an error getting the appointments, please try again!');
+                    }
+                  }
+            }
+        }).catch((error) => {
+            console.log(error);
+            toast.error('There has been an error getting the appointments, please try again!');
+        });
 
     }, [reloadCount]);
 
@@ -196,6 +266,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
                     endAccessor="end"
                     onSelectSlot={handleDateClick}
                     selectable
+                    onSelectEvent={handleSelectEvent}
                 />
 
                 <Modal
@@ -293,6 +364,55 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
                                 <Button className="btn-save"
                                     onClick={addAppointmentSubmit}
                                 >Save</Button>
+                            </div>
+                        </ModalFooter>
+                    </div>
+                </Modal>
+
+                <Modal
+                    isOpen={appointmentModalIsOpen}
+                    onRequestClose={closeAppointmentModal}
+                    contentLabel="Appointment Details"
+
+                >
+                    <div>
+                        <ModalHeader>
+                            <h5 className='modal-title text-left set-appointment'>Appointment Details</h5>
+                            <button type='button' className='close react-appointment-close' onClick={closeAppointmentModal} data-dismiss='modal' aria-label='Close'>
+                                <span aria-hidden='true'>&times;</span>
+                            </button>
+                        </ModalHeader>
+                        <hr className="mt-0 mb-2" />
+
+                        {selectedEvent && (
+                           <div className="px-3">
+
+                            {selectedEvent.title != "" &&
+                                <>
+                                    <p>Appointment Title: <span className="fw-500 current-date ms-2">{selectedEvent.title}</span></p>
+                                </>
+                            }
+
+                            {selectedEvent.start != "" &&
+                                <>
+                                    <p>Appointment Start: <span className="fw-500 current-date ms-2">{selectedEvent.start}</span></p>
+                                </>
+                            }
+                            {selectedEvent.end != "" &&
+                                <>
+                                    <p>Appointment End: <span className="fw-500 current-date ms-2">{selectedEvent.end}</span></p>
+                                </>
+                            }
+                            {selectedEvent.desc != "" || selectedEvent.desc != null &&
+                                <>
+                                    <p>Appointment Description: <span className="fw-500 current-date ms-2">{selectedEvent.desc}</span></p>
+                                </>
+                            }
+                        </div>
+                        )}
+                        <ModalFooter>
+                            <div className='text-right'>
+                                <Button className="cancel-btn me-2" onClick={closeAppointmentModal}>Close</Button>
                             </div>
                         </ModalFooter>
                     </div>

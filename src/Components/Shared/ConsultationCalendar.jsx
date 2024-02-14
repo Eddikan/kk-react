@@ -149,7 +149,13 @@ const ConsultationCalendar = ({ toggleEvent }) => {
             const selectedHours = response.data.data?.available_hours;
             const status = response.data.status;
             if (status == "Fail") {
-                toast.error('This designer have not yet set their available hours');
+                const errors = response.data.errors;
+                if (errors && errors.length > 0) {
+                    errors.map((error, index) => {
+                        toast.error(error);
+                        return null; // React requires a return value, so we return null here
+                    })
+                }
             } else {
                 if (selectedHours) {
                     let hoursArray = convertArrayTo12HourFormat(selectedHours);
@@ -244,7 +250,6 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         setModalHeading(message);
         console.log("Message", message);
     }
-
 
     return (
         <>
