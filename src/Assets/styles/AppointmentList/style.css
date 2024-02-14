@@ -51,7 +51,17 @@ img.user-placeholder {
     background-repeat: no-repeat;
     border-radius: 50%;
 }
-
+img.placeholder-img {
+    width: 12%;
+}
 .bg-color-page {
     background-color: #FAFAFA !important;
+}
+.profile-image.small {
+    width: 40px;
+    height: 40px;
+    background-position: center;
+    background-size: cover;
+    margin-right: 10px;
+    border-radius: 50%;
 }

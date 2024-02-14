@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import LayoutSellerCenter from '../Components/Layout/LayoutSellerCenter';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
-import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import Container from 'react-bootstrap/Container';
 import { GoAlertFill } from 'react-icons/go';
-// import '../Assets/styles/Appointments/style.css';
 import { FaUserCircle } from "react-icons/fa";
 import { LiaSmileBeam } from "react-icons/lia";
 import { VscSend } from "react-icons/vsc";
 import { IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
-import Sidebar from 'Components/Shared/Sidebar';
 import { AiOutlineMessage } from "react-icons/ai";
 import { CiSearch } from 'react-icons/ci';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import '../Assets/styles/AppointmentList/style.css';
 import { IoEyeOutline } from "react-icons/io5";
 import UserPlaceholder from 'Assets/images/user.png';
+import Sidebar from 'Components/Shared/Sidebar';
 import toast from 'react-hot-toast';
 import axios from "axios";
-import { useNavigate, useParams, Link } from 'react-router-dom';
-
 
 const AppointmentList = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
@@ -57,7 +54,6 @@ const AppointmentList = (props) => {
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
-
     }
 
     // useEffect(() => {
@@ -83,7 +79,6 @@ const AppointmentList = (props) => {
     // useEffect(() => {
     //     document.body.classList.add('designer-calendar-body');
     // }, []);
-
 
     useEffect(() => {
         getAppointments()
@@ -111,7 +106,6 @@ const AppointmentList = (props) => {
         //     .catch((error) => {
         //         toast.error('There has been an error getting the date, please try again!');
         //     });
-
 
     }, [reloadCount]);
 
@@ -214,7 +208,6 @@ const AppointmentList = (props) => {
                                             </Card.Body>
                                         </Card>
                                     </Col>
-
                                     <>
                                         {appointments ?
                                             <>
@@ -244,19 +237,17 @@ const AppointmentList = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={3} className='d-flex'>
-                                                                                    <div className='d-flex user-image-appointment'>
-                                                                                        {appointment.image && (
-                                                                                            <>
-                                                                                                <div
-                                                                                                    className='user-photo'
-                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.image})` }}
-                                                                                                >
-                                                                                                </div>
-                                                                                                :
-                                                                                                <div className="profile-image" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
-                                                                                            </>
-                                                                                        )}
-                                                                                    </div>
+
+                                                                                    {appointment.image !== null && appointment.image !== '' ? (
+                                                                                        <div
+                                                                                            className='user-photo'
+                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.image})` }}
+                                                                                        >
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <img src={UserPlaceholder} className='placeholder-img me-2' />
+                                                                                    )}
+
                                                                                     <span className='d-flex justify-content-center align-items-center ms-2 mt-1'>
                                                                                         {appointment.first_name}
                                                                                         &nbsp;

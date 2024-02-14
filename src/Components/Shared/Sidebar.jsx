@@ -1,7 +1,19 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import {
-    CardFooter, Input, CardBody, Label, ModalHeader, ModalBody, ModalFooter, Card, Col, Modal, Table, Row, Accordion,
+    CardFooter,
+    Input,
+    CardBody,
+    Label,
+    ModalHeader,
+    ModalBody,
+    ModalFooter,
+    Card,
+    Col,
+    Modal,
+    Table,
+    Row,
+    Accordion,
     AccordionBody,
     AccordionHeader,
     AccordionItem,
@@ -24,11 +36,6 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
     const currentUser = cookies.currentUser;
     const [user, setUser] = useState('');
     const [designerId, setDesignerId] = useState('');
-    const [allShow, setAllShow] = useState(true);
-    const [show, setShow] = useState(false);
-
-    const [onCurrentTab, setOnCurrentTab] = useState('');
-
     const navigate = useNavigate();
 
     const getUser = async () => {
@@ -43,15 +50,13 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                     setUser(selectedUser);
                     setDesignerId(selectedUser.designer.id);
                 } else {
-                    toast.error('There has been an error getting the date, please try again!');
+                    toast.error('There has been an error getting the user, please try again!');
                 }
             })
             .catch((error) => {
-                toast.error('There has been an error getting the date, please try again!');
+                toast.error('There has been an error getting the user, please try again!');
             });
     }, []);
-
-
 
     return (
         <>

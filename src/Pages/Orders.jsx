@@ -29,10 +29,8 @@ const Orders = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'token', 'userRole']);
     const token = cookies.token;
     const [reloadCount, setReloadCount] = useState(0);
-    const [formStatus, setFormStatus] = useState('standby');
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
-    const [checkOutFormData, setCheckOutFormData] = useState(initialCheckOut);
 
     const [allShow, setAllShow] = useState(true);
     const [activeShow, setActiveShow] = useState(false);
@@ -46,9 +44,6 @@ const Orders = (props) => {
     const [designerName, setDesignerName] = useState('');
     const [text, setText] = useState('')
 
-    function handleOnEnter(text) {
-        console.log('enter', text)
-    }
 
     const showTab = (tab) => {
         if (tab == "all") {
@@ -116,10 +111,13 @@ const Orders = (props) => {
         }
     }
 
-
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
+    }
+
+    function handleOnEnter(text) {
+        console.log('enter', text)
     }
 
     const getAddCarts = async () => {
@@ -1082,7 +1080,6 @@ const Orders = (props) => {
                                                 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
                                             </div>
                                         </div>
-
                                         <img src={User} className='placeholder-chat ms-3' />
                                     </div>
 
