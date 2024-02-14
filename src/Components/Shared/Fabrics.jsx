@@ -188,6 +188,7 @@ const Fabrics = (props) => {
                                         var wishlist_user_ids = fabric.wishlist_user_ids;
                                         const userWishlist = wishlist_user_ids.includes(currentUser);
 
+
                                         return (
                                             <>
                                                 {index < limit ?
@@ -286,6 +287,7 @@ const Fabrics = (props) => {
                                                                 :
                                                                 null
                                                             } */}
+
                                                         </div>
                                                     </Col >
                                                     :

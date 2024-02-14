@@ -85,7 +85,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
     const getDesignerAppointment = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
     };
-    
+
 
     const convertHoursToDatetime = (time, selectedDate) => {
         const [hours, minutes, period] = time.split(/[: ]/);
@@ -99,8 +99,6 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
 
         return resultDatetime.toISOString();
     };
-
-
 
     const handleSelectEvent = useCallback((event) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
@@ -117,8 +115,8 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
         setAppointmentModalIsOpen(true);
         console.log("formattedDateStart", formattedDateStart);
         console.log("formattedDateEnd", formattedDateEnd);
-        
-      }, []);
+
+    }, []);
 
     const closeAppointmentModal = () => {
         setAppointmentModalIsOpen(false);
@@ -179,7 +177,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
                     setConsultationFormData(intitialConsultationData);
                     toast.success('Appointment added successfully!');
                 } else {
-                    if(status == "Fail") {
+                    if (status == "Fail") {
                         const errors = response.data.errors;
                         if (errors && errors.length > 0) {
                             errors.map((error, index) => {
@@ -221,31 +219,31 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
                 if (appointments) {
                     const apiEventDataArray = [];
                     for (let i = 0; i < appointments.length; i++) {
-                      const appointment = appointments[i];
-                      const appointmentDateTime = appointment.consultation_date_time;
-                      const appointmentStartIso = convertHoursToDatetime(appointment.consultation_hour_start, appointmentDateTime);
-                      const appointmentEndIso = convertHoursToDatetime(appointment.consultation_hour_end, appointmentDateTime);
-                      const eventData = {
-                        id: appointment.id,
-                        title: 'Appointment with ' + appointment.first_name + ' ' + appointment.last_name,
-                        start: new Date(appointmentStartIso),
-                        end: new Date(appointmentEndIso),
-                        desc: appointment.consultation_details,
-                      };
-                      apiEventDataArray.push(eventData);
+                        const appointment = appointments[i];
+                        const appointmentDateTime = appointment.consultation_date_time;
+                        const appointmentStartIso = convertHoursToDatetime(appointment.consultation_hour_start, appointmentDateTime);
+                        const appointmentEndIso = convertHoursToDatetime(appointment.consultation_hour_end, appointmentDateTime);
+                        const eventData = {
+                            id: appointment.id,
+                            title: 'Appointment with ' + appointment.first_name + ' ' + appointment.last_name,
+                            start: new Date(appointmentStartIso),
+                            end: new Date(appointmentEndIso),
+                            desc: appointment.consultation_details,
+                        };
+                        apiEventDataArray.push(eventData);
                     }
                     setEvents(apiEventDataArray);
                     // console.log("apiEventDataArray", apiEventDataArray);
-                  } else {
+                } else {
                     const errors = response.data.errors;
                     if (errors && errors.length > 0) {
-                      errors.forEach((error) => {
-                        toast.error(error);
-                      });
+                        errors.forEach((error) => {
+                            toast.error(error);
+                        });
                     } else {
-                      toast.error('There has been an error getting the appointments, please try again!');
+                        toast.error('There has been an error getting the appointments, please try again!');
                     }
-                  }
+                }
             }
         }).catch((error) => {
             console.log(error);
@@ -253,8 +251,6 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
         });
 
     }, [reloadCount]);
-
-
 
     return (
         <>
@@ -385,30 +381,30 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
                         <hr className="mt-0 mb-2" />
 
                         {selectedEvent && (
-                           <div className="px-3">
+                            <div className="px-3">
 
-                            {selectedEvent.title != "" &&
-                                <>
-                                    <p>Appointment Title: <span className="fw-500 current-date ms-2">{selectedEvent.title}</span></p>
-                                </>
-                            }
+                                {selectedEvent.title != "" &&
+                                    <>
+                                        <p>Appointment Title: <span className="fw-500 current-date ms-2">{selectedEvent.title}</span></p>
+                                    </>
+                                }
 
-                            {selectedEvent.start != "" &&
-                                <>
-                                    <p>Appointment Start: <span className="fw-500 current-date ms-2">{selectedEvent.start}</span></p>
-                                </>
-                            }
-                            {selectedEvent.end != "" &&
-                                <>
-                                    <p>Appointment End: <span className="fw-500 current-date ms-2">{selectedEvent.end}</span></p>
-                                </>
-                            }
-                            {selectedEvent.desc != "" || selectedEvent.desc != null &&
-                                <>
-                                    <p>Appointment Description: <span className="fw-500 current-date ms-2">{selectedEvent.desc}</span></p>
-                                </>
-                            }
-                        </div>
+                                {selectedEvent.start != "" &&
+                                    <>
+                                        <p>Appointment Start: <span className="fw-500 current-date ms-2">{selectedEvent.start}</span></p>
+                                    </>
+                                }
+                                {selectedEvent.end != "" &&
+                                    <>
+                                        <p>Appointment End: <span className="fw-500 current-date ms-2">{selectedEvent.end}</span></p>
+                                    </>
+                                }
+                                {selectedEvent.desc != "" || selectedEvent.desc != null &&
+                                    <>
+                                        <p>Appointment Description: <span className="fw-500 current-date ms-2">{selectedEvent.desc}</span></p>
+                                    </>
+                                }
+                            </div>
                         )}
                         <ModalFooter>
                             <div className='text-right'>

@@ -6,10 +6,9 @@ import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import { CiCreditCard2 } from "react-icons/ci";
 import '../Assets/styles/Cart/style.css';
-import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import User from '../Assets/images/user.png';
-import { GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
+import { GoAlertFill } from 'react-icons/go';
 import axios from "axios";
 import toast from 'react-hot-toast';
 
@@ -65,26 +64,6 @@ const Cart = (props) => {
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
     }, []);
-
-    const addBusinessHoursSubmitPost = (e) => {
-        // e.preventDefault();
-        setFormStatus('loading');
-        postCheckOut(checkOutFormData).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setFormStatus('standby');
-                setReloadCount(reloadCount + 1);
-                setCheckOutFormData(initialCheckOut);
-                toast.success('Availability added successfully!');
-            } else {
-                setFormStatus('standby');
-                toast.error('There has been an error saving the appointment, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the appointment, please try again!');
-        });
-    }
-
 
     useEffect(() => {
         // getAddCarts()

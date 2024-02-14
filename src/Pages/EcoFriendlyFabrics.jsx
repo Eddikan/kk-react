@@ -306,11 +306,11 @@ const EcoFriendlyFabrics = (props) => {
                         <Row className="mt-2">
                             <Col lg="3">
                                 <div className="filter-sidebar pe-4">
-                                    {/* <Form.Group className='mb-4'>
+                                    <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Search</Form.Label>
                                         <FormControl type='text' name='search' value={search} className='mr-sm-2' onChange={handleChangeSearch} placeholder='Enter your search term...' />
                                     </Form.Group>
-                                    <hr className="border-black" /> */}
+                                    <hr className="border-black" />
                                     <div style={{ position: "relative" }} className="mb-4">
                                         <div>
                                             <Form.Control as='select' onChange={(e) => handleSortFieldChange(e.target.value)}>
