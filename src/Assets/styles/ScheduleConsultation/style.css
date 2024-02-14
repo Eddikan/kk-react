@@ -85,6 +85,17 @@
     justify-content: end;
 }
 
+.appointment-calendar-container .rbc-toolbar {
+    margin-bottom: 20px !important;
+    justify-content: unset;
+    column-gap: 67px;
+}
+.appointment-calendar-container span.rbc-toolbar-label {
+    font-size: 18px !important;
+    font-weight: 400;
+    flex-grow: 0 !important;
+}
+
 /* width */
 .timeslots-container::-webkit-scrollbar {
     width: 10px;

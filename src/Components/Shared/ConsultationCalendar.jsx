@@ -2,7 +2,7 @@ import { Calendar, momentLocalizer, Views, DateLocalizer } from 'react-big-calen
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { FiCalendar } from "react-icons/fi";
 import { LuGlobe2 } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
@@ -135,12 +135,23 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         return hoursArray.map(hour => convertTo12HourFormat(hour));
     }
 
+    const { defaultDate, views } = useMemo(
+        () => ({
+          defaultDate: new Date(1970, 1, 1),
+          views: [Views.MONTH],
+        }),
+        []
+    )
+
     const handleCalendarTimeslotClick = ({ start, end }) => {
+        //clear previous selected hour slot
+        setClickedTimeslotButton(null);
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
         const formattedDate = new Intl.DateTimeFormat('en-US', options).format(start);
         setSelectedDate(formattedDate);
         const timeDifference = end - start;
+        console.log("formattedDate", formattedDate);
 
         // Convert milliseconds to hours
         const hoursDifference = timeDifference / (1000 * 60 * 60);
@@ -297,10 +308,12 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                     <Calendar
                                         localizer={localizer}
                                         events={events}
+                                        defaultView={Views.MONTH}
                                         startAccessor="start"
                                         endAccessor="end"
                                         onSelectSlot={handleCalendarTimeslotClick}
                                         selectable
+                                        views={views}
                                     />
                                 </div>
                             </Col>
@@ -308,19 +321,30 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                 <div className="time-container">
                                     <h4>Time</h4>
                                     <div className="timeslots-container">
-                                        {selectedHoursArray.map((time, index) => (
-                                            <div className="timeslots-column" key={index}>
-                                                <div>
-                                                    <button key={index} className={clickedTimeslotButton == index ? "btn btn-primary timeslot-btn" : "btn btn-primary"} onClick={() => handleTimeslotClick({ time, index })}>{time}</button>
-                                                </div>
-                                                <div>
-                                                    {clickedTimeslotButton == index && (
-                                                        <button key={index} className="btn btn-primary timeslot-btn" onClick={() => handleTimeslotNextClick()}>Next</button>
-                                                    )}
-                                                </div>
-                                            </div>
+                                        {selectedHoursArray.length > 0 ?
+                                            <>
+                                                {selectedHoursArray.map((time, index) => (
+                                                    <div className="timeslots-column" key={index}>
+                                                        <div>
+                                                            <button key={index} className={clickedTimeslotButton == index ? "btn btn-primary timeslot-btn" : "btn btn-primary"} onClick={() => handleTimeslotClick({ time, index })}>{time}</button>
+                                                        </div>
+                                                        <div>
+                                                            {clickedTimeslotButton == index && (
+                                                                <button key={index} className="btn btn-primary timeslot-btn" onClick={() => handleTimeslotNextClick()}>Next</button>
+                                                            )}
+                                                        </div>
+                                                    </div>
 
-                                        ))}
+                                                ))}
+                                            </>
+                                        :
+                                        <>
+                                            <div>
+                                                <p>No available hours.</p>
+                                            </div>
+                                        </>
+                                        }
+                                        
                                     </div>
                                 </div>
 

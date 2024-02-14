@@ -117,6 +117,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
         setAppointmentModalIsOpen(true);
         console.log("formattedDateStart", formattedDateStart);
         console.log("formattedDateEnd", formattedDateEnd);
+        console.log("event", event);
         
       }, []);
 
@@ -126,10 +127,8 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
     }
 
     const handleChangeConsultation = (e) => {
-        const { name, value } = e.target;
         setConsultationFormData({
             ...consultationFormData,
-            [name]: value,
 
             email: currentUserDetails.email,
             first_name: currentUserDetails.first_name,
@@ -389,23 +388,36 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
 
                             {selectedEvent.title != "" &&
                                 <>
-                                    <p>Appointment Title: <span className="fw-500 current-date ms-2">{selectedEvent.title}</span></p>
+                                    <div className="d-flex">
+                                        <p className="fw-500">Appointment Title:</p>
+                                        <p className="current-date ms-2">{selectedEvent.title}</p>
+                                    </div>
+                                    
                                 </>
                             }
 
                             {selectedEvent.start != "" &&
                                 <>
-                                    <p>Appointment Start: <span className="fw-500 current-date ms-2">{selectedEvent.start}</span></p>
+                                    <div className="d-flex">
+                                        <p className="fw-500">Appointment Start:</p>
+                                        <p className="current-date ms-2">{selectedEvent.start}</p>
+                                    </div>
                                 </>
                             }
                             {selectedEvent.end != "" &&
                                 <>
-                                    <p>Appointment End: <span className="fw-500 current-date ms-2">{selectedEvent.end}</span></p>
+                                    <div className="d-flex">
+                                        <p className="fw-500">Appointment End:</p>
+                                        <p className="current-date ms-2">{selectedEvent.end}</p>
+                                    </div>
                                 </>
                             }
-                            {selectedEvent.desc != "" || selectedEvent.desc != null &&
+                            {selectedEvent.desc != "" &&
                                 <>
-                                    <p>Appointment Description: <span className="fw-500 current-date ms-2">{selectedEvent.desc}</span></p>
+                                    <div className="d-flex">
+                                        <p className="fw-500">Appointment Description:</p>
+                                        <p className="current-date ms-2">{selectedEvent.desc}</p>
+                                    </div>
                                 </>
                             }
                         </div>
