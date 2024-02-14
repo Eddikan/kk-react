@@ -16,6 +16,7 @@ import { AiOutlineMessage } from "react-icons/ai";
 import { CiSearch } from 'react-icons/ci';
 import '../Assets/styles/AppointmentList/style.css';
 import { IoEyeOutline } from "react-icons/io5";
+import UserPlaceholder from 'Assets/images/user.png';
 import toast from 'react-hot-toast';
 import axios from "axios";
 import { useNavigate, useParams, Link } from 'react-router-dom';
@@ -245,11 +246,15 @@ const AppointmentList = (props) => {
                                                                                 <Col lg={3} className='d-flex'>
                                                                                     <div className='d-flex user-image-appointment'>
                                                                                         {appointment.image && (
-                                                                                            <div
-                                                                                                className='user-photo'
-                                                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.image})` }}
-                                                                                            >
-                                                                                            </div>
+                                                                                            <>
+                                                                                                <div
+                                                                                                    className='user-photo'
+                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.image})` }}
+                                                                                                >
+                                                                                                </div>
+                                                                                                :
+                                                                                                <div className="profile-image" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
+                                                                                            </>
                                                                                         )}
                                                                                     </div>
                                                                                     <span className='d-flex justify-content-center align-items-center ms-2 mt-1'>

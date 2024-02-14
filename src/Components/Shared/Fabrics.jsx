@@ -156,7 +156,7 @@ const Fabrics = (props) => {
                                                     onChange={(e) => {
                                                         const selectedOption = e.target.value;
                                                         if (selectedOption === "New") {
-                                                            toggleSortFabrics("?date=", "desc");
+                                                            toggleSortFabrics("?date=", "desc"); 
                                                         } else if (selectedOption === "Price") {
                                                             toggleSortFabrics("?price=", "desc");
                                                         } else if (selectedOption === "Most Liked") {

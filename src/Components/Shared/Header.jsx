@@ -36,8 +36,6 @@ const Header = () => {
   const [user, setUser] = useState('');
   const [reloadCount, setReloadCount] = useState(0);
   const [designerId, setDesignerId] = useState('');
-  const [fabrics, setFabrics] = useState('');
-
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
   const [userType, setUserType] = useState('user');
@@ -168,18 +166,7 @@ const Header = () => {
         });
     }
 
-    getFabrics()
-      .then((response) => {
-        const selectedFabrics = response.data.data;
-        if (selectedFabrics) {
-          setFabrics(selectedFabrics);
-        } else {
-          toast.error('There has been an error getting the date, please try again!');
-        }
-      })
-      .catch((error) => {
-        toast.error('There has been an error getting the date, please try again!');
-      });
+
   }, [reloadCount]);
 
   return (
