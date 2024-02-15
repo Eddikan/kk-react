@@ -52,13 +52,15 @@ const initialAppointments = {
 
 const localizer = momentLocalizer(moment)
 
-const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
+const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUserDetails = cookies.userDetails;
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
-    const { designerId } = useParams();
+    const { designerIdParams }= useParams();
+
+    const designer_id = designerId ?? designerIdParams;
 
     const [events, setEvents] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -72,20 +74,53 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
     const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
     const [currentTimezone, setCurrentTimezone] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [selectedHoursArray, setSelectedHoursArray] = useState([]);
+    const [startTime, setStartTime] = useState('');
+    const [endTime, setEndTime] = useState('');
 
 
     const postSetAppointment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/set/appointment', data);
     };
 
-    const getSetAppointment = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment');
+    const getAvailabilities = async (e) => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/availability?date=' + e);
     };
 
     const getDesignerAppointment = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/appointment');
     };
 
+    function convertTo12HourFormat(time24) {
+        const [hours, minutes] = time24.split(':');
+        let hours12 = parseInt(hours, 10);
+        const ampm = hours12 >= 12 ? 'PM' : 'AM';
+        hours12 = hours12 % 12 || 12;
+        return `${hours12}:${minutes} ${ampm}`;
+    }
+
+    function convert12to24(time12) {
+        const [time, period] = time12.split(' ');
+
+        let [hours, minutes] = time.split(':');
+        hours = parseInt(hours, 10);
+
+        if (period === 'PM' && hours !== 12) {
+            hours += 12;
+        } else if (period === 'AM' && hours === 12) {
+            hours = 0;
+        }
+
+        // Format the result in 24-hour format
+        const hours24 = hours.toString().padStart(2, '0');
+        const minutes24 = minutes.padStart(2, '0');
+
+        return `${hours24}:${minutes24}`;
+    }
+
+    function convertArrayTo12HourFormat(hoursArray) {
+        return hoursArray.map(hour => convertTo12HourFormat(hour));
+    }
 
     const convertHoursToDatetime = (time, selectedDate) => {
         const [hours, minutes, period] = time.split(/[: ]/);
@@ -144,14 +179,82 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
             [name]: value,
 
         });
-        console.log("name", name);
-        console.log("value", name);
-        console.log("consultationFormData", consultationFormData);
-        console.log("Selected Date", selectedDate);
+        // console.log("name", name);
+        // console.log("value", name);
+        // console.log("consultationFormData", consultationFormData);
+        // console.log("Selected Date", selectedDate);
     }
 
     const handleDateClick = ({ start }) => {
-        console.log("Start", start);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+
+        const formattedDate = new Intl.DateTimeFormat('en-US', options).format(start);
+
+        getAvailabilities(formattedDate).then(response => {
+            const selectedHours = response.data.data?.available_hours;
+            const status = response.data.status;
+            if (status == "Fail") {
+                const errors = response.data.errors;
+                if (errors && errors.length > 0) {
+                    errors.map((error, index) => {
+                        toast.error(error);
+                        return null; // React requires a return value, so we return null here
+                    })
+                }
+            } else {
+                if (selectedHours) {
+                    let hoursArray = convertArrayTo12HourFormat(selectedHours);
+                    setSelectedHoursArray(hoursArray);
+                    if (hoursArray.length > 0) {
+                        if (hoursArray.length > 1) {
+                            setStartTime(hoursArray[0]);
+                            setEndTime(hoursArray[hoursArray.length - 1]);
+                        } else {
+                            setStartTime(hoursArray[0]);
+                        }
+                        setConsultationFormData({
+                            ...consultationFormData,
+                
+                            email: currentUserDetails.email,
+                            first_name: currentUserDetails.first_name,
+                            last_name: currentUserDetails.last_name,
+                            timezone: currentTimezone,
+                            consultation_date_time: convertToIsoDatetime(selectedDate),
+                            consultation_details: 'Self added Appointment',
+                            consultation_hour_start: convert12to24(hoursArray[0]),
+                        });
+
+                    } else {
+                        setConsultationFormData({
+                            ...consultationFormData,
+                
+                            email: currentUserDetails.email,
+                            first_name: currentUserDetails.first_name,
+                            last_name: currentUserDetails.last_name,
+                            timezone: currentTimezone,
+                            consultation_date_time: convertToIsoDatetime(selectedDate),
+                            consultation_details: 'Self added Appointment',
+                            consultation_hour_start: '',
+                        });
+                        setStartTime('');
+                        setEndTime('');
+                    }
+
+                } else {
+                    const errors = response.data.errors;
+                    if (errors && errors.length > 0) {
+                        errors.map((error, index) => {
+                            toast.error(error);
+                            return null; // React requires a return value, so we return null here
+                        });
+                    } else {
+                        toast.error('There has been an error getting the schedule, please try again!');
+                    }
+                }
+            }
+        }).catch(() => {
+            toast.error('There has been an error adding the appointment, please try again!');
+        });
         setSelectedDate(start);
         setModalIsOpen(true);
     };
@@ -217,8 +320,8 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
         getDesignerAppointment().then((response) => {
             const appointments = response.data?.data;
             const status = response.data.status;
-            console.log("appointments", appointments);
-            console.log("status", status);
+            // console.log("appointments", appointments);
+            // console.log("status", status);
             if (status == "Fail") {
                 const errors = response.data.errors;
                 if (errors && errors.length > 0) {
@@ -311,7 +414,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
                                     </Col>
 
                                     <Col lg="8">
-                                        <Row className="align-items-center mt-4">
+                                        <Row className={`align-items-center mt-3 ${startTime != "" || endTime != "" ? "mb-3" : ""}`}>
                                             {times.map((time, index) => {
                                                 return (
                                                     <>
@@ -365,6 +468,33 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
                                             </Col>
                                         </Row>
                                     </Col>
+                                    {startTime != "" || endTime != "" ?
+                                        <Col lg="12" className='mt-0 text-left'>
+                                            {startTime != "" || endTime != "" ?
+                                                <>
+                                                    <span className='title-appointment'>Schedule</span>
+                                                    {startTime == "" ?
+                                                        <>
+                                                            <p className='mb-0'>{endTime}</p>
+                                                        </>
+                                                        : endTime == "" ?
+                                                        <>
+                                                            <p className='mb-0'>{startTime}</p>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <p className='mb-0'>{startTime} - {endTime}</p>
+                                                        </>
+                                                    }
+                                                </>
+                                                :
+                                                null
+                                            }
+                                        </Col>
+                                        :
+                                        null
+                                    }
+                                    
                                 </Row>
                             </div>
                         )}

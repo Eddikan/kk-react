@@ -69,7 +69,7 @@ const PortfolioGrid = (props) => {
         });
     }
 
-    console.log("portfolio.portfolio_items", portfolio.portfolio_items);
+    // console.log("portfolio.portfolio_items", portfolio.portfolio_items);
 
     return (
         <>

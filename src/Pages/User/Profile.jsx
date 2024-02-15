@@ -481,7 +481,7 @@ const Profile = () => {
 
                         {myCalendarShow ?
                             <div id="profile-portfolio">
-                                <MyCalendar />
+                                <MyCalendar designerId={designer?.id} />
                             </div>
                             :
                             null

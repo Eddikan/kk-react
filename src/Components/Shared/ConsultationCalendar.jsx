@@ -2,7 +2,7 @@ import { Calendar, momentLocalizer, Views, DateLocalizer } from 'react-big-calen
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { FiCalendar } from "react-icons/fi";
 import { LuGlobe2 } from "react-icons/lu";
 import { FaRegUser } from "react-icons/fa";
@@ -43,12 +43,24 @@ const intitialConsultationData = {
 const localizer = momentLocalizer(moment)
 
 const ConsultationCalendar = ({ toggleEvent }) => {
+    const calendarRef = useRef(null);
 
-    const dayPropGetter = (date) => {
-        const isPast = moment(date).isBefore(moment(), 'day');
-        return {
-          style: isPast ? { backgroundColor: '#E6E6E6', pointerEvents: 'none' } : {}
-        };
+    const applyPastDateClass = () => {
+        const isPast = (date) => moment(date, 'DD').isBefore(moment(), 'day');
+    
+        const dayCells = document.querySelectorAll('.rbc-date-cell'); // Select all day cell elements
+        dayCells.forEach(cell => {
+          const button = cell.querySelector('button'); // Select the button element inside the day cell
+          const dateText = button.textContent.trim(); // Get the text content of the button
+          const date = moment(dateText, 'DD'); // Parse the date text using moment
+          if (isPast(date)) {
+            cell.classList.add('past-date'); // Add the class to the parent day cell
+            button.disabled = true;
+          } else {
+            cell.classList.remove('past-date'); // Remove the class from the parent day cell
+            button.disabled = false;
+          }
+        });
     };
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
@@ -62,7 +74,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedDate12, setSelectedDate12] = useState("");
-    const [selectedHoursArray, setSelectedHoursArray] = useState([])
+    const [selectedHoursArray, setSelectedHoursArray] = useState([]);
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
     const [appointmentFormData, setAppointmentFormData] = useState(initialAppointments);
@@ -152,6 +164,15 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     )
 
     const handleCalendarTimeslotClick = ({ start, end }) => {
+        const isPast = moment(start).isBefore(moment(), 'day');
+    
+        // If the start date is in the past, do nothing
+        if (isPast) {
+            setSelectedDate('');
+            setSelectedHoursArray([]);
+            return;
+        }
+
         //clear previous selected hour slot
         setClickedTimeslotButton(null);
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -258,6 +279,12 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         getTimezone();
     }, []);
 
+    useEffect(() => {
+        if (calendarRef.current) {
+          applyPastDateClass(); // Apply the past date class when the component mounts or updates
+        }
+    }, [calendarRef.current]);
+
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(!underConstructionShow);
         setModalHeading(message);
@@ -314,6 +341,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                             <Col lg="8">
                                 <div className="schedule-calendar-container">
                                     <Calendar
+                                        ref={calendarRef}
                                         localizer={localizer}
                                         events={events}
                                         defaultView={Views.MONTH}
@@ -321,8 +349,8 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                         endAccessor="end"
                                         onSelectSlot={handleCalendarTimeslotClick}
                                         selectable
+                                        onView={applyPastDateClass} 
                                         views={views}
-                                        dayPropGetter={dayPropGetter}
                                     />
                                 </div>
                             </Col>

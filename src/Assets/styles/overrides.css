@@ -1633,3 +1633,13 @@ a.schedule-consultation {
     display: contents;
 }
 
+/* Disable Button on Calendar */
+.rbc-date-cell.past-date {
+    background-color: #e6e6e6 !important;
+    pointer-events: none;
+}
+
+.rbc-date-cell.past-date button {
+    pointer-events: none;
+    color: #999999;
+}
