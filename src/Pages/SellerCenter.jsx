@@ -57,14 +57,24 @@ const SellerCenter = (props) => {
     const [thursdayHoursFormData, setThursdayHoursFormData] = useState([initialBusinessHours]);
     const [fridayHoursFormData, setFridayHoursFormData] = useState([initialBusinessHours]);
     const [saturdayHoursFormData, setSaturdayHoursFormData] = useState([initialBusinessHours]);
+
+    const [sundayHoursCopyFormData, setSundayHoursCopyFormData] = useState([]);
+    const [mondayHoursCopyFormData, setMondayHoursCopyFormData] = useState([]);
+    const [tuesdayHoursCopyFormData, setTuesdayHoursCopyFormData] = useState([]);
+    const [wednesdayHoursCopyFormData, setWednesdayHoursCopyFormData] = useState([]);
+    const [thursdayHoursCopyFormData, setThursdayHoursCopyFormData] = useState([]);
+    const [fridayHoursCopyFormData, setFridayHoursCopyFormData] = useState([]);
+    const [saturdayHoursCopyFormData, setSaturdayHoursCopyFormData] = useState([]);
     const [appointmentFormData, setAppointmentFormData] = useState(initialAppointments);
     const [businessHoursFormData, setBusinessHoursFormData] = useState([initialBusinessHours]);
     const [calendarAppointment, setCalendarAppointment] = useState([]);
     const [times, setTimes] = useState([]);
     const [availability, setAvailability] = useState([]);
+    const [currentTimezone, setCurrentTimezone] = useState(null);
 
 
     const [reloadCount, setReloadCount] = useState(0);
+    const [scheduleReloadCount, setScheduleReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
 
     // const postSetAppointment = async (data) => {
@@ -265,12 +275,35 @@ const SellerCenter = (props) => {
                                 }));
 
                                 setMondayHoursFormData(mappedMondayBusinessHours);
+                                setSundayHoursCopyFormData(mappedMondayBusinessHours);
                                 setTuesdayHoursFormData(mappedTuesdayBusinessHours);
+                                setTuesdayHoursCopyFormData(mappedTuesdayBusinessHours);
                                 setWednesdayHoursFormData(mappedWednesdayBusinessHours);
+                                setWednesdayHoursCopyFormData(mappedWednesdayBusinessHours);
                                 setThursdayHoursFormData(mappedThursdayBusinessHours);
+                                setThursdayHoursCopyFormData(mappedThursdayBusinessHours);
                                 setFridayHoursFormData(mappedFridayBusinessHours);
+                                setFridayHoursCopyFormData(mappedFridayBusinessHours);
                                 setSaturdayHoursFormData(mappedSaturdayBusinessHours);
+                                setSaturdayHoursCopyFormData(mappedSaturdayBusinessHours);
                                 setSundayHoursFormData(mappedSundayBusinessHours);
+                                setSundayHoursCopyFormData(mappedSundayBusinessHours);
+                                if(mappedFridayBusinessHours.length <=0 ) {
+                                    //means that the day is unavailable
+                                    setIsFridayChecked(true);
+                                } else if(mappedSundayBusinessHours.length <=0) {
+                                    setIsSundayChecked(true);
+                                } else if(mappedMondayBusinessHours.length <=0) {
+                                    setIsMondayChecked(true);
+                                } else if (mappedTuesdayBusinessHours.length <=0) {
+                                    setIsTuesdayChecked(true);
+                                } else if (mappedWednesdayBusinessHours.length <=0) {
+                                    setIsWednesdayChecked(true);
+                                } else if (mappedThursdayBusinessHours.length <=0) {
+                                    setIsThursdayChecked(true);
+                                } else if (mappedSaturdayBusinessHours.length <=0) {
+                                    setIsSaturdayChecked(true);
+                                }
                             } else {
                                 setSundayHoursFormData([initialBusinessHours]);
                             }
@@ -357,11 +390,11 @@ const SellerCenter = (props) => {
     //* This will close the fields when you click the checkbox *//
     const handleSundayCheckboxChangeClose = () => {
         setIsSundayChecked(!isSundayChecked);
-
         if (!isSundayChecked) {
             setSundayHoursFormData([]);
         } else {
-            setSundayHoursFormData([sundayHoursFormData]);
+            setScheduleReloadCount(scheduleReloadCount+1);
+            setSundayHoursFormData([sundayHoursCopyFormData]);
         }
     };
 
@@ -371,7 +404,8 @@ const SellerCenter = (props) => {
         if (!isMondayChecked) {
             setMondayHoursFormData([]);
         } else {
-            setMondayHoursFormData([mondayHoursFormData]);
+            setScheduleReloadCount(scheduleReloadCount+1);
+            setMondayHoursFormData([mondayHoursCopyFormData]);
         }
     };
 
@@ -381,7 +415,8 @@ const SellerCenter = (props) => {
         if (!isTuesdayChecked) {
             setTuesdayHoursFormData([]);
         } else {
-            setTuesdayHoursFormData([tuesdayHoursFormData]);
+            setScheduleReloadCount(scheduleReloadCount+1);
+            setTuesdayHoursFormData([tuesdayHoursCopyFormData]);
         }
     };
 
@@ -391,7 +426,8 @@ const SellerCenter = (props) => {
         if (!isWednesdayChecked) {
             setWednesdayHoursFormData([]);
         } else {
-            setWednesdayHoursFormData([wednesdayHoursFormData]);
+            setScheduleReloadCount(scheduleReloadCount+1);
+            setWednesdayHoursFormData([wednesdayHoursCopyFormData]);
         }
     };
 
@@ -401,7 +437,8 @@ const SellerCenter = (props) => {
         if (!isThursdayChecked) {
             setThursdayHoursFormData([]);
         } else {
-            setThursdayHoursFormData([thursdayHoursFormData]);
+            setScheduleReloadCount(scheduleReloadCount+1);
+            setThursdayHoursFormData([thursdayHoursCopyFormData]);
         }
     };
 
@@ -412,7 +449,8 @@ const SellerCenter = (props) => {
         if (!isFridayChecked) {
             setFridayHoursFormData([]);
         } else {
-            setFridayHoursFormData([fridayHoursFormData]);
+            setScheduleReloadCount(scheduleReloadCount+1);
+            setFridayHoursFormData([fridayHoursCopyFormData]);
         }
     };
 
@@ -422,7 +460,8 @@ const SellerCenter = (props) => {
         if (!isSaturdayChecked) {
             setSaturdayHoursFormData([]);
         } else {
-            setSaturdayHoursFormData([saturdayHoursFormData]);
+            setScheduleReloadCount(scheduleReloadCount+1);
+            setSaturdayHoursFormData([saturdayHoursCopyFormData]);
         }
     };
 
@@ -522,7 +561,7 @@ const SellerCenter = (props) => {
                 availabilities: saturdayHoursFormData
             },
         ];
-        postBusinessHours({ content, designer_id: designerId, }).then(response => {
+        postBusinessHours({ content, designer_id: designerId, timezone: currentTimezone }).then(response => {
             const status = response.data.status;
             if (status === "Success") {
                 setFormStatus('standby');
@@ -541,12 +580,141 @@ const SellerCenter = (props) => {
 
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
+        const getTimezone = () => {
+            const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+            setCurrentTimezone(timezone);
+        };
+
+        getTimezone();
     }, []);
 
 
     useEffect(() => {
 
-    }, [reloadCount]);
+        getBusinessHours()
+            .then((response) => {
+                const selectedTime = response.data.data;
+                const status = response.data.status;
+                if (status == "Fail") {
+                    toast.error('There has no availabilty found!');
+                }
+                else {
+                    if (selectedTime) {
+                        console.log(selectedTime.content)
+                        setTimes(selectedTime.content);
+                        if (selectedTime && selectedTime.content && selectedTime.content.length > 0) {
+
+                            const sundayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'sunday');
+                            const mondayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'monday');
+                            const tuesdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'tuesday');
+                            const wednesdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'wednesday');
+                            const thursdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'thursday');
+                            const fridayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'friday');
+                            const saturdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'saturday');
+
+                            if (sundayEntry && mondayEntry && tuesdayEntry) {
+                                const sundayAvailabilities = sundayEntry.availabilities || [];
+
+                                const mappedSundayBusinessHours = sundayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const mondayAvailabilities = mondayEntry.availabilities || [];
+
+                                const mappedMondayBusinessHours = mondayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const tuesdayAvailabilities = tuesdayEntry.availabilities || [];
+
+                                const mappedTuesdayBusinessHours = tuesdayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const wednesdayAvailabilities = wednesdayEntry.availabilities || [];
+
+                                const mappedWednesdayBusinessHours = wednesdayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const thursdayAvailabilities = thursdayEntry.availabilities || [];
+
+                                const mappedThursdayBusinessHours = thursdayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const fridayAvailabilities = fridayEntry.availabilities || [];
+
+                                const mappedFridayBusinessHours = fridayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const saturdayAvailabilities = saturdayEntry.availabilities || [];
+
+                                const mappedSaturdayBusinessHours = saturdayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                setMondayHoursFormData(mappedMondayBusinessHours);
+                                setMondayHoursCopyFormData(mappedMondayBusinessHours);
+                                setTuesdayHoursFormData(mappedTuesdayBusinessHours);
+                                setTuesdayHoursCopyFormData(mappedTuesdayBusinessHours);
+                                setWednesdayHoursFormData(mappedWednesdayBusinessHours);
+                                setWednesdayHoursCopyFormData(mappedWednesdayBusinessHours);
+                                setThursdayHoursFormData(mappedThursdayBusinessHours);
+                                setThursdayHoursCopyFormData(mappedThursdayBusinessHours);
+                                setFridayHoursFormData(mappedFridayBusinessHours);
+                                setFridayHoursCopyFormData(mappedFridayBusinessHours);
+                                setSaturdayHoursFormData(mappedSaturdayBusinessHours);
+                                setSaturdayHoursCopyFormData(mappedSaturdayBusinessHours);
+                                setSundayHoursFormData(mappedSundayBusinessHours);
+                                setSundayHoursCopyFormData(mappedSundayBusinessHours);
+                                if(mappedFridayBusinessHours.length <=0 ) {
+                                    //means that the day is unavailable
+                                    setIsFridayChecked(true);
+                                } else if(mappedSundayBusinessHours.length <=0) {
+                                    setIsSundayChecked(true);
+                                } else if(mappedMondayBusinessHours.length <=0) {
+                                    setIsMondayChecked(true);
+                                } else if (mappedTuesdayBusinessHours.length <=0) {
+                                    setIsTuesdayChecked(true);
+                                } else if (mappedWednesdayBusinessHours.length <=0) {
+                                    setIsWednesdayChecked(true);
+                                } else if (mappedThursdayBusinessHours.length <=0) {
+                                    setIsThursdayChecked(true);
+                                } else if (mappedSaturdayBusinessHours.length <=0) {
+                                    setIsSaturdayChecked(true);
+                                }
+                            } else {
+                                setSundayHoursFormData([initialBusinessHours]);
+                            }
+
+                        }
+                        setBusinessHoursFormData([initialBusinessHours]);
+                    } else {
+                        toast.error('There has been an error getting the appointment, please try again!');
+                    }
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the appointment, please try again!');
+            });
+
+    }, [scheduleReloadCount]);
 
     const BusinessHoursSubmitPut = (e) => {
         setFormStatus('loading');
@@ -580,7 +748,7 @@ const SellerCenter = (props) => {
                 availabilities: saturdayHoursFormData
             },
         ];
-        putBusinessHourss({ content, designer_id: designerId, }).then(response => {
+        putBusinessHourss({ content, designer_id: designerId, timezone: currentTimezone }).then(response => {
             const status = response.data.status;
             if (status === "Success") {
                 setFormStatus('standby');
@@ -663,15 +831,8 @@ const SellerCenter = (props) => {
                                                     <>
                                                         {sundayHoursFormData.length > 0 && (
                                                             <>
-                                                                {index > 0 && (
-                                                                    <div className='w-100 d-flex justify-content-end mt-3'>
-                                                                        <div className='cursor-pointer' onClick={() => handleRemoveMondayHours(index)}>
-                                                                            <RxCross2 color='#000000' />
-                                                                        </div>
-                                                                    </div>
-                                                                )}
 
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
@@ -684,10 +845,17 @@ const SellerCenter = (props) => {
                                                                     </Form.Group>
                                                                 </Col>
 
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Closes at</p>
+                                                                    {index > 0 && (
+                                                                        <div className='close-container'>
+                                                                            <div className='cursor-pointer' onClick={() => handleRemoveSundayHours(index)}>
+                                                                                <RxCross2 color='#000000' />
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl
+                                                                        <FormControl 
                                                                             type='time'
                                                                             name='end'
                                                                             className='mr-sm-2 form-control-hours'
@@ -695,6 +863,7 @@ const SellerCenter = (props) => {
                                                                             onChange={e => handleChangeTimeSunday(e, index)}
                                                                         />
                                                                     </Form.Group>
+                                                                    
                                                                 </Col>
                                                             </>
                                                         )}
@@ -711,14 +880,14 @@ const SellerCenter = (props) => {
                                         </Row>
                                     </Col >
                                 </Row>
-                                <hr class="mb-4 mt-2" />
+                                <hr className="mb-4 mt-2" />
 
                                 <Row>
                                     <Col lg="2">
                                         <h4 className="day-header">Monday</h4>
                                         <Form.Check
                                             type={`checkbox`}
-                                            id={`schedule-sunday`}
+                                            id={`schedule-monday`}
                                             label={`Closed`}
                                             name={`day`}
                                             checked={isMondayChecked}
@@ -732,15 +901,8 @@ const SellerCenter = (props) => {
                                                     <>
                                                         {mondayHoursFormData.length > 0 && (
                                                             <>
-                                                                {index > 0 && (
-                                                                    <div className='w-100 d-flex justify-content-end mt-3'>
-                                                                        <div className='cursor-pointer' onClick={() => handleRemoveMondayHours(index)}>
-                                                                            <RxCross2 color='#000000' />
-                                                                        </div>
-                                                                    </div>
-                                                                )}
 
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
@@ -753,8 +915,15 @@ const SellerCenter = (props) => {
                                                                     </Form.Group>
                                                                 </Col>
 
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Closes at</p>
+                                                                    {index > 0 && (
+                                                                        <div className='close-container'>
+                                                                            <div className='cursor-pointer' onClick={() => handleRemoveMondayHours(index)}>
+                                                                                <RxCross2 color='#000000' />
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
                                                                             type='time'
@@ -780,14 +949,14 @@ const SellerCenter = (props) => {
                                         </Row>
                                     </Col>
                                 </Row>
-                                <hr class="mb-4 mt-2" />
+                                <hr className="mb-4 mt-2" />
 
                                 <Row>
                                     <Col lg="2">
                                         <h4 className="day-header">Tuesday</h4>
                                         <Form.Check
                                             type={`checkbox`}
-                                            id={`schedule-sunday`}
+                                            id={`schedule-tuesday`}
                                             label={`Closed`}
                                             name={`day`}
                                             checked={isTuesdayChecked}
@@ -803,15 +972,7 @@ const SellerCenter = (props) => {
                                                         {tuesdayHoursFormData.length > 0 && (
                                                             <>
 
-                                                                {index > 0 && (
-                                                                    <div className='w-100 d-flex justify-content-end mt-3'>
-                                                                        <div className='cursor-pointer' onClick={() => handleRemoveTuesdayHours(index)}>
-                                                                            <RxCross2 color='#000000' />
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
@@ -824,8 +985,15 @@ const SellerCenter = (props) => {
                                                                     </Form.Group>
                                                                 </Col>
 
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Closes at</p>
+                                                                    {index > 0 && (
+                                                                        <div className='close-container'>
+                                                                            <div className='cursor-pointer' onClick={() => handleRemoveTuesdayHours(index)}>
+                                                                                <RxCross2 color='#000000' />
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
                                                                             type='time'
@@ -852,14 +1020,14 @@ const SellerCenter = (props) => {
                                         </Row>
                                     </Col>
                                 </Row>
-                                <hr class="mb-4 mt-2" />
+                                <hr className="mb-4 mt-2" />
 
                                 <Row>
                                     <Col lg="2">
                                         <h4 className="day-header">Wednesday</h4>
                                         <Form.Check
                                             type={`checkbox`}
-                                            id={`schedule-sunday`}
+                                            id={`schedule-wednesday`}
                                             label={`Closed`}
                                             name={`day`}
                                             checked={isWednesdayChecked}
@@ -874,15 +1042,7 @@ const SellerCenter = (props) => {
                                                         {wednesdayHoursFormData.length > 0 && (
                                                             <>
 
-                                                                {index > 0 && (
-                                                                    <div className='w-100 d-flex justify-content-end mt-3'>
-                                                                        <div className='cursor-pointer' onClick={() => handleRemoveWednesdayHours(index)}>
-                                                                            <RxCross2 color='#000000' />
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
@@ -894,8 +1054,15 @@ const SellerCenter = (props) => {
                                                                         />
                                                                     </Form.Group>
                                                                 </Col>
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Closes at</p>
+                                                                    {index > 0 && (
+                                                                        <div className='close-container'>
+                                                                            <div className='cursor-pointer' onClick={() => handleRemoveWednesdayHours(index)}>
+                                                                                <RxCross2 color='#000000' />
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
                                                                             type='time'
@@ -922,14 +1089,14 @@ const SellerCenter = (props) => {
                                         </Row >
                                     </Col>
                                 </Row>
-                                <hr class="mb-4 mt-2" />
+                                <hr className="mb-4 mt-2" />
 
                                 <Row>
                                     <Col lg="2">
                                         <h4 className="day-header">Thursday</h4>
                                         <Form.Check
                                             type={`checkbox`}
-                                            id={`schedule-sunday`}
+                                            id={`schedule-thursday`}
                                             label={`Closed`}
                                             name={`day`}
                                             checked={isThursdayChecked}
@@ -944,15 +1111,7 @@ const SellerCenter = (props) => {
                                                         {thursdayHoursFormData.length > 0 && (
                                                             <>
 
-                                                                {index > 0 && (
-                                                                    <div className='w-100 d-flex justify-content-end mt-3'>
-                                                                        <div className='cursor-pointer' onClick={() => handleRemoveThursdayHours(index)}>
-                                                                            <RxCross2 color='#000000' />
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
@@ -964,8 +1123,15 @@ const SellerCenter = (props) => {
                                                                         />
                                                                     </Form.Group>
                                                                 </Col>
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Closes at</p>
+                                                                    {index > 0 && (
+                                                                        <div className='close-container'>
+                                                                            <div className='cursor-pointer' onClick={() => handleRemoveThursdayHours(index)}>
+                                                                                <RxCross2 color='#000000' />
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
                                                                             type='time'
@@ -992,14 +1158,14 @@ const SellerCenter = (props) => {
                                         </Row>
                                     </Col>
                                 </Row>
-                                <hr class="mb-4 mt-2" />
+                                <hr className="mb-4 mt-2" />
 
                                 <Row>
                                     <Col lg="2">
                                         <h4 className="day-header">Friday</h4>
                                         <Form.Check
                                             type={`checkbox`}
-                                            id={`schedule-sunday`}
+                                            id={`schedule-friday`}
                                             label={`Closed`}
                                             name={`day`}
                                             checked={isFridayChecked}
@@ -1014,15 +1180,7 @@ const SellerCenter = (props) => {
                                                         {fridayHoursFormData.length > 0 && (
                                                             <>
 
-                                                                {index > 0 && (
-                                                                    <div className='w-100 d-flex justify-content-end mt-3'>
-                                                                        <div className='cursor-pointer' onClick={() => handleRemoveFridayHours(index)}>
-                                                                            <RxCross2 color='#000000' />
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
@@ -1034,8 +1192,15 @@ const SellerCenter = (props) => {
                                                                         />
                                                                     </Form.Group>
                                                                 </Col>
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Closes at</p>
+                                                                    {index > 0 && (
+                                                                        <div className='close-container'>
+                                                                            <div className='cursor-pointer' onClick={() => handleRemoveFridayHours(index)}>
+                                                                                <RxCross2 color='#000000' />
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
                                                                             type='time'
@@ -1062,14 +1227,14 @@ const SellerCenter = (props) => {
                                         </Row >
                                     </Col>
                                 </Row>
-                                <hr class="mb-4 mt-2" />
+                                <hr className="mb-4 mt-2" />
 
                                 <Row>
                                     <Col lg="2">
                                         <h4 className="day-header">Saturday</h4>
                                         <Form.Check
                                             type={`checkbox`}
-                                            id={`schedule-sunday`}
+                                            id={`schedule-saturday`}
                                             label={`Closed`}
                                             name={`day`}
                                             checked={isSaturdayChecked}
@@ -1092,7 +1257,7 @@ const SellerCenter = (props) => {
                                                                     </div>
                                                                 )}
 
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Opens at</p>
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
@@ -1104,7 +1269,7 @@ const SellerCenter = (props) => {
                                                                         />
                                                                     </Form.Group>
                                                                 </Col>
-                                                                <Col md="5" className="pe-0">
+                                                                <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header">Closes at</p>
                                                                     <Form.Group className='mb-3'>
                                                                         <FormControl
@@ -1188,7 +1353,7 @@ const SellerCenter = (props) => {
                                                             </div>
                                                         )}
 
-                                                        <Col md="5" className="pe-0">
+                                                        <Col md="5" className="pe-0 position-relative">
                                                             <p className="hours-header mb-2">Opens at</p>
                                                             <Form.Group className='mb-3'>
                                                                 <FormControl
@@ -1200,7 +1365,7 @@ const SellerCenter = (props) => {
                                                                 />
                                                             </Form.Group>
                                                         </Col>
-                                                        <Col md="5" className="pe-0">
+                                                        <Col md="5" className="pe-0 position-relative">
                                                             <p className="hours-header mb-2">Closes at</p>
                                                             <Form.Group className='mb-3'>
                                                                 <FormControl

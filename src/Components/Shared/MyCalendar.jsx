@@ -100,6 +100,12 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
         return resultDatetime.toISOString();
     };
 
+    const convertToIsoDatetime = (date) => {
+        const resultDatetime = new Date(date);
+
+        return resultDatetime.toISOString();
+    };
+
     const handleSelectEvent = useCallback((event) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
         const formattedDateStart = new Intl.DateTimeFormat('en-US', options).format(event.start);
@@ -125,6 +131,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
     }
 
     const handleChangeConsultation = (e) => {
+        var { name, value } = e.target;
         setConsultationFormData({
             ...consultationFormData,
 
@@ -132,13 +139,19 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
             first_name: currentUserDetails.first_name,
             last_name: currentUserDetails.last_name,
             timezone: currentTimezone,
-            consultation_date_time: selectedDate,
+            consultation_date_time: convertToIsoDatetime(selectedDate),
             consultation_details: 'Self added Appointment',
+            [name]: value,
 
         });
+        console.log("name", name);
+        console.log("value", name);
+        console.log("consultationFormData", consultationFormData);
+        console.log("Selected Date", selectedDate);
     }
 
     const handleDateClick = ({ start }) => {
+        console.log("Start", start);
         setSelectedDate(start);
         setModalIsOpen(true);
     };
@@ -224,7 +237,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
                         const appointmentEndIso = convertHoursToDatetime(appointment.consultation_hour_end, appointmentDateTime);
                         const eventData = {
                             id: appointment.id,
-                            title: 'Appointment with ' + appointment.first_name + ' ' + appointment.last_name,
+                            title: appointment.title ? appointment.title : 'Appointment with ' + appointment.first_name + ' ' + appointment.last_name,
                             start: new Date(appointmentStartIso),
                             end: new Date(appointmentEndIso),
                             desc: appointment.consultation_details,
@@ -268,6 +281,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
                     isOpen={modalIsOpen}
                     onRequestClose={handleModalClose}
                     contentLabel="Date Details"
+                    id={'set-self-appointment'}
 
                 >
                     <div>
@@ -303,16 +317,10 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
                                                     <>
                                                         {times.length > 0 && (
                                                             <>
-                                                                {index > 0 && (
-                                                                    <div className='w-75 ms-4 d-flex justify-content-end mt-3'>
-                                                                        <div className='cursor-pointer' onClick={() => handleRemoveAppointment(index)}>
-                                                                            <RxCross2 color='#000000' />
-                                                                        </div>
-                                                                    </div>
-                                                                )}
+                                                                
 
                                                                 <Col md="5" className="pe-0">
-                                                                    <p className="hours-header mb-2 text-left">Opens at</p>
+                                                                    <p className="hours-header mb-2 text-left">Starts at</p>
                                                                     <div className='mb-3'>
                                                                         <input
                                                                             type='time'
@@ -324,8 +332,15 @@ const MyCalendar = ({ toggleEvent, calendarAppointment }) => {
                                                                     </div>
                                                                 </Col>
 
-                                                                <Col md="5" className="pe-0">
-                                                                    <p className="hours-header mb-2 text-left">Closes at</p>
+                                                                <Col md="5" className="pe-0 position-relative">
+                                                                    <p className="hours-header mb-2 text-left">Ends at</p>
+                                                                    {index > 0 && (
+                                                                    <div className='close-container'>
+                                                                        <div className='cursor-pointer' onClick={() => handleRemoveAppointment(index)}>
+                                                                            <RxCross2 color='#000000' />
+                                                                        </div>
+                                                                    </div>
+                                                                )}
                                                                     <div className='mb-3'>
                                                                         <input
                                                                             type='time'
