@@ -43,6 +43,14 @@ const intitialConsultationData = {
 const localizer = momentLocalizer(moment)
 
 const ConsultationCalendar = ({ toggleEvent }) => {
+
+    const dayPropGetter = (date) => {
+        const isPast = moment(date).isBefore(moment(), 'day');
+        return {
+          style: isPast ? { backgroundColor: '#E6E6E6', pointerEvents: 'none' } : {}
+        };
+    };
+
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const currentUserDetails = cookies.userDetails;
@@ -314,6 +322,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                         onSelectSlot={handleCalendarTimeslotClick}
                                         selectable
                                         views={views}
+                                        dayPropGetter={dayPropGetter}
                                     />
                                 </div>
                             </Col>
