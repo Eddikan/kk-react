@@ -3,9 +3,8 @@ import LayoutSellerCenter from '../Components/Layout/LayoutSellerCenter';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import Container from 'react-bootstrap/Container';
+import InputEmoji from 'react-input-emoji';
 import { GoAlertFill } from 'react-icons/go';
-import { FaUserCircle } from "react-icons/fa";
-import { LiaSmileBeam } from "react-icons/lia";
 import { VscSend } from "react-icons/vsc";
 import { IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
@@ -24,7 +23,6 @@ const AppointmentList = (props) => {
     const [reloadCount, setReloadCount] = useState(0);
     const currentUser = cookies.currentUser;
     const { designerId } = useParams();
-    const [askAQuestion, setAskAQuestion] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [inputClicked, setInputClicked] = useState(false);
@@ -35,8 +33,8 @@ const AppointmentList = (props) => {
     const [date, setDate] = useState('');
     const [chatBox, setChatBox] = useState(false);
     const [query, setQuery] = useState('');
-    const [chatName, setChatName] = useState('');
-    const siteCookies = cookies[0];
+    const [text, setText] = useState('')
+    const [designerData, setDesignerData] = useState('');
 
     const getAppointments = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
@@ -46,9 +44,13 @@ const AppointmentList = (props) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
     };
 
-    const chatBoxModal = (first_name, last_name) => {
+    const chatBoxModal = (first_name, last_name, image) => {
         setChatBox(true);
-        setChatName(first_name + ' ' + last_name);
+        setDesignerData({
+            first_name: first_name || '-',
+            last_name: last_name || '-',
+            image: image || '-'
+        })
     };
 
     function toggleUnderConstruction(message) {
@@ -56,29 +58,33 @@ const AppointmentList = (props) => {
         setModalHeading(message);
     }
 
-    // useEffect(() => {
-    //     if (inputClicked) {
-    //         fetchAppointmentList();
-    //     }
-    // }, [query, inputClicked]);
+    function handleOnEnter(text) {
+        console.log('enter', text)
+    }
 
-    // const fetchAppointmentList = async () => {
-    //     try {
-    //         const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment?user_id=' + currentUser, {
-    //             params: {
-    //                 query: query
-    //             }
-    //         });
+    useEffect(() => {
+        if (inputClicked) {
+            fetchAppointmentList();
+        }
+    }, [query, inputClicked]);
 
-    //         setAppointments(response.data.data);
-    //     } catch (error) {
-    //         console.error('Error fetching appointment:', error);
-    //     }
-    // };
+    const fetchAppointmentList = async () => {
+        try {
+            const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment?user_id=' + currentUser, {
+                params: {
+                    query: query
+                }
+            });
 
-    // useEffect(() => {
-    //     document.body.classList.add('designer-calendar-body');
-    // }, []);
+            setAppointments(response.data.data);
+        } catch (error) {
+            console.error('Error fetching appointments:', error);
+        }
+    };
+
+    useEffect(() => {
+        document.body.classList.add('designer-calendar-body');
+    }, []);
 
     useEffect(() => {
         getAppointments()
@@ -87,11 +93,11 @@ const AppointmentList = (props) => {
                 if (selectedAppointments) {
                     setAppointments(selectedAppointments);
                 } else {
-                    toast.error('There has been an error getting the date, please try again!');
+                    toast.error('There has been an error getting the appointment, please try again!');
                 }
             })
             .catch((error) => {
-                toast.error('There has been an error getting the date, please try again!');
+                toast.error('There has been an error getting the appointment, please try again!');
             });
 
         // getDate()
@@ -118,7 +124,7 @@ const AppointmentList = (props) => {
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='col-right mx-auto top-bottom' style={{ maxWidth: '1440px' }}>
+                        <Col lg={10} className='col-right mx-auto top-bottom'>
                             <div className='ms-5'>
                                 <Row>
                                     <Col lg={12}>
@@ -156,16 +162,13 @@ const AppointmentList = (props) => {
                                             </Col>
 
                                             <Col lg='4'>
-                                                <div
-                                                    className='d-flex align-items-end w-100 justify-content-end'
-                                                    style={{ position: 'relative' }}
-                                                >
+                                                <div className='d-flex align-items-end w-100 justify-content-end position-relative'>
                                                     <input
                                                         className='search-bar'
                                                         type="text"
                                                         placeholder="Search"
-                                                    // value={query}
-                                                    // onChange={(e) => { setQuery(e.target.value); setInputClicked(true); }}
+                                                        value={query}
+                                                        onChange={(e) => { setQuery(e.target.value); setInputClicked(true); }}
                                                     />
 
                                                     <CiSearch size="20px"
@@ -264,11 +267,17 @@ const AppointmentList = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={1} className='d-flex justify-content-end'>
-                                                                                    <div className="cursor-pointer d-flex justify-content-center align-items-center" onClick={() => chatBoxModal(appointment.first_name, appointment.last_name)}>
+                                                                                    <div
+                                                                                        className="cursor-pointer d-flex justify-content-center align-items-center"
+                                                                                        onClick={() => chatBoxModal(appointment.first_name, appointment.last_name, appointment.image)}
+                                                                                    >
                                                                                         <AiOutlineMessage className='me-2' size={20} />
                                                                                     </div>
 
-                                                                                    <div className="cursor-pointer icon-tooltiptext d-flex justify-content-center align-items-center" onClick={() => toggleUnderConstruction("")}>
+                                                                                    <div
+                                                                                        className="cursor-pointer icon-tooltiptext d-flex justify-content-center align-items-center"
+                                                                                        onClick={() => toggleUnderConstruction("")}
+                                                                                    >
                                                                                         <span>
                                                                                             <IoEyeOutline size={20} />
                                                                                         </span>
@@ -284,7 +293,9 @@ const AppointmentList = (props) => {
                                                     </>
                                                     :
                                                     <>
-
+                                                        <div className='text-center fs-18 mt-5'>
+                                                            No records found.
+                                                        </div>
                                                     </>
                                                 }
                                             </>
@@ -301,11 +312,11 @@ const AppointmentList = (props) => {
                         {chatBox ?
                             <>
                                 <Card className='width-chat-card px-0'>
-                                    <Card.Header className='header-chat bg-white'>
+                                    <Card.Header className='order-chat bg-white pt-3 pb-3'>
                                         <div className='d-flex justify-content-between'>
                                             <div>
                                                 <span className="fs-14 fw-500 mb-0 name-of-user-chat">
-                                                    {chatName}
+                                                    <span className='fw-500'>{designerData.first_name} {designerData.last_name}</span>
                                                 </span>
                                                 <span className='ms-3 active-now fs-14 fw-400 text-gold'>Active Now</span>
                                             </div>
@@ -316,61 +327,37 @@ const AppointmentList = (props) => {
                                     </Card.Header>
 
                                     <Card.Body >
-                                        <div className='height-cb'>
-                                        </div>
-
                                         <div>
-                                            <input type="text" className='form-control' placeholder='Type Message...' />
-                                            <div className='mt-3  d-flex justify-content-between'>
-                                                <div className='d-flex'>
-                                                    <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' size={20} /></div>
-                                                    <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
-                                                </div>
-                                                <div>
-                                                    <div
-                                                        className="cursor-pointer fw-500"
-                                                        onClick={() => toggleUnderConstruction("Send Message")}
-                                                    >
-                                                        Send
-                                                        <VscSend className='ms-1' />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Card.Body>
-                                </Card>
-                            </>
-                            :
-                            null
-                        }
-
-                        {askAQuestion ?
-                            <>
-
-                                <Card className='width-chat-card px-0'>
-                                    <Card.Header className='header-chat bg-white'>
-                                        <div className='d-flex justify-content-between'>
-                                            <div>
-                                                <span className='fw-500'>Dave Napoles</span>
-                                                <span className='ms-2 active-now fs-14 fw-400'>Active Now</span>
-                                            </div>
-                                            <div className="cursor-pointer" onClick={() => setAskAQuestion(false)}>
-                                                <IoCloseOutline color="#39393A" />
-                                            </div>
-                                        </div>
-                                    </Card.Header>
-                                    <Card.Body >
-                                        <div className='product-portfolio-image'>
                                             <span className='d-flex'>
-                                                {/* {images && images.length > 0 ?
-                                                <>
-                                                    <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+
+                                                {designerData.image !== null && designerData.image !== '' ? (
+                                                    <div
+                                                        className='user-photo-designer'
+                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designerData.image})` }}
+                                                    >
                                                     </div>
-                                                    <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
-                                                </>
-                                                :
-                                                null
-                                            } */}
+                                                ) : (
+                                                    <img src={UserPlaceholder} className='placeholder-img me-2' />
+                                                )}
+                                                {/* {designerData.image && (
+                                                    <div
+                                                        className='user-photo-designer'
+                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designerData.image})` }}
+                                                    >
+                                                    </div>
+                                                )} */}
+
+                                                <div className="designer-info mx-2">
+
+                                                    <div>
+                                                        <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">
+                                                            <span className=''>{designerData.first_name}{designerData.last_name}</span>
+                                                            <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
+                                                        </p>
+                                                    </div>
+
+                                                    <div className='fs-14 ms-2 mt-2 name-of-user-chat'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</div>
+                                                </div>
                                             </span>
                                         </div>
 
@@ -382,39 +369,22 @@ const AppointmentList = (props) => {
                                                     Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
                                                 </div>
                                             </div>
-
-                                            <div className=' d-flex align-items-center portfolio-designer ms-3'>
-                                                {/* {portfolio.user.image && (
-                                                <div
-                                                    className='designer-photo'
-                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
-                                                >
-                                                </div>
-                                            )} */}
-                                            </div>
+                                            <img src={UserPlaceholder} className='placeholder-img-chat ms-3' />
                                         </div>
 
                                         <div>
-                                            <span>
-                                                <FaUserCircle />
-                                                <span className='name-chat'>Dave Napoles</span>
-                                                <span className='ms-2 time-chat fw-400 fs-14'>4:00 PM</span>
-                                            </span>
-                                        </div>
-
-                                        <div className='mt-3'>
-                                            <input type="text" className='form-control' />
-                                        </div>
-
-                                        <div className='mt-3 d-flex justify-content-between'>
-
-                                            <div className='d-flex'>
-                                                <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' /></div>
-                                                <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach /></div>
-                                            </div>
+                                            <InputEmoji
+                                                value={text}
+                                                onChange={setText}
+                                                cleanOnEnter
+                                                onEnter={handleOnEnter}
+                                                placeholder="Type a message"
+                                                className="emoji-picker"
+                                            />
+                                            <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
                                             <div>
                                                 <div
-                                                    className="cursor-pointer fw-500"
+                                                    className="cursor-pointer fw-500 position-absolute send-button"
                                                     onClick={() => toggleUnderConstruction("Send Message")}
                                                 >
                                                     Send
@@ -428,6 +398,7 @@ const AppointmentList = (props) => {
                             :
                             null
                         }
+
                     </Row>
                 </Container>
             </section >

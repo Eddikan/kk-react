@@ -86,13 +86,13 @@ const About = () => {
           <div className='core-values text-center rufina-family fs-40 text-black mb-4'>Core Values</div>
           <Row>
             <Col lg="3" className='mb-4 card-left-right'>
-              <Card className='h-100 border-color'>
+              <Card className='box-height border-color'>
                 <CardBody>
                   <div className='mb-2'>
                     <img src={Professionalism} className='core-values-icon' />
                   </div>
 
-                  <div className='rufina-family fw-600 fs-25 mb-2 professionalism height-twenty-four'>Professionalism</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 professionalism height-seven-card'>Professionalism</div>
 
                   <p className='mb-0 fs-16 body-height  content-card'>Upholding high standards in all interactions.</p>
                 </CardBody>
@@ -100,13 +100,13 @@ const About = () => {
             </Col>
 
             <Col lg="3" className='mb-4 card-left-right'>
-              <Card className='h-100 border-color'>
+              <Card className='box-height border-color'>
                 <CardBody>
                   <div className='mb-2'>
                     <img src={Integrity} className='core-values-icon' />
                   </div>
 
-                  <div className='rufina-family fw-600 fs-25 mb-2 integrity height-twenty-four'>Integrity</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 integrity height-seven-card'>Integrity</div>
 
                   <p className='mb-0 fs-16 body-height  content-card'>Operating with honesty and transparency.</p>
                 </CardBody>
@@ -114,13 +114,13 @@ const About = () => {
             </Col>
 
             <Col lg="3" className='mb-4 card-left-right'>
-              <Card className='h-100 border-color'>
+              <Card className='box-height border-color'>
                 <CardBody>
                   <div className='mb-2'>
                     <img src={Speed} className='core-values-icon' />
                   </div>
 
-                  <div className='rufina-family fw-600 fs-25 mb-2 speed height-twenty-four'>Speed</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 speed height-seven-card'>Speed</div>
 
                   <p className='mb-0 fs-16 body-height  content-card'>Ensuring timely responses and delivery.</p>
                 </CardBody>
@@ -128,13 +128,13 @@ const About = () => {
             </Col>
 
             <Col lg="3" className='mb-4 card-left-right'>
-              <Card className='h-100 border-color'>
+              <Card className='box-height border-color'>
                 <CardBody>
                   <div className='mb-2'>
                     <img src={Reliability} className='core-values-icon' />
                   </div>
 
-                  <div className='rufina-family fw-600 fs-25 mb-2 reliability height-twenty-four'>Reliability</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 reliability height-seven-card'>Reliability</div>
 
                   <p className='mb-0 fs-16 body-height  content-card'>Consistency in meeting commitments.</p>
                 </CardBody>
@@ -142,13 +142,13 @@ const About = () => {
             </Col>
 
             <Col lg="3" className='mb-4 card-left-right'>
-              <Card className='h-100 border-color'>
+              <Card className='box-height border-color'>
                 <CardBody>
                   <div className='mb-2'>
                     <img src={Excellence} className='core-values-icon' />
                   </div>
 
-                  <div className='rufina-family fw-600 fs-25 mb-2 excellence height-twenty-four'>Excellence</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 excellence height-seven-card'>Excellence</div>
 
                   <p className='mb-0 fs-16 body-height  content-card'>Striving for top-quality, custom-made designs.</p>
                 </CardBody>
@@ -156,13 +156,13 @@ const About = () => {
             </Col>
 
             <Col lg="3" className='mb-4 card-left-right'>
-              <Card className='h-100 border-color'>
+              <Card className='box-height border-color'>
                 <CardBody>
                   <div className='mb-2'>
                     <img src={SuperiorQuality} className='core-values-icon' />
                   </div>
 
-                  <div className='rufina-family fw-600 fs-25 mb-2 superior height-twenty-four'>Superior Quality</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 superior height-seven-card'>Superior Quality</div>
 
                   <p className='mb-0 fs-16 body-height  content-card'>Commitment to the highest standards.</p>
                 </CardBody>
@@ -170,12 +170,12 @@ const About = () => {
             </Col>
 
             <Col lg="3" className='card-left-right'>
-              <Card className='h-100 border-color'>
+              <Card className='box-height border-color'>
                 <CardBody>
                   <div className='mb-2'>
                     <img src={CustomerExperience} className='core-values-icon' />
                   </div>
-                  <div className='rufina-family fw-600 fs-25 mb-2 exceptional height-twenty-four'>Exceptional Customer Experience</div>
+                  <div className='rufina-family fw-600 fs-25 mb-2 exceptional height-seven-card'>Exceptional Customer Experience</div>
                   <p className='mb-0 fs-16 body-height  content-card'>Going the extra mile for satisfaction.</p>
                 </CardBody>
               </Card>

@@ -45,6 +45,9 @@ img.item-placeholder-chatbox {
 }
 .top-padding {
     padding-top: 50px;
+    padding-bottom: 50px;
+    padding-right: 50px;
+    padding-left: 0px;
 }
 .fabric-image {
     width: 19%;
@@ -108,4 +111,13 @@ img.item-placeholder-chatbox {
 .send-button {
     bottom: 18px;
     right: 19px;
+}
+.search-bar {
+    width: 90%;
+    height: 42px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 0 solid #7F8185;
+    padding: 5px 40px 5px 14px;
+    outline: none;
 }

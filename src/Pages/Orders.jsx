@@ -391,7 +391,9 @@ const Orders = (props) => {
 
 
                                                                             {fabric.user.first_name}  {fabric.user.last_name}
-                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
+                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
+                                                                            />
                                                                         </div>
                                                                     </span>
 
@@ -505,7 +507,10 @@ const Orders = (props) => {
 
 
                                                                             {fabric.user.first_name}  {fabric.user.last_name}
-                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
+                                                                            <AiFillMessage
+                                                                                className='ms-2 text-gold cursor-pointer'
+                                                                                onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
+                                                                            />
                                                                         </div>
                                                                     </span>
 
@@ -619,7 +624,9 @@ const Orders = (props) => {
 
 
                                                                             {fabric.user.first_name}  {fabric.user.last_name}
-                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
+                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
+                                                                            />
                                                                         </div>
                                                                     </span>
 
@@ -733,7 +740,9 @@ const Orders = (props) => {
 
 
                                                                             {fabric.user.first_name}  {fabric.user.last_name}
-                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
+                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
+                                                                            />
                                                                         </div>
                                                                     </span>
 
@@ -1002,8 +1011,10 @@ const Orders = (props) => {
                                                                             <span className='text-black'>{fabric.status}</span>
                                                                         </Col>
 
-                                                                        <Col lg={2} onClick={() => toggleUnderConstruction("Buy Again")}>
-                                                                            <button className='btn btn-primary'>Buy Again</button>
+                                                                        <Col lg={2} >
+                                                                            <a href={`/product/${fabric.id}`}>
+                                                                                <button className='btn btn-primary'>Buy Again</button>
+                                                                            </a>
                                                                         </Col>
                                                                     </Row>
                                                                 </Card.Body>

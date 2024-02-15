@@ -34,6 +34,9 @@ section.section2 {
 img.core-values-icon {
     width: 15%;
 }
+.box-height {
+    height: 195px;
+}
 section.section3 {
     padding-top: 50px;
     padding-bottom: 50px;
@@ -46,8 +49,8 @@ section.section3 {
     width: 71%;
     line-height: 24px;
 }
-.height-twenty-four {
-    line-height: 24px;
+.height-seven-card {
+    line-height: 1.2;
 }
 .left-right-padding {
     padding-left: 150px;
