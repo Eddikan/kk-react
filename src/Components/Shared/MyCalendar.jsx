@@ -58,8 +58,8 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
     const currentUserDetails = cookies.userDetails;
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
-    const { designerIdParams }= useParams();
-    
+    const { designerIdParams } = useParams();
+
     const designer_id = designerId ?? designerIdParams;
 
     const [events, setEvents] = useState([]);
@@ -157,8 +157,8 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
         console.log("formattedDateStart", formattedDateStart);
         console.log("formattedDateEnd", formattedDateEnd);
         console.log("event", event);
-        
-      }, []);
+
+    }, []);
 
     const closeAppointmentModal = () => {
         setAppointmentModalIsOpen(false);
@@ -214,7 +214,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                         }
                         setConsultationFormData({
                             ...consultationFormData,
-                
+
                             email: currentUserDetails.email,
                             first_name: currentUserDetails.first_name,
                             last_name: currentUserDetails.last_name,
@@ -227,7 +227,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                     } else {
                         setConsultationFormData({
                             ...consultationFormData,
-                
+
                             email: currentUserDetails.email,
                             first_name: currentUserDetails.first_name,
                             last_name: currentUserDetails.last_name,
@@ -420,7 +420,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                                     <>
                                                         {times.length > 0 && (
                                                             <>
-                                                                
+
 
                                                                 <Col md="5" className="pe-0">
                                                                     <p className="hours-header mb-2 text-left">Starts at</p>
@@ -438,12 +438,12 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                                                 <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header mb-2 text-left">Ends at</p>
                                                                     {index > 0 && (
-                                                                    <div className='close-container'>
-                                                                        <div className='cursor-pointer' onClick={() => handleRemoveAppointment(index)}>
-                                                                            <RxCross2 color='#000000' />
+                                                                        <div className='close-container'>
+                                                                            <div className='cursor-pointer' onClick={() => handleRemoveAppointment(index)}>
+                                                                                <RxCross2 color='#000000' />
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                )}
+                                                                    )}
                                                                     <div className='mb-3'>
                                                                         <input
                                                                             type='time'
@@ -459,13 +459,13 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                                     </>
                                                 );
                                             })}
-                                            <Col md="2" className="px-0">
+                                            {/* <Col md="2" className="px-0">
                                                 <GoPlus
                                                     size={25}
                                                     className="plus-btn mt-2"
                                                     onClick={handleAppointments}
                                                 />
-                                            </Col>
+                                            </Col> */}
                                         </Row>
                                     </Col>
                                     {startTime != "" || endTime != "" ?
@@ -478,13 +478,13 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                                             <p className='mb-0'>{endTime}</p>
                                                         </>
                                                         : endTime == "" ?
-                                                        <>
-                                                            <p className='mb-0'>{startTime}</p>
-                                                        </>
-                                                        :
-                                                        <>
-                                                            <p className='mb-0'>{startTime} - {endTime}</p>
-                                                        </>
+                                                            <>
+                                                                <p className='mb-0'>{startTime}</p>
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <p className='mb-0'>{startTime} - {endTime}</p>
+                                                            </>
                                                     }
                                                 </>
                                                 :
@@ -494,7 +494,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                         :
                                         null
                                     }
-                                    
+
                                 </Row>
                             </div>
                         )}
@@ -527,41 +527,41 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                         {selectedEvent && (
                             <div className="px-3">
 
-                            {selectedEvent.title != "" &&
-                                <>
-                                    <div className="d-flex">
-                                        <p className="fw-500">Appointment Title:</p>
-                                        <p className="current-date ms-2">{selectedEvent.title}</p>
-                                    </div>
-                                    
-                                </>
-                            }
+                                {selectedEvent.title != "" &&
+                                    <>
+                                        <div className="d-flex">
+                                            <p className="fw-500">Appointment Title:</p>
+                                            <p className="current-date ms-2">{selectedEvent.title}</p>
+                                        </div>
 
-                            {selectedEvent.start != "" &&
-                                <>
-                                    <div className="d-flex">
-                                        <p className="fw-500">Appointment Start:</p>
-                                        <p className="current-date ms-2">{selectedEvent.start}</p>
-                                    </div>
-                                </>
-                            }
-                            {selectedEvent.end != "" &&
-                                <>
-                                    <div className="d-flex">
-                                        <p className="fw-500">Appointment End:</p>
-                                        <p className="current-date ms-2">{selectedEvent.end}</p>
-                                    </div>
-                                </>
-                            }
-                            {selectedEvent.desc != "" &&
-                                <>
-                                    <div className="d-flex">
-                                        <p className="fw-500">Appointment Description:</p>
-                                        <p className="current-date ms-2">{selectedEvent.desc}</p>
-                                    </div>
-                                </>
-                            }
-                        </div>
+                                    </>
+                                }
+
+                                {selectedEvent.start != "" &&
+                                    <>
+                                        <div className="d-flex">
+                                            <p className="fw-500">Appointment Start:</p>
+                                            <p className="current-date ms-2">{selectedEvent.start}</p>
+                                        </div>
+                                    </>
+                                }
+                                {selectedEvent.end != "" &&
+                                    <>
+                                        <div className="d-flex">
+                                            <p className="fw-500">Appointment End:</p>
+                                            <p className="current-date ms-2">{selectedEvent.end}</p>
+                                        </div>
+                                    </>
+                                }
+                                {selectedEvent.desc != "" &&
+                                    <>
+                                        <div className="d-flex">
+                                            <p className="fw-500">Appointment Description:</p>
+                                            <p className="current-date ms-2">{selectedEvent.desc}</p>
+                                        </div>
+                                    </>
+                                }
+                            </div>
                         )}
                         <ModalFooter>
                             <div className='text-right'>
