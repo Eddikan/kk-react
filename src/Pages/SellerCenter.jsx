@@ -787,7 +787,7 @@ const SellerCenter = (props) => {
                                     </Row>
                                     <div className="calendar-container">
                                         <MyCalendar
-                                            calendarAppointment={calendarAppointment}
+                                            calendarAppointment={calendarAppointment} designerId={designerId}
                                         />
                                     </div>
                                 </Col>

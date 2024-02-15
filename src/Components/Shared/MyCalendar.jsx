@@ -59,7 +59,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const { designerIdParams }= useParams();
-
+    
     const designer_id = designerId ?? designerIdParams;
 
     const [events, setEvents] = useState([]);
