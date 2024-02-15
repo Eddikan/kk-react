@@ -104,6 +104,11 @@ img.item-placeholder-chatbox {
     fill: #212529 !important;
     width: 19px;
 }
+.search-style {
+    position: absolute;
+    top: 12px;
+    right: 9px;
+}
 .attach-icon {
     bottom: 18px;
     left: 54px;

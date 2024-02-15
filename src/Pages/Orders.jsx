@@ -894,7 +894,7 @@ const Orders = (props) => {
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            <a className="cursor-pointer write-review-decoration" href="/rate-review">
+                                                                            <a className="cursor-pointer write-review-decoration" href={`/rate-review/${fabric.id}`}>
                                                                                 <span className='text-gold'>
                                                                                     <IoMdStarOutline className='me-2 mb-1' size={20} />
                                                                                     Write Review

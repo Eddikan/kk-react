@@ -23,6 +23,11 @@ img.user-placeholder {
     padding-right: 60px;
     padding-left: 0px;
 }
+.search-style {
+    position: absolute;
+    top: 12px;
+    right: 9px;
+}
 .center-name {
     display: flex;
     align-items: center;

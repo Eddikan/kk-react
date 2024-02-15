@@ -161,7 +161,7 @@ const Portfolio = (props) => {
 
                                                             <div className='d-flex mt-2'>
                                                                 <div className="text-black text-decoration-none ellipsis rufina-family fs-18">{object.name ?? "-"}</div>
-                                                                <div><GoHeart className="text-black ms-2" /></div>
+                                                                <div><GoHeart className="text-black ms-3" /></div>
                                                                 <div><IoEyeOutline className="text-black ms-2" /> {object.views}</div>
                                                             </div>
                                                         </Col>

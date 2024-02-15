@@ -322,7 +322,7 @@ const Fabrics = (props) => {
                         <Row className="mt-2">
                             <Col lg="3">
                                 <div className="filter-sidebar pe-4">
-                                    <Form.Group className='mb-4'>
+                                    {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Search</Form.Label>
                                         <FormControl
                                             type='text'
@@ -332,7 +332,7 @@ const Fabrics = (props) => {
                                             onChange={handleChangeSearch}
                                             placeholder='Enter your search term...'
                                         />
-                                    </Form.Group>
+                                    </Form.Group> */}
                                     <hr className="border-black" />
                                     <div style={{ position: "relative" }} className="mb-4">
                                         <div>

@@ -380,8 +380,6 @@ const ViewProduct = () => {
                                                 </div>
 
                                                 <div>
-                                                </div>
-                                                <div>
                                                     <Link to={`/product/${product.id}/edit`} className="text-decoration-none">
                                                         <div class="kouture-tooltip">
                                                             <div className="action-button bg-smgray me-2">
@@ -392,6 +390,7 @@ const ViewProduct = () => {
                                                             </div>
                                                         </div>
                                                     </Link>
+
                                                     <div class="kouture-tooltip">
                                                         <div className="action-button bg-smgray me-2">
                                                             <GoShareAndroid className="text-black" onClick={toggleShareModal} />
@@ -400,6 +399,7 @@ const ViewProduct = () => {
                                                             Share
                                                         </div>
                                                     </div>
+
                                                     {userWishlist ?
                                                         <div class="kouture-tooltip">
                                                             <div className="action-button bg-gold me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
@@ -446,11 +446,11 @@ const ViewProduct = () => {
                                                 <div className="mb-3">
                                                     <p className="fw-600 fs-25">${productPrice}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
                                                 </div>
-                                                <div className="">
+                                                <div>
                                                     <p className="mb-2 fs-16 fw-600">Fabric Process Insight</p>
                                                     <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.fabric_process_insights ?? "-"}</p>
                                                 </div>
-                                                <div className="">
+                                                <div>
                                                     <p className="mb-2 fs-16 fw-600">Pricing Structure</p>
                                                     <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.pricing_structure ?? "-"}</p>
                                                 </div>
@@ -672,7 +672,7 @@ const ViewProduct = () => {
                 </Modal.Body>
             </Modal>
 
-            {/* Add Review */}
+            {/* Add Review Item */}
             <Modal
                 show={addReviewShow}
                 className='modal-preview'
@@ -688,21 +688,8 @@ const ViewProduct = () => {
                 <Modal.Body className='padding-card-review'>
                     <h4 className='text-left fs-25 fw-600 mb-3'>{updateReview ? "Update Review" : "Review Item"}</h4>
                     <Card className='review-card'>
-                        {/* <Card.Header>
-                            <div className="d-flex align-items-center">
-                                <div className="user">
-                                    {product.user?.image && product.user?.image != "" ?
-                                        <div className="profile-image small" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + product.user?.image + ")" }}></div>
-                                        :
-                                        <div className="profile-image small" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
-                                    }
-                                </div>
-                                <p className="text-black fs-16 mb-0 text-left">{product.user?.first_name} {product.user?.last_name}</p>
-                            </div>
-                        </Card.Header> */}
                         <Card.Body className="text-center py-3 p-0">
                             <div className="product-review-container">
-
                                 <div className='product-portfolio-image mb-4'>
                                     <span className='d-flex'>
                                         {images && images.length > 0 ?
@@ -717,12 +704,6 @@ const ViewProduct = () => {
                                     </span>
                                 </div>
 
-                                {/* <div className="d-flex align-items-center">
-                                    <div className="user">
-                                        <div className="profile-image small" style={{ backgroundImage: "url(" + activeImage + ")", borderRadius: '10px' }}></div>
-                                    </div>
-                                    <p className="text-black fs-16 mb-0 text-left">{product.name}</p>
-                                </div> */}
                                 <div className="text-left mt-3">
                                     <span className="fs-14 me-3">Product Quality:</span> <Rating
                                         initialValue={reviewFormData.rating}
@@ -770,78 +751,6 @@ const ViewProduct = () => {
                         </Card.Footer>
                     </Card>
                 </Modal.Body>
-            </Modal>
-
-            <Modal
-                show={reviewItemModal}
-                className='modal-preview'
-                fade={false}
-                size="sm"
-            >
-                <ModalHeader className='pt-2 pb-2'>
-                    <h5 className='modal-title text-left fs-25 rufina-family fw-600 '>Review Item</h5>
-                    <button
-                        type='button'
-                        className='close react-review-items-close'
-                        data-dismiss='modal' aria-label='Close'
-                        onClick={() => setReviewItemModal(false)}
-                    >
-                        <span aria-hidden='true'>&times;</span>
-                    </button>
-                </ModalHeader>
-                <hr className="mt-0 mb-2" />
-                <Modal.Body className='pt-4 pb-2'>
-                    <div className='product-portfolio-image mb-4'>
-                        <span className='d-flex'>
-                            {images && images.length > 0 ?
-                                <>
-                                    <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-                                    </div>
-                                    <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{product.name ?? "-"}</span>
-                                </>
-                                :
-                                null
-                            }
-                        </span>
-                    </div>
-
-                    <div className='d-flex mb-2'>
-                        <div className='d-flex justify-content-center align-items-center'>
-                            Product Quality:
-                        </div>
-
-                        <div className='mx-4'>
-                            <Rating
-                                // initialValue={rating}
-                                readonly={true}
-                                allowFraction={true}
-                                size={30}
-                                className="star-rating"
-                                showTooltip={false}
-                                emptyColor="#cea835"
-                                fillColor="#cea835"
-                            />
-                        </div>
-
-                        <div className='d-flex justify-content-center align-items-center'>
-                            Excellent
-                        </div>
-                    </div>
-                    <div className='mb-4'>
-                        <textarea
-                            type="text"
-                            name="description"
-                            className="d-block form-control bg-white"
-                            placeholder='Leave a comment about the product...'
-                        />
-                    </div>
-                </Modal.Body>
-                <ModalFooter className=''>
-                    <div className='text-right'>
-                        <Button className="cancel-btn me-2" onClick={() => setReviewItemModal(false)}>Cancel</Button>
-                        <Button className="btn-save" onClick={() => { toggleUnderConstruction("Review Item"); setReviewItemModal(false); }}>Submit</Button>
-                    </div>
-                </ModalFooter>
             </Modal>
 
             <Modal

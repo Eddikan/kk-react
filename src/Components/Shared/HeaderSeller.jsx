@@ -14,6 +14,8 @@ import { GoBell } from "react-icons/go";
 import { BsEnvelope } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import UserPlaceholder from 'Assets/images/user.png';
+import NewOrder from '../../Assets/images/new-order-icon.png';
+import NewAppointment from '../../Assets/images/new-appointment-icon.png';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import User from '../../Assets/images/user.png';
@@ -193,7 +195,7 @@ const HeaderSeller = () => {
 
                                                         <div className="action-box-bell user-menu-bell">
                                                             <div className='d-flex'>
-                                                                <div>Icon</div>
+                                                                <img src={NewOrder} className='new-order-image' />
                                                                 <div className='ms-3 fs-14 body-text-bell'>You have a new order and instructions from Mike. Get Started
                                                                     sed diam nonumy eirmod tempor invidunt ut labore et dolore
                                                                     magna.
@@ -203,7 +205,7 @@ const HeaderSeller = () => {
                                                             <hr />
 
                                                             <div className='d-flex'>
-                                                                <div>Icon</div>
+                                                                <img src={NewAppointment} className='new-appointment-image' />
                                                                 <div className='ms-3 fs-14 body-text-bell'>"New buyer set an appointment. Go check it out"
                                                                     <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
                                                                 </div>

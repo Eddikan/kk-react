@@ -6,20 +6,18 @@ import User from '../Assets/images/user.png';
 import InputEmoji from 'react-input-emoji';
 import '../Assets/styles/Order/style.css';
 import Sidebar from 'Components/Shared/Sidebar';
-import { GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
+import { GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
-import { LiaSmileBeam } from "react-icons/lia";
 import { VscSend } from "react-icons/vsc";
 import { IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
-import { CiSearch, CiBookmark, CiSettings } from 'react-icons/ci';
+import { CiSearch } from 'react-icons/ci';
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
 import toast from 'react-hot-toast';
 import axios from "axios";
-
 
 const ToastCss = {
     position: "top-right",
@@ -48,6 +46,7 @@ const OrdersSeller = (props) => {
     const [designerData, setDesignerData] = useState('');
     const [text, setText] = useState('')
     const [query, setQuery] = useState('');
+
     const [dateTo, setDateTo] = useState('');
     const [dateFrom, setDateFrom] = useState('');
 
@@ -184,9 +183,7 @@ const OrdersSeller = (props) => {
 
                                             <Col lg='4'>
                                                 <div
-                                                    className='d-flex align-items-end w-100 justify-content-end'
-                                                    style={{ position: 'relative' }}
-                                                >
+                                                    className='d-flex align-items-end w-100 justify-content-end position-relative'>
                                                     <input
                                                         className='search-bar'
                                                         type="text"
@@ -194,15 +191,7 @@ const OrdersSeller = (props) => {
                                                         value={query}
                                                         onChange={(e) => { setQuery(e.target.value); setInputClicked(true); }}
                                                     />
-
-                                                    <CiSearch size="20px"
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: '50%',
-                                                            left: '92%',
-                                                            transform: 'translateY(-50%)',
-                                                        }}
-                                                    />
+                                                    <CiSearch size="20px" className='search-style' />
                                                 </div>
                                             </Col>
                                         </Row>
@@ -276,14 +265,6 @@ const OrdersSeller = (props) => {
                                                                 day: 'numeric',
                                                             };
                                                             const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
-                                                            const formattedDate = (new Date(fabric.consultation_date_time)).toLocaleString('en-US', {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                                hour: 'numeric',
-                                                                minute: 'numeric',
-                                                                timeZone: 'UTC',
-                                                            });
 
                                                             return (
 
@@ -300,7 +281,6 @@ const OrdersSeller = (props) => {
                                                                                             >
                                                                                             </div>
                                                                                         )}
-
 
                                                                                         <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
                                                                                         <AiFillMessage className='ms-2 text-gold cursor-pointer'

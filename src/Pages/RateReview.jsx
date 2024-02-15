@@ -3,135 +3,80 @@ import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
-import { CiCreditCard2 } from "react-icons/ci";
-import { FaRegUserCircle } from "react-icons/fa";
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { AiFillMessage } from "react-icons/ai";
 import User from '../Assets/images/user.png';
 import '../Assets/styles/RateReview/style.css';
-import GetSinglePortfolioData from 'Utils/GetSinglePortfolioData';
 import { Rating } from 'react-simple-star-rating';
-import { LiaSmileBeam } from "react-icons/lia";
+import InputEmoji from 'react-input-emoji';
 import { VscSend } from "react-icons/vsc";
 import { IoIosAttach } from "react-icons/io";
-import { IoCloseOutline, IoVideocam } from "react-icons/io5";
-import { GoHeart, GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
-import PlaceholderSquare from 'Assets/images/square-placeholder.jpg';
+import { IoCloseOutline } from "react-icons/io5";
+import { GoAlertFill } from 'react-icons/go';
 import axios from "axios";
 import toast from 'react-hot-toast';
-import ChatBox from '../Components/Shared/ChatBox';
 
-const initialCheckOut = {
-    card_name: '',
-    card_number: '',
-    date: ''
-};
-
-const ToastCss = {
-    position: "top-right",
-    autoClose: 1500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-};
 
 const RateReview = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const currentUser = cookies.currentUser;
-    const { portfolioId } = useParams();
-    const userDetails = cookies.userDetails;
-    const { designerId } = useParams();
+    const { productId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
-    const [formStatus, setFormStatus] = useState('standby');
-    const [radioButtonValue, setRadioButtonValue] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
-    const [images, setImages] = useState([]);
-    const [activeImage, setActiveImage] = useState('');
-    const [checkOutFormData, setCheckOutFormData] = useState(initialCheckOut);
-    const [portfolio, setPortfolio] = useState('');
     const [chatBox, setChatBox] = useState(false);
-    const [portfolioLoading, setPortfolioLoading] = useState(true);
-    const [currentTab, setCurrentTab] = useState(false);
+    const [product, setProduct] = useState([]);
+    const [images, setImages] = useState([]);
+    const [productUser, setProductUser] = useState('');
+    const [text, setText] = useState('')
+    const [activeImage, setActiveImage] = useState('');
 
+    const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    };
+    const today = (new Date(product.created_at)).toLocaleDateString('en-ES', options);
 
-    const navigate = useNavigate();
+    const getProduct = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId);
+    };
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
     }
 
-    const getAddCarts = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
-    };
-
-    const postCheckOut = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
-    };
-
-    const handleChangePaymentInfo = (e) => {
-        const { name, value } = e.target;
-        setCheckOutFormData({
-            ...checkOutFormData,
-            [name]: value,
-        });
+    function handleOnEnter(text) {
+        console.log('enter', text)
     }
-
-    // const fetchData = async (e) => {
-    //     try {
-    //         const portfolioData = await GetSinglePortfolioData(e);
-    //         if (portfolioData.id) {
-    //             setPortfolio(portfolioData);
-    //             setPortfolioLoading(false);
-    //             setImages(portfolioData.image_urls);
-    //             if (portfolioData.image_urls?.[0]?.image_url) {
-    //                 setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + portfolioData.image_urls[0].image_url);
-    //             } else {
-    //                 setActiveImage(PlaceholderImage);
-    //             }
-
-    //         } else {
-    //             setPortfolioLoading(false);
-    //             toast.error('Portfolio item does not exist!');
-    //             navigate('/user/profile');
-    //         }
-    //     } catch (error) {
-    //         toast.error('Portfolio item does not exist!');
-    //         navigate('/user/profile');
-    //     }
-    // };
 
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
     }, []);
 
-    const addBusinessHoursSubmitPost = (e) => {
-        // e.preventDefault();
-        setFormStatus('loading');
-        postCheckOut(checkOutFormData).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setFormStatus('standby');
-                setReloadCount(reloadCount + 1);
-                setCheckOutFormData(initialCheckOut);
-                toast.success('Availability added successfully!');
-            } else {
-                setFormStatus('standby');
-                toast.error('There has been an error saving the appointment, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the appointment, please try again!');
-        });
-    }
+    useEffect(() => {
+        getProduct()
+            .then((response) => {
+                const productData = response.data.data;
+                if (productData) {
+                    setProduct(productData);
+                    setProductUser(productData.user)
+                    setImages(productData.image_urls);
 
-
-    // useEffect(() => {
-    //     fetchData(portfolioId);
-    // }, [reloadCount]);
+                    if (productData.image_urls?.[0]?.image_url) {
+                        setActiveImage(process.env.REACT_APP_STORAGE_URL + 'product/' + productData.image_urls[0].image_url);
+                    } else {
+                        setActiveImage(PlaceholderImage);
+                    }
+                } else {
+                    toast.error('There has been an error getting the date, please try again!');
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the date, please try again!');
+            });
+    }, [reloadCount]);
 
     return (
         <LayoutNoFooter>
@@ -156,8 +101,15 @@ const RateReview = (props) => {
                                         <Card className='mt-2 rate-review-card'>
                                             <Card.Header className='header-chat bg-light d-flex justify-content-between border-bottom'>
                                                 <span>
-                                                    <span>
-                                                        <img src={User} className='user-placeholder-order me-2 order-user' />Dave Napoles
+                                                    <span className='d-flex align-items-center user-image-rate'>
+                                                        {productUser.image && (
+                                                            <div
+                                                                className='user-photo-rate me-2'
+                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${productUser.image})` }}
+                                                            >
+                                                            </div>
+                                                        )}
+                                                        {productUser.first_name}&nbsp;{productUser.last_name}
                                                         <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={() => setChatBox(true)} />
                                                     </span>
                                                 </span>
@@ -166,29 +118,31 @@ const RateReview = (props) => {
                                                     Order ID: 11002345CT
                                                 </div>
                                             </Card.Header>
+
                                             <Card.Body className='bg-white'>
                                                 <Row>
                                                     <Col lg={12} className='mb-3'>
-                                                        <span className='delivered-date fs-14'>Delivered on December 13, 2023</span>
+                                                        <span className='delivered-date fs-14'>
+                                                            Delivered on
+                                                            <span className='ms-1'>{today}</span>
+                                                        </span>
                                                     </Col>
 
                                                     <Col lg={12}>
-
-                                                        <img src={PlaceholderSquare} className='square-placeholder me-3 ' />
-                                                        <span>Crystal Cascade SleeveGuard</span>
-                                                        {/* <div className='product-portfolio-image mb-4'>
+                                                        <a href={`/product/${product.id}`} className='text-none-decoration'>
                                                             <span className='d-flex'>
+
                                                                 {images && images.length > 0 ?
                                                                     <>
-                                                                        <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                                                        <div className="single-image-review-item" style={{ backgroundImage: "url(" + activeImage + ")" }}>
                                                                         </div>
-                                                                        <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
+                                                                        <span className='fs-16 text-black ms-3 d-flex justify-content-center align-items-center '>{product.name ?? "-"}</span>
                                                                     </>
                                                                     :
                                                                     null
                                                                 }
                                                             </span>
-                                                        </div> */}
+                                                        </a>
 
                                                         <div className="text-left mt-3">
                                                             <span className="fs-16 me-3">Product Quality:</span> <Rating
@@ -218,7 +172,7 @@ const RateReview = (props) => {
                                                             <Form.Control
                                                                 as="textarea"
                                                                 name="content"
-                                                                rows={5} // You can adjust the number of rows as needed
+                                                                rows={5}
                                                                 // value={reviewFormData.content}
                                                                 placeholder="Leave a comment about the product..."
                                                                 // onChange={handleChangeReview}
@@ -245,15 +199,15 @@ const RateReview = (props) => {
                             </Col>
                         </Row>
 
-                        {/* {chatBox ?
+
+                        {chatBox ?
                             <>
                                 <Card className='width-chat-card px-0'>
-                                    <Card.Header className='header-chat bg-white'>
+                                    <Card.Header className='order-chat bg-white pt-3 pb-3'>
                                         <div className='d-flex justify-content-between'>
                                             <div>
                                                 <span className="fs-14 fw-500 mb-0 name-of-user-chat">
-                                                    {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} &nbsp;
-                                                    {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"}
+                                                    <span className='fw-500'>{productUser.first_name} {productUser.last_name}</span>
                                                 </span>
                                                 <span className='ms-3 active-now fs-14 fw-400'>Active Now</span>
                                             </div>
@@ -264,28 +218,28 @@ const RateReview = (props) => {
                                     </Card.Header>
 
                                     <Card.Body >
-
                                         <div>
-                                            <div className='mt-4 d-flex portfolio-designer-chat'>
-                                                {portfolio.user.image && (
+                                            <span className='d-flex user-image'>
+                                                {productUser.image && (
                                                     <div
-                                                        className='designer-photo'
-                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
+                                                        className='user-photo'
+                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${productUser.image})` }}
                                                     >
                                                     </div>
                                                 )}
+
                                                 <div className="designer-info mx-2">
+
                                                     <div>
                                                         <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">
-                                                            {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"}
+                                                            <span className=''>{productUser.first_name}{productUser.last_name}</span>
                                                             <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
                                                         </p>
                                                     </div>
 
                                                     <div className='fs-14 ms-2 mt-2 name-of-user-chat'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</div>
                                                 </div>
-
-                                            </div>
+                                            </span>
                                         </div>
 
                                         <div className='mt-5 mb-4 text-right d-flex'>
@@ -296,22 +250,22 @@ const RateReview = (props) => {
                                                     Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
                                                 </div>
                                             </div>
-
                                             <img src={User} className='placeholder-chat ms-3' />
                                         </div>
 
-                                        <div className='mt-3'>
-                                            <input type="text" className='form-control' />
-                                        </div>
-
-                                        <div className='mt-3 d-flex justify-content-between'>
-                                            <div className='d-flex'>
-                                                <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' size={20} /></div>
-                                                <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
-                                            </div>
+                                        <div>
+                                            <InputEmoji
+                                                value={text}
+                                                onChange={setText}
+                                                cleanOnEnter
+                                                onEnter={handleOnEnter}
+                                                placeholder="Type a message"
+                                                className="emoji-picker"
+                                            />
+                                            <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
                                             <div>
                                                 <div
-                                                    className="cursor-pointer fw-500"
+                                                    className="cursor-pointer fw-500 position-absolute send-button"
                                                     onClick={() => toggleUnderConstruction("Send Message")}
                                                 >
                                                     Send
@@ -324,9 +278,7 @@ const RateReview = (props) => {
                             </>
                             :
                             null
-                        } */}
-
-                        <ChatBox chatBox={chatBox} onCloseChat={() => setCurrentTab(false)} />
+                        }
                     </Row>
                 </Container>
             </section>

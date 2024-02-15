@@ -114,11 +114,11 @@
 }
 
 .single-image-chat {
-    width: 9%;
+    width: 9% !important;
     min-height: 36px;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
     border-radius: 5px;
 }
 .product-grid-image {

@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react';
 import LayoutSellerCenter from '../Components/Layout/LayoutSellerCenter';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
-import Container from 'react-bootstrap/Container';
-import InputEmoji from 'react-input-emoji';
 import { GoAlertFill } from 'react-icons/go';
 import { VscSend } from "react-icons/vsc";
 import { IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
 import { CiSearch } from 'react-icons/ci';
-import { useNavigate, useParams, Link } from 'react-router-dom';
-import '../Assets/styles/AppointmentList/style.css';
+import { useParams } from 'react-router-dom';
 import { IoEyeOutline } from "react-icons/io5";
+import '../Assets/styles/AppointmentList/style.css';
 import UserPlaceholder from 'Assets/images/user.png';
+import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
+import InputEmoji from 'react-input-emoji';
 import toast from 'react-hot-toast';
 import axios from "axios";
 
@@ -26,7 +26,6 @@ const AppointmentList = (props) => {
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [inputClicked, setInputClicked] = useState(false);
-
     const [dateTo, setDateTo] = useState('');
     const [dateFrom, setDateFrom] = useState('');
     const [appointments, setAppointments] = useState('');
@@ -100,19 +99,6 @@ const AppointmentList = (props) => {
                 toast.error('There has been an error getting the appointment, please try again!');
             });
 
-        // getDate()
-        //     .then((response) => {
-        //         const selectedDate = response.data.data;
-        //         if (selectedDate) {
-        //             setDate(selectedDate);
-        //         } else {
-        //             toast.error('There has been an error getting the date, please try again!');
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         toast.error('There has been an error getting the date, please try again!');
-        //     });
-
     }, [reloadCount]);
 
     return (
@@ -170,15 +156,7 @@ const AppointmentList = (props) => {
                                                         value={query}
                                                         onChange={(e) => { setQuery(e.target.value); setInputClicked(true); }}
                                                     />
-
-                                                    <CiSearch size="20px"
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: '50%',
-                                                            left: '92%',
-                                                            transform: 'translateY(-50%)',
-                                                        }}
-                                                    />
+                                                    <CiSearch size="20px" className='search-style' />
                                                 </div>
                                             </Col>
                                         </Row>
@@ -289,7 +267,6 @@ const AppointmentList = (props) => {
                                                                 </Col>
                                                             );
                                                         })}
-
                                                     </>
                                                     :
                                                     <>
@@ -339,13 +316,6 @@ const AppointmentList = (props) => {
                                                 ) : (
                                                     <img src={UserPlaceholder} className='placeholder-img me-2' />
                                                 )}
-                                                {/* {designerData.image && (
-                                                    <div
-                                                        className='user-photo-designer'
-                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designerData.image})` }}
-                                                    >
-                                                    </div>
-                                                )} */}
 
                                                 <div className="designer-info mx-2">
 

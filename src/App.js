@@ -190,7 +190,11 @@ const App = () => {
           />
           <Route path="/orders-seller" exact element={<OrdersSeller />} />
           <Route path="/messages" exact element={<Messages />} />
-          <Route path="/rate-review" exact element={<RateReview />} />
+          <Route
+            path="/rate-review/:productId"
+            exact
+            element={<RateReview />}
+          />
           <Route
             path="/order-details/:designerId"
             exact
