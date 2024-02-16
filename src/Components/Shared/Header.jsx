@@ -8,7 +8,7 @@ import { Container, Button, Dropdown } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import Logo from 'Assets/images/kouture-konect-logo.png';
 import { IoIosHeartEmpty, IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
-import { IoCalendarClearOutline } from "react-icons/io5";
+import { IoCalendarClearOutline, IoCartOutline } from "react-icons/io5";
 import { GoBell } from "react-icons/go";
 import { BsEnvelope } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
@@ -36,6 +36,7 @@ const Header = () => {
   const [user, setUser] = useState('');
   const [reloadCount, setReloadCount] = useState(0);
   const [designerId, setDesignerId] = useState('');
+  const [userOrders, setUserOrders] = useState([]);
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
   const [userType, setUserType] = useState('user');
@@ -54,6 +55,9 @@ const Header = () => {
   const getFabrics = async () => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/product/fabric' + currentUser);
   };
+  const getUserOrders = async () => {
+    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order');
+  }
 
   // removeCookies
   const removeCookies = () => {
@@ -98,6 +102,14 @@ const Header = () => {
   function toggleUnderConstruction(message) {
     setUnderConstructionShow(!underConstructionShow);
     setModalHeading(message);
+  }
+
+  function truncateDescription(description, wordLimit) {
+    const words = description.split(' ');
+    if (words.length > wordLimit) {
+      return words.slice(0, wordLimit).join(' ') + '...';
+    }
+    return description;
   }
 
   let reminded = 0;
@@ -163,6 +175,20 @@ const Header = () => {
         })
         .catch((error) => {
           toast.error('There has been an error getting the date, please try again!');
+        });
+
+        getUserOrders()
+        .then((response) => {
+          const userOrder = response.data.data;
+          if (userOrder) {
+            setUserOrders(userOrder);
+            console.log("User Order", userOrder);
+          } else {
+            toast.error('There has been an error getting the order, please try again!');
+          }
+        })
+        .catch((error) => {
+          toast.error('There has been an error getting the order, please try again!');
         });
     }
 
@@ -268,8 +294,15 @@ const Header = () => {
                       href={`/appointments/${currentUser}`}
                     >
                       <IoCalendarClearOutline size={25} />
+                      
                     </Nav.Link>
-
+                    <Nav.Link
+                      href={`/cart/`}
+                    >
+                     <IoCartOutline size={26}/>
+                      
+                    </Nav.Link>
+                    
 
                     <div className="user-dropdown nav-link" ref={userRef}>
                       {userImage ?
@@ -281,37 +314,44 @@ const Header = () => {
 
 
                         <div className="action-box-orders user-menu-orders">
-                          <div className='d-flex cursor-pointer' >
-                            <img src={PlaceholderSquare} className='item-placeholder-header ' alt="User" />
-                            <div className='fs-14 body-text-bell'>
-                              Crystal Cascade SleeveGuard
-                              <div className='mt-1'>
-                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et...
+                          {userOrders.length > 0 ? (
+                            <>
+                              {userOrders.slice(0, 4).map((order) => {
+                                const productImageArray = order?.order_items[0].product.image_urls;
+                                let imageName;
+                                let imageURL;
+                                if (productImageArray) {
+                                  imageName = JSON.parse(productImageArray);
+                                  imageURL = process.env.REACT_APP_STORAGE_URL + 'product/'+imageName[0].image_url;
+                                }
+                                return (
+                                  <>
+                                    <div className='d-flex cursor-pointer' key={order.id}>
+                                      <img src={productImageArray ? imageURL : PlaceholderSquare} className='item-placeholder-header' alt="User" />
+                                      <div className='fs-14 body-text-bell'>
+                                        {order.order_items[0].product.name}
+                                        <div className='mt-1'>
+                                          {truncateDescription(order.order_items[0].product.description, 15)}
+                                        </div>
+                                        <div className='mt-1'>
+                                          <span className='price-color-orders'>${order.total_amount}</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>{order.status}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <hr />
+                                  </>
+                                );
+                              })}
+                              <div className='text-right'>
+                                <a href="/orders" className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All</a>
                               </div>
-                              <div className='mt-1'>
-                                <span className='price-color-orders'>$10.30</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>To Ship</span>
-                              </div>
+                            </>
+                          ) : (
+                            <div className='text-center'>
+                              <GoAlertFill size="50px" className="mb-2 text-gold" />
+                              <p className="mb-0">No orders found.</p>
                             </div>
-                          </div>
-                          <hr />
-
-                          <div className='d-flex cursor-pointer'>
-                            <img src={PlaceholderSquare} className='item-placeholder-header ' alt="User" />
-                            <div className='fs-14 body-text-bell'>
-                              Retro Rendezvous T-Shirt
-                              <div className='mt-1'>
-                                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et...
-                              </div>
-                              <div className='mt-1'>
-                                <span className='price-color-orders'>$22.75</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>Unpaid</span>
-                              </div>
-                            </div>
-                          </div>
-                          <hr />
-
-                          <div className='text-right'>
-                            <a href="/orders" className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All</a>
-                          </div>
+                          )}
                         </div>
                       )}
 

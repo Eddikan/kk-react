@@ -71,6 +71,7 @@ span.rbc-toolbar-label {
 }
 button.rbc-button-link {
     font-size: 14px;
+    color: #000;
 }
 .form-control-hours, .rti--container {
     border: 2px solid var(--gray) !important;
@@ -96,7 +97,7 @@ button.rbc-button-link {
 }
 .col-right-calendar {
     padding-right: 60px;
-    padding-left: 40px;
+    padding-left: 0px;
 }
 .btn-save {
     font-size: 15px;

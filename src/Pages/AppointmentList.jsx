@@ -110,8 +110,8 @@ const AppointmentList = (props) => {
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='col-right mx-auto top-bottom'>
-                            <div className='ms-5'>
+                        <Col lg={10} className='mx-auto top-bottom col-right' style={{maxWidth: '1440px'}}>
+                            <div className='ms-4'>
                                 <Row>
                                     <Col lg={12}>
                                         <Row className="pb-4">

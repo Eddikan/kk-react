@@ -114,8 +114,8 @@ const Products = (props) => {
                                             <Sidebar />
                                         </Col>
 
-                                        <Col lg={10} className='mt-5 col-right mx-auto'>
-                                            <div className='ms-5'>
+                                        <Col lg={10} className='mt-5 col-right mx-auto' style={{maxWidth: '1440px'}}>
+                                            <div className='ms-4'>
                                                 <h2 className='fs-30 mb-3'>Products</h2>
                                                 <Row>
                                                     {products.map((object, index) => (

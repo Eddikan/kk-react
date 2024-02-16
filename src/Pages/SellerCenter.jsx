@@ -776,7 +776,7 @@ const SellerCenter = (props) => {
 
                         <Col lg={10} className='col-right-calendar mx-auto' style={{ maxWidth: '1440px' }}>
                             <Row>
-                                <Col lg={12} className="designer-calendar-container">
+                                <Col lg={12} className="designer-calendar-container ms-4">
                                     <Row className="pb-4">
                                         <Col md={6} className='d-flex justify-content-left align-items-center'>
                                             <h3 className="fs-30 fw-600 text-black mb-0">My Calendar</h3>

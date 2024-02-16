@@ -130,8 +130,8 @@ const OrdersSeller = (props) => {
                             <Sidebar currentTab={currentTab} onChangeTab={(e) => setCurrentTab(e)} />
                         </Col>
 
-                        <Col lg={10} className='top-padding mx-auto'>
-                            <div className='ms-5'>
+                        <Col lg={10} className='top-padding mx-auto' style={{maxWidth: '1440px'}}>
+                            <div className='ms-4'>
                                 <Row>
                                     <Col lg={12}>
                                         <Row className="pb-4">
