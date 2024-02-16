@@ -4,6 +4,7 @@ import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import GoBack from 'Components/Shared/GoBack';
 import NewPortfolioNormal from 'Components/Forms/Portolio/NewPortfolioNormal';
+import AddPortfolioSeller from 'Components/Forms/Portolio/AddPortfolioSeller';
 
 const AddNewPortfolio = () => {
     const navigate = useNavigate();

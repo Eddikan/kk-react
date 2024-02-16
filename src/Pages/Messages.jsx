@@ -107,10 +107,10 @@ const Messages = (props) => {
     return (
         <LayoutNoFooter>
             <section>
-                <Container>
+                <Container className='top-bottom'>
                     <Row>
-                        <Col lg={12} className="designer-calendar-container">
-                            <Row className="pb-4">
+                        <Col lg={12}>
+                            <Row>
                                 <Col md={6} className='d-flex justify-content-left align-items-center'>
                                     <h3 className="fs-30 fw-600 text-black mb-0">Messages</h3>
                                 </Col>
@@ -118,8 +118,8 @@ const Messages = (props) => {
                                     <GoBack fallBack="/#" />
                                 </Col>
                             </Row>
+                            <hr className='mb-4' />
                         </Col>
-                        <hr />
                     </Row>
 
                     <Row>

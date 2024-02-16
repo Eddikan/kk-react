@@ -8,6 +8,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { MdOutlinePlace } from "react-icons/md";
 import FormControl from 'react-bootstrap/FormControl';
+import { MdOutlineCalendarMonth } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 import { GoPlus } from "react-icons/go";
 import moment from 'moment';
@@ -19,6 +20,7 @@ import axios from "axios";
 import toast from 'react-hot-toast';
 import { FiCalendar } from "react-icons/fi";
 import { LuGlobe2 } from "react-icons/lu";
+import { GiAlarmClock } from "react-icons/gi";
 import { FaRegUser } from "react-icons/fa";
 import { MdOutlineEmail } from "react-icons/md";
 
@@ -143,20 +145,25 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
 
     const handleSelectEvent = useCallback((event) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-        const formattedDateStart = new Intl.DateTimeFormat('en-US', options).format(event.start);
-        const formattedDateEnd = new Intl.DateTimeFormat('en-US', options).format(event.end);
+        const optionsDate = { year: 'numeric', month: 'long', day: 'numeric' };
+        const optionsTimeEnd = { hour: 'numeric', minute: 'numeric' };
+        const optionsTimeStart = { hour: 'numeric', minute: 'numeric' };
+        // const formattedDateStart = new Intl.DateTimeFormat('en-US', options).format(event.start);
+        const formattedDate = new Intl.DateTimeFormat('en-US', optionsDate).format(event.date);
+        const formattedTimeEnd = new Intl.DateTimeFormat('en-US', optionsTimeEnd).format(event.end);
+        const formattedTimeStart = new Intl.DateTimeFormat('en-US', optionsTimeStart).format(event.start);
+        // const formattedDateEnd = new Intl.DateTimeFormat('en-US', options).format(event.end);
         setSelectedEvent({
             ...selectedEvent,
             title: event.title,
-            start: formattedDateStart,
-            end: formattedDateEnd,
+            start: formattedTimeStart,
+            end: formattedTimeEnd,
+            date: formattedDate,
             desc: event.desc,
 
         });
         setAppointmentModalIsOpen(true);
-        console.log("formattedDateStart", formattedDateStart);
-        console.log("formattedDateEnd", formattedDateEnd);
-        console.log("event", event);
+
 
     }, []);
 
@@ -529,35 +536,35 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
 
                                 {selectedEvent.title != "" &&
                                     <>
-                                        <div className="d-flex">
-                                            <p className="fw-500">Appointment Title:</p>
-                                            <p className="current-date ms-2">{selectedEvent.title}</p>
+                                        <div>
+                                            <h2 className="current-date fs-18 poppins-ft fw-600 mb-3 mt-3">{selectedEvent.title}</h2>
                                         </div>
 
                                     </>
                                 }
 
-                                {selectedEvent.start != "" &&
+                                {selectedEvent.date != "" &&
                                     <>
                                         <div className="d-flex">
-                                            <p className="fw-500">Appointment Start:</p>
-                                            <p className="current-date ms-2">{selectedEvent.start}</p>
+                                            <p className="fw-500 mb-2"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
+                                            <p className="current-date ms-2 mb-0 text-black">{selectedEvent.date}</p>
                                         </div>
                                     </>
                                 }
-                                {selectedEvent.end != "" &&
+                                {selectedEvent.end != "" || selectedEvent.start != "" ?
                                     <>
                                         <div className="d-flex">
-                                            <p className="fw-500">Appointment End:</p>
-                                            <p className="current-date ms-2">{selectedEvent.end}</p>
+                                            <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color' /></p>
+                                            <p className="current-date ms-2 mb-0 text-black">{selectedEvent.start}&nbsp;-&nbsp;{selectedEvent.end}</p>
                                         </div>
                                     </>
+                                    :
+                                    null
                                 }
                                 {selectedEvent.desc != "" &&
                                     <>
-                                        <div className="d-flex">
-                                            <p className="fw-500">Appointment Description:</p>
-                                            <p className="current-date ms-2">{selectedEvent.desc}</p>
+                                        <div>
+                                            <p className="current-date fs-16 poppins-ft fw-400 text-black mb-2">{selectedEvent.desc}</p>
                                         </div>
                                     </>
                                 }

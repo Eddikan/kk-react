@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
-import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
+import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import { CiCreditCard2 } from "react-icons/ci";
 import '../Assets/styles/Cart/style.css';
-import { useNavigate, useParams, Link } from 'react-router-dom';
-import User from '../Assets/images/user.png';
+import PlaceholderImage from '../Assets/images/placeholders/image.png';
+import { AiOutlineCheck, AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
+import { PiGridFourThin, PiTableThin, PiTrashThin, PiPencilThin, PiUserCircleThin } from 'react-icons/pi';
+import { AiOutlineDelete } from "react-icons/ai";
+import { useParams } from 'react-router-dom';
 import { GoAlertFill } from 'react-icons/go';
 import axios from "axios";
 import toast from 'react-hot-toast';
@@ -18,19 +21,10 @@ const initialCheckOut = {
     date: ''
 };
 
-const ToastCss = {
-    position: "top-right",
-    autoClose: 1500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-};
-
 const Cart = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
+    const token = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const { designerId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
@@ -38,20 +32,38 @@ const Cart = (props) => {
     const [radioButtonValue, setRadioButtonValue] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
+    const [cartItems, setCartItems] = useState('');
+    const [cartItemId, setCartItemId] = useState('');
     const [checkOutFormData, setCheckOutFormData] = useState(initialCheckOut);
+    const [selectedCartItems, setSelectedCartItems] = useState([]);
+    const [cartItemModalDelete, setCartItemModalDelete] = useState(false);
+
+    const [subtotalAmount, setSubtotalAmount] = useState(0);
+    const [totalAmount, setTotalAmount] = useState(0);
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
     }
 
-    const getAddCarts = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
+    const toggleDeleteCartItem = (id) => {
+        setCartItemId(id);
+        setCartItemModalDelete(!cartItemModalDelete);
+    }
+
+
+    const getUserCartItems = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart');
     };
 
     const postCheckOut = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order', data);
     };
+
+    const deleteCartItem = async () => {
+        return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'cart/' + cartItemId);
+    };
+
 
     const handleChangePaymentInfo = (e) => {
         const { name, value } = e.target;
@@ -61,31 +73,85 @@ const Cart = (props) => {
         });
     }
 
+    const handleCheckboxChange = (id) => {
+        if (selectedCartItems.includes(id)) {
+            setSelectedCartItems(selectedCartItems.filter((cartItemId) => cartItemId !== id));
+        } else {
+            setSelectedCartItems([...selectedCartItems, id]);
+        }
+    };
+
+    const checkOutSubmit = (e) => {
+        e.preventDefault();
+        setFormStatus('loading');
+        postCheckOut({ user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: selectedCartItems }).then(response => {
+            const success = response.data.status;
+            if (success == success) {
+                toast.success('Checkout successfully!');
+            } else {
+                toast.error('There has been an error getting the checkout, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error getting the checkout, please try again!');
+        });
+    }
+
+    console.log("selectedCartItems", selectedCartItems);
+
+    const deleteCartItemSubmit = (cartItemId) => {
+        setFormStatus('loading');
+        deleteCartItem(cartItemId).then(response => {
+            const success = response.data.status;
+            if (success) {
+                setFormStatus('standby');
+                setCartItemModalDelete(false);
+                setReloadCount(reloadCount + 1);
+                toast.success('Cart Item deleted successfully!');
+            } else {
+                setFormStatus('standby');
+                toast.error('There has been an error getting the item, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error getting the item, please try again!');
+        });
+    }
+
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
     }, []);
 
     useEffect(() => {
-        // getAddCarts()
-        //     .then((response) => {
-        //         const selectedOrders = response.data.data;
-        //         if (selectedOrders) {
-        //             setOrders(selectedOrders);
-        //         } else {
-        //             toast.error('There has been an error getting the date, please try again!');
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         toast.error('There has been an error getting the date, please try again!');
-        //     });
+        getUserCartItems()
+            .then((response) => {
+                const selectedCartItems = response.data.data;
+                if (selectedCartItems) {
+                    setCartItems(selectedCartItems);
+                    let cart_total = 0;
+                    if (selectedCartItems.length > 0) {
+                        // Calculate subtotal for each item and sum up to get the total
+                        cart_total = selectedCartItems.reduce((acc, item) => {
+                            const subtotal = item.product.price * item.quantity;
+                            return acc + subtotal;
+                        }, 0);
+                    }
+
+                    setTotalAmount(cart_total.toFixed(2));
+                    setSubtotalAmount(cart_total.toFixed(2));
+                } else {
+                    toast.error('There has been an error getting the products, please try again!');
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the products, please try again!');
+            });
     }, [reloadCount]);
 
     return (
         <LayoutNoFooter>
             <section>
-                <Container>
+                <Container className='top-bottom'>
                     <Row>
-                        <Col lg={12} className="designer-calendar-container">
+                        <Col lg={12}>
                             <Row className="pb-4">
                                 <Col md={6} className='d-flex justify-content-left align-items-center'>
                                     <h3 className="fs-30 fw-600 text-black mb-0">Cart</h3>
@@ -103,10 +169,18 @@ const Cart = (props) => {
                                         <Col lg={1}>
                                             <input
                                                 type="checkbox"
-                                                className="cursor-pointer check-box accented me-2 ms-3"
+                                                className="check-box check-box-color date-width mb-1"
+                                                checked={selectedCartItems.length === cartItems.length}
+                                                onChange={() => {
+                                                    if (selectedCartItems.length === cartItems.length) {
+                                                        setSelectedCartItems([]);
+                                                    } else {
+                                                        setSelectedCartItems(cartItems.map((cartItem) => cartItem.id));
+                                                    }
+                                                }}
                                             />
                                         </Col>
-                                        <Col lg={3}>
+                                        <Col lg={4}>
                                             Item
                                         </Col>
 
@@ -122,69 +196,118 @@ const Cart = (props) => {
                                             Total
                                         </Col>
 
-                                        <Col lg={2} className='text-center'>
+                                        <Col lg={1} className='text-center'>
                                             Action
                                         </Col>
                                     </Row>
                                 </Card.Body>
                             </Card>
 
-                            <Card className='mt-2'>
-                                <Card.Body>
-                                    <Row>
-                                        <Col lg={1}>
-                                            <input
-                                                type="checkbox"
-                                                className="cursor-pointer check-box accented me-2 ms-3"
-                                            />
-                                        </Col>
-                                        <Col lg={3}>
-                                            <div className='d-flex'>
-                                                <div>image</div>
-                                                <div className='ms-2'>
-                                                    <div className='mb-1'>
-                                                        Name
-                                                    </div>
+                            <>
+                                {cartItems ?
+                                    <>
+                                        {cartItems.length > 0 ?
+                                            <>
+                                                {cartItems.map((cartItem) => {
+                                                    var cart_product = cartItem.product;
+                                                    if (cart_product.image_urls) {
+                                                        var image_urls = JSON.parse(cart_product.image_urls);
+                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                    } else {
+                                                        var fabricImage = PlaceholderImage;
+                                                    }
 
-                                                    <div>
-                                                        <img src={User} className='placeholder-cart' />
-                                                        <span className='name-user ms-2'>David Taylor</span>
-                                                    </div>
+                                                    return (
+                                                        <Card className='mt-2'>
+                                                            <Card.Body>
+                                                                <Row>
+                                                                    <Col lg={1}>
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            className="check-box me-2 check-box-color"
+                                                                            checked={selectedCartItems.includes(cartItem.id)}
+                                                                            onChange={(e) => { handleCheckboxChange(cartItem.id); }}
+                                                                        />
+                                                                    </Col>
+                                                                    <Col lg={4}>
+                                                                        <div className='d-flex'>
+                                                                            <div className="designs-grid-div fabric-image cursor-pointer"
+                                                                                style={{ backgroundImage: "url(" + fabricImage + ")" }}>
+                                                                            </div>
 
+                                                                            <div className='ms-3'>
+                                                                                <div className='mb-1 fw-500 text-black'>
+                                                                                    {cartItem.product.name}
+                                                                                </div>
+
+                                                                                <div className='d-flex align-items-center user-image-chat'>
+                                                                                    {userDetails.image && (
+                                                                                        <div
+                                                                                            className='user-photo-chat'
+                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${userDetails.image})` }}
+                                                                                        >
+                                                                                        </div>
+                                                                                    )}
+                                                                                    <span className='name-user ms-2'>
+                                                                                        {userDetails.first_name}
+                                                                                        &nbsp;
+                                                                                        {userDetails.last_name}
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </Col>
+
+                                                                    <Col lg={2}>
+                                                                        ${cartItem.product.price}
+                                                                    </Col>
+
+                                                                    <Col lg={2}>
+                                                                        {cartItem.quantity}
+                                                                    </Col>
+
+                                                                    <Col lg={2}>
+                                                                        {cartItem.product.price * cartItem.quantity}
+                                                                    </Col>
+
+                                                                    <Col lg={1} className='text-center cursor-pointer'
+                                                                        onClick={function () { toggleDeleteCartItem(cartItem.id); }}
+                                                                    >
+                                                                        <AiOutlineDelete size="20" />
+                                                                    </Col>
+                                                                </Row>
+                                                            </Card.Body>
+                                                        </Card>
+                                                    );
+                                                })}
+
+                                            </>
+                                            :
+                                            <>
+                                                <div className='text-center fs-18 mt-5 mb-5'>
+                                                    No Item found.
                                                 </div>
-                                            </div>
-                                        </Col>
+                                            </>
+                                        }
+                                    </>
+                                    :
+                                    <>
 
-                                        <Col lg={2}>
-                                            $9.00
-                                        </Col>
-
-                                        <Col lg={2}>
-                                            12 metre
-                                        </Col>
-
-                                        <Col lg={2}>
-                                            $108.00
-                                        </Col>
-
-                                        <Col lg={2}>
-                                        </Col>
-                                    </Row>
-                                </Card.Body>
-                            </Card>
-
+                                    </>
+                                }
+                            </>
                             <Card className='mt-2'>
                                 <Card.Body className='bg-light'>
                                     <Row>
                                         <Col lg={1}>
                                         </Col>
-                                        <Col lg={5}>
+                                        <Col lg={6}>
                                         </Col>
                                         <Col lg={2}>
                                             <span className='fs-18'>Total Amount</span>
                                         </Col>
                                         <Col>
-                                            <span className='total-price fs-20 fw-600'>$120.00</span>
+                                            <span className='total-price fs-20 fw-600'>${totalAmount}</span>
                                         </Col>
                                     </Row>
                                 </Card.Body>
@@ -258,7 +381,10 @@ const Cart = (props) => {
 
                                         </div>
                                     }
-                                    <div className='text-center mt-4' onClick={() => toggleUnderConstruction("Check Out")}>
+                                    <div className='text-center mt-4'
+                                        onClick={checkOutSubmit}
+                                    // onClick={() => toggleUnderConstruction("Check Out")}
+                                    >
                                         <button className='btn btn-primary w-100'>Check Out</button>
                                     </div>
                                 </Card.Body>
@@ -291,6 +417,56 @@ const Cart = (props) => {
                         </Card.Body>
                     </Card>
                 </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={cartItemModalDelete}
+                size='lg'
+                centered
+            >
+                <Modal.Header>
+                    <Modal.Title>Delete Item</Modal.Title>
+                    <AiOutlineClose role='button' onClick={() => setCartItemModalDelete(false)} />
+                </Modal.Header>
+
+                <Modal.Body className="pb-0 pt-1">
+                    <Card className="border-none">
+                        <Card.Body>
+                            <p className="pt-0 fs-22">Are you sure about deleting the item?</p>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+                <Modal.Footer className='text-right modal-footer-border pb-4'>
+                    <button
+                        type="button"
+                        className="btn-primary btn"
+                        onClick={() => setCartItemModalDelete(false)}
+                    >
+                        <AiOutlineClose
+                            size="20px"
+                            className="cancel-button me-1"
+                        />
+                        Cancel
+                    </button>
+
+                    {formStatus !== "standby" ?
+                        <button className='btn btn-primary' type='button'>
+                            <AiOutlineCheck size="20px" /> Deleting...
+                        </button>
+                        :
+                        <button
+                            className='btn btn-primary form-hover'
+                            type='button'
+                            onClick={deleteCartItemSubmit}
+                        >
+                            <PiTrashThin
+                                size="20px"
+                                className="cancel-button me-1"
+                            />
+                            Delete
+                        </button>
+                    }
+                </Modal.Footer>
             </Modal>
 
         </LayoutNoFooter >

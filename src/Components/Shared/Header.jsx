@@ -254,8 +254,10 @@ const Header = () => {
                           <hr />
 
 
-                          <div className='text-right'>
-                            <a href="/messages" className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All Message</a>
+                          <div className='text-right' onClick={() => toggleUnderConstruction("View All Message")}>
+                            <a
+                              // href="/messages"
+                              className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All Message</a>
                           </div>
                         </div>
 

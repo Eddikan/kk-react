@@ -1446,7 +1446,9 @@ span.featured-designs {
 .margin-img {
     margin-top: 10px;
 }
-
+.poppins-ft {
+    font-family: 'Poppins';
+}
 .heart-btn {
     background: #CEA835;
     color: var(--white);
@@ -1487,6 +1489,15 @@ video#home-video {
     padding: 0;
     line-height: 1;
     z-index: 9;
+}
+section#profile {
+    background: #FAFAFA;
+}
+.rbc-event {
+    background-color: #000000 !important;
+}
+.icon-color {
+    color: #CEA835;
 }
 .explore-premium-fabrics,
 .discover-design {

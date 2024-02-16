@@ -18,6 +18,7 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
 import toast from 'react-hot-toast';
 import axios from "axios";
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 const ToastCss = {
     position: "top-right",
@@ -31,6 +32,7 @@ const ToastCss = {
 
 const OrdersSeller = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole']);
+    const { designerId } = useParams();
     const siteCookies = cookies[0];
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -44,7 +46,7 @@ const OrdersSeller = (props) => {
     const [chatBox, setChatBox] = useState(false);
     const [fabrics, setFabrics] = useState('');
     const [designerData, setDesignerData] = useState('');
-    const [text, setText] = useState('')
+    const [text, setText] = useState('');
     const [query, setQuery] = useState('');
 
     const [dateTo, setDateTo] = useState('');
@@ -82,38 +84,6 @@ const OrdersSeller = (props) => {
         document.body.classList.add('designer-calendar-body');
     }, []);
 
-
-    useEffect(() => {
-
-        getFabrics()
-            .then((response) => {
-                const selectedFabrics = response.data.data;
-                if (selectedFabrics) {
-                    setFabrics(selectedFabrics);
-                } else {
-                    toast.error('There has been an error getting the products, please try again!');
-                }
-            })
-            .catch((error) => {
-                toast.error('There has been an error getting the products, please try again!');
-            });
-
-        // getAllOrders()
-        //     .then((response) => {
-        //         const selectedOrders = response.data.data;
-        //         if (selectedOrders) {
-        //             setOrders(selectedOrders);
-        //         } else {
-        //             toast.error('There has been an error getting the date, please try again!');
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         toast.error('There has been an error getting the date, please try again!');
-        //     });
-
-    }, [reloadCount]);
-
-
     useEffect(() => {
         if (inputClicked) {
             fetchProducts();
@@ -133,6 +103,23 @@ const OrdersSeller = (props) => {
             console.error('Error fetching products:', error);
         }
     };
+
+
+    useEffect(() => {
+        getFabrics()
+            .then((response) => {
+                const selectedFabrics = response.data.data;
+                if (selectedFabrics) {
+                    setFabrics(selectedFabrics);
+                } else {
+                    toast.error('There has been an error getting the products, please try again!');
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the products, please try again!');
+            });
+
+    }, [reloadCount]);
 
     return (
         <LayoutSellerCenter>
@@ -339,7 +326,7 @@ const OrdersSeller = (props) => {
                                                     :
                                                     <>
                                                         <div className='text-center fs-18 mt-5'>
-                                                            No records found.
+                                                            No product found.
                                                         </div>
                                                     </>
                                                 }
@@ -457,7 +444,7 @@ const OrdersSeller = (props) => {
                                                     :
                                                     <>
                                                         <div className='text-center fs-18 mt-5'>
-                                                            No records found.
+                                                            No product found.
                                                         </div>
                                                     </>
                                                 }
@@ -575,7 +562,7 @@ const OrdersSeller = (props) => {
                                                     :
                                                     <>
                                                         <div className='text-center fs-18 mt-5'>
-                                                            No records found.
+                                                            No product found.
                                                         </div>
                                                     </>
                                                 }
@@ -693,7 +680,7 @@ const OrdersSeller = (props) => {
                                                     :
                                                     <>
                                                         <div className='text-center fs-18 mt-5'>
-                                                            No records found.
+                                                            No product found.
                                                         </div>
                                                     </>
                                                 }
@@ -811,7 +798,7 @@ const OrdersSeller = (props) => {
                                                     :
                                                     <>
                                                         <div className='text-center fs-18 mt-5'>
-                                                            No records found.
+                                                            No product found.
                                                         </div>
                                                     </>
                                                 }
@@ -929,7 +916,7 @@ const OrdersSeller = (props) => {
                                                     :
                                                     <>
                                                         <div className='text-center fs-18 mt-5'>
-                                                            No records found.
+                                                            No product found.
                                                         </div>
                                                     </>
                                                 }

@@ -16,6 +16,30 @@ img.placeholder-cart {
     margin-bottom: 3px;
    
 }
-.accented {
+.check-box-color {
     accent-color: #CEA835;
+}
+.user-image-chat .user-photo-chat {
+    min-width: 20px;
+    min-height: 20px;
+    max-width: 45px;
+    max-height: 45px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}
+.designs-grid-div {
+    min-height: 300px;
+    border-radius: 5px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    width: 46px;
+    min-height: 48px;
+}
+.top-bottom {
+    padding-top: 50px;
+    padding-bottom: 50px;
 }

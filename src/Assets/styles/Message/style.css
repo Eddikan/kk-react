@@ -37,3 +37,7 @@ img.user-placeholder-message {
     font-size: 14px;
     width: 95%;
 }
+.top-bottom {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}

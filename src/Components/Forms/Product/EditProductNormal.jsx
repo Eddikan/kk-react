@@ -13,6 +13,7 @@ import { GoPlus } from 'react-icons/go';
 import axios from 'axios';
 import Countries from 'Utils/Countries';
 import VideoDragAndDrop from 'Components/Shared/VideoDragAndDrop';
+import Sidebar from 'Components/Shared/Sidebar';
 
 const initialProductData = Object.freeze({
     image_urls: [],
@@ -274,17 +275,17 @@ const EditProductNormal = (props) => {
 
     useEffect(() => {
         const resizeObserver = new ResizeObserver(() => {
-          // Your resize logic here
+            // Your resize logic here
         });
-    
+
         if (formRef.current) {
-          resizeObserver.observe(formRef.current);
+            resizeObserver.observe(formRef.current);
         }
-    
+
         return () => {
-          if (formRef.current) {
-            resizeObserver.unobserve(formRef.current);
-          }
+            if (formRef.current) {
+                resizeObserver.unobserve(formRef.current);
+            }
         };
     }, []);
 
@@ -334,7 +335,7 @@ const EditProductNormal = (props) => {
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
             setProductDraftLoading(false);
-            formSuccess(false); 
+            formSuccess(false);
         });
     };
 
@@ -374,47 +375,47 @@ const EditProductNormal = (props) => {
                                                                     }
                                                                 </>
                                                                 : size == "normal" ?
-                                                                <>
-                                                                    {images.length > 4 && index + 1 > 4 ?
-                                                                        <Col lg={3} key={image.id} className="image-preview mt-3">
-                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
-                                                                                <div className="dnd-actions-overlay">
-                                                                                    <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                    <>
+                                                                        {images.length > 4 && index + 1 > 4 ?
+                                                                            <Col lg={3} key={image.id} className="image-preview mt-3">
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
+                                                                                    <div className="dnd-actions-overlay">
+                                                                                        <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </Col>
-                                                                        :
-                                                                        <Col lg={3} key={image.id} className="image-preview">
-                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
-                                                                                <div className="dnd-actions-overlay">
-                                                                                    <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                            </Col>
+                                                                            :
+                                                                            <Col lg={3} key={image.id} className="image-preview">
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
+                                                                                    <div className="dnd-actions-overlay">
+                                                                                        <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </Col>
-                                                                    }
-                                                                </>
-                                                                :
-                                                                <>
-                                                                    {images.length > 6 && index + 1 > 6 ?
-                                                                        <Col lg={2} key={image.id} className="image-preview mt-3">
-                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
-                                                                                <div className="dnd-actions-overlay">
-                                                                                    <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                            </Col>
+                                                                        }
+                                                                    </>
+                                                                    :
+                                                                    <>
+                                                                        {images.length > 6 && index + 1 > 6 ?
+                                                                            <Col lg={2} key={image.id} className="image-preview mt-3">
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                                    <div className="dnd-actions-overlay">
+                                                                                        <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </Col>
-                                                                        :
-                                                                        <Col lg={2} key={image.id} className="image-preview">
-                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
-                                                                                <div className="dnd-actions-overlay">
-                                                                                    <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                            </Col>
+                                                                            :
+                                                                            <Col lg={2} key={image.id} className="image-preview">
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                                    <div className="dnd-actions-overlay">
+                                                                                        <FaTimesCircle size="25px" onClick={() => handleRemove(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </Col>
-                                                                    }
-                                                                </>
+                                                                            </Col>
+                                                                        }
+                                                                    </>
                                                             }
-                                                            
+
                                                         </>
                                                     ))}
                                                 </>
@@ -436,59 +437,59 @@ const EditProductNormal = (props) => {
                                                             }
                                                         </>
                                                         : size == "normal" ?
-                                                        <>
-                                                            {images.length >= 4 ?
-                                                                <Col lg={3} className="image-preview mt-3" style={{ minHeight: '175px' }}>
-                                                                    <Loading />
-                                                                </Col>
-                                                                :
-                                                                <Col lg={3} className="image-preview" style={{ minHeight: '175px' }}>
-                                                                    <Loading />
-                                                                </Col>
-                                                            }
-                                                        </>
-                                                        :
-                                                        <>
-                                                            {images.length >= 6 ?
-                                                                <Col lg={2} className="image-preview mt-3" style={{ minHeight: '170px' }}>
-                                                                    <Loading />
-                                                                </Col>
-                                                                :
-                                                                <Col lg={2} className="image-preview" style={{ minHeight: '170px' }}>
-                                                                    <Loading />
-                                                                </Col>
-                                                            }
-                                                        </>
+                                                            <>
+                                                                {images.length >= 4 ?
+                                                                    <Col lg={3} className="image-preview mt-3" style={{ minHeight: '175px' }}>
+                                                                        <Loading />
+                                                                    </Col>
+                                                                    :
+                                                                    <Col lg={3} className="image-preview" style={{ minHeight: '175px' }}>
+                                                                        <Loading />
+                                                                    </Col>
+                                                                }
+                                                            </>
+                                                            :
+                                                            <>
+                                                                {images.length >= 6 ?
+                                                                    <Col lg={2} className="image-preview mt-3" style={{ minHeight: '170px' }}>
+                                                                        <Loading />
+                                                                    </Col>
+                                                                    :
+                                                                    <Col lg={2} className="image-preview" style={{ minHeight: '170px' }}>
+                                                                        <Loading />
+                                                                    </Col>
+                                                                }
+                                                            </>
                                                     }
                                                 </>
                                                 :
                                                 <>
                                                     {size == "small" ?
                                                         <>
-                                                        <Col lg={2} className={`image-preview ${images && images.length >= 6 ? "mt-3" : ""}`}>
-                                                            <div onClick={handleAddMore} className="product-grid-div add-more-box w-100 text-center cursor-pointer background-dashed bg-lgray" style={{ minHeight: '170px' }}>
-                                                                <GoPlus color="#a4a4a4" size="130px" className="mt-2" />
-                                                                <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
-                                                            </div>
-                                                        </Col>
+                                                            <Col lg={2} className={`image-preview ${images && images.length >= 6 ? "mt-3" : ""}`}>
+                                                                <div onClick={handleAddMore} className="product-grid-div add-more-box w-100 text-center cursor-pointer background-dashed bg-lgray" style={{ minHeight: '170px' }}>
+                                                                    <GoPlus color="#a4a4a4" size="130px" className="mt-2" />
+                                                                    <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
+                                                                </div>
+                                                            </Col>
                                                         </>
                                                         : size == "normal" ?
-                                                        <Col lg={3} className={`image-preview ${images && images.length >= 4 ? "mt-3" : ""}`}>
-                                                            <div onClick={handleAddMore} className="product-grid-div add-more-box w-100 text-center cursor-pointer background-dashed bg-lgray" style={{ minHeight: '175px' }}>
-                                                                <GoPlus color="#a4a4a4" size="130px" className="mt-2" />
-                                                                <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
-                                                            </div>
-                                                        </Col>
-                                                        :
-                                                        <Col lg={2} className={`image-preview ${images && images.length >= 6 ? "mt-3" : ""}`}>
-                                                            <div onClick={handleAddMore} className="product-grid-div add-more-box w-100 text-center cursor-pointer background-dashed bg-lgray" style={{ minHeight: '170px' }}>
-                                                                <GoPlus color="#a4a4a4" size="130px" className="mt-2" />
-                                                                <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
-                                                            </div>
-                                                        </Col>
+                                                            <Col lg={3} className={`image-preview ${images && images.length >= 4 ? "mt-3" : ""}`}>
+                                                                <div onClick={handleAddMore} className="product-grid-div add-more-box w-100 text-center cursor-pointer background-dashed bg-lgray" style={{ minHeight: '175px' }}>
+                                                                    <GoPlus color="#a4a4a4" size="130px" className="mt-2" />
+                                                                    <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
+                                                                </div>
+                                                            </Col>
+                                                            :
+                                                            <Col lg={2} className={`image-preview ${images && images.length >= 6 ? "mt-3" : ""}`}>
+                                                                <div onClick={handleAddMore} className="product-grid-div add-more-box w-100 text-center cursor-pointer background-dashed bg-lgray" style={{ minHeight: '170px' }}>
+                                                                    <GoPlus color="#a4a4a4" size="130px" className="mt-2" />
+                                                                    <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
+                                                                </div>
+                                                            </Col>
                                                     }
                                                 </>
-                                                
+
                                             }
                                         </Row>
                                         <input
@@ -546,7 +547,7 @@ const EditProductNormal = (props) => {
                                                     <option value='yard'>Yard</option>
                                                     <option value='Other'>Other</option>
                                                 </Form.Control>
-                                                {(unitMeasurement != "centimeter" && unitMeasurement != "meter" && unitMeasurement != "inch" && unitMeasurement != "feet" && unitMeasurement != "yard" || unitMeasurement == "Other") && unitMeasurement != ""  ?
+                                                {(unitMeasurement != "centimeter" && unitMeasurement != "meter" && unitMeasurement != "inch" && unitMeasurement != "feet" && unitMeasurement != "yard" || unitMeasurement == "Other") && unitMeasurement != "" ?
                                                     <FormControl type='text' name='unit_measurement' value={otherUnitMeasurement} className='mr-sm-2' onChange={handleChangeOtherUnitMeasurement} placeholder='' />
                                                     :
                                                     null
@@ -691,7 +692,7 @@ const EditProductNormal = (props) => {
                                     <option value='Mental'>Mental</option>
                                     <option value='Other'>Other</option>
                                 </Form.Control>
-                                {(composition != "Polyamide" && composition != "Polyester" && composition != "Acrylic" && composition != "Polyurethane" && composition != "Cashmere" && composition != "Mental" || composition == "Other") && composition != ""  ?
+                                {(composition != "Polyamide" && composition != "Polyester" && composition != "Acrylic" && composition != "Polyurethane" && composition != "Cashmere" && composition != "Mental" || composition == "Other") && composition != "" ?
                                     <FormControl type='text' name='composition' value={otherComposition} className='mr-sm-2' onChange={handleChangeOtherComposition} placeholder='' />
                                     :
                                     null
@@ -711,7 +712,7 @@ const EditProductNormal = (props) => {
                                     <option value='Leno'>Leno</option>
                                     <option value='Other'>Other</option>
                                 </Form.Control>
-                                {(weave != "Plain" && weave != "Twill" && weave != "Satin" && weave != "Basket" && weave != "Herringbone" && weave != "Jacquard" && weave != "Dobby" && weave != "Leno" || weave == "Other") && weave != ""  ?
+                                {(weave != "Plain" && weave != "Twill" && weave != "Satin" && weave != "Basket" && weave != "Herringbone" && weave != "Jacquard" && weave != "Dobby" && weave != "Leno" || weave == "Other") && weave != "" ?
                                     <FormControl type='text' name='weave' value={otherWeave} className='mr-sm-2' onChange={handleChangeOtherWeave} placeholder='' />
                                     :
                                     null
@@ -801,12 +802,11 @@ const EditProductNormal = (props) => {
                                                         <div className="mt-3">
                                                             <VideoDragAndDrop type="product" onVideoChange={handleVideoChange} size={size} videoLink={productData.video_demo_url && productData.video_demo_url != "" ? productData.video_demo_url : ""} />
                                                         </div>
-                                                    :
-                                                    null
+                                                        :
+                                                        null
                                                 }
                                             </Form.Group>
                                         </Col>
-                                        
                                     </Row>
                                 </Card.Body>
                             </Card>

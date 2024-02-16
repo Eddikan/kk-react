@@ -47,19 +47,19 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
     const applyPastDateClass = () => {
         const isPast = (date) => moment(date, 'DD').isBefore(moment(), 'day');
-    
+
         const dayCells = document.querySelectorAll('.rbc-date-cell'); // Select all day cell elements
         dayCells.forEach(cell => {
-          const button = cell.querySelector('button'); // Select the button element inside the day cell
-          const dateText = button.textContent.trim(); // Get the text content of the button
-          const date = moment(dateText, 'DD'); // Parse the date text using moment
-          if (isPast(date)) {
-            cell.classList.add('past-date'); // Add the class to the parent day cell
-            button.disabled = true;
-          } else {
-            cell.classList.remove('past-date'); // Remove the class from the parent day cell
-            button.disabled = false;
-          }
+            const button = cell.querySelector('button'); // Select the button element inside the day cell
+            const dateText = button.textContent.trim(); // Get the text content of the button
+            const date = moment(dateText, 'DD'); // Parse the date text using moment
+            if (isPast(date)) {
+                cell.classList.add('past-date'); // Add the class to the parent day cell
+                button.disabled = true;
+            } else {
+                cell.classList.remove('past-date'); // Remove the class from the parent day cell
+                button.disabled = false;
+            }
         });
     };
 
@@ -157,8 +157,8 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
     const { defaultDate, views } = useMemo(
         () => ({
-          defaultDate: new Date(1970, 1, 1),
-          views: [Views.MONTH],
+            defaultDate: new Date(1970, 1, 1),
+            views: [Views.MONTH],
         }),
         []
     )
@@ -166,7 +166,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const handleCalendarTimeslotClick = ({ start, end }) => {
         setScheduleLoading(true);
         const isPast = moment(start).isBefore(moment(), 'day');
-    
+
         // If the start date is in the past, do nothing
         if (isPast) {
             setSelectedDate('');
@@ -287,7 +287,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
     useEffect(() => {
         if (calendarRef.current) {
-          applyPastDateClass(); // Apply the past date class when the component mounts or updates
+            applyPastDateClass(); // Apply the past date class when the component mounts or updates
         }
     }, [calendarRef.current]);
 
@@ -355,7 +355,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                         endAccessor="end"
                                         onSelectSlot={handleCalendarTimeslotClick}
                                         selectable
-                                        onView={applyPastDateClass} 
+                                        onView={applyPastDateClass}
                                         views={views}
                                     />
                                 </div>
@@ -386,16 +386,16 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
                                                         ))}
                                                     </>
-                                                :
-                                                <>
-                                                    <div>
-                                                        <p>No available hours.</p>
-                                                    </div>
-                                                </>
+                                                    :
+                                                    <>
+                                                        <div>
+                                                            <p>No available hours.</p>
+                                                        </div>
+                                                    </>
                                                 }
                                             </>
                                         }
-                                        
+
                                     </div>
                                 </div>
 
@@ -420,7 +420,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                         </Form>
                         {/* temporary, should be inside the form */}
                         <div className="send-btn-container">
-                            <button className="btn btn-primary bg-transparent text-black" onClick={() => { setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate('') }}>Cancel</button>
+                            <button className="btn btn-primary bg-transparent text-black" onClick={() => { setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate(''); setSelectedHoursArray([]); }}>Cancel</button>
                             {formStatus != "loading" ?
                                 // <button className="btn btn-primary" onClick={addAppointmentSubmit}>Schedule Now</button>
                                 <button className="btn btn-primary" onClick={() => addAppointmentSubmit("You are Scheduled!")}>Schedule Now</button>

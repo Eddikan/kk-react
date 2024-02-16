@@ -13,7 +13,7 @@ const ImageDragAndDrop = (props) => {
   const [images, setImages] = useState([]);
   const [fileInputKey, setFileInputKey] = useState(Date.now());
   const [uploadStatus, setUploadStatus] = useState('standby');
-  const [imageUrls, setImageUrls]  = useState([]);
+  const [imageUrls, setImageUrls] = useState([]);
   const propImages = props.images;
   const size = props.size;
   const type = props.type;
@@ -42,17 +42,17 @@ const ImageDragAndDrop = (props) => {
       imageType = "portfolio";
     } else if (type == "product") {
       imageType = "product";
-    } 
+    }
   }
 
   const submitDocumentsSequentially = async (images) => {
     setUploadStatus("loading");
     const updatedImageUrls = [...imageUrls];
-  
+
     for (const imageInfo of images) {
       const dataArray = new FormData();
       dataArray.append("image_url", imageInfo.file);
-      
+
       try {
         const response = await axios.post(
           `${process.env.REACT_APP_API_ENDPOINT}${imageType}/image?user_id=${currentUser}&token=${token}`,
@@ -63,7 +63,7 @@ const ImageDragAndDrop = (props) => {
             }
           }
         );
-  
+
         if (response.data.status === "Success") {
           const image = response.data.data.image_url;
           const imageUrlObject = { id: imageInfo.id, image_url: image };
@@ -76,7 +76,7 @@ const ImageDragAndDrop = (props) => {
           setImageUrls((prevImageUrls) => [...prevImageUrls, imageUrlObject]);
 
           let reader = new FileReader();
-  
+
           reader.onloadend = () => {
             // Do something with the uploaded image, if needed
             // For example, update state or perform additional actions
@@ -85,7 +85,7 @@ const ImageDragAndDrop = (props) => {
             //   { media_id: mediaId, name: imageInfo.file.name, url: reader.result, type: imageInfo.file.type }
             // ]);
           };
-  
+
           reader.readAsDataURL(imageInfo.file);
         } else {
           const errors = response.data.errors;
@@ -104,7 +104,7 @@ const ImageDragAndDrop = (props) => {
         // Handle error if needed
       }
     }
-  
+
     // All images have been uploaded
     setUploadStatus("standby");
   };
@@ -122,7 +122,7 @@ const ImageDragAndDrop = (props) => {
 
   const handleRemove = (id, index) => {
     setImages((prevImages) => prevImages.filter((img) => img.id !== id));
-    const currentImages = [...imageUrls]; 
+    const currentImages = [...imageUrls];
     filesUploaded(currentImages.filter((_, i) => i !== index));
     setImageUrls(currentImages.filter((_, i) => i !== index));
     setFileInputKey(Date.now()); // Update the key to trigger re-render of file input
@@ -142,12 +142,12 @@ const ImageDragAndDrop = (props) => {
     fileInputRef.current.click();
   };
 
-  
+
   useEffect(() => {
     if (propImages) {
       setImageUrls(propImages);
     }
-}, [propImages]);
+  }, [propImages]);
 
   return (
     <div
@@ -166,7 +166,7 @@ const ImageDragAndDrop = (props) => {
         multiple
       />
       <label htmlFor="" onClick={handleAdd} className="file-label d-block text-center cursor-pointer">
-        <SlCloudUpload className="d-block mx-auto text-mgray mb-2" size="50px" />
+        <SlCloudUpload className="d-block mx-auto mb-2" color="#CEA835" size="50px" />
         <p className="text-mgray mb-2">Drag and drop file here</p>
         <p className="text-mgray mb-2">Or</p>
         <p>Browse File</p>
@@ -180,30 +180,10 @@ const ImageDragAndDrop = (props) => {
                 {imageUrls.map((image, index) => (
                   <>
                     {size == "small" ?
-                        <>
-                          {images.length > 3 && index > 2 ?
-                            <Col lg={4} key={image.id} className="image-preview mt-3">
-                              <div className="image-dnd min" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+imageType+'/'+image.image_url+")"}}>
-                                <div className="dnd-actions-overlay">
-                                  <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
-                                </div>
-                              </div>
-                            </Col>
-                            :
-                            <Col lg={4} key={image.id} className="image-preview">
-                              <div className="image-dnd min" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+imageType+'/'+image.image_url+")"}}>
-                                <div className="dnd-actions-overlay">
-                                  <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
-                                </div>
-                              </div>
-                            </Col>
-                          }
-                      </>
-                      : size == "normal" ?
                       <>
-                        {images.length > 3 && index+1 > 3 ?
+                        {images.length > 3 && index > 2 ?
                           <Col lg={4} key={image.id} className="image-preview mt-3">
-                            <div className="image-dnd normal" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+imageType+'/'+image.image_url+")"}}>
+                            <div className="image-dnd min" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + imageType + '/' + image.image_url + ")" }}>
                               <div className="dnd-actions-overlay">
                                 <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
                               </div>
@@ -211,7 +191,7 @@ const ImageDragAndDrop = (props) => {
                           </Col>
                           :
                           <Col lg={4} key={image.id} className="image-preview">
-                            <div className="image-dnd normal" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+imageType+'/'+image.image_url+")"}}>
+                            <div className="image-dnd min" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + imageType + '/' + image.image_url + ")" }}>
                               <div className="dnd-actions-overlay">
                                 <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
                               </div>
@@ -219,69 +199,89 @@ const ImageDragAndDrop = (props) => {
                           </Col>
                         }
                       </>
-                      :
-                      <>
-                        {images.length > 3 && index > 3 ?
-                          <Col lg={3} key={image.id} className="image-preview mt-3">
-                            <div className="image-dnd large" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+imageType+'/'+image.image_url+")"}}>
-                              <div className="dnd-actions-overlay">
-                                <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
+                      : size == "normal" ?
+                        <>
+                          {images.length > 3 && index + 1 > 3 ?
+                            <Col lg={4} key={image.id} className="image-preview mt-3">
+                              <div className="image-dnd normal" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + imageType + '/' + image.image_url + ")" }}>
+                                <div className="dnd-actions-overlay">
+                                  <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
+                                </div>
                               </div>
-                            </div>
-                          </Col>
-                          :
-                          <Col lg={3} key={image.id} className="image-preview">
-                            <div className="image-dnd large" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+imageType+'/'+image.image_url+")"}}>
-                              <div className="dnd-actions-overlay">
-                                <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
+                            </Col>
+                            :
+                            <Col lg={4} key={image.id} className="image-preview">
+                              <div className="image-dnd normal" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + imageType + '/' + image.image_url + ")" }}>
+                                <div className="dnd-actions-overlay">
+                                  <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
+                                </div>
                               </div>
-                            </div>
-                          </Col>
-                        }
-                      </>
+                            </Col>
+                          }
+                        </>
+                        :
+                        <>
+                          {images.length > 3 && index > 3 ?
+                            <Col lg={3} key={image.id} className="image-preview mt-3">
+                              <div className="image-dnd large" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + imageType + '/' + image.image_url + ")" }}>
+                                <div className="dnd-actions-overlay">
+                                  <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
+                                </div>
+                              </div>
+                            </Col>
+                            :
+                            <Col lg={3} key={image.id} className="image-preview">
+                              <div className="image-dnd large" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + imageType + '/' + image.image_url + ")" }}>
+                                <div className="dnd-actions-overlay">
+                                  <FaTimesCircle size="25px" onClick={() => handleRemove(image.id, index)} className="remove-icon cursor-pointer text-danger" />
+                                </div>
+                              </div>
+                            </Col>
+                          }
+                        </>
                     }
                   </>
                 ))}
                 {uploadStatus != "standby" ?
-                    <>
-                      {size == "small" ?
+                  <>
+                    {size == "small" ?
+                      <>
+                        {images.length > 3 ?
+                          <Col lg={4} className="image-preview mt-3" style={{ minHeight: '150px' }}>
+                            <Loading />
+                          </Col>
+                          :
+                          <Col lg={4} className="image-preview" style={{ minHeight: '150px' }}>
+                            <Loading />
+                          </Col>
+                        }
+                      </>
+                      : size == "normal" ?
                         <>
                           {images.length > 3 ?
-                            <Col lg={4} className="image-preview mt-3" style={{minHeight: '150px'}}>
+                            <Col lg={4} className="image-preview mt-3" style={{ minHeight: '225px' }}>
                               <Loading />
                             </Col>
                             :
-                            <Col lg={4} className="image-preview" style={{minHeight: '150px'}}>
-                              <Loading />
-                            </Col>
-                          }
-                        </>
-                        : size == "normal" ?
-                        <>
-                          {images.length > 3 ?
-                            <Col lg={4} className="image-preview mt-3" style={{minHeight: '225px'}}>
-                              <Loading />
-                            </Col>
-                            :
-                            <Col lg={4} className="image-preview" style={{minHeight: '225px'}}>
+                            <Col lg={4} className="image-preview" style={{ minHeight: '225px' }}>
                               <Loading />
                             </Col>
                           }
                         </>
                         :
                         <>
-                          {images.length > 4?
-                            <Col lg={3} className="image-preview mt-3" style={{minHeight: '250px'}}>
+                          {images.length > 4 ?
+                            <Col lg={3} className="image-preview mt-3" style={{ minHeight: '250px' }}>
                               <Loading />
                             </Col>
                             :
-                            <Col lg={3} className="image-preview" style={{minHeight: '250px'}}>
+                            <Col lg={3} className="image-preview" style={{ minHeight: '250px' }}>
                               <Loading />
                             </Col>
                           }
                         </>
-                      }
-                    </>
+                    }
+                  </>
                   :
                   null
                 }

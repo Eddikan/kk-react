@@ -55,6 +55,7 @@ const ViewProduct = () => {
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [unitMeasurement, setUnitMeasurement] = useState(1.00);
     const [yards, setYards] = useState(0.00);
+    const [addToCartLoading, setAddToCartLoading] = useState(false);
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -304,6 +305,21 @@ const ViewProduct = () => {
         getProductReviews();
     }, []);
 
+
+    async function addToCart(e) {
+        setAddToCartLoading(true);
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                navigate("/cart");
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
+        }).catch((error) => {
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    }
+
     return (
         <Layout>
             {productLoading ?
@@ -477,9 +493,32 @@ const ViewProduct = () => {
                                                             <hr className="mb-4" />
                                                         </Col>
                                                         <Col lg="12">
-                                                            <Link to="/cart">
-                                                                <Button className="w-auto me-3 btn-primary fs-16" onClick={toggleAddToCart}>Add to Cart</Button>
-                                                            </Link>
+
+                                                            {addToCartLoading ?
+                                                                <Button
+                                                                    className="w-auto me-3 btn-primary fs-16"
+                                                                    onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: 1 })}
+                                                                >
+                                                                    Add to Cart
+                                                                </Button>
+                                                                :
+                                                                <Button
+                                                                    className="w-auto me-3 btn-primary fs-16"
+                                                                    onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: 1 })}
+                                                                >
+                                                                    Add to Cart
+                                                                </Button>
+                                                            }
+
+                                                            {/* <a href="/cart">
+                                                                <Button
+                                                                    className="w-auto me-3 btn-primary fs-16"
+                                                                    onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: 1 })}
+                                                                >
+                                                                    Add to Cart
+                                                                </Button>
+                                                            </a> */}
+
                                                             {/* <span className="fw-600 fs-24">${(unitMeasurement * productPrice).toFixed(2)} 
                                                             <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span> */}
                                                         </Col>

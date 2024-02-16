@@ -4,7 +4,6 @@ import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
-import '../Assets/styles/Cart/style.css';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import User from '../Assets/images/user.png';
 import { GoAlertFill } from 'react-icons/go';
@@ -17,39 +16,22 @@ import { PiNotepadLight } from "react-icons/pi";
 import { TfiLocationPin } from "react-icons/tfi";
 import { BsTelephone } from "react-icons/bs";
 import { IoIosAttach } from "react-icons/io";
-import { LiaSmileBeam } from "react-icons/lia";
 import { VscSend } from "react-icons/vsc";
 import { IoCloseOutline } from "react-icons/io5";
 import '../Assets/styles/OrderDetails/style.css';
+import InputEmoji from 'react-input-emoji';
 import axios from "axios";
 import toast from 'react-hot-toast';
-
-const initialCheckOut = {
-    card_name: '',
-    card_number: '',
-    date: ''
-};
-
-const ToastCss = {
-    position: "top-right",
-    autoClose: 1500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-};
 
 const OrderDetails = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const { designerId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
-    const [formStatus, setFormStatus] = useState('standby');
     const [chatBox, setChatBox] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
-    const [checkOutFormData, setCheckOutFormData] = useState(initialCheckOut);
-
+    const [user, setUser] = useState('');
+    const [text, setText] = useState('');
 
     const chatBoxModal = () => {
         setChatBox(true);
@@ -64,16 +46,12 @@ const OrderDetails = (props) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
     };
 
-    const postCheckOut = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+    const getUser = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + designerId);
     };
 
-    const handleChangePaymentInfo = (e) => {
-        const { name, value } = e.target;
-        setCheckOutFormData({
-            ...checkOutFormData,
-            [name]: value,
-        });
+    function handleOnEnter(text) {
+        console.log('enter', text)
     }
 
     useEffect(() => {
@@ -81,18 +59,18 @@ const OrderDetails = (props) => {
     }, []);
 
     useEffect(() => {
-        // getAddCarts()
-        //     .then((response) => {
-        //         const selectedOrders = response.data.data;
-        //         if (selectedOrders) {
-        //             setOrders(selectedOrders);
-        //         } else {
-        //             toast.error('There has been an error getting the date, please try again!');
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         toast.error('There has been an error getting the date, please try again!');
-        //     });
+        getUser()
+            .then((response) => {
+                const selectedUser = response.data.data;
+                if (selectedUser) {
+                    setUser(selectedUser);
+                } else {
+                    toast.error('There has been an error getting the user, please try again!');
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the user, please try again!');
+            });
     }, [reloadCount]);
 
     return (
@@ -146,7 +124,7 @@ const OrderDetails = (props) => {
                                     <div className="date-details fs-14">December 25, 2023</div>
                                 </div>
 
-                                {/* <GiMagnifyingGlass className='processing-icon' size={25} /> */}
+                                <PiStarLight className='for-review-icon' size={25} />
                                 <div className="timeline-circle timeline-circle--data timeline-circle--active">
                                     <div className="processing fw-600">Completed</div>
                                     <div className="date-details fs-14">December 26, 2023</div>
@@ -159,27 +137,37 @@ const OrderDetails = (props) => {
                         <Col lg={12} className='mt-4'>
                             <Card className='mt-2 card-details-border'>
                                 <Card.Header className='order-chat card-border bg-header d-flex justify-content-between'>
-                                    <span>
-                                        <img src={User} className='user-placeholder-order me-2 order-user' />Dave Napoles
+                                    <div className='d-flex align-items-center user-image-order'>
+                                        {user.image && (
+                                            <div
+                                                className='user-photo-order me-2'
+                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${user.image})` }}
+                                            >
+                                            </div>
+                                        )}
+
+                                        {user.first_name}
+                                        &nbsp;
+                                        {user.last_name}
                                         <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
-                                    </span>
+                                    </div>
 
                                     <div className='order-id-details d-flex align-items-center'>
                                         Order ID: 11002345CT
                                     </div>
                                 </Card.Header>
-                                <Card.Body className='bg-white'>
+                                <Card.Body className='bg-white radius-border'>
                                     <div className='text-black fs-18 rufina-family fw-600 mb-4'>Delivery Address</div>
                                     <Row>
                                         <Col lg={5} className='mt-2 border-right'>
                                             <div>
                                                 <BsTelephone className='text-gold me-3' />
-                                                +63999 999 1234
+                                                {user.phone_number}
                                             </div>
 
                                             <div className='mt-2'>
                                                 <TfiLocationPin className='text-gold me-3' size="20" />
-                                                155, Cabrera Street, Subic, Agoncillo, Batangas
+                                                {user.address_line_1}
                                             </div>
                                         </Col>
 
@@ -258,11 +246,11 @@ const OrderDetails = (props) => {
                                     <div className='d-flex justify-content-between'>
                                         <div>
                                             <span className="fs-14 fw-500 mb-0 name-of-user-chat">
-                                                {/* {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} &nbsp;
-                                                {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"} */}
-                                                Dave Napoles
+                                                {user.first_name}
+                                                &nbsp;
+                                                {user.last_name}
                                             </span>
-                                            <span className='ms-3 active-now fs-14 fw-400'>Active Now</span>
+                                            <span className='ms-3 active-now fs-14 fw-400'>{user.status}</span>
                                         </div>
                                         <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                             <IoCloseOutline color="#39393A" />
@@ -270,44 +258,29 @@ const OrderDetails = (props) => {
                                     </div>
                                 </Card.Header>
 
-                                <Card.Body >
-                                    {/* <div className='product-portfolio-image'>
-                                        <span className='d-flex'>
-
-                                            {images && images.length > 0 ?
-                                                    <>
-                                                        <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-                                                        </div>
-                                                        <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
-                                                    </>
-                                                    :
-                                                    null
-                                                }
-                                        </span>
-                                    </div> */}
-
+                                <Card.Body>
                                     <div>
-                                        <div className='mt-0 d-flex portfolio-designer-chat'>
-                                            {/* {portfolio.user.image && (
-                                                    <div
-                                                        className='designer-photo'
-                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
-                                                    >
-                                                    </div>
-                                                )} */}
+                                        <span className='d-flex user-image'>
+                                            {user.image && (
+                                                <div
+                                                    className='user-photo'
+                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${user.image})` }}
+                                                >
+                                                </div>
+                                            )}
 
                                             <div className="designer-info mx-2">
+
                                                 <div>
                                                     <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">
-                                                        {/* {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"} */}
-                                                        <span className=''>Dave Napoles</span>
+                                                        <span className=''>{user.first_name}{user.last_name}</span>
                                                         <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
                                                     </p>
                                                 </div>
 
                                                 <div className='fs-14 ms-2 mt-2 name-of-user-chat'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</div>
                                             </div>
-                                        </div>
+                                        </span>
                                     </div>
 
                                     <div className='mt-5 mb-4 text-right d-flex'>
@@ -322,18 +295,19 @@ const OrderDetails = (props) => {
                                         <img src={User} className='placeholder-chat ms-3' />
                                     </div>
 
-                                    <div className='mt-3'>
-                                        <input type="text" className='form-control' />
-                                    </div>
-
-                                    <div className='mt-3 d-flex justify-content-between'>
-                                        <div className='d-flex'>
-                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' size={20} /></div>
-                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
-                                        </div>
+                                    <div>
+                                        <InputEmoji
+                                            value={text}
+                                            onChange={setText}
+                                            cleanOnEnter
+                                            onEnter={handleOnEnter}
+                                            placeholder="Type a message"
+                                            className="emoji-picker"
+                                        />
+                                        <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
                                         <div>
                                             <div
-                                                className="cursor-pointer fw-500"
+                                                className="cursor-pointer fw-500 position-absolute send-button"
                                                 onClick={() => toggleUnderConstruction("Send Message")}
                                             >
                                                 Send

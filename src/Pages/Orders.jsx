@@ -28,6 +28,7 @@ const initialCheckOut = {
 const Orders = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'token', 'userRole']);
     const token = cookies.token;
+    const currentUser = cookies.currentUser;
     const [reloadCount, setReloadCount] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
@@ -41,6 +42,7 @@ const Orders = (props) => {
     const [completedShow, setCompletedShow] = useState(false);
     const [chatBox, setChatBox] = useState(false);
     const [fabrics, setFabrics] = useState('');
+    const [orders, setOrders] = useState('');
     const [designerName, setDesignerName] = useState('');
     const [text, setText] = useState('')
 
@@ -120,8 +122,8 @@ const Orders = (props) => {
         console.log('enter', text)
     }
 
-    const getAddCarts = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
+    const getOrder = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order');
     };
 
     const postCheckOut = async (data) => {
@@ -153,11 +155,24 @@ const Orders = (props) => {
                 if (selectedFabrics) {
                     setFabrics(selectedFabrics);
                 } else {
-                    toast.error('There has been an error getting the date, please try again!');
+                    toast.error('There has been an error getting the date');
                 }
             })
             .catch((error) => {
-                toast.error('There has been an error getting the date, please try again!');
+                toast.error('There has been an error getting the date');
+            });
+
+        getOrder()
+            .then((response) => {
+                const selectedOrders = response.data.data;
+                if (selectedOrders) {
+                    setOrders(selectedOrders);
+                } else {
+                    toast.error('There has been an error getting the orders');
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the orders');
             });
 
     }, [reloadCount]);
@@ -228,11 +243,126 @@ const Orders = (props) => {
 
                     {allShow ?
                         <>
-                            {fabrics ?
+                            {orders ?
                                 <>
-                                    {fabrics.length > 0 ?
+                                    {orders.length > 0 ?
                                         <>
-                                            {fabrics.map((fabric) => {
+                                            {orders.map((order) => {
+
+                                                var order_product = order.order_items[0].product;
+                                                if (order_product.image_urls) {
+                                                    var image_urls = JSON.parse(order_product.image_urls);
+                                                    var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                } else {
+                                                    var cartItemImage = PlaceholderImage;
+                                                }
+
+                                                const options = {
+                                                    year: 'numeric',
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                };
+                                                const today = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
+
+                                                return (
+
+                                                    <Row>
+                                                        <Col lg={12}>
+                                                            <Card className='mt-2 border-card'>
+                                                                <Card.Header className='order-chat d-flex justify-content-between'>
+                                                                    <div>
+                                                                        <div className='d-flex align-items-center user-image-order'>
+                                                                            {order.user.image && (
+                                                                                <div
+                                                                                    className='user-photo-order me-2'
+                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${order.user.image})` }}
+                                                                                >
+                                                                                </div>
+                                                                            )}
+
+
+                                                                            <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
+                                                                            {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
+                                                                            /> */}
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div className='order-id'>
+                                                                        Order ID: 11002345CT
+                                                                    </div>
+                                                                </Card.Header>
+                                                                <Card.Body className='bg-white card-body-border'>
+                                                                    <Row>
+                                                                        <Col lg={2}>
+                                                                            <span className='text-black'>{today}</span>
+                                                                        </Col>
+
+                                                                        <Col lg={3} className='d-flex'>
+
+                                                                            <div className="designs-grid-div fabric-image cursor-pointer"
+                                                                                style={{ backgroundImage: "url(" + cartItemImage + ")", minHeight: '55px' }}>
+                                                                            </div>
+
+                                                                            <span className='d-flex text-black ms-3'>
+                                                                                {order.order_items[0].product.name}
+                                                                            </span>
+                                                                        </Col>
+
+                                                                        <Col lg={2}>
+                                                                            <span className='text-black'>{today}</span>
+                                                                        </Col>
+
+                                                                        <Col lg={1}>
+                                                                            <span className='text-black'>${order.total_amount}</span>
+                                                                        </Col>
+
+                                                                        <Col lg={2}>
+                                                                            <span className='text-black'>{order.status}</span>
+                                                                        </Col>
+
+                                                                        <Col lg={2}>
+                                                                            {/* <a href={`/order-details/${order.user.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                                            </a> */}
+                                                                            <a href={`/product/${order.id}`}>
+                                                                                <button className='btn btn-primary'>Buy Again</button>
+                                                                            </a>
+                                                                        </Col>
+                                                                    </Row>
+                                                                </Card.Body>
+                                                            </Card>
+                                                        </Col>
+                                                    </Row>
+                                                );
+                                            })}
+
+                                        </>
+                                        :
+                                        <>
+
+                                        </>
+                                    }
+                                </>
+                                :
+                                <>
+
+                                </>
+                            }
+                        </>
+
+                        :
+                        null
+                    }
+
+
+                    {activeShow ?
+                        <>
+                            {orders ?
+                                <>
+                                    {orders.length > 0 ?
+                                        <>
+                                            {orders.map((fabric) => {
 
                                                 if (fabric.image_urls?.[0]?.image_url) {
                                                     var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
@@ -273,9 +403,9 @@ const Orders = (props) => {
 
 
                                                                             <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
-                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                            {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
                                                                                 onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
-                                                                            />
+                                                                            /> */}
                                                                         </div>
                                                                     </div>
 
@@ -295,17 +425,17 @@ const Orders = (props) => {
                                                                                 style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
                                                                             </div>
 
-                                                                            <span className='d-flex text-black ms-2'>
+                                                                            <span className='d-flex text-black ms-3'>
                                                                                 {fabric.name}
                                                                             </span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            <span className='text-black'>December 25, 2023</span>
+                                                                            <span className='text-black'>{today}</span>
                                                                         </Col>
 
                                                                         <Col lg={1}>
-                                                                            <span className='text-black'>${fabric.price}</span>
+                                                                            <span className='text-black'>${fabric.total_amount}</span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
@@ -338,135 +468,17 @@ const Orders = (props) => {
                                 </>
                             }
                         </>
-
-                        :
-                        null
-                    }
-
-
-                    {activeShow ?
-                        <>
-                            {fabrics ?
-                                <>
-                                    {fabrics.length > 0 ?
-                                        <>
-                                            {fabrics.map((fabric) => {
-
-                                                if (fabric.image_urls?.[0]?.image_url) {
-                                                    var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
-                                                } else {
-                                                    var fabricImage = PlaceholderImage;
-                                                }
-
-                                                const options = {
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                };
-                                                const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
-                                                const formattedDate = (new Date(fabric.consultation_date_time)).toLocaleString('en-US', {
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                    hour: 'numeric',
-                                                    minute: 'numeric',
-                                                    timeZone: 'UTC',
-                                                });
-
-                                                return (
-
-                                                    <Row>
-                                                        <Col lg={12}>
-                                                            <Card className='mt-2 border-card'>
-                                                                <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                    <span>
-                                                                        <div className='d-flex align-items-center user-image-order'>
-                                                                            {fabric.user.image && (
-                                                                                <div
-                                                                                    className='user-photo-order me-2'
-                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
-                                                                                >
-                                                                                </div>
-                                                                            )}
-
-
-                                                                            {fabric.user.first_name}  {fabric.user.last_name}
-                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
-                                                                            />
-                                                                        </div>
-                                                                    </span>
-
-                                                                    <div className='order-id'>
-                                                                        Order ID: 11002345CT
-                                                                    </div>
-                                                                </Card.Header>
-                                                                <Card.Body className='bg-white card-body-border'>
-                                                                    <Row>
-                                                                        <Col lg={2}>
-                                                                            <span className='text-black'>{today}</span>
-                                                                        </Col>
-
-                                                                        <Col lg={3} className='d-flex'>
-
-                                                                            <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
-                                                                            </div>
-
-                                                                            <span className='d-flex text-black ms-2'>
-                                                                                {fabric.name}
-                                                                            </span>
-                                                                        </Col>
-
-                                                                        <Col lg={2}>
-                                                                            <span className='text-black'>December 25, 2023</span>
-                                                                        </Col>
-
-                                                                        <Col lg={1}>
-                                                                            <span className='text-black'>${fabric.price}</span>
-                                                                        </Col>
-
-                                                                        <Col lg={2}>
-                                                                            <span className='text-black'>{fabric.status}</span>
-                                                                        </Col>
-
-                                                                        <Col lg={2}>
-                                                                            <a href="/order-details" className="cursor-pointer check-datails-decoration" >
-                                                                                <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                            </a>
-                                                                        </Col>
-                                                                    </Row>
-                                                                </Card.Body>
-                                                            </Card>
-                                                        </Col>
-                                                    </Row>
-                                                );
-                                            })}
-
-                                        </>
-                                        :
-                                        <>
-
-                                        </>
-                                    }
-                                </>
-                                :
-                                <>
-
-                                </>
-                            }
-                        </>
                         :
                         null
                     }
 
                     {processShow ?
                         <>
-                            {fabrics ?
+                            {orders ?
                                 <>
-                                    {fabrics.length > 0 ?
+                                    {orders.length > 0 ?
                                         <>
-                                            {fabrics.map((fabric) => {
+                                            {orders.map((fabric) => {
 
                                                 if (fabric.image_urls?.[0]?.image_url) {
                                                     var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
@@ -495,7 +507,7 @@ const Orders = (props) => {
                                                         <Col lg={12}>
                                                             <Card className='mt-2 border-card'>
                                                                 <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                    <span>
+                                                                    <div>
                                                                         <div className='d-flex align-items-center user-image-order'>
                                                                             {fabric.user.image && (
                                                                                 <div
@@ -506,13 +518,12 @@ const Orders = (props) => {
                                                                             )}
 
 
-                                                                            {fabric.user.first_name}  {fabric.user.last_name}
-                                                                            <AiFillMessage
-                                                                                className='ms-2 text-gold cursor-pointer'
+                                                                            <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
+                                                                            {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
                                                                                 onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
-                                                                            />
+                                                                            /> */}
                                                                         </div>
-                                                                    </span>
+                                                                    </div>
 
                                                                     <div className='order-id'>
                                                                         Order ID: 11002345CT
@@ -530,17 +541,17 @@ const Orders = (props) => {
                                                                                 style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
                                                                             </div>
 
-                                                                            <span className='d-flex text-black ms-2'>
+                                                                            <span className='d-flex text-black ms-3'>
                                                                                 {fabric.name}
                                                                             </span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            <span className='text-black'>December 25, 2023</span>
+                                                                            <span className='text-black'>{today}</span>
                                                                         </Col>
 
                                                                         <Col lg={1}>
-                                                                            <span className='text-black'>${fabric.price}</span>
+                                                                            <span className='text-black'>${fabric.total_amount}</span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
@@ -548,7 +559,7 @@ const Orders = (props) => {
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            <a href="/order-details" className="cursor-pointer check-datails-decoration" >
+                                                                            <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
                                                                                 <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                                             </a>
                                                                         </Col>
@@ -579,11 +590,11 @@ const Orders = (props) => {
 
                     {shippedShow ?
                         <>
-                            {fabrics ?
+                            {orders ?
                                 <>
-                                    {fabrics.length > 0 ?
+                                    {orders.length > 0 ?
                                         <>
-                                            {fabrics.map((fabric) => {
+                                            {orders.map((fabric) => {
 
                                                 if (fabric.image_urls?.[0]?.image_url) {
                                                     var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
@@ -612,7 +623,7 @@ const Orders = (props) => {
                                                         <Col lg={12}>
                                                             <Card className='mt-2 border-card'>
                                                                 <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                    <span>
+                                                                    <div>
                                                                         <div className='d-flex align-items-center user-image-order'>
                                                                             {fabric.user.image && (
                                                                                 <div
@@ -623,12 +634,12 @@ const Orders = (props) => {
                                                                             )}
 
 
-                                                                            {fabric.user.first_name}  {fabric.user.last_name}
-                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                            <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
+                                                                            {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
                                                                                 onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
-                                                                            />
+                                                                            /> */}
                                                                         </div>
-                                                                    </span>
+                                                                    </div>
 
                                                                     <div className='order-id'>
                                                                         Order ID: 11002345CT
@@ -646,17 +657,17 @@ const Orders = (props) => {
                                                                                 style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
                                                                             </div>
 
-                                                                            <span className='d-flex text-black ms-2'>
+                                                                            <span className='d-flex text-black ms-3'>
                                                                                 {fabric.name}
                                                                             </span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            <span className='text-black'>December 25, 2023</span>
+                                                                            <span className='text-black'>{today}</span>
                                                                         </Col>
 
                                                                         <Col lg={1}>
-                                                                            <span className='text-black'>${fabric.price}</span>
+                                                                            <span className='text-black'>${fabric.total_amount}</span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
@@ -664,7 +675,7 @@ const Orders = (props) => {
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            <a href="/order-details" className="cursor-pointer check-datails-decoration" >
+                                                                            <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
                                                                                 <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                                             </a>
                                                                         </Col>
@@ -695,11 +706,11 @@ const Orders = (props) => {
 
                     {deliveredShow ?
                         <>
-                            {fabrics ?
+                            {orders ?
                                 <>
-                                    {fabrics.length > 0 ?
+                                    {orders.length > 0 ?
                                         <>
-                                            {fabrics.map((fabric) => {
+                                            {orders.map((fabric) => {
 
                                                 if (fabric.image_urls?.[0]?.image_url) {
                                                     var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
@@ -728,7 +739,7 @@ const Orders = (props) => {
                                                         <Col lg={12}>
                                                             <Card className='mt-2 border-card'>
                                                                 <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                    <span>
+                                                                    <div>
                                                                         <div className='d-flex align-items-center user-image-order'>
                                                                             {fabric.user.image && (
                                                                                 <div
@@ -739,12 +750,12 @@ const Orders = (props) => {
                                                                             )}
 
 
-                                                                            {fabric.user.first_name}  {fabric.user.last_name}
-                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                            <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
+                                                                            {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
                                                                                 onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
-                                                                            />
+                                                                            /> */}
                                                                         </div>
-                                                                    </span>
+                                                                    </div>
 
                                                                     <div className='order-id'>
                                                                         Order ID: 11002345CT
@@ -762,17 +773,17 @@ const Orders = (props) => {
                                                                                 style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
                                                                             </div>
 
-                                                                            <span className='d-flex text-black ms-2'>
+                                                                            <span className='d-flex text-black ms-3'>
                                                                                 {fabric.name}
                                                                             </span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            <span className='text-black'>December 25, 2023</span>
+                                                                            <span className='text-black'>{today}</span>
                                                                         </Col>
 
                                                                         <Col lg={1}>
-                                                                            <span className='text-black'>${fabric.price}</span>
+                                                                            <span className='text-black'>${fabric.total_amount}</span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
@@ -780,7 +791,7 @@ const Orders = (props) => {
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            <a href="/order-details" className="cursor-pointer check-datails-decoration" >
+                                                                            <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
                                                                                 <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                                             </a>
                                                                         </Col>
@@ -811,11 +822,11 @@ const Orders = (props) => {
 
                     {reviewShow ?
                         <>
-                            {fabrics ?
+                            {orders ?
                                 <>
-                                    {fabrics.length > 0 ?
+                                    {orders.length > 0 ?
                                         <>
-                                            {fabrics.map((fabric) => {
+                                            {orders.map((fabric) => {
 
                                                 if (fabric.image_urls?.[0]?.image_url) {
                                                     var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
@@ -844,7 +855,7 @@ const Orders = (props) => {
                                                         <Col lg={12}>
                                                             <Card className='mt-2 border-card'>
                                                                 <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                    <span>
+                                                                    <div>
                                                                         <div className='d-flex align-items-center user-image-order'>
                                                                             {fabric.user.image && (
                                                                                 <div
@@ -855,10 +866,12 @@ const Orders = (props) => {
                                                                             )}
 
 
-                                                                            {fabric.user.first_name}  {fabric.user.last_name}
-                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
+                                                                            <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
+                                                                            {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
+                                                                            /> */}
                                                                         </div>
-                                                                    </span>
+                                                                    </div>
 
                                                                     <div className='order-id'>
                                                                         Order ID: 11002345CT
@@ -876,17 +889,17 @@ const Orders = (props) => {
                                                                                 style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
                                                                             </div>
 
-                                                                            <span className='d-flex text-black ms-2'>
+                                                                            <span className='d-flex text-black ms-3'>
                                                                                 {fabric.name}
                                                                             </span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            <span className='text-black'>December 25, 2023</span>
+                                                                            <span className='text-black'>{today}</span>
                                                                         </Col>
 
                                                                         <Col lg={1}>
-                                                                            <span className='text-black'>${fabric.price}</span>
+                                                                            <span className='text-black'>${fabric.total_amount}</span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
@@ -928,19 +941,17 @@ const Orders = (props) => {
 
                     {completedShow ?
                         <>
-                            {fabrics ?
+                            {orders ?
                                 <>
-                                    {fabrics.length > 0 ?
+                                    {orders.length > 0 ?
                                         <>
-                                            {fabrics.map((fabric) => {
-
+                                            {orders.map((fabric) => {
 
                                                 if (fabric.image_urls?.[0]?.image_url) {
                                                     var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
                                                 } else {
                                                     var fabricImage = PlaceholderImage;
                                                 }
-
 
                                                 const options = {
                                                     year: 'numeric',
@@ -963,7 +974,7 @@ const Orders = (props) => {
                                                         <Col lg={12}>
                                                             <Card className='mt-2 border-card'>
                                                                 <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                    <span>
+                                                                    <div>
                                                                         <div className='d-flex align-items-center user-image-order'>
                                                                             {fabric.user.image && (
                                                                                 <div
@@ -973,10 +984,13 @@ const Orders = (props) => {
                                                                                 </div>
                                                                             )}
 
-                                                                            {fabric.user.first_name}  {fabric.user.last_name}
-                                                                            <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
+
+                                                                            <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
+                                                                            {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
+                                                                            /> */}
                                                                         </div>
-                                                                    </span>
+                                                                    </div>
 
                                                                     <div className='order-id'>
                                                                         Order ID: 11002345CT
@@ -994,17 +1008,17 @@ const Orders = (props) => {
                                                                                 style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
                                                                             </div>
 
-                                                                            <span className='d-flex text-black ms-2'>
+                                                                            <span className='d-flex text-black ms-3'>
                                                                                 {fabric.name}
                                                                             </span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            <span className='text-black'>December 25, 2023</span>
+                                                                            <span className='text-black'>{today}</span>
                                                                         </Col>
 
                                                                         <Col lg={1}>
-                                                                            <span className='text-black'>${fabric.price}</span>
+                                                                            <span className='text-black'>${fabric.total_amount}</span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
@@ -1072,7 +1086,7 @@ const Orders = (props) => {
                                             <div className="designer-info mx-2">
 
                                                 <div>
-                                                    <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">
+                                                    <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-3">
                                                         <span className=''>{designerName.first_name}{designerName.last_name}</span>
                                                         <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
                                                     </p>

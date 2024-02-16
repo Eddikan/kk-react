@@ -4,13 +4,14 @@ import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import GoBack from 'Components/Shared/GoBack';
 import NewProductNormal from 'Components/Forms/Product/NewProductNormal';
+import AddNewDesign from 'Components/Forms/Product/AddNewDesign';
 
 const AddNewProduct = () => {
     const navigate = useNavigate();
 
     const addSuccess = (e) => {
         if (e) {
-            setTimeout(function(){
+            setTimeout(function () {
                 navigate("/user/profile");
             }, 1000);
         }
@@ -30,14 +31,14 @@ const AddNewProduct = () => {
                 <Container>
                     <Row>
                         <Col lg="8" className='mb-3'>
-                            <h2 className='fs-30 mb-2'>New Fabric</h2>
+                            <h2 className='fs-30 mb-2'>Add Design</h2>
                         </Col>
                         <Col lg="4" className='mb-3 text-right'>
                             <GoBack fallBack="/user/profile" />
                         </Col>
                     </Row>
                     <NewProductNormal size="normal" withDraft={true} onSuccess={addSuccess} onReloadPage={reloadPage} onCancel={cancel} />
-                </Container> 
+                </Container>
             </section>
         </Layout>
     );

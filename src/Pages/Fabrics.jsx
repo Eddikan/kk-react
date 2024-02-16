@@ -333,7 +333,7 @@ const Fabrics = (props) => {
                                             placeholder='Enter your search term...'
                                         />
                                     </Form.Group> */}
-                                    <hr className="border-black" />
+                                    {/* <hr className="border-black" /> */}
                                     <div style={{ position: "relative" }} className="mb-4">
                                         <div>
                                             {/* <Form.Label className="fw-600">Sort By: </Form.Label> */}
