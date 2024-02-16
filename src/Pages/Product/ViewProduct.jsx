@@ -56,6 +56,7 @@ const ViewProduct = () => {
     const [unitMeasurement, setUnitMeasurement] = useState(1.00);
     const [yards, setYards] = useState(0.00);
     const [addToCartLoading, setAddToCartLoading] = useState(false);
+    const [buyNowLoading, setBuyNowLoading] = useState(false);
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -315,8 +316,29 @@ const ViewProduct = () => {
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
+            setAddToCartLoading(false);
+        }).catch((error) => {
+            setAddToCartLoading(false);
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    }
+
+    async function buyNow(e) {
+        setBuyNowLoading(true);
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
+            const success = response.data.status;
+            const data = response.data.data;
+            console.log(data);
+            if (success == 'Success') {
+                const cart_item_id = data.cart_item.id;
+                navigate("/cart?item="+cart_item_id);
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
+            setBuyNowLoading(false);
         }).catch((error) => {
             toast.error('Something went wrong, please contact the administrator!');
+            setBuyNowLoading(false);
         });
     }
 
@@ -497,9 +519,9 @@ const ViewProduct = () => {
                                                             {addToCartLoading ?
                                                                 <Button
                                                                     className="w-auto me-3 btn-primary fs-16"
-                                                                    onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: 1 })}
+                                                                    type="button"
                                                                 >
-                                                                    Add to Cart
+                                                                    Addiing to Cart...
                                                                 </Button>
                                                                 :
                                                                 <Button
@@ -509,15 +531,21 @@ const ViewProduct = () => {
                                                                     Add to Cart
                                                                 </Button>
                                                             }
-
-                                                            {/* <a href="/cart">
+                                                            {buyNowLoading ?
                                                                 <Button
-                                                                    className="w-auto me-3 btn-primary fs-16"
-                                                                    onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: 1 })}
+                                                                    className="w-auto me-3 btn-secondary fs-16"
+                                                                    type="button"
                                                                 >
-                                                                    Add to Cart
+                                                                    Adding to Cart...
                                                                 </Button>
-                                                            </a> */}
+                                                                :
+                                                                <Button
+                                                                    className="bg-gold border-gold text-white w-auto me-3 btn-secondary fs-16"
+                                                                    onClick={() => buyNow({ user_id: currentUser, product_id: product.id, quantity: 1 })}
+                                                                >
+                                                                    Buy Now
+                                                                </Button>
+                                                            }
 
                                                             {/* <span className="fw-600 fs-24">${(unitMeasurement * productPrice).toFixed(2)} 
                                                             <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span> */}

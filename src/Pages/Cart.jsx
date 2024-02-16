@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import '../Assets/styles/DesignerCalendar/style.css'
@@ -24,6 +24,14 @@ const initialCheckOut = {
 
 const Cart = (props) => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    // Parse search string to get query parameters
+    const searchParams = new URLSearchParams(location.search);
+    
+    // Access individual query parameters using get method
+    const item = searchParams.get('item');
+
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const token = cookies.currentUser;
@@ -53,13 +61,16 @@ const Cart = (props) => {
         setCartItemModalDelete(!cartItemModalDelete);
     }
 
-
     const getUserCartItems = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart');
     };
 
     const postCheckOut = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order', data);
+    };
+
+    const updateQuantity = async (data) => {
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'cart/'+data.id, data);
     };
 
     const deleteCartItem = async () => {
@@ -86,11 +97,28 @@ const Cart = (props) => {
     const checkOutSubmit = (e) => {
         e.preventDefault();
         setFormStatus('loading');
-        postCheckOut({ user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: selectedCartItems }).then(response => {
+        const uniqueSelectedCartItems = [...new Set(selectedCartItems)];
+        postCheckOut({ user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems }).then(response => {
             const success = response.data.status;
             if (success == success) {
                 toast.success('Order added successfully!');
                 navigate('/orders');
+            } else {
+                toast.error('There has been an error adding the order, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error adding the order, please try again!');
+        });
+    }
+
+    const updateItemQuantity = (data) => {
+        // setFormStatus('loading');
+        // console.log(data);
+        updateQuantity({ user_id: currentUser, quantity: data.quantity, id: data.id }).then(response => {
+            const success = response.data.status;
+            if (success == success) {
+                // toast.success('Product quantity updated successfully!');
+                setReloadCount(reloadCount + 1);
             } else {
                 toast.error('There has been an error adding the order, please try again!');
             }
@@ -122,22 +150,6 @@ const Cart = (props) => {
     }, []);
 
     useEffect(() => {
-        getUserCartItems()
-            .then((response) => {
-                const cartItemsData = response.data.data;
-                if (cartItemsData) {
-                    setCartItems(cartItemsData);
-                    
-                } else {
-                    toast.error('There has been an error getting the products, please try again!');
-                }
-            })
-            .catch((error) => {
-                toast.error('There has been an error getting the products, please try again!');
-            });
-    }, [reloadCount]);
-
-    useEffect(() => {
         let cart_total = 0;
         if (cartItems.length > 0 && selectedCartItems.length > 0 ) {
             // Calculate subtotal for each selected item and sum up to get the total
@@ -150,9 +162,30 @@ const Cart = (props) => {
                 return acc;
             }, 0);
         }
-        setTotalAmount(cart_total.toFixed(2));
-        setSubtotalAmount(cart_total.toFixed(2));
-    }, [selectedCartItems]);
+        if (cart_total > 0) {
+            setTotalAmount(cart_total.toFixed(2));
+            setSubtotalAmount(cart_total.toFixed(2));
+        }
+    }, [selectedCartItems, item, reloadCount, cartItems]);
+
+    useEffect(() => {
+        getUserCartItems()
+            .then((response) => {
+                const cartItemsData = response.data.data;
+                if (cartItemsData) {
+                    setCartItems(cartItemsData);
+                    if (item && item != "") {
+                        setSelectedCartItems([...selectedCartItems, parseInt(item)]);
+                    }
+                    
+                } else {
+                    toast.error('There has been an error getting the products, please try again!');
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the products, please try again!');
+            });
+    }, [reloadCount, item]);
 
     return (
         <LayoutNoFooter>
@@ -178,7 +211,7 @@ const Cart = (props) => {
                                             <input
                                                 type="checkbox"
                                                 className="check-box check-box-color date-width mb-1"
-                                                checked={selectedCartItems.length === cartItems.length}
+                                                checked={selectedCartItems.length === cartItems.length && cartItems.length > 0}
                                                 onChange={() => {
                                                     if (selectedCartItems.length === cartItems.length) {
                                                         setSelectedCartItems([]);
@@ -235,7 +268,7 @@ const Cart = (props) => {
                                                                             className="check-box me-2 check-box-color"
                                                                             checked={selectedCartItems.includes(cartItem.id)}
                                                                             onChange={(e) => { handleCheckboxChange(cartItem.id); }}
-                                                                        />
+                                                                        /> 
                                                                     </Col>
                                                                     <Col lg={4}>
                                                                         <div className='d-flex'>
@@ -271,11 +304,11 @@ const Cart = (props) => {
                                                                     </Col>
 
                                                                     <Col lg={2}>
-                                                                        {cartItem.quantity} {cartItem.product.unit_measurement}
+                                                                        <input type="number" className="form-control p-2 d-inline-block" min={1} style={{maxWidth: 60}} defaultValue={cartItem.quantity} onChange={(e) => updateItemQuantity({quantity: e.target.value, id: cartItem.id})} /> {cartItem.product.unit_measurement}
                                                                     </Col>
 
                                                                     <Col lg={2}>
-                                                                        {cartItem.product.price * cartItem.quantity}
+                                                                        ${(cartItem.product.price * cartItem.quantity).toFixed(2)}
                                                                     </Col>
 
                                                                     <Col lg={1} className='text-center cursor-pointer'
@@ -292,7 +325,7 @@ const Cart = (props) => {
                                             </>
                                             :
                                             <>
-                                                <div className='text-center fs-18 mt-5 mb-5'>
+                                                <div className='text-center my-3'>
                                                     No Item found.
                                                 </div>
                                             </>
@@ -390,10 +423,14 @@ const Cart = (props) => {
                                         </div>
                                     }
                                     <div className='text-center mt-4'
-                                        onClick={checkOutSubmit}
                                     // onClick={() => toggleUnderConstruction("Check Out")}
                                     >
-                                        <button className='btn btn-primary w-100'>Check Out</button>
+                                        {selectedCartItems.length < 1 ?
+                                            <button className='btn btn-primary w-100' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                            :
+                                            <button onClick={checkOutSubmit} className='btn btn-primary w-100'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                        }
+                                        
                                     </div>
                                 </Card.Body>
                             </Card>
