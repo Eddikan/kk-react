@@ -541,7 +541,7 @@ const ViewProduct = () => {
                                                                 :
                                                                 <Button
                                                                     className="bg-gold border-gold text-white w-auto me-3 btn-secondary fs-16"
-                                                                    onClick={() => buyNow({ user_id: currentUser, product_id: product.id, quantity: 1 })}
+                                                                    onClick={() => buyNow({ user_id: currentUser, product_id: product.id, quantity: unitMeasurement })}
                                                                 >
                                                                     Buy Now
                                                                 </Button>
