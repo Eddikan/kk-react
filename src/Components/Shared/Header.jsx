@@ -331,7 +331,7 @@ const Header = () => {
                                       <div className='fs-14 body-text-bell'>
                                         {order.order_items[0].product.name}
                                         <div className='mt-1'>
-                                          {truncateDescription(order.order_items[0].product.description, 15)}
+                                          {truncateDescription(order.order_items[0].product.description, 10)}
                                         </div>
                                         <div className='mt-1'>
                                           <span className='price-color-orders'>${order.total_amount}</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>{order.status}</span>
