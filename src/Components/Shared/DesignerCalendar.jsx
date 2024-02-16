@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Calendar, momentLocalizer, Views, DateLocalizer } from 'react-big-calendar';
 import { Container, CardFooter, Input, Label, UncontrolledAccordion, AccordionItem, AccordionHeader, AccordionBody, CardBody, Button, ModalHeader, ModalBody, ModalFooter, Card, Col, Modal, Table, Row, Form, } from 'reactstrap';
 import moment from 'moment';
@@ -8,7 +9,8 @@ import '../../Assets/styles/DesignerCalendar/style.css';
 
 const localizer = momentLocalizer(moment)
 
-const DesignerCalendar = ({ toggleEvent }) => {
+const DesignerCalendar = ({ toggleEvent, events, designerId }) => {
+    const navigate = useNavigate();
     const [calendarReady, setCalendarReady] = useState(false);
     const calendarRef = useRef(null);
 
@@ -30,13 +32,20 @@ const DesignerCalendar = ({ toggleEvent }) => {
         });
     };
 
-    const [events, setEvents] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState(null);
 
     const handleDateClick = ({ start }) => {
         setSelectedDate(start);
         setModalIsOpen(true);
+    };
+
+    // Function to handle event selection
+    const handleSelectEvent = (event, e) => {
+        // Extract the date from the selected event
+        const selectedDate = moment(event.start).format('MMMM D, YYYY');
+        // Do something with the selected date
+        navigate("/appointment/schedule/"+designerId);
     };
 
     useEffect(() => {
@@ -60,9 +69,10 @@ const DesignerCalendar = ({ toggleEvent }) => {
                     events={events}
                     startAccessor="start"
                     endAccessor="end"
-                    onSelectSlot={handleDateClick}
+                    onSelectSlot={handleSelectEvent}
                     selectable
                     onView={applyPastDateClass}
+                    onSelectEvent={handleSelectEvent}
                 />
             </div>
         </>

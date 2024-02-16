@@ -201,7 +201,7 @@ const SellerCenter = (props) => {
                 const selectedTime = response.data.data;
                 const status = response.data.status;
                 if (status == "Fail") {
-                    toast.error('There has no availabilty found!');
+                    toast.error('No availabilty found!');
                 }
                 else {
                     if (selectedTime) {
@@ -311,12 +311,12 @@ const SellerCenter = (props) => {
                         }
                         setBusinessHoursFormData([initialBusinessHours]);
                     } else {
-                        toast.error('There has been an error getting the appointment, please try again!');
+                        toast.error('There has been an error getting the schedules, please try again!');
                     }
                 }
             })
             .catch((error) => {
-                toast.error('There has been an error getting the appointment, please try again!');
+                toast.error('There has been an error getting the schedules, please try again!');
             });
 
     }

@@ -26,6 +26,8 @@ import { VscSend } from "react-icons/vsc";
 import { FaUserCircle } from "react-icons/fa";
 import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
+import axios from 'axios';
+import moment from 'moment';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -78,6 +80,7 @@ const DesignerProfile = () => {
     const [modalHeading, setModalHeading] = useState('');
     const [activeImage, setActiveImage] = useState('');
     const [elements, setElements] = useState([]);
+    const [designerSchedule, setDesignerSchedule] = useState([]);
 
     const [portfolio, setPortfolio] = useState('');
     const [images, setImages] = useState([]);
@@ -96,6 +99,9 @@ const DesignerProfile = () => {
     const [userImage, setUserImage] = useState();
     const [uploadStatus, setUploadStatus] = useState("standby");
 
+    const getBusinessHours = async (designerId) => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId);
+    };
 
     const chatBoxModal = (e) => {
         setChatBox(true);
@@ -173,11 +179,55 @@ const DesignerProfile = () => {
 
     const toggleGuidePreviewModal = (e) => {
         setGuidePreviewModalShow(!guidePreviewModalShow);
-    }
+    };
+
+    // Function to format time to "8:00 AM" format
+    const formatTime = (time) => {
+        return moment(time, 'HH:mm').format('h:mm A');
+    };
 
     useEffect(() => {
         fetchData({ token: token, currentUser: user_id });
     }, [reloadCount]);
+
+    useEffect(() => {
+        if (designer) {
+            const designerId = designer.id;
+            if (designerId) {
+                getBusinessHours(designerId).then((response) => {
+                    const selectedTime = response.data.data;
+                    const status = response.data.status;    
+                    if (status == "Fail") {
+                        toast.error('No availabilty found!');
+                    } else {
+                        if (selectedTime) {
+                            if (selectedTime.content) {
+                                const availableHours = selectedTime.content;
+                                const events = [];
+
+                                // Map over the content array to format events
+                                availableHours.forEach(({ day, availabilities }) => {
+                                    availabilities.forEach(({ start, end }) => {
+                                        const startTime = moment().day(day).set({ hour: parseInt(start.split(':')[0]), minute: parseInt(start.split(':')[1]), second: 0 });
+                                        const endTime = moment().day(day).set({ hour: parseInt(end.split(':')[0]), minute: parseInt(end.split(':')[1]), second: 0 });
+                                        events.push({
+                                            title: `Schedule: ${formatTime(start)} to ${formatTime(end)}`,
+                                            start: startTime.toDate(),
+                                            end: endTime.toDate(),
+                                        });
+                                    });
+                                });
+
+                                setDesignerSchedule(events);
+                            }
+                        }
+                    }
+                }).catch((error) => {
+                    toast.error('There has been an error getting the schedules, please try again!');
+                });
+            }
+        }
+    }, [reloadCount, designer]);
 
     return (
         <Layout>
@@ -338,7 +388,7 @@ const DesignerProfile = () => {
 
                         {calendarShow ?
                             <div className='mt-3'>
-                                <DesignerCalendar />
+                                <DesignerCalendar events={designerSchedule} designerId={designer ? designer.id : ""} />
                             </div>
                             :
                             null

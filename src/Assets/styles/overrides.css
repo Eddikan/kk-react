@@ -1643,3 +1643,7 @@ a.schedule-consultation {
     pointer-events: none;
     color: #999999;
 }
+
+.rbc-date-cell {
+    cursor: pointer;
+}

@@ -69,7 +69,6 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const userDetails = cookies.userDetails;
     const { designerId } = useParams();
 
-
     const [events, setEvents] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState("");
@@ -87,6 +86,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [youAreScheduleShow, setYouAreScheduleShow] = useState(false);
     const [modalHeading, setModalHeading] = useState();
+    const [scheduleLoading, setScheduleLoading] = useState(false);
 
     const postSetAppointment = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment', data);
@@ -164,12 +164,14 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     )
 
     const handleCalendarTimeslotClick = ({ start, end }) => {
+        setScheduleLoading(true);
         const isPast = moment(start).isBefore(moment(), 'day');
     
         // If the start date is in the past, do nothing
         if (isPast) {
             setSelectedDate('');
             setSelectedHoursArray([]);
+            setScheduleLoading(false);
             return;
         }
 
@@ -196,10 +198,12 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                         return null; // React requires a return value, so we return null here
                     })
                 }
+                setScheduleLoading(false);
             } else {
                 if (selectedHours) {
                     let hoursArray = convertArrayTo12HourFormat(selectedHours);
                     setSelectedHoursArray(hoursArray);
+                    setScheduleLoading(false);
                 } else {
                     const errors = response.data.errors;
                     if (errors && errors.length > 0) {
@@ -210,18 +214,20 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                     } else {
                         toast.error('There has been an error getting the schedule, please try again!');
                     }
+                    setScheduleLoading(false);
                 }
             }
         }).catch((error) => {
-            console.log(error);
+            // console.log(error);
             toast.error('There has been an error getting the schedule, please try again!');
+            setScheduleLoading(false);
         });
     };
 
     const handleTimeslotClick = (data) => {
         setSelectedTimeSlot(convert12to24(data.time));
         setClickedTimeslotButton(data.index);
-        console.log("data.time", convert12to24(data.time));
+        // console.log("data.time", convert12to24(data.time));
     }
 
     const handleTimeslotNextClick = () => {
@@ -358,28 +364,36 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                 <div className="time-container">
                                     <h4>Time</h4>
                                     <div className="timeslots-container">
-                                        {selectedHoursArray.length > 0 ?
-                                            <>
-                                                {selectedHoursArray.map((time, index) => (
-                                                    <div className="timeslots-column" key={index}>
-                                                        <div>
-                                                            <button key={index} className={clickedTimeslotButton == index ? "btn btn-primary timeslot-btn" : "btn btn-primary"} onClick={() => handleTimeslotClick({ time, index })}>{time}</button>
-                                                        </div>
-                                                        <div>
-                                                            {clickedTimeslotButton == index && (
-                                                                <button key={index} className="btn btn-primary timeslot-btn" onClick={() => handleTimeslotNextClick()}>Next</button>
-                                                            )}
-                                                        </div>
-                                                    </div>
-
-                                                ))}
-                                            </>
-                                        :
-                                        <>
+                                        {scheduleLoading ?
                                             <div>
-                                                <p>No available hours.</p>
+                                                <p>Loading...</p>
                                             </div>
-                                        </>
+                                            :
+                                            <>
+                                                {selectedHoursArray.length > 0 ?
+                                                    <>
+                                                        {selectedHoursArray.map((time, index) => (
+                                                            <div className="timeslots-column" key={index}>
+                                                                <div>
+                                                                    <button key={index} className={clickedTimeslotButton == index ? "btn btn-primary timeslot-btn" : "btn btn-primary"} onClick={() => handleTimeslotClick({ time, index })}>{time}</button>
+                                                                </div>
+                                                                <div>
+                                                                    {clickedTimeslotButton == index && (
+                                                                        <button key={index} className="btn btn-primary timeslot-btn" onClick={() => handleTimeslotNextClick()}>Next</button>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+
+                                                        ))}
+                                                    </>
+                                                :
+                                                <>
+                                                    <div>
+                                                        <p>No available hours.</p>
+                                                    </div>
+                                                </>
+                                                }
+                                            </>
                                         }
                                         
                                     </div>
