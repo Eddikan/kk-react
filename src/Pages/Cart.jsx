@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import '../Assets/styles/DesignerCalendar/style.css'
@@ -22,6 +23,7 @@ const initialCheckOut = {
 };
 
 const Cart = (props) => {
+    const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const token = cookies.currentUser;
@@ -75,7 +77,7 @@ const Cart = (props) => {
 
     const handleCheckboxChange = (id) => {
         if (selectedCartItems.includes(id)) {
-            setSelectedCartItems(selectedCartItems.filter((cartItemId) => cartItemId !== id));
+            setSelectedCartItems(selectedCartItems.filter((cartItemId) => cartItemId !== id)); 
         } else {
             setSelectedCartItems([...selectedCartItems, id]);
         }
@@ -87,16 +89,15 @@ const Cart = (props) => {
         postCheckOut({ user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: selectedCartItems }).then(response => {
             const success = response.data.status;
             if (success == success) {
-                toast.success('Checkout successfully!');
+                toast.success('Order added successfully!');
+                navigate('/orders');
             } else {
-                toast.error('There has been an error getting the checkout, please try again!');
+                toast.error('There has been an error adding the order, please try again!');
             }
         }).catch(() => {
-            toast.error('There has been an error getting the checkout, please try again!');
+            toast.error('There has been an error adding the order, please try again!');
         });
     }
-
-    console.log("selectedCartItems", selectedCartItems);
 
     const deleteCartItemSubmit = (cartItemId) => {
         setFormStatus('loading');
@@ -123,20 +124,10 @@ const Cart = (props) => {
     useEffect(() => {
         getUserCartItems()
             .then((response) => {
-                const selectedCartItems = response.data.data;
-                if (selectedCartItems) {
-                    setCartItems(selectedCartItems);
-                    let cart_total = 0;
-                    if (selectedCartItems.length > 0) {
-                        // Calculate subtotal for each item and sum up to get the total
-                        cart_total = selectedCartItems.reduce((acc, item) => {
-                            const subtotal = item.product.price * item.quantity;
-                            return acc + subtotal;
-                        }, 0);
-                    }
-
-                    setTotalAmount(cart_total.toFixed(2));
-                    setSubtotalAmount(cart_total.toFixed(2));
+                const cartItemsData = response.data.data;
+                if (cartItemsData) {
+                    setCartItems(cartItemsData);
+                    
                 } else {
                     toast.error('There has been an error getting the products, please try again!');
                 }
@@ -145,6 +136,23 @@ const Cart = (props) => {
                 toast.error('There has been an error getting the products, please try again!');
             });
     }, [reloadCount]);
+
+    useEffect(() => {
+        let cart_total = 0;
+        if (cartItems.length > 0 && selectedCartItems.length > 0 ) {
+            // Calculate subtotal for each selected item and sum up to get the total
+            cart_total = cartItems.reduce((acc, item) => {
+                // Check if the item is selected
+                if (selectedCartItems.includes(item.id)) {
+                    const subtotal = item.product.price * item.quantity;
+                    return acc + subtotal;
+                }
+                return acc;
+            }, 0);
+        }
+        setTotalAmount(cart_total.toFixed(2));
+        setSubtotalAmount(cart_total.toFixed(2));
+    }, [selectedCartItems]);
 
     return (
         <LayoutNoFooter>
@@ -263,7 +271,7 @@ const Cart = (props) => {
                                                                     </Col>
 
                                                                     <Col lg={2}>
-                                                                        {cartItem.quantity}
+                                                                        {cartItem.quantity} {cartItem.product.unit_measurement}
                                                                     </Col>
 
                                                                     <Col lg={2}>
