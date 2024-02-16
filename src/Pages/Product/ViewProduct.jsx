@@ -526,7 +526,7 @@ const ViewProduct = () => {
                                                                 :
                                                                 <Button
                                                                     className="w-auto me-3 btn-primary fs-16"
-                                                                    onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: 1 })}
+                                                                    onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: unitMeasurement })}
                                                                 >
                                                                     Add to Cart
                                                                 </Button>
