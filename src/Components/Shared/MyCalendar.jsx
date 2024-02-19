@@ -294,6 +294,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                     setReloadCount(reloadCount + 1);
                     setConsultationFormData(intitialConsultationData);
                     toast.success('Appointment added successfully!');
+                    handleModalClose();
                 } else {
                     if (status == "Fail") {
                         const errors = response.data.errors;
@@ -337,16 +338,18 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                     for (let i = 0; i < appointments.length; i++) {
                         const appointment = appointments[i];
                         const appointmentDateTime = appointment.consultation_date_time;
-                        const appointmentStartIso = convertHoursToDatetime(appointment.consultation_hour_start, appointmentDateTime);
-                        const appointmentEndIso = convertHoursToDatetime(appointment.consultation_hour_end, appointmentDateTime);
-                        const eventData = {
-                            id: appointment.id,
-                            title: appointment.title ? appointment.title : 'Appointment with ' + appointment.first_name + ' ' + appointment.last_name,
-                            start: new Date(appointmentStartIso),
-                            end: new Date(appointmentEndIso),
-                            desc: appointment.consultation_details,
-                        };
-                        apiEventDataArray.push(eventData);
+                        if (appointment.consultation_hour_start && appointment.consultation_hour_end) {
+                            const appointmentStartIso = convertHoursToDatetime(appointment.consultation_hour_start, appointmentDateTime);
+                            const appointmentEndIso = convertHoursToDatetime(appointment.consultation_hour_end, appointmentDateTime);
+                            const eventData = {
+                                id: appointment.id,
+                                title: appointment.title ? appointment.title : 'Appointment with ' + appointment.first_name + ' ' + appointment.last_name,
+                                start: new Date(appointmentStartIso),
+                                end: new Date(appointmentEndIso),
+                                desc: appointment.consultation_details,
+                            };
+                            apiEventDataArray.push(eventData);
+                        }
                     }
                     setEvents(apiEventDataArray);
                 } else {
@@ -386,7 +389,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                     id={'set-self-appointment'}
 
                 >
-                    <div>
+                    <form onSubmit={addAppointmentSubmit}>
                         <ModalHeader>
                             <h5 className='modal-title text-left set-appointment'>Set Appointment</h5>
                             <button type='button' className='close react-appointment-close' onClick={handleModalClose} data-dismiss='modal' aria-label='Close'>
@@ -409,6 +412,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                             className='form-control'
                                             value={consultationFormData.title}
                                             onChange={handleChangeConsultation}
+                                            required
                                         />
                                     </Col>
 
@@ -430,19 +434,14 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                                                             className='mr-sm-2 form-control-hours'
                                                                             value={consultationFormData?.consultation_hour_start}
                                                                             onChange={e => handleChangeConsultation(e, index)}
+                                                                            required
                                                                         />
                                                                     </div>
                                                                 </Col>
 
                                                                 <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header mb-2 text-left">Ends at</p>
-                                                                    {index > 0 && (
-                                                                        <div className='close-container'>
-                                                                            <div className='cursor-pointer' onClick={() => handleRemoveAppointment(index)}>
-                                                                                <RxCross2 color='#000000' />
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
+                                                                    
                                                                     <div className='mb-3'>
                                                                         <input
                                                                             type='time'
@@ -450,6 +449,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                                                             className='mr-sm-2 form-control-hours'
                                                                             value={consultationFormData?.consultation_hour_end}
                                                                             onChange={e => handleChangeConsultation(e, index)}
+                                                                            required
                                                                         />
                                                                     </div>
                                                                 </Col>
@@ -499,13 +499,15 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                         )}
                         <ModalFooter>
                             <div className='text-right'>
-                                <Button className="cancel-btn me-2" onClick={handleModalClose}>Cancel</Button>
-                                <Button className="btn-save"
-                                    onClick={addAppointmentSubmit}
-                                >Save</Button>
+                                <Button className="cancel-btn me-2" type="button" onClick={handleModalClose}>Cancel</Button>
+                                {formStatus != "standby" ?
+                                    <Button className="btn-save" type="button">Saving...</Button>
+                                    :
+                                    <Button className="btn-save" type="submit">Save</Button>
+                                }
                             </div>
                         </ModalFooter>
-                    </div>
+                    </form>
                 </Modal>
 
                 <Modal

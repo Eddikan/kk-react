@@ -346,7 +346,7 @@ const EditProductNormal = (props) => {
                     <Card className="mb-3">
                         <Card.Body className='bg-lgray'>
                             <Form.Group className='mb-3'>
-                                <Form.Label>Uploaded Files</Form.Label>
+                                <Form.Label>Photos</Form.Label>
                                 <Card>
                                     <Card.Body>
                                         <Row>

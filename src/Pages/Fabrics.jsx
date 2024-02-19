@@ -414,10 +414,10 @@ const Fabrics = (props) => {
                                             </Form.Group>
                                         ))}
                                     </Form.Group>
-                                    <Form.Group className='mb-4'>
+                                    {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Colors</Form.Label>
                                         <input type="text" name="colors" className='form-control' />
-                                        {/* {colors.map((color) => (
+                                        {colors.map((color) => (
                                             <Form.Group key={color}>
                                                 <Form.Check
                                                     className="cursor-pointer"
@@ -428,8 +428,8 @@ const Fabrics = (props) => {
                                                     onChange={() => handleColorChange(color)}
                                                 />
                                             </Form.Group>
-                                        ))} */}
-                                    </Form.Group>
+                                        ))}
+                                    </Form.Group> */}
 
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Origin</Form.Label>
@@ -443,7 +443,7 @@ const Fabrics = (props) => {
                                         </Form.Control>
                                     </Form.Group> */}
 
-                                    <Form.Group className='mb-4'>
+                                    {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Price Range</Form.Label>
                                         <div>
                                             <select id="sort-by" className='form-control' >
@@ -453,15 +453,15 @@ const Fabrics = (props) => {
                                                 <option value="">3000</option>
                                             </select>
                                         </div>
-                                    </Form.Group>
+                                    </Form.Group> */}
 
 
-                                    {/* <Form.Group className='mb-4'>
+                                    <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Price Range</Form.Label>
                                         <Form.Group as={Row} className="mt-3 position-relative">
                                             <MultiRangeSlider min={10} max={1000} onChange={priceRangeChange} />
                                         </Form.Group>
-                                    </Form.Group> */}
+                                    </Form.Group>
 
 
                                     {/* <h2>Price Range</h2>
@@ -503,7 +503,7 @@ const Fabrics = (props) => {
                                                             } else {
                                                                 var fabricImage = PlaceholderImage;
                                                             }
-
+                                                            
                                                             var wishlist_user_ids = fabric.wishlist_user_ids;
                                                             const userWishlist = wishlist_user_ids.includes(currentUser);
 

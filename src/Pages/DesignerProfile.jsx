@@ -90,6 +90,8 @@ const DesignerProfile = () => {
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
+    const activeProfileTab = cookies.activeProfileTab;
+
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
     }
@@ -126,24 +128,28 @@ const DesignerProfile = () => {
             setFabricShow(false);
             setProcessShow(false);
             setCalendarShow(false);
+            setCookie('activeProfileTab', 'about', { path: '/' });
         } else if (tab === "portfolio") {
             setPortfolioShow(true);
             setAboutShow(false);
             setFabricShow(false);
             setProcessShow(false);
             setCalendarShow(false);
+            setCookie('activeProfileTab', 'portfolio', { path: '/' });
         } else if (tab === "fabric") {
             setFabricShow(true);
             setPortfolioShow(false);
             setAboutShow(false);
             setProcessShow(false);
             setCalendarShow(false);
+            setCookie('activeProfileTab', 'fabric', { path: '/' });
         } else if (tab === "calendar") {
             setProcessShow(false);
             setPortfolioShow(false);
             setAboutShow(false);
             setFabricShow(false);
             setCalendarShow(true);
+            setCookie('activeProfileTab', 'calendar', { path: '/' });
         }
     };
 
@@ -167,9 +173,9 @@ const DesignerProfile = () => {
                 }
 
                 if (currentUser == userData.id) {
-                    setIsDesignerCurrentUser(false);
-                } else {
                     setIsDesignerCurrentUser(true);
+                } else {
+                    setIsDesignerCurrentUser(false);
                 }
 
                 setUserLoading(false);
@@ -214,25 +220,58 @@ const DesignerProfile = () => {
                                 const events = [];
 
                                 // Map over the content array to format events
-                                availableHours.forEach(({ day, availabilities }) => {
-                                    availabilities.forEach(({ start, end }) => {
-                                        const startTime = moment().day(day).set({ hour: parseInt(start.split(':')[0]), minute: parseInt(start.split(':')[1]), second: 0 });
-                                        const endTime = moment().day(day).set({ hour: parseInt(end.split(':')[0]), minute: parseInt(end.split(':')[1]), second: 0 });
-                                        events.push({
-                                            title: `Schedule: ${formatTime(start)} to ${formatTime(end)}`,
-                                            start: startTime.toDate(),
-                                            end: endTime.toDate(),
+                                if (availableHours) {
+                                    availableHours.forEach(({ day, availabilities }) => {
+                                        availabilities.forEach(({ start, end }) => {
+                                            if (start && end && start != "" && end != "") {
+                                                const startTime = moment().day(day).set({ hour: parseInt(start.split(':')[0]), minute: parseInt(start.split(':')[1]), second: 0 });
+                                                const endTime = moment().day(day).set({ hour: parseInt(end.split(':')[0]), minute: parseInt(end.split(':')[1]), second: 0 });
+                                                events.push({
+                                                    title: `Schedule: ${formatTime(start)} to ${formatTime(end)}`,
+                                                    start: startTime.toDate(),
+                                                    end: endTime.toDate(),
+                                                });
+                                            }
                                         });
                                     });
-                                });
+                                }
 
                                 setDesignerSchedule(events);
                             }
                         }
                     }
                 }).catch((error) => {
+                    // console.log(error);
                     toast.error('There has been an error getting the schedules, please try again!');
                 });
+            }
+        }
+
+        if (activeProfileTab && activeProfileTab != '') {
+            if (activeProfileTab == "about") {
+                setAboutShow(true);
+                setPortfolioShow(false);
+                setFabricShow(false);
+                setProcessShow(false);
+                setCalendarShow(false);
+            } else if (activeProfileTab === "portfolio") {
+                setPortfolioShow(true);
+                setAboutShow(false);
+                setFabricShow(false);
+                setProcessShow(false);
+                setCalendarShow(false);
+            } else if (activeProfileTab === "fabric") {
+                setFabricShow(true);
+                setPortfolioShow(false);
+                setAboutShow(false);
+                setProcessShow(false);
+                setCalendarShow(false);
+            } else if (activeProfileTab === "calendar") {
+                setProcessShow(false);
+                setPortfolioShow(false);
+                setAboutShow(false);
+                setFabricShow(false);
+                setCalendarShow(true);
             }
         }
     }, [reloadCount, designer]);
@@ -269,9 +308,10 @@ const DesignerProfile = () => {
                                                 <span>-</span>
                                             }
                                             {isDesignerCurrentUser ?
-                                                <>
-                                                    <AiFillMessage className="ms-3 cursor-pointer" size={20} color="#CEA835" onClick={() => toggleUnderConstruction("Chat Designer")} />
-                                                </>
+                                                // <>
+                                                //     <AiFillMessage className="ms-3 cursor-pointer" size={20} color="#CEA835" onClick={() => toggleUnderConstruction("Chat Designer")} />
+                                                // </>
+                                                null
                                                 :
                                                 <>
                                                     <AiFillMessage className="ms-3 cursor-pointer" size={20} color="#CEA835" />
@@ -295,6 +335,8 @@ const DesignerProfile = () => {
 
                             <Col lg="6" className='text-right'>
                                 {isDesignerCurrentUser ?
+                                    null
+                                    :
                                     <>
                                         <span>
                                             <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black request-a-quote'
@@ -313,25 +355,6 @@ const DesignerProfile = () => {
                                                 <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
                                         </span>
                                     </>
-                                    :
-                                    <>
-                                        <span>
-                                            <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black request-a-quote'
-
-                                            >
-                                                <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
-                                                Request A Quote
-                                            </p>
-                                        </span>
-
-                                        <span className='w-100'>
-                                            <a
-                                                className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn'
-                                            >
-                                                <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
-                                        </span>
-
-                                    </>
                                 }
                             </Col>
 
@@ -343,7 +366,9 @@ const DesignerProfile = () => {
                                 {user.is_seller == 1 && (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${fabricShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("fabric") }}>Fabrics</span>
                                 )}
-                                <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${calendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("calendar"); }}>Calendar</span>
+                                 {!isDesignerCurrentUser && (
+                                    <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${calendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("calendar"); }}>Calendar</span>
+                                )}
                                 {elements && (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${guidePreviewModalShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { toggleGuidePreviewModal(); }}>Measurement Guide</span>
                                 )}
@@ -425,7 +450,7 @@ const DesignerProfile = () => {
                             null
                         }
 
-                        {calendarShow ?
+                        {calendarShow && !isDesignerCurrentUser ?
                             <div className='mt-3'>
                                 <DesignerCalendar events={designerSchedule} designerId={designer ? designer.id : ""} />
                             </div>

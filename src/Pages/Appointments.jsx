@@ -26,6 +26,7 @@ const ToastCss = {
 };
 
 const Appointments = (props) => {
+    const { designerId } = useParams();
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     // const { designerId } = useParams();
     const currentUser = cookies.currentUser;
@@ -36,8 +37,9 @@ const Appointments = (props) => {
     const [users, setUsers] = useState('');
     const [nameDesigner, setNameDesigner] = useState('');
     const [images, setImages] = useState([]);
+    const [appointments, setAppointments] = useState([]);
 
-    const getUser = async () => {
+    const getAppointments = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment');
     };
 
@@ -83,12 +85,11 @@ const Appointments = (props) => {
 
     useEffect(() => {
         if (currentUser) {
-            getUser()
+            getAppointments()
                 .then((response) => {
-                    const selectedUser = response.data.data;
-                    if (selectedUser) {
-                        setUsers(selectedUser);
-                        setImages(selectedUser.image);
+                    const selectedAppointments = response.data.data;
+                    if (selectedAppointments) {
+                        setAppointments(selectedAppointments);
                     } else {
                         toast.error('There has been an error getting the user, please try again!');
                     }
@@ -140,19 +141,19 @@ const Appointments = (props) => {
                         </Col>
 
                         <>
-                            {users ?
+                            {appointments ?
                                 <>
-                                    {users.length > 0 ?
+                                    {appointments.length > 0 ?
                                         <>
-                                            {users.map((user) => {
+                                            {appointments.map((appointment) => {
 
                                                 const options = {
                                                     year: 'numeric',
                                                     month: 'long',
                                                     day: 'numeric',
                                                 };
-                                                const today = (new Date(user.created_at)).toLocaleDateString('en-ES', options);
-                                                const formattedDate = (new Date(user.consultation_date_time)).toLocaleString('en-US', {
+                                                const today = (new Date(appointment.created_at)).toLocaleDateString('en-ES', options);
+                                                const formattedDate = (new Date(appointment.consultation_date_time)).toLocaleString('en-US', {
                                                     year: 'numeric',
                                                     month: 'long',
                                                     day: 'numeric',
@@ -168,18 +169,18 @@ const Appointments = (props) => {
                                                                 <Row>
                                                                     <Col lg={4}>
                                                                         <div className='d-flex user-image'>
-                                                                            {user.image && (
+                                                                            {appointment.image && (
                                                                                 <div
                                                                                     className='user-photo'
-                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${user.image})` }}
+                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.image})` }}
                                                                                 >
                                                                                 </div>
                                                                             )}
                                                                             <div>
                                                                                 <span className='d-flex ms-3 mt-0 mb-2 fs-18 text-black'>
-                                                                                    {user.first_name}
+                                                                                    {appointment.first_name}
                                                                                     &nbsp;
-                                                                                    {user.last_name}
+                                                                                    {appointment.last_name}
                                                                                 </span>
                                                                                 <div className='ms-3 fs-16 text-black'>
                                                                                     <span className='fw-600 me-1'>Date Created:</span>&nbsp;{today}
@@ -193,7 +194,7 @@ const Appointments = (props) => {
                                                                     </Col>
 
                                                                     <Col lg={2}>
-                                                                        <span className='text-black'>{user.status}</span>
+                                                                        <span className='text-black'>{appointment.status}</span>
                                                                     </Col>
 
                                                                     <Col lg={2} className='d-flex justify-content-end'>
@@ -203,7 +204,7 @@ const Appointments = (props) => {
                                                                         </div>
 
                                                                         <div className="cursor-pointer icon-tooltiptext"
-                                                                            onClick={function () { toggleChatbox(user.first_name, user.last_name, user.image); }}
+                                                                            onClick={function () { toggleChatbox(appointment.first_name, appointment.last_name, appointment.image); }}
                                                                         >
                                                                             <span><AiFillMessage className='video-cam' size={20} /></span>
                                                                         </div>
@@ -218,13 +219,25 @@ const Appointments = (props) => {
                                         </>
                                         :
                                         <>
-
+                                            <Col lg={12}>
+                                                <Card>
+                                                    <Card.Body>
+                                                        <p className="text-center mb-0">No records found.</p>
+                                                    </Card.Body>
+                                                </Card>
+                                            </Col>
                                         </>
                                     }
                                 </>
                                 :
                                 <>
-
+                                    <Col lg={12}>
+                                        <Card>
+                                            <Card.Body>
+                                                <p className="text-center mb-0">No records found.</p>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
                                 </>
                             }
                         </>

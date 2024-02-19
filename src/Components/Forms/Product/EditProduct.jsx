@@ -284,7 +284,7 @@ const EditProduct = (props) => {
         e.preventDefault();
         if (images) {
             setProductLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/'+productId+'?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, colors: colors, certifications: certifications,  status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if(success == 'Success') {
                     toast.success('Fabric updated successfully!');
@@ -334,7 +334,7 @@ const EditProduct = (props) => {
             <Row>
                 <Col lg='12'>
                     <Form.Group className='my-4'>
-                        <Form.Label>Uploaded Files</Form.Label>
+                        <Form.Label>Photos</Form.Label>
                         <Card>
                             <CardBody>
                             <Row>

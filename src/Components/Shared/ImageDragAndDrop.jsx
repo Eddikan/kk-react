@@ -173,7 +173,7 @@ const ImageDragAndDrop = (props) => {
       </label>
       {images.length > 0 || imageUrls.length > 0 ?
         <>
-          <p>Uploaded files: </p>
+          <p>Photos: </p>
           <Card>
             <CardBody>
               <Row>
