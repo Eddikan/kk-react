@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Layout from '../Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
@@ -18,6 +19,7 @@ const initialUserData = Object.freeze({
 
 const EmailConfirmation = () => {
     const navigate = useNavigate();
+    const { userCode } = useParams();
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
     }
@@ -37,7 +39,7 @@ const EmailConfirmation = () => {
     const userRole = cookies.userRole;
 
     const getUser = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+userCode+'/details');
     };
 
     async function goToQuestionnaire(e) {

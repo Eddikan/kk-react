@@ -75,11 +75,12 @@ const Profile = () => {
     const [limitedDesignShow, setLimitedDesignShow] = useState(false);
     const [myCalendarShow, setMyCalendarShow] = useState(false);
     const [formStatus, setFormStatus] = useState('standby');
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'activeProfileTab']);
     const [areasOfSpecialization, setAreaOfSpecialization] = useState([])
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
+    const activeProfileTab = cookies.activeProfileTab;
 
     // User Image
     const [userImage, setUserImage] = useState();
@@ -168,6 +169,7 @@ const Profile = () => {
             setProcessShow(false);
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
+            setCookie('activeProfileTab', 'about', { path: '/' });
         } else if (tab === "portfolio") {
             setPortfolioShow(true);
             setAboutShow(false);
@@ -175,6 +177,7 @@ const Profile = () => {
             setProcessShow(false);
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
+            setCookie('activeProfileTab', 'portfolio', { path: '/' });
         } else if (tab === "fabric") {
             setFabricShow(true);
             setPortfolioShow(false);
@@ -182,6 +185,7 @@ const Profile = () => {
             setProcessShow(false);
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
+            setCookie('activeProfileTab', 'fabric', { path: '/' });
         } else if (tab === "process") {
             setProcessShow(true);
             setPortfolioShow(false);
@@ -189,6 +193,7 @@ const Profile = () => {
             setFabricShow(false);
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
+            setCookie('activeProfileTab', 'process', { path: '/' });
         } else if (tab === "calendar") {
             setLimitedDesignShow(true);
             setProcessShow(false);
@@ -196,6 +201,7 @@ const Profile = () => {
             setAboutShow(false);
             setFabricShow(false);
             setMyCalendarShow(false);
+            setCookie('activeProfileTab', 'calendar', { path: '/' });
         } else if (tab == "my_calendar") {
             setLimitedDesignShow(false);
             setProcessShow(false);
@@ -203,6 +209,7 @@ const Profile = () => {
             setAboutShow(false);
             setFabricShow(false);
             setMyCalendarShow(true);
+            setCookie('activeProfileTab', 'my_calendar', { path: '/' });
         }
     }
 
@@ -234,6 +241,52 @@ const Profile = () => {
 
     useEffect(() => {
         fetchData({ token: token, currentUser: currentUser });
+
+        if (activeProfileTab && activeProfileTab != '') {
+            if (activeProfileTab == "about") {
+                setAboutShow(true);
+                setPortfolioShow(false);
+                setFabricShow(false);
+                setProcessShow(false);
+                setLimitedDesignShow(false);
+                setMyCalendarShow(false);
+            } else if (activeProfileTab === "portfolio") {
+                setPortfolioShow(true);
+                setAboutShow(false);
+                setFabricShow(false);
+                setProcessShow(false);
+                setLimitedDesignShow(false);
+                setMyCalendarShow(false);
+            } else if (activeProfileTab === "fabric") {
+                setFabricShow(true);
+                setPortfolioShow(false);
+                setAboutShow(false);
+                setProcessShow(false);
+                setLimitedDesignShow(false);
+                setMyCalendarShow(false);
+            } else if (activeProfileTab === "process") {
+                setProcessShow(true);
+                setPortfolioShow(false);
+                setAboutShow(false);
+                setFabricShow(false);
+                setLimitedDesignShow(false);
+                setMyCalendarShow(false);
+            } else if (activeProfileTab === "calendar") {
+                setLimitedDesignShow(true);
+                setProcessShow(false);
+                setPortfolioShow(false);
+                setAboutShow(false);
+                setFabricShow(false);
+                setMyCalendarShow(false);
+            } else if (activeProfileTab == "my_calendar") {
+                setLimitedDesignShow(false);
+                setProcessShow(false);
+                setPortfolioShow(false);
+                setAboutShow(false);
+                setFabricShow(false);
+                setMyCalendarShow(true);
+            }
+        }
     }, [reloadCount]);
 
     return (

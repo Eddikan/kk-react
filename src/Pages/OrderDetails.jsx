@@ -25,13 +25,14 @@ import toast from 'react-hot-toast';
 
 const OrderDetails = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const { designerId } = useParams();
+    const { orderId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
     const [chatBox, setChatBox] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [user, setUser] = useState('');
     const [text, setText] = useState('');
+    const [order, setOrder] = useState('');
 
     const chatBoxModal = () => {
         setChatBox(true);
@@ -46,8 +47,12 @@ const OrderDetails = (props) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
     };
 
-    const getUser = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + designerId);
+    // const getUser = async () => {
+    //     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + designerId);
+    // };
+
+    const getOrder = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId);
     };
 
     function handleOnEnter(text) {
@@ -59,11 +64,12 @@ const OrderDetails = (props) => {
     }, []);
 
     useEffect(() => {
-        getUser()
+        getOrder()
             .then((response) => {
-                const selectedUser = response.data.data;
-                if (selectedUser) {
-                    setUser(selectedUser);
+                const selectedOrder = response.data.data;
+                if (selectedOrder) {
+                    setOrder(selectedOrder);
+                    console.log(selectedOrder);
                 } else {
                     toast.error('There has been an error getting the user, please try again!');
                 }

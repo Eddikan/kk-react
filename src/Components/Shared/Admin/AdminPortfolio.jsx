@@ -43,8 +43,6 @@ const PortfolioGrid = (props) => {
             if (portfolioData) {
                 setPortfolio(portfolioData);
                 setPortfolioLoading(false);
-
-                console.log(portfolioData);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setPortfolioLoading(false);

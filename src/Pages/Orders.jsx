@@ -277,7 +277,7 @@ const Orders = (props) => {
                                         <>
                                             {orders.map((order) => {
                                                 var order_items = order.order_items;
-                                                var order_product = order.order_items[0].product;
+                                                var order_product = order_items[0].product;
                                                 if (order_product.image_urls) {
                                                     var image_urls = JSON.parse(order_product.image_urls);
                                                     var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
@@ -333,7 +333,7 @@ const Orders = (props) => {
                                                                             </div>
 
                                                                             <span className='d-flex text-black ms-3'>
-                                                                                {order.order_items[0].product.name}
+                                                                                {order_items[0].product.name}
                                                                             </span>
                                                                         </Col>
 
@@ -350,14 +350,14 @@ const Orders = (props) => {
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            {/* <a href={`/order-details/${order.user.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                            <a href={`/order-details/${order.id}`} className="cursor-pointer check-datails-decoration" >
                                                                                 <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                            </a> */}
-                                                                            {reorderLoading ?
+                                                                            </a>
+                                                                            {/* {reorderLoading ?
                                                                                 <button type="button" className='btn btn-primary'>Loading...</button>
                                                                                 :
                                                                                 <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
-                                                                            }
+                                                                            } */}
                                                                             
                                                                         </Col>
                                                                     </Row>
@@ -405,7 +405,7 @@ const Orders = (props) => {
                                                 <>
                                                     {orders.filter(order => order.status === "Pending").map(order => {
                                                         var order_items = order.order_items;
-                                                        var order_product = order.order_items[0].product;
+                                                        var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
                                                             var image_urls = JSON.parse(order_product.image_urls);
                                                             var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
@@ -461,7 +461,7 @@ const Orders = (props) => {
                                                                                     </div>
 
                                                                                     <span className='d-flex text-black ms-3'>
-                                                                                        {order.order_items[0].product.name}
+                                                                                        {order_items[0].product.name}
                                                                                     </span>
                                                                                 </Col>
 
@@ -540,7 +540,7 @@ const Orders = (props) => {
                                                 <>
                                                     {orders.filter(order => order.status === "Processing").map(order => {
                                                         var order_items = order.order_items;
-                                                        var order_product = order.order_items[0].product;
+                                                        var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
                                                             var image_urls = JSON.parse(order_product.image_urls);
                                                             var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
@@ -596,7 +596,7 @@ const Orders = (props) => {
                                                                                     </div>
 
                                                                                     <span className='d-flex text-black ms-3'>
-                                                                                        {order.order_items[0].product.name}
+                                                                                        {order_items[0].product.name}
                                                                                     </span>
                                                                                 </Col>
 
@@ -675,7 +675,7 @@ const Orders = (props) => {
                                                 <>
                                                     {orders.filter(order => order.status === "Shipped").map(order => {
                                                         var order_items = order.order_items;
-                                                        var order_product = order.order_items[0].product;
+                                                        var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
                                                             var image_urls = JSON.parse(order_product.image_urls);
                                                             var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
@@ -731,7 +731,7 @@ const Orders = (props) => {
                                                                                     </div>
 
                                                                                     <span className='d-flex text-black ms-3'>
-                                                                                        {order.order_items[0].product.name}
+                                                                                        {order_items[0].product.name}
                                                                                     </span>
                                                                                 </Col>
 
@@ -810,7 +810,7 @@ const Orders = (props) => {
                                                 <>
                                                     {orders.filter(order => order.status === "Delivered").map(order => {
                                                         var order_items = order.order_items;
-                                                        var order_product = order.order_items[0].product;
+                                                        var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
                                                             var image_urls = JSON.parse(order_product.image_urls);
                                                             var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
@@ -866,7 +866,7 @@ const Orders = (props) => {
                                                                                     </div>
 
                                                                                     <span className='d-flex text-black ms-3'>
-                                                                                        {order.order_items[0].product.name}
+                                                                                        {order_items[0].product.name}
                                                                                     </span>
                                                                                 </Col>
 
@@ -945,7 +945,7 @@ const Orders = (props) => {
                                                 <>
                                                     {orders.filter(order => order.status === "Reviewed").map(order => {
                                                         var order_items = order.order_items;
-                                                        var order_product = order.order_items[0].product;
+                                                        var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
                                                             var image_urls = JSON.parse(order_product.image_urls);
                                                             var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
@@ -1001,7 +1001,7 @@ const Orders = (props) => {
                                                                                     </div>
 
                                                                                     <span className='d-flex text-black ms-3'>
-                                                                                        {order.order_items[0].product.name}
+                                                                                        {order_items[0].product.name}
                                                                                     </span>
                                                                                 </Col>
 
@@ -1080,7 +1080,7 @@ const Orders = (props) => {
                                                 <>
                                                     {orders.filter(order => order.status === "Completed").map(order => {
                                                         var order_items = order.order_items;
-                                                        var order_product = order.order_items[0].product;
+                                                        var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
                                                             var image_urls = JSON.parse(order_product.image_urls);
                                                             var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
@@ -1136,7 +1136,7 @@ const Orders = (props) => {
                                                                                     </div>
 
                                                                                     <span className='d-flex text-black ms-3'>
-                                                                                        {order.order_items[0].product.name}
+                                                                                        {order_items[0].product.name}
                                                                                     </span>
                                                                                 </Col>
 

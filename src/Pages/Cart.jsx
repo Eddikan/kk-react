@@ -304,7 +304,7 @@ const Cart = (props) => {
                                                                     </Col>
 
                                                                     <Col lg={2}>
-                                                                        <input type="number" className="form-control p-2 d-inline-block" min={1} style={{maxWidth: 60}} defaultValue={cartItem.quantity} onChange={(e) => updateItemQuantity({quantity: e.target.value, id: cartItem.id})} /> {cartItem.product.unit_measurement}
+                                                                        <input type="number" className="form-control p-2 d-inline-block" min="1" style={{maxWidth: 60}} defaultValue={cartItem.quantity} onChange={(e) => updateItemQuantity({quantity: e.target.value, id: cartItem.id})} /> {cartItem.product.unit_measurement}
                                                                     </Col>
 
                                                                     <Col lg={2}>

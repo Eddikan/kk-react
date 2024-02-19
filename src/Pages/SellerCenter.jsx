@@ -596,7 +596,7 @@ const SellerCenter = (props) => {
                 const selectedTime = response.data.data;
                 const status = response.data.status;
                 if (status == "Fail") {
-                    toast.error('There has no availabilty found!');
+                    toast.error('There are no available hours found!');
                 }
                 else {
                     if (selectedTime) {

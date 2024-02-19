@@ -98,7 +98,7 @@ const App = () => {
             exact
             element={<EmailConfirmation />}
           />
-          <Route path="/email-confirmed" exact element={<EmailConfirmed />} />
+          <Route path="/email-confirmed/:userCode" exact element={<EmailConfirmed />} />
           <Route path="/questionnaire" exact element={<Questionnaire />} />
           <Route path="/about" exact element={<About />} />
           <Route path="/elements/buttons" exact element={<Buttons />} />
@@ -196,7 +196,7 @@ const App = () => {
             element={<RateReview />}
           />
           <Route
-            path="/order-details/:designerId"
+            path="/order-details/:orderId"
             exact
             element={<OrderDetails />}
           />
