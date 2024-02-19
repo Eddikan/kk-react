@@ -89,7 +89,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const [scheduleLoading, setScheduleLoading] = useState(false);
 
     const postSetAppointment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment?user_id=' + currentUser, data);
     };
 
     const getSetAppointment = async (e) => {
@@ -182,7 +182,6 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         const formattedDate = new Intl.DateTimeFormat('en-US', options).format(start);
         setSelectedDate(formattedDate);
         const timeDifference = end - start;
-        console.log("formattedDate", formattedDate);
 
         // Convert milliseconds to hours
         const hoursDifference = timeDifference / (1000 * 60 * 60);
@@ -218,7 +217,6 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                 }
             }
         }).catch((error) => {
-            // console.log(error);
             toast.error('There has been an error getting the schedule, please try again!');
             setScheduleLoading(false);
         });
@@ -227,7 +225,6 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const handleTimeslotClick = (data) => {
         setSelectedTimeSlot(convert12to24(data.time));
         setClickedTimeslotButton(data.index);
-        // console.log("data.time", convert12to24(data.time));
     }
 
     const handleTimeslotNextClick = () => {
@@ -294,13 +291,11 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(!underConstructionShow);
         setModalHeading(message);
-        console.log("Message", message);
     }
 
     function toggleSchedule(message) {
         setYouAreScheduleShow(!youAreScheduleShow);
         setModalHeading(message);
-        console.log("Message", message);
     }
 
     return (

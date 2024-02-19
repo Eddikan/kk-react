@@ -486,47 +486,7 @@ const ViewProduct = () => {
 
                                                         </>
                                                         :
-                                                        <>
-                                                            <div>
-                                                                <div class="kouture-tooltip">
-                                                                    <div className="action-button bg-smgray me-2">
-                                                                        <GoPencil className="text-black" />
-                                                                    </div>
-                                                                    <div class="kouture-tooltiptext">
-                                                                        Edit
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="kouture-tooltip">
-                                                                    <div className="action-button bg-smgray me-2">
-                                                                        <GoShareAndroid className="text-black" />
-                                                                    </div>
-                                                                    <div class="kouture-tooltiptext">
-                                                                        Share
-                                                                    </div>
-                                                                </div>
-
-                                                                {userWishlist ?
-                                                                    <div class="kouture-tooltip">
-                                                                        <div className="action-button bg-gold me-2">
-                                                                            <GoHeart className="text-white" />
-                                                                        </div>
-                                                                        <div class="kouture-tooltiptext">
-                                                                            Remove from Wishlist
-                                                                        </div>
-                                                                    </div>
-                                                                    :
-                                                                    <div class="kouture-tooltip">
-                                                                        <div className="action-button bg-smgray me-2">
-                                                                            <GoHeart className="text-black" />
-                                                                        </div>
-                                                                        <div class="kouture-tooltiptext">
-                                                                            Add to Wishlist
-                                                                        </div>
-                                                                    </div>
-                                                                }
-                                                            </div>
-                                                        </>
+                                                        null
                                                     }
                                                 </Col>
 
@@ -552,6 +512,12 @@ const ViewProduct = () => {
                                                     <div className="mb-3">
                                                         <p className="fw-600 fs-25">${productPrice}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
                                                     </div>
+
+                                                    {/* <div>
+                                                        <p className="mb-2 fs-16 fw-600">Description</p>
+                                                        <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.fabric_process_insights ?? "-"}</p>
+                                                    </div> */}
+
                                                     <div>
                                                         <p className="mb-2 fs-16 fw-600">Fabric Process Insight</p>
                                                         <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.fabric_process_insights ?? "-"}</p>
@@ -645,35 +611,7 @@ const ViewProduct = () => {
 
                                                                     </>
                                                                     :
-                                                                    <>
-                                                                        {addToCartLoading ?
-                                                                            <Button
-                                                                                className="w-auto me-3 btn-primary fs-16"
-                                                                                type="button"
-                                                                            >
-                                                                                Adding to Cart...
-                                                                            </Button>
-                                                                            :
-                                                                            <Button
-                                                                                className="w-auto me-3 btn-primary fs-16">
-                                                                                Add to Cart
-                                                                            </Button>
-                                                                        }
-                                                                        {buyNowLoading ?
-                                                                            <Button
-                                                                                className="w-auto me-3 btn-secondary fs-16"
-                                                                                type="button"
-                                                                            >
-                                                                                Adding to Cart...
-                                                                            </Button>
-                                                                            :
-                                                                            <Button
-                                                                                className="bg-gold border-gold text-white w-auto me-3  fs-16">
-                                                                                Buy Now
-                                                                            </Button>
-                                                                        }
-
-                                                                    </>
+                                                                    null
                                                                 }
 
 
@@ -732,13 +670,18 @@ const ViewProduct = () => {
                                     >
                                         Customer Reviews
 
-                                        <span className="cursor-pointer reviews-tooltip" onClick={() => toggleAddToReview()}>
-                                            <div className='tooltip-content'>
-                                                <span className="reviews-tooltiptext fs-14">Write Review</span>
-                                            </div>
-                                            <BsArrowUpRightSquare className='ms-2' color="#caa533" />
-                                        </span>
-
+                                        {isProductCurrentUser ?
+                                            <>
+                                                <span className="cursor-pointer reviews-tooltip" onClick={() => toggleAddToReview()}>
+                                                    <div className='tooltip-content'>
+                                                        <span className="reviews-tooltiptext fs-14">Write Review</span>
+                                                    </div>
+                                                    <BsArrowUpRightSquare className='ms-2' color="#caa533" />
+                                                </span>
+                                            </>
+                                            :
+                                            null
+                                        }
                                     </span>
 
                                     <hr className='mt-2 mb-4' />

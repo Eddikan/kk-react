@@ -200,13 +200,7 @@ const ViewPortFolio = () => {
 
                                                         </>
                                                         :
-                                                        <>
-
-                                                            <div className="action-button bg-smgray">
-                                                                <GoShareAndroid className="text-black" />
-                                                            </div>
-
-                                                        </>
+                                                        null
                                                     }
 
 
@@ -277,14 +271,7 @@ const ViewPortFolio = () => {
                                                             </div>
                                                         </>
                                                         :
-                                                        <>
-                                                            <div>
-                                                                <div className="cursor-pointer">
-                                                                    <AiFillMessage className='me-2 mb-1' color='#caa533' />Chat Designer
-
-                                                                </div>
-                                                            </div>
-                                                        </>
+                                                        null
                                                     }
                                                 </div>
 
@@ -306,19 +293,7 @@ const ViewPortFolio = () => {
                                                         </span>
                                                     </>
                                                     :
-                                                    <>
-                                                        <span>
-                                                            <p className='btn request-quote-btn mt-4 mb-0 fs-16 fw-400 bg-transparent text-black request-a-quote'>
-                                                                <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
-                                                                Request A Quote
-                                                            </p>
-                                                        </span>
-
-                                                        <span className='w-100'>
-                                                            <a className='btn mt-4 ms-3 btn-primary fs-16 fw-400 consultation-btn'>
-                                                                <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
-                                                        </span>
-                                                    </>
+                                                    null
                                                 }
 
 
@@ -664,7 +639,7 @@ const ViewPortFolio = () => {
                                                             <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
                                                             </div>
                                                             <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>
-                                                                {/* {product.name ?? "-"} */}
+                                                                {portfolio.name ?? "-"}
                                                             </span>
                                                         </>
                                                         :

@@ -58,7 +58,8 @@ const Designs = (props) => {
     const [portfolioCategories, setPortfolioCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedAllCategories, setSelectedAllCategories] = useState(false);
- 
+    const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
+
     const compositions = ['Polyamide', 'Polyester', 'Polyurethane', 'Acrylic', 'Cashmere', 'Mental']; // Replace with your array of composition options
     const weaves = ['Plain', 'Twill', 'Satin', 'Basket', 'Herringbone', 'Jacquard', 'Dobby', 'Leno']; // Replace with your array of weave options
 
@@ -136,7 +137,6 @@ const Designs = (props) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setDesigns(selectedDesigns);
-                // console.log("selectedDesigns", selectedDesigns);
                 setDesignsLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -283,10 +283,11 @@ const Designs = (props) => {
         }
     };
 
-    function togglePortfolioImage(id, first_name, last_name, image_urls, image, address_line_1, province, tags, description) {
+    function togglePortfolioImage(id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId) {
         setPortfolioImage(true);
         setSingleDesign({
             id: id ?? 0,
+            userId: userId ?? 0,
             first_name: first_name ?? '-',
             last_name: last_name ?? '-',
             image: image ?? '-',
@@ -297,13 +298,21 @@ const Designs = (props) => {
 
         })
         setDesignImages(image_urls);
-        console.log('These are image urls: ', image_urls);
-        console.log('id ', id);
         if (image_urls?.[0]?.image_url) {
             setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
         } else {
             setActiveImage(PlaceholderImage);
         }
+
+        if (currentUser == userId) {
+            setIsDesignCurrentUser(false);
+        } else {
+            setIsDesignCurrentUser(true);
+        }
+
+        console.log("userId", userId);
+        console.log("currentUser", currentUser);
+
     }
 
     async function toggleSortDesigns(type, sort) {
@@ -345,7 +354,6 @@ const Designs = (props) => {
                 toast.error('An error occured. Please try again or contact the administrator.');
             }
         }).catch((e) => {
-            console.log(e);
             toast.error('An error occured. Please try again or contact the administrator.');
         });
     }
@@ -407,7 +415,7 @@ const Designs = (props) => {
 
                             <div className='sort-by-border mb-2'>
                                 <label htmlFor="dropdown" className='sample-categories'>Sort By: </label>
-                                <select id="sort-by" className="form-control d-inline-block border-none cursor-pointer fs-20 p-0 px-2" style={{width: '120px'}} onChange={(e) => handleSortFieldChange(e.target.value)}>
+                                <select id="sort-by" className="form-control d-inline-block border-none cursor-pointer fs-20 p-0 px-2" style={{ width: '120px' }} onChange={(e) => handleSortFieldChange(e.target.value)}>
                                     {sortOptions.map(option => (
                                         <option key={option.value} className='fs-20' value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
                                     ))}
@@ -429,7 +437,7 @@ const Designs = (props) => {
                                         label={`All`}
                                         name={`day`}
                                         className={`mb-2`}
-                                        onChange={(e) => handleChangeAllCategories(e.target.checked) }
+                                        onChange={(e) => handleChangeAllCategories(e.target.checked)}
                                         checked={portfolioCategories.length == selectedCategories.length || selectedAllCategories}
                                     />
                                     {portfolioCategories && portfolioCategories.length > 0 ?
@@ -449,7 +457,7 @@ const Designs = (props) => {
                                         :
                                         null
                                     }
-                                    
+
 
                                     {/* <Form.Check
                                         type={`checkbox`}
@@ -728,7 +736,7 @@ const Designs = (props) => {
                                                                 <>
                                                                     <Col className="designs-grid mb-4" xs="12" md="4">
                                                                         <div className="portfolio-link">
-                                                                            <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { togglePortfolioImage(design.designer.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description); }} style={{ backgroundImage: "url(" + designImage + ")" }}>
+                                                                            <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { togglePortfolioImage(design.designer.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description, design.user.id); }} style={{ backgroundImage: "url(" + designImage + ")" }}>
 
                                                                             </div>
                                                                             <div className='save-link'>
@@ -877,11 +885,17 @@ const Designs = (props) => {
                                                 </div>
                                             </div>
 
-                                            <div className='btn-book-bar'>
-                                                <a href={`/appointment/schedule/${singleDesign.id}`}>
-                                                    <button className='btn btn-book-consultation'>Book a Consultation</button>
-                                                </a>
-                                            </div>
+                                            {isDesignCurrentUser ?
+                                                <>
+                                                    <div className='btn-book-bar'>
+                                                        <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                                            <button className='btn btn-book-consultation'>Book a Consultation</button>
+                                                        </a>
+                                                    </div>
+                                                </>
+                                                :
+                                                null}
+
                                         </p>
                                     </div>
                                 </div>
@@ -936,21 +950,28 @@ const Designs = (props) => {
                                                             }
                                                         </div>
 
-                                                        <hr />
-                                                        <div className='text-center'>
-                                                            <a className='book-consultation btn-book btn'
-                                                                href={`/appointment/schedule/${singleDesign.id}`}
-                                                            >
-                                                                <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
-                                                        </div>
+                                                        {isDesignCurrentUser ?
+                                                            <>
+                                                                <hr />
+                                                                <div className='text-center'>
+                                                                    <a className='book-consultation btn-book btn'
+                                                                        href={`/appointment/schedule/${singleDesign.id}`}
+                                                                    >
+                                                                        <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
+                                                                </div>
 
-                                                        <div className='text-center mt-2'
-                                                            onClick={() => toggleMessage()}
-                                                        >
-                                                            <a className='book-consultation btn-message-designer btn'
-                                                            >
-                                                                <AiFillMessage className="me-2" />Message Designer</a>
-                                                        </div>
+                                                                <div className='text-center mt-2'
+                                                                    onClick={() => toggleMessage()}
+                                                                >
+                                                                    <a className='book-consultation btn-message-designer btn'
+                                                                    >
+                                                                        <AiFillMessage className="me-2" />Message Designer</a>
+                                                                </div>
+                                                            </>
+                                                            :
+                                                            null
+                                                        }
+
                                                     </Col>
                                                 </Row>
                                             </Card.Body>
@@ -958,35 +979,42 @@ const Designs = (props) => {
                                     </div>
                                 </div>
 
-                                <div className='text-center mb-4' >
-                                    <a href={`/appointment/schedule/${singleDesign.id}`}>
-                                        <div className="action-button-designs bg-white">
-                                            <PiNotepadFill className="text-black mt-2" size={30} />
+                                {isDesignCurrentUser ?
+                                    <>
+                                        <div className='text-center mb-4' >
+                                            <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                                <div className="action-button-designs bg-white">
+                                                    <PiNotepadFill className="text-black mt-2" size={30} />
+                                                </div>
+                                            </a>
+                                            <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                         </div>
-                                    </a>
-                                    <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
-                                </div>
 
-                                <div className='text-center mb-4' onClick={toggleMessage}>
-                                    <div className="action-button-designs bg-white">
-                                        <AiFillMessage className="text-black mt-2" size={30} />
-                                    </div>
-                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
-                                </div>
+                                        <div className='text-center mb-4' onClick={toggleMessage}>
+                                            <div className="action-button-designs bg-white">
+                                                <AiFillMessage className="text-black mt-2" size={30} />
+                                            </div>
+                                            <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
+                                        </div>
 
-                                <div className='text-center mb-4' onClick={toggleUnderConstruction}>
-                                    <div className="action-button-designs bg-white">
-                                        <IoShareSocial className="text-black mt-2" size={30} />
-                                    </div>
-                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
-                                </div>
+                                        <div className='text-center mb-4' onClick={toggleUnderConstruction}>
+                                            <div className="action-button-designs bg-white">
+                                                <IoShareSocial className="text-black mt-2" size={30} />
+                                            </div>
+                                            <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
+                                        </div>
 
+                                    </>
+                                    :
+                                    null
+                                }
                                 <div className='text-center mb-4' onClick={toggleDescription}>
                                     <div className="action-button-designs bg-white">
                                         <IoInformationOutline className="text-black mt-2" size={30} />
                                     </div>
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Description</div>
                                 </div>
+
                             </div>
                         </Col>
                     </Row>

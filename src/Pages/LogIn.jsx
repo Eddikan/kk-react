@@ -88,7 +88,7 @@ const LogIn = () => {
     <LayoutNoFooter>
       <section id='login' className='d-flex align-items-center'>
         <Container fluid>
-          <Row style={{minHeight: '100vh'}}>
+          <Row style={{ minHeight: '100vh' }}>
             <Col id="login-column" lg='8' className='d-flex flex-column justify-content-center'>
               <div className='login-container'>
                 <Link to="/">

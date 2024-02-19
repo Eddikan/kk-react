@@ -82,7 +82,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
 
 
     const postSetAppointment = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/set/appointment', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer_id + '/set/appointment?user_id=' + currentUser, data);
     };
 
     const getAvailabilities = async (e) => {
@@ -186,10 +186,6 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
             [name]: value,
 
         });
-        // console.log("name", name);
-        // console.log("value", name);
-        // console.log("consultationFormData", consultationFormData);
-        // console.log("Selected Date", selectedDate);
     }
 
     const handleDateClick = ({ start }) => {
@@ -327,8 +323,6 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
         getDesignerAppointment().then((response) => {
             const appointments = response.data?.data;
             const status = response.data.status;
-            // console.log("appointments", appointments);
-            // console.log("status", status);
             if (status == "Fail") {
                 const errors = response.data.errors;
                 if (errors && errors.length > 0) {
@@ -355,7 +349,6 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                         apiEventDataArray.push(eventData);
                     }
                     setEvents(apiEventDataArray);
-                    // console.log("apiEventDataArray", apiEventDataArray);
                 } else {
                     const errors = response.data.errors;
                     if (errors && errors.length > 0) {
@@ -368,7 +361,6 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                 }
             }
         }).catch((error) => {
-            console.log(error);
             toast.error('There has been an error getting the appointments, please try again!');
         });
 
