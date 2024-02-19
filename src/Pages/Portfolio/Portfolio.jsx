@@ -32,10 +32,12 @@ const Portfolio = (props) => {
 
     const fetchData = async (e) => {
         try {
+
             const portfolioData = await GetUserPortfolioData(e);
             if (portfolioData) {
                 setPortfolio(portfolioData);
                 setPortfolioLoading(false);
+
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setPortfolioLoading(false);
@@ -113,7 +115,7 @@ const Portfolio = (props) => {
 
                                 {portfolio && portfolio.length > 0 ?
                                     <>
-                                        <Col lg={10} className='mt-5 col-right mx-auto' style={{maxWidth: '1440px'}}>
+                                        <Col lg={10} className='mt-5 col-right mx-auto' style={{ maxWidth: '1440px' }}>
                                             <div className='ms-4'>
                                                 <h2 className='fs-30 mb-3'>Portfolio</h2>
                                                 <Row>
@@ -128,6 +130,9 @@ const Portfolio = (props) => {
                                                                                 <Link className="text-decoration-none" to={`/portfolio/${object.id}/edit`}>
                                                                                     <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
                                                                                 </Link>
+                                                                                <Link className="text-decoration-none" to={`/portfolio/${object.id}`}>
+                                                                                    <p className="mb-3 text-decoration-none"><IoEyeOutline /> Preview</p>
+                                                                                </Link>
                                                                                 <p className="mb-3"><GoTrash /> Delete</p>
                                                                                 {object.status != "Draft" ?
                                                                                     <p className="mb-0 cursor-pointer" onClick={function () { PortfolioDraftSubmit(object.id); }}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
@@ -140,21 +145,23 @@ const Portfolio = (props) => {
                                                                         )}
                                                                     </div>
                                                                     <div className="portfolio-details">
-                                                                        {/* <span className="text-white text-decoration-none">{object.name ?? "-"}</span> */}
                                                                         <div className="other-actions">
+                                                                            {object.user === currentUser && (
+                                                                                <>
+                                                                                    <div className="action-button bg-white me-2">
+                                                                                        <GoBookmark className="text-black" />
+                                                                                    </div>
+                                                                                    <div className="action-button bg-white">
+                                                                                        <GoHeart className="text-black" />
+                                                                                    </div>
+                                                                                </>
+                                                                            )}
 
-                                                                            <div className="action-button bg-white me-2">
-                                                                                <GoBookmark className="text-black" />
-                                                                            </div>
-
-                                                                            <div className="action-button bg-white">
-                                                                                <GoHeart className="text-black" />
-                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
 
-                                                                <Link to={`/portfolio/${object.id}`} className="text-decoration-none">
+                                                                <Link to={`/portfolio/${object.id}/edit`} className="text-decoration-none">
                                                                     <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
                                                                 </Link>
                                                             </div>

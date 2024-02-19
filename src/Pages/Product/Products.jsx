@@ -114,7 +114,7 @@ const Products = (props) => {
                                             <Sidebar />
                                         </Col>
 
-                                        <Col lg={10} className='mt-5 col-right mx-auto' style={{maxWidth: '1440px'}}>
+                                        <Col lg={10} className='mt-5 col-right mx-auto' style={{ maxWidth: '1440px' }}>
                                             <div className='ms-4'>
                                                 <h2 className='fs-30 mb-3'>Products</h2>
                                                 <Row>
@@ -129,6 +129,9 @@ const Products = (props) => {
                                                                                 <Link className="text-decoration-none" to={`/product/${object.id}/edit`}>
                                                                                     <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
                                                                                 </Link>
+                                                                                <Link className="text-decoration-none" to={`/product/${object.id}`}>
+                                                                                    <p className="mb-3 text-decoration-none"><IoEyeOutline /> Preview</p>
+                                                                                </Link>
                                                                                 <p className="mb-3"><GoTrash /> Delete</p>
                                                                                 {object.status != "Draft" ?
                                                                                     <p className="mb-0 cursor-pointer" onClick={function () { ProductDraftSubmit(object.id); }}><IoDocumentOutline /> {productDraftLoading ? "Drafting..." : "Draft"}</p>
@@ -141,21 +144,25 @@ const Products = (props) => {
                                                                         )}
                                                                     </div>
                                                                     <div className="product-details">
-                                                                        {/* <span className="text-white text-decoration-none">{object.name ?? "-"}</span> */}
                                                                         <div className="other-actions">
-                                                                            <div className="action-button bg-white me-2">
-                                                                                <GoHeart className="text-black" />
-                                                                            </div>
-                                                                            <div className="action-button bg-white me-2">
-                                                                                <GoBookmark className="text-black" />
-                                                                            </div>
-                                                                            <div className="action-button bg-white">
-                                                                                <BsCart2 className="text-black" />
-                                                                            </div>
+                                                                            {object.user === currentUser && (
+                                                                                <>
+                                                                                    <div className="action-button bg-white me-2">
+                                                                                        <GoHeart className="text-black" />
+                                                                                    </div>
+                                                                                    <div className="action-button bg-white me-2">
+                                                                                        <GoBookmark className="text-black" />
+                                                                                    </div>
+                                                                                    <div className="action-button bg-white">
+                                                                                        <BsCart2 className="text-black" />
+                                                                                    </div>
+                                                                                </>
+                                                                            )}
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <Link to={`/product/${object.id}`} className="text-decoration-none">
+                                                                <Link to={`/product/${object.id}/edit`} className="text-decoration-none">
                                                                     <div className="product-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
                                                                 </Link>
                                                             </div>

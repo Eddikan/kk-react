@@ -4,7 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import { Container, Button, Dropdown } from 'react-bootstrap';
+import { Container, Button, Dropdown, Col, Row } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import Logo from 'Assets/images/kouture-konect-logo.png';
 import { IoIosHeartEmpty, IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
@@ -177,12 +177,11 @@ const Header = () => {
           toast.error('There has been an error getting the date, please try again!');
         });
 
-        getUserOrders()
+      getUserOrders()
         .then((response) => {
           const userOrder = response.data.data;
           if (userOrder) {
             setUserOrders(userOrder);
-            console.log("User Order", userOrder);
           } else {
             toast.error('There has been an error getting the order, please try again!');
           }
@@ -259,33 +258,35 @@ const Header = () => {
                         <div className="cursor-pointer nav-link"><BsEnvelope size={25} onClick={toggleEnvelopMenu} /></div>
                       }
                       {userEnvelopOpen && (
+                        <>
 
-                        <div className="action-box-envelop user-menu-envelop">
-                          <div className='d-flex'>
-                            <div><img src={User} className='user-placeholder-header' /></div>
-                            <div className='fs-14 body-text-bell'>Jeans Lorem Pants
-                              <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et...</div>
-                              <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
+                          <div className="action-box-envelop user-menu-envelop">
+                            <div className='d-flex'>
+                              <div><img src={User} className='user-placeholder-header' /></div>
+                              <div className='fs-14 body-text-bell'>Jeans Lorem Pants
+                                <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et...</div>
+                                <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
+                              </div>
+                            </div>
+                            <hr />
+
+                            <div className='d-flex'>
+                              <div><img src={User} className='user-placeholder-header' /></div>
+                              <div className='ms-3 fs-14 body-text-bell'>Marie Salazar
+                                <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div>
+                                <div className='hours-bell mt-1'>1 day ago - 3:25 PM</div>
+                              </div>
+                            </div>
+                            <hr />
+
+
+                            <div className='text-right' onClick={() => toggleUnderConstruction("View All Message")}>
+                              <a
+                                // href="/messages"
+                                className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All Message</a>
                             </div>
                           </div>
-                          <hr />
-
-                          <div className='d-flex'>
-                            <div><img src={User} className='user-placeholder-header' /></div>
-                            <div className='ms-3 fs-14 body-text-bell'>Marie Salazar
-                              <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div>
-                              <div className='hours-bell mt-1'>1 day ago - 3:25 PM</div>
-                            </div>
-                          </div>
-                          <hr />
-
-
-                          <div className='text-right' onClick={() => toggleUnderConstruction("View All Message")}>
-                            <a
-                              // href="/messages"
-                              className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All Message</a>
-                          </div>
-                        </div>
+                        </>
 
                       )}
                     </div>
@@ -294,15 +295,15 @@ const Header = () => {
                       href={`/appointments/${currentUser}`}
                     >
                       <IoCalendarClearOutline size={25} />
-                      
+
                     </Nav.Link>
                     <Nav.Link
                       href={`/cart/`}
                     >
-                     <IoCartOutline size={26}/>
-                      
+                      <IoCartOutline size={26} />
+
                     </Nav.Link>
-                    
+
 
                     <div className="user-dropdown nav-link" ref={userRef}>
                       {userImage ?
@@ -311,7 +312,6 @@ const Header = () => {
                         <div className="cursor-pointer nav-link" onClick={toggleOrdersMenu}>Orders</div>
                       }
                       {userOrdersOpen && (
-
 
                         <div className="action-box-orders user-menu-orders">
                           {userOrders.length > 0 ? (
@@ -322,11 +322,33 @@ const Header = () => {
                                 let imageURL;
                                 if (productImageArray) {
                                   imageName = JSON.parse(productImageArray);
-                                  imageURL = process.env.REACT_APP_STORAGE_URL + 'product/'+imageName[0].image_url;
+                                  imageURL = process.env.REACT_APP_STORAGE_URL + 'product/' + imageName[0].image_url;
                                 }
                                 return (
                                   <>
-                                    <div className='d-flex cursor-pointer' key={order.id}>
+                                    <Row>
+                                      <Col
+                                        lg="3"
+                                        className='cursor-pointer product-size me-3 mt-1'
+                                        style={{ backgroundImage: `url(${productImageArray ? imageURL : PlaceholderSquare})` }}
+                                      >
+                                      </Col>
+
+                                      <Col lg="9" className='mt-1'>
+                                        <div className='fs-14 body-text-bell mb-3'>
+                                          {order.order_items[0].product.name}
+                                          <div className='mt-1'>
+                                            {truncateDescription(order.order_items[0].product.description, 10)}
+                                          </div>
+                                          <div className='mt-1'>
+                                            <span className='price-color-orders'>${order.total_amount}</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>{order.status}</span>
+                                          </div>
+                                        </div>
+                                      </Col>
+                                      <hr />
+                                    </Row>
+
+                                    {/* <div className='d-flex cursor-pointer' key={order.id}>
                                       <img src={productImageArray ? imageURL : PlaceholderSquare} className='item-placeholder-header' alt="User" />
                                       <div className='fs-14 body-text-bell'>
                                         {order.order_items[0].product.name}
@@ -337,8 +359,7 @@ const Header = () => {
                                           <span className='price-color-orders'>${order.total_amount}</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>{order.status}</span>
                                         </div>
                                       </div>
-                                    </div>
-                                    <hr />
+                                    </div> */}
                                   </>
                                 );
                               })}

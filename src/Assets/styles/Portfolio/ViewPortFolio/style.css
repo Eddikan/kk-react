@@ -97,7 +97,15 @@ img.placeholder-chat {
     background-repeat: no-repeat;
     border-radius: 50%;
 }
-
+.this-is-preview {
+    font-size: 14px;
+    background: #dfdfdf;
+    color: var(--white);
+    padding: 5px 30px 5px 30px;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
 .request-quote-btn {
     padding: 12px 20px;
     min-width: 190px;

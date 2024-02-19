@@ -81,6 +81,8 @@ const DesignerProfile = () => {
     const [activeImage, setActiveImage] = useState('');
     const [elements, setElements] = useState([]);
     const [designerSchedule, setDesignerSchedule] = useState([]);
+    // const [underConstructionShow, setUnderConstructionShow] = useState(false);
+    // setIsProfileCurrentUser
 
     const [portfolio, setPortfolio] = useState('');
     const [images, setImages] = useState([]);
@@ -165,6 +167,12 @@ const DesignerProfile = () => {
                     setSeller(userData.seller);
                 }
                 setUserLoading(false);
+
+                // if (currentUser == userData.user.id) {
+                //     setIsProfileCurrentUser(false);
+                // } else {
+                //     setIsProfileCurrentUser(true);
+                // }
             } else {
                 setUserLoading(false);
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -196,7 +204,7 @@ const DesignerProfile = () => {
             if (designerId) {
                 getBusinessHours(designerId).then((response) => {
                     const selectedTime = response.data.data;
-                    const status = response.data.status;    
+                    const status = response.data.status;
                     if (status == "Fail") {
                         toast.error('No availabilty found!');
                     } else {
@@ -592,7 +600,7 @@ const DesignerProfile = () => {
             </Modal>
 
             <Modal
-                show={guidePreviewModalShow} 
+                show={guidePreviewModalShow}
                 onHide={toggleGuidePreviewModal}
                 className='modal-preview'
                 fade={false}
@@ -618,41 +626,41 @@ const DesignerProfile = () => {
                                                         {element.type == "Heading" ?
                                                             <h3 className='fw-600 mb-4' key={index}>{element.value}</h3>
                                                             : element.type == "Paragraph" ?
-                                                            <p key={index}>{element.value}</p>
-                                                            : element.type == "Image" ?
-                                                                <>
-                                                                    {element.value && element.value.length > 0 && element.value != "" ?
-                                                                        <>
-                                                                            {element.value.map((image, imageIndex) => (
-                                                                                <img key={imageIndex} src={process.env.REACT_APP_STORAGE_URL+'product/'+image?.image_url} className="w-100 h-auto mb-3" alt="" />
-                                                                            ))}
-                                                                        </>
-                                                                        :
-                                                                        null
-                                                                    }
-                                                                </>
-                                                            :
-                                                            <>
-                                                                {(element.type == "YouTube Embed Link" || element.type == "Vimeo Embed Link") && element.value != "" ?
+                                                                <p key={index}>{element.value}</p>
+                                                                : element.type == "Image" ?
                                                                     <>
-                                                                        <div className="mb-3">
-                                                                            <ResponsiveEmbedVideo src={element.value} title={element.type} />
-                                                                        </div>
+                                                                        {element.value && element.value.length > 0 && element.value != "" ?
+                                                                            <>
+                                                                                {element.value.map((image, imageIndex) => (
+                                                                                    <img key={imageIndex} src={process.env.REACT_APP_STORAGE_URL + 'product/' + image?.image_url} className="w-100 h-auto mb-3" alt="" />
+                                                                                ))}
+                                                                            </>
+                                                                            :
+                                                                            null
+                                                                        }
                                                                     </>
-                                                                    : element.type == "Video" && element.value != "" ?
-                                                                    <>
-                                                                        <div className="mb-3">
-                                                                            <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL+'products/videos/'+element.value} />
-                                                                        </div>
-                                                                    </>
-                                                                    : element.type == "Line Break" ?
-                                                                    <p className="py-4 mb-0"></p>
                                                                     :
-                                                                    null
-                                                                }
-                                                            </>
+                                                                    <>
+                                                                        {(element.type == "YouTube Embed Link" || element.type == "Vimeo Embed Link") && element.value != "" ?
+                                                                            <>
+                                                                                <div className="mb-3">
+                                                                                    <ResponsiveEmbedVideo src={element.value} title={element.type} />
+                                                                                </div>
+                                                                            </>
+                                                                            : element.type == "Video" && element.value != "" ?
+                                                                                <>
+                                                                                    <div className="mb-3">
+                                                                                        <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL + 'products/videos/' + element.value} />
+                                                                                    </div>
+                                                                                </>
+                                                                                : element.type == "Line Break" ?
+                                                                                    <p className="py-4 mb-0"></p>
+                                                                                    :
+                                                                                    null
+                                                                        }
+                                                                    </>
                                                         }
-                                                        
+
                                                     </>
                                                 ))}
                                             </>
@@ -662,7 +670,7 @@ const DesignerProfile = () => {
                                                     <p className="text-center mb-0">No measurement guide added.</p>
                                                 </Card.Body>
                                             </Card>
-                                            
+
                                         }
                                     </div>
                                 </Card.Body>

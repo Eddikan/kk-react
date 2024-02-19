@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
-import { Container, Row, Col, Button,Form } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
@@ -43,6 +43,8 @@ const ViewPortFolio = () => {
     const [addReviewShow, setAddReviewShow] = useState(false);
     const [addReviewLoading, setAddReviewLoading] = useState(false);
 
+    const [isPortfolioCurrentUser, setIsPortfolioCurrentUser] = useState(false);
+
     const currentUser = cookies.currentUser;
     const navigate = useNavigate();
 
@@ -68,7 +70,7 @@ const ViewPortFolio = () => {
         setModalHeading(message);
     }
 
-    function toggleRequestAQuote(message) {
+    function toggleRequestAQuote(message, enabled) {
         setRequestAQuoteModal(true);
         setModalHeading(message);
     }
@@ -84,6 +86,12 @@ const ViewPortFolio = () => {
                     setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + portfolioData.image_urls[0].image_url);
                 } else {
                     setActiveImage(PlaceholderImage);
+                }
+
+                if (currentUser == portfolioData.user.id) {
+                    setIsPortfolioCurrentUser(false);
+                } else {
+                    setIsPortfolioCurrentUser(true);
                 }
 
             } else {
@@ -110,13 +118,27 @@ const ViewPortFolio = () => {
     useEffect(() => {
         fetchData(portfolioId);
     }, [reloadCount]);
- 
+
     return (
         <Layout>
             {portfolioLoading ?
                 <LoadingPage />
                 :
                 <>
+                    <Container fluid>
+                        <Row>
+                            {isPortfolioCurrentUser ?
+                                <>
+
+                                </>
+                                :
+                                <Col lg="12" className='text-center px-0'>
+                                    <div className='this-is-preview bg-gold'>This is a Preview</div>
+                                </Col>
+                            }
+                        </Row>
+                    </Container>
+
                     <section id="single-portfolio" className='py-5 px-2'>
                         <Container>
                             <Row>
@@ -166,15 +188,27 @@ const ViewPortFolio = () => {
                                                     </div>
                                                 </div> */}
                                                         <h2 className="fw-600 fs-30">{portfolio.name ?? "-"}</h2>
+
                                                     </div>
-                                                    <div>
-                                                        <div className="action-button bg-smgray" onClick={() => toggleUnderConstruction("Share Portfolio")}>
-                                                            <GoShareAndroid className="text-black" />
-                                                        </div>
-                                                        {/* <div className="action-button bg-smgray" onClick={() => toggleUnderConstruction("Add to wishlist")}>
-                                                            <GoHeart className="text-black" />
-                                                        </div> */}
-                                                    </div>
+
+                                                    {isPortfolioCurrentUser ?
+                                                        <>
+
+                                                            <div className="action-button bg-smgray" onClick={() => toggleUnderConstruction("Share Portfolio")}>
+                                                                <GoShareAndroid className="text-black" />
+                                                            </div>
+
+                                                        </>
+                                                        :
+                                                        <>
+
+                                                            <div className="action-button bg-smgray">
+                                                                <GoShareAndroid className="text-black" />
+                                                            </div>
+
+                                                        </>
+                                                    }
+
 
                                                 </Col>
 
@@ -233,26 +267,61 @@ const ViewPortFolio = () => {
                                                         </div>
                                                     </div>
 
-                                                    <div>
-                                                        <div className="cursor-pointer" onClick={() => chatBoxModal("Chat Designer")}>
-                                                            <AiFillMessage className='me-2 mb-1' color='#caa533' />Chat Designer
-                                                        </div>
-                                                    </div>
+                                                    {isPortfolioCurrentUser ?
+                                                        <>
+                                                            <div>
+                                                                <div className="cursor-pointer" onClick={() => chatBoxModal("Chat Designer")}>
+                                                                    <AiFillMessage className='me-2 mb-1' color='#caa533' />Chat Designer
+
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <div>
+                                                                <div className="cursor-pointer">
+                                                                    <AiFillMessage className='me-2 mb-1' color='#caa533' />Chat Designer
+
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    }
                                                 </div>
 
-                                                <span>
-                                                    <p className='btn request-quote-btn mt-4 mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black request-a-quote'
-                                                        onClick={() => toggleRequestAQuote(true)}
-                                                    >
-                                                        <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
-                                                        Request A Quote
-                                                    </p>
-                                                </span>
 
-                                                <span className='w-100'>
-                                                    <a href={`/appointment/schedule/${portfolio.designer.id}`} className='btn mt-4 ms-3 btn-primary fs-16 fw-400 consultation-btn'>
-                                                        <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
-                                                </span>
+                                                {isPortfolioCurrentUser ?
+                                                    <>
+                                                        <span>
+                                                            <p className='btn request-quote-btn mt-4 mb-0 fs-16 fw-400 bg-transparent text-black request-a-quote'
+                                                                onClick={() => toggleRequestAQuote(true)}
+                                                            >
+                                                                <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
+                                                                Request A Quote
+                                                            </p>
+                                                        </span>
+
+                                                        <span className='w-100'>
+                                                            <a href={`/appointment/schedule/${portfolio.designer.id}`} className='btn mt-4 ms-3 btn-primary fs-16 fw-400 consultation-btn'>
+                                                                <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
+                                                        </span>
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <span>
+                                                            <p className='btn request-quote-btn mt-4 mb-0 fs-16 fw-400 bg-transparent text-black request-a-quote'>
+                                                                <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
+                                                                Request A Quote
+                                                            </p>
+                                                        </span>
+
+                                                        <span className='w-100'>
+                                                            <a className='btn mt-4 ms-3 btn-primary fs-16 fw-400 consultation-btn'>
+                                                                <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
+                                                        </span>
+                                                    </>
+                                                }
+
+
 
                                             </Card.Body>
                                         </Card>
@@ -568,93 +637,93 @@ const ViewPortFolio = () => {
                         </Modal>
 
 
-                <Modal
-                show={addReviewShow}
-                className='modal-preview'
-                fade={false}
-                centered
-                size="lg"
-            >
-                <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={toggleAddToReview} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
-                    </button>
-                </Modal.Header>
-                <Modal.Body className='padding-card-review'>
-                    <h4 className='te   xt-left fs-25 fw-600 mb-3'>
-                        {/* {updateReview ? "Update Review" : "Review Item"} */}
-                        </h4>
-                    <Card className='review-card'>
-                        <Card.Body className="text-center py-3 p-0">
-                            <div className="product-review-container">
+                        <Modal
+                            show={addReviewShow}
+                            className='modal-preview'
+                            fade={false}
+                            centered
+                            size="lg"
+                        >
+                            <Modal.Header className="py-0">
+                                <h5 className='modal-title text-uppercase text-left'></h5>
+                                <button type='button' className='close react-modal-close' onClick={toggleAddToReview} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                                </button>
+                            </Modal.Header>
+                            <Modal.Body className='padding-card-review'>
+                                <h4 className='te   xt-left fs-25 fw-600 mb-3'>
+                                    {/* {updateReview ? "Update Review" : "Review Item"} */}
+                                </h4>
+                                <Card className='review-card'>
+                                    <Card.Body className="text-center py-3 p-0">
+                                        <div className="product-review-container">
 
-                                <div className='product-portfolio-image mb-4'>
-                                    <span className='d-flex'>
-                                        {images && images.length > 0 ?
-                                            <>
-                                                <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-                                                </div>
-                                                <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>
-                                                    {/* {product.name ?? "-"} */}
-                                                    </span>
-                                            </>
-                                            :
-                                            null
-                                        }
-                                    </span>
-                                </div>
+                                            <div className='product-portfolio-image mb-4'>
+                                                <span className='d-flex'>
+                                                    {images && images.length > 0 ?
+                                                        <>
+                                                            <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                                            </div>
+                                                            <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>
+                                                                {/* {product.name ?? "-"} */}
+                                                            </span>
+                                                        </>
+                                                        :
+                                                        null
+                                                    }
+                                                </span>
+                                            </div>
 
-                                <div className="text-left mt-3">
-                                    <span className="fs-14 me-3">Product Quality:</span> <Rating
-                                        // initialValue={reviewFormData.rating}
-                                        allowFraction={true}
-                                        size={25}
-                                        className="star-rating"
-                                        showTooltip={true}
-                                        emptyColor="#dddddd"
-                                        fillColor="#cea835"
-                                        // onClick={handlePointerMove}
-                                        tooltipArray={[
-                                            'Terrible',
-                                            'Terrible',
-                                            'Bad',
-                                            'Bad',
-                                            'Average',
-                                            'Average',
-                                            'Great',
-                                            'Great',
-                                            'Excellent',
-                                            'Excellent'
-                                        ]}
-                                        // tooltipDefaultText={reviewText}
-                                    />
-                                    <Form.Control
-                                        as="textarea"
-                                        name="content"
-                                        rows={5} 
-                                        // value={reviewFormData.content}
-                                        placeholder="Leave a comment about the product..."
-                                        // onChange={handleChangeReview}
-                                        className="mt-3"
-                                    />
-                                </div>
-                            </div>
-                        </Card.Body>
-                        <Card.Footer className="text-right bg-white footer-top-border px-0">
-                            <Button className="w-auto mt-2 btn-primary-cancel me-3" onClick={() => setAddReviewShow(false)}>Cancel</Button>
-                            {/* {updateReview ?
+                                            <div className="text-left mt-3">
+                                                <span className="fs-14 me-3">Product Quality:</span> <Rating
+                                                    // initialValue={reviewFormData.rating}
+                                                    allowFraction={true}
+                                                    size={25}
+                                                    className="star-rating"
+                                                    showTooltip={true}
+                                                    emptyColor="#dddddd"
+                                                    fillColor="#cea835"
+                                                    // onClick={handlePointerMove}
+                                                    tooltipArray={[
+                                                        'Terrible',
+                                                        'Terrible',
+                                                        'Bad',
+                                                        'Bad',
+                                                        'Average',
+                                                        'Average',
+                                                        'Great',
+                                                        'Great',
+                                                        'Excellent',
+                                                        'Excellent'
+                                                    ]}
+                                                // tooltipDefaultText={reviewText}
+                                                />
+                                                <Form.Control
+                                                    as="textarea"
+                                                    name="content"
+                                                    rows={5}
+                                                    // value={reviewFormData.content}
+                                                    placeholder="Leave a comment about the product..."
+                                                    // onChange={handleChangeReview}
+                                                    className="mt-3"
+                                                />
+                                            </div>
+                                        </div>
+                                    </Card.Body>
+                                    <Card.Footer className="text-right bg-white footer-top-border px-0">
+                                        <Button className="w-auto mt-2 btn-primary-cancel me-3" onClick={() => setAddReviewShow(false)}>Cancel</Button>
+                                        {/* {updateReview ?
                                 <Button className="w-auto mt-2 btn-primary" onClick={function () { reviewUpdate(); }}>{addReviewLoading ? "Updating..." : "Update"}</Button>
                                 :
                                 <Button className="w-auto mt-2 btn-primary" onClick={function () { reviewAdd(); }}>{addReviewLoading ? "Saving..." : "Submit"}</Button>
                             } */}
-                        </Card.Footer>
-                    </Card>
-                </Modal.Body>
-            </Modal>
+                                    </Card.Footer>
+                                </Card>
+                            </Modal.Body>
+                        </Modal>
                     </section>
                 </>
             }
-        </Layout>
+        </Layout >
     );
 };
 

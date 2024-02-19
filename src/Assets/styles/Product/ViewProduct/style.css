@@ -124,3 +124,12 @@
 .product-grid-image {
     width: 300px;
 }
+.this-is-preview {
+    font-size: 14px;
+    background: #dfdfdf;
+    color: var(--white);
+    padding: 5px 30px 5px 30px;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}

@@ -64,7 +64,7 @@ const Designs = (props) => {
     const token = cookies.token;
 
     const [sortOptions] = useState([
-        { value: 'created_at', label: 'Date' },
+        { value: 'created_at', label: 'All' },
         { value: 'views', label: 'Views' },
     ]);
 
@@ -383,7 +383,7 @@ const Designs = (props) => {
                                 <label htmlFor="dropdown" className='sample-categories'>Sort By: </label>
                                 <select id="sort-by" onChange={(e) => handleSortFieldChange(e.target.value)}>
                                     {sortOptions.map(option => (
-                                        <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
+                                        <option key={option.value} className='fs-20' value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
                                     ))}
                                 </select>
                             </div>

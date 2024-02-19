@@ -57,6 +57,8 @@ const ViewProduct = () => {
     const [yards, setYards] = useState(0.00);
     const [addToCartLoading, setAddToCartLoading] = useState(false);
     const [buyNowLoading, setBuyNowLoading] = useState(false);
+    const [isProductCurrentUser, setIsProductCurrentUser] = useState(false);
+
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -177,6 +179,13 @@ const ViewProduct = () => {
                         setYards(1)
                     }
                 }
+
+                if (currentUser == productData.user.id) {
+                    setIsProductCurrentUser(false);
+                } else {
+                    setIsProductCurrentUser(true);
+                }
+
             } else {
                 setProductLoading(false);
                 toast.error('Product does not exist!');
@@ -328,10 +337,9 @@ const ViewProduct = () => {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
             const success = response.data.status;
             const data = response.data.data;
-            console.log(data);
             if (success == 'Success') {
                 const cart_item_id = data.cart_item.id;
-                navigate("/cart?item="+cart_item_id);
+                navigate("/cart?item=" + cart_item_id);
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
@@ -347,212 +355,335 @@ const ViewProduct = () => {
             {productLoading ?
                 <LoadingPage />
                 :
-                <section id="single-product" className='py-5 px-2'>
-                    <Container>
+                <>
+                    <Container fluid>
                         <Row>
-                            <Col lg="12" className='text-right'>
-                                <GoBack fallBack="/user/profile" />
-                            </Col>
+                            {isProductCurrentUser ?
+                                <>
+
+                                </>
+                                :
+                                <Col lg="12" className='text-center px-0'>
+                                    <div className='this-is-preview bg-gold'>This is a Preview</div>
+                                </Col>
+                            }
                         </Row>
-                        <Row>
-                            <Col lg={5}>
-                                {images && images.length > 0 ?
-                                    <>
-                                        <div className="single-image-slider mb-4" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                    </Container>
 
-                                        </div>
-                                        <ImageSlider type="product" slidesToShow={4} images={images} onActiveImageChange={handleActiveImageChange} />
-                                    </>
-                                    :
-                                    <div className="single-image-slider" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-                                    </div>
-                                }
-                                {product.video_demo_type && product.video_demo_type != "" && product.video_demo_url && product.video_demo_url != "" && (
-                                    <div className="mt-4">
+                    <section id="single-product" className='py-5 px-2'>
+                        <Container>
+                            <Row>
+                                <Col lg="12" className='text-right'>
+                                    <GoBack fallBack="/user/profile" />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col lg={5}>
+                                    {images && images.length > 0 ?
                                         <>
-                                            {
-                                                product.video_demo_type == "Youtube" || product.video_demo_type == "Vimeo" ?
-                                                    <>
-                                                        <ResponsiveEmbedVideo src={product.video_demo_url} title={product.name} />
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL + 'products/videos/' + product.video_demo_url} />
-                                                    </>
-                                            }
+                                            <div className="single-image-slider mb-4" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+
+                                            </div>
+                                            <ImageSlider type="product" slidesToShow={4} images={images} onActiveImageChange={handleActiveImageChange} />
                                         </>
-                                    </div>
-                                )}
-                            </Col>
+                                        :
+                                        <div className="single-image-slider" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                        </div>
+                                    }
+                                    {product.video_demo_type && product.video_demo_type != "" && product.video_demo_url && product.video_demo_url != "" && (
+                                        <div className="mt-4">
+                                            <>
+                                                {
+                                                    product.video_demo_type == "Youtube" || product.video_demo_type == "Vimeo" ?
+                                                        <>
+                                                            <ResponsiveEmbedVideo src={product.video_demo_url} title={product.name} />
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL + 'products/videos/' + product.video_demo_url} />
+                                                        </>
+                                                }
+                                            </>
+                                        </div>
+                                    )}
+                                </Col>
 
-                            <Col lg={7}>
-                                <Card>
-                                    <Card.Body>
-                                        <Row>
-                                            <Col lg="12" className="d-flex justify-content-between">
-                                                <div className='mb-3 d-flex portfolio-designer'>
-                                                    {product.user.image ? (
-                                                        <div
-                                                            className='designer-photo'
-                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${product.user.image})` }}
-                                                        ></div>
-                                                    ) : (
-                                                        <div
-                                                            className='designer-photo'
-                                                            style={{ backgroundImage: `url(${product.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}
-                                                        ></div>
-                                                    )}
-                                                    <div className="designer-info mx-2">
-                                                        <p className="text-black fs-16 fw-600 mb-0">{product.user.first_name && product.user.first_name != "" ? product.user.first_name : "-"} {product.user.last_name && product.user.last_name != "" ? product.user.last_name : "-"}</p>
-                                                        {currentUser !== product.user.id ?
-                                                            <>
-                                                                <a className='text-decoration-none fs-12 follow-products'>Follow</a>
-                                                            </>
-                                                            :
-                                                            <>
+                                <Col lg={7}>
+                                    <Card>
+                                        <Card.Body>
+                                            <Row>
+                                                <Col lg="12" className="d-flex justify-content-between">
+                                                    <div className='mb-3 d-flex portfolio-designer'>
+                                                        {product.user.image ? (
+                                                            <div
+                                                                className='designer-photo'
+                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${product.user.image})` }}
+                                                            ></div>
+                                                        ) : (
+                                                            <div
+                                                                className='designer-photo'
+                                                                style={{ backgroundImage: `url(${product.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}
+                                                            ></div>
+                                                        )}
+                                                        <div className="designer-info mx-2">
+                                                            <p className="text-black fs-16 fw-600 mb-0">{product.user.first_name && product.user.first_name != "" ? product.user.first_name : "-"} {product.user.last_name && product.user.last_name != "" ? product.user.last_name : "-"}</p>
+                                                            {currentUser !== product.user.id ?
+                                                                <>
+                                                                    <a className='text-decoration-none fs-12 follow-products'>Follow</a>
+                                                                </>
+                                                                :
+                                                                <>
 
-                                                                <a className='text-decoration-none fs-12 you-products'>You</a>
-                                                            </>
-                                                        }
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <Link to={`/product/${product.id}/edit`} className="text-decoration-none">
-                                                        <div class="kouture-tooltip">
-                                                            <div className="action-button bg-smgray me-2">
-                                                                <GoPencil className="text-black" />
-                                                            </div>
-                                                            <div class="kouture-tooltiptext">
-                                                                Edit
-                                                            </div>
-                                                        </div>
-                                                    </Link>
-
-                                                    <div class="kouture-tooltip">
-                                                        <div className="action-button bg-smgray me-2">
-                                                            <GoShareAndroid className="text-black" onClick={toggleShareModal} />
-                                                        </div>
-                                                        <div class="kouture-tooltiptext">
-                                                            Share
+                                                                    <a className='text-decoration-none fs-12 you-products'>You</a>
+                                                                </>
+                                                            }
                                                         </div>
                                                     </div>
 
-                                                    {userWishlist ?
-                                                        <div class="kouture-tooltip">
-                                                            <div className="action-button bg-gold me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
-                                                                <GoHeart className="text-white" />
+                                                    {isProductCurrentUser ?
+                                                        <>
+
+                                                            <div>
+                                                                <Link to={`/product/${product.id}/edit`} className="text-decoration-none">
+                                                                    <div class="kouture-tooltip">
+                                                                        <div className="action-button bg-smgray me-2">
+                                                                            <GoPencil className="text-black" />
+                                                                        </div>
+                                                                        <div class="kouture-tooltiptext">
+                                                                            Edit
+                                                                        </div>
+                                                                    </div>
+                                                                </Link>
+
+                                                                <div class="kouture-tooltip">
+                                                                    <div className="action-button bg-smgray me-2">
+                                                                        <GoShareAndroid className="text-black" onClick={toggleShareModal} />
+                                                                    </div>
+                                                                    <div class="kouture-tooltiptext">
+                                                                        Share
+                                                                    </div>
+                                                                </div>
+
+                                                                {userWishlist ?
+                                                                    <div class="kouture-tooltip">
+                                                                        <div className="action-button bg-gold me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <GoHeart className="text-white" />
+                                                                        </div>
+                                                                        <div class="kouture-tooltiptext">
+                                                                            Remove from Wishlist
+                                                                        </div>
+                                                                    </div>
+                                                                    :
+                                                                    <div class="kouture-tooltip">
+                                                                        <div className="action-button bg-smgray me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <GoHeart className="text-black" />
+                                                                        </div>
+                                                                        <div class="kouture-tooltiptext">
+                                                                            Add to Wishlist
+                                                                        </div>
+                                                                    </div>
+                                                                }
                                                             </div>
-                                                            <div class="kouture-tooltiptext">
-                                                                Remove from Wishlist
+
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <div>
+                                                                <div class="kouture-tooltip">
+                                                                    <div className="action-button bg-smgray me-2">
+                                                                        <GoPencil className="text-black" />
+                                                                    </div>
+                                                                    <div class="kouture-tooltiptext">
+                                                                        Edit
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="kouture-tooltip">
+                                                                    <div className="action-button bg-smgray me-2">
+                                                                        <GoShareAndroid className="text-black" />
+                                                                    </div>
+                                                                    <div class="kouture-tooltiptext">
+                                                                        Share
+                                                                    </div>
+                                                                </div>
+
+                                                                {userWishlist ?
+                                                                    <div class="kouture-tooltip">
+                                                                        <div className="action-button bg-gold me-2">
+                                                                            <GoHeart className="text-white" />
+                                                                        </div>
+                                                                        <div class="kouture-tooltiptext">
+                                                                            Remove from Wishlist
+                                                                        </div>
+                                                                    </div>
+                                                                    :
+                                                                    <div class="kouture-tooltip">
+                                                                        <div className="action-button bg-smgray me-2">
+                                                                            <GoHeart className="text-black" />
+                                                                        </div>
+                                                                        <div class="kouture-tooltiptext">
+                                                                            Add to Wishlist
+                                                                        </div>
+                                                                    </div>
+                                                                }
                                                             </div>
+                                                        </>
+                                                    }
+                                                </Col>
+
+                                                <Col lg="12">
+                                                    <h2 className="fw-600 fs-25 ">{product.name ?? "-"}</h2>
+                                                    {product.categories && product.categories.length > 0 ?
+                                                        <div className="mb-3">
+                                                            {product.categories.length > 0 ?
+                                                                <>
+                                                                    {product.categories.map((category, index) => (
+                                                                        <span className="design-tag bg-light fs-14 categories-color">
+                                                                            {category}
+                                                                        </span>
+                                                                    ))}
+                                                                </>
+                                                                :
+                                                                null
+                                                            }
                                                         </div>
                                                         :
-                                                        <div class="kouture-tooltip">
-                                                            <div className="action-button bg-smgray me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
-                                                                <GoHeart className="text-black" />
-                                                            </div>
-                                                            <div class="kouture-tooltiptext">
-                                                                Add to Wishlist
-                                                            </div>
-                                                        </div>
+                                                        null
                                                     }
-                                                    {/* <div className="action-button bg-smgray">
-                                                        <GoBookmark className="text-black" />
-                                                    </div> */}
-                                                </div>
-                                            </Col>
-                                            <Col lg="12">
-                                                <h2 className="fw-600 fs-25 ">{product.name ?? "-"}</h2>
-                                                {product.categories && product.categories.length > 0 ?
                                                     <div className="mb-3">
-                                                        {product.categories.length > 0 ?
-                                                            <>
-                                                                {product.categories.map((category, index) => (
-                                                                    <span className="design-tag bg-light fs-14 categories-color">
-                                                                        {category}
-                                                                    </span>
-                                                                ))}
-                                                            </>
-                                                            :
-                                                            null
-                                                        }
+                                                        <p className="fw-600 fs-25">${productPrice}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
                                                     </div>
-                                                    :
-                                                    null
-                                                }
-                                                <div className="mb-3">
-                                                    <p className="fw-600 fs-25">${productPrice}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
-                                                </div>
-                                                <div>
-                                                    <p className="mb-2 fs-16 fw-600">Fabric Process Insight</p>
-                                                    <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.fabric_process_insights ?? "-"}</p>
-                                                </div>
-                                                <div>
-                                                    <p className="mb-2 fs-16 fw-600">Pricing Structure</p>
-                                                    <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.pricing_structure ?? "-"}</p>
-                                                </div>
+                                                    <div>
+                                                        <p className="mb-2 fs-16 fw-600">Fabric Process Insight</p>
+                                                        <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.fabric_process_insights ?? "-"}</p>
+                                                    </div>
+                                                    <div>
+                                                        <p className="mb-2 fs-16 fw-600">Pricing Structure</p>
+                                                        <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.pricing_structure ?? "-"}</p>
+                                                    </div>
 
-                                                <div>
-                                                    <Row>
-                                                        <Col lg="12">
-                                                            <p className="mb-2 fs-16 fw-600">Measurement</p>
-                                                            {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
+                                                    <div>
+                                                        <Row>
+                                                            <Col lg="12">
+                                                                {isProductCurrentUser ?
+                                                                    <>
+                                                                        <p className="mb-2 fs-16 fw-600">Measurement</p>
+                                                                        {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
                                                                 -
                                                             </Button> */}
-                                                            <FormControl min="1" defaultValue="1" type='number' name='count' onChange={handleChange} className='me-3 d-inline-block counter-input' required />
-                                                            {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
+                                                                        <FormControl min="1" defaultValue="1" type='number' name='count' onChange={handleChange} className='me-3 d-inline-block counter-input' required />
+                                                                        {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
                                                                 +
                                                             </Button> */}
 
-                                                            <span className="fs-18 fw-600">{Number(unitMeasurement)?.toFixed(2)} {
-                                                                product.unit_measurement !== 'inch' && product.unit_measurement !== 'feet'
-                                                                    ? product.unit_measurement + 's'
-                                                                    : product.unit_measurement === 'feet'
-                                                                        ? product.unit_measurement
-                                                                        : product.unit_measurement + 'es'
-                                                            } {product.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span>
-                                                            <hr className="mb-4" />
-                                                        </Col>
-                                                        <Col lg="12">
+                                                                        <span className="fs-18 fw-600">{Number(unitMeasurement)?.toFixed(2)} {
+                                                                            product.unit_measurement !== 'inch' && product.unit_measurement !== 'feet'
+                                                                                ? product.unit_measurement + 's'
+                                                                                : product.unit_measurement === 'feet'
+                                                                                    ? product.unit_measurement
+                                                                                    : product.unit_measurement + 'es'
+                                                                        } {product.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span>
+                                                                        <hr className="mb-4" />
+                                                                    </>
+                                                                    :
+                                                                    <>
+                                                                        <p className="mb-2 fs-16 fw-600">Measurement</p>
+                                                                        {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
+                                                                -
+                                                            </Button> */}
+                                                                        <FormControl min="1" defaultValue="1" type='number' name='count' onChange={handleChange} className='me-3 d-inline-block counter-input' disabled />
+                                                                        {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
+                                                                +
+                                                            </Button> */}
 
-                                                            {addToCartLoading ?
-                                                                <Button
-                                                                    className="w-auto me-3 btn-primary fs-16"
-                                                                    type="button"
-                                                                >
-                                                                    Addiing to Cart...
-                                                                </Button>
-                                                                :
-                                                                <Button
-                                                                    className="w-auto me-3 btn-primary fs-16"
-                                                                    onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: unitMeasurement })}
-                                                                >
-                                                                    Add to Cart
-                                                                </Button>
-                                                            }
-                                                            {buyNowLoading ?
-                                                                <Button
-                                                                    className="w-auto me-3 btn-secondary fs-16"
-                                                                    type="button"
-                                                                >
-                                                                    Adding to Cart...
-                                                                </Button>
-                                                                :
-                                                                <Button
-                                                                    className="bg-gold border-gold text-white w-auto me-3 btn-secondary fs-16"
-                                                                    onClick={() => buyNow({ user_id: currentUser, product_id: product.id, quantity: unitMeasurement })}
-                                                                >
-                                                                    Buy Now
-                                                                </Button>
-                                                            }
+                                                                        <span className="fs-18 fw-600">{Number(unitMeasurement)?.toFixed(2)} {
+                                                                            product.unit_measurement !== 'inch' && product.unit_measurement !== 'feet'
+                                                                                ? product.unit_measurement + 's'
+                                                                                : product.unit_measurement === 'feet'
+                                                                                    ? product.unit_measurement
+                                                                                    : product.unit_measurement + 'es'
+                                                                        } {product.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span>
+                                                                        <hr className="mb-4" />
+                                                                    </>
+                                                                }
 
-                                                            {/* <span className="fw-600 fs-24">${(unitMeasurement * productPrice).toFixed(2)} 
+
+                                                            </Col>
+
+                                                            <Col lg="12">
+                                                                {isProductCurrentUser ?
+                                                                    <>
+                                                                        {addToCartLoading ?
+                                                                            <Button
+                                                                                className="w-auto me-3 btn-primary fs-16"
+                                                                                type="button"
+                                                                            >
+                                                                                Addiing to Cart...
+                                                                            </Button>
+                                                                            :
+                                                                            <Button
+                                                                                className="w-auto me-3 btn-primary fs-16"
+                                                                                onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: unitMeasurement })}
+                                                                            >
+                                                                                Add to Cart
+                                                                            </Button>
+                                                                        }
+                                                                        {buyNowLoading ?
+                                                                            <Button
+                                                                                className="w-auto me-3 btn-secondary fs-16"
+                                                                                type="button"
+                                                                            >
+                                                                                Adding to Cart...
+                                                                            </Button>
+                                                                            :
+                                                                            <Button
+                                                                                className="bg-gold border-gold text-white w-auto me-3 btn-secondary fs-16"
+                                                                                onClick={() => buyNow({ user_id: currentUser, product_id: product.id, quantity: unitMeasurement })}
+                                                                            >
+                                                                                Buy Now
+                                                                            </Button>
+                                                                        }
+
+                                                                    </>
+                                                                    :
+                                                                    <>
+                                                                        {addToCartLoading ?
+                                                                            <Button
+                                                                                className="w-auto me-3 btn-primary fs-16"
+                                                                                type="button"
+                                                                            >
+                                                                                Adding to Cart...
+                                                                            </Button>
+                                                                            :
+                                                                            <Button
+                                                                                className="w-auto me-3 btn-primary fs-16">
+                                                                                Add to Cart
+                                                                            </Button>
+                                                                        }
+                                                                        {buyNowLoading ?
+                                                                            <Button
+                                                                                className="w-auto me-3 btn-secondary fs-16"
+                                                                                type="button"
+                                                                            >
+                                                                                Adding to Cart...
+                                                                            </Button>
+                                                                            :
+                                                                            <Button
+                                                                                className="bg-gold border-gold text-white w-auto me-3  fs-16">
+                                                                                Buy Now
+                                                                            </Button>
+                                                                        }
+
+                                                                    </>
+                                                                }
+
+
+                                                                {/* <span className="fw-600 fs-24">${(unitMeasurement * productPrice).toFixed(2)} 
                                                             <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span> */}
-                                                        </Col>
-                                                    </Row>
-                                                </div>
-                                                {/* <p className="mb-2"><strong>Certifications</strong></p>
+                                                            </Col>
+                                                        </Row>
+                                                    </div>
+                                                    {/* <p className="mb-2"><strong>Certifications</strong></p>
                                                 <div className="mb-4">
                                                     {product.certifications ?
                                                         <>
@@ -572,18 +703,18 @@ const ViewProduct = () => {
                                                         null
                                                     }
                                                 </div> */}
-                                            </Col>
-                                        </Row>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            {/* <Col lg={12} className="mt-4">
+                                                </Col>
+                                            </Row>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                                {/* <Col lg={12} className="mt-4">
                                 <p className="mb-2"><strong>Description</strong></p>
                                 <p className="mb-4">{product.description ?? "-"}</p>
                             </Col> */}
-                            <Col lg="12" className='mt-4'>
-                                {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
-                                {/* <div className="d-flex justify-content-between w-100 align-item-center">
+                                <Col lg="12" className='mt-4'>
+                                    {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
+                                    {/* <div className="d-flex justify-content-between w-100 align-item-center">
                                     <p className={`text-black cursor-pointer me-5 mt-3 mb-0 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews
                                         <BsArrowUpRightSquare className='ms-2' color="#caa533" />
                                     </p>
@@ -596,97 +727,98 @@ const ViewProduct = () => {
                                 </div> */}
 
 
-                                <span
-                                    className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`}
-                                    onClick={function () { showTab("reviews"); }}
-                                >
-                                    Customer Reviews
+                                    <span
+                                        className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`}
+                                        onClick={function () { showTab("reviews"); }}
+                                    >
+                                        Customer Reviews
 
-                                    <span className="cursor-pointer reviews-tooltip" onClick={() => toggleAddToReview()}>
-                                        <div className='tooltip-content'>
-                                            <span className="reviews-tooltiptext fs-14">Write Review</span>
-                                        </div>
-                                        <BsArrowUpRightSquare className='ms-2' color="#caa533" />
+                                        <span className="cursor-pointer reviews-tooltip" onClick={() => toggleAddToReview()}>
+                                            <div className='tooltip-content'>
+                                                <span className="reviews-tooltiptext fs-14">Write Review</span>
+                                            </div>
+                                            <BsArrowUpRightSquare className='ms-2' color="#caa533" />
+                                        </span>
+
                                     </span>
 
-                                </span>
-
-                                <hr className='mt-2 mb-4' />
-                                {commentsTabShow ?
-                                    <>
-                                        <div className="text-center">
-                                            <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
-                                            <p className="fs-20 text-black">No available comments at this time</p>
-                                        </div>
-                                    </>
-                                    :
-                                    null
-                                }
-                                {reviewsTabShow ?
-                                    <>
-                                        {productReviewsLoading ?
-                                            <>
-                                                <Loading />
-                                            </>
-                                            :
-                                            <>
-                                                {productReviews && productReviews.length > 0 ?
-                                                    <>
-                                                        {productReviews.map(({ rating, content, user }, index) => (
-                                                            <>
-                                                                <div className="product-review-container mt-4 mb-3">
-                                                                    <div className="d-flex">
-                                                                        <div className="user">
-                                                                            {user.image && user.image != "" ?
-                                                                                <div className="profile-image small" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + user.image + ")" }}></div>
-                                                                                :
-                                                                                <div className="profile-image small" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
-                                                                            }
-                                                                        </div>
-                                                                        <div className="rating">
-                                                                            <p className="text-black fs-16 mb-0 text-left">{user.first_name} {user.last_name}</p>
-                                                                            <Rating
-                                                                                initialValue={rating}
-                                                                                readonly={true}
-                                                                                allowFraction={true}
-                                                                                size={22}
-                                                                                className="star-rating"
-                                                                                showTooltip={false}
-                                                                                emptyColor="#dddddd"
-                                                                                fillColor="#cea835"
-                                                                            />
-                                                                            {content && content != "" ?
-                                                                                <p className="mb-0 mt-3">{content}</p>
-                                                                                :
-                                                                                null
-                                                                            }
+                                    <hr className='mt-2 mb-4' />
+                                    {commentsTabShow ?
+                                        <>
+                                            <div className="text-center">
+                                                <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
+                                                <p className="fs-20 text-black">No available comments at this time</p>
+                                            </div>
+                                        </>
+                                        :
+                                        null
+                                    }
+                                    {reviewsTabShow ?
+                                        <>
+                                            {productReviewsLoading ?
+                                                <>
+                                                    <Loading />
+                                                </>
+                                                :
+                                                <>
+                                                    {productReviews && productReviews.length > 0 ?
+                                                        <>
+                                                            {productReviews.map(({ rating, content, user }, index) => (
+                                                                <>
+                                                                    <div className="product-review-container mt-4 mb-3">
+                                                                        <div className="d-flex">
+                                                                            <div className="user">
+                                                                                {user.image && user.image != "" ?
+                                                                                    <div className="profile-image small" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + user.image + ")" }}></div>
+                                                                                    :
+                                                                                    <div className="profile-image small" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
+                                                                                }
+                                                                            </div>
+                                                                            <div className="rating">
+                                                                                <p className="text-black fs-16 mb-0 text-left">{user.first_name} {user.last_name}</p>
+                                                                                <Rating
+                                                                                    initialValue={rating}
+                                                                                    readonly={true}
+                                                                                    allowFraction={true}
+                                                                                    size={22}
+                                                                                    className="star-rating"
+                                                                                    showTooltip={false}
+                                                                                    emptyColor="#dddddd"
+                                                                                    fillColor="#cea835"
+                                                                                />
+                                                                                {content && content != "" ?
+                                                                                    <p className="mb-0 mt-3">{content}</p>
+                                                                                    :
+                                                                                    null
+                                                                                }
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                {index + 1 < productReviews.length ?
-                                                                    <hr />
-                                                                    :
-                                                                    null
-                                                                }
-                                                            </>
-                                                        ))}
-                                                    </>
-                                                    :
-                                                    <div className="text-center">
-                                                        <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
-                                                        <p className="fs-20 text-black">No available reviews at this time</p>
-                                                    </div>
-                                                }
-                                            </>
-                                        }
-                                    </>
-                                    :
-                                    null
-                                }
-                            </Col>
-                        </Row>
-                    </Container>
-                </section>
+                                                                    {index + 1 < productReviews.length ?
+                                                                        <hr />
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </>
+                                                            ))}
+                                                        </>
+                                                        :
+                                                        <div className="text-center">
+                                                            <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
+                                                            <p className="fs-20 text-black">No available reviews at this time</p>
+                                                        </div>
+                                                    }
+                                                </>
+                                            }
+                                        </>
+                                        :
+                                        null
+                                    }
+                                </Col>
+                            </Row>
+                        </Container>
+                    </section>
+                </>
             }
             {/* Share to  */}
             <Modal
