@@ -55,12 +55,22 @@ const EmailConfirmation = () => {
                 setUser(selectedUser);
                 setUserLoading(false);
                 if (selectedUser.email_verified_at != "" && selectedUser.email_verified_at) {
-                    const user_details = { currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at, signup_type: selectedUser.signup_type }
+                    setCookie('currentUser', JSON.stringify(selectedUser.id), { path: '/' });
+                    setCookie('userRole', JSON.stringify(selectedUser.role), { path: '/' });
+                    const user_details = { currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at, signup_type: selectedUser.signup_type, email: selectedUser.email }
                     setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+                    setCookie('isLoggedIn', true, { path: '/' });
+                    setCookie('token', selectedUser.token, { path: '/' });
                     setCookie('signup_type', selectedUser.signup_type, { path: '/' });
+                    setCookie('completed_questionnaire', selectedUser.completed_questionnaire, { path: '/' });
+                    setCookie('token', selectedUser.token, { path: '/' });
                     if (selectedUser.signup_type) {
                         setSignupType(selectedUser.signup_type);
                     }
+                } else {
+                    const message = 'Please verify your email first!';
+                    toast.error(message);
+                    navigate('/');
                 }
             } else {
                 const message = 'There has been an error getting the user, please try again!';
