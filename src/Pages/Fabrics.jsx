@@ -116,7 +116,7 @@ const Fabrics = (props) => {
 
     async function onFilterChange(data) {
         setFabricsLoading(true);
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setFabrics(selectedDesigns);
@@ -503,7 +503,6 @@ const Fabrics = (props) => {
                                                             } else {
                                                                 var fabricImage = PlaceholderImage;
                                                             }
-
 
                                                             var wishlist_user_ids = fabric.wishlist_user_ids;
                                                             const userWishlist = wishlist_user_ids.includes(currentUser);

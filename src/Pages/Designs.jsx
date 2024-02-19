@@ -55,7 +55,10 @@ const Designs = (props) => {
     const [messageShow, setMessageShow] = useState(false);
     const [selectedSortField, setSelectedSortField] = useState(null);
     const [selectedSortOrder, setSelectedSortOrder] = useState(null);
-
+    const [portfolioCategories, setPortfolioCategories] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [selectedAllCategories, setSelectedAllCategories] = useState(false);
+ 
     const compositions = ['Polyamide', 'Polyester', 'Polyurethane', 'Acrylic', 'Cashmere', 'Mental']; // Replace with your array of composition options
     const weaves = ['Plain', 'Twill', 'Satin', 'Basket', 'Herringbone', 'Jacquard', 'Dobby', 'Leno']; // Replace with your array of weave options
 
@@ -108,14 +111,10 @@ const Designs = (props) => {
 
         // Call the API with the updated filter values and sorting parameters
         onFilterChange({
-            eco_friendly: ecoFriendly ? 1 : null,
-            composition: selectedCompositions,
-            weave: selectedWeaves,
-            colors: selectedColors,
-            price_range: priceRange,
             sortField: field, // Only the field without order
             sortOrder: null, // Reset order when changing field
             search: searchValue,
+            categories: selectedCategories,
         });
     };
 
@@ -124,14 +123,10 @@ const Designs = (props) => {
 
         // Call the API with the updated filter values and sorting parameters
         onFilterChange({
-            eco_friendly: ecoFriendly ? 1 : null,
-            composition: selectedCompositions,
-            weave: selectedWeaves,
-            colors: selectedColors,
-            price_range: priceRange,
             sortField: selectedSortField,
             sortOrder: order,
             search: searchValue,
+            categories: selectedCategories,
         });
     };
 
@@ -141,7 +136,7 @@ const Designs = (props) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setDesigns(selectedDesigns);
-                console.log("selectedDesigns", selectedDesigns);
+                // console.log("selectedDesigns", selectedDesigns);
                 setDesignsLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -219,6 +214,11 @@ const Designs = (props) => {
 
     const handleChangeCheckbox = (isChecked) => {
         setEcoFriendly(isChecked ? 1 : 0);
+    };
+
+    const handleChangeAllCategories = (isChecked) => {
+        setSelectedAllCategories(isChecked ? true : false);
+        setSelectedCategories([]);
     };
 
     const handleChangeCountry = (e) => {
@@ -336,25 +336,51 @@ const Designs = (props) => {
         });
     }
 
+    async function getPortfolioCategories() {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/categories').then((response) => {
+            const data = response.data;
+            if (data) {
+                setPortfolioCategories(data);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+        }).catch((e) => {
+            console.log(e);
+            toast.error('An error occured. Please try again or contact the administrator.');
+        });
+    }
+
+    // Handle checkbox change event
+    const handleCategoriesCheckboxChange = (event) => {
+        const category = event.target.value;
+        if (event.target.checked) {
+            setSelectedCategories([...selectedCategories, category]);
+            if (selectedAllCategories.length + 1 === portfolioCategories.length) {
+                setSelectedAllCategories(true);
+            } else {
+                setSelectedAllCategories(false);
+            }
+        } else {
+            setSelectedCategories(selectedCategories.filter(item => item !== category));
+        }
+    };
+
     useEffect(() => {
         // Only run the filter API call after the component has mounted
         if (mounted) {
             // Call the API with the updated filter values
             onFilterChange({
-                eco_friendly: ecoFriendly ? 1 : null,
-                composition: selectedCompositions,
-                weave: selectedWeaves,
-                colors: selectedColors,
-                price_range: priceRange,
                 sortField: selectedSortField,
                 sortOrder: selectedSortOrder,
                 search: searchValue,
+                categories: selectedCategories,
             });
         } else {
             // Set the component as mounted
             setMounted(true);
         }
-    }, [mounted, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue]);
+        getPortfolioCategories();
+    }, [mounted, searchValue, selectedCategories]);
 
     return (
         <Layout>
@@ -381,7 +407,7 @@ const Designs = (props) => {
 
                             <div className='sort-by-border'>
                                 <label htmlFor="dropdown" className='sample-categories'>Sort By: </label>
-                                <select id="sort-by" onChange={(e) => handleSortFieldChange(e.target.value)}>
+                                <select id="sort-by" className="form-control d-inline-block ms-2 border-none cursor-pointer fs-20 p-0" style={{width: '120px'}} onChange={(e) => handleSortFieldChange(e.target.value)}>
                                     {sortOptions.map(option => (
                                         <option key={option.value} className='fs-20' value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
                                     ))}
@@ -398,8 +424,34 @@ const Designs = (props) => {
                         <Row className="mt-2">
                             <Col lg="3">
                                 <div className="filter-sidebar pe-4">
-
                                     <Form.Check
+                                        type={`checkbox`}
+                                        label={`All`}
+                                        name={`day`}
+                                        className={`mb-2`}
+                                        onChange={(e) => handleChangeAllCategories(e.target.checked) }
+                                        checked={portfolioCategories.length == selectedCategories.length || selectedAllCategories}
+                                    />
+                                    {portfolioCategories && portfolioCategories.length > 0 ?
+                                        <>
+                                            {portfolioCategories.map((category, index) => (
+                                                <Form.Check
+                                                    key={index}
+                                                    type="checkbox"
+                                                    label={category.label}
+                                                    value={category.value}
+                                                    checked={selectedCategories.includes(category.value)}
+                                                    onChange={handleCategoriesCheckboxChange}
+                                                    className="mb-2"
+                                                />
+                                            ))}
+                                        </>
+                                        :
+                                        null
+                                    }
+                                    
+
+                                    {/* <Form.Check
                                         type={`checkbox`}
                                         label={`All`}
                                         name={`day`}
@@ -558,7 +610,7 @@ const Designs = (props) => {
                                         label={`Costumes`}
                                         name={`day`}
                                         className={`mb-2`}
-                                    />
+                                    /> */}
 
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Search</Form.Label>

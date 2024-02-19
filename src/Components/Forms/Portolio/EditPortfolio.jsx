@@ -182,12 +182,11 @@ const EditPortfolio = (props) => {
         }
     }, [reloadCount]);
 
-
     async function PortfolioSubmit(e) {
         e.preventDefault();
         if (images) {
             setPortfolioLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+portfolioId+'?user_id=' + currentUser + '&token=' + token, {...portfolioData, image_urls: images, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+portfolioId+'?user_id=' + currentUser + '&token=' + token, {...portfolioData, image_urls: images, colors: colors, tags: tags, materials: materials, categories: categories, status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if(success == 'Success') {
                     toast.success('Design updated successfully!');
@@ -213,7 +212,7 @@ const EditPortfolio = (props) => {
     async function PortfolioDraftSubmit(e) {
         e.preventDefault();
         setPortfolioDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+portfolioId+'?user_id=' + currentUser + '&token=' + token, {...portfolioData, image_urls: images, colors: colors, tags: tags, materials: materials, status: 'Draft' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/'+portfolioId+'?user_id=' + currentUser + '&token=' + token, {...portfolioData, image_urls: images, colors: colors, tags: tags, materials: materials, categories: categories, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Design saved as draft successfully!');
