@@ -7,11 +7,18 @@ import GetUserProductsData from 'Utils/GetUserProductsData';
 import { GoHeart } from "react-icons/go";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from './Loading';
+import { useCookies } from 'react-cookie';
 
 const ProductGrid = (props) => {
     const [products, setProducts] = useState([]);
     const [productsLoading, setProductsLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
+    const [isProductCurrentUser, setIsProductCurrentUser] = useState(false);
+
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
+    const currentUser = cookies.currentUser;
+
+
 
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
@@ -29,9 +36,15 @@ const ProductGrid = (props) => {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setProductsLoading(false);
             }
+
+            if (currentUser == productsData.user.id) {
+                setIsProductCurrentUser(true);
+            } else {
+                setIsProductCurrentUser(false);
+            }
         } catch (error) {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setProductsLoading(false);
+            // toast.error('An error occured. Please try again or contact the administrator.');
+            // setProductsLoading(false);
         }
     };
 
@@ -74,9 +87,21 @@ const ProductGrid = (props) => {
 
                                                                     {user_id ?
                                                                         <div className="other-actions">
-                                                                            <div className="action-button bg-white">
-                                                                                <GoHeart className="text-black" />
-                                                                            </div>
+
+                                                                            {isProductCurrentUser ?
+                                                                                <>
+                                                                                    <div className="action-button bg-white">
+                                                                                        <GoHeart className="text-black" />
+                                                                                    </div>
+                                                                                </>
+                                                                                :
+                                                                                <>
+                                                                                    {/* <div className="action-button bg-white">
+                                                                                        <GoHeart className="text-black" />
+                                                                                    </div> */}
+                                                                                </>
+                                                                            }
+
                                                                         </div>
                                                                         :
                                                                         null

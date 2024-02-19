@@ -16,19 +16,19 @@ const DesignerCalendar = ({ toggleEvent, events, designerId }) => {
 
     const applyPastDateClass = () => {
         const isPast = (date) => moment(date, 'DD').isBefore(moment(), 'day');
-    
+
         const dayCells = document.querySelectorAll('.rbc-date-cell'); // Select all day cell elements
         dayCells.forEach(cell => {
-          const button = cell.querySelector('button'); // Select the button element inside the day cell
-          const dateText = button.textContent.trim(); // Get the text content of the button
-          const date = moment(dateText, 'DD'); // Parse the date text using moment
-          if (isPast(date)) {
-            cell.classList.add('past-date'); // Add the class to the parent day cell
-            button.disabled = true;
-          } else {
-            cell.classList.remove('past-date'); // Remove the class from the parent day cell
-            button.disabled = false;
-          }
+            const button = cell.querySelector('button'); // Select the button element inside the day cell
+            const dateText = button.textContent.trim(); // Get the text content of the button
+            const date = moment(dateText, 'DD'); // Parse the date text using moment
+            if (isPast(date)) {
+                cell.classList.add('past-date'); // Add the class to the parent day cell
+                button.disabled = true;
+            } else {
+                cell.classList.remove('past-date'); // Remove the class from the parent day cell
+                button.disabled = false;
+            }
         });
     };
 
@@ -45,18 +45,18 @@ const DesignerCalendar = ({ toggleEvent, events, designerId }) => {
         // Extract the date from the selected event
         const selectedDate = moment(event.start).format('MMMM D, YYYY');
         // Do something with the selected date
-        navigate("/appointment/schedule/"+designerId);
+        navigate("/appointment/schedule/" + designerId);
     };
 
     useEffect(() => {
-        setTimeout(function(){
+        setTimeout(function () {
             setCalendarReady(true);
         }, 500)
     }, []);
 
     useEffect(() => {
         if (calendarRef.current) {
-          applyPastDateClass(); // Apply the past date class when the component mounts or updates
+            applyPastDateClass(); // Apply the past date class when the component mounts or updates
         }
     }, [calendarRef.current, calendarReady]);
 

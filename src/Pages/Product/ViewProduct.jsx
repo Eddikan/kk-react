@@ -442,7 +442,6 @@ const ViewProduct = () => {
 
                                                     {isProductCurrentUser ?
                                                         <>
-
                                                             <div>
                                                                 <Link to={`/product/${product.id}/edit`} className="text-decoration-none">
                                                                     <div class="kouture-tooltip">

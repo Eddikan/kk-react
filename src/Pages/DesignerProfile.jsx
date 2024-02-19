@@ -81,8 +81,7 @@ const DesignerProfile = () => {
     const [activeImage, setActiveImage] = useState('');
     const [elements, setElements] = useState([]);
     const [designerSchedule, setDesignerSchedule] = useState([]);
-    // const [underConstructionShow, setUnderConstructionShow] = useState(false);
-    // setIsProfileCurrentUser
+    const [isDesignerCurrentUser, setIsDesignerCurrentUser] = useState(false);
 
     const [portfolio, setPortfolio] = useState('');
     const [images, setImages] = useState([]);
@@ -166,13 +165,14 @@ const DesignerProfile = () => {
                     setPortfolioItems(userData.portfolio_items);
                     setSeller(userData.seller);
                 }
-                setUserLoading(false);
 
-                // if (currentUser == userData.user.id) {
-                //     setIsProfileCurrentUser(false);
-                // } else {
-                //     setIsProfileCurrentUser(true);
-                // }
+                if (currentUser == userData.id) {
+                    setIsDesignerCurrentUser(false);
+                } else {
+                    setIsDesignerCurrentUser(true);
+                }
+
+                setUserLoading(false);
             } else {
                 setUserLoading(false);
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -268,7 +268,16 @@ const DesignerProfile = () => {
                                                 :
                                                 <span>-</span>
                                             }
-                                            <AiFillMessage className="ms-3 cursor-pointer" size={20} color="#CEA835" onClick={() => toggleUnderConstruction("Chat Designer")} />
+                                            {isDesignerCurrentUser ?
+                                                <>
+                                                    <AiFillMessage className="ms-3 cursor-pointer" size={20} color="#CEA835" onClick={() => toggleUnderConstruction("Chat Designer")} />
+                                                </>
+                                                :
+                                                <>
+                                                    <AiFillMessage className="ms-3 cursor-pointer" size={20} color="#CEA835" />
+                                                </>
+                                            }
+
                                         </h2>
                                         <div className='icons-d-flex'>
                                             <img src={PinIcon} alt="location pin" />
@@ -285,23 +294,45 @@ const DesignerProfile = () => {
                             </Col>
 
                             <Col lg="6" className='text-right'>
-                                <span>
-                                    <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black request-a-quote'
-                                        onClick={() => toggleRequestAQuote(true)}
-                                    >
-                                        <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
-                                        Request A Quote
-                                    </p>
-                                </span>
+                                {isDesignerCurrentUser ?
+                                    <>
+                                        <span>
+                                            <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black request-a-quote'
+                                                onClick={() => toggleRequestAQuote(true)}
+                                            >
+                                                <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
+                                                Request A Quote
+                                            </p>
+                                        </span>
 
-                                <span className='w-100'>
-                                    <a
-                                        // onClick={() => toggleUnderConstruction("Schedule A Consultation")}
-                                        href={`/appointment/schedule/${designer.id}`}
-                                        className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn'
-                                    >
-                                        <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
-                                </span>
+                                        <span className='w-100'>
+                                            <a
+                                                href={`/appointment/schedule/${designer.id}`}
+                                                className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn'
+                                            >
+                                                <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
+                                        </span>
+                                    </>
+                                    :
+                                    <>
+                                        <span>
+                                            <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black request-a-quote'
+
+                                            >
+                                                <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
+                                                Request A Quote
+                                            </p>
+                                        </span>
+
+                                        <span className='w-100'>
+                                            <a
+                                                className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn'
+                                            >
+                                                <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
+                                        </span>
+
+                                    </>
+                                }
                             </Col>
 
                             <Col lg="12" className='mt-4'>
