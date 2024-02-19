@@ -129,14 +129,6 @@ const Orders = (props) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order');
     };
 
-    const postCheckOut = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
-    };
-
-    const getFabrics = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + token);
-    };
-
     const chatBoxModal = (first_name, last_name, image) => {
         setChatBox(true);
 
@@ -177,18 +169,6 @@ const Orders = (props) => {
     }, []);
 
     useEffect(() => {
-        getFabrics()
-            .then((response) => {
-                const selectedFabrics = response.data.data;
-                if (selectedFabrics) {
-                    setFabrics(selectedFabrics);
-                } else {
-                    toast.error('There has been an error getting the date');
-                }
-            })
-            .catch((error) => {
-                toast.error('There has been an error getting the date');
-            });
 
         getOrder()
             .then((response) => {
@@ -350,14 +330,14 @@ const Orders = (props) => {
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            <a href={`/order-details/${order.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                            {/* <a href={`/order-details/${order.id}`} className="cursor-pointer check-datails-decoration" >
                                                                                 <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                            </a>
-                                                                            {/* {reorderLoading ?
+                                                                            </a> */}
+                                                                            {reorderLoading ?
                                                                                 <button type="button" className='btn btn-primary'>Loading...</button>
                                                                                 :
                                                                                 <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
-                                                                            } */}
+                                                                            }
                                                                             
                                                                         </Col>
                                                                     </Row>

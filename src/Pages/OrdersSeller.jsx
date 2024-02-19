@@ -58,7 +58,7 @@ const OrdersSeller = (props) => {
     };
 
     const getFabrics = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + token);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + token);
     };
 
     const chatBoxModal = (first_name, last_name, image) => {
@@ -92,7 +92,7 @@ const OrdersSeller = (props) => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + currentUser, {
+            const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser, {
                 params: {
                     search: query
                 }

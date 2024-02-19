@@ -70,11 +70,11 @@ const RateReview = (props) => {
                         setActiveImage(PlaceholderImage);
                     }
                 } else {
-                    toast.error('There has been an error getting the date, please try again!');
+                    toast.error('There has been an error getting the product, please try again!');
                 }
             })
             .catch((error) => {
-                toast.error('There has been an error getting the date, please try again!');
+                toast.error('There has been an error getting the product, please try again!');
             });
     }, [reloadCount]);
 

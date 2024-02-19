@@ -405,9 +405,9 @@ const Designs = (props) => {
                                 Categories
                             </div>
 
-                            <div className='sort-by-border'>
+                            <div className='sort-by-border mb-2'>
                                 <label htmlFor="dropdown" className='sample-categories'>Sort By: </label>
-                                <select id="sort-by" className="form-control d-inline-block ms-2 border-none cursor-pointer fs-20 p-0" style={{width: '120px'}} onChange={(e) => handleSortFieldChange(e.target.value)}>
+                                <select id="sort-by" className="form-control d-inline-block border-none cursor-pointer fs-20 p-0 px-2" style={{width: '120px'}} onChange={(e) => handleSortFieldChange(e.target.value)}>
                                     {sortOptions.map(option => (
                                         <option key={option.value} className='fs-20' value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
                                     ))}
