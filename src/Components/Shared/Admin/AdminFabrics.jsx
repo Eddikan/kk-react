@@ -188,7 +188,7 @@ const ProductGrid = (props) => {
                                                                 null
                                                             }
                                                             <span className="text-white text-decoration-none portfolio-name">{product.name ?? "-"}</span>
-                                                            {currentUser ?
+                                                            {currentUser != product.user.id ?
                                                                 <div className="other-actions">
                                                                     {userWishlist ?
                                                                         <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>

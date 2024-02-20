@@ -45,9 +45,11 @@ const Orders = (props) => {
     const [chatBox, setChatBox] = useState(false);
     const [fabrics, setFabrics] = useState('');
     const [orders, setOrders] = useState('');
+    const [ordersLoading, setOrdersLoading] = useState(true);
     const [designerName, setDesignerName] = useState('');
     const [text, setText] = useState('');
     const [reorderLoading, setReorderLoading] = useState(false);
+    const [orderStatus, setOrderStatus] = useState('All');
 
 
     const showTab = (tab) => {
@@ -59,6 +61,7 @@ const Orders = (props) => {
             setDeliveredShow(false);
             setReviewShow(false);
             setCompletedShow(false);
+            setOrderStatus('All');
 
         } else if (tab === "pending") {
             setAllShow(false);
@@ -68,6 +71,7 @@ const Orders = (props) => {
             setDeliveredShow(false);
             setReviewShow(false);
             setCompletedShow(false);
+            setOrderStatus('Pending');
 
         } else if (tab === "processing") {
             setAllShow(false);
@@ -77,6 +81,7 @@ const Orders = (props) => {
             setDeliveredShow(false);
             setReviewShow(false);
             setCompletedShow(false);
+            setOrderStatus('Processing');
 
         } else if (tab === "shipped") {
             setAllShow(false);
@@ -86,6 +91,7 @@ const Orders = (props) => {
             setDeliveredShow(false);
             setReviewShow(false);
             setCompletedShow(false);
+            setOrderStatus('Shipped');
 
         } else if (tab === "delivered") {
             setAllShow(false);
@@ -95,6 +101,7 @@ const Orders = (props) => {
             setDeliveredShow(true);
             setReviewShow(false);
             setCompletedShow(false);
+            setOrderStatus('Delivered');
 
         } else if (tab === "review") {
             setAllShow(false);
@@ -104,6 +111,7 @@ const Orders = (props) => {
             setDeliveredShow(false);
             setReviewShow(true);
             setCompletedShow(false);
+            setOrderStatus('Reviewed');
 
         } else if (tab === "completed") {
             setAllShow(false);
@@ -113,7 +121,9 @@ const Orders = (props) => {
             setDeliveredShow(false);
             setReviewShow(false);
             setCompletedShow(true);
+            setOrderStatus('Completed');
         }
+        setReloadCount(reloadCount + 1);
     }
 
     function toggleUnderConstruction(message) {
@@ -126,7 +136,7 @@ const Orders = (props) => {
     }
 
     const getOrder = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?status='+orderStatus);
     };
 
     const chatBoxModal = (first_name, last_name, image) => {
@@ -144,24 +154,24 @@ const Orders = (props) => {
     async function reorderProducts(e) {
         // setReorderLoading(true);
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: e, user_id: currentUser }).then((response) => {
-        const success = response.data.status;
-        if (success == 'Success') {
-            const data = response.data.data;
-            navigate("/cart");
-        } else {
-            const errors = response.data.errors;
-            errors.map((error, index) => {
-                toast.error(error);
-                return null; // React requires a return value, so we return null here
-            });
-            
-        }
-        // setReorderLoading(false);
+            const success = response.data.status;
+            if (success == 'Success') {
+                const data = response.data.data;
+                navigate("/cart");
+            } else {
+                const errors = response.data.errors;
+                errors.map((error, index) => {
+                    toast.error(error);
+                    return null; // React requires a return value, so we return null here
+                });
+
+            }
+            // setReorderLoading(false);
         }).catch((error) => {
             // setReorderLoading(false);
             toast.error('Something went wrong, please contact the administrator!');
         });
-        
+
     }
 
     useEffect(() => {
@@ -169,20 +179,22 @@ const Orders = (props) => {
     }, []);
 
     useEffect(() => {
-
+        setOrdersLoading(true);
         getOrder()
             .then((response) => {
-                const selectedOrders = response.data;
+                const selectedOrders = response.data.data;
                 if (selectedOrders) {
                     setOrders(selectedOrders);
+                    setOrdersLoading(false);
                 } else {
                     toast.error('There has been an error getting the orders');
+                    setOrdersLoading(false);
                 }
             })
             .catch((error) => {
                 toast.error('There has been an error getting the orders');
+                setOrdersLoading(false);
             });
-
     }, [reloadCount]);
 
     return (
@@ -214,42 +226,40 @@ const Orders = (props) => {
                         </Col>
                     </Row>
 
-                    <Row>
+                    <Row className="mb-2">
                         <Col>
                             <Card>
                                 <Card.Body className='bg-light'>
                                     <Row>
-                                        <Col lg={2}>
-                                            <span className='fw-500 text-black'>Date Created</span>
-                                        </Col>
-
                                         <Col lg={3}>
-                                            <span className='fw-500 text-black'>Item Title</span>
+                                            <span className='fw-500 text-black'>Date</span>
                                         </Col>
 
-                                        <Col lg={2}>
-                                            <span className='fw-500 text-black'>Order Date</span>
+                                        <Col lg={3} className="text-center">
+                                            <span className='fw-500 text-black'>Number of Items</span>
                                         </Col>
 
-                                        <Col lg={1}>
-                                            <span className='fw-500 text-black'>Total</span>
+                                        <Col lg={3} className="text-right">
+                                            <span className='fw-500 text-black'>Total Amount</span>
                                         </Col>
 
-                                        <Col lg={2}>
-                                            <span className='fw-500 text-black cursor-pointer'>Status
-                                                <MdOutlineKeyboardArrowDown className="ms-2" /></span>
-                                        </Col>
-
-                                        <Col lg={2}>
-                                            <span className='fw-500 text-black'>Action</span>
+                                        <Col lg={3} className="text-right">
+                                            <span className='fw-500 text-black'></span>
                                         </Col>
                                     </Row>
                                 </Card.Body>
                             </Card>
                         </Col>
                     </Row>
-
-                    {allShow ?
+                    {ordersLoading ?
+                        <>
+                            <Card className="mt-2">
+                                <Card.Body>
+                                    <p className="mb-0 text-center">Loading...</p>
+                                </Card.Body>
+                            </Card>
+                        </>
+                        :
                         <>
                             {orders ?
                                 <>
@@ -270,75 +280,52 @@ const Orders = (props) => {
                                                     month: 'long',
                                                     day: 'numeric',
                                                 };
-                                                const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
+                                                const created_at = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
+
+                                                // Use map() to extract quantities from each item
+                                                var quantities = order_items.map(function(item) {
+                                                    return parseInt(item.quantity);
+                                                });
+
+                                                // Use reduce() to calculate the sum of quantities
+                                                var number_of_items = quantities.reduce(function(total, quantity) {
+                                                    return total + quantity;
+                                                }, 0);
+
 
                                                 return (
 
-                                                    <Row>
+                                                    <Row className='mb-2'>
                                                         <Col lg={12}>
                                                             <Card className='mt-2 border-card'>
                                                                 <Card.Header className='order-chat d-flex justify-content-between'>
                                                                     <div>
-                                                                        <div className='d-flex align-items-center user-image-order'>
-                                                                            {order.user.image && (
-                                                                                <div
-                                                                                    className='user-photo-order me-2'
-                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${order.user.image})` }}
-                                                                                >
-                                                                                </div>
-                                                                            )}
-
-
-                                                                            <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
-                                                                            {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
-                                                                            /> */}
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div className='order-id'>
-                                                                        Order ID: {order.order.id}
+                                                                        <strong>Order ID: {order.id}</strong>
                                                                     </div>
                                                                 </Card.Header>
                                                                 <Card.Body className='bg-white card-body-border'>
                                                                     <Row>
-                                                                        <Col lg={2}>
+                                                                        <Col lg={3}>
                                                                             <span className='text-black'>{created_at}</span>
                                                                         </Col>
 
-                                                                        <Col lg={3} className='d-flex'>
-
-                                                                            <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                style={{ backgroundImage: "url(" + cartItemImage + ")", minHeight: '55px' }}>
-                                                                            </div>
-
-                                                                            <span className='d-flex text-black ms-3'>
-                                                                                {order_items[0].product.name}
-                                                                            </span>
+                                                                        <Col lg={3} className="text-center">
+                                                                            <span className='text-black'>{number_of_items}</span>
                                                                         </Col>
 
-                                                                        <Col lg={2}>
-                                                                            <span className='text-black'>{created_at}</span>
+                                                                        <Col lg={3} className="text-right">
+                                                                            <span className='text-black'>${order.total_amount}</span>
                                                                         </Col>
 
-                                                                        <Col lg={1}>
-                                                                            <span className='text-black'>${order.order_items_total}</span>
-                                                                        </Col>
-
-                                                                        <Col lg={2}>
-                                                                            <span className='text-black'>{order.order.status}</span>
-                                                                        </Col>
-
-                                                                        <Col lg={2}  className='text-right'>
-                                                                            <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                                        <Col lg={3} className='text-right'>
+                                                                            <a href={`/order/${order.id}/details`} className="cursor-pointer check-datails-decoration" >
+                                                                                <span className='text-gold'><IoEyeOutline className='me-2' size={20} />View Details</span>
                                                                             </a>
                                                                             {/* {reorderLoading ?
                                                                                 <button type="button" className='btn btn-primary'>Loading...</button>
                                                                                 :
                                                                                 <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
                                                                             } */}
-                                                                            
                                                                         </Col>
                                                                     </Row>
                                                                 </Card.Body>
@@ -351,7 +338,7 @@ const Orders = (props) => {
                                         </>
                                         :
                                         <>
-                                            <Card>
+                                            <Card className='mt-2'>
                                                 <Card.Body>
                                                     <p className="mb-0 text-center">No records found.</p>
                                                 </Card.Body>
@@ -361,7 +348,7 @@ const Orders = (props) => {
                                 </>
                                 :
                                 <>
-                                    <Card>
+                                    <Card className='mt-2'>
                                         <Card.Body>
                                             <p className="mb-0 text-center">No records found.</p>
                                         </Card.Body>
@@ -369,820 +356,6 @@ const Orders = (props) => {
                                 </>
                             }
                         </>
-
-                        :
-                        null
-                    }
-
-
-                    {pendingShow ?
-                        <>
-                            {orders ?
-                                <>
-                                    {orders.length > 0 ?
-                                        <>
-                                            {orders.some(order => order.order.status === "Pending") ?
-                                                <>
-                                                    {orders.filter(order => order.order.status === "Pending").map(order => {
-                                                        var order_items = order.order_items;
-                                                        var order_product = order_items[0].product;
-                                                        if (order_product.image_urls) {
-                                                            var image_urls = JSON.parse(order_product.image_urls);
-                                                            var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                        } else {
-                                                            var cartItemImage = PlaceholderImage;
-                                                        }
-
-                                                        const options = {
-                                                            year: 'numeric',
-                                                            month: 'long',
-                                                            day: 'numeric',
-                                                        };
-                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
-
-                                                        return (
-
-                                                            <Row>
-                                                                <Col lg={12}>
-                                                                    <Card className='mt-2 border-card'>
-                                                                        <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                            <div>
-                                                                                <div className='d-flex align-items-center user-image-order'>
-                                                                                    {order.user.image && (
-                                                                                        <div
-                                                                                            className='user-photo-order me-2'
-                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${order.user.image})` }}
-                                                                                        >
-                                                                                        </div>
-                                                                                    )}
-
-
-                                                                                    <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
-                                                                                    {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                        onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
-                                                                                    /> */}
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div className='order-id'>
-                                                                                Order ID: {order.order.id}
-                                                                            </div>
-                                                                        </Card.Header>
-                                                                        <Card.Body className='bg-white card-body-border'>
-                                                                            <Row>
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{created_at}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={3} className='d-flex'>
-
-                                                                                    <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                        style={{ backgroundImage: "url(" + cartItemImage + ")", minHeight: '55px' }}>
-                                                                                    </div>
-
-                                                                                    <span className='d-flex text-black ms-3'>
-                                                                                        {order_items[0].product.name}
-                                                                                    </span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{created_at}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={1}>
-                                                                                    <span className='text-black'>${order.order_items_total}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{order.order.status}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2} className='text-right'>
-                                                                                    {/* <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                        <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                    </a> */}
-                                                                                    {reorderLoading ?
-                                                                                        <button type="button" className='btn btn-primary'>Loading...</button>
-                                                                                        :
-                                                                                        <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
-                                                                                    }
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </Card.Body>
-                                                                    </Card>
-                                                                </Col>
-                                                            </Row>
-                                                        );
-                                                    })}
-                                                </>
-                                                :
-                                                <>
-                                                    <Card>
-                                                        <Card.Body>
-                                                            <p className="mb-0 text-center">No records found.</p>
-                                                        </Card.Body>
-                                                    </Card>
-                                                </>
-                                            }
-
-                                        </>
-                                        :
-                                        <>
-                                            <Card>
-                                                <Card.Body>
-                                                    <p className="mb-0 text-center">No records found.</p>
-                                                </Card.Body>
-                                            </Card>
-                                        </>
-                                    }
-                                </>
-                                :
-                                <>
-                                    <Card>
-                                        <Card.Body>
-                                            <p className="mb-0 text-center">No records found.</p>
-                                        </Card.Body>
-                                    </Card>
-                                </>
-                            }
-                        </>
-                        :
-                        null
-                    }
-
-                    {processShow ?
-                        <>
-                            {orders ?
-                                <>
-                                    {orders.length > 0 ?
-                                        <>
-                                            {orders.some(order => order.order.status === "Processing") ?
-                                                <>
-                                                    {orders.filter(order => order.order.status === "Processing").map(order => {
-                                                        var order_items = order.order_items;
-                                                        var order_product = order_items[0].product;
-                                                        if (order_product.image_urls) {
-                                                            var image_urls = JSON.parse(order_product.image_urls);
-                                                            var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                        } else {
-                                                            var cartItemImage = PlaceholderImage;
-                                                        }
-
-                                                        const options = {
-                                                            year: 'numeric',
-                                                            month: 'long',
-                                                            day: 'numeric',
-                                                        };
-                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
-
-                                                        return (
-
-                                                            <Row>
-                                                                <Col lg={12}>
-                                                                    <Card className='mt-2 border-card'>
-                                                                        <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                            <div>
-                                                                                <div className='d-flex align-items-center user-image-order'>
-                                                                                    {order.user.image && (
-                                                                                        <div
-                                                                                            className='user-photo-order me-2'
-                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${order.user.image})` }}
-                                                                                        >
-                                                                                        </div>
-                                                                                    )}
-
-
-                                                                                    <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
-                                                                                    {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                        onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
-                                                                                    /> */}
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div className='order-id'>
-                                                                                Order ID: {order.order.id}
-                                                                            </div>
-                                                                        </Card.Header>
-                                                                        <Card.Body className='bg-white card-body-border'>
-                                                                            <Row>
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{created_at}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={3} className='d-flex'>
-
-                                                                                    <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                        style={{ backgroundImage: "url(" + cartItemImage + ")", minHeight: '55px' }}>
-                                                                                    </div>
-
-                                                                                    <span className='d-flex text-black ms-3'>
-                                                                                        {order_items[0].product.name}
-                                                                                    </span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{created_at}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={1}>
-                                                                                    <span className='text-black'>${order.order_items_total}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{order.order.status}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2} className='text-right'>
-                                                                                    {/* <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                        <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                    </a> */}
-                                                                                    {reorderLoading ?
-                                                                                        <button type="button" className='btn btn-primary'>Loading...</button>
-                                                                                        :
-                                                                                        <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
-                                                                                    }
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </Card.Body>
-                                                                    </Card>
-                                                                </Col>
-                                                            </Row>
-                                                        );
-                                                    })}
-                                                </>
-                                                :
-                                                <>
-                                                    <Card>
-                                                        <Card.Body>
-                                                            <p className="mb-0 text-center">No records found.</p>
-                                                        </Card.Body>
-                                                    </Card>
-                                                </>
-                                            }
-
-                                        </>
-                                        :
-                                        <>
-                                            <Card>
-                                                <Card.Body>
-                                                    <p className="mb-0 text-center">No records found.</p>
-                                                </Card.Body>
-                                            </Card>
-                                        </>
-                                    }
-                                </>
-                                :
-                                <>
-                                    <Card>
-                                        <Card.Body>
-                                            <p className="mb-0 text-center">No records found.</p>
-                                        </Card.Body>
-                                    </Card>
-                                </>
-                            }
-                        </>
-                        :
-                        null
-                    }
-
-                    {shippedShow ?
-                        <>
-                            {orders ?
-                                <>
-                                    {orders.length > 0 ?
-                                        <>
-                                            {orders.some(order => order.order.status === "Shipped") ?
-                                                <>
-                                                    {orders.filter(order => order.order.status === "Shipped").map(order => {
-                                                        var order_items = order.order_items;
-                                                        var order_product = order_items[0].product;
-                                                        if (order_product.image_urls) {
-                                                            var image_urls = JSON.parse(order_product.image_urls);
-                                                            var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                        } else {
-                                                            var cartItemImage = PlaceholderImage;
-                                                        }
-
-                                                        const options = {
-                                                            year: 'numeric',
-                                                            month: 'long',
-                                                            day: 'numeric',
-                                                        };
-                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
-
-                                                        return (
-
-                                                            <Row>
-                                                                <Col lg={12}>
-                                                                    <Card className='mt-2 border-card'>
-                                                                        <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                            <div>
-                                                                                <div className='d-flex align-items-center user-image-order'>
-                                                                                    {order.user.image && (
-                                                                                        <div
-                                                                                            className='user-photo-order me-2'
-                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${order.user.image})` }}
-                                                                                        >
-                                                                                        </div>
-                                                                                    )}
-
-
-                                                                                    <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
-                                                                                    {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                        onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
-                                                                                    /> */}
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div className='order-id'>
-                                                                                Order ID: {order.order.id}
-                                                                            </div>
-                                                                        </Card.Header>
-                                                                        <Card.Body className='bg-white card-body-border'>
-                                                                            <Row>
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{created_at}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={3} className='d-flex'>
-
-                                                                                    <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                        style={{ backgroundImage: "url(" + cartItemImage + ")", minHeight: '55px' }}>
-                                                                                    </div>
-
-                                                                                    <span className='d-flex text-black ms-3'>
-                                                                                        {order_items[0].product.name}
-                                                                                    </span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{created_at}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={1}>
-                                                                                    <span className='text-black'>${order.order_items_total}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{order.order.status}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2} className='text-right'>
-                                                                                    {/* <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                        <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                    </a> */}
-                                                                                    {reorderLoading ?
-                                                                                        <button type="button" className='btn btn-primary'>Loading...</button>
-                                                                                        :
-                                                                                        <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
-                                                                                    }
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </Card.Body>
-                                                                    </Card>
-                                                                </Col>
-                                                            </Row>
-                                                        );
-                                                    })}
-                                                </>
-                                                :
-                                                <>
-                                                    <Card>
-                                                        <Card.Body>
-                                                            <p className="mb-0 text-center">No records found.</p>
-                                                        </Card.Body>
-                                                    </Card>
-                                                </>
-                                            }
-
-                                        </>
-                                        :
-                                        <>
-                                            <Card>
-                                                <Card.Body>
-                                                    <p className="mb-0 text-center">No records found.</p>
-                                                </Card.Body>
-                                            </Card>
-                                        </>
-                                    }
-                                </>
-                                :
-                                <>
-                                    <Card>
-                                        <Card.Body>
-                                            <p className="mb-0 text-center">No records found.</p>
-                                        </Card.Body>
-                                    </Card>
-                                </>
-                            }
-                        </>
-                        :
-                        null
-                    }
-
-                    {deliveredShow ?
-                        <>
-                            {orders ?
-                                <>
-                                    {orders.length > 0 ?
-                                        <>
-                                            {orders.some(order => order.order.status === "Delivered") ?
-                                                <>
-                                                    {orders.filter(order => order.order.status === "Delivered").map(order => {
-                                                        var order_items = order.order_items;
-                                                        var order_product = order_items[0].product;
-                                                        if (order_product.image_urls) {
-                                                            var image_urls = JSON.parse(order_product.image_urls);
-                                                            var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                        } else {
-                                                            var cartItemImage = PlaceholderImage;
-                                                        }
-
-                                                        const options = {
-                                                            year: 'numeric',
-                                                            month: 'long',
-                                                            day: 'numeric',
-                                                        };
-                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
-
-                                                        return (
-
-                                                            <Row>
-                                                                <Col lg={12}>
-                                                                    <Card className='mt-2 border-card'>
-                                                                        <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                            <div>
-                                                                                <div className='d-flex align-items-center user-image-order'>
-                                                                                    {order.user.image && (
-                                                                                        <div
-                                                                                            className='user-photo-order me-2'
-                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${order.user.image})` }}
-                                                                                        >
-                                                                                        </div>
-                                                                                    )}
-
-
-                                                                                    <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
-                                                                                    {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                        onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
-                                                                                    /> */}
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div className='order-id'>
-                                                                                Order ID: {order.order.id}
-                                                                            </div>
-                                                                        </Card.Header>
-                                                                        <Card.Body className='bg-white card-body-border'>
-                                                                            <Row>
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{created_at}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={3} className='d-flex'>
-
-                                                                                    <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                        style={{ backgroundImage: "url(" + cartItemImage + ")", minHeight: '55px' }}>
-                                                                                    </div>
-
-                                                                                    <span className='d-flex text-black ms-3'>
-                                                                                        {order_items[0].product.name}
-                                                                                    </span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{created_at}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={1}>
-                                                                                    <span className='text-black'>${order.order_items_total}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{order.order.status}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2} className='text-right'>
-                                                                                    {/* <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                        <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                    </a> */}
-                                                                                    {reorderLoading ?
-                                                                                        <button type="button" className='btn btn-primary'>Loading...</button>
-                                                                                        :
-                                                                                        <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
-                                                                                    }
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </Card.Body>
-                                                                    </Card>
-                                                                </Col>
-                                                            </Row>
-                                                        );
-                                                    })}
-                                                </>
-                                                :
-                                                <>
-                                                    <Card>
-                                                        <Card.Body>
-                                                            <p className="mb-0 text-center">No records found.</p>
-                                                        </Card.Body>
-                                                    </Card>
-                                                </>
-                                            }
-
-                                        </>
-                                        :
-                                        <>
-                                            <Card>
-                                                <Card.Body>
-                                                    <p className="mb-0 text-center">No records found.</p>
-                                                </Card.Body>
-                                            </Card>
-                                        </>
-                                    }
-                                </>
-                                :
-                                <>
-                                    <Card>
-                                        <Card.Body>
-                                            <p className="mb-0 text-center">No records found.</p>
-                                        </Card.Body>
-                                    </Card>
-                                </>
-                            }
-                        </>
-                        :
-                        null
-                    }
-
-                    {reviewShow ?
-                        <>
-                            {orders ?
-                                <>
-                                    {orders.length > 0 ?
-                                        <>
-                                            {orders.some(order => order.order.status === "Reviewed") ?
-                                                <>
-                                                    {orders.filter(order => order.order.status === "Reviewed").map(order => {
-                                                        var order_items = order.order_items;
-                                                        var order_product = order_items[0].product;
-                                                        if (order_product.image_urls) {
-                                                            var image_urls = JSON.parse(order_product.image_urls);
-                                                            var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                        } else {
-                                                            var cartItemImage = PlaceholderImage;
-                                                        }
-
-                                                        const options = {
-                                                            year: 'numeric',
-                                                            month: 'long',
-                                                            day: 'numeric',
-                                                        };
-                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
-
-                                                        return (
-
-                                                            <Row>
-                                                                <Col lg={12}>
-                                                                    <Card className='mt-2 border-card'>
-                                                                        <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                            <div>
-                                                                                <div className='d-flex align-items-center user-image-order'>
-                                                                                    {order.user.image && (
-                                                                                        <div
-                                                                                            className='user-photo-order me-2'
-                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${order.user.image})` }}
-                                                                                        >
-                                                                                        </div>
-                                                                                    )}
-
-
-                                                                                    <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
-                                                                                    {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                        onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
-                                                                                    /> */}
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div className='order-id'>
-                                                                                Order ID: {order.order.id}
-                                                                            </div>
-                                                                        </Card.Header>
-                                                                        <Card.Body className='bg-white card-body-border'>
-                                                                            <Row>
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{created_at}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={3} className='d-flex'>
-
-                                                                                    <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                        style={{ backgroundImage: "url(" + cartItemImage + ")", minHeight: '55px' }}>
-                                                                                    </div>
-
-                                                                                    <span className='d-flex text-black ms-3'>
-                                                                                        {order_items[0].product.name}
-                                                                                    </span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{created_at}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={1}>
-                                                                                    <span className='text-black'>${order.order_items_total}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{order.order.status}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2} className='text-right'>
-                                                                                    {/* <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                        <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                    </a> */}
-                                                                                    {reorderLoading ?
-                                                                                        <button type="button" className='btn btn-primary'>Loading...</button>
-                                                                                        :
-                                                                                        <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
-                                                                                    }
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </Card.Body>
-                                                                    </Card>
-                                                                </Col>
-                                                            </Row>
-                                                        );
-                                                    })}
-                                                </>
-                                                :
-                                                <>
-                                                    <Card>
-                                                        <Card.Body>
-                                                            <p className="mb-0 text-center">No records found.</p>
-                                                        </Card.Body>
-                                                    </Card>
-                                                </>
-                                            }
-
-                                        </>
-                                        :
-                                        <>
-                                            <Card>
-                                                <Card.Body>
-                                                    <p className="mb-0 text-center">No records found.</p>
-                                                </Card.Body>
-                                            </Card>
-                                        </>
-                                    }
-                                </>
-                                :
-                                <>
-                                    <Card>
-                                        <Card.Body>
-                                            <p className="mb-0 text-center">No records found.</p>
-                                        </Card.Body>
-                                    </Card>
-                                </>
-                            }
-                        </>
-                        :
-                        null
-                    }
-
-                    {completedShow ?
-                        <>
-                            {orders ?
-                                <>
-                                    {orders.length > 0 ?
-                                        <>
-                                            {orders.some(order => order.order.status === "Completed") ?
-                                                <>
-                                                    {orders.filter(order => order.order.status === "Completed").map(order => {
-                                                        var order_items = order.order_items;
-                                                        var order_product = order_items[0].product;
-                                                        if (order_product.image_urls) {
-                                                            var image_urls = JSON.parse(order_product.image_urls);
-                                                            var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                        } else {
-                                                            var cartItemImage = PlaceholderImage;
-                                                        }
-
-                                                        const options = {
-                                                            year: 'numeric',
-                                                            month: 'long',
-                                                            day: 'numeric',
-                                                        };
-                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
-
-                                                        return (
-
-                                                            <Row>
-                                                                <Col lg={12}>
-                                                                    <Card className='mt-2 border-card'>
-                                                                        <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                            <div>
-                                                                                <div className='d-flex align-items-center user-image-order'>
-                                                                                    {order.user.image && (
-                                                                                        <div
-                                                                                            className='user-photo-order me-2'
-                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${order.user.image})` }}
-                                                                                        >
-                                                                                        </div>
-                                                                                    )}
-
-
-                                                                                    <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
-                                                                                    {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                        onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
-                                                                                    /> */}
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div className='order-id'>
-                                                                                Order ID: {order.order.id}
-                                                                            </div>
-                                                                        </Card.Header>
-                                                                        <Card.Body className='bg-white card-body-border'>
-                                                                            <Row>
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{created_at}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={3} className='d-flex'>
-
-                                                                                    <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                        style={{ backgroundImage: "url(" + cartItemImage + ")", minHeight: '55px' }}>
-                                                                                    </div>
-
-                                                                                    <span className='d-flex text-black ms-3'>
-                                                                                        {order_items[0].product.name}
-                                                                                    </span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{created_at}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={1}>
-                                                                                    <span className='text-black'>${order.order_items_total}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{order.order.status}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2} className='text-right'>
-                                                                                    {/* <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                        <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                    </a> */}
-                                                                                    {reorderLoading ?
-                                                                                        <button type="button" className='btn btn-primary'>Loading...</button>
-                                                                                        :
-                                                                                        <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
-                                                                                    }
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </Card.Body>
-                                                                    </Card>
-                                                                </Col>
-                                                            </Row>
-                                                        );
-                                                    })}
-                                                </>
-                                                :
-                                                <>
-                                                    <Card>
-                                                        <Card.Body>
-                                                            <p className="mb-0 text-center">No records found.</p>
-                                                        </Card.Body>
-                                                    </Card>
-                                                </>
-                                            }
-
-                                        </>
-                                        :
-                                        <>
-                                            <Card>
-                                                <Card.Body>
-                                                    <p className="mb-0 text-center">No records found.</p>
-                                                </Card.Body>
-                                            </Card>
-                                        </>
-                                    }
-                                </>
-                                :
-                                <>
-                                    <Card>
-                                        <Card.Body>
-                                            <p className="mb-0 text-center">No records found.</p>
-                                        </Card.Body>
-                                    </Card>
-                                </>
-                            }
-                        </>
-                        :
-                        null
                     }
 
                     {chatBox ?

@@ -32,6 +32,7 @@ const OrdersSeller = lazy(() => import("./Pages/OrdersSeller"));
 const Orders = lazy(() => import("./Pages/Orders"));
 const Messages = lazy(() => import("./Pages/Messages"));
 const RateReview = lazy(() => import("./Pages/RateReview"));
+const OrderTrackingDetails = lazy(() => import("./Pages/OrderTrackingDetails"));
 const OrderDetails = lazy(() => import("./Pages/OrderDetails"));
 
 // User
@@ -98,11 +99,7 @@ const App = () => {
             exact
             element={<EmailConfirmation />}
           />
-          <Route
-            path="/email-confirmed/:userCode"
-            exact
-            element={<EmailConfirmed />}
-          />
+          <Route path="/email-confirmed/:userCode" exact element={<EmailConfirmed />} />
           <Route path="/questionnaire" exact element={<Questionnaire />} />
           <Route path="/about" exact element={<About />} />
           <Route path="/elements/buttons" exact element={<Buttons />} />
@@ -200,9 +197,14 @@ const App = () => {
             element={<RateReview />}
           />
           <Route
-            path="/order-details/:orderId"
+            path="/order/:orderId/details"
             exact
             element={<OrderDetails />}
+          />
+          <Route
+            path="/order/:orderId/track"
+            exact
+            element={<OrderTrackingDetails />}
           />
           <Route
             path="/appointment-list/:designerId"

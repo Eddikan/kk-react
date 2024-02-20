@@ -37,10 +37,16 @@ const Header = () => {
   const [reloadCount, setReloadCount] = useState(0);
   const [designerId, setDesignerId] = useState('');
   const [userOrders, setUserOrders] = useState([]);
+  const [userOrdersLoading, setUserOrdersLoading] = useState(true);
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
   const [userType, setUserType] = useState('user');
   const userRef = useRef(null);
+  const bellRef = useRef(null);
+  const messageRef = useRef(null);
+  const wishlistRef = useRef(null);
+  const appointmentRef = useRef(null);
+  const orderRef = useRef(null);
   const [underConstructionShow, setUnderConstructionShow] = useState(false);
   const [modalHeading, setModalHeading] = useState();
   const currentUser = cookies.currentUser;
@@ -75,6 +81,16 @@ const Header = () => {
     if (userRef.current && !userRef.current.contains(event.target)) {
       setUserMenuOpen(false);
     }
+    if (bellRef.current && !bellRef.current.contains(event.target)) {
+      setUserBellOpen(false);
+    }
+    if (messageRef.current && !messageRef.current.contains(event.target)) {
+      setUserEnvelopOpen(false);
+    }
+    if (orderRef.current && !orderRef.current.contains(event.target)) {
+      setUserOrdersOpen(false);
+    }
+    
   };
 
   const toggleUserMenu = () => {
@@ -179,15 +195,18 @@ const Header = () => {
 
       getUserOrders()
         .then((response) => {
-          const userOrder = response.data;
+          const userOrder = response.data.data;
           if (userOrder) {
             setUserOrders(userOrder);
+            setUserOrdersLoading(false);
           } else {
-            toast.error('There has been an error getting the order, please try again!');
+            toast.error('There has been an error getting the orders, please try again!');
+            setUserOrdersLoading(false);
           }
         })
         .catch((error) => {
-          toast.error('There has been an error getting the order, please try again!');
+          toast.error('There has been an error getting the orders, please try again!');
+          setUserOrdersLoading(false);
         });
     }
 
@@ -217,7 +236,7 @@ const Header = () => {
                 {currentUser && currentUser != "" ?
                   <>
 
-                    <div className="user-dropdown nav-link" ref={userRef}>
+                    <div className="user-dropdown nav-link" ref={bellRef}>
                       {userImage ?
                         <div className="cursor-pointer nav-link">
                           <GoBell size={25} onClick={toggleBellMenu} />
@@ -230,7 +249,7 @@ const Header = () => {
                       {userBellOpen && (
 
                         <div className="action-box-bell user-menu-bell">
-                          <div className='d-flex p-3'>
+                          {/* <div className='d-flex p-3'>
                             <img src={NewOrder} className='new-order-image' />
                             <div className='ms-4 fs-14 body-text-bell'>You have a new order and instructions from Mike. Get Started
                               sed diam nonumy eirmod tempor invidunt ut labore et dolore
@@ -238,20 +257,20 @@ const Header = () => {
                               <div className='hours-bell mt-1'>1hr ago - 9:00 AM</div>
                             </div>
                           </div>
-                          <hr />
+                          <hr /> */}
 
                           <div className='d-flex p-3'>
                             <img src={NewAppointment} className='new-appointment-image' />
-                            <div className='ms-3 fs-14 body-text-bell'>"New buyer set an appointment. Go check it out"
+                            <div className='ms-3 fs-14 body-text-bell'>Congratulations! You can now start using Kouture Konect
                               <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
                             </div>
                           </div>
-                          <hr />
+                          {/* <hr /> */}
                         </div>
                       )}
                     </div>
 
-                    <div className="user-dropdown nav-link" ref={userRef}>
+                    <div className="user-dropdown nav-link" ref={messageRef}>
                       {userImage ?
                         <div className="cursor-pointer nav-link"><BsEnvelope size={25} onClick={toggleEnvelopMenu} /></div>
                         :
@@ -261,7 +280,7 @@ const Header = () => {
                         <>
 
                           <div className="action-box-envelop user-menu-envelop">
-                            <div className='d-flex'>
+                            {/* <div className='d-flex'>
                               <div><img src={User} className='user-placeholder-header' /></div>
                               <div className='fs-14 body-text-bell'>Jeans Lorem Pants
                                 <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et...</div>
@@ -277,13 +296,20 @@ const Header = () => {
                                 <div className='hours-bell mt-1'>1 day ago - 3:25 PM</div>
                               </div>
                             </div>
-                            <hr />
+                            <hr /> */}
+                            <div className='d-flex'>
+                              <div style={{maxWidth: 100}}><img src={User} className='user-placeholder-header' /></div>
+                              <div className='fs-14 body-text-bell'>Admin
+                                  <div className='mt-1'>Thank you for signing up to Kouture Konect!</div>
+                                  <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
+                              </div>
+                          </div>
 
 
-                            <div className='text-right' onClick={() => toggleUnderConstruction("View All Message")}>
+                            <div className='text-right' onClick={() => toggleUnderConstruction("Messages")}>
                               <a
                                 // href="/messages"
-                                className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All Message</a>
+                                className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All</a>
                             </div>
                           </div>
                         </>
@@ -305,7 +331,7 @@ const Header = () => {
                     </Nav.Link>
 
 
-                    <div className="user-dropdown nav-link" ref={userRef}>
+                    <div className="user-dropdown nav-link" ref={orderRef}>
                       {userImage ?
                         <div className="cursor-pointer nav-link" onClick={toggleOrdersMenu}>Orders</div>
                         :
@@ -341,7 +367,7 @@ const Header = () => {
                                             {truncateDescription(order.order_items[0].product.description, 10)}
                                           </div>
                                           <div className='mt-1'>
-                                            <span className='price-color-orders'>${order.order.total_amount}</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>{order.order.status}</span>
+                                            <span className='price-color-orders'>${order.total_amount}</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>{order.status}</span>
                                           </div>
                                         </div>
                                       </Col>

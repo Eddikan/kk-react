@@ -48,6 +48,7 @@ const OrdersSeller = (props) => {
     const [designerData, setDesignerData] = useState('');
     const [text, setText] = useState('');
     const [query, setQuery] = useState('');
+    const [underConstruction, setUnderConstruction] = useState(true);
 
     const [dateTo, setDateTo] = useState('');
     const [dateFrom, setDateFrom] = useState('');
@@ -188,7 +189,7 @@ const OrdersSeller = (props) => {
                                 <Row>
                                     <Col lg={12}>
                                         <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "all" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("all"); }}>All</span>
-                                        <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "active" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("active"); }}>Active</span>
+                                        <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "active" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("active"); }}>Pending</span>
                                         <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "processing" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("processing"); }}>Processing</span>
                                         <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "shipped" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("shipped"); }}>Shipped</span>
                                         <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "delivered" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("delivered"); }}>Delivered</span>
@@ -231,704 +232,720 @@ const OrdersSeller = (props) => {
                                     </Col>
                                 </Row>
 
-
-                                {currentTab == 'all' ?
+                                {underConstruction ?
                                     <>
-                                        {fabrics ?
+                                         <Card className='mt-2'>
+                                            <Card.Body className="text-center py-5">
+                                                <GoAlertFill size="60px" color="#000" className="mb-2" />
+                                                <p className="fs-20 text-black">Under Construction</p>
+                                                {/* <DatePicker onSelectedDate={handleDateChange} date={questionnaire1Data.target_date} /> */}
+                                            </Card.Body>
+                                        </Card>
+                                    </>
+                                    :
+                                    <>
+                                        {currentTab == 'all' ?
                                             <>
-                                                {fabrics.length > 0 ?
+                                                {fabrics ?
                                                     <>
-                                                        {fabrics.map((fabric) => {
+                                                        {fabrics.length > 0 ?
+                                                            <>
+                                                                {fabrics.map((fabric) => {
 
-                                                            if (fabric.image_urls?.[0]?.image_url) {
-                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
-                                                            } else {
-                                                                var fabricImage = PlaceholderImage;
-                                                            }
+                                                                    if (fabric.image_urls?.[0]?.image_url) {
+                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
+                                                                    } else {
+                                                                        var fabricImage = PlaceholderImage;
+                                                                    }
 
-                                                            const options = {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                            };
-                                                            const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
+                                                                    const options = {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                    };
+                                                                    const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
 
-                                                            return (
+                                                                    return (
 
-                                                                <Row>
-                                                                    <Col lg={12}>
-                                                                        <Card className='mt-2 border-card'>
-                                                                            <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                                <div>
-                                                                                    <div className='d-flex align-items-center user-image-order'>
-                                                                                        {fabric.user.image && (
-                                                                                            <div
-                                                                                                className='user-photo-order me-2'
-                                                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
-                                                                                            >
+                                                                        <Row>
+                                                                            <Col lg={12}>
+                                                                                <Card className='mt-2 border-card'>
+                                                                                    <Card.Header className='order-chat d-flex justify-content-between'>
+                                                                                        <div>
+                                                                                            <div className='d-flex align-items-center user-image-order'>
+                                                                                                {fabric.user.image && (
+                                                                                                    <div
+                                                                                                        className='user-photo-order me-2'
+                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                )}
+
+                                                                                                <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
+                                                                                                <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                                    onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
+                                                                                                />
                                                                                             </div>
-                                                                                        )}
-
-                                                                                        <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
-                                                                                        <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                            onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
-                                                                                        />
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div className='order-id'>
-                                                                                    Order ID: 11002345CT
-                                                                                </div>
-                                                                            </Card.Header>
-                                                                            <Card.Body className='bg-white card-body-border'>
-                                                                                <Row>
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>{today}</span>
-                                                                                    </Col>
-
-                                                                                    <Col lg={3} className='d-flex'>
-
-                                                                                        <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
                                                                                         </div>
 
-                                                                                        <span className='d-flex text-black ms-2'>
-                                                                                            {fabric.name}
-                                                                                        </span>
-                                                                                    </Col>
+                                                                                        <div className='order-id'>
+                                                                                            Order ID: 11002345CT
+                                                                                        </div>
+                                                                                    </Card.Header>
+                                                                                    <Card.Body className='bg-white card-body-border'>
+                                                                                        <Row>
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>{today}</span>
+                                                                                            </Col>
 
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>December 25, 2023</span>
-                                                                                    </Col>
+                                                                                            <Col lg={3} className='d-flex'>
 
-                                                                                    <Col lg={1}>
-                                                                                        <span className='text-black'>${fabric.price}</span>
-                                                                                    </Col>
+                                                                                                <div className="designs-grid-div fabric-image cursor-pointer"
+                                                                                                    style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
+                                                                                                </div>
 
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>{fabric.status}</span>
-                                                                                    </Col>
+                                                                                                <span className='d-flex text-black ms-2'>
+                                                                                                    {fabric.name}
+                                                                                                </span>
+                                                                                            </Col>
 
-                                                                                    <Col lg={2} className='text-center'>
-                                                                                        <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                            <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                        </a>
-                                                                                    </Col>
-                                                                                </Row>
-                                                                            </Card.Body>
-                                                                        </Card>
-                                                                    </Col>
-                                                                </Row>
-                                                            );
-                                                        })}
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>December 25, 2023</span>
+                                                                                            </Col>
 
+                                                                                            <Col lg={1}>
+                                                                                                <span className='text-black'>${fabric.price}</span>
+                                                                                            </Col>
+
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>{fabric.status}</span>
+                                                                                            </Col>
+
+                                                                                            <Col lg={2} className='text-center'>
+                                                                                                <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                                                                </a>
+                                                                                            </Col>
+                                                                                        </Row>
+                                                                                    </Card.Body>
+                                                                                </Card>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    );
+                                                                })}
+
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <div className='text-center fs-18 mt-5'>
+                                                                    No product found.
+                                                                </div>
+                                                            </>
+                                                        }
                                                     </>
                                                     :
                                                     <>
-                                                        <div className='text-center fs-18 mt-5'>
-                                                            No product found.
-                                                        </div>
+
                                                     </>
                                                 }
                                             </>
                                             :
-                                            <>
-
-                                            </>
+                                            null
                                         }
-                                    </>
-                                    :
-                                    null
-                                }
 
-                                {currentTab == 'active' ?
-                                    <>
-                                        {fabrics ?
+                                        {currentTab == 'active' ?
                                             <>
-                                                {fabrics.length > 0 ?
+                                                {fabrics ?
                                                     <>
-                                                        {fabrics.map((fabric) => {
+                                                        {fabrics.length > 0 ?
+                                                            <>
+                                                                {fabrics.map((fabric) => {
 
-                                                            if (fabric.image_urls?.[0]?.image_url) {
-                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
-                                                            } else {
-                                                                var fabricImage = PlaceholderImage;
-                                                            }
+                                                                    if (fabric.image_urls?.[0]?.image_url) {
+                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
+                                                                    } else {
+                                                                        var fabricImage = PlaceholderImage;
+                                                                    }
 
-                                                            const options = {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                            };
-                                                            const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
-                                                            const formattedDate = (new Date(fabric.consultation_date_time)).toLocaleString('en-US', {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                                hour: 'numeric',
-                                                                minute: 'numeric',
-                                                                timeZone: 'UTC',
-                                                            });
+                                                                    const options = {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                    };
+                                                                    const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
+                                                                    const formattedDate = (new Date(fabric.consultation_date_time)).toLocaleString('en-US', {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                        hour: 'numeric',
+                                                                        minute: 'numeric',
+                                                                        timeZone: 'UTC',
+                                                                    });
 
-                                                            return (
+                                                                    return (
 
-                                                                <Row>
-                                                                    <Col lg={12}>
-                                                                        <Card className='mt-2 border-card'>
-                                                                            <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                                <div>
-                                                                                    <div className='d-flex align-items-center user-image-order'>
-                                                                                        {fabric.user.image && (
-                                                                                            <div
-                                                                                                className='user-photo-order me-2'
-                                                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
-                                                                                            >
+                                                                        <Row>
+                                                                            <Col lg={12}>
+                                                                                <Card className='mt-2 border-card'>
+                                                                                    <Card.Header className='order-chat d-flex justify-content-between'>
+                                                                                        <div>
+                                                                                            <div className='d-flex align-items-center user-image-order'>
+                                                                                                {fabric.user.image && (
+                                                                                                    <div
+                                                                                                        className='user-photo-order me-2'
+                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                )}
+
+
+                                                                                                <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
+                                                                                                <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                                    onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
+                                                                                                />
                                                                                             </div>
-                                                                                        )}
-
-
-                                                                                        <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
-                                                                                        <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                            onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
-                                                                                        />
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div className='order-id'>
-                                                                                    Order ID: 11002345CT
-                                                                                </div>
-                                                                            </Card.Header>
-                                                                            <Card.Body className='bg-white card-body-border'>
-                                                                                <Row>
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>{today}</span>
-                                                                                    </Col>
-
-                                                                                    <Col lg={3} className='d-flex'>
-
-                                                                                        <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
                                                                                         </div>
 
-                                                                                        <span className='d-flex text-black ms-2'>
-                                                                                            {fabric.name}
-                                                                                        </span>
-                                                                                    </Col>
+                                                                                        <div className='order-id'>
+                                                                                            Order ID: 11002345CT
+                                                                                        </div>
+                                                                                    </Card.Header>
+                                                                                    <Card.Body className='bg-white card-body-border'>
+                                                                                        <Row>
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>{today}</span>
+                                                                                            </Col>
 
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>December 25, 2023</span>
-                                                                                    </Col>
+                                                                                            <Col lg={3} className='d-flex'>
 
-                                                                                    <Col lg={1}>
-                                                                                        <span className='text-black'>${fabric.price}</span>
-                                                                                    </Col>
+                                                                                                <div className="designs-grid-div fabric-image cursor-pointer"
+                                                                                                    style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
+                                                                                                </div>
 
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>{fabric.status}</span>
-                                                                                    </Col>
+                                                                                                <span className='d-flex text-black ms-2'>
+                                                                                                    {fabric.name}
+                                                                                                </span>
+                                                                                            </Col>
 
-                                                                                    <Col lg={2} className='text-center'>
-                                                                                        <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                            <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                        </a>
-                                                                                    </Col>
-                                                                                </Row>
-                                                                            </Card.Body>
-                                                                        </Card>
-                                                                    </Col>
-                                                                </Row>
-                                                            );
-                                                        })}
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>December 25, 2023</span>
+                                                                                            </Col>
 
+                                                                                            <Col lg={1}>
+                                                                                                <span className='text-black'>${fabric.price}</span>
+                                                                                            </Col>
+
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>{fabric.status}</span>
+                                                                                            </Col>
+
+                                                                                            <Col lg={2} className='text-center'>
+                                                                                                <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                                                                </a>
+                                                                                            </Col>
+                                                                                        </Row>
+                                                                                    </Card.Body>
+                                                                                </Card>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    );
+                                                                })}
+
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <div className='text-center fs-18 mt-5'>
+                                                                    No product found.
+                                                                </div>
+                                                            </>
+                                                        }
                                                     </>
                                                     :
                                                     <>
-                                                        <div className='text-center fs-18 mt-5'>
-                                                            No product found.
-                                                        </div>
+
                                                     </>
                                                 }
                                             </>
                                             :
-                                            <>
-
-                                            </>
+                                            null
                                         }
-                                    </>
-                                    :
-                                    null
-                                }
 
-                                {currentTab == 'processing' ?
-                                    <>
-                                        {fabrics ?
+                                        {currentTab == 'processing' ?
                                             <>
-                                                {fabrics.length > 0 ?
+                                                {fabrics ?
                                                     <>
-                                                        {fabrics.map((fabric) => {
+                                                        {fabrics.length > 0 ?
+                                                            <>
+                                                                {fabrics.map((fabric) => {
 
-                                                            if (fabric.image_urls?.[0]?.image_url) {
-                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
-                                                            } else {
-                                                                var fabricImage = PlaceholderImage;
-                                                            }
+                                                                    if (fabric.image_urls?.[0]?.image_url) {
+                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
+                                                                    } else {
+                                                                        var fabricImage = PlaceholderImage;
+                                                                    }
 
-                                                            const options = {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                            };
-                                                            const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
-                                                            const formattedDate = (new Date(fabric.consultation_date_time)).toLocaleString('en-US', {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                                hour: 'numeric',
-                                                                minute: 'numeric',
-                                                                timeZone: 'UTC',
-                                                            });
+                                                                    const options = {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                    };
+                                                                    const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
+                                                                    const formattedDate = (new Date(fabric.consultation_date_time)).toLocaleString('en-US', {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                        hour: 'numeric',
+                                                                        minute: 'numeric',
+                                                                        timeZone: 'UTC',
+                                                                    });
 
-                                                            return (
+                                                                    return (
 
-                                                                <Row>
-                                                                    <Col lg={12}>
-                                                                        <Card className='mt-2 border-card'>
-                                                                            <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                                <div>
-                                                                                    <div className='d-flex align-items-center user-image-order'>
-                                                                                        {fabric.user.image && (
-                                                                                            <div
-                                                                                                className='user-photo-order me-2'
-                                                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
-                                                                                            >
+                                                                        <Row>
+                                                                            <Col lg={12}>
+                                                                                <Card className='mt-2 border-card'>
+                                                                                    <Card.Header className='order-chat d-flex justify-content-between'>
+                                                                                        <div>
+                                                                                            <div className='d-flex align-items-center user-image-order'>
+                                                                                                {fabric.user.image && (
+                                                                                                    <div
+                                                                                                        className='user-photo-order me-2'
+                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                )}
+
+
+                                                                                                <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
+                                                                                                <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                                    onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
+                                                                                                />
                                                                                             </div>
-                                                                                        )}
-
-
-                                                                                        <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
-                                                                                        <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                            onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
-                                                                                        />
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div className='order-id'>
-                                                                                    Order ID: 11002345CT
-                                                                                </div>
-                                                                            </Card.Header>
-                                                                            <Card.Body className='bg-white card-body-border'>
-                                                                                <Row>
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>{today}</span>
-                                                                                    </Col>
-
-                                                                                    <Col lg={3} className='d-flex'>
-
-                                                                                        <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
                                                                                         </div>
 
-                                                                                        <span className='d-flex text-black ms-2'>
-                                                                                            {fabric.name}
-                                                                                        </span>
-                                                                                    </Col>
+                                                                                        <div className='order-id'>
+                                                                                            Order ID: 11002345CT
+                                                                                        </div>
+                                                                                    </Card.Header>
+                                                                                    <Card.Body className='bg-white card-body-border'>
+                                                                                        <Row>
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>{today}</span>
+                                                                                            </Col>
 
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>December 25, 2023</span>
-                                                                                    </Col>
+                                                                                            <Col lg={3} className='d-flex'>
 
-                                                                                    <Col lg={1}>
-                                                                                        <span className='text-black'>${fabric.price}</span>
-                                                                                    </Col>
+                                                                                                <div className="designs-grid-div fabric-image cursor-pointer"
+                                                                                                    style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
+                                                                                                </div>
 
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>{fabric.status}</span>
-                                                                                    </Col>
+                                                                                                <span className='d-flex text-black ms-2'>
+                                                                                                    {fabric.name}
+                                                                                                </span>
+                                                                                            </Col>
 
-                                                                                    <Col lg={2} className='text-center'>
-                                                                                        <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                            <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                        </a>
-                                                                                    </Col>
-                                                                                </Row>
-                                                                            </Card.Body>
-                                                                        </Card>
-                                                                    </Col>
-                                                                </Row>
-                                                            );
-                                                        })}
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>December 25, 2023</span>
+                                                                                            </Col>
 
+                                                                                            <Col lg={1}>
+                                                                                                <span className='text-black'>${fabric.price}</span>
+                                                                                            </Col>
+
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>{fabric.status}</span>
+                                                                                            </Col>
+
+                                                                                            <Col lg={2} className='text-center'>
+                                                                                                <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                                                                </a>
+                                                                                            </Col>
+                                                                                        </Row>
+                                                                                    </Card.Body>
+                                                                                </Card>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    );
+                                                                })}
+
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <div className='text-center fs-18 mt-5'>
+                                                                    No product found.
+                                                                </div>
+                                                            </>
+                                                        }
                                                     </>
                                                     :
                                                     <>
-                                                        <div className='text-center fs-18 mt-5'>
-                                                            No product found.
-                                                        </div>
+
                                                     </>
                                                 }
                                             </>
                                             :
-                                            <>
-
-                                            </>
+                                            null
                                         }
-                                    </>
-                                    :
-                                    null
-                                }
 
-                                {currentTab == 'shipped' ?
-                                    <>
-                                        {fabrics ?
+                                        {currentTab == 'shipped' ?
                                             <>
-                                                {fabrics.length > 0 ?
+                                                {fabrics ?
                                                     <>
-                                                        {fabrics.map((fabric) => {
+                                                        {fabrics.length > 0 ?
+                                                            <>
+                                                                {fabrics.map((fabric) => {
 
-                                                            if (fabric.image_urls?.[0]?.image_url) {
-                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
-                                                            } else {
-                                                                var fabricImage = PlaceholderImage;
-                                                            }
+                                                                    if (fabric.image_urls?.[0]?.image_url) {
+                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
+                                                                    } else {
+                                                                        var fabricImage = PlaceholderImage;
+                                                                    }
 
-                                                            const options = {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                            };
-                                                            const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
-                                                            const formattedDate = (new Date(fabric.consultation_date_time)).toLocaleString('en-US', {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                                hour: 'numeric',
-                                                                minute: 'numeric',
-                                                                timeZone: 'UTC',
-                                                            });
+                                                                    const options = {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                    };
+                                                                    const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
+                                                                    const formattedDate = (new Date(fabric.consultation_date_time)).toLocaleString('en-US', {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                        hour: 'numeric',
+                                                                        minute: 'numeric',
+                                                                        timeZone: 'UTC',
+                                                                    });
 
-                                                            return (
+                                                                    return (
 
-                                                                <Row>
-                                                                    <Col lg={12}>
-                                                                        <Card className='mt-2 border-card'>
-                                                                            <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                                <div>
-                                                                                    <div className='d-flex align-items-center user-image-order'>
-                                                                                        {fabric.user.image && (
-                                                                                            <div
-                                                                                                className='user-photo-order me-2'
-                                                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
-                                                                                            >
+                                                                        <Row>
+                                                                            <Col lg={12}>
+                                                                                <Card className='mt-2 border-card'>
+                                                                                    <Card.Header className='order-chat d-flex justify-content-between'>
+                                                                                        <div>
+                                                                                            <div className='d-flex align-items-center user-image-order'>
+                                                                                                {fabric.user.image && (
+                                                                                                    <div
+                                                                                                        className='user-photo-order me-2'
+                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                )}
+
+
+                                                                                                <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
+                                                                                                <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                                    onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
+                                                                                                />
                                                                                             </div>
-                                                                                        )}
-
-
-                                                                                        <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
-                                                                                        <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                            onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
-                                                                                        />
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div className='order-id'>
-                                                                                    Order ID: 11002345CT
-                                                                                </div>
-                                                                            </Card.Header>
-                                                                            <Card.Body className='bg-white card-body-border'>
-                                                                                <Row>
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>{today}</span>
-                                                                                    </Col>
-
-                                                                                    <Col lg={3} className='d-flex'>
-
-                                                                                        <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
                                                                                         </div>
 
-                                                                                        <span className='d-flex text-black ms-2'>
-                                                                                            {fabric.name}
-                                                                                        </span>
-                                                                                    </Col>
+                                                                                        <div className='order-id'>
+                                                                                            Order ID: 11002345CT
+                                                                                        </div>
+                                                                                    </Card.Header>
+                                                                                    <Card.Body className='bg-white card-body-border'>
+                                                                                        <Row>
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>{today}</span>
+                                                                                            </Col>
 
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>December 25, 2023</span>
-                                                                                    </Col>
+                                                                                            <Col lg={3} className='d-flex'>
 
-                                                                                    <Col lg={1}>
-                                                                                        <span className='text-black'>${fabric.price}</span>
-                                                                                    </Col>
+                                                                                                <div className="designs-grid-div fabric-image cursor-pointer"
+                                                                                                    style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
+                                                                                                </div>
 
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>{fabric.status}</span>
-                                                                                    </Col>
+                                                                                                <span className='d-flex text-black ms-2'>
+                                                                                                    {fabric.name}
+                                                                                                </span>
+                                                                                            </Col>
 
-                                                                                    <Col lg={2} className='text-center'>
-                                                                                        <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                            <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                        </a>
-                                                                                    </Col>
-                                                                                </Row>
-                                                                            </Card.Body>
-                                                                        </Card>
-                                                                    </Col>
-                                                                </Row>
-                                                            );
-                                                        })}
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>December 25, 2023</span>
+                                                                                            </Col>
 
+                                                                                            <Col lg={1}>
+                                                                                                <span className='text-black'>${fabric.price}</span>
+                                                                                            </Col>
+
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>{fabric.status}</span>
+                                                                                            </Col>
+
+                                                                                            <Col lg={2} className='text-center'>
+                                                                                                <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                                                                </a>
+                                                                                            </Col>
+                                                                                        </Row>
+                                                                                    </Card.Body>
+                                                                                </Card>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    );
+                                                                })}
+
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <div className='text-center fs-18 mt-5'>
+                                                                    No product found.
+                                                                </div>
+                                                            </>
+                                                        }
                                                     </>
                                                     :
                                                     <>
-                                                        <div className='text-center fs-18 mt-5'>
-                                                            No product found.
-                                                        </div>
+
                                                     </>
                                                 }
                                             </>
                                             :
-                                            <>
-
-                                            </>
+                                            null
                                         }
-                                    </>
-                                    :
-                                    null
-                                }
 
-                                {currentTab == 'delivered' ?
-                                    <>
-                                        {fabrics ?
+                                        {currentTab == 'delivered' ?
                                             <>
-                                                {fabrics.length > 0 ?
+                                                {fabrics ?
                                                     <>
-                                                        {fabrics.map((fabric) => {
+                                                        {fabrics.length > 0 ?
+                                                            <>
+                                                                {fabrics.map((fabric) => {
 
-                                                            if (fabric.image_urls?.[0]?.image_url) {
-                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
-                                                            } else {
-                                                                var fabricImage = PlaceholderImage;
-                                                            }
+                                                                    if (fabric.image_urls?.[0]?.image_url) {
+                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
+                                                                    } else {
+                                                                        var fabricImage = PlaceholderImage;
+                                                                    }
 
-                                                            const options = {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                            };
-                                                            const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
-                                                            const formattedDate = (new Date(fabric.consultation_date_time)).toLocaleString('en-US', {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                                hour: 'numeric',
-                                                                minute: 'numeric',
-                                                                timeZone: 'UTC',
-                                                            });
+                                                                    const options = {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                    };
+                                                                    const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
+                                                                    const formattedDate = (new Date(fabric.consultation_date_time)).toLocaleString('en-US', {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                        hour: 'numeric',
+                                                                        minute: 'numeric',
+                                                                        timeZone: 'UTC',
+                                                                    });
 
-                                                            return (
+                                                                    return (
 
-                                                                <Row>
-                                                                    <Col lg={12}>
-                                                                        <Card className='mt-2 border-card'>
-                                                                            <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                                <div>
-                                                                                    <div className='d-flex align-items-center user-image-order'>
-                                                                                        {fabric.user.image && (
-                                                                                            <div
-                                                                                                className='user-photo-order me-2'
-                                                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
-                                                                                            >
+                                                                        <Row>
+                                                                            <Col lg={12}>
+                                                                                <Card className='mt-2 border-card'>
+                                                                                    <Card.Header className='order-chat d-flex justify-content-between'>
+                                                                                        <div>
+                                                                                            <div className='d-flex align-items-center user-image-order'>
+                                                                                                {fabric.user.image && (
+                                                                                                    <div
+                                                                                                        className='user-photo-order me-2'
+                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                )}
+
+
+                                                                                                <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
+                                                                                                <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                                    onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
+                                                                                                />
                                                                                             </div>
-                                                                                        )}
-
-
-                                                                                        <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
-                                                                                        <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                            onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
-                                                                                        />
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div className='order-id'>
-                                                                                    Order ID: 11002345CT
-                                                                                </div>
-                                                                            </Card.Header>
-                                                                            <Card.Body className='bg-white card-body-border'>
-                                                                                <Row>
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>{today}</span>
-                                                                                    </Col>
-
-                                                                                    <Col lg={3} className='d-flex'>
-
-                                                                                        <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
                                                                                         </div>
 
-                                                                                        <span className='d-flex text-black ms-2'>
-                                                                                            {fabric.name}
-                                                                                        </span>
-                                                                                    </Col>
+                                                                                        <div className='order-id'>
+                                                                                            Order ID: 11002345CT
+                                                                                        </div>
+                                                                                    </Card.Header>
+                                                                                    <Card.Body className='bg-white card-body-border'>
+                                                                                        <Row>
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>{today}</span>
+                                                                                            </Col>
 
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>December 25, 2023</span>
-                                                                                    </Col>
+                                                                                            <Col lg={3} className='d-flex'>
 
-                                                                                    <Col lg={1}>
-                                                                                        <span className='text-black'>${fabric.price}</span>
-                                                                                    </Col>
+                                                                                                <div className="designs-grid-div fabric-image cursor-pointer"
+                                                                                                    style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
+                                                                                                </div>
 
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>{fabric.status}</span>
-                                                                                    </Col>
+                                                                                                <span className='d-flex text-black ms-2'>
+                                                                                                    {fabric.name}
+                                                                                                </span>
+                                                                                            </Col>
 
-                                                                                    <Col lg={2} className='text-center'>
-                                                                                        <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                            <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                        </a>
-                                                                                    </Col>
-                                                                                </Row>
-                                                                            </Card.Body>
-                                                                        </Card>
-                                                                    </Col>
-                                                                </Row>
-                                                            );
-                                                        })}
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>December 25, 2023</span>
+                                                                                            </Col>
 
+                                                                                            <Col lg={1}>
+                                                                                                <span className='text-black'>${fabric.price}</span>
+                                                                                            </Col>
+
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>{fabric.status}</span>
+                                                                                            </Col>
+
+                                                                                            <Col lg={2} className='text-center'>
+                                                                                                <a href={`/order-details/${fabric.user.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                                                                </a>
+                                                                                            </Col>
+                                                                                        </Row>
+                                                                                    </Card.Body>
+                                                                                </Card>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    );
+                                                                })}
+
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <div className='text-center fs-18 mt-5'>
+                                                                    No product found.
+                                                                </div>
+                                                            </>
+                                                        }
                                                     </>
                                                     :
                                                     <>
-                                                        <div className='text-center fs-18 mt-5'>
-                                                            No product found.
-                                                        </div>
+
                                                     </>
                                                 }
                                             </>
                                             :
-                                            <>
-
-                                            </>
+                                            null
                                         }
-                                    </>
-                                    :
-                                    null
-                                }
 
-                                {currentTab == 'review' ?
-                                    <>
-                                        {fabrics ?
+                                        {currentTab == 'review' ?
                                             <>
-                                                {fabrics.length > 0 ?
+                                                {fabrics ?
                                                     <>
-                                                        {fabrics.map((fabric) => {
+                                                        {fabrics.length > 0 ?
+                                                            <>
+                                                                {fabrics.map((fabric) => {
 
-                                                            if (fabric.image_urls?.[0]?.image_url) {
-                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
-                                                            } else {
-                                                                var fabricImage = PlaceholderImage;
-                                                            }
+                                                                    if (fabric.image_urls?.[0]?.image_url) {
+                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
+                                                                    } else {
+                                                                        var fabricImage = PlaceholderImage;
+                                                                    }
 
-                                                            const options = {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                            };
-                                                            const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
-                                                            const formattedDate = (new Date(fabric.consultation_date_time)).toLocaleString('en-US', {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                                hour: 'numeric',
-                                                                minute: 'numeric',
-                                                                timeZone: 'UTC',
-                                                            });
+                                                                    const options = {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                    };
+                                                                    const today = (new Date(fabric.created_at)).toLocaleDateString('en-ES', options);
+                                                                    const formattedDate = (new Date(fabric.consultation_date_time)).toLocaleString('en-US', {
+                                                                        year: 'numeric',
+                                                                        month: 'long',
+                                                                        day: 'numeric',
+                                                                        hour: 'numeric',
+                                                                        minute: 'numeric',
+                                                                        timeZone: 'UTC',
+                                                                    });
 
-                                                            return (
+                                                                    return (
 
-                                                                <Row>
-                                                                    <Col lg={12}>
-                                                                        <Card className='mt-2 border-card'>
-                                                                            <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                                <div>
-                                                                                    <div className='d-flex align-items-center user-image-order'>
-                                                                                        {fabric.user.image && (
-                                                                                            <div
-                                                                                                className='user-photo-order me-2'
-                                                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
-                                                                                            >
+                                                                        <Row>
+                                                                            <Col lg={12}>
+                                                                                <Card className='mt-2 border-card'>
+                                                                                    <Card.Header className='order-chat d-flex justify-content-between'>
+                                                                                        <div>
+                                                                                            <div className='d-flex align-items-center user-image-order'>
+                                                                                                {fabric.user.image && (
+                                                                                                    <div
+                                                                                                        className='user-photo-order me-2'
+                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                )}
+
+
+                                                                                                <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
+                                                                                                <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                                    onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
+                                                                                                />
                                                                                             </div>
-                                                                                        )}
-
-
-                                                                                        <div className='name-of-designer'> {fabric.user.first_name}  {fabric.user.last_name}</div>
-                                                                                        <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                            onClick={function () { chatBoxModal(fabric.user.first_name, fabric.user.last_name, fabric.user.image) }}
-                                                                                        />
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div className='order-id'>
-                                                                                    Order ID: 11002345CT
-                                                                                </div>
-                                                                            </Card.Header>
-                                                                            <Card.Body className='bg-white card-body-border'>
-                                                                                <Row>
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>{today}</span>
-                                                                                    </Col>
-
-                                                                                    <Col lg={3} className='d-flex'>
-
-                                                                                        <div className="designs-grid-div fabric-image cursor-pointer"
-                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
                                                                                         </div>
 
-                                                                                        <span className='d-flex text-black ms-2'>
-                                                                                            {fabric.name}
-                                                                                        </span>
-                                                                                    </Col>
+                                                                                        <div className='order-id'>
+                                                                                            Order ID: 11002345CT
+                                                                                        </div>
+                                                                                    </Card.Header>
+                                                                                    <Card.Body className='bg-white card-body-border'>
+                                                                                        <Row>
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>{today}</span>
+                                                                                            </Col>
 
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>December 25, 2023</span>
-                                                                                    </Col>
+                                                                                            <Col lg={3} className='d-flex'>
 
-                                                                                    <Col lg={1}>
-                                                                                        <span className='text-black'>${fabric.price}</span>
-                                                                                    </Col>
+                                                                                                <div className="designs-grid-div fabric-image cursor-pointer"
+                                                                                                    style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '55px' }}>
+                                                                                                </div>
 
-                                                                                    <Col lg={2}>
-                                                                                        <span className='text-black'>{fabric.status}</span>
-                                                                                    </Col>
+                                                                                                <span className='d-flex text-black ms-2'>
+                                                                                                    {fabric.name}
+                                                                                                </span>
+                                                                                            </Col>
 
-                                                                                    <Col lg={2} className='text-center'>
-                                                                                        <a href={`/product/${fabric.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                            <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Review</span>
-                                                                                        </a>
-                                                                                    </Col>
-                                                                                </Row>
-                                                                            </Card.Body>
-                                                                        </Card>
-                                                                    </Col>
-                                                                </Row>
-                                                            );
-                                                        })}
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>December 25, 2023</span>
+                                                                                            </Col>
 
+                                                                                            <Col lg={1}>
+                                                                                                <span className='text-black'>${fabric.price}</span>
+                                                                                            </Col>
+
+                                                                                            <Col lg={2}>
+                                                                                                <span className='text-black'>{fabric.status}</span>
+                                                                                            </Col>
+
+                                                                                            <Col lg={2} className='text-center'>
+                                                                                                <a href={`/product/${fabric.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Review</span>
+                                                                                                </a>
+                                                                                            </Col>
+                                                                                        </Row>
+                                                                                    </Card.Body>
+                                                                                </Card>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    );
+                                                                })}
+
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <div className='text-center fs-18 mt-5'>
+                                                                    No product found.
+                                                                </div>
+                                                            </>
+                                                        }
                                                     </>
                                                     :
                                                     <>
-                                                        <div className='text-center fs-18 mt-5'>
-                                                            No product found.
-                                                        </div>
                                                     </>
                                                 }
                                             </>
                                             :
-                                            <>
-                                            </>
+                                            null
                                         }
                                     </>
-                                    :
-                                    null
                                 }
+
+
+                                
 
                                 {chatBox ?
                                     <>

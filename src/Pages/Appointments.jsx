@@ -144,7 +144,7 @@ const Appointments = (props) => {
                                                     <Col lg={12}>
                                                         <Card className='mt-2'>
                                                             <Card.Body className='bg-white'>
-                                                                <Row>
+                                                                <Row className="align-items-center">
                                                                     <Col lg={4}>
                                                                         <div className='d-flex appointment-user-image'>
                                                                             {appointment.image && (

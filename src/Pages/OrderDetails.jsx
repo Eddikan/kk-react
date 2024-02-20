@@ -1,62 +1,100 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
-import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
+import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import '../Assets/styles/DesignerCalendar/style.css'
-import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import '../Assets/styles/Order/style.css';
 import User from '../Assets/images/user.png';
-import { GoAlertFill } from 'react-icons/go';
+import { useCookies } from 'react-cookie';
 import { AiFillMessage } from "react-icons/ai";
-import { CiSaveDown2 } from "react-icons/ci";
-import { GiMagnifyingGlass } from "react-icons/gi";
-import { PiCircleDashedLight, PiTruckThin } from "react-icons/pi";
-import { PiStarLight } from "react-icons/pi";
-import { PiNotepadLight } from "react-icons/pi";
-import { TfiLocationPin } from "react-icons/tfi";
-import { BsTelephone } from "react-icons/bs";
-import { IoIosAttach } from "react-icons/io";
-import { VscSend } from "react-icons/vsc";
+import { IoEyeOutline } from "react-icons/io5";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { GoAlertFill } from 'react-icons/go';
 import { IoCloseOutline } from "react-icons/io5";
-import '../Assets/styles/OrderDetails/style.css';
-import InputEmoji from 'react-input-emoji';
-import axios from "axios";
-import toast from 'react-hot-toast';
+import { IoMdStarOutline, IoIosAttach } from "react-icons/io";
+import { CgTrack } from "react-icons/cg";
 
-const OrderDetails = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+import { VscSend } from "react-icons/vsc";
+import InputEmoji from 'react-input-emoji'
+import PlaceholderImage from '../Assets/images/placeholders/image.png';
+import toast from 'react-hot-toast';
+import axios from "axios";
+
+
+const initialCheckOut = {
+    card_name: '',
+    card_number: '',
+    date: ''
+};
+
+const Orders = (props) => {
+    const navigate = useNavigate();
     const { orderId } = useParams();
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'token', 'userRole']);
+    const token = cookies.token;
+    const currentUser = cookies.currentUser;
     const [reloadCount, setReloadCount] = useState(0);
-    const [chatBox, setChatBox] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
-    const [user, setUser] = useState('');
-    const [text, setText] = useState('');
-    const [order, setOrder] = useState('');
 
-    const chatBoxModal = () => {
-        setChatBox(true);
-    }
+    const [chatBox, setChatBox] = useState(false);
+    const [fabrics, setFabrics] = useState('');
+    const [orders, setOrders] = useState('');
+    const [order, setOrder] = useState('');
+    const [user, setUser] = useState('');
+    const [orderLoading, setOrderLoading] = useState(true);
+    const [designerName, setDesignerName] = useState('');
+    const [text, setText] = useState('');
+    const [reorderLoading, setReorderLoading] = useState(false);
+    const [orderStatus, setOrderStatus] = useState('All');
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
     }
 
-    const getAddCarts = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
-    };
-
-    // const getUser = async () => {
-    //     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + designerId);
-    // };
+    function handleOnEnter(text) {
+        console.log('enter', text)
+    }
 
     const getOrder = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId);
     };
 
-    function handleOnEnter(text) {
-        console.log('enter', text)
+    const chatBoxModal = (first_name, last_name, image) => {
+        setChatBox(true);
+
+        setDesignerName({
+            first_name: first_name || '-',
+            last_name: last_name || '-',
+            image: image || '-'
+        })
+    };
+
+
+
+    async function reorderProducts(e) {
+        // setReorderLoading(true);
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: e, user_id: currentUser }).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                const data = response.data.data;
+                navigate("/cart");
+            } else {
+                const errors = response.data.errors;
+                errors.map((error, index) => {
+                    toast.error(error);
+                    return null; // React requires a return value, so we return null here
+                });
+
+            }
+            // setReorderLoading(false);
+        }).catch((error) => {
+            // setReorderLoading(false);
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+
     }
 
     useEffect(() => {
@@ -64,25 +102,30 @@ const OrderDetails = (props) => {
     }, []);
 
     useEffect(() => {
+        setOrderLoading(true);
         getOrder()
             .then((response) => {
-                const selectedOrder = response.data.data;
+                const selectedOrder = response.data;
                 if (selectedOrder) {
-                    setOrder(selectedOrder);
-                    console.log(selectedOrder);
+                    setOrders(selectedOrder);
+                    setOrder(selectedOrder[0].order);
+                    setUser(selectedOrder[0].user);
+                    setOrderLoading(false);
                 } else {
-                    toast.error('There has been an error getting the user, please try again!');
+                    toast.error('There has been an error getting the orders');
+                    setOrderLoading(false);
                 }
             })
             .catch((error) => {
-                toast.error('There has been an error getting the user, please try again!');
+                toast.error('There has been an error getting the orders');
+                setOrderLoading(false);
             });
     }, [reloadCount]);
 
     return (
-        <LayoutNoFooter>
-            <section id="details-order">
-                <Container>
+        <LayoutNoFooter className='bg-white'>
+            <section className='bg-white'>
+                <Container className='container-order position-relative'>
                     <Row>
                         <Col lg={12}>
                             <Row className="pb-4">
@@ -93,170 +136,270 @@ const OrderDetails = (props) => {
                                     <GoBack fallBack="/#" />
                                 </Col>
                             </Row>
+                            <h4 className="fs-20 mb-3"><strong>Order #{orderId}</strong></h4>
                         </Col>
                     </Row>
+                    <Row>
+                        <Col lg={8}>
+                            <Row className="mb-2">
+                                <Col lg={12}>
+                                    <Card>
+                                        <Card.Body className='bg-light'>
+                                            <Row>
+                                                <Col lg={4}>
+                                                    <span className='fw-500 text-black'>Item</span>
+                                                </Col>
 
-                    <Row className='left-right-padding'>
-                        <Col>
-                            <div className="base-timeline">
+                                                <Col lg={3} className="text-right">
+                                                    <span className='fw-500 text-black'>Price</span>
+                                                </Col>
 
-                                <PiNotepadLight className='order-placed-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data">
-                                    <div className="order fw-600">Order Placed</div>
-                                    <div className="date-details fs-14">December 13, 2023</div>
-                                </div>
+                                                <Col lg={2} className="text-right">
+                                                    <span className='fw-500 text-black'>Quantity</span>
+                                                </Col>
 
-                                <PiCircleDashedLight className='processing-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data timeline-circle--active">
-                                    <div className="processing fw-600">Processing</div>
-                                    <div className="date-details fs-14">December 13, 2023</div>
-                                </div>
+                                                <Col lg={3} className="text-right">
+                                                    <span className='fw-500 text-black'></span>
+                                                </Col>
+                                            </Row>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                            {orderLoading ?
+                                <>
+                                    <Card className="mt-2">
+                                        <Card.Body>
+                                            <p className="mb-0 text-center">Loading...</p>
+                                        </Card.Body>
+                                    </Card>
+                                </>
+                                :
+                                <>
+                                    {orders ?
+                                        <>
+                                            {orders.length > 0 ?
+                                                <>
+                                                    {orders.map((order) => {
+                                                        var order_items = order.order_items;
+                                                        var order_product = order_items[0].product;
+                                                        if (order_product.image_urls) {
+                                                            var image_urls = JSON.parse(order_product.image_urls);
+                                                            var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                        } else {
+                                                            var cartItemImage = PlaceholderImage;
+                                                        }
 
-                                <PiTruckThin className='truck-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data">
-                                    <div className="order-shipped fw-600">Order Shipped</div>
-                                    <div className="date-details fs-14">December 25, 2023</div>
-                                </div>
+                                                        const options = {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: 'numeric',
+                                                        };
+                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
 
-                                <CiSaveDown2 className='delivered-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data">
-                                    <div className="order-received fw-600">Delivered</div>
-                                    <div className="date-details fs-14">December 25, 2023</div>
-                                </div>
+                                                        return (
+                                                            <Row className="mb-2">
+                                                                <Col lg={12}>
+                                                                    <Card className='mt-2 border-card'>
+                                                                        <Card.Header className='order-chat d-flex justify-content-between'>
+                                                                            <div>
+                                                                                <div className='d-flex align-items-center user-image-order'>
+                                                                                    {order.user.image && (
+                                                                                        <div
+                                                                                            className='user-photo-order me-2'
+                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${order.user.image})` }}
+                                                                                        >
+                                                                                        </div>
+                                                                                    )}
+                                                                                    <div className=''><strong> {order.user.first_name}  {order.user.last_name} </strong></div>
+                                                                                    {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
+                                                                                onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
+                                                                            /> */}
+                                                                                </div>
+                                                                            </div>
+                                                                        </Card.Header>
+                                                                        <Card.Body className='bg-white card-body-border'>
+                                                                            {order_items && order_items.length > 0 ?
+                                                                                <>
+                                                                                    {order_items.map((order_item , index) => {
+                                                                                        var order_item_product = order_item.product;
+                                                                                        if (order_item_product.image_urls) {
+                                                                                            var image_urls = JSON.parse(order_item_product.image_urls);
+                                                                                            var orderItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                                                        } else {
+                                                                                            var orderItemImage = PlaceholderImage;
+                                                                                        }
 
-                                <PiStarLight className='for-review-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data">
-                                    <div className="order-complete fw-600">For Review</div>
-                                    <div className="date-details fs-14">December 25, 2023</div>
-                                </div>
+                                                                                        return (
+                                                                                            <>
+                                                                                                <Row className='align-items-center'>
+                                                                                                    <Col lg={4} className='d-flex align-items-center'>
+                                                                                                        <div className="designs-grid-div fabric-image cursor-pointer"
+                                                                                                            style={{ backgroundImage: "url(" + orderItemImage + ")", minHeight: '55px' }}>
+                                                                                                        </div>
 
-                                <PiStarLight className='for-review-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data timeline-circle--active">
-                                    <div className="processing fw-600">Completed</div>
-                                    <div className="date-details fs-14">December 26, 2023</div>
-                                </div>
-                            </div>
+                                                                                                        <span className='d-flex text-black ms-3'>
+                                                                                                            {order_item_product.name}
+                                                                                                        </span>
+                                                                                                    </Col>
+
+                                                                                                    <Col lg={3} className="text-right">
+                                                                                                        <span className='text-black'>${order_item_product.price}</span>
+                                                                                                    </Col>
+
+                                                                                                    <Col lg={2} className="text-right">
+                                                                                                        <span className='text-black'>{order_item.quantity}</span>
+                                                                                                    </Col>
+
+                                                                                                    <Col lg={3}>
+                                                                                                        <a href={`/product/${order_item_product.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                                            <p className='text-gold mb-1'><IoEyeOutline className='me-2' size={20} />View Product</p>
+                                                                                                        </a>
+                                                                                                        <a href={`/order/${order_item.id}/track`} className="cursor-pointer check-datails-decoration">
+                                                                                                            <p className='text-black mb-0'><CgTrack className='me-2' size={20} />Track</p>
+                                                                                                        </a>
+                                                                                                        {/* {reorderLoading ?
+                                                                                                            <button type="button" className='btn btn-primary'>Loading...</button>
+                                                                                                            :
+                                                                                                            <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
+                                                                                                        } */}
+                                                                                                    </Col>
+                                                                                                </Row>
+                                                                                                {order_items.length > 1 && index + 1 < order_items.length ?
+                                                                                                    <hr />
+                                                                                                    :
+                                                                                                    null
+                                                                                                }
+                                                                                        </>
+                                                                                        );
+                                                                                    })}
+                                                                                </>
+                                                                                :
+                                                                                <p className="text-center mb-0">No records found.</p>
+                                                                            }
+                                                                        </Card.Body>
+                                                                    </Card>
+                                                                </Col>
+                                                            </Row>
+                                                        );
+                                                    })}
+
+                                                </>
+                                                :
+                                                <>
+                                                    <Card className='mt=2'>
+                                                        <Card.Body>
+                                                            <p className="mb-0 text-center">No records found.</p>
+                                                        </Card.Body>
+                                                    </Card>
+                                                </>
+                                            }
+                                        </>
+                                        :
+                                        <>
+                                            <Card className='mt-2'>
+                                                <Card.Body>
+                                                    <p className="mb-0 text-center">No records found.</p>
+                                                </Card.Body>
+                                            </Card>
+                                        </>
+                                    }
+                                </>
+                            }
+                        </Col>
+                        <Col lg={4}>
+                            <Row>
+                                <Col lg={12}>
+                                    <Card className="mb-3">
+                                        <Card.Body className='bg-light'>
+                                            <Row>
+                                                <Col lg={12}>
+                                                    <span className='fw-500 text-black'>Billing Address</span>
+                                                </Col>
+                                            </Row>
+                                        </Card.Body>
+                                    </Card>
+                                    <Card className='mb-3'>
+                                        <Card.Body>
+                                            <p className="mb-2"><strong>Payment Status: </strong>{order.payment_status ?? 'Pending'}</p>
+                                            {order.first_name && order.last_name ?
+                                                <>
+                                                    <p className="mb-1">{order?.first_name} {order?.last_name}</p>
+                                                </>
+                                                :
+                                                <>
+                                                    <p className="mb-1">{user?.first_name} {user?.last_name}</p>
+                                                </>
+                                            }
+                                            {order.address_line_1 && order.city && order.province && order.country && order.postal_code ?
+                                                <>
+                                                    <p className="mb-0">{order?.address_line_1}</p>
+                                                    <p className="mb-0">{order.city}, {order.province} {order.postal_code}</p>
+                                                    <p className="mb-0">{order.country}</p>
+                                                </>
+                                                :
+                                                <>
+                                                    <p className="mb-0">{user?.address_line_1}</p>
+                                                    <p className="mb-0">{user.city}, {user.province} {user.postal_code}</p>
+                                                    <p className="mb-0">{user.country}</p>
+                                                </>
+                                            }
+                                            
+                                        </Card.Body>
+                                    </Card>
+                                    <Card className="mb-3">
+                                        <Card.Body className='bg-light'>
+                                            <Row>
+                                                <Col lg={12}>
+                                                    <span className='fw-500 text-black'>Shipping Address</span>
+                                                </Col>
+                                            </Row>
+                                        </Card.Body>
+                                    </Card>
+                                    <Card className='mb-3'>
+                                        <Card.Body>
+                                            <p className="mb-2"><strong>Fulfillment Status: </strong>{order.status ?? 'Pending'}</p>
+                                            {order.delivery_first_name && order.delivery_last_name ?
+                                                <>
+                                                    <p className="mb-1">{order?.delivery_first_name} {order?.delivery_last_name}</p>
+                                                </>
+                                                :
+                                                <>
+                                                    <p className="mb-1">{user?.first_name} {user?.last_name}</p>
+                                                </>
+                                            }
+                                            {order.delivery_address_line_1 && order.delivery_city && order.delivery_province && order.delivery_country && order.delivery_postal_code ?
+                                                <>
+                                                    <p className="mb-0">{order?.delivery_address_line_1}</p>
+                                                    <p className="mb-0">{order.delivery_city}, {order.delivery_province} {order.delivery_postal_code}</p>
+                                                    <p className="mb-0">{order.delivery_country}</p>
+                                                </>
+                                                :
+                                                <>
+                                                    <p className="mb-0">{user?.address_line_1}</p>
+                                                    <p className="mb-0">{user.city}, {user.province} {user.postal_code}</p>
+                                                    <p className="mb-0">{user.country}</p>
+                                                </>
+                                            }
+                                            
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
-
-                    <Row className='mt-5'>
-                        <Col lg={12} className='mt-4'>
-                            <Card className='mt-2 card-details-border'>
-                                <Card.Header className='order-chat card-border bg-header d-flex justify-content-between'>
-                                    <div className='d-flex align-items-center user-image-order'>
-                                        {user.image && (
-                                            <div
-                                                className='user-photo-order me-2'
-                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${user.image})` }}
-                                            >
-                                            </div>
-                                        )}
-
-                                        {user.first_name}
-                                        &nbsp;
-                                        {user.last_name}
-                                        <AiFillMessage className='ms-2 text-gold cursor-pointer' onClick={chatBoxModal} />
-                                    </div>
-
-                                    <div className='order-id-details d-flex align-items-center'>
-                                        Order ID: 11002345CT
-                                    </div>
-                                </Card.Header>
-                                <Card.Body className='bg-white radius-border'>
-                                    <div className='text-black fs-18 rufina-family fw-600 mb-4'>Delivery Address</div>
-                                    <Row>
-                                        <Col lg={5} className='mt-2 border-right'>
-                                            <div>
-                                                <BsTelephone className='text-gold me-3' />
-                                                {user.phone_number}
-                                            </div>
-
-                                            <div className='mt-2'>
-                                                <TfiLocationPin className='text-gold me-3' size="20" />
-                                                {user.address_line_1}
-                                            </div>
-                                        </Col>
-
-                                        <Col lg={7}>
-                                            <div className="wrap">
-                                                <ul className="timeline">
-
-                                                    <li>
-                                                        <div className='d-flex'>
-                                                            <div className="me-3 completed">December 25, 2023</div>
-                                                            <div className='text-black fs-16 fw-600'>Completed
-                                                            </div>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div className='d-flex'>
-                                                            <div className="me-3">December 20, 2023</div>
-                                                            <div className='color-order'>Order Received
-                                                                <br />
-                                                                <span className='fs-14'>The order has been delivered.<span className='text-gold'> View Proof of Delivery</span></span>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div className='d-flex'>
-                                                            <div className="me-3">December 18, 2023</div>
-                                                            <div className='color-order'>Order Ship Out
-                                                                <br />
-                                                                <span className='fs-14'>The order is out for delivery.</span>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div className='d-flex'>
-                                                            <div className="me-3">December 13, 2023</div>
-                                                            <div className='color-order fs-14'>Processing
-                                                                <br />
-                                                                <span className='fs-14'>The order is being processed.</span>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div className='d-flex'>
-                                                            <div className="me-3">December 13, 2023</div>
-                                                            <div className='color-order'>Payment has been received.
-                                                            </div>
-                                                        </div>
-                                                    </li>
-
-                                                    <li>
-                                                        <div className='d-flex'>
-                                                            <div className="me-3">December 13, 2023</div>
-                                                            <div className='color-order'>Order Placed
-                                                                <br />
-                                                                <span className='fs-14'>Order Placed.</span>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </Col>
-                                    </Row>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
+                    
 
                     {chatBox ?
                         <>
                             <Card className='width-chat-card px-0'>
-                                <Card.Header className='order-chat bg-white'>
+                                <Card.Header className='order-chat bg-white pt-3 pb-3'>
                                     <div className='d-flex justify-content-between'>
                                         <div>
                                             <span className="fs-14 fw-500 mb-0 name-of-user-chat">
-                                                {user.first_name}
-                                                &nbsp;
-                                                {user.last_name}
+                                                <span className='fw-500'>{designerName.first_name} {designerName.last_name}</span>
                                             </span>
-                                            <span className='ms-3 active-now fs-14 fw-400'>{user.status}</span>
+                                            <span className='ms-3 active-now fs-14 fw-400'>Active Now</span>
                                         </div>
                                         <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                             <IoCloseOutline color="#39393A" />
@@ -264,13 +407,13 @@ const OrderDetails = (props) => {
                                     </div>
                                 </Card.Header>
 
-                                <Card.Body>
+                                <Card.Body >
                                     <div>
                                         <span className='d-flex user-image'>
-                                            {user.image && (
+                                            {designerName.image && (
                                                 <div
                                                     className='user-photo'
-                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${user.image})` }}
+                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designerName.image})` }}
                                                 >
                                                 </div>
                                             )}
@@ -278,8 +421,8 @@ const OrderDetails = (props) => {
                                             <div className="designer-info mx-2">
 
                                                 <div>
-                                                    <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">
-                                                        <span className=''>{user.first_name}{user.last_name}</span>
+                                                    <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-3">
+                                                        <span className=''>{designerName.first_name}{designerName.last_name}</span>
                                                         <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
                                                     </p>
                                                 </div>
@@ -297,7 +440,6 @@ const OrderDetails = (props) => {
                                                 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
                                             </div>
                                         </div>
-
                                         <img src={User} className='placeholder-chat ms-3' />
                                     </div>
 
@@ -359,4 +501,4 @@ const OrderDetails = (props) => {
     );
 };
 
-export default OrderDetails;
+export default Orders;

@@ -14,7 +14,7 @@ import { Rating } from 'react-simple-star-rating';
 import { PiNotepadFill } from "react-icons/pi";
 import { GoHeart, GoAlertFill } from "react-icons/go";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
-import UserPlaceholder from 'Assets/images/placeholders/user.png';
+import UserPlaceholder from 'Assets/images/user.png';
 import PinIcon from '../Assets/images/pin.png';
 import { IoShareSocial, IoInformationOutline, IoVideocam } from "react-icons/io5";
 import { useCookies } from 'react-cookie';
@@ -962,7 +962,7 @@ const Designs = (props) => {
                                                             <>
                                                                 <hr />
                                                                 <div className='text-center'>
-                                                                    <a className='book-consultation btn-book btn'
+                                                                    <a className='book-consultation btn-book btn w-100'
                                                                         href={`/appointment/schedule/${singleDesign.id}`}
                                                                     >
                                                                         <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
@@ -971,9 +971,9 @@ const Designs = (props) => {
                                                                 <div className='text-center mt-2'
                                                                     onClick={() => toggleUnderConstruction("Message")}
                                                                 >
-                                                                    <a className='book-consultation btn-message-designer btn'
+                                                                    <a className='book-consultation btn-message-designer btn w-100'
                                                                     >
-                                                                        <AiFillMessage className="me-2" />Message Designer</a>
+                                                                        <AiFillMessage className="me-2" />Send Message</a>
                                                                 </div>
                                                             </>
                                                             :
@@ -1074,7 +1074,7 @@ const Designs = (props) => {
                 size="sm"
             >
                 <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left fw-600 fs-25 mt-2'>{modalHeading}</h5>
+                    <h5 className='modal-title text-left fw-600 fs-25 mt-2'>{modalHeading}</h5>
                     <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>

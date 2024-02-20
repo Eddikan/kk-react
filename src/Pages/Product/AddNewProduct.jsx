@@ -31,7 +31,7 @@ const AddNewProduct = () => {
                 <Container>
                     <Row>
                         <Col lg="8" className='mb-3'>
-                            <h2 className='fs-30 mb-2'>Add Design</h2>
+                            <h2 className='fs-30 mb-2'>New Fabric</h2>
                         </Col>
                         <Col lg="4" className='mb-3 text-right'>
                             <GoBack fallBack="/user/profile" />

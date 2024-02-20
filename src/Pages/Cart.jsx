@@ -260,7 +260,7 @@ const Cart = (props) => {
                                                     return (
                                                         <Card className='mt-2'>
                                                             <Card.Body>
-                                                                <Row>
+                                                                <Row className="align-items-center">
                                                                     <Col lg={1}>
                                                                         <input
                                                                             type="checkbox"
@@ -331,7 +331,7 @@ const Cart = (props) => {
                                             :
                                             <>
                                                 <div className='text-center my-3'>
-                                                    No Item found.
+                                                    No items found.
                                                 </div>
                                             </>
                                         }

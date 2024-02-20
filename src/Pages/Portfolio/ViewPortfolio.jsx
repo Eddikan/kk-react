@@ -125,7 +125,7 @@ const ViewPortFolio = () => {
                 <LoadingPage />
                 :
                 <>
-                    <Container fluid>
+                    {/* <Container fluid>
                         <Row>
                             {isPortfolioCurrentUser ?
                                 <>
@@ -137,7 +137,7 @@ const ViewPortFolio = () => {
                                 </Col>
                             }
                         </Row>
-                    </Container>
+                    </Container> */}
 
                     <section id="single-portfolio" className='py-5 px-2'>
                         <Container>

@@ -178,7 +178,7 @@ const PortfolioGrid = (props) => {
                                                                 null
                                                             }
                                                             <span className="text-white text-decoration-none portfolio-name">{object.name ?? "-"}</span>
-                                                            {currentUser ?
+                                                            {currentUser != object.user.id ?
                                                                 <div className="other-actions">
                                                                     <div className="action-button bg-white me-2">
                                                                         <GoHeart className="text-black" />

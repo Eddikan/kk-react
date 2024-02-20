@@ -194,7 +194,7 @@ const HeaderSeller = () => {
                                                     {userBellOpen && (
 
                                                         <div className="action-box-bell user-menu-bell">
-                                                            <div className='d-flex'>
+                                                            {/* <div className='d-flex'>
                                                                 <img src={NewOrder} className='new-order-image' />
                                                                 <div className='ms-3 fs-14 body-text-bell'>You have a new order and instructions from Mike. Get Started
                                                                     sed diam nonumy eirmod tempor invidunt ut labore et dolore
@@ -202,15 +202,15 @@ const HeaderSeller = () => {
                                                                     <div className='hours-bell mt-1'>1hr ago - 9:00 AM</div>
                                                                 </div>
                                                             </div>
-                                                            <hr />
+                                                            <hr /> */}
 
                                                             <div className='d-flex'>
                                                                 <img src={NewAppointment} className='new-appointment-image' />
-                                                                <div className='ms-3 fs-14 body-text-bell'>"New buyer set an appointment. Go check it out"
+                                                                <div className='ms-3 fs-14 body-text-bell'>Congratulations! You can now start using Kouture Konect
                                                                     <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
                                                                 </div>
                                                             </div>
-                                                            <hr />
+                                                            {/* <hr /> */}
                                                         </div>
                                                     )}
                                                 </div>
@@ -225,14 +225,14 @@ const HeaderSeller = () => {
 
                                                         <div className="action-box-envelop user-menu-envelop">
                                                             <div className='d-flex'>
-                                                                <div><img src={User} className='user-placeholder-header' /></div>
-                                                                <div className='fs-14 body-text-bell'>Jeans Lorem Pants
-                                                                    <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et...</div>
+                                                                <div style={{maxWidth: 100}}><img src={User} className='user-placeholder-header' /></div>
+                                                                <div className='fs-14 body-text-bell'>Admin
+                                                                    <div className='mt-1'>Thank you for signing up to Kouture Konect!</div>
                                                                     <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
                                                                 </div>
                                                             </div>
-                                                            <hr />
-
+                                                             {/* <hr /> */}
+                                                            {/*
                                                             <div className='d-flex'>
                                                                 <div><img src={User} className='user-placeholder-header' /></div>
                                                                 <div className='ms-3 fs-14 body-text-bell'>Marie Salazar
@@ -240,10 +240,10 @@ const HeaderSeller = () => {
                                                                     <div className='hours-bell mt-1'>1 day ago - 3:25 PM</div>
                                                                 </div>
                                                             </div>
-                                                            <hr />
+                                                            <hr /> */}
 
                                                             <div className='text-right text-gold fs-14 cursor-pointer'
-                                                                onClick={() => toggleUnderConstruction("View All Message")}>View All Message</div>
+                                                                onClick={() => toggleUnderConstruction("Messages")}>View All</div>
                                                         </div>
 
                                                     )}

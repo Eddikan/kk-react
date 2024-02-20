@@ -181,9 +181,9 @@ const ViewProduct = () => {
                 }
 
                 if (currentUser == productData.user.id) {
-                    setIsProductCurrentUser(false);
-                } else {
                     setIsProductCurrentUser(true);
+                } else {
+                    setIsProductCurrentUser(false);
                 }
 
             } else {
@@ -260,7 +260,8 @@ const ViewProduct = () => {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
-                navigate("/cart");
+                // navigate("/cart");
+                toast.success("Fabric added to cart successfully!");
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
@@ -355,7 +356,7 @@ const ViewProduct = () => {
                 <LoadingPage />
                 :
                 <>
-                    <Container fluid>
+                    {/* <Container fluid>
                         <Row>
                             {isProductCurrentUser ?
                                 <>
@@ -367,7 +368,7 @@ const ViewProduct = () => {
                                 </Col>
                             }
                         </Row>
-                    </Container>
+                    </Container> */}
 
                     <section id="single-product" className='py-5 px-2'>
                         <Container>
@@ -439,7 +440,7 @@ const ViewProduct = () => {
                                                         </div>
                                                     </div>
 
-                                                    {isProductCurrentUser ?
+                                                    {!isProductCurrentUser ?
                                                         <>
                                                             <div>
                                                                 <Link to={`/product/${product.id}/edit`} className="text-decoration-none">
@@ -529,7 +530,7 @@ const ViewProduct = () => {
                                                     <div>
                                                         <Row>
                                                             <Col lg="12">
-                                                                {isProductCurrentUser ?
+                                                                {!isProductCurrentUser ?
                                                                     <>
                                                                         <p className="mb-2 fs-16 fw-600">Measurement</p>
                                                                         {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
@@ -550,32 +551,14 @@ const ViewProduct = () => {
                                                                         <hr className="mb-4" />
                                                                     </>
                                                                     :
-                                                                    <>
-                                                                        <p className="mb-2 fs-16 fw-600">Measurement</p>
-                                                                        {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
-                                                                -
-                                                            </Button> */}
-                                                                        <FormControl min="1" defaultValue="1" type='number' name='count' onChange={handleChange} className='me-3 d-inline-block counter-input' disabled />
-                                                                        {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
-                                                                +
-                                                            </Button> */}
-
-                                                                        <span className="fs-18 fw-600">{Number(unitMeasurement)?.toFixed(2)} {
-                                                                            product.unit_measurement !== 'inch' && product.unit_measurement !== 'feet'
-                                                                                ? product.unit_measurement + 's'
-                                                                                : product.unit_measurement === 'feet'
-                                                                                    ? product.unit_measurement
-                                                                                    : product.unit_measurement + 'es'
-                                                                        } {product.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span>
-                                                                        <hr className="mb-4" />
-                                                                    </>
+                                                                   null
                                                                 }
 
 
                                                             </Col>
 
                                                             <Col lg="12">
-                                                                {isProductCurrentUser ?
+                                                                {!isProductCurrentUser ?
                                                                     <>
                                                                         {addToCartLoading ?
                                                                             <Button
@@ -669,7 +652,7 @@ const ViewProduct = () => {
                                     >
                                         Customer Reviews
 
-                                        {isProductCurrentUser ?
+                                        {!isProductCurrentUser ?
                                             <>
                                                 <span className="cursor-pointer reviews-tooltip" onClick={() => toggleAddToReview()}>
                                                     <div className='tooltip-content'>

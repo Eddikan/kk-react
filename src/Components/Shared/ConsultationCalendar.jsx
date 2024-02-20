@@ -44,6 +44,7 @@ const localizer = momentLocalizer(moment)
 
 const ConsultationCalendar = ({ toggleEvent }) => {
     const calendarRef = useRef(null);
+    const navigate = useNavigate();
 
     const applyPastDateClass = () => {
         const isPast = (date) => moment(date, 'DD').isBefore(moment(), 'day');
@@ -264,6 +265,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                     setYouAreScheduleShow(!youAreScheduleShow);
                     setAppointmentFormData(initialAppointments);
                     toast.success('Consultation added successfully!');
+                    navigate('/appointments/'+currentUser)
                 } else {
                     setFormStatus('standby');
                     toast.error('Designer is not available at this time');

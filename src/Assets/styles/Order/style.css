@@ -50,7 +50,9 @@ img.item-placeholder-chatbox {
     padding-left: 0px;
 }
 .fabric-image {
-    width: 19%;
+    width: 100%;
+    max-width: 55px;
+    min-width: 55px;
 }
 .tabs-image {
     width: 30%;

@@ -220,7 +220,7 @@ const AppointmentList = (props) => {
 
                                                                                 <Col lg={3} className='d-flex'>
 
-                                                                                    {appointment.image !== null && appointment.image !== '' ? (
+                                                                                    {/* {appointment.image !== null && appointment.image !== '' ? (
                                                                                         <div
                                                                                             className='user-photo'
                                                                                             style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.image})` }}
@@ -228,7 +228,8 @@ const AppointmentList = (props) => {
                                                                                         </div>
                                                                                     ) : (
                                                                                         <img src={UserPlaceholder} className='placeholder-img me-2' />
-                                                                                    )}
+                                                                                    )} */}
+                                                                                    <img src={UserPlaceholder} className='placeholder-img me-2' />
 
                                                                                     <span className='d-flex justify-content-center align-items-center ms-2 mt-1'>
                                                                                         {appointment.first_name}
@@ -254,7 +255,7 @@ const AppointmentList = (props) => {
                                                                                     </div>
 
                                                                                     {/* <Link className="text-decoration-none" to={`/portfolio/${appointment.id}/edit`}> */}
-                                                                                    <div
+                                                                                    <div onClick={() => toggleUnderConstruction("View")}
                                                                                         className="cursor-pointer icon-tooltiptext d-flex justify-content-center align-items-center"
                                                                                     >
                                                                                         <span>
@@ -305,8 +306,9 @@ const AppointmentList = (props) => {
                                         </div>
                                     </Card.Header>
 
-                                    <Card.Body >
-                                        <div>
+                                    <Card.Body>
+                                        <p>No messages found.</p>
+                                        {/* <div>
                                             <span className='d-flex'>
 
                                                 {designerData.image !== null && designerData.image !== '' ? (
@@ -320,7 +322,6 @@ const AppointmentList = (props) => {
                                                 )}
 
                                                 <div className="designer-info mx-2">
-
                                                     <div>
                                                         <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">
                                                             <span className=''>{designerData.first_name}{designerData.last_name}</span>
@@ -342,7 +343,7 @@ const AppointmentList = (props) => {
                                                 </div>
                                             </div>
                                             <img src={UserPlaceholder} className='placeholder-img-chat ms-3' />
-                                        </div>
+                                        </div> */}
 
                                         <div>
                                             <InputEmoji

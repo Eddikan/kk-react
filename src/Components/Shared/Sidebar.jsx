@@ -73,7 +73,7 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                             <a className="yellow-hover cursor-pointer text-decoration "
                                 href={`/appointment-list/${designerId}`}
                             >
-                                Appointment Lists
+                                List
                             </a>
                             <p className="yellow-hover cursor-pointer mt-3" onClick={() => navigate('/seller-center/' + designerId)}>Calendar</p>
                         </AccordionBody>
