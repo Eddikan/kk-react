@@ -34,6 +34,7 @@ const Designs = (props) => {
     const [messageShow, setMessageShow] = useState(false);
     const [descriptionShow, setDescriptionShow] = useState(false);
     const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
+    const [modalHeading, setModalHeading] = useState('');
 
     const responsive = {
         desktop: {
@@ -65,8 +66,9 @@ const Designs = (props) => {
         setMessageShow(true);
     }
 
-    function toggleUnderConstruction() {
+    function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
+        setModalHeading(message);
     }
 
     function togglePortfolioImage(id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId) {
@@ -323,20 +325,25 @@ const Designs = (props) => {
                 id="bg-transparent-card"
             >
                 <ModalHeader className='pt-2 pb-3 bg-transparent-card d-flex align-items-start'>
-                    <div className='d-flex justify-content-center align-items-center user-image'>
-                        {singleDesign.image && (
-                            <div
-                                className='user-photo'
-                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
-                            >
-                            </div>
-                        )}
+                    <a href={`/designer-profile?user_id=${singleDesign.userId}`} className='text-decoration-none'>
+                        <div className='d-flex justify-content-center align-items-center user-image'>
 
-                        <div className='ms-3'>
-                            <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
-                            <div className='fashion-designer fs-16'>Fashion Designer</div>
+                            {singleDesign.image !== '' && singleDesign.image !== '-' ? (
+                                <div
+                                    className='user-photo'
+                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                >
+                                </div>
+                            ) : (
+                                <img src={UserPlaceholder} className='placeholder-img ' />
+                            )}
+
+                            <div className='ms-3'>
+                                <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                                <div className='fashion-designer fs-16'>Fashion Designer</div>
+                            </div>
                         </div>
-                    </div>
+                    </a>
 
                     <button type='button' className='close modal-close close-button-image bg-black' aria-label='Close' onClick={() => setPortfolioImage(false)}>
                         <span aria-hidden='true'>&times;</span>
@@ -384,19 +391,23 @@ const Designs = (props) => {
                                 <div>
                                     <div className='text-white book-consultation-bar w-100 d-flex justify-content-center'>
                                         <p className='request d-flex justify-content-between mb-5'>
-                                            <div className='d-flex justify-content-center align-items-center user-image'>
-                                                {singleDesign.image && (
-                                                    <div
-                                                        className='user-photo'
-                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
-                                                    >
+                                            <a href={`/designer-profile?user_id=${singleDesign.userId}`} className='text-decoration-none'>
+                                                <div className='d-flex justify-content-center align-items-center user-image'>
+                                                    {singleDesign.image !== '' && singleDesign.image !== '-' ? (
+                                                        <div
+                                                            className='user-photo'
+                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                        >
+                                                        </div>
+                                                    ) : (
+                                                        <img src={UserPlaceholder} className='placeholder-img ' />
+                                                    )}
+                                                    <div className='ms-3'>
+                                                        <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                                                        <div className='fashion-designer fs-16'>Fashion Designer</div>
                                                     </div>
-                                                )}
-                                                <div className='ms-3'>
-                                                    <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
-                                                    <div className='fashion-designer fs-16'>Fashion Designer</div>
                                                 </div>
-                                            </div>
+                                            </a>
 
                                             <div className='btn-book-bar'>
                                                 <a href={`/appointment/schedule/${singleDesign.id}`}>
@@ -412,25 +423,30 @@ const Designs = (props) => {
                         <Col lg={1}>
                             <div>
                                 <div>
-                                    <div className='user-image-side thumbnail-table'>
-                                        {singleDesign.image && (
+                                    <div className='user-image-side thumbnail-table text-center'>
+
+                                        {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                             <div
                                                 className='user-photo-side mb-4 '
                                                 style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                             >
                                             </div>
+                                        ) : (
+                                            <img src={UserPlaceholder} className='placeholder-img-side mb-4' />
                                         )}
 
-                                        <Card className="table_content file-action">
+                                        <Card className="table_content file-action mt-3">
                                             <Card.Body className="action_container font-weight">
                                                 <Row>
                                                     <Col>
-                                                        {singleDesign.image && (
+                                                        {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                             <div
                                                                 className='user-photo-card mb-2 '
                                                                 style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                             >
                                                             </div>
+                                                        ) : (
+                                                            <img src={UserPlaceholder} className='placeholder-img-side mb-3' />
                                                         )}
                                                         <div className='modal-title text-center fs-20 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
                                                         <div className='fs-14 text-center mt-2'>
@@ -465,7 +481,8 @@ const Designs = (props) => {
                                                         </div>
 
                                                         <div className='text-center mt-2'
-                                                            onClick={() => toggleMessage()}
+                                                            // onClick={() => toggleMessage()}
+                                                            onClick={() => toggleUnderConstruction("Message")}
                                                         >
                                                             <a className='book-consultation btn-message-designer btn'
                                                             ><AiFillMessage className="me-2" />Message Designer</a>
@@ -486,14 +503,19 @@ const Designs = (props) => {
                                     <div className='icon-name-color fs-12 mt-2 fw-400'>Consultation</div>
                                 </div>
 
-                                <div className='text-center mb-4' onClick={toggleMessage}>
+                                <div className='text-center mb-4'
+                                    // onClick={toggleMessage}
+                                    onClick={() => toggleUnderConstruction("Message")}
+                                >
                                     <div className="action-button-designs bg-white">
                                         <AiFillMessage className="text-black mt-2" size={30} />
                                     </div>
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-400'>Message</div>
                                 </div>
 
-                                <div className='text-center mb-4' onClick={() => toggleUnderConstruction()}>
+                                <div className='text-center mb-4'
+                                    onClick={() => toggleUnderConstruction("Share")}
+                                >
                                     <div className="action-button-designs bg-white">
                                         <IoShareSocial className="text-black mt-2" size={30} />
                                     </div>
@@ -557,12 +579,12 @@ const Designs = (props) => {
                 size="sm"
             >
                 <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left'></h5>
+                    <h5 className='modal-title text-uppercase text-left fw-600 fs-25 mt-2'>{modalHeading}</h5>
                     <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>
 
-                <Modal.Body>
+                <Modal.Body className='pt-2'>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />

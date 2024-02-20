@@ -807,23 +807,25 @@ const Designs = (props) => {
                 id="bg-transparent-card"
             >
                 <ModalHeader className='pt-2 pb-3 bg-transparent-card d-flex align-items-start'>
-                    <div className='d-flex user-image'>
+                    <a href={`/designer-profile?user_id=${singleDesign.userId}`} className='text-decoration-none'>
+                        <div className='d-flex user-image'>
 
-                        {singleDesign.image == null && singleDesign.image == '' ? (
-                            <div
-                                className='user-photo'
-                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
-                            >
+                            {singleDesign.image !== '' && singleDesign.image !== '-' ? (
+                                <div
+                                    className='user-photo'
+                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                >
+                                </div>
+                            ) : (
+                                <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
+                            )}
+
+                            <div className='ms-3'>
+                                <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                                <div className='fashion-designer fs-16'>Fashion Designer</div>
                             </div>
-                        ) : (
-                            <img src={UserPlaceholder} className='placeholder-img ' />
-                        )}
-
-                        <div className='ms-3'>
-                            <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
-                            <div className='fashion-designer fs-16'>Fashion Designer</div>
                         </div>
-                    </div>
+                    </a>
                     <button type='button' className='close modal-close close-button-image bg-black' aria-label='Close' onClick={() => setPortfolioImage(false)}>
                         <span aria-hidden='true'>&times;</span>
                     </button>
@@ -866,10 +868,10 @@ const Designs = (props) => {
                                 <div>
                                     <div className='text-white book-consultation-bar w-100 d-flex justify-content-center'>
                                         <p className='request d-flex justify-content-between mb-5'>
-                                            <a href={`/designer-profile?user_id=${singleDesign.userId}`}>
+                                            <a href={`/designer-profile?user_id=${singleDesign.userId}`} className='text-decoration-none'>
                                                 <div className='d-flex justify-content-center align-items-center user-image'>
 
-                                                    {singleDesign.image == null && singleDesign.image == '' ? (
+                                                    {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                         <div
                                                             className='user-photo'
                                                             style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
@@ -908,7 +910,7 @@ const Designs = (props) => {
                             <div>
                                 <div>
                                     <div className='user-image-side thumbnail-table text-center'>
-                                        {singleDesign.image == null && singleDesign.image == '' ? (
+                                        {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                             <div
                                                 className='user-photo-side mb-4 '
                                                 style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
@@ -922,7 +924,7 @@ const Designs = (props) => {
                                             <Card.Body className="action_container font-weight">
                                                 <Row>
                                                     <Col>
-                                                        {singleDesign.image == null && singleDesign.image == '' ? (
+                                                        {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                             <div
                                                                 className='user-photo-card mb-2 '
                                                                 style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}

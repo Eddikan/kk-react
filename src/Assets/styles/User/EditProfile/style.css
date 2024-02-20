@@ -67,3 +67,7 @@
 .remove-circle:hover {
     opacity: 50%;
 }
+.scroll-body {
+    overflow: auto;
+    height: 136px;
+}

@@ -386,7 +386,7 @@ const Profile = () => {
                                         </p>
                                         {user.is_designer ?
                                             <>
-                                                <p className='areas-specialization mt-5 mb-3'>Areas of Specialization and Expertise</p>
+                                                <p className='areas-specialization mt-3 mb-3'>Areas of Specialization and Expertise</p>
                                                 <div className='mb-4'>
                                                     {areasOfSpecialization && areasOfSpecialization.length > 0 ?
                                                         <>

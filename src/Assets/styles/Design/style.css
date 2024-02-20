@@ -26,6 +26,7 @@ select#sort-by {
     min-width: 70px;
     max-width: 120px;
     text-align: center;
+    text-wrap: nowrap;
 }
 .bg-transparent {
     background-color: transparent!important;

@@ -1561,6 +1561,9 @@ img.user-placeholder-header {
 .body-text-bell {
     color: #39393A;
 }
+.text-decoration-none {
+    text-decoration: none !important;
+}
 .single-image-chat {
     width: 11%;
     min-height: 36px;
