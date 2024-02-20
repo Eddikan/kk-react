@@ -12,6 +12,7 @@ const ResponsiveVideo = ({ src }) => {
     height: '100%',
     objectFit: 'cover',
     minHeight: 240,
+    borderRadius: '5px'
   };
 
   return (

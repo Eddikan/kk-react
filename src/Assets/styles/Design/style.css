@@ -189,13 +189,23 @@ select#sort-by {
     bottom: 0;
     right: 0;
 }
+.placeholder-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+.placeholder-img-side {
+    width: 52px;
+    height: 50px;
+    border-radius: 50%;
+}
 .image-fabrics {
     position: relative;
 }
 .request {
     padding: 10px 20px 10px 20px;
     width: 670px;
-    background: #202a44a3 !important;
+    background: #202a44e8 !important;
     border: none;
     border-radius: 7px;
 }
@@ -222,7 +232,7 @@ select#sort-by {
     border: none;
 }
 .card-description {
-    background: #0000005e;
+    background: #000000e3;
     border: none;
     width: 900px;
     border-radius: 5px;

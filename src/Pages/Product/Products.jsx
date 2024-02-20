@@ -116,7 +116,7 @@ const Products = (props) => {
 
                                         <Col lg={10} className='mt-5 col-right mx-auto' style={{ maxWidth: '1440px' }}>
                                             <div className='ms-4'>
-                                                <h2 className='fs-30 mb-3'>Products</h2>
+                                                <h2 className='fs-30 mb-3'>Fabrics</h2>
                                                 <Row>
                                                     {products.map((object, index) => (
                                                         <Col className={`product-grid-image mb-3`} xs="4" md="2">

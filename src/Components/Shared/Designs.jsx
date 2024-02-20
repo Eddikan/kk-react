@@ -33,6 +33,7 @@ const Designs = (props) => {
     const [activeImage, setActiveImage] = useState('');
     const [messageShow, setMessageShow] = useState(false);
     const [descriptionShow, setDescriptionShow] = useState(false);
+    const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
 
     const responsive = {
         desktop: {
@@ -68,10 +69,11 @@ const Designs = (props) => {
         setUnderConstructionShow(true);
     }
 
-    function togglePortfolioImage(id, first_name, last_name, image_urls, image, address_line_1, province, tags, description) {
+    function togglePortfolioImage(id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId) {
         setPortfolioImage(true);
         setSingleDesign({
             id: id ?? 0,
+            userId: userId ?? 0,
             first_name: first_name ?? '-',
             last_name: last_name ?? '-',
             image: image ?? '-',
@@ -86,6 +88,12 @@ const Designs = (props) => {
             setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
         } else {
             setActiveImage(PlaceholderImage);
+        }
+
+        if (currentUser == userId) {
+            setIsDesignCurrentUser(false);
+        } else {
+            setIsDesignCurrentUser(true);
         }
     }
 
@@ -198,7 +206,7 @@ const Designs = (props) => {
                                                     <Col className="designs-grid mb-3" xs="12" md="3">
                                                         {currentUser ?
                                                             <>
-                                                                <div className='portfolio-link cursor-pointer' onClick={function () { togglePortfolioImage(design.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description); }}>
+                                                                <div className='portfolio-link cursor-pointer' onClick={function () { togglePortfolioImage(design.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description, design.user.id); }}>
                                                                     <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}>
                                                                         {/* {currentUser ?
                                                                             <div className='save-link'>

@@ -381,12 +381,12 @@ const Profile = () => {
                                             {user.short_bio && user.short_bio != "" ? user.short_bio : "-"}
                                         </p>
                                         <p className='long-bio-title mb-1'>Long Bio</p>
-                                        <p className='long-bio-designer mb-5'>
+                                        <p className='long-bio-designer mb-0 scroll-body'>
                                             {user.long_bio && user.long_bio != "" ? user.long_bio : "-"}
                                         </p>
                                         {user.is_designer ?
                                             <>
-                                                <p className='areas-specialization mb-3'>Areas of Specialization and Expertise</p>
+                                                <p className='areas-specialization mt-5 mb-3'>Areas of Specialization and Expertise</p>
                                                 <div className='mb-4'>
                                                     {areasOfSpecialization && areasOfSpecialization.length > 0 ?
                                                         <>

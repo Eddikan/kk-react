@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
@@ -9,12 +8,11 @@ import { RxCross2 } from "react-icons/rx";
 import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
 import { GoPlus } from "react-icons/go";
-import { AiOutlineClose } from "react-icons/ai";
 import MyCalendar from 'Components/Shared/MyCalendar';
 import axios from "axios";
 import toast from 'react-hot-toast';
 import LayoutSellerCenter from '../Components/Layout/LayoutSellerCenter';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 
 const initialBusinessHours = {
@@ -26,23 +24,12 @@ const initialAppointments = {
     title: '',
 };
 
-const ToastCss = {
-    position: "top-right",
-    autoClose: 1500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-};
 
 const SellerCenter = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
-    const userDetails = cookies.userDetails;
     const { designerId } = useParams();
     const [designerBusinessHoursModalShow, setDesignerBusinessHoursModalShow] = useState(false);
-    const [appointmentModalShow, setAppointmentModalShow] = useState(false);
     const [isSundayChecked, setIsSundayChecked] = useState(false);
     const [isMondayChecked, setIsMondayChecked] = useState(false);
     const [isTuesdayChecked, setIsTuesdayChecked] = useState(false);
@@ -288,20 +275,20 @@ const SellerCenter = (props) => {
                                 setSaturdayHoursCopyFormData(mappedSaturdayBusinessHours);
                                 setSundayHoursFormData(mappedSundayBusinessHours);
                                 setSundayHoursCopyFormData(mappedSundayBusinessHours);
-                                if(mappedFridayBusinessHours.length <=0 ) {
+                                if (mappedFridayBusinessHours.length <= 0) {
                                     //means that the day is unavailable
                                     setIsFridayChecked(true);
-                                } else if(mappedSundayBusinessHours.length <=0) {
+                                } else if (mappedSundayBusinessHours.length <= 0) {
                                     setIsSundayChecked(true);
-                                } else if(mappedMondayBusinessHours.length <=0) {
+                                } else if (mappedMondayBusinessHours.length <= 0) {
                                     setIsMondayChecked(true);
-                                } else if (mappedTuesdayBusinessHours.length <=0) {
+                                } else if (mappedTuesdayBusinessHours.length <= 0) {
                                     setIsTuesdayChecked(true);
-                                } else if (mappedWednesdayBusinessHours.length <=0) {
+                                } else if (mappedWednesdayBusinessHours.length <= 0) {
                                     setIsWednesdayChecked(true);
-                                } else if (mappedThursdayBusinessHours.length <=0) {
+                                } else if (mappedThursdayBusinessHours.length <= 0) {
                                     setIsThursdayChecked(true);
-                                } else if (mappedSaturdayBusinessHours.length <=0) {
+                                } else if (mappedSaturdayBusinessHours.length <= 0) {
                                     setIsSaturdayChecked(true);
                                 }
                             } else {
@@ -393,7 +380,7 @@ const SellerCenter = (props) => {
         if (!isSundayChecked) {
             setSundayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount+1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setSundayHoursFormData([sundayHoursCopyFormData]);
         }
     };
@@ -404,7 +391,7 @@ const SellerCenter = (props) => {
         if (!isMondayChecked) {
             setMondayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount+1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setMondayHoursFormData([mondayHoursCopyFormData]);
         }
     };
@@ -415,7 +402,7 @@ const SellerCenter = (props) => {
         if (!isTuesdayChecked) {
             setTuesdayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount+1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setTuesdayHoursFormData([tuesdayHoursCopyFormData]);
         }
     };
@@ -426,7 +413,7 @@ const SellerCenter = (props) => {
         if (!isWednesdayChecked) {
             setWednesdayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount+1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setWednesdayHoursFormData([wednesdayHoursCopyFormData]);
         }
     };
@@ -437,7 +424,7 @@ const SellerCenter = (props) => {
         if (!isThursdayChecked) {
             setThursdayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount+1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setThursdayHoursFormData([thursdayHoursCopyFormData]);
         }
     };
@@ -449,7 +436,7 @@ const SellerCenter = (props) => {
         if (!isFridayChecked) {
             setFridayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount+1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setFridayHoursFormData([fridayHoursCopyFormData]);
         }
     };
@@ -460,7 +447,7 @@ const SellerCenter = (props) => {
         if (!isSaturdayChecked) {
             setSaturdayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount+1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setSaturdayHoursFormData([saturdayHoursCopyFormData]);
         }
     };
@@ -562,6 +549,55 @@ const SellerCenter = (props) => {
             },
         ];
         postBusinessHours({ content, designer_id: designerId, timezone: currentTimezone }).then(response => {
+            const status = response.data.status;
+            if (status === "Success") {
+                setFormStatus('standby');
+                setReloadCount(reloadCount + 1);
+                setDesignerBusinessHoursModalShow(false);
+                setBusinessHoursFormData(initialBusinessHours);
+                toast.success('Availability added successfully!');
+            } else {
+                setFormStatus('standby');
+                toast.error('There has been an error saving the appointment, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error saving the appointment, please try again!');
+        });
+    }
+
+    const BusinessHoursSubmitPut = (e) => {
+        setFormStatus('loading');
+        const content = [
+            {
+                day: 'sunday',
+                availabilities: sundayHoursFormData
+            },
+            {
+                day: 'monday',
+                availabilities: mondayHoursFormData
+            },
+            {
+                day: 'tuesday',
+                availabilities: tuesdayHoursFormData
+            },
+            {
+                day: 'wednesday',
+                availabilities: wednesdayHoursFormData
+            },
+            {
+                day: 'thursday',
+                availabilities: thursdayHoursFormData
+            },
+            {
+                day: 'friday',
+                availabilities: fridayHoursFormData
+            },
+            {
+                day: 'saturday',
+                availabilities: saturdayHoursFormData
+            },
+        ];
+        putBusinessHourss({ content, designer_id: designerId, timezone: currentTimezone }).then(response => {
             const status = response.data.status;
             if (status === "Success") {
                 setFormStatus('standby');
@@ -683,20 +719,20 @@ const SellerCenter = (props) => {
                                 setSaturdayHoursCopyFormData(mappedSaturdayBusinessHours);
                                 setSundayHoursFormData(mappedSundayBusinessHours);
                                 setSundayHoursCopyFormData(mappedSundayBusinessHours);
-                                if(mappedFridayBusinessHours.length <=0 ) {
+                                if (mappedFridayBusinessHours.length <= 0) {
                                     //means that the day is unavailable
                                     setIsFridayChecked(true);
-                                } else if(mappedSundayBusinessHours.length <=0) {
+                                } else if (mappedSundayBusinessHours.length <= 0) {
                                     setIsSundayChecked(true);
-                                } else if(mappedMondayBusinessHours.length <=0) {
+                                } else if (mappedMondayBusinessHours.length <= 0) {
                                     setIsMondayChecked(true);
-                                } else if (mappedTuesdayBusinessHours.length <=0) {
+                                } else if (mappedTuesdayBusinessHours.length <= 0) {
                                     setIsTuesdayChecked(true);
-                                } else if (mappedWednesdayBusinessHours.length <=0) {
+                                } else if (mappedWednesdayBusinessHours.length <= 0) {
                                     setIsWednesdayChecked(true);
-                                } else if (mappedThursdayBusinessHours.length <=0) {
+                                } else if (mappedThursdayBusinessHours.length <= 0) {
                                     setIsThursdayChecked(true);
-                                } else if (mappedSaturdayBusinessHours.length <=0) {
+                                } else if (mappedSaturdayBusinessHours.length <= 0) {
                                     setIsSaturdayChecked(true);
                                 }
                             } else {
@@ -715,55 +751,6 @@ const SellerCenter = (props) => {
             });
 
     }, [scheduleReloadCount]);
-
-    const BusinessHoursSubmitPut = (e) => {
-        setFormStatus('loading');
-        const content = [
-            {
-                day: 'sunday',
-                availabilities: sundayHoursFormData
-            },
-            {
-                day: 'monday',
-                availabilities: mondayHoursFormData
-            },
-            {
-                day: 'tuesday',
-                availabilities: tuesdayHoursFormData
-            },
-            {
-                day: 'wednesday',
-                availabilities: wednesdayHoursFormData
-            },
-            {
-                day: 'thursday',
-                availabilities: thursdayHoursFormData
-            },
-            {
-                day: 'friday',
-                availabilities: fridayHoursFormData
-            },
-            {
-                day: 'saturday',
-                availabilities: saturdayHoursFormData
-            },
-        ];
-        putBusinessHourss({ content, designer_id: designerId, timezone: currentTimezone }).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setFormStatus('standby');
-                setReloadCount(reloadCount + 1);
-                setDesignerBusinessHoursModalShow(false);
-                setBusinessHoursFormData(initialBusinessHours);
-                toast.success('Availability added successfully!');
-            } else {
-                setFormStatus('standby');
-                toast.error('There has been an error saving the appointment, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the appointment, please try again!');
-        });
-    }
 
     return (
         <LayoutSellerCenter>
@@ -855,7 +842,7 @@ const SellerCenter = (props) => {
                                                                         </div>
                                                                     )}
                                                                     <Form.Group className='mb-3'>
-                                                                        <FormControl 
+                                                                        <FormControl
                                                                             type='time'
                                                                             name='end'
                                                                             className='mr-sm-2 form-control-hours'
@@ -863,7 +850,7 @@ const SellerCenter = (props) => {
                                                                             onChange={e => handleChangeTimeSunday(e, index)}
                                                                         />
                                                                     </Form.Group>
-                                                                    
+
                                                                 </Col>
                                                             </>
                                                         )}
@@ -1309,119 +1296,13 @@ const SellerCenter = (props) => {
                         } else {
                             BusinessHoursSubmitPut()
                         }
+
                     }}>
                         Save
                     </Button>
 
                 </Modal.Footer>
-            </Modal >
-
-            {/* <Modal show={appointmentModalShow}>
-                <Modal.Header>
-                    <Modal.Title className='set-appointment'>Set Appointment</Modal.Title>
-                    <AiOutlineClose role='button' onClick={() => setAppointmentModalShow(false)} />
-                </Modal.Header>
-                <Form onSubmit={addAppointmentSubmit}>
-                    <Modal.Body className="pb-0 pt-2">
-                        <Row>
-                            <Col lg="12" className='mb-2'>
-                                <span className='title-appointment'>Title</span>
-                            </Col>
-
-                            <Col lg="12">
-                                <input
-                                    type="text"
-                                    name="title"
-                                    className='form-control'
-                                    value={appointmentFormData?.title}
-                                    onChange={handleChangeAppointment}
-                                />
-                            </Col>
-
-                            <Col lg="8">
-                                <Row className="align-items-center mt-4 mb-3">
-                                    {times.map((time, index) => {
-                                        return (
-                                            <>
-                                                {times.length > 0 && (
-                                                    <>
-                                                        {index > 0 && (
-                                                            <div className='w-100 d-flex justify-content-end mt-3'>
-                                                                <div className='cursor-pointer' onClick={() => handleRemoveAppointment(index)}>
-                                                                    <RxCross2 color='#000000' />
-                                                                </div>
-                                                            </div>
-                                                        )}
-
-                                                        <Col md="5" className="pe-0 position-relative">
-                                                            <p className="hours-header mb-2">Opens at</p>
-                                                            <Form.Group className='mb-3'>
-                                                                <FormControl
-                                                                    type='time'
-                                                                    name='opens_at'
-                                                                    className='mr-sm-2 form-control-hours'
-                                                                    value={time?.opens_at}
-                                                                    onChange={e => handleChangeTime(e, index)}
-                                                                />
-                                                            </Form.Group>
-                                                        </Col>
-                                                        <Col md="5" className="pe-0 position-relative">
-                                                            <p className="hours-header mb-2">Closes at</p>
-                                                            <Form.Group className='mb-3'>
-                                                                <FormControl
-                                                                    type='time'
-                                                                    name='closes_at'
-                                                                    className='mr-sm-2 form-control-hours'
-                                                                    value={time?.closes_at}
-                                                                    onChange={e => handleChangeTime(e, index)}
-                                                                />
-                                                            </Form.Group>
-                                                        </Col>
-                                                    </>
-                                                )}
-                                            </>
-                                        );
-                                    })}
-                                    <Col md="2" className="pl-0">
-                                        <GoPlus
-                                            size={25}
-                                            className="plus-btn mt-2"
-                                            onClick={handleAppointments}
-                                        />
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Row>
-                    </Modal.Body>
-                    <Modal.Footer className='text-right modal-footer-border'>
-
-                        <button
-                            type="button"
-                            className="cancel-btn btn"
-                            onClick={() => setAppointmentModalShow(false)}>
-
-                            Cancel
-                        </button>
-
-                        {formStatus !== "standby" ?
-                            <button
-                                className='btn btn-save'
-                                type='button'
-                            >
-                                Saving...
-                            </button>
-                            :
-                            <button
-                                className='btn btn-save'
-                                type='submit'
-                            >
-                                Save
-                            </button>
-                        }
-                    </Modal.Footer>
-                </Form>
-            </Modal> */}
-
+            </Modal>
         </LayoutSellerCenter >
     );
 };

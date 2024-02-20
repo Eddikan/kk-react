@@ -366,9 +366,9 @@ const DesignerProfile = () => {
                                 {user.is_seller == 1 && (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${fabricShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("fabric") }}>Fabrics</span>
                                 )}
-                                 {!isDesignerCurrentUser && (
+                                {/* {!isDesignerCurrentUser && (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${calendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("calendar"); }}>Calendar</span>
-                                )}
+                                )} */}
                                 {elements && (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${guidePreviewModalShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { toggleGuidePreviewModal(); }}>Measurement Guide</span>
                                 )}
@@ -450,13 +450,13 @@ const DesignerProfile = () => {
                             null
                         }
 
-                        {calendarShow && !isDesignerCurrentUser ?
+                        {/* {calendarShow && !isDesignerCurrentUser ?
                             <div className='mt-3'>
                                 <DesignerCalendar events={designerSchedule} designerId={designer ? designer.id : ""} />
                             </div>
                             :
                             null
-                        }
+                        } */}
 
                         {chatBox ?
                             <>

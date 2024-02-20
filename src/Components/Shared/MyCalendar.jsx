@@ -76,6 +76,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
     const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
     const [currentTimezone, setCurrentTimezone] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
+
     const [selectedHoursArray, setSelectedHoursArray] = useState([]);
     const [startTime, setStartTime] = useState('');
     const [endTime, setEndTime] = useState('');

@@ -901,7 +901,7 @@ const ViewProduct = () => {
                 size="sm"
             >
                 <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left'></h5>
+                    <h5 className='modal-title text-uppercase text-left fs-25 '></h5>
                     <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>

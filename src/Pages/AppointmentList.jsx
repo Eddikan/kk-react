@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LayoutSellerCenter from '../Components/Layout/LayoutSellerCenter';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
+import { useNavigate, Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { GoAlertFill } from 'react-icons/go';
 import { VscSend } from "react-icons/vsc";
@@ -110,7 +111,7 @@ const AppointmentList = (props) => {
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='mx-auto top-bottom col-right' style={{maxWidth: '1440px'}}>
+                        <Col lg={10} className='mx-auto top-bottom col-right' style={{ maxWidth: '1440px' }}>
                             <div className='ms-4'>
                                 <Row>
                                     <Col lg={12}>
@@ -252,14 +253,15 @@ const AppointmentList = (props) => {
                                                                                         <AiOutlineMessage className='me-2' size={20} />
                                                                                     </div>
 
+                                                                                    {/* <Link className="text-decoration-none" to={`/portfolio/${appointment.id}/edit`}> */}
                                                                                     <div
                                                                                         className="cursor-pointer icon-tooltiptext d-flex justify-content-center align-items-center"
-                                                                                        onClick={() => toggleUnderConstruction("")}
                                                                                     >
                                                                                         <span>
                                                                                             <IoEyeOutline size={20} />
                                                                                         </span>
                                                                                     </div>
+                                                                                    {/* </Link> */}
                                                                                 </Col>
                                                                             </Row>
                                                                         </Card.Body>

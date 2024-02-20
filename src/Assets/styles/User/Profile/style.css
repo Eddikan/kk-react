@@ -31,3 +31,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.scroll-body {
+    overflow: auto;
+    height: 160px;
+}

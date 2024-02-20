@@ -19,7 +19,7 @@ const EditPortfolioDetails = () => {
 
     const editSuccess = (e) => {
         if (e) {
-            setTimeout(function(){
+            setTimeout(function () {
                 navigate("/user/profile");
             }, 1000);
         }
@@ -35,19 +35,19 @@ const EditPortfolioDetails = () => {
 
     const fetchData = async (e) => {
         try {
-          const portfolioData = await GetSinglePortfolioData(e);
-          if (portfolioData.id) {
-            setPortfolio(portfolioData);
-            setPortfolioLoading(false);
-            setImages(portfolioData.image_urls);
-          } else {
-            setPortfolioLoading(false);
-            toast.error('Portfolio item does not exist!');
-          }
-          // Update state or perform other logic with portfolioData
+            const portfolioData = await GetSinglePortfolioData(e);
+            if (portfolioData.id) {
+                setPortfolio(portfolioData);
+                setPortfolioLoading(false);
+                setImages(portfolioData.image_urls);
+            } else {
+                setPortfolioLoading(false);
+                toast.error('Portfolio item does not exist!');
+            }
+            // Update state or perform other logic with portfolioData
         } catch (error) {
             toast.error('Portfolio item does not exist!');
-          // Handle the error, if needed
+            // Handle the error, if needed
         }
     };
 
@@ -64,14 +64,14 @@ const EditPortfolioDetails = () => {
                     <Container>
                         <Row>
                             <Col lg="8" className='mb-3'>
-                                <h2 className='fs-30 mb-2'>Edit Design</h2>
+                                <h2 className='fs-30 mb-2'>Edit Portfolio</h2>
                             </Col>
                             <Col lg="4" className='mb-3 text-right'>
                                 <GoBack fallBack="/user/profile" />
                             </Col>
                         </Row>
                         <EditPortfolioNormal size="normal" portfolioId={portfolioId} portfolio={portfolio} images={images} withDraft={true} onSuccess={editSuccess} onReloadPage={reloadPage} onCancel={cancel} />
-                    </Container> 
+                    </Container>
                 </section>
             }
         </Layout>

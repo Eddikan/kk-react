@@ -59,6 +59,8 @@ const Designs = (props) => {
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedAllCategories, setSelectedAllCategories] = useState(false);
     const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
+    const [modalHeading, setModalHeading] = useState('');
+
 
     const compositions = ['Polyamide', 'Polyester', 'Polyurethane', 'Acrylic', 'Cashmere', 'Mental']; // Replace with your array of composition options
     const weaves = ['Plain', 'Twill', 'Satin', 'Basket', 'Herringbone', 'Jacquard', 'Dobby', 'Leno']; // Replace with your array of weave options
@@ -102,8 +104,9 @@ const Designs = (props) => {
         setDescriptionShow(true);
     }
 
-    function toggleUnderConstruction() {
+    function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
+        setModalHeading(message);
     }
 
     const handleSortFieldChange = (field) => {
@@ -309,8 +312,6 @@ const Designs = (props) => {
         } else {
             setIsDesignCurrentUser(true);
         }
-
-
     }
 
     async function toggleSortDesigns(type, sort) {
@@ -387,6 +388,11 @@ const Designs = (props) => {
         }
         getPortfolioCategories();
     }, [mounted, searchValue, selectedCategories]);
+
+
+    const toggleGetUser = (e) => {
+        window.location.href = "/designer-profile?user_id=" + e;
+    }
 
     return (
         <Layout>
@@ -722,7 +728,6 @@ const Designs = (props) => {
                                             {designs && designs.length > 0 ?
                                                 <>
                                                     <Row className="designs-row">
-                                                        {/* <img src={object.url} className='designs-img'/> */}
                                                         {designs.map((design, index) => {
                                                             if (design.image_urls?.[0]?.image_url) {
                                                                 var designImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + design.image_urls[0].image_url;
@@ -735,16 +740,8 @@ const Designs = (props) => {
                                                                     <Col className="designs-grid mb-4" xs="12" md="4">
                                                                         <div className="portfolio-link">
                                                                             <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { togglePortfolioImage(design.designer.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description, design.user.id); }} style={{ backgroundImage: "url(" + designImage + ")" }}>
+                                                                            </div>
 
-                                                                            </div>
-                                                                            <div className='save-link'>
-                                                                                {/* <div className="action-button bg-white me-2">
-                                                                                    <GoBookmark className="text-black" />
-                                                                                </div> */}
-                                                                                {/* <div className="action-button bg-white">
-                                                                                    <GoHeart className="text-black" />
-                                                                                </div> */}
-                                                                            </div>
                                                                         </div>
                                                                         <div className="design-details">
                                                                             <div className='d-flex align-items-center justify-content-between'>
@@ -799,8 +796,6 @@ const Designs = (props) => {
                             </Col>
                         </Row>
 
-
-
                     </Container>
                 </section>
             </div>
@@ -813,12 +808,15 @@ const Designs = (props) => {
             >
                 <ModalHeader className='pt-2 pb-3 bg-transparent-card d-flex align-items-start'>
                     <div className='d-flex user-image'>
-                        {singleDesign.image && (
+
+                        {singleDesign.image == null && singleDesign.image == '' ? (
                             <div
                                 className='user-photo'
                                 style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                             >
                             </div>
+                        ) : (
+                            <img src={UserPlaceholder} className='placeholder-img ' />
                         )}
 
                         <div className='ms-3'>
@@ -868,32 +866,38 @@ const Designs = (props) => {
                                 <div>
                                     <div className='text-white book-consultation-bar w-100 d-flex justify-content-center'>
                                         <p className='request d-flex justify-content-between mb-5'>
-                                            <div className='d-flex justify-content-center align-items-center user-image'>
-                                                {singleDesign.image && (
-                                                    <div
-                                                        className='user-photo'
-                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
-                                                    >
+                                            <a href={`/designer-profile?user_id=${singleDesign.userId}`}>
+                                                <div className='d-flex justify-content-center align-items-center user-image'>
+
+                                                    {singleDesign.image == null && singleDesign.image == '' ? (
+                                                        <div
+                                                            className='user-photo'
+                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                                        >
+                                                        </div>
+                                                    ) : (
+                                                        <img src={UserPlaceholder} className='placeholder-img' />
+                                                    )}
+
+                                                    <div className='ms-3'>
+                                                        <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                                                        <div className='fashion-designer fs-16'>Fashion Designer</div>
                                                     </div>
-                                                )}
 
-                                                <div className='ms-3'>
-                                                    <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
-                                                    <div className='fashion-designer fs-16'>Fashion Designer</div>
                                                 </div>
-                                            </div>
+                                            </a>
 
-                                            {/* {isDesignCurrentUser ?
-                                                <> */}
-                                            <div className='btn-book-bar'>
-                                                <a href={`/appointment/schedule/${singleDesign.id}`}>
-                                                    <button className='btn btn-book-consultation'>Book a Consultation</button>
-                                                </a>
-                                            </div>
-                                            {/* </>
+                                            {isDesignCurrentUser ?
+                                                <>
+                                                    <div className='btn-book-bar'>
+                                                        <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                                            <button className='btn btn-book-consultation'>Book a Consultation</button>
+                                                        </a>
+                                                    </div>
+                                                </>
                                                 :
-                                                null} */}
-
+                                                null
+                                            }
                                         </p>
                                     </div>
                                 </div>
@@ -903,25 +907,29 @@ const Designs = (props) => {
                         <Col lg={1}>
                             <div>
                                 <div>
-                                    <div className='user-image-side thumbnail-table'>
-                                        {singleDesign.image && (
+                                    <div className='user-image-side thumbnail-table text-center'>
+                                        {singleDesign.image == null && singleDesign.image == '' ? (
                                             <div
                                                 className='user-photo-side mb-4 '
                                                 style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                             >
                                             </div>
+                                        ) : (
+                                            <img src={UserPlaceholder} className='placeholder-img-side mb-4' />
                                         )}
 
-                                        <Card className="table_content file-action">
+                                        <Card className="table_content file-action mt-3 me-0">
                                             <Card.Body className="action_container font-weight">
                                                 <Row>
                                                     <Col>
-                                                        {singleDesign.image && (
+                                                        {singleDesign.image == null && singleDesign.image == '' ? (
                                                             <div
                                                                 className='user-photo-card mb-2 '
                                                                 style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                             >
                                                             </div>
+                                                        ) : (
+                                                            <img src={UserPlaceholder} className='placeholder-img-side mb-3' />
                                                         )}
                                                         <div className='modal-title text-center fs-20 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
                                                         <div className='fs-14 text-center mt-2'>
@@ -948,27 +956,27 @@ const Designs = (props) => {
                                                             }
                                                         </div>
 
-                                                        {/* {isDesignCurrentUser ?
-                                                            <> */}
-                                                        <hr />
-                                                        <div className='text-center'>
-                                                            <a className='book-consultation btn-book btn'
-                                                                href={`/appointment/schedule/${singleDesign.id}`}
-                                                            >
-                                                                <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
-                                                        </div>
+                                                        {isDesignCurrentUser ?
+                                                            <>
+                                                                <hr />
+                                                                <div className='text-center'>
+                                                                    <a className='book-consultation btn-book btn'
+                                                                        href={`/appointment/schedule/${singleDesign.id}`}
+                                                                    >
+                                                                        <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
+                                                                </div>
 
-                                                        <div className='text-center mt-2'
-                                                            onClick={() => toggleMessage()}
-                                                        >
-                                                            <a className='book-consultation btn-message-designer btn'
-                                                            >
-                                                                <AiFillMessage className="me-2" />Message Designer</a>
-                                                        </div>
-                                                        {/* </>
+                                                                <div className='text-center mt-2'
+                                                                    onClick={() => toggleUnderConstruction("Message")}
+                                                                >
+                                                                    <a className='book-consultation btn-message-designer btn'
+                                                                    >
+                                                                        <AiFillMessage className="me-2" />Message Designer</a>
+                                                                </div>
+                                                            </>
                                                             :
                                                             null
-                                                        } */}
+                                                        }
 
                                                     </Col>
                                                 </Row>
@@ -988,14 +996,14 @@ const Designs = (props) => {
                                             <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                         </div>
 
-                                        <div className='text-center mb-4' onClick={toggleMessage}>
+                                        <div className='text-center mb-4' onClick={() => toggleUnderConstruction("Message")}>
                                             <div className="action-button-designs bg-white">
                                                 <AiFillMessage className="text-black mt-2" size={30} />
                                             </div>
                                             <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
                                         </div>
 
-                                        <div className='text-center mb-4' onClick={toggleUnderConstruction}>
+                                        <div className='text-center mb-4' onClick={() => toggleUnderConstruction("Share")}>
                                             <div className="action-button-designs bg-white">
                                                 <IoShareSocial className="text-black mt-2" size={30} />
                                             </div>
@@ -1017,7 +1025,7 @@ const Designs = (props) => {
                         </Col>
                     </Row>
                 </Modal.Body>
-            </Modal>
+            </Modal >
 
             <Modal
                 show={messageShow}
@@ -1064,12 +1072,12 @@ const Designs = (props) => {
                 size="sm"
             >
                 <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left'></h5>
+                    <h5 className='modal-title text-uppercase text-left fw-600 fs-25 mt-2'>{modalHeading}</h5>
                     <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>
 
-                <Modal.Body>
+                <Modal.Body className='pt-2'>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />
