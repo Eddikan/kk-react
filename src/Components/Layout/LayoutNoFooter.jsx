@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import Header from '../Shared/Header'
 import toast, { Toaster } from 'react-hot-toast';
 
-const LayoutNoFooter = ({ children }) => {
+const LayoutNoFooter = ({ children, className }) => {
 
   useEffect(() => {
     // Scroll to the top when the component mounts or updates
@@ -15,7 +15,7 @@ const LayoutNoFooter = ({ children }) => {
         position="top-right"
         reverseOrder={false}
       />
-      <div style={{ minHeight: '100vh' }}>
+      <div style={{ minHeight: '100vh' }} className={className}>
         <div id="navigation">
           <Header />
         </div>

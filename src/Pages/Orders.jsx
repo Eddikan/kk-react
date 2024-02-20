@@ -172,7 +172,7 @@ const Orders = (props) => {
 
         getOrder()
             .then((response) => {
-                const selectedOrders = response.data.data;
+                const selectedOrders = response.data;
                 if (selectedOrders) {
                     setOrders(selectedOrders);
                 } else {
@@ -186,7 +186,7 @@ const Orders = (props) => {
     }, [reloadCount]);
 
     return (
-        <LayoutNoFooter>
+        <LayoutNoFooter className='bg-white'>
             <section className='bg-white'>
                 <Container className='container-order position-relative'>
                     <Row>
@@ -270,7 +270,7 @@ const Orders = (props) => {
                                                     month: 'long',
                                                     day: 'numeric',
                                                 };
-                                                const created_at = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
+                                                const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
 
                                                 return (
 
@@ -297,7 +297,7 @@ const Orders = (props) => {
                                                                     </div>
 
                                                                     <div className='order-id'>
-                                                                        Order ID: {order.id}
+                                                                        Order ID: {order.order.id}
                                                                     </div>
                                                                 </Card.Header>
                                                                 <Card.Body className='bg-white card-body-border'>
@@ -322,22 +322,22 @@ const Orders = (props) => {
                                                                         </Col>
 
                                                                         <Col lg={1}>
-                                                                            <span className='text-black'>${order.total_amount}</span>
+                                                                            <span className='text-black'>${order.order_items_total}</span>
                                                                         </Col>
 
                                                                         <Col lg={2}>
-                                                                            <span className='text-black'>{order.status}</span>
+                                                                            <span className='text-black'>{order.order.status}</span>
                                                                         </Col>
 
-                                                                        <Col lg={2}>
-                                                                            {/* <a href={`/order-details/${order.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                        <Col lg={2}  className='text-right'>
+                                                                            <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
                                                                                 <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                            </a> */}
-                                                                            {reorderLoading ?
+                                                                            </a>
+                                                                            {/* {reorderLoading ?
                                                                                 <button type="button" className='btn btn-primary'>Loading...</button>
                                                                                 :
                                                                                 <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
-                                                                            }
+                                                                            } */}
                                                                             
                                                                         </Col>
                                                                     </Row>
@@ -381,9 +381,9 @@ const Orders = (props) => {
                                 <>
                                     {orders.length > 0 ?
                                         <>
-                                            {orders.some(order => order.status === "Pending") ?
+                                            {orders.some(order => order.order.status === "Pending") ?
                                                 <>
-                                                    {orders.filter(order => order.status === "Pending").map(order => {
+                                                    {orders.filter(order => order.order.status === "Pending").map(order => {
                                                         var order_items = order.order_items;
                                                         var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
@@ -398,7 +398,7 @@ const Orders = (props) => {
                                                             month: 'long',
                                                             day: 'numeric',
                                                         };
-                                                        const created_at = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
+                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
 
                                                         return (
 
@@ -425,7 +425,7 @@ const Orders = (props) => {
                                                                             </div>
 
                                                                             <div className='order-id'>
-                                                                                Order ID: {order.id}
+                                                                                Order ID: {order.order.id}
                                                                             </div>
                                                                         </Card.Header>
                                                                         <Card.Body className='bg-white card-body-border'>
@@ -450,15 +450,15 @@ const Orders = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={1}>
-                                                                                    <span className='text-black'>${order.total_amount}</span>
+                                                                                    <span className='text-black'>${order.order_items_total}</span>
                                                                                 </Col>
 
                                                                                 <Col lg={2}>
-                                                                                    <span className='text-black'>{order.status}</span>
+                                                                                    <span className='text-black'>{order.order.status}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={2}>
-                                                                                    {/* <a href={`/order-details/${order.user.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                <Col lg={2} className='text-right'>
+                                                                                    {/* <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
                                                                                         <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
                                                                                     </a> */}
                                                                                     {reorderLoading ?
@@ -516,9 +516,9 @@ const Orders = (props) => {
                                 <>
                                     {orders.length > 0 ?
                                         <>
-                                            {orders.some(order => order.status === "Processing") ?
+                                            {orders.some(order => order.order.status === "Processing") ?
                                                 <>
-                                                    {orders.filter(order => order.status === "Processing").map(order => {
+                                                    {orders.filter(order => order.order.status === "Processing").map(order => {
                                                         var order_items = order.order_items;
                                                         var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
@@ -533,7 +533,7 @@ const Orders = (props) => {
                                                             month: 'long',
                                                             day: 'numeric',
                                                         };
-                                                        const created_at = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
+                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
 
                                                         return (
 
@@ -554,13 +554,13 @@ const Orders = (props) => {
 
                                                                                     <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
                                                                                     {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                    onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
-                                                                                /> */}
+                                                                                        onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
+                                                                                    /> */}
                                                                                 </div>
                                                                             </div>
 
                                                                             <div className='order-id'>
-                                                                                Order ID: {order.id}
+                                                                                Order ID: {order.order.id}
                                                                             </div>
                                                                         </Card.Header>
                                                                         <Card.Body className='bg-white card-body-border'>
@@ -585,17 +585,17 @@ const Orders = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={1}>
-                                                                                    <span className='text-black'>${order.total_amount}</span>
+                                                                                    <span className='text-black'>${order.order_items_total}</span>
                                                                                 </Col>
 
                                                                                 <Col lg={2}>
-                                                                                    <span className='text-black'>{order.status}</span>
+                                                                                    <span className='text-black'>{order.order.status}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={2}>
-                                                                                    {/* <a href={`/order-details/${order.user.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                </a> */}
+                                                                                <Col lg={2} className='text-right'>
+                                                                                    {/* <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                        <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                                                    </a> */}
                                                                                     {reorderLoading ?
                                                                                         <button type="button" className='btn btn-primary'>Loading...</button>
                                                                                         :
@@ -651,9 +651,9 @@ const Orders = (props) => {
                                 <>
                                     {orders.length > 0 ?
                                         <>
-                                            {orders.some(order => order.status === "Shipped") ?
+                                            {orders.some(order => order.order.status === "Shipped") ?
                                                 <>
-                                                    {orders.filter(order => order.status === "Shipped").map(order => {
+                                                    {orders.filter(order => order.order.status === "Shipped").map(order => {
                                                         var order_items = order.order_items;
                                                         var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
@@ -668,7 +668,7 @@ const Orders = (props) => {
                                                             month: 'long',
                                                             day: 'numeric',
                                                         };
-                                                        const created_at = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
+                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
 
                                                         return (
 
@@ -689,13 +689,13 @@ const Orders = (props) => {
 
                                                                                     <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
                                                                                     {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                    onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
-                                                                                /> */}
+                                                                                        onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
+                                                                                    /> */}
                                                                                 </div>
                                                                             </div>
 
                                                                             <div className='order-id'>
-                                                                                Order ID: {order.id}
+                                                                                Order ID: {order.order.id}
                                                                             </div>
                                                                         </Card.Header>
                                                                         <Card.Body className='bg-white card-body-border'>
@@ -720,17 +720,17 @@ const Orders = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={1}>
-                                                                                    <span className='text-black'>${order.total_amount}</span>
+                                                                                    <span className='text-black'>${order.order_items_total}</span>
                                                                                 </Col>
 
                                                                                 <Col lg={2}>
-                                                                                    <span className='text-black'>{order.status}</span>
+                                                                                    <span className='text-black'>{order.order.status}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={2}>
-                                                                                    {/* <a href={`/order-details/${order.user.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                </a> */}
+                                                                                <Col lg={2} className='text-right'>
+                                                                                    {/* <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                        <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                                                    </a> */}
                                                                                     {reorderLoading ?
                                                                                         <button type="button" className='btn btn-primary'>Loading...</button>
                                                                                         :
@@ -786,9 +786,9 @@ const Orders = (props) => {
                                 <>
                                     {orders.length > 0 ?
                                         <>
-                                            {orders.some(order => order.status === "Delivered") ?
+                                            {orders.some(order => order.order.status === "Delivered") ?
                                                 <>
-                                                    {orders.filter(order => order.status === "Delivered").map(order => {
+                                                    {orders.filter(order => order.order.status === "Delivered").map(order => {
                                                         var order_items = order.order_items;
                                                         var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
@@ -803,7 +803,7 @@ const Orders = (props) => {
                                                             month: 'long',
                                                             day: 'numeric',
                                                         };
-                                                        const created_at = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
+                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
 
                                                         return (
 
@@ -824,13 +824,13 @@ const Orders = (props) => {
 
                                                                                     <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
                                                                                     {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                    onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
-                                                                                /> */}
+                                                                                        onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
+                                                                                    /> */}
                                                                                 </div>
                                                                             </div>
 
                                                                             <div className='order-id'>
-                                                                                Order ID: {order.id}
+                                                                                Order ID: {order.order.id}
                                                                             </div>
                                                                         </Card.Header>
                                                                         <Card.Body className='bg-white card-body-border'>
@@ -855,17 +855,17 @@ const Orders = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={1}>
-                                                                                    <span className='text-black'>${order.total_amount}</span>
+                                                                                    <span className='text-black'>${order.order_items_total}</span>
                                                                                 </Col>
 
                                                                                 <Col lg={2}>
-                                                                                    <span className='text-black'>{order.status}</span>
+                                                                                    <span className='text-black'>{order.order.status}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={2}>
-                                                                                    {/* <a href={`/order-details/${order.user.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                </a> */}
+                                                                                <Col lg={2} className='text-right'>
+                                                                                    {/* <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                        <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                                                    </a> */}
                                                                                     {reorderLoading ?
                                                                                         <button type="button" className='btn btn-primary'>Loading...</button>
                                                                                         :
@@ -921,9 +921,9 @@ const Orders = (props) => {
                                 <>
                                     {orders.length > 0 ?
                                         <>
-                                            {orders.some(order => order.status === "Reviewed") ?
+                                            {orders.some(order => order.order.status === "Reviewed") ?
                                                 <>
-                                                    {orders.filter(order => order.status === "Reviewed").map(order => {
+                                                    {orders.filter(order => order.order.status === "Reviewed").map(order => {
                                                         var order_items = order.order_items;
                                                         var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
@@ -938,7 +938,7 @@ const Orders = (props) => {
                                                             month: 'long',
                                                             day: 'numeric',
                                                         };
-                                                        const created_at = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
+                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
 
                                                         return (
 
@@ -959,13 +959,13 @@ const Orders = (props) => {
 
                                                                                     <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
                                                                                     {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                    onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
-                                                                                /> */}
+                                                                                        onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
+                                                                                    /> */}
                                                                                 </div>
                                                                             </div>
 
                                                                             <div className='order-id'>
-                                                                                Order ID: {order.id}
+                                                                                Order ID: {order.order.id}
                                                                             </div>
                                                                         </Card.Header>
                                                                         <Card.Body className='bg-white card-body-border'>
@@ -990,17 +990,17 @@ const Orders = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={1}>
-                                                                                    <span className='text-black'>${order.total_amount}</span>
+                                                                                    <span className='text-black'>${order.order_items_total}</span>
                                                                                 </Col>
 
                                                                                 <Col lg={2}>
-                                                                                    <span className='text-black'>{order.status}</span>
+                                                                                    <span className='text-black'>{order.order.status}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={2}>
-                                                                                    {/* <a href={`/order-details/${order.user.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                </a> */}
+                                                                                <Col lg={2} className='text-right'>
+                                                                                    {/* <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                        <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                                                    </a> */}
                                                                                     {reorderLoading ?
                                                                                         <button type="button" className='btn btn-primary'>Loading...</button>
                                                                                         :
@@ -1056,9 +1056,9 @@ const Orders = (props) => {
                                 <>
                                     {orders.length > 0 ?
                                         <>
-                                            {orders.some(order => order.status === "Completed") ?
+                                            {orders.some(order => order.order.status === "Completed") ?
                                                 <>
-                                                    {orders.filter(order => order.status === "Completed").map(order => {
+                                                    {orders.filter(order => order.order.status === "Completed").map(order => {
                                                         var order_items = order.order_items;
                                                         var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
@@ -1073,7 +1073,7 @@ const Orders = (props) => {
                                                             month: 'long',
                                                             day: 'numeric',
                                                         };
-                                                        const created_at = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
+                                                        const created_at = (new Date(order.order.created_at)).toLocaleDateString('en-ES', options);
 
                                                         return (
 
@@ -1094,13 +1094,13 @@ const Orders = (props) => {
 
                                                                                     <div className='name-of-designer'> {order.user.first_name}  {order.user.last_name}</div>
                                                                                     {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
-                                                                                    onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
-                                                                                /> */}
+                                                                                        onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
+                                                                                    /> */}
                                                                                 </div>
                                                                             </div>
 
                                                                             <div className='order-id'>
-                                                                                Order ID: {order.id}
+                                                                                Order ID: {order.order.id}
                                                                             </div>
                                                                         </Card.Header>
                                                                         <Card.Body className='bg-white card-body-border'>
@@ -1125,17 +1125,17 @@ const Orders = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={1}>
-                                                                                    <span className='text-black'>${order.total_amount}</span>
+                                                                                    <span className='text-black'>${order.order_items_total}</span>
                                                                                 </Col>
 
                                                                                 <Col lg={2}>
-                                                                                    <span className='text-black'>{order.status}</span>
+                                                                                    <span className='text-black'>{order.order.status}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={2}>
-                                                                                    {/* <a href={`/order-details/${order.user.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                    <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
-                                                                                </a> */}
+                                                                                <Col lg={2} className='text-right'>
+                                                                                    {/* <a href={`/order-details/${order.order.id}`} className="cursor-pointer check-datails-decoration" >
+                                                                                        <span className='text-gold'><IoEyeOutline className='me-2' size={20} />Check Details</span>
+                                                                                    </a> */}
                                                                                     {reorderLoading ?
                                                                                         <button type="button" className='btn btn-primary'>Loading...</button>
                                                                                         :

@@ -8,6 +8,7 @@ import GoBack from 'Components/Shared/GoBack';
 import { CiCreditCard2 } from "react-icons/ci";
 import '../Assets/styles/Cart/style.css';
 import PlaceholderImage from '../Assets/images/placeholders/image.png';
+import UserPlaceholder from 'Assets/images/user.png';
 import { AiOutlineCheck, AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
 import { PiGridFourThin, PiTableThin, PiTrashThin, PiPencilThin, PiUserCircleThin } from 'react-icons/pi';
 import { AiOutlineDelete } from "react-icons/ai";
@@ -280,17 +281,23 @@ const Cart = (props) => {
                                                                                 </div>
 
                                                                                 <div className='d-flex align-items-center user-image-chat'>
-                                                                                    {userDetails.image && (
+                                                                                    {cartItem.seller.image ? 
                                                                                         <div
                                                                                             className='user-photo-chat'
-                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${userDetails.image})` }}
+                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${cartItem.seller.image})` }}
                                                                                         >
                                                                                         </div>
-                                                                                    )}
+                                                                                        :
+                                                                                        <div
+                                                                                            className='user-photo-chat'
+                                                                                            style={{ backgroundImage: `url(${UserPlaceholder})` }}
+                                                                                        >
+                                                                                        </div>
+                                                                                    }
                                                                                     <span className='name-user ms-2'>
-                                                                                        {userDetails.first_name}
+                                                                                        {cartItem.seller.first_name}
                                                                                         &nbsp;
-                                                                                        {userDetails.last_name}
+                                                                                        {cartItem.seller.last_name}
                                                                                     </span>
                                                                                 </div>
                                                                             </div>
