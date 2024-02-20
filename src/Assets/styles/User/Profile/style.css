@@ -21,3 +21,13 @@
     display: block;
     border-radius: 50%;
 }
+
+.profile-icon {
+    margin-top: 5px;
+}
+
+.ellipsis-profile {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

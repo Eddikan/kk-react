@@ -61,28 +61,6 @@ const Appointments = (props) => {
         document.body.classList.add('designer-calendar-body');
     }, []);
 
-
-    // useEffect(() => {
-    //     if (inputClicked) {
-    //         fetchAppointmentList();
-    //     }
-    // }, [query, inputClicked]);
-
-    // const fetchAppointmentList = async () => {
-    //     try {
-    //         const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment?user_id=' + currentUser, {
-    //             params: {
-    //                 query: query
-    //             }
-    //         });
-
-    //         setAppointments(response.data.data);
-    //     } catch (error) {
-    //         console.error('Error fetching appointment:', error);
-    //     }
-    // };
-
-
     useEffect(() => {
         if (currentUser) {
             getAppointments()
@@ -103,9 +81,9 @@ const Appointments = (props) => {
     return (
         <LayoutNoFooter>
             <section>
-                <Container>
+                <Container className='top-bottom'>
                     <Row>
-                        <Col lg={12} className="designer-calendar-container">
+                        <Col lg={12}>
                             <Row className="pb-4">
                                 <Col md={6} className='d-flex justify-content-left align-items-center'>
                                     <h3 className="fs-30 fw-600 text-black mb-0">Appointments</h3>
@@ -168,10 +146,10 @@ const Appointments = (props) => {
                                                             <Card.Body className='bg-white'>
                                                                 <Row>
                                                                     <Col lg={4}>
-                                                                        <div className='d-flex user-image'>
+                                                                        <div className='d-flex appointment-user-image'>
                                                                             {appointment.image && (
                                                                                 <div
-                                                                                    className='user-photo'
+                                                                                    className='user-photo-appointment'
                                                                                     style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.image})` }}
                                                                                 >
                                                                                 </div>

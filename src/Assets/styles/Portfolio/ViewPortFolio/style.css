@@ -3,7 +3,7 @@
 }
 .cancel-btn {
     font-size: 15px;
-    padding: 12px 20px;
+    padding: 10px 20px;
     min-width: 120px;
     border-radius: 5px;
     border-width: 2px;
@@ -13,7 +13,7 @@
 }
 .btn-save {
     font-size: 15px;
-    padding: 12px 20px;
+    padding: 10px 20px;
     min-width: 120px;
     border-radius: 5px;
     border-width: 2px;
@@ -107,7 +107,7 @@ img.placeholder-chat {
     width: 100%;
 }
 .request-quote-btn {
-    padding: 12px 20px;
+    padding: 10px 20px;
     min-width: 190px;
     border-radius: 5px;
     border-width: 2px;

@@ -329,7 +329,7 @@ const EditProfile = () => {
                                                                     placeholder=''
                                                                     onChange={handleChange} />
                                                             </Form.Group>
-                                                            <div className="text-right mt-4 mb-5">
+                                                            <div className="text-right mt-4 mb-2">
                                                                 {profileFormLoading ?
                                                                     <Button type='button' className="btn-save">Saving...</Button>
                                                                     :
@@ -387,7 +387,7 @@ const EditProfile = () => {
                                                                 </Form.Control>
                                                             </Form.Group>
                                                         </Col>
-                                                        <div className="text-right mt-4 mb-5">
+                                                        <div className="text-right mt-0 mb-2">
                                                             {profileFormLoading ?
                                                                 <Button type='button' className="btn-save">Saving...</Button>
                                                                 :
@@ -421,7 +421,7 @@ const EditProfile = () => {
                                                             </Form.Group>
                                                         </Col>
                                                     </Row>
-                                                    <div className="text-right mt-4 mb-5">
+                                                    <div className="text-right mt-0 mb-2">
                                                         {profileFormLoading ?
                                                             <Button type='button' className="btn-save">Saving...</Button>
                                                             :
@@ -464,7 +464,7 @@ const EditProfile = () => {
                                                             <Form.Label>YouTube</Form.Label>
                                                             <FormControl type='text' name='youtube' value={profileFormData.youtube} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                         </Form.Group>
-                                                        <div className="text-right mt-4 mb-5">
+                                                        <div className="text-right mt-4 mb-2">
                                                             {profileFormLoading ?
                                                                 <Button type='button' className="btn-save">Saving...</Button>
                                                                 :
@@ -500,7 +500,7 @@ const EditProfile = () => {
                                                             }}
                                                         />
                                                     </Form.Group>
-                                                    <div className="text-right mt-4 mb-5">
+                                                    <div className="text-right mt-4 mb-2">
                                                         {profileFormLoading ?
                                                             <Button type='button' className="btn-save">Saving...</Button>
                                                             :

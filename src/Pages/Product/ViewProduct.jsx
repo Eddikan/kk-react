@@ -255,6 +255,40 @@ const ViewProduct = () => {
         });
     }
 
+    async function addToCart(e) {
+        setAddToCartLoading(true);
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                navigate("/cart");
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
+            setAddToCartLoading(false);
+        }).catch((error) => {
+            setAddToCartLoading(false);
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    }
+
+    async function buyNow(e) {
+        setBuyNowLoading(true);
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
+            const success = response.data.status;
+            const data = response.data.data;
+            if (success == 'Success') {
+                const cart_item_id = data.cart_item.id;
+                navigate("/cart?item=" + cart_item_id);
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
+            setBuyNowLoading(false);
+        }).catch((error) => {
+            toast.error('Something went wrong, please contact the administrator!');
+            setBuyNowLoading(false);
+        });
+    }
+
     const getProductReview = async (e) => {
         await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product/review/' + e + '?user_id=' + currentUser + '&token=' + token)
             .then((response) => {
@@ -314,41 +348,6 @@ const ViewProduct = () => {
         fetchData(productId);
         getProductReviews();
     }, []);
-
-
-    async function addToCart(e) {
-        setAddToCartLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
-            const success = response.data.status;
-            if (success == 'Success') {
-                navigate("/cart");
-            } else {
-                toast.error('Something went wrong, please contact the administrator!');
-            }
-            setAddToCartLoading(false);
-        }).catch((error) => {
-            setAddToCartLoading(false);
-            toast.error('Something went wrong, please contact the administrator!');
-        });
-    }
-
-    async function buyNow(e) {
-        setBuyNowLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
-            const success = response.data.status;
-            const data = response.data.data;
-            if (success == 'Success') {
-                const cart_item_id = data.cart_item.id;
-                navigate("/cart?item=" + cart_item_id);
-            } else {
-                toast.error('Something went wrong, please contact the administrator!');
-            }
-            setBuyNowLoading(false);
-        }).catch((error) => {
-            toast.error('Something went wrong, please contact the administrator!');
-            setBuyNowLoading(false);
-        });
-    }
 
     return (
         <Layout>
@@ -583,7 +582,7 @@ const ViewProduct = () => {
                                                                                 className="w-auto me-3 btn-primary fs-16"
                                                                                 type="button"
                                                                             >
-                                                                                Addiing to Cart...
+                                                                                Adding to Cart...
                                                                             </Button>
                                                                             :
                                                                             <Button

@@ -170,7 +170,7 @@ p {
 
 .btn-outline {
     font-size: 15px;
-    padding: 12px 20px;
+    padding: 10px 20px;
     min-width: 190px;
     border-width: 2px;
     border-radius: 5px;
@@ -768,7 +768,7 @@ form select::placeholder {
 
 #btn-edit-profile {
     font-size: 14px !important;
-    padding: 5px 0px !important;
+    padding: 10px 0px !important;
     min-width: 117px !important;
     color: #000000 !important;
     background: #ffffff;
@@ -776,13 +776,13 @@ form select::placeholder {
 
 #btn-seller-profile {
     font-size: 14px !important;
-    padding: 5px 0px !important;
+    padding: 10px 0px !important;
     min-width: 117px !important;
 }
 
 #btn-edit-profile:hover {
     font-size: 14px !important;
-    padding: 5px 0px !important;
+    padding: 10px 0px !important;
     min-width: 117px !important;
     color: #ffffff !important;
     background: #000000;
@@ -1460,6 +1460,7 @@ span.featured-designs {
     text-align: center;
     cursor: pointer;
 }
+
 button.ask-question {
     border: none;
     background: none;
@@ -1470,7 +1471,7 @@ button.ask-question {
 button.schedule-consultation {
     background: #000000;
     color: #ffffff;
-    padding: 12px 20px;
+    padding: 10px 20px;
     border-radius: 5px;
     width: 100%;
 }
@@ -1624,7 +1625,7 @@ a.schedule-consultation {
 }
 .btn-explore-now {
     font-size: 15px;
-    padding: 12px 20px;
+    padding: 10px 20px;
     min-width: 190px;
     border-radius: 5px;
     border-width: 2px;

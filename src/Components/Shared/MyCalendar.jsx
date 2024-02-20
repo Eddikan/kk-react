@@ -441,7 +441,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
 
                                                                 <Col md="5" className="pe-0 position-relative">
                                                                     <p className="hours-header mb-2 text-left">Ends at</p>
-                                                                    
+
                                                                     <div className='mb-3'>
                                                                         <input
                                                                             type='time'

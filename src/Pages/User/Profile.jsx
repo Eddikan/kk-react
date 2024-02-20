@@ -331,7 +331,7 @@ const Profile = () => {
                                             }
                                         </h2>
                                         <div className='icons-d-flex'>
-                                            <img src={PinIcon} alt="location pin" />
+                                            <img src={PinIcon} alt="location pin" className='profile-icon' />
                                             {user.city || user.province || user.country ?
                                                 <p className='fs-16 color-light-blue'>
                                                     {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""}
@@ -347,11 +347,11 @@ const Profile = () => {
                             <Col lg="6" className='mb-5'>
                                 <Row className="justify-content-end">
                                     <Col md="3" className="text-right pe-0">
-                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile">Edit Profile</Button>
+                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className='w-100'>Edit Profile</Button>
                                     </Col>
                                     {user.is_designer == 1 && (
                                         <Col md="3" className="text-left">
-                                            <Button href={`/seller-center/${user.designer.id}`} type='button' id="btn-seller-profile"><GoArrowUpRight /><span className='ms-1'>Seller Center</span></Button>
+                                            <Button href={`/seller-center/${user.designer.id}`} type='button' id="btn-seller-profile" className='w-100'><GoArrowUpRight /><span className='ms-1'>Seller Center</span></Button>
                                         </Col>
                                     )}
                                 </Row>
@@ -412,7 +412,7 @@ const Profile = () => {
                                     <Col lg="6">
                                         <div className='bg-lgray profile-details address mb-4'>
                                             <div className='icons-d-flex'>
-                                                <img src={PinIcon} alt="location pin" />
+                                                <img src={PinIcon} alt="location pin" className='profile-icon' />
                                                 {user.city || user.province || user.country ?
                                                     <p className='information-font'>{user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country + "," : ""}</p>
                                                     :
@@ -421,23 +421,23 @@ const Profile = () => {
                                             </div>
                                             {user.website ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={LinkIcon} alt="website pin" />
+                                                    <img src={LinkIcon} alt="website pin" className='profile-icon' />
                                                     <p className='information-font'><a href={user.website} target="_blank">{user.website}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={LinkIcon} alt="website pin" />
+                                                    <img src={LinkIcon} alt="website pin" className='profile-icon' />
                                                     <p className='information-font'><a href="#">-</a></p>
                                                 </div>
                                             }
                                             {user.phone_number ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={TelephonIcon} alt="telephone pin" />
+                                                    <img src={TelephonIcon} alt="telephone pin" className='profile-icon' />
                                                     <p className='information-font mb-0'><a href={`tel:${user.phone_number}"`}>{user.phone_number}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={TelephonIcon} alt="telephone pin" />
+                                                    <img src={TelephonIcon} alt="telephone pin" className='profile-icon' />
                                                     <p className='information-font mb-0'><a href="#">-</a></p>
                                                 </div>
                                             }
@@ -446,56 +446,56 @@ const Profile = () => {
                                             <p className='social-profile'>Social</p>
                                             {user.behance ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={BehanceIcon} alt="behance pin" />
-                                                    <p className='information-font'><a href={user.behance} target="_blank">{user.behance}</a></p>
+                                                    <img src={BehanceIcon} alt="behance pin" className='profile-icon' />
+                                                    <p className='information-font ellipsis-profile'><a href={user.behance} target="_blank">{user.behance}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={BehanceIcon} alt="behance pin" />
+                                                    <img src={BehanceIcon} alt="behance pin" className='profile-icon' />
                                                     <p><a href="#" target="_blank">-</a></p>
                                                 </div>
                                             }
                                             {user.facebook ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={FacebookIcon} alt="facebook pin" />
-                                                    <p className='information-font'><a href={user.facebook} target="_blank">{user.facebook}</a></p>
+                                                    <img src={FacebookIcon} alt="facebook pin" className='profile-icon' />
+                                                    <p className='information-font ellipsis-profile'><a href={user.facebook} target="_blank">{user.facebook}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={FacebookIcon} alt="facebook pin" />
+                                                    <img src={FacebookIcon} alt="facebook pin" className='profile-icon' />
                                                     <p><a href="#">-</a></p>
                                                 </div>
                                             }
                                             {user.linkedin ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={LinkedinIcon} alt="linkedin pin" />
-                                                    <p className='information-font'><a href={user.linkedin} target="_blank">{user.linkedin}</a></p>
+                                                    <img src={LinkedinIcon} alt="linkedin pin" className='profile-icon' />
+                                                    <p className='information-font ellipsis-profile'><a href={user.linkedin} target="_blank">{user.linkedin}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={LinkedinIcon} alt="linkedin pin" />
+                                                    <img src={LinkedinIcon} alt="linkedin pin" className='profile-icon' />
                                                     <p><a href="#">-</a></p>
                                                 </div>
                                             }
                                             {user.instagram ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={SocialmediaIcon} alt="instagram pin" />
-                                                    <p className='information-font'><a href={user.instagram} target="_blank">{user.instagram}</a></p>
+                                                    <img src={SocialmediaIcon} alt="instagram pin" className='profile-icon' />
+                                                    <p className='information-font ellipsis-profile'><a href={user.instagram} target="_blank">{user.instagram}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={SocialmediaIcon} alt="instagram pin" />
+                                                    <img src={SocialmediaIcon} alt="instagram pin" className='profile-icon' />
                                                     <p><a href="#">-</a></p>
                                                 </div>
                                             }
                                             {user.youtube ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={YoutubeIcon} alt="youtube pin" />
-                                                    <p className='information-font'><a href={user.youtube} target="_blank">{user.youtube}</a></p>
+                                                    <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
+                                                    <p className='information-font ellipsis-profile'><a href={user.youtube} target="_blank">{user.youtube}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={YoutubeIcon} alt="youtube pin" />
+                                                    <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
                                                     <p><a href="#">-</a></p>
                                                 </div>
                                             }

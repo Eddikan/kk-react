@@ -310,8 +310,6 @@ const Designs = (props) => {
             setIsDesignCurrentUser(true);
         }
 
-        console.log("userId", userId);
-        console.log("currentUser", currentUser);
 
     }
 
@@ -885,16 +883,16 @@ const Designs = (props) => {
                                                 </div>
                                             </div>
 
-                                            {isDesignCurrentUser ?
-                                                <>
-                                                    <div className='btn-book-bar'>
-                                                        <a href={`/appointment/schedule/${singleDesign.id}`}>
-                                                            <button className='btn btn-book-consultation'>Book a Consultation</button>
-                                                        </a>
-                                                    </div>
-                                                </>
+                                            {/* {isDesignCurrentUser ?
+                                                <> */}
+                                            <div className='btn-book-bar'>
+                                                <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                                    <button className='btn btn-book-consultation'>Book a Consultation</button>
+                                                </a>
+                                            </div>
+                                            {/* </>
                                                 :
-                                                null}
+                                                null} */}
 
                                         </p>
                                     </div>
@@ -950,27 +948,27 @@ const Designs = (props) => {
                                                             }
                                                         </div>
 
-                                                        {isDesignCurrentUser ?
-                                                            <>
-                                                                <hr />
-                                                                <div className='text-center'>
-                                                                    <a className='book-consultation btn-book btn'
-                                                                        href={`/appointment/schedule/${singleDesign.id}`}
-                                                                    >
-                                                                        <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
-                                                                </div>
+                                                        {/* {isDesignCurrentUser ?
+                                                            <> */}
+                                                        <hr />
+                                                        <div className='text-center'>
+                                                            <a className='book-consultation btn-book btn'
+                                                                href={`/appointment/schedule/${singleDesign.id}`}
+                                                            >
+                                                                <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
+                                                        </div>
 
-                                                                <div className='text-center mt-2'
-                                                                    onClick={() => toggleMessage()}
-                                                                >
-                                                                    <a className='book-consultation btn-message-designer btn'
-                                                                    >
-                                                                        <AiFillMessage className="me-2" />Message Designer</a>
-                                                                </div>
-                                                            </>
+                                                        <div className='text-center mt-2'
+                                                            onClick={() => toggleMessage()}
+                                                        >
+                                                            <a className='book-consultation btn-message-designer btn'
+                                                            >
+                                                                <AiFillMessage className="me-2" />Message Designer</a>
+                                                        </div>
+                                                        {/* </>
                                                             :
                                                             null
-                                                        }
+                                                        } */}
 
                                                     </Col>
                                                 </Row>

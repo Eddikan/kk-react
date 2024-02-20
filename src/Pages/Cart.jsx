@@ -28,7 +28,7 @@ const Cart = (props) => {
 
     // Parse search string to get query parameters
     const searchParams = new URLSearchParams(location.search);
-    
+
     // Access individual query parameters using get method
     const item = searchParams.get('item');
 
@@ -70,7 +70,7 @@ const Cart = (props) => {
     };
 
     const updateQuantity = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'cart/'+data.id, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'cart/' + data.id, data);
     };
 
     const deleteCartItem = async () => {
@@ -88,7 +88,7 @@ const Cart = (props) => {
 
     const handleCheckboxChange = (id) => {
         if (selectedCartItems.includes(id)) {
-            setSelectedCartItems(selectedCartItems.filter((cartItemId) => cartItemId !== id)); 
+            setSelectedCartItems(selectedCartItems.filter((cartItemId) => cartItemId !== id));
         } else {
             setSelectedCartItems([...selectedCartItems, id]);
         }
@@ -112,8 +112,6 @@ const Cart = (props) => {
     }
 
     const updateItemQuantity = (data) => {
-        // setFormStatus('loading');
-        // console.log(data);
         updateQuantity({ user_id: currentUser, quantity: data.quantity, id: data.id }).then(response => {
             const success = response.data.status;
             if (success == success) {
@@ -151,7 +149,7 @@ const Cart = (props) => {
 
     useEffect(() => {
         let cart_total = 0;
-        if (cartItems.length > 0 && selectedCartItems.length > 0 ) {
+        if (cartItems.length > 0 && selectedCartItems.length > 0) {
             // Calculate subtotal for each selected item and sum up to get the total
             cart_total = cartItems.reduce((acc, item) => {
                 // Check if the item is selected
@@ -177,7 +175,7 @@ const Cart = (props) => {
                     if (item && item != "") {
                         setSelectedCartItems([...selectedCartItems, parseInt(item)]);
                     }
-                    
+
                 } else {
                     toast.error('There has been an error getting the products, please try again!');
                 }
@@ -268,7 +266,7 @@ const Cart = (props) => {
                                                                             className="check-box me-2 check-box-color"
                                                                             checked={selectedCartItems.includes(cartItem.id)}
                                                                             onChange={(e) => { handleCheckboxChange(cartItem.id); }}
-                                                                        /> 
+                                                                        />
                                                                     </Col>
                                                                     <Col lg={4}>
                                                                         <div className='d-flex'>
@@ -304,7 +302,7 @@ const Cart = (props) => {
                                                                     </Col>
 
                                                                     <Col lg={2}>
-                                                                        <input type="number" className="form-control p-2 d-inline-block" min="1" style={{maxWidth: 60}} defaultValue={cartItem.quantity} onChange={(e) => updateItemQuantity({quantity: e.target.value, id: cartItem.id})} /> {cartItem.product.unit_measurement}
+                                                                        <input type="number" className="form-control p-2 d-inline-block" min="1" style={{ maxWidth: 60 }} defaultValue={cartItem.quantity} onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id })} /> {cartItem.product.unit_measurement}
                                                                     </Col>
 
                                                                     <Col lg={2}>
@@ -430,7 +428,7 @@ const Cart = (props) => {
                                             :
                                             <button onClick={checkOutSubmit} className='btn btn-primary w-100'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
                                         }
-                                        
+
                                     </div>
                                 </Card.Body>
                             </Card>
@@ -484,7 +482,7 @@ const Cart = (props) => {
                 <Modal.Footer className='text-right modal-footer-border pb-4'>
                     <button
                         type="button"
-                        className="btn-primary btn"
+                        className="btn-cart-cancel btn"
                         onClick={() => setCartItemModalDelete(false)}
                     >
                         <AiOutlineClose
