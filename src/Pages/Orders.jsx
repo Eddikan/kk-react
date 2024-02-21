@@ -135,7 +135,7 @@ const Orders = (props) => {
         console.log('enter', text)
     }
 
-    const getOrder = async () => {
+    const getOrders = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?status='+orderStatus);
     };
 
@@ -148,8 +148,6 @@ const Orders = (props) => {
             image: image || '-'
         })
     };
-
-
 
     async function reorderProducts(e) {
         // setReorderLoading(true);
@@ -180,7 +178,7 @@ const Orders = (props) => {
 
     useEffect(() => {
         setOrdersLoading(true);
-        getOrder()
+        getOrders()
             .then((response) => {
                 const selectedOrders = response.data.data;
                 if (selectedOrders) {
@@ -214,131 +212,152 @@ const Orders = (props) => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col lg={12}>
-                            <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${allShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("all"); }}>All</span>
-                            <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${pendingShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("pending"); }}>Pending</span>
-                            <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${processShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("processing"); }}>Processing</span>
-                            <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${shippedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("shipped"); }}>Shipped</span>
-                            <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${deliveredShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("delivered"); }}>Delivered</span>
-                            <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${reviewShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("review"); }}>Review and Feedback</span>
-                            <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${completedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("completed"); }}>Completed</span>
-                            <hr className='mt-2 mb-3' />
-                        </Col>
-                    </Row>
-
-                    <Row className="mb-2">
-                        <Col>
-                            <Card>
-                                <Card.Body className='bg-light'>
-                                    <Row>
-                                        <Col lg={3}>
-                                            <span className='fw-500 text-black'>Date</span>
-                                        </Col>
-
-                                        <Col lg={3} className="text-center">
-                                            <span className='fw-500 text-black'>Number of Items</span>
-                                        </Col>
-
-                                        <Col lg={3} className="text-right">
-                                            <span className='fw-500 text-black'>Total Amount</span>
-                                        </Col>
-
-                                        <Col lg={3} className="text-right">
-                                            <span className='fw-500 text-black'></span>
-                                        </Col>
-                                    </Row>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                    {ordersLoading ?
-                        <>
-                            <Card className="mt-2">
+                        <Col lg={3}>
+                            <Row className="mb-3">
+                                <Col>
+                                    <Card>
+                                        <Card.Body className='bg-light'>
+                                            <span className='fw-500 text-black'>Status</span>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                            <Card className='mb-3'>
                                 <Card.Body>
-                                    <p className="mb-0 text-center">Loading...</p>
+                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${allShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("all"); }}>All</p>
+                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${pendingShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("pending"); }}>Pending</p>
+                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${processShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("processing"); }}>Processing</p>
+                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${shippedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("shipped"); }}>Shipped</p>
+                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${deliveredShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("delivered"); }}>Delivered</p>
+                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${reviewShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("review"); }}>Review and Feedback</p>
+                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${completedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("completed"); }}>Completed</p>
                                 </Card.Body>
                             </Card>
-                        </>
-                        :
-                        <>
-                            {orders ?
+                        </Col>
+                        <Col lg={9}>
+                            <Row className="mb-2">
+                                <Col>
+                                    <Card>
+                                        <Card.Body className='bg-light'>
+                                            <Row>
+                                                <Col lg={3}>
+                                                    <span className='fw-500 text-black'>Date</span>
+                                                </Col>
+
+                                                <Col lg={3} className="text-right">
+                                                    <span className='fw-500 text-black'># of Items</span>
+                                                </Col>
+
+                                                <Col lg={3} className="text-right">
+                                                    <span className='fw-500 text-black'>Total Amount</span>
+                                                </Col>
+
+                                                <Col lg={3} className="text-right">
+                                                    <span className='fw-500 text-black'></span>
+                                                </Col>
+                                            </Row>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                            {ordersLoading ?
                                 <>
-                                    {orders.length > 0 ?
+                                    <Card className="mt-3">
+                                        <Card.Body>
+                                            <p className="mb-0 text-center">Loading...</p>
+                                        </Card.Body>
+                                    </Card>
+                                </>
+                                :
+                                <>
+                                    {orders ?
                                         <>
-                                            {orders.map((order) => {
-                                                var order_items = order.order_items;
-                                                var order_product = order_items[0].product;
-                                                if (order_product.image_urls) {
-                                                    var image_urls = JSON.parse(order_product.image_urls);
-                                                    var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                } else {
-                                                    var cartItemImage = PlaceholderImage;
-                                                }
+                                            {orders.length > 0 ?
+                                                <>
+                                                    {orders.map((order) => {
+                                                        var order_items = order.order_items;
+                                                        var order_product = order_items[0].product;
+                                                        if (order_product.image_urls) {
+                                                            var image_urls = JSON.parse(order_product.image_urls);
+                                                            var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                        } else {
+                                                            var cartItemImage = PlaceholderImage;
+                                                        }
 
-                                                const options = {
-                                                    year: 'numeric',
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                };
-                                                const created_at = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
+                                                        const options = {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: 'numeric',
+                                                        };
+                                                        const created_at = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
 
-                                                // Use map() to extract quantities from each item
-                                                var quantities = order_items.map(function(item) {
-                                                    return parseInt(item.quantity);
-                                                });
+                                                        // Use map() to extract quantities from each item
+                                                        var quantities = order_items.map(function(item) {
+                                                            return parseInt(item.quantity);
+                                                        });
 
-                                                // Use reduce() to calculate the sum of quantities
-                                                var number_of_items = quantities.reduce(function(total, quantity) {
-                                                    return total + quantity;
-                                                }, 0);
+                                                        // Use reduce() to calculate the sum of quantities
+                                                        var number_of_items = quantities.reduce(function(total, quantity) {
+                                                            return total + quantity;
+                                                        }, 0);
 
 
-                                                return (
+                                                        return (
 
-                                                    <Row className='mb-2'>
-                                                        <Col lg={12}>
-                                                            <Card className='mt-2 border-card'>
-                                                                <Card.Header className='order-chat d-flex justify-content-between'>
-                                                                    <div>
-                                                                        <strong>Order ID: {order.id}</strong>
-                                                                    </div>
-                                                                </Card.Header>
-                                                                <Card.Body className='bg-white card-body-border'>
-                                                                    <Row>
-                                                                        <Col lg={3}>
-                                                                            <span className='text-black'>{created_at}</span>
-                                                                        </Col>
+                                                            <Row className='mb-2'>
+                                                                <Col lg={12}>
+                                                                    <Card className='mt-2 border-card'>
+                                                                        <Card.Header className='order-chat d-flex justify-content-between'>
+                                                                            <div>
+                                                                                <strong>Order #{order.id}</strong>
+                                                                            </div>
+                                                                        </Card.Header>
+                                                                        <Card.Body className='bg-white card-body-border'>
+                                                                            <Row>
+                                                                                <Col lg={3}>
+                                                                                    <span className='text-black'>{created_at}</span>
+                                                                                </Col>
 
-                                                                        <Col lg={3} className="text-center">
-                                                                            <span className='text-black'>{number_of_items}</span>
-                                                                        </Col>
+                                                                                <Col lg={3} className="text-right">
+                                                                                    <span className='text-black'>{number_of_items}</span>
+                                                                                </Col>
 
-                                                                        <Col lg={3} className="text-right">
-                                                                            <span className='text-black'>${order.total_amount}</span>
-                                                                        </Col>
+                                                                                <Col lg={3} className="text-right">
+                                                                                    <span className='text-black'>${order.total_amount}</span>
+                                                                                </Col>
 
-                                                                        <Col lg={3} className='text-right'>
-                                                                            <a href={`/order/${order.id}/details`} className="cursor-pointer check-datails-decoration" >
-                                                                                <span className='text-gold'><IoEyeOutline className='me-2' size={20} />View Details</span>
-                                                                            </a>
-                                                                            {/* {reorderLoading ?
-                                                                                <button type="button" className='btn btn-primary'>Loading...</button>
-                                                                                :
-                                                                                <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
-                                                                            } */}
-                                                                        </Col>
-                                                                    </Row>
-                                                                </Card.Body>
-                                                            </Card>
-                                                        </Col>
-                                                    </Row>
-                                                );
-                                            })}
+                                                                                <Col lg={3} className='text-right'>
+                                                                                    <a href={`/order/${order.id}/details`} className="cursor-pointer check-datails-decoration" >
+                                                                                        <span className='text-gold'><IoEyeOutline className='me-2' size={20} />View Details</span>
+                                                                                    </a>
+                                                                                    {/* {reorderLoading ?
+                                                                                        <button type="button" className='btn btn-primary'>Loading...</button>
+                                                                                        :
+                                                                                        <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
+                                                                                    } */}
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Card.Body>
+                                                                    </Card>
+                                                                </Col>
+                                                            </Row>
+                                                        );
+                                                    })}
 
+                                                </>
+                                                :
+                                                <>
+                                                    <Card className='mt-3'>
+                                                        <Card.Body>
+                                                            <p className="mb-0 text-center">No records found.</p>
+                                                        </Card.Body>
+                                                    </Card>
+                                                </>
+                                            }
                                         </>
                                         :
                                         <>
-                                            <Card className='mt-2'>
+                                            <Card className='mt-3'>
                                                 <Card.Body>
                                                     <p className="mb-0 text-center">No records found.</p>
                                                 </Card.Body>
@@ -346,17 +365,9 @@ const Orders = (props) => {
                                         </>
                                     }
                                 </>
-                                :
-                                <>
-                                    <Card className='mt-2'>
-                                        <Card.Body>
-                                            <p className="mb-0 text-center">No records found.</p>
-                                        </Card.Body>
-                                    </Card>
-                                </>
                             }
-                        </>
-                    }
+                        </Col>
+                    </Row>
 
                     {chatBox ?
                         <>
@@ -367,7 +378,7 @@ const Orders = (props) => {
                                             <span className="fs-14 fw-500 mb-0 name-of-user-chat">
                                                 <span className='fw-500'>{designerName.first_name} {designerName.last_name}</span>
                                             </span>
-                                            <span className='ms-3 active-now fs-14 fw-400'>Active Now</span>
+                                            {/* <span className='ms-3 active-now fs-14 fw-400'>Active Now</span> */}
                                         </div>
                                         <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                             <IoCloseOutline color="#39393A" />

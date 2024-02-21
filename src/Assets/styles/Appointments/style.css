@@ -20,7 +20,7 @@ img.placeholder-appointments {
     padding: 8px 0;
     position: absolute;
     z-index: 1;
-    bottom: 71px;
+    bottom: 35px;
     left: 10%;
     margin-left: -90px;
 }
@@ -45,10 +45,10 @@ img.placeholder-appointments {
 }
 
 .appointment-user-image .user-photo-appointment {
-    min-width: 25px;
-    min-height: 25px;
+    min-width: 45px;
+    min-height: 45px;
     max-width: 45px;
-    max-height: 20px;
+    max-height: 45px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

@@ -346,7 +346,7 @@ const DesignerProfile = () => {
                                                 onClick={() => toggleRequestAQuote(true)}
                                             >
                                                 <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
-                                                Request A Quote
+                                                Request a Quote
                                             </p>
                                         </span>
                                         {designerAvailable ?
@@ -355,12 +355,12 @@ const DesignerProfile = () => {
                                                     href={`/appointment/schedule/${designer.id}`}
                                                     className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn'
                                                 >
-                                                    <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
+                                                    <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule a Consultation</a>
                                             </span>
                                             :
                                             <span className='w-100'>
                                                 <button className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn' disabled>
-                                                    <IoVideocam color="#ffffff" className='me-2' size="20" />Designer Unavailable for Consultation
+                                                    <IoVideocam color="#ffffff" className='me-2' size="20" />Unavailable for Consultation
                                                 </button>
                                             </span>
                                         }
@@ -479,7 +479,7 @@ const DesignerProfile = () => {
                                         <div className='d-flex justify-content-between'>
                                             <div>
                                                 <span className='fw-500'>Dave Napoles</span>
-                                                <span className='ms-2 active-now fs-14 fw-400'>Active Now</span>
+                                                {/* <span className='ms-2 active-now fs-14 fw-400'>Active Now</span> */}
                                             </div>
                                             <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                                 <IoCloseOutline color="#39393A" />

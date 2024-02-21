@@ -209,7 +209,7 @@ const RateReview = (props) => {
                                                 <span className="fs-14 fw-500 mb-0 name-of-user-chat">
                                                     <span className='fw-500'>{productUser.first_name} {productUser.last_name}</span>
                                                 </span>
-                                                <span className='ms-3 active-now fs-14 fw-400'>Active Now</span>
+                                                {/* <span className='ms-3 active-now fs-14 fw-400'>Active Now</span> */}
                                             </div>
                                             <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                                 <IoCloseOutline color="#39393A" />
@@ -218,40 +218,7 @@ const RateReview = (props) => {
                                     </Card.Header>
 
                                     <Card.Body >
-                                        <div>
-                                            <span className='d-flex user-image'>
-                                                {productUser.image && (
-                                                    <div
-                                                        className='user-photo'
-                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${productUser.image})` }}
-                                                    >
-                                                    </div>
-                                                )}
-
-                                                <div className="designer-info mx-2">
-
-                                                    <div>
-                                                        <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">
-                                                            <span className=''>{productUser.first_name}{productUser.last_name}</span>
-                                                            <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
-                                                        </p>
-                                                    </div>
-
-                                                    <div className='fs-14 ms-2 mt-2 name-of-user-chat'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</div>
-                                                </div>
-                                            </span>
-                                        </div>
-
-                                        <div className='mt-5 mb-4 text-right d-flex'>
-                                            <div>
-                                                <div className='time-chat-box fs-14 fw-400'>3:30 PM
-                                                    <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
-                                                <div className='mt-2 welcome-chat'>
-                                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
-                                                </div>
-                                            </div>
-                                            <img src={User} className='placeholder-chat ms-3' />
-                                        </div>
+                                        <p>No messages.</p>
 
                                         <div>
                                             <InputEmoji

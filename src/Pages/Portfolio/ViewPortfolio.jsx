@@ -264,8 +264,8 @@ const ViewPortFolio = () => {
                                                     {isPortfolioCurrentUser ?
                                                         <>
                                                             <div>
-                                                                <div className="cursor-pointer" onClick={() => chatBoxModal("Chat Designer")}>
-                                                                    <AiFillMessage className='me-2 mb-1' color='#caa533' />Chat Designer
+                                                                <div className="cursor-pointer" onClick={() => chatBoxModal("Message")}>
+                                                                    <AiFillMessage className='me-2 mb-1' color='#caa533' />Message
 
                                                                 </div>
                                                             </div>
@@ -283,13 +283,13 @@ const ViewPortFolio = () => {
                                                                 onClick={() => toggleRequestAQuote(true)}
                                                             >
                                                                 <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
-                                                                Request A Quote
+                                                                Request a Quote
                                                             </p>
                                                         </span>
 
                                                         <span className='w-100'>
                                                             <a href={`/appointment/schedule/${portfolio.designer.id}`} className='btn mt-4 ms-3 btn-primary fs-16 fw-400 consultation-btn'>
-                                                                <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
+                                                                <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule a Consultation</a>
                                                         </span>
                                                     </>
                                                     :
@@ -358,7 +358,7 @@ const ViewPortFolio = () => {
                                                             {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} &nbsp;
                                                             {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"}
                                                         </span>
-                                                        <span className='ms-3 active-now fs-14 fw-400'>Active Now</span>
+                                                        {/* <span className='ms-3 active-now fs-14 fw-400'>Active Now</span> */}
                                                     </div>
                                                     <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                                         <IoCloseOutline color="#39393A" />
@@ -367,7 +367,8 @@ const ViewPortFolio = () => {
                                             </Card.Header>
 
                                             <Card.Body >
-                                                <div className='product-portfolio-image'>
+                                                <p>No Messages.</p>
+                                                {/* <div className='product-portfolio-image'>
                                                     <span className='d-flex'>
                                                         {images && images.length > 0 ?
                                                             <>
@@ -413,7 +414,7 @@ const ViewPortFolio = () => {
                                                     </div>
 
                                                     <img src={User} className='placeholder-chat ms-3' />
-                                                </div>
+                                                </div> */}
 
                                                 <div className='mt-3'>
                                                     <input type="text" className='form-control' />

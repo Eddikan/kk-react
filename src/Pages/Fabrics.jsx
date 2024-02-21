@@ -296,7 +296,8 @@ const Fabrics = (props) => {
             // Set the component as mounted
             setMounted(true);
         }
-    }, [mounted, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue]);
+    }, [ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue]);
+
 
     return (
         <Layout>

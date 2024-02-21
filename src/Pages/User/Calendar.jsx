@@ -192,7 +192,7 @@ const Calendar = (props) => {
                 }
                 else {
                     if (selectedTime) {
-                        console.log(selectedTime.content)
+                        // console.log(selectedTime.content)
                         setTimes(selectedTime.content);
                         if (selectedTime && selectedTime.content && selectedTime.content.length > 0) {
 
@@ -380,7 +380,7 @@ const Calendar = (props) => {
         if (!isSundayChecked) {
             setSundayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setSundayHoursFormData([sundayHoursCopyFormData]);
         }
     };
@@ -391,7 +391,7 @@ const Calendar = (props) => {
         if (!isMondayChecked) {
             setMondayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setMondayHoursFormData([mondayHoursCopyFormData]);
         }
     };
@@ -402,7 +402,7 @@ const Calendar = (props) => {
         if (!isTuesdayChecked) {
             setTuesdayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setTuesdayHoursFormData([tuesdayHoursCopyFormData]);
         }
     };
@@ -413,7 +413,7 @@ const Calendar = (props) => {
         if (!isWednesdayChecked) {
             setWednesdayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setWednesdayHoursFormData([wednesdayHoursCopyFormData]);
         }
     };
@@ -424,7 +424,7 @@ const Calendar = (props) => {
         if (!isThursdayChecked) {
             setThursdayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setThursdayHoursFormData([thursdayHoursCopyFormData]);
         }
     };
@@ -436,7 +436,7 @@ const Calendar = (props) => {
         if (!isFridayChecked) {
             setFridayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setFridayHoursFormData([fridayHoursCopyFormData]);
         }
     };
@@ -447,7 +447,7 @@ const Calendar = (props) => {
         if (!isSaturdayChecked) {
             setSaturdayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setSaturdayHoursFormData([saturdayHoursCopyFormData]);
         }
     };
@@ -636,7 +636,7 @@ const Calendar = (props) => {
                 }
                 else {
                     if (selectedTime) {
-                        console.log(selectedTime.content)
+                        // console.log(selectedTime.content)
                         setTimes(selectedTime.content);
                         if (selectedTime && selectedTime.content && selectedTime.content.length > 0) {
 

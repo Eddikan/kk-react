@@ -415,33 +415,18 @@ const Designs = (props) => {
                         </Row>
                     </Container>
                 </section>
-
-                <section>
-                    <Container>
-                        <div className='d-flex justify-content-between'>
-                            <div className='sample-categories'>
-                                Categories
-                            </div>
-
-                            <div className='sort-by-border mb-2'>
-                                <label htmlFor="dropdown" className='sample-categories'>Sort By: </label>
-                                <select id="sort-by" className="form-control d-inline-block border-none cursor-pointer fs-20 p-0 px-2" style={{ width: '120px' }} onChange={(e) => handleSortFieldChange(e.target.value)}>
-                                    {sortOptions.map(option => (
-                                        <option key={option.value} className='fs-20' value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                        </div>
-                    </Container>
-                </section>
-
-                <hr className="border-black mt-2" />
                 <section className="pt-3">
                     <Container>
                         <Row className="mt-2">
                             <Col lg="3">
                                 <div className="filter-sidebar pe-4">
+                                    <Form.Control className="mb-4" as='select' onChange={(e) => handleSortFieldChange(e.target.value)}>
+                                        <option value="" disabled selected  >Sort By:</option>
+                                        {sortOptions.map(option => (
+                                            <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
+                                        ))}
+                                    </Form.Control>
+                                    <Form.Label className="fw-600">Categories</Form.Label>
                                     <Form.Check
                                         type={`checkbox`}
                                         label={`All`}

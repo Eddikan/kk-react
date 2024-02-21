@@ -441,7 +441,7 @@ const ViewProduct = () => {
                                                         </div>
                                                     </div>
 
-                                                    {!isProductCurrentUser ?
+                                                    {isProductCurrentUser ?
                                                         <>
                                                             <div>
                                                                 <Link to={`/user/center/product/${product.id}/edit`} className="text-decoration-none">
@@ -525,33 +525,35 @@ const ViewProduct = () => {
                                                     <div className="mb-3">
                                                         <p className="fw-600 fs-25">${productPrice}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
                                                     </div>
-
+                                                    <hr />
                                                     <div>
                                                         <p className="mb-2 fs-16 fw-600">Description:</p>
-                                                        <p className="mb-3 fs-16 fw-400 line-height-24">{product.description ?? "-"}</p>
+                                                        <p className="mb-1 fs-16 fw-400 line-height-24">{product.description ?? "-"}</p>
                                                     </div>
-
+                                                    <hr />
                                                     <div>
                                                         <p className="mb-2 fs-16 fw-600">Care Instructions:</p>
-                                                        <p className="mb-3 fs-16 fw-400 line-height-24">{product.care_instructions ?? "-"}</p>
+                                                        <p className="mb-1 fs-16 fw-400 line-height-24">{product.care_instructions ?? "-"}</p>
                                                     </div>
-
+                                                    <hr />
                                                     <div>
                                                         <p className="mb-2 fs-16 fw-600">Measurements:</p>
                                                         <Row>
                                                             <Col sm={6}>
                                                                 <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Width</p>
-                                                                <p className="mb-3 fs-16 fw-400 line-height-24">{Math.trunc(product.width) ?? "-"} {product.unit_measurement ?? "-"}{product.unit_measurement == 'inch' && product.width > 1 ? 'es' : product.width > 1 ? "s" : null}</p>
+                                                                <p className="mb-1 fs-16 fw-400 line-height-24">{Math.trunc(product.width) ?? "-"} {product.unit_measurement ?? "-"}{product.unit_measurement == 'inch' && product.width > 1 ? 'es' : product.width > 1 ? "s" : null}</p>
                                                             </Col>
                                                             <Col sm={6}>
                                                                 <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Weight</p>
-                                                                <p className="mb-3 fs-16 fw-400 line-height-24">{Math.trunc(product.weight) ?? "-"} KG per sq. {product.unit_measurement ?? "-"}</p>
+                                                                <p className="mb-1 fs-16 fw-400 line-height-24">{Math.trunc(product.weight) ?? "-"} KG per sq. {product.unit_measurement ?? "-"}</p>
                                                             </Col>
                                                         </Row>
                                                     </div>
+                                                    <hr />
+                                                    
                                                     {product.colors && product.colors.length > 0 ?
                                                         <>
-                                                            <div className="mb-4">
+                                                            <div className="mb-2">
                                                                 <p className="mb-1 fs-16 fw-600">Colors:</p>
                                                                 {product.colors.map((color) => (
                                                                     <span className="design-tag bg-light fs-14 categories-color">
@@ -559,6 +561,7 @@ const ViewProduct = () => {
                                                                     </span>
                                                                 ))}
                                                             </div>
+                                                            <hr />
                                                         </>
                                                         :
                                                         null
@@ -566,7 +569,7 @@ const ViewProduct = () => {
                                                     
                                                     {product.certifications && product.certifications.length > 0 ?
                                                         <>
-                                                            <div className="mb-4">
+                                                            <div className="mb-2">
                                                                 <p className="mb-1 fs-16 fw-600">Certifications (Organic, sustainable, etc):</p>
                                                                 {product.certifications.map((certification) => (
                                                                     <span className="design-tag bg-light fs-14 categories-color mw-100">
@@ -574,6 +577,7 @@ const ViewProduct = () => {
                                                                     </span>
                                                                 ))}
                                                             </div>
+                                                            <hr />
                                                         </>
                                                         :
                                                         null
@@ -608,11 +612,11 @@ const ViewProduct = () => {
                                                             </Col>
                                                             <Col sm={6}>
                                                                 <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Drape</p>
-                                                                <p className="mb-3 fs-16 fw-400 line-height-24">{product.drape ?? "-"}</p>
+                                                                <p className="mb-2 fs-16 fw-400 line-height-24">{product.drape ?? "-"}</p>
                                                             </Col>
                                                         </Row>
                                                     </div>
-
+                                                    <hr />
                                                     {/* <div>
                                                         <p className="mb-2 fs-16 fw-600">Fabric Process Insight</p>
                                                         <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.fabric_process_insights ?? "-"}</p>
@@ -629,12 +633,12 @@ const ViewProduct = () => {
                                                                     <>
                                                                         <p className="mb-2 fs-16 fw-600">Measurement</p>
                                                                         {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
-                                                                -
-                                                            </Button> */}
+                                                                            -
+                                                                        </Button> */}
                                                                         <FormControl min="1" defaultValue="1" type='number' name='count' onChange={handleChange} className='me-3 d-inline-block counter-input' required />
                                                                         {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
-                                                                +
-                                                            </Button> */}
+                                                                            +
+                                                                        </Button> */}
 
                                                                         <span className="fs-18 fw-600">{Number(unitMeasurement)?.toFixed(2)} {
                                                                             product.unit_measurement !== 'inch' && product.unit_measurement !== 'feet'
@@ -690,8 +694,6 @@ const ViewProduct = () => {
                                                                     :
                                                                     null
                                                                 }
-
-
                                                                 {/* <span className="fw-600 fs-24">${(unitMeasurement * productPrice).toFixed(2)} 
                                                             <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span> */}
                                                             </Col>

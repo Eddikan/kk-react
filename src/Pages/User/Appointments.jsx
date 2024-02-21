@@ -8,13 +8,14 @@ import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { VscSend } from "react-icons/vsc";
 import { IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
-import { AiOutlineMessage } from "react-icons/ai";
+import { AiFillMessage } from "react-icons/ai";
 import { CiSearch } from 'react-icons/ci';
 import { useParams } from 'react-router-dom';
 import { GiAlarmClock } from "react-icons/gi";
 import { MdOutlineCalendarMonth } from "react-icons/md";
-import { IoEyeOutline } from "react-icons/io5";
+import { IoEye } from "react-icons/io5";
 import 'Assets/styles/AppointmentList/style.css';
+import 'Assets/styles/Appointments/style.css';
 import UserPlaceholder from 'Assets/images/user.png';
 import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
@@ -83,6 +84,7 @@ const Appointments = (props) => {
     function toggleShowAppointment(first_name, last_name, title, created_at, consultation_hour_start, consultation_hour_end, consultation_details) {
         setAppointmentModalIsOpen(true);
 
+        
         setSingleAppointment({
             first_name: first_name || '-',
             last_name: last_name || '-',
@@ -223,39 +225,38 @@ const Appointments = (props) => {
                                         </Row>
                                     </Col>
 
+                                    
                                     <Col lg={12}>
-                                        <Card className='border-appointment-list'>
-                                            <Card.Body className='bg-white'>
+                                        <Card>
+                                            <Card.Body className='bg-light'>
                                                 <Row>
-                                                    <Col lg={3}>
-                                                        <div className='fw-500'>Date Created</div>
+                                                    <Col lg={4}>
+                                                        <span className='fw-500'>Customer</span>
                                                     </Col>
 
-                                                    <Col lg={3}>
-                                                        <div className='fw-500'>Name</div>
-                                                    </Col>
-
-                                                    <Col lg={3}>
-                                                        <div className='fw-500'>Appointment Date & Time</div>
+                                                    <Col lg={4}>
+                                                        <span className='fw-500'>Appointment Date & Time</span>
                                                     </Col>
 
                                                     <Col lg={2}>
-                                                        <div className='fw-500'>Status</div>
+                                                        <span className='fw-500'>Status</span>
                                                     </Col>
 
-                                                    <Col lg={1} className='text-end fw-500'>
-                                                        <div>Action</div>
+                                                    <Col lg={2}>
+
                                                     </Col>
                                                 </Row>
                                             </Card.Body>
                                         </Card>
                                     </Col>
+
                                     <>
                                         {appointments ?
                                             <>
                                                 {appointments.length > 0 ?
                                                     <>
                                                         {appointments.map((appointment) => {
+
                                                             const options = {
                                                                 year: 'numeric',
                                                                 month: 'long',
@@ -266,66 +267,59 @@ const Appointments = (props) => {
                                                                 year: 'numeric',
                                                                 month: 'long',
                                                                 day: 'numeric',
+                                                                hour: 'numeric',
+                                                                minute: 'numeric',
                                                                 timeZone: 'UTC',
-
                                                             });
+
                                                             return (
-
                                                                 <Col lg={12}>
-                                                                    <Card className='mt-2 border-appointment-list'>
+                                                                    <Card className='mt-3'>
                                                                         <Card.Body className='bg-white'>
-                                                                            <Row>
-                                                                                <Col lg={3} className='center-name'>
-                                                                                    <span>{today}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={3} className='d-flex user-image' >
-
-                                                                                    {appointment.image !== null && appointment.image !== '' ? (
-                                                                                        <div
-                                                                                            className='user-photo'
-                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.image})` }}
-                                                                                        >
+                                                                            <Row className="align-items-center">
+                                                                                <Col lg={4}>
+                                                                                    <div className='d-flex appointment-user-image'>
+                                                                                        {appointment.customer?.image && (
+                                                                                            <div
+                                                                                                className='user-photo-appointment'
+                                                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.customer?.image})` }}
+                                                                                            >
+                                                                                            </div>
+                                                                                        )}
+                                                                                        <div>
+                                                                                            <span className='d-flex ms-3 mt-0 mb-1 fs-18 text-black'>
+                                                                                                {appointment.customer?.first_name}
+                                                                                                &nbsp;
+                                                                                                {appointment.customer?.last_name}
+                                                                                            </span>
+                                                                                            <div className='ms-3 fs-16 text-black'>
+                                                                                                <span className='fw-600 me-1'>Created:</span>&nbsp;{today}
+                                                                                            </div>
                                                                                         </div>
-                                                                                    ) : (
-                                                                                        <img src={UserPlaceholder} className='placeholder-img me-2' />
-                                                                                    )}
-                                                                                    {/* <img src={UserPlaceholder} className='placeholder-img me-2' /> */}
-
-                                                                                    <span className='d-flex justify-content-center align-items-center ms-2 mt-1'>
-                                                                                        {appointment.first_name}
-                                                                                        &nbsp;
-                                                                                        {appointment.last_name}
-                                                                                    </span>
+                                                                                    </div>
                                                                                 </Col>
 
-                                                                                <Col lg={3} className='center-name'>
-                                                                                    <span>{formattedDate}</span>
+                                                                                <Col lg={4}>
+                                                                                    <span className='text-black'>{formattedDate}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={2} className='center-name'>
-                                                                                    <span>{appointment.status}</span>
+                                                                                <Col lg={2}>
+                                                                                    <span className='text-black'>{appointment.status}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={1} className='d-flex justify-content-end'>
-                                                                                    <div
-                                                                                        className="cursor-pointer d-flex justify-content-center align-items-center"
-                                                                                        onClick={() => chatBoxModal(appointment.first_name, appointment.last_name, appointment.image, appointment.status)}
-                                                                                    >
-                                                                                        <AiOutlineMessage className='me-2' size={20} />
+                                                                                
+                                                                                <Col lg={2} className='d-flex justify-content-end'>
+                                                                                    <div className="cursor-pointer appointments-tooltip" onClick={() => toggleShowAppointment(appointment.customer?.first_name, appointment.customer?.last_name, appointment.title, appointment.created_at, appointment.consultation_hour_start, appointment.consultation_hour_end, appointment.consultation_details)}>
+                                                                                        <span className="icon-tooltiptext fs-14">View Details</span>
+                                                                                        <IoEye className='video-cam me-3' size={20} />
                                                                                     </div>
 
-                                                                                    {/* <Link className="text-decoration-none" to={`/portfolio/${appointment.id}/edit`}> */}
-                                                                                    <div
-                                                                                        onClick={() => toggleShowAppointment(appointment.first_name, appointment.last_name, appointment.title, appointment.created_at, appointment.consultation_hour_start, appointment.consultation_hour_end, appointment.consultation_details)}
-                                                                                        // onclick={() => toggleUnderConstruction}
-                                                                                        className="cursor-pointer icon-tooltiptext d-flex justify-content-center align-items-center"
+                                                                                    <div className="cursor-pointer appointments-tooltip"
+                                                                                        onClick={() => chatBoxModal(appointment.customer?.first_name, appointment.customer?.last_name, appointment.customer?.image, appointment.status)}
                                                                                     >
-                                                                                        <span>
-                                                                                            <IoEyeOutline size={20} />
-                                                                                        </span>
+                                                                                        <span className="icon-tooltiptext fs-14">Message Customer</span>
+                                                                                        <span><AiFillMessage className='video-cam' size={20} /></span>
                                                                                     </div>
-                                                                                    {/* </Link> */}
                                                                                 </Col>
                                                                             </Row>
                                                                         </Card.Body>
@@ -333,18 +327,29 @@ const Appointments = (props) => {
                                                                 </Col>
                                                             );
                                                         })}
+
                                                     </>
                                                     :
                                                     <>
-                                                        <div className='text-center fs-18 mt-5'>
-                                                            No records found.
-                                                        </div>
+                                                        <Col lg={12}>
+                                                            <Card className='mt-3'>
+                                                                <Card.Body>
+                                                                    <p className="text-center mb-0">No records found.</p>
+                                                                </Card.Body>
+                                                            </Card>
+                                                        </Col>
                                                     </>
                                                 }
                                             </>
                                             :
                                             <>
-
+                                                <Col lg={12}>
+                                                    <Card className='mt-3'>
+                                                        <Card.Body>
+                                                            <p className="text-center mb-0">No records found.</p>
+                                                        </Card.Body>
+                                                    </Card>
+                                                </Col>
                                             </>
                                         }
                                     </>

@@ -160,6 +160,7 @@ const Cart = (props) => {
                 }
                 return acc;
             }, 0);
+
         }
         if (cart_total > 0) {
             setTotalAmount(cart_total.toFixed(2));
@@ -173,8 +174,14 @@ const Cart = (props) => {
                 const cartItemsData = response.data.data;
                 if (cartItemsData) {
                     setCartItems(cartItemsData);
-                    if (item && item != "") {
-                        setSelectedCartItems([...selectedCartItems, parseInt(item)]);
+                    if (item && item !== "") {
+                        // Extract item ids from cartItemsData and add parseInt(item)
+                        const updatedSelectedCartItems = [...cartItemsData.map(cartItem => cartItem.id), parseInt(item)];
+                        setSelectedCartItems(updatedSelectedCartItems);
+                    } else {
+                        // Map over cartItemsData to extract item ids and add them to selectedCartItems
+                        const updatedSelectedCartItems = cartItemsData.map(cartItem => cartItem.id);
+                        setSelectedCartItems(updatedSelectedCartItems);
                     }
 
                 } else {
@@ -331,7 +338,7 @@ const Cart = (props) => {
                                             :
                                             <>
                                                 <div className='text-center my-3'>
-                                                    No items found.
+                                                    Your cart is empty.
                                                 </div>
                                             </>
                                         }
@@ -349,11 +356,8 @@ const Cart = (props) => {
                                         </Col>
                                         <Col lg={6}>
                                         </Col>
-                                        <Col lg={2}>
-                                            <span className='fs-18'>Total Amount</span>
-                                        </Col>
-                                        <Col>
-                                            <span className='total-price fs-20 fw-600'>${totalAmount}</span>
+                                        <Col className='text-right'>
+                                            <span className='fs-18 me-3'>Total Amount</span><span className='total-price fs-20 fw-600'>${totalAmount}</span>
                                         </Col>
                                     </Row>
                                 </Card.Body>
@@ -430,7 +434,7 @@ const Cart = (props) => {
                                     <div className='text-center mt-4'
                                     // onClick={() => toggleUnderConstruction("Check Out")}
                                     >
-                                        {selectedCartItems.length < 1 ?
+                                        {selectedCartItems.length < 1 || cartItems.length < 1?
                                             <button className='btn btn-primary w-100' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
                                             :
                                             <button onClick={checkOutSubmit} className='btn btn-primary w-100'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>

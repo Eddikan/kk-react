@@ -168,11 +168,11 @@ const Products = (props) => {
                                                             </div>
 
                                                             <Row>
-                                                                <Col lg="6">
+                                                                <Col lg="12">
                                                                     <div className="text-black text-decoration-none ellipsis rufina-family fs-18 mt-2">{object.name ?? "-"}</div>
                                                                 </Col>
 
-                                                                <Col lg="6" className='text-end'>
+                                                                {/* <Col lg="6" className='text-end'>
                                                                     {object.views == null ?
                                                                         <div className='mt-2'>
                                                                             <IoEyeOutline className="text-black ms-2" /> 0
@@ -182,7 +182,7 @@ const Products = (props) => {
                                                                             <IoEyeOutline className="text-black ms-2" /> {object.views}
                                                                         </div>
                                                                     }
-                                                                </Col>
+                                                                </Col> */}
                                                             </Row>
                                                         </Col>
                                                     ))}

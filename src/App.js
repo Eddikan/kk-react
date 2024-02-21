@@ -28,7 +28,7 @@ const DesignerProfile = lazy(() => import("./Pages/DesignerProfile"));
 const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
 const Appointments = lazy(() => import("./Pages/Appointments"));
 const UserAppointments = lazy(() => import("./Pages/User/Appointments"));
-const UserOrders = lazy(() => import("./Pages/User/Orders"));
+const UserOrders = lazy(() => import("./Pages/Seller/Orders"));
 const Orders = lazy(() => import("./Pages/Orders"));
 const Messages = lazy(() => import("./Pages/Messages"));
 const RateReview = lazy(() => import("./Pages/RateReview"));

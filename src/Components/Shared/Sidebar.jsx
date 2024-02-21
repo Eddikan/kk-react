@@ -64,7 +64,8 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
 
             <div id="sidebar">
                 <UncontrolledAccordion>
-                    <AccordionItem className='padding-sidebar'>
+                    <AccordionItem className='padding-sidebar pt-4'>
+                        <p className="fs-20"><strong>Seller Center</strong></p>
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/calendar')}><IoCalendarClearOutline size="20" className="me-2" />Calendar</div>
 
                         <a className="yellow-hover cursor-pointer text-decoration "
@@ -93,12 +94,12 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                         </AccordionHeader>
 
                         <AccordionBody accordionId="2">
-                            <p className={currentTab == 'all' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('all')}>All</p>
-                            <p className={currentTab == 'active' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('active')}>Pending</p>
-                            <p className={currentTab == 'processing' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('processing')}>Processing</p>
-                            <p className={currentTab == 'shipped' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('shipped')}>Shipped</p>
-                            <p className={currentTab == 'delivered' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer'} onClick={() => onChangeTab('delivered')}>Delivered</p>
-                            <p className={currentTab == 'review' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('review')}>Review and Feedback</p>
+                            <p className={currentTab == 'All' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('All')}>All</p>
+                            <p className={currentTab == 'Pending' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('Pending')}>Pending</p>
+                            <p className={currentTab == 'Processing' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('Processing')}>Processing</p>
+                            <p className={currentTab == 'Shipped' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('Shipped')}>Shipped</p>
+                            <p className={currentTab == 'Delivered' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer'} onClick={() => onChangeTab('Delivered')}>Delivered</p>
+                            <p className={currentTab == 'Review' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('Review')}>Review and Feedback</p>
                         </AccordionBody>
 
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/portfolio')}><PiBriefcase size="22" className="me-2" />Portfolio</div>

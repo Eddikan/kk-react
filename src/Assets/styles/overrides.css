@@ -292,7 +292,8 @@ p {
 }
 
 hr {
-    border-color: var(--dgray);
+    border-color: var(--light);
+    opacity: 1;
 }
 
 a {
@@ -1662,4 +1663,11 @@ a.schedule-consultation {
 
 .rbc-date-cell {
     cursor: pointer;
+}
+
+.bio-short-designer {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    -webkit-line-clamp: 1;
 }

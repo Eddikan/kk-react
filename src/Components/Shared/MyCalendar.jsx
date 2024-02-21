@@ -352,7 +352,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                             const appointmentEndIso = convertHoursToDatetime(appointment.consultation_hour_end, appointmentDateTime);
                             const eventData = {
                                 id: appointment.id,
-                                title: appointment.title ? appointment.title : 'Appointment with ' + appointment.first_name + ' ' + appointment.last_name,
+                                title: appointment.title ? appointment.title : 'Appointment with ' + appointment.customer?.first_name + ' ' + appointment.customer?.last_name,
                                 start: new Date(appointmentStartIso),
                                 end: new Date(appointmentEndIso),
                                 desc: appointment.consultation_details,

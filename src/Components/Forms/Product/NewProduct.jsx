@@ -457,14 +457,14 @@ const NewProduct = (props) => {
                             </Form.Group>
                             <Form.Group className='my-4'>
                                 <Form.Label>Video Demonstration</Form.Label>
-                                <Form.Control as='select' name='video_demo_type' value={productData.video_demo_type} className='mr-sm-2' onChange={handleChange} required>
+                                <Form.Control as='select' name='video_demo_type' value={productData.video_demo_type} className='mr-sm-2' onChange={handleChange}>
                                     <option value=''>Select Type</option>
                                     <option value='Youtube'>Youtube</option>
                                     <option value='Vimeo'>Vimeo</option>
                                     <option value='Upload'>Upload Video</option>
                                 </Form.Control>
                                 {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Vimeo" ?
-                                    <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} required placeholder={`Insert ${productData.video_demo_type} embed link`} />
+                                    <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />
                                     : productData.video_demo_type == "Upload" ?
                                     <div className="mt-3">
                                         <VideoDragAndDrop type="product" onVideoChange={handleVideoChange} size={size} />

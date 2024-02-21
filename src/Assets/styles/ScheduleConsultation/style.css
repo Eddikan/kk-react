@@ -32,22 +32,22 @@
 }
 
 .time-container h4 {
-    font-family: ProximaNova;
+    font-family: Poppins;
     font-size: 18px;
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .appointment-preview-container h3 {
-    font-family: ProximaNova;
+    font-family: Poppins;
     font-size: 18px;
-    font-weight: 700;
+    font-weight: 600;
     margin-bottom: 20px;
 }
 
 .appointment-calendar-container h3 {
-    font-family: ProximaNova;
+    font-family: Poppins;
     font-size: 18px;
-    font-weight: 700;
+    font-weight: 600;
     margin-bottom: 15px;
 }
 

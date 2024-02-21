@@ -142,26 +142,26 @@ const Appointments = (props) => {
 
                                                 return (
                                                     <Col lg={12}>
-                                                        <Card className='mt-2'>
+                                                        <Card className='mt-3'>
                                                             <Card.Body className='bg-white'>
                                                                 <Row className="align-items-center">
                                                                     <Col lg={4}>
                                                                         <div className='d-flex appointment-user-image'>
-                                                                            {appointment.image && (
+                                                                            {appointment.designer?.image && (
                                                                                 <div
                                                                                     className='user-photo-appointment'
-                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.image})` }}
+                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.designer?.image})` }}
                                                                                 >
                                                                                 </div>
                                                                             )}
                                                                             <div>
-                                                                                <span className='d-flex ms-3 mt-0 mb-2 fs-18 text-black'>
-                                                                                    {appointment.first_name}
+                                                                                <span className='d-flex ms-3 mt-0 mb-1 fs-18 text-black'>
+                                                                                    {appointment.designer?.first_name}
                                                                                     &nbsp;
-                                                                                    {appointment.last_name}
+                                                                                    {appointment.designer?.last_name}
                                                                                 </span>
                                                                                 <div className='ms-3 fs-16 text-black'>
-                                                                                    <span className='fw-600 me-1'>Date Created:</span>&nbsp;{today}
+                                                                                    <span className='fw-600 me-1'>Created:</span>&nbsp;{today}
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -181,9 +181,10 @@ const Appointments = (props) => {
                                                                             <IoMdVideocam className='video-cam me-3' size={20} />
                                                                         </div>
 
-                                                                        <div className="cursor-pointer icon-tooltiptext"
-                                                                            onClick={function () { toggleChatbox(appointment.first_name, appointment.last_name, appointment.image); }}
+                                                                        <div className="cursor-pointer appointments-tooltip"
+                                                                            onClick={function () { toggleChatbox(appointment.designer?.first_name, appointment.designer?.last_name, appointment.designer?.image); }}
                                                                         >
+                                                                            <span className="icon-tooltiptext fs-14">Message Designer</span>
                                                                             <span><AiFillMessage className='video-cam' size={20} /></span>
                                                                         </div>
                                                                     </Col>
@@ -198,7 +199,7 @@ const Appointments = (props) => {
                                         :
                                         <>
                                             <Col lg={12}>
-                                                <Card>
+                                                <Card className='mt-3'>
                                                     <Card.Body>
                                                         <p className="text-center mb-0">No records found.</p>
                                                     </Card.Body>
@@ -210,7 +211,7 @@ const Appointments = (props) => {
                                 :
                                 <>
                                     <Col lg={12}>
-                                        <Card>
+                                        <Card className='mt-3'>
                                             <Card.Body>
                                                 <p className="text-center mb-0">No records found.</p>
                                             </Card.Body>
@@ -228,7 +229,7 @@ const Appointments = (props) => {
                                     <div className='d-flex justify-content-between'>
                                         <div>
                                             <span className='fw-500'>{nameDesigner.first_name} {nameDesigner.last_name}</span>
-                                            <span className='ms-2 active-now fs-14 fw-400'>Active Now</span>
+                                            {/* <span className='ms-2 active-now fs-14 fw-400'>Active Now</span> */}
                                         </div>
                                         <div className="cursor-pointer" onClick={() => setAskAQuestion(false)}>
                                             <IoCloseOutline color="#39393A" />
@@ -236,53 +237,7 @@ const Appointments = (props) => {
                                     </div>
                                 </Card.Header>
                                 <Card.Body >
-                                    <div className='product-portfolio-image'>
-                                        <span className='d-flex'>
-                                            {/* {images && images.length > 0 ?
-                                                <>
-                                                    <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-                                                    </div>
-                                                    <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
-                                                </>
-                                                :
-                                                null
-                                            } */}
-                                        </span>
-                                    </div>
-
-                                    <div className='mt-5 mb-4 text-right d-flex'>
-                                        <div>
-                                            <div className='time-chat-box fs-14 fw-400'>3:30 PM
-                                                <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
-                                            <div className='mt-2 welcome-chat'>
-                                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
-                                            </div>
-                                        </div>
-
-                                        <div className=' d-flex align-items-center portfolio-designer ms-3'>
-                                            {/* {portfolio.user.image && (
-                                                <div
-                                                    className='designer-photo'
-                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
-                                                >
-                                                </div>
-                                            )} */}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <span className='d-flex user-image'>
-                                            {nameDesigner.image && (
-                                                <div
-                                                    className='user-photo'
-                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${nameDesigner.image})` }}
-                                                >
-                                                </div>
-                                            )}
-                                            <span className='name-chat'>{nameDesigner.first_name} {nameDesigner.last_name}</span>
-                                            <span className='ms-2 time-chat fw-400 fs-14'>4:00 PM</span>
-                                        </span>
-                                    </div>
+                                    <p>No messages.</p>
 
                                     <div className='mt-3'>
                                         <input type="text" className='form-control' />

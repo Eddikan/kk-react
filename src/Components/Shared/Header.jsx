@@ -267,7 +267,8 @@ const Header = () => {
                               <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
                             </div>
                           </div>
-                          {/* <hr /> */}
+                          <hr />
+                          <div className='text-right text-gold fs-14 cursor-pointer' onClick={() => toggleUnderConstruction("Notifcations")}>View All</div>
                         </div>
                       )}
                     </div>
@@ -334,11 +335,10 @@ const Header = () => {
 
 
                     <div className="user-dropdown nav-link" ref={orderRef}>
-                      {userImage ?
-                        <div className="cursor-pointer nav-link" onClick={toggleOrdersMenu}>Orders</div>
-                        :
-                        <div className="cursor-pointer nav-link" onClick={toggleOrdersMenu}>Orders</div>
-                      }
+                      <a href="/orders" className="text-decoration-none">
+                        <div className="cursor-pointer nav-link" >Orders</div>
+                      </a>
+                      {/* <div className="cursor-pointer nav-link" onClick={toggleOrdersMenu}>Orders</div> */}
                       {userOrdersOpen && (
 
                         <div className="action-box-orders user-menu-orders">

@@ -72,8 +72,6 @@ const Orders = (props) => {
         })
     };
 
-
-
     async function reorderProducts(e) {
         // setReorderLoading(true);
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: e, user_id: currentUser }).then((response) => {
@@ -158,8 +156,8 @@ const Orders = (props) => {
                                                     <span className='fw-500 text-black'>Quantity</span>
                                                 </Col>
 
-                                                <Col lg={3} className="text-right">
-                                                    <span className='fw-500 text-black'></span>
+                                                <Col lg={3} className="">
+                                                    <span className='fw-500 text-black'>Action</span>
                                                 </Col>
                                             </Row>
                                         </Card.Body>
@@ -399,7 +397,7 @@ const Orders = (props) => {
                                             <span className="fs-14 fw-500 mb-0 name-of-user-chat">
                                                 <span className='fw-500'>{designerName.first_name} {designerName.last_name}</span>
                                             </span>
-                                            <span className='ms-3 active-now fs-14 fw-400'>Active Now</span>
+                                            {/* <span className='ms-3 active-now fs-14 fw-400'>Active Now</span> */}
                                         </div>
                                         <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                             <IoCloseOutline color="#39393A" />

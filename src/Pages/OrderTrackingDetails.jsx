@@ -10,11 +10,9 @@ import { GoAlertFill } from 'react-icons/go';
 import { AiFillMessage } from "react-icons/ai";
 import { CiSaveDown2 } from "react-icons/ci";
 import { GiMagnifyingGlass } from "react-icons/gi";
-import { PiCircleDashedLight, PiTruckThin } from "react-icons/pi";
-import { PiStarLight } from "react-icons/pi";
-import { PiNotepadLight } from "react-icons/pi";
+import { PiStarLight, PiCheckBold, PiNotepadLight, PiCircleDashedLight, PiTruckThin } from "react-icons/pi";
 import { TfiLocationPin } from "react-icons/tfi";
-import { BsTelephone } from "react-icons/bs";
+import { BsTelephone, BsPerson } from "react-icons/bs";
 import { IoIosAttach } from "react-icons/io";
 import { VscSend } from "react-icons/vsc";
 import { IoCloseOutline } from "react-icons/io5";
@@ -30,9 +28,12 @@ const OrderDetails = (props) => {
     const [chatBox, setChatBox] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
-    const [user, setUser] = useState('');
+
     const [text, setText] = useState('');
+    const [orders, setOrders] = useState('');
     const [order, setOrder] = useState('');
+    const [user, setUser] = useState('');
+    const [orderLoading, setOrderLoading] = useState(true);
 
     const chatBoxModal = () => {
         setChatBox(true);
@@ -64,18 +65,21 @@ const OrderDetails = (props) => {
     }, []);
 
     useEffect(() => {
-        // getOrder()
-        //     .then((response) => {
-        //         const selectedOrder = response.data;
-        //         if (selectedOrder) {
-        //             setOrder(selectedOrder);
-        //         } else {
-        //             toast.error('There has been an error getting the user, please try again!');
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         toast.error('There has been an error getting the user, please try again!');
-        //     });
+        getOrder()
+            .then((response) => {
+                const selectedOrder = response.data;
+                if (selectedOrder) {
+                    setOrders(selectedOrder);
+                    setOrder(selectedOrder[0].order);
+                    setUser(selectedOrder[0].user);
+                    setOrderLoading(false);
+                } else {
+                    toast.error('There has been an error getting the user, please try again!');
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the user, please try again!');
+            });
     }, [reloadCount]);
 
     return (
@@ -99,40 +103,40 @@ const OrderDetails = (props) => {
                         <Col>
                             <div className="base-timeline">
 
-                                <PiNotepadLight className='order-placed-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data">
+                                <PiNotepadLight className='order-placed-icon tracking-icon active' size={25} />
+                                <div className="timeline-circle timeline-circle--data timeline-circle--active">
                                     <div className="order fw-600">Order Placed</div>
                                     <div className="date-details fs-14">December 13, 2023</div>
                                 </div>
 
-                                <PiCircleDashedLight className='processing-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data timeline-circle--active">
+                                <PiCircleDashedLight className='processing-icon tracking-icon' size={25} />
+                                <div className="timeline-circle timeline-circle--data">
                                     <div className="processing fw-600">Processing</div>
-                                    <div className="date-details fs-14">December 13, 2023</div>
+                                    {/* <div className="date-details fs-14">December 13, 2023</div> */}
                                 </div>
 
-                                <PiTruckThin className='truck-icon' size={25} />
+                                <PiTruckThin className='truck-icon tracking-icon' size={25} />
                                 <div className="timeline-circle timeline-circle--data">
                                     <div className="order-shipped fw-600">Order Shipped</div>
-                                    <div className="date-details fs-14">December 25, 2023</div>
+                                    {/* <div className="date-details fs-14">December 25, 2023</div> */}
                                 </div>
 
-                                <CiSaveDown2 className='delivered-icon' size={25} />
+                                <CiSaveDown2 className='delivered-icon tracking-icon' size={25} />
                                 <div className="timeline-circle timeline-circle--data">
                                     <div className="order-received fw-600">Delivered</div>
-                                    <div className="date-details fs-14">December 25, 2023</div>
+                                    {/* <div className="date-details fs-14">December 25, 2023</div> */}
                                 </div>
 
-                                <PiStarLight className='for-review-icon' size={25} />
+                                <PiStarLight className='for-review-icon tracking-icon' size={25} />
                                 <div className="timeline-circle timeline-circle--data">
                                     <div className="order-complete fw-600">For Review</div>
-                                    <div className="date-details fs-14">December 25, 2023</div>
+                                    {/* <div className="date-details fs-14">December 25, 2023</div> */}
                                 </div>
 
-                                <PiStarLight className='for-review-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data timeline-circle--active">
+                                <PiCheckBold className='for-review-icon tracking-icon' size={25} />
+                                <div className="timeline-circle timeline-circle--data">
                                     <div className="processing fw-600">Completed</div>
-                                    <div className="date-details fs-14">December 26, 2023</div>
+                                    {/* <div className="date-details fs-14">December 26, 2023</div> */}
                                 </div>
                             </div>
                         </Col>
@@ -158,40 +162,78 @@ const OrderDetails = (props) => {
                                     </div> */}
 
                                     <div className='d-flex align-items-center'>
-                                        <strong>Order ID: {orderId}</strong>
+                                        <strong>Order #{orderId}</strong>
                                     </div>
                                 </Card.Header>
                                 <Card.Body className='bg-white radius-border'>
-                                    <div className='text-black fs-18 rufina-family fw-600 mb-4'>Delivery Address</div>
+                                    <div className='text-black fs-18 rufina-family fw-600'>Delivery Details</div>
                                     <Row>
                                         <Col lg={5} className='mt-2 border-right'>
-                                            {/* <div>
-                                                <BsTelephone className='text-gold me-3' />
-                                                {user.phone_number}
-                                            </div>
-
-                                            <div className='mt-2'>
-                                                <TfiLocationPin className='text-gold me-3' size="20" />
-                                                {user.address_line_1}
-                                            </div> */}
-                                             <Card>
+                                            {order.delivery_first_name && order.delivery_last_name ?
+                                                <>
+                                                    <p className="mb-1">{order?.delivery_first_name} {order?.delivery_last_name}</p>
+                                                    <div>
+                                                        <BsPerson className='text-gold me-3' />
+                                                        {order?.delivery_first_name} {order?.delivery_last_name}
+                                                    </div>
+                                                </>
+                                                :
+                                                <>
+                                                    <p className="mb-1">{order?.delivery_first_name} {order?.delivery_last_name}</p>
+                                                    <div>
+                                                        <BsPerson className='text-gold me-3' />
+                                                        {user?.first_name} {user?.last_name}
+                                                    </div>
+                                                </>
+                                            }
+                                            {order.phone  ?
+                                                <>
+                                                    <p className="mb-1">{order?.phone}</p>
+                                                    <div>
+                                                        <BsTelephone className='text-gold me-3' />
+                                                        {order?.phone}
+                                                    </div>
+                                                </>
+                                                :
+                                                <>
+                                                    <p className="mb-1">{user?.phone}</p>
+                                                    <div>
+                                                        <BsTelephone className='text-gold me-3' />
+                                                        {user?.phone ?? "-"}
+                                                    </div>
+                                                </>
+                                            }
+                                            {order.delivery_address_line_1 && order.delivery_city && order.delivery_province && order.delivery_country && order.delivery_postal_code ?
+                                                <>
+                                                    <div className='mt-2'>
+                                                        <TfiLocationPin className='text-gold me-3' size="20" />
+                                                        {order?.delivery_address_line_1} {order.delivery_city}, {order.delivery_province} {order.delivery_country} {order.delivery_postal_code}
+                                                    </div>
+                                                </>
+                                                :
+                                                <>
+                                                    <div className='mt-2'>
+                                                        <TfiLocationPin className='text-gold me-3' size="20" />
+                                                        {user?.address_line_1} {user.city}, {user.province} {user.country} {order.delivery_postal_code}
+                                                    </div>
+                                                </>
+                                            }
+                                             {/* <Card>
                                                 <Card.Body className="text-center py-5">
                                                     <GoAlertFill size="60px" color="#000" className="mb-2" />
                                                     <p className="fs-20 text-black">Under Construction</p>
-                                                    {/* <DatePicker onSelectedDate={handleDateChange} date={questionnaire1Data.target_date} /> */}
                                                 </Card.Body>
-                                            </Card>
+                                            </Card> */}
                                         </Col>
 
                                         <Col lg={7}>
                                             <div className="wrap">
                                                 <ul className="timeline">
 
-                                                    <li>
+                                                    {/* <li>
                                                         <div className='d-flex'>
-                                                            <div className="me-3 completed">December 25, 2023</div>
-                                                            <div className='text-black fs-16 fw-600'>Completed
-                                                            </div>
+                                                            <div className="me-3">December 25, 2023</div>
+                                                            <div className='fs-14'>Completed</div>
                                                         </div>
                                                     </li>
 
@@ -231,12 +273,12 @@ const OrderDetails = (props) => {
                                                             <div className='color-order'>Payment has been received.
                                                             </div>
                                                         </div>
-                                                    </li>
+                                                    </li> */}
 
                                                     <li>
                                                         <div className='d-flex'>
-                                                            <div className="me-3">December 13, 2023</div>
-                                                            <div className='color-order'>Order Placed
+                                                            <div className="me-3 completed">December 13, 2023</div>
+                                                            <div className='color-order text-black fs-16'><span className="fw-600">Order Placed</span>
                                                                 <br />
                                                                 <span className='fs-14'>Order Placed.</span>
                                                             </div>
