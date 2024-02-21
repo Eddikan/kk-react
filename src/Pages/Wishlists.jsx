@@ -25,6 +25,7 @@ const Wishlists = (props) => {
     const [connectShow, setConnectShow] = useState(false);
     const [addToCartLoading, setAddToCartLoading] = useState(false);
     const [isWishlistCurrentUser, setIsWishlistCurrentUser] = useState(false);
+    const [clickedCartButtonIndex, setClickedCartButtonIndex] = useState();
 
     const [unitMeasurement, setUnitMeasurement] = useState(1.00);
 
@@ -55,12 +56,15 @@ const Wishlists = (props) => {
         }
     };
 
+
     async function addToCart(e) {
         setAddToCartLoading(true);
+        setClickedCartButtonIndex(e.index);
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 navigate("/cart");
+
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
@@ -163,10 +167,10 @@ const Wishlists = (props) => {
 
                                                         return (
                                                             <>
-                                                                <Col className="designs-grid mb-3" xs="12" md="6">
+                                                                <Col className="designs-grid mb-3" xs="12" md="6" key={index}>
                                                                     <div className="bg-lgray rounded p-3">
                                                                         <div className="portfolio-link">
-                                                                            <Row key={index}>
+                                                                            <Row>
                                                                                 <Col lg="3" xs="12">
                                                                                     <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(wishlist.product.id); navigate('/product/' + wishlist.product.id); }} style={{ backgroundImage: "url(" + wishlistImage + ")", minHeight: '140px' }}>
 
@@ -198,25 +202,21 @@ const Wishlists = (props) => {
 
                                                                                         {/* {isWishlistCurrentUser ?
                                                                                             <> */}
-
-
-                                                                                        {addToCartLoading ?
+                                                                                        {addToCartLoading && clickedCartButtonIndex == index ? (
                                                                                             <Button
                                                                                                 className="w-auto me-3 mt-2 btn-primary fs-16"
                                                                                                 type="button"
                                                                                             >
                                                                                                 Adding to Cart...
                                                                                             </Button>
-                                                                                            :
+                                                                                        ) : (
                                                                                             <Button
                                                                                                 className="w-auto me-3 mt-2 btn-primary fs-16"
-                                                                                                onClick={() => addToCart({ user_id: currentUser, product_id: wishlist.product.id, quantity: unitMeasurement })}
+                                                                                                onClick={() => addToCart({ user_id: currentUser, product_id: wishlist.product.id, quantity: unitMeasurement, index })}
                                                                                             >
                                                                                                 Add to Cart
                                                                                             </Button>
-                                                                                        }
-
-
+                                                                                        )}
                                                                                         {/* </>
                                                                                             :
                                                                                             null
@@ -238,7 +238,7 @@ const Wishlists = (props) => {
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </Col>
+                                                                </Col >
                                                             </>
                                                         )
                                                     })}
@@ -280,7 +280,7 @@ const Wishlists = (props) => {
                     </Modal>
                 </>
             }
-        </Layout>
+        </Layout >
     );
 };
 

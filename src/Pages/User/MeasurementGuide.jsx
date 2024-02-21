@@ -163,9 +163,9 @@ const MeasurementGuide = (props) => {
                                             </Col>
                                             <Col lg={5} className="text-right">
                                                 {elements && elements.length > 0 && (
-                                                    <Button className='btn-primary bg-transparent border-black text-black bg-black-hover border-black-hover text-white-hover me-3' type="button" onClick={() => { toggleGuideModal(); handleActionType("edit"); }}><GoPencil size="30px" className='me-2' /> Edit Elements</Button>
+                                                    <Button className='btn-primary bg-transparent border-black text-black bg-black-hover border-black-hover text-white-hover me-3' type="button" onClick={() => { toggleGuideModal(); handleActionType("edit"); }}><GoPencil size="20px" className='me-2' /> Edit</Button>
                                                 )}
-                                                <Button className='btn-primary bg-gold-hover border-gold-hover text-white-hover' type="button" onClick={() => { toggleGuideModal(); handleActionType("add"); }}><GoPlus size="20px" className='me-2' /> Add Element</Button>
+                                                <Button className='btn-primary bg-gold-hover border-gold-hover text-white-hover' type="button" onClick={() => { toggleGuideModal(); handleActionType("add"); }}><GoPlus size="20px" className='me-2' /> New Element</Button>
                                             </Col>
                                         </Row>
                                         <Row>
@@ -280,7 +280,7 @@ const MeasurementGuide = (props) => {
                         id="measurement-guide"
                     >
                         <Modal.Header className="pb-0">
-                            <h4 className='text-left fs-25 fw-600 px-2'>{actionType == "add" ? "Add Element" : "Edit Elements"}</h4>
+                            <h4 className='text-left fs-25 fw-600 px-2'>{actionType == "add" ? "New Element" : "Edit Element"}</h4>
                             <button type='button' className='close react-modal-close' onClick={toggleGuideModal} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                             </button>
                         </Modal.Header>

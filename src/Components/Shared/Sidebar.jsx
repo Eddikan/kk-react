@@ -28,6 +28,7 @@ import axios from "axios";
 import Container from 'react-bootstrap/Container';
 import toast from 'react-hot-toast';
 import { RxRulerHorizontal } from "react-icons/rx";
+import { IoCalendarClearOutline } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
 
 
@@ -64,23 +65,31 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
             <div id="sidebar">
                 <UncontrolledAccordion>
                     <AccordionItem className='padding-sidebar'>
-                        <AccordionHeader targetId="1">
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/seller-center/' + designerId)}><IoCalendarClearOutline size="20" className="me-2" />Calendar</div>
+
+                        <a className="yellow-hover cursor-pointer text-decoration "
+                            href={`/appointment-list/${designerId}`}
+                        >
+                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/portfolio')}><PiBriefcase size="22" className="me-2" />Appointments</div>
+                        </a>
+
+                        {/* <AccordionHeader targetId="1">
                             <span><PiSuitcaseSimple size="22" className="me-2 text-black" /></span>
                             <span className="appointments cursor-pointer text-black">Appointments<IoIosArrowDown className='ms-3 text-black' /></span>
-                        </AccordionHeader>
+                        </AccordionHeader> */}
 
-                        <AccordionBody accordionId="1">
+                        {/* <AccordionBody accordionId="1">
                             <a className="yellow-hover cursor-pointer text-decoration "
                                 href={`/appointment-list/${designerId}`}
                             >
                                 List
                             </a>
                             <p className="yellow-hover cursor-pointer mt-3" onClick={() => navigate('/seller-center/' + designerId)}>Calendar</p>
-                        </AccordionBody>
+                        </AccordionBody> */}
 
-                        <AccordionHeader targetId="2" className='mt-2 text-black' onClick={() => navigate('/orders-seller')}>
+                        <AccordionHeader targetId="2" className='mt-2 hover-sidebar' onClick={() => navigate('/orders-seller')}>
                             <span><PiShoppingCartSimple size="22" className="me-2" /></span>
-                            <span className="orders cursor-pointer mt-3 text-black" >Orders <IoIosArrowDown className='ms-3' /></span>
+                            <span className=" orders cursor-pointer mt-3 order-font" >Orders <IoIosArrowDown className='ms-3' /></span>
                         </AccordionHeader>
 
                         <AccordionBody accordionId="2">
@@ -93,12 +102,12 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
 
                         </AccordionBody>
 
-                        <div className="portfolio cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/portfolio')}><PiBriefcase size="22" className="me-2" />Portfolio</div>
-                        <div className="fabrics cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/products')}><HiOutlineScissors size="22" className="me-2" />Fabrics</div>
-                        <div className="fabrics cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/measurement-guide')}><RxRulerHorizontal size="22" className="me-2" />Measurement Guide</div>
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/portfolio')}><PiBriefcase size="22" className="me-2" />Portfolio</div>
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/products')}><HiOutlineScissors size="22" className="me-2" />Fabrics</div>
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/measurement-guide')}><RxRulerHorizontal size="22" className="me-2" />Measurement Guide</div>
                     </AccordionItem>
                 </UncontrolledAccordion>
-            </div>
+            </div >
         </>
     )
 }

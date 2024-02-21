@@ -167,13 +167,26 @@ const Products = (props) => {
                                                                 </Link>
                                                             </div>
 
-                                                            <div className='d-flex mt-2'>
-                                                                <div className="text-black text-decoration-none ellipsis rufina-family fs-18">{object.name ?? "-"}</div>
-                                                                <div><GoHeart className="text-black ms-2" /></div>
-                                                                <div><IoEyeOutline className="text-black ms-2" /> {object.views}</div>
-                                                            </div>
+                                                            <Row>
+                                                                <Col lg="6">
+                                                                    <div className="text-black text-decoration-none ellipsis rufina-family fs-18 mt-2">{object.name ?? "-"}</div>
+                                                                </Col>
+
+                                                                <Col lg="6" className='text-end'>
+                                                                    {object.views == null ?
+                                                                        <div className='mt-2'>
+                                                                            <IoEyeOutline className="text-black ms-2" /> 0
+                                                                        </div>
+                                                                        :
+                                                                        <div className='mt-2'>
+                                                                            <IoEyeOutline className="text-black ms-2" /> {object.views}
+                                                                        </div>
+                                                                    }
+                                                                </Col>
+                                                            </Row>
                                                         </Col>
                                                     ))}
+
                                                     <Col className="product-grid mb-3" xs="4" md="2">
                                                         <div onClick={addNewProduct} className="product-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
                                                             <GoPlus color="#a4a4a4" size="150px" className="mt-3" />

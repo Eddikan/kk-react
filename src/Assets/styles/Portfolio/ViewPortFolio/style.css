@@ -125,7 +125,7 @@ img.placeholder-chat {
 }
 .ellipsis {
     white-space: nowrap; 
-    width: 70%; 
+    width: 100%; 
     overflow: hidden;
     text-overflow: ellipsis; 
   }

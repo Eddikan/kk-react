@@ -332,7 +332,7 @@ const EcoFriendlyFabrics = (props) => {
                                             )}
                                         </div>
                                     </div>
-                                    <Form.Group className='mb-4'>
+                                    {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Eco-Friendly</Form.Label>
                                         <div className='d-flex'>
                                             <div>
@@ -347,7 +347,7 @@ const EcoFriendlyFabrics = (props) => {
                                             </div>
                                         </div>
 
-                                    </Form.Group>
+                                    </Form.Group> */}
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Composition</Form.Label>
                                         {compositions.map((composition) => (
@@ -378,10 +378,9 @@ const EcoFriendlyFabrics = (props) => {
                                             </Form.Group>
                                         ))}
                                     </Form.Group>
-                                    <Form.Group className='mb-4'>
+                                    {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Colors</Form.Label>
-                                        <input type="text" name="colors" className='form-control' />
-                                        {/* {colors.map((color) => (
+                                        {colors.map((color) => (
                                             <Form.Group key={color}>
                                                 <Form.Check
                                                     className="cursor-pointer"
@@ -392,8 +391,8 @@ const EcoFriendlyFabrics = (props) => {
                                                     onChange={() => handleColorChange(color)}
                                                 />
                                             </Form.Group>
-                                        ))} */}
-                                    </Form.Group>
+                                        ))}
+                                    </Form.Group> */}
 
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Origin</Form.Label>
@@ -407,25 +406,14 @@ const EcoFriendlyFabrics = (props) => {
                                         </Form.Control>
                                     </Form.Group> */}
 
+
+
                                     <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600">Price Range</Form.Label>
-                                        <div>
-                                            <select id="sort-by" className='form-control' >
-                                                <option value=""></option>
-                                                <option value="">1000</option>
-                                                <option value="">2000</option>
-                                                <option value="">3000</option>
-                                            </select>
-                                        </div>
-                                    </Form.Group>
-
-
-                                    {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Price Range</Form.Label>
                                         <Form.Group as={Row} className="mt-3 position-relative">
                                             <MultiRangeSlider min={10} max={1000} onChange={priceRangeChange} />
                                         </Form.Group>
-                                    </Form.Group> */}
+                                    </Form.Group>
 
 
                                     {/* <h2>Price Range</h2>

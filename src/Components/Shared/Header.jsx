@@ -90,7 +90,7 @@ const Header = () => {
     if (orderRef.current && !orderRef.current.contains(event.target)) {
       setUserOrdersOpen(false);
     }
-    
+
   };
 
   const toggleUserMenu = () => {
@@ -298,12 +298,12 @@ const Header = () => {
                             </div>
                             <hr /> */}
                             <div className='d-flex'>
-                              <div style={{maxWidth: 100}}><img src={User} className='user-placeholder-header' /></div>
+                              <div style={{ maxWidth: 100 }}><img src={User} className='user-placeholder-header' /></div>
                               <div className='fs-14 body-text-bell'>Admin
-                                  <div className='mt-1'>Thank you for signing up to Kouture Konect!</div>
-                                  <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
+                                <div className='mt-1'>Thank you for signing up to Kouture Konect!</div>
+                                <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
                               </div>
-                          </div>
+                            </div>
 
 
                             <div className='text-right' onClick={() => toggleUnderConstruction("Messages")}>

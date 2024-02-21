@@ -44,12 +44,13 @@ const AppointmentList = (props) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
     };
 
-    const chatBoxModal = (first_name, last_name, image) => {
+    const chatBoxModal = (first_name, last_name, image, status) => {
         setChatBox(true);
         setDesignerData({
             first_name: first_name || '-',
             last_name: last_name || '-',
-            image: image || '-'
+            image: image || '-',
+            status: status || '-'
         })
     };
 
@@ -101,6 +102,7 @@ const AppointmentList = (props) => {
             });
 
     }, [reloadCount]);
+    console.log("appointments", appointments);
 
     return (
         <LayoutSellerCenter>
@@ -218,9 +220,9 @@ const AppointmentList = (props) => {
                                                                                     <span>{today}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={3} className='d-flex'>
+                                                                                <Col lg={3} className='d-flex user-image' >
 
-                                                                                    {/* {appointment.image !== null && appointment.image !== '' ? (
+                                                                                    {appointment.image !== null && appointment.image !== '' ? (
                                                                                         <div
                                                                                             className='user-photo'
                                                                                             style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.image})` }}
@@ -228,8 +230,8 @@ const AppointmentList = (props) => {
                                                                                         </div>
                                                                                     ) : (
                                                                                         <img src={UserPlaceholder} className='placeholder-img me-2' />
-                                                                                    )} */}
-                                                                                    <img src={UserPlaceholder} className='placeholder-img me-2' />
+                                                                                    )}
+                                                                                    {/* <img src={UserPlaceholder} className='placeholder-img me-2' /> */}
 
                                                                                     <span className='d-flex justify-content-center align-items-center ms-2 mt-1'>
                                                                                         {appointment.first_name}
@@ -249,7 +251,7 @@ const AppointmentList = (props) => {
                                                                                 <Col lg={1} className='d-flex justify-content-end'>
                                                                                     <div
                                                                                         className="cursor-pointer d-flex justify-content-center align-items-center"
-                                                                                        onClick={() => chatBoxModal(appointment.first_name, appointment.last_name, appointment.image)}
+                                                                                        onClick={() => chatBoxModal(appointment.first_name, appointment.last_name, appointment.image, appointment.status)}
                                                                                     >
                                                                                         <AiOutlineMessage className='me-2' size={20} />
                                                                                     </div>
@@ -298,7 +300,7 @@ const AppointmentList = (props) => {
                                                 <span className="fs-14 fw-500 mb-0 name-of-user-chat">
                                                     <span className='fw-500'>{designerData.first_name} {designerData.last_name}</span>
                                                 </span>
-                                                <span className='ms-3 active-now fs-14 fw-400 text-gold'>Active Now</span>
+                                                {/* <span className='ms-3 active-now fs-14 fw-400 text-gold'>{designerData.status}</span> */}
                                             </div>
                                             <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                                 <IoCloseOutline color="#39393A" />
@@ -354,7 +356,7 @@ const AppointmentList = (props) => {
                                                 placeholder="Type a message"
                                                 className="emoji-picker"
                                             />
-                                            <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
+                                            {/* <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div> */}
                                             <div>
                                                 <div
                                                     className="cursor-pointer fw-500 position-absolute send-button"

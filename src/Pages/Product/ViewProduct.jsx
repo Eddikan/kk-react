@@ -646,7 +646,7 @@ const ViewProduct = () => {
                                                                         <hr className="mb-4" />
                                                                     </>
                                                                     :
-                                                                   null
+                                                                    null
                                                                 }
 
 
