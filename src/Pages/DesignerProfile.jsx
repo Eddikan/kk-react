@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
-import { Container, Row, Col, Button, Card, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Button, Card, Modal, NavItem } from 'react-bootstrap';
 import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { useCookies } from 'react-cookie';
 import { useLocation } from 'react-router-dom';
@@ -82,6 +82,7 @@ const DesignerProfile = () => {
     const [elements, setElements] = useState([]);
     const [designerSchedule, setDesignerSchedule] = useState([]);
     const [isDesignerCurrentUser, setIsDesignerCurrentUser] = useState(false);
+    const [designerAvailable, setDesignerAvailable] = useState(false);
 
     const [portfolio, setPortfolio] = useState('');
     const [images, setImages] = useState([]);
@@ -213,6 +214,7 @@ const DesignerProfile = () => {
                     const status = response.data.status;
                     if (status == "Fail") {
                         // toast.error('No availabilty found!');
+                        setDesignerAvailable(false);
                     } else {
                         if (selectedTime) {
                             if (selectedTime.content) {
@@ -234,6 +236,7 @@ const DesignerProfile = () => {
                                             }
                                         });
                                     });
+                                    setDesignerAvailable(true);
                                 }
 
                                 setDesignerSchedule(events);
@@ -346,14 +349,22 @@ const DesignerProfile = () => {
                                                 Request A Quote
                                             </p>
                                         </span>
-
-                                        <span className='w-100'>
-                                            <a
-                                                href={`/appointment/schedule/${designer.id}`}
-                                                className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn'
-                                            >
-                                                <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
-                                        </span>
+                                        {designerAvailable ?
+                                            <span className='w-100'>
+                                                <a
+                                                    href={`/appointment/schedule/${designer.id}`}
+                                                    className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn'
+                                                >
+                                                    <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule A Consultation</a>
+                                            </span>
+                                            :
+                                            <span className='w-100'>
+                                                <button className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn' disabled>
+                                                    <IoVideocam color="#ffffff" className='me-2' size="20" />Designer Unavailable for Consultation
+                                                </button>
+                                            </span>
+                                        }
+                                        
                                     </>
                                 }
                             </Col>
@@ -369,9 +380,12 @@ const DesignerProfile = () => {
                                 {/* {!isDesignerCurrentUser && (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${calendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("calendar"); }}>Calendar</span>
                                 )} */}
-                                {elements && (
+                                {elements && elements.length > 0 ? (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${guidePreviewModalShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { toggleGuidePreviewModal(); }}>Measurement Guide</span>
-                                )}
+                                )
+                                :
+                                    null
+                                }
                                 <hr className='mt-2' />
                             </Col>
                         </Row>
@@ -568,7 +582,7 @@ const DesignerProfile = () => {
                 size="sm"
             >
                 <ModalHeader className='pt-2 pb-2'>
-                    <h5 className='modal-title text-left fs-25 rufina-family fw-600 '>New Quote</h5>
+                    <h5 className='modal-title text-left fs-25 rufina-family fw-600 '>New Quote Request</h5>
                     <button type='button' className='close react-review-items-close' data-dismiss='modal' aria-label='Close' onClick={() => setRequestAQuoteModal(false)}>
                         <span aria-hidden='true'>&times;</span>
                     </button>

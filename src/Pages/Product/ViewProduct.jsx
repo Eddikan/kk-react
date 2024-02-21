@@ -22,6 +22,7 @@ import { BsArrowUpRightSquare } from "react-icons/bs";
 import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
+import { ImLeaf } from 'react-icons/im';
 
 const initialReviewData = Object.freeze({
     rating: 0,
@@ -491,7 +492,19 @@ const ViewProduct = () => {
                                                 </Col>
 
                                                 <Col lg="12">
-                                                    <h2 className="fw-600 fs-25 ">{product.name ?? "-"}</h2>
+                                                    <div className='d-flex align-items-center mb-2'>
+                                                        <h2 className="fw-600 fs-25 mb-0 ">{product.name ?? "-"}</h2>
+                                                        <div className='d-flex align-items-center'>
+                                                            {product.eco_friendly != null && product.eco_friendly != '' && (
+                                                                <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
+                                                                    <div className='tooltip-content'>
+                                                                        <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
+                                                                    </div>
+                                                                    <ImLeaf color="#55d140" />
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                     {product.categories && product.categories.length > 0 ?
                                                         <div className="mb-3">
                                                             {product.categories.length > 0 ?
@@ -513,19 +526,101 @@ const ViewProduct = () => {
                                                         <p className="fw-600 fs-25">${productPrice}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
                                                     </div>
 
-                                                    {/* <div>
-                                                        <p className="mb-2 fs-16 fw-600">Description</p>
-                                                        <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.fabric_process_insights ?? "-"}</p>
-                                                    </div> */}
+                                                    <div>
+                                                        <p className="mb-2 fs-16 fw-600">Description:</p>
+                                                        <p className="mb-3 fs-16 fw-400 line-height-24">{product.description ?? "-"}</p>
+                                                    </div>
 
                                                     <div>
+                                                        <p className="mb-2 fs-16 fw-600">Care Instructions:</p>
+                                                        <p className="mb-3 fs-16 fw-400 line-height-24">{product.care_instructions ?? "-"}</p>
+                                                    </div>
+
+                                                    <div>
+                                                        <p className="mb-2 fs-16 fw-600">Measurements:</p>
+                                                        <Row>
+                                                            <Col sm={6}>
+                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Width</p>
+                                                                <p className="mb-3 fs-16 fw-400 line-height-24">{Math.trunc(product.width) ?? "-"} {product.unit_measurement ?? "-"}{product.unit_measurement == 'inch' && product.width > 1 ? 'es' : product.width > 1 ? "s" : null}</p>
+                                                            </Col>
+                                                            <Col sm={6}>
+                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Weight</p>
+                                                                <p className="mb-3 fs-16 fw-400 line-height-24">{Math.trunc(product.weight) ?? "-"} KG per sq. {product.unit_measurement ?? "-"}</p>
+                                                            </Col>
+                                                        </Row>
+                                                    </div>
+                                                    {product.colors && product.colors.length > 0 ?
+                                                        <>
+                                                            <div className="mb-4">
+                                                                <p className="mb-1 fs-16 fw-600">Colors:</p>
+                                                                {product.colors.map((color) => (
+                                                                    <span className="design-tag bg-light fs-14 categories-color">
+                                                                        {color}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        </>
+                                                        :
+                                                        null
+                                                    }
+                                                    
+                                                    {product.certifications && product.certifications.length > 0 ?
+                                                        <>
+                                                            <div className="mb-4">
+                                                                <p className="mb-1 fs-16 fw-600">Certifications (Organic, sustainable, etc):</p>
+                                                                {product.certifications.map((certification) => (
+                                                                    <span className="design-tag bg-light fs-14 categories-color">
+                                                                        {certification}
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        </>
+                                                        :
+                                                        null
+                                                    }
+
+                                                    <div>
+                                                        <p className="mb-2 fs-16 fw-600">Specifications:</p>
+                                                        <Row>
+                                                            <Col sm={6}>
+                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Composition</p>
+                                                                <p className="mb-2 fs-16 fw-400 line-height-24">{product.composition ?? "-"}</p>
+                                                            </Col>
+                                                            <Col sm={6}>
+                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Weave</p>
+                                                                <p className="mb-2 fs-16 fw-400 line-height-24">{product.weave ?? "-"}</p>
+                                                            </Col>
+                                                            <Col sm={6}>
+                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Pattern</p>
+                                                                <p className="mb-2 fs-16 fw-400 line-height-24">{product.pattern ?? "-"}</p>
+                                                            </Col>
+                                                            <Col sm={6}>
+                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Texture</p>
+                                                                <p className="mb-2 fs-16 fw-400 line-height-24">{product.texture ?? "-"}</p>
+                                                            </Col>
+                                                            <Col sm={6}>
+                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Opacity</p>
+                                                                <p className="mb-2 fs-16 fw-400 line-height-24">{product.opacity ?? "-"}</p>
+                                                            </Col>
+                                                            <Col sm={6}>
+                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Stretch</p>
+                                                                <p className="mb-2 fs-16 fw-400 line-height-24">{product.stretch ?? "-"}</p>
+                                                            </Col>
+                                                            <Col sm={6}>
+                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Drape</p>
+                                                                <p className="mb-3 fs-16 fw-400 line-height-24">{product.drape ?? "-"}</p>
+                                                            </Col>
+                                                        </Row>
+                                                    </div>
+
+                                                    {/* <div>
                                                         <p className="mb-2 fs-16 fw-600">Fabric Process Insight</p>
                                                         <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.fabric_process_insights ?? "-"}</p>
                                                     </div>
                                                     <div>
                                                         <p className="mb-2 fs-16 fw-600">Pricing Structure</p>
                                                         <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.pricing_structure ?? "-"}</p>
-                                                    </div>
+                                                    </div> */}
 
                                                     <div>
                                                         <Row>

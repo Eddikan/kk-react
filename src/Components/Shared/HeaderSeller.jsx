@@ -37,10 +37,14 @@ const HeaderSeller = () => {
     const [reloadCount, setReloadCount] = useState(0);
     const [designerId, setDesignerId] = useState('');
 
-
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
     const [userType, setUserType] = useState('user');
     const userRef = useRef(null);
+    const bellRef = useRef(null);
+    const messageRef = useRef(null);
+    const wishlistRef = useRef(null);
+    const appointmentRef = useRef(null);
+    const orderRef = useRef(null);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState();
     const currentUser = cookies.currentUser;
@@ -66,12 +70,18 @@ const HeaderSeller = () => {
     // Close the dropdown when clicking outside of it
     const handleClickOutside = (event) => {
         if (userRef.current && !userRef.current.contains(event.target)) {
-            setUserMenuOpen(false);
-            // setUserBellOpen(false);
-            // setUserEnvelopOpen(false);
-            // setUserOrdersOpen(false);
+          setUserMenuOpen(false);
         }
-    };
+        if (bellRef.current && !bellRef.current.contains(event.target)) {
+          setUserBellOpen(false);
+        }
+        if (messageRef.current && !messageRef.current.contains(event.target)) {
+          setUserEnvelopOpen(false);
+        }
+        if (orderRef.current && !orderRef.current.contains(event.target)) {
+          setUserOrdersOpen(false);
+        }
+      };
 
     const toggleUserMenu = () => {
         setUserMenuOpen(!userMenuOpen);
@@ -185,7 +195,7 @@ const HeaderSeller = () => {
                                         {currentUser && currentUser != "" ?
                                             <>
 
-                                                <div className="user-dropdown nav-link" ref={userRef}>
+                                                <div className="user-dropdown nav-link" ref={bellRef}>
                                                     {userImage ?
                                                         <div className="cursor-pointer nav-link"><GoBell size={25} onClick={toggleBellMenu} /></div>
                                                         :
@@ -210,12 +220,15 @@ const HeaderSeller = () => {
                                                                     <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
                                                                 </div>
                                                             </div>
-                                                            {/* <hr /> */}
+                                                            <hr />
+                                                            <div className='text-right text-gold fs-14 cursor-pointer'
+                                                                onClick={() => toggleUnderConstruction("Notifcations")}>View All
+                                                            </div>
                                                         </div>
                                                     )}
                                                 </div>
 
-                                                <div className="user-dropdown nav-link" ref={userRef}>
+                                                <div className="user-dropdown nav-link" ref={messageRef}>
                                                     {userImage ?
                                                         <div className="cursor-pointer nav-link"><BsEnvelope size={25} onClick={toggleEnvelopMenu} /></div>
                                                         :
@@ -231,7 +244,7 @@ const HeaderSeller = () => {
                                                                     <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
                                                                 </div>
                                                             </div>
-                                                             {/* <hr /> */}
+                                                             <hr />
                                                             {/*
                                                             <div className='d-flex'>
                                                                 <div><img src={User} className='user-placeholder-header' /></div>
@@ -243,7 +256,8 @@ const HeaderSeller = () => {
                                                             <hr /> */}
 
                                                             <div className='text-right text-gold fs-14 cursor-pointer'
-                                                                onClick={() => toggleUnderConstruction("Messages")}>View All</div>
+                                                                onClick={() => toggleUnderConstruction("Messages")}>View All
+                                                            </div>
                                                         </div>
 
                                                     )}
