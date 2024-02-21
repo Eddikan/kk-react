@@ -118,7 +118,7 @@ const App = () => {
           />
 
           {/* Portfolio */}
-          <Route path="/portfolio/add" exact element={<AddNewPortfolio />} />
+          <Route path="/user/center/design/add" exact element={<AddNewPortfolio />} />
           <Route
             path="/portfolio/:portfolioId"
             exact
@@ -132,7 +132,7 @@ const App = () => {
           <Route path="/user/center/portfolio" exact element={<UserPortfolio />} />
 
           {/* Product */}
-          <Route path="/product/add" exact element={<AddNewProduct />} />
+          <Route path="/user/center/product/add" exact element={<AddNewProduct />} />
           <Route path="/product/:productId" exact element={<ViewProduct />} />
           <Route
             path="/user/center/product/:productId/edit"

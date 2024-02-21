@@ -61,7 +61,7 @@ const PortfolioGrid = (props) => {
     };
 
     const addNewPortfolio = () => {
-        navigate('/portfolio/add')
+        navigate('/user/center/design/add')
     };
 
     const deleteConfirm = (e) => {
@@ -157,7 +157,7 @@ const PortfolioGrid = (props) => {
                                                             <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
                                                             {selectedItemIndex === index && (
                                                                 <div className="action-box">
-                                                                    <Link className="text-decoration-none" to={`/portfolio/${object.id}/edit`}>
+                                                                    <Link className="text-decoration-none" to={`/user/center/design/${object.id}/edit`}>
                                                                         <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
                                                                     </Link>
                                                                     <p className="mb-3 cursor-pointer" onClick={function () { deleteConfirm(object.id); }}><GoTrash /> Delete</p>
@@ -211,7 +211,7 @@ const PortfolioGrid = (props) => {
                             <>
                                 <div className="text-center">
                                     <p className="text-center mb-3 mt-3">No records found.</p>
-                                    <Link to="/portfolio/add">
+                                    <Link to="/user/center/design/add">
                                         <Button className="btn btn-primary">Add Portfolio</Button>
                                     </Link>
                                 </div>

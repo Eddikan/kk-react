@@ -145,6 +145,13 @@ const Profile = () => {
                 setUploadStatus("standby");
                 const data = response.data.data;
                 const user = data.user;
+                if (user.designer) {
+                    setCookie('currentUserDesigner', JSON.stringify(user.designer.id), { path: '/' });
+                }
+                if (user.seller) {
+                    setCookie('currentUserSeller', JSON.stringify(user.seller.id), { path: '/' });
+                }
+
                 const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
                 setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
                 setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });

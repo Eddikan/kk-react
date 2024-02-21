@@ -71,6 +71,8 @@ const Header = () => {
     removeCookie('userDetails', { path: '/' });
     removeCookie('isWelcome', { path: '/' });
     removeCookie('currentUser', { path: '/' });
+    removeCookie('currentUserDesigner', { path: '/' });
+    removeCookie('currentUserSeller', { path: '/' });
     removeCookie('isLoggedIn', { path: '/' });
     removeCookie('userRole', { path: '/' });
     removeCookie('signup_type', { path: '/' });

@@ -55,7 +55,7 @@ const Products = (props) => {
     };
 
     const addNewProduct = () => {
-        navigate('/product/add')
+        navigate('/user/center/product/add')
     };
 
     async function ProductDraftSubmit(e) {
@@ -202,7 +202,7 @@ const Products = (props) => {
                                 <>
                                     <div className="text-center">
                                         <p className="text-center mb-3 mt-3">No records found.</p>
-                                        <Link to="/product/add">
+                                        <Link to="/user/center/product/add">
                                             <Button className="btn btn-primary">Add Product</Button>
                                         </Link>
                                     </div>

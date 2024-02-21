@@ -56,7 +56,7 @@ const Portfolio = (props) => {
     };
 
     const addNewPortfolio = () => {
-        navigate('/portfolio/add')
+        navigate('/user/center/design/add')
     };
 
     async function PortfolioDraftSubmit(e) {
@@ -218,7 +218,7 @@ const Portfolio = (props) => {
                                     <>
                                         <div className="text-center">
                                             <p className="text-center mb-3 mt-3">No records found.</p>
-                                            <Link to="/portfolio/add">
+                                            <Link to="/user/center/design/add">
                                                 <Button className="btn btn-primary">Add Portfolio</Button>
                                             </Link>
                                         </div>

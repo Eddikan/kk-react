@@ -35,8 +35,7 @@ const ProductGrid = (props) => {
             if (productsData) {
                 setProducts(productsData);
                 setProductsLoading(false);
-
-                console.log(productsData);
+                // console.log(productsData);
 
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -56,7 +55,7 @@ const ProductGrid = (props) => {
     };
 
     const addNewProduct = () => {
-        navigate('/product/add')
+        navigate('/user/center/product/add')
     };
 
     const deleteConfirm = (e) => {
@@ -227,7 +226,7 @@ const ProductGrid = (props) => {
                             <>
                                 <div className="text-center">
                                     <p className="text-center mb-3 mt-3">No records found.</p>
-                                    <Link to="/portfolio/add">
+                                    <Link to="/user/center/design/add">
                                         <Button className="btn btn-primary">Add Fabric</Button>
                                     </Link>
                                 </div>

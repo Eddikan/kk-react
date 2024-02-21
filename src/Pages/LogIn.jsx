@@ -47,6 +47,9 @@ const LogIn = () => {
         if (user.designer) {
           setCookie('currentUserDesigner', JSON.stringify(user.designer.id), { path: '/' });
         }
+        if (user.seller) {
+          setCookie('currentUserSeller', JSON.stringify(user.seller.id), { path: '/' });
+        }
         toast.success('Successfully signed in!');
         setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
         setCookie('userRole', JSON.stringify(user.role), { path: '/' });
