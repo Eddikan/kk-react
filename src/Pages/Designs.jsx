@@ -52,6 +52,7 @@ const Designs = (props) => {
     const [designImages, setDesignImages] = useState([]);
     const [activeImage, setActiveImage] = useState('');
     const [descriptionShow, setDescriptionShow] = useState(false);
+    const [designerProfileShow, setDesignerProfileShow] = useState(false);
     const [messageShow, setMessageShow] = useState(false);
     const [selectedSortField, setSelectedSortField] = useState(null);
     const [selectedSortOrder, setSelectedSortOrder] = useState(null);
@@ -102,6 +103,10 @@ const Designs = (props) => {
 
     function toggleDescription() {
         setDescriptionShow(true);
+    }
+
+    function toggleProfileCardShow() {
+        setDesignerProfileShow(true);
     }
 
     function toggleUnderConstruction(message) {
@@ -909,7 +914,7 @@ const Designs = (props) => {
                         <Col lg={1}>
                             <div>
                                 <div>
-                                    <div className='user-image-side thumbnail-table text-center'>
+                                    <div className='user-image-side thumbnail-table text-center cursor-pointer' onClick={toggleProfileCardShow}>
                                         {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                             <div
                                                 className='user-photo-side mb-4 '
@@ -920,7 +925,7 @@ const Designs = (props) => {
                                             <img src={UserPlaceholder} className='placeholder-img-side mb-4' />
                                         )}
 
-                                        <Card className="table_content file-action mt-3 me-0">
+                                        {/* <Card className="table_content file-action mt-3 me-0">
                                             <Card.Body className="action_container font-weight">
                                                 <Row>
                                                     <Col>
@@ -983,7 +988,7 @@ const Designs = (props) => {
                                                     </Col>
                                                 </Row>
                                             </Card.Body>
-                                        </Card>
+                                        </Card> */}
                                     </div>
                                 </div>
 
@@ -1072,6 +1077,7 @@ const Designs = (props) => {
                 fade={false}
                 centered
                 size="sm"
+                id="under-construction"
             >
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-left fw-600 fs-25 mt-2'>{modalHeading}</h5>
@@ -1102,6 +1108,87 @@ const Designs = (props) => {
 
                 <Modal.Body className='card-description d-flex align-items-center'>
                     <p className='text-white fw-400 p-3 fs-14 mb-0'>{singleDesign.description}</p>
+                </Modal.Body>
+            </Modal>
+
+
+            <Modal
+                show={designerProfileShow}
+                fade={false}
+                centered
+                id="profile-card"
+                size="sm"
+            >
+                <Modal.Header className="py-0">
+                    <button type='button' className='close react-modal-close' onClick={() => setDesignerProfileShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body className='card-profile align-items-center'>
+                    <Row>
+                        <Col>
+                            <div className='user-image-modal'>
+                                {singleDesign.image !== '' && singleDesign.image !== '-' ? (
+                                    <div
+                                        className='user-photo-modal mb-2 '
+                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                    >
+                                    </div>
+                                ) : (
+                                    <img src={UserPlaceholder} className='placeholder-img-side mb-3' />
+                                )}
+
+                            </div>
+
+                            <div className='modal-title text-center fs-18 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                            <div className='fs-14 text-center mt-2 mb-2'>
+                                <img src={PinIcon} alt="location pin" className='me-2' />
+                                {singleDesign.address_line_1}{singleDesign.province}</div>
+                            {/* <div className='fs-18 fw-600 text-center mt-3 mb-1 specialization'>Specialization and Expertise</div> */}
+                            <div className="mb-2 text-center">
+                                {singleDesign.tags ?
+                                    <>
+                                        {singleDesign.tags.length > 0 ?
+                                            <>
+                                                {singleDesign.tags.map((tag, index) => (
+                                                    <span className="design-tags bg-light fs-14 categories-color">
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                            </>
+                                            :
+                                            null
+                                        }
+                                    </>
+                                    :
+                                    null
+                                }
+                            </div>
+
+                            {isDesignCurrentUser ?
+                                <>
+                                    <hr />
+                                    <div className='text-center'>
+                                        <a className='book-consultation btn-book btn w-100'
+                                            href={`/appointment/schedule/${singleDesign.id}`}
+                                        >
+                                            <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
+                                    </div>
+
+                                    <div className='text-center mt-2'
+                                        onClick={() => toggleUnderConstruction("Message")}
+                                    >
+                                        <a className='book-consultation btn-message-designer btn w-100'
+                                        >
+                                            <AiFillMessage className="me-2" />Send Message</a>
+                                    </div>
+                                </>
+                                :
+                                null
+                            }
+
+                        </Col>
+                    </Row>
                 </Modal.Body>
             </Modal>
         </Layout >

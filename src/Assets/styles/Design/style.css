@@ -24,7 +24,7 @@ select#sort-by {
     margin-top: 5px;
     display: inline-block;
     min-width: 70px;
-    max-width: 120px;
+    max-width: 100%;
     text-align: center;
     text-wrap: nowrap;
 }
@@ -109,6 +109,19 @@ select#sort-by {
     margin-right: auto;
 }
 
+.user-image-modal .user-photo-modal {
+    min-width: 60px;
+    min-height: 60px;
+    max-width: 45px;
+    max-height: 45px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .btn-message-designer {
     font-size: 15px;
     padding: 5px 46px;
@@ -118,6 +131,10 @@ select#sort-by {
     color: var(--black);
     background-color: var(--white);
     border-color: var(--black);
+}
+
+#under-construction .modal-content {
+    right: 50px !important;
 }
 
 .btn-message-designer:hover {
@@ -238,6 +255,14 @@ select#sort-by {
     width: 900px;
     border-radius: 5px;
 }
+
+.card-profile {
+    background: #ffffff;
+    border: none;
+    border-radius: 5px;
+}
+
+
 #description-card .modal-content {
     right: 205px;
     position: absolute;
@@ -265,5 +290,10 @@ select#sort-by {
 }
 .specialization {
 color:#F6D46D;
+}
+#profile-card .modal-content {
+    width: 100% !important;
+    max-width: 400px !important;
+    left: 48px;
 }
 

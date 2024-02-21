@@ -19,6 +19,11 @@ img.user-placeholder {
 .border-appointment-list {
     border: none;
 }
+.set-appointment {
+    font-size: 25px;
+    font-family: 'Rufina';
+    font-weight: bold;
+}
 .col-right {
     padding-right: 60px;
     padding-left: 0px;

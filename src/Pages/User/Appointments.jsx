@@ -4,12 +4,15 @@ import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { GoAlertFill } from 'react-icons/go';
+import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { VscSend } from "react-icons/vsc";
 import { IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
 import { AiOutlineMessage } from "react-icons/ai";
 import { CiSearch } from 'react-icons/ci';
 import { useParams } from 'react-router-dom';
+import { GiAlarmClock } from "react-icons/gi";
+import { MdOutlineCalendarMonth } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
 import 'Assets/styles/AppointmentList/style.css';
 import UserPlaceholder from 'Assets/images/user.png';
@@ -21,9 +24,12 @@ import axios from "axios";
 
 const Appointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const { designerIdParams } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
+    // const designer_id = designerId ?? designerIdParams;
     const currentUser = cookies.currentUser;
     const designerId = cookies.currentUserDesigner;
+    const [events, setEvents] = useState([]);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [inputClicked, setInputClicked] = useState(false);
@@ -36,8 +42,11 @@ const Appointments = (props) => {
     const [text, setText] = useState('')
     const [designerData, setDesignerData] = useState('');
 
+    const [singleAppointment, setSingleAppointment] = useState('');
+
 
     const [appointmentModalIsOpen, setAppointmentModalIsOpen] = useState(false);
+    const [selectedEvent, setSelectedEvent] = useState(null);
 
     const getAppointments = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
@@ -47,10 +56,14 @@ const Appointments = (props) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
     };
 
-    // const closeAppointmentModal = () => {
-    //     setAppointmentModalIsOpen(false);
-    //     setSelectedEvent(null);
-    // }
+    const getDesignerAppointment = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
+    };
+
+    const closeAppointmentModal = () => {
+        setAppointmentModalIsOpen(false);
+        setSelectedEvent(null);
+    }
 
     const chatBoxModal = (first_name, last_name, image, status) => {
         setChatBox(true);
@@ -65,6 +78,20 @@ const Appointments = (props) => {
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
+    }
+
+    function toggleShowAppointment(first_name, last_name, title, created_at, consultation_hour_start, consultation_hour_end, consultation_details) {
+        setAppointmentModalIsOpen(true);
+
+        setSingleAppointment({
+            first_name: first_name || '-',
+            last_name: last_name || '-',
+            title: title || '-',
+            created_at: created_at || '-',
+            consultation_hour_start: consultation_hour_start || '-',
+            consultation_hour_end: consultation_hour_end || '-',
+            consultation_details: consultation_details || '-',
+        })
     }
 
     function handleOnEnter(text) {
@@ -110,7 +137,34 @@ const Appointments = (props) => {
             });
 
     }, [reloadCount]);
-    console.log("appointments", appointments);
+
+    function returnFormattedDate(date) {
+        const targetDate = new Date(date);
+        const month = targetDate.toLocaleString('en-US', { month: 'long' });
+        const day = targetDate.getDate();
+        const year = targetDate.getFullYear();
+        const formattedDate = `${day} ${month}, ${year}`;
+        return formattedDate;
+    }
+
+    function returnFormattedTime(time) {
+        const targetDate = new Date(time);
+        let hours = targetDate.getHours();
+        const minutes = targetDate.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+
+        // Convert hours to 12-hour format
+        hours = hours % 12 || 12;
+
+        // Format hours and minutes to include leading zeros if needed
+        const formattedHours = hours < 10 ? `0${hours}` : hours;
+        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+
+        const formattedTime = `${formattedHours}:${formattedMinutes} ${ampm}`;
+        return formattedTime;
+    }
+
+
 
     return (
         <LayoutSellerCenter>
@@ -217,6 +271,7 @@ const Appointments = (props) => {
                                                                 month: 'long',
                                                                 day: 'numeric',
                                                                 timeZone: 'UTC',
+
                                                             });
                                                             return (
 
@@ -265,7 +320,9 @@ const Appointments = (props) => {
                                                                                     </div>
 
                                                                                     {/* <Link className="text-decoration-none" to={`/portfolio/${appointment.id}/edit`}> */}
-                                                                                    <div onClick={() => toggleUnderConstruction("View")}
+                                                                                    <div
+                                                                                        onClick={() => toggleShowAppointment(appointment.first_name, appointment.last_name, appointment.title, appointment.created_at, appointment.consultation_hour_start, appointment.consultation_hour_end, appointment.consultation_details)}
+                                                                                        // onclick={() => toggleUnderConstruction}
                                                                                         className="cursor-pointer icon-tooltiptext d-flex justify-content-center align-items-center"
                                                                                     >
                                                                                         <span>
@@ -409,67 +466,52 @@ const Appointments = (props) => {
                 </Modal.Body>
             </Modal>
 
-            {/* <Modal
-                isOpen={appointmentModalIsOpen}
-                onRequestClose={closeAppointmentModal}
-                contentLabel="Appointment Details"
-
+            <Modal
+                show={appointmentModalIsOpen}
+                className='modal-preview'
+                fade={false}
+                centered
             >
                 <div>
                     <ModalHeader>
                         <h5 className='modal-title text-left set-appointment'>Appointment Details</h5>
-                        <button type='button' className='close react-appointment-close' onClick={closeAppointmentModal} data-dismiss='modal' aria-label='Close'>
+                        <button type='button' className='close react-appointment-close' data-dismiss='modal' aria-label='Close'>
                             <span aria-hidden='true'>&times;</span>
                         </button>
                     </ModalHeader>
                     <hr className="mt-0 mb-2" />
 
-                    {selectedEvent && (
-                        <div className="px-3">
-
-                            {selectedEvent.title != "" &&
-                                <>
-                                    <div>
-                                        <h2 className="current-date fs-18 poppins-ft fw-600 mb-3 mt-3">{selectedEvent.title}</h2>
-                                    </div>
-
-                                </>
-                            }
-
-                            {selectedEvent.date != "" &&
-                                <>
-                                    <div className="d-flex">
-                                        <p className="fw-500 mb-2"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
-                                        <p className="current-date ms-2 mb-0 text-black">{selectedEvent.date}</p>
-                                    </div>
-                                </>
-                            }
-                            {selectedEvent.end != "" || selectedEvent.start != "" ?
-                                <>
-                                    <div className="d-flex">
-                                        <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color' /></p>
-                                        <p className="current-date ms-2 mb-0 text-black">{selectedEvent.start}&nbsp;-&nbsp;{selectedEvent.end}</p>
-                                    </div>
-                                </>
-                                :
-                                null
-                            }
-                            {selectedEvent.desc != "" &&
-                                <>
-                                    <div>
-                                        <p className="current-date fs-16 poppins-ft fw-400 text-black mb-2">{selectedEvent.desc}</p>
-                                    </div>
-                                </>
-                            }
+                    <div>
+                        <div>
+                            <h2 className="current-date fs-18 poppins-ft fw-600 px-3 mb-3 mt-3">Appointment with&nbsp;{singleAppointment.first_name} {singleAppointment.last_name}</h2>
                         </div>
-                    )}
+
+                        <div className="d-flex">
+                            <p className="fw-500 mb-2 ps-3"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
+                            <p className="current-date ms-2 mb-0 text-black">
+                                {returnFormattedDate(singleAppointment.created_at ?? '-')}
+                            </p>
+                        </div>
+
+                        <div className="d-flex">
+                            <p className="fw-500 mb-2 ps-3"><GiAlarmClock size="20" className='icon-color' /></p>
+                            <p className="current-date ms-2 mb-0 text-black ">
+                                {returnFormattedTime(singleAppointment.consultation_hour_start ?? '-')}
+                                {/* {singleAppointment.consultation_hour_start}&nbsp;-&nbsp;{singleAppointment.consultation_hour_end} */}
+                            </p>
+                        </div>
+
+                        <div>
+                            <p className="current-date fs-16 poppins-ft fw-400 text-black mb-2 px-3">{singleAppointment.consultation_details}</p>
+                        </div>
+                    </div>
                     <ModalFooter>
                         <div className='text-right'>
                             <Button className="cancel-btn me-2" onClick={closeAppointmentModal}>Close</Button>
                         </div>
                     </ModalFooter>
                 </div>
-            </Modal> */}
+            </Modal>
 
 
         </LayoutSellerCenter >
