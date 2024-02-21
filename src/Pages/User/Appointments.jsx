@@ -143,24 +143,20 @@ const Appointments = (props) => {
         const month = targetDate.toLocaleString('en-US', { month: 'long' });
         const day = targetDate.getDate();
         const year = targetDate.getFullYear();
-        const formattedDate = `${day} ${month}, ${year}`;
+        const formattedDate = `${month} ${day}, ${year}`;
         return formattedDate;
     }
 
-    function returnFormattedTime(time) {
-        const targetDate = new Date(time);
-        let hours = targetDate.getHours();
-        const minutes = targetDate.getMinutes();
-        const ampm = hours >= 12 ? 'PM' : 'AM';
+    function returnFormattedTime(timeString) {
+        const [hours, minutes] = timeString.split(':').map(Number);
+        const ampm = hours >= 12 ? ' PM' : ' AM';
 
         // Convert hours to 12-hour format
-        hours = hours % 12 || 12;
+        let formattedHours = hours % 12;
+        formattedHours = formattedHours === 0 ? 12 : formattedHours;
 
         // Format hours and minutes to include leading zeros if needed
-        const formattedHours = hours < 10 ? `0${hours}` : hours;
-        const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-
-        const formattedTime = `${formattedHours}:${formattedMinutes} ${ampm}`;
+        const formattedTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes}${ampm}`;
         return formattedTime;
     }
 
@@ -496,7 +492,11 @@ const Appointments = (props) => {
                         <div className="d-flex">
                             <p className="fw-500 mb-2 ps-3"><GiAlarmClock size="20" className='icon-color' /></p>
                             <p className="current-date ms-2 mb-0 text-black ">
-                                {returnFormattedTime(singleAppointment.consultation_hour_start ?? '-')}
+                                {
+                                    returnFormattedTime(singleAppointment.consultation_hour_start ?? '-') + ' - ' + returnFormattedTime(singleAppointment.consultation_hour_end ?? '-')
+                                }
+
+                                {/* {returnFormattedTime(singleAppointment.consultation_hour_start ?? '-')} */}
                                 {/* {singleAppointment.consultation_hour_start}&nbsp;-&nbsp;{singleAppointment.consultation_hour_end} */}
                             </p>
                         </div>
