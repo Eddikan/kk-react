@@ -80,7 +80,15 @@ select#sort-by {
     margin-left: auto;
     margin-right: auto;
 }
-
+.card-profile-designer {
+    width: 100%;
+    right: 502px;
+    top: 100px;
+    max-width: 300px;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+}
 .thumbnail-table:hover .table_content {
     visibility: visible !important;
 }
@@ -108,7 +116,9 @@ select#sort-by {
     margin-left: auto;
     margin-right: auto;
 }
-
+.card-hr {
+    border-bottom: none;
+}
 .user-image-modal .user-photo-modal {
     min-width: 60px;
     min-height: 60px;

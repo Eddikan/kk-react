@@ -470,10 +470,11 @@ const Appointments = (props) => {
             >
                 <div>
                     <ModalHeader>
-                        <h5 className='modal-title text-left set-appointment'>Appointment Details</h5>
-                        <button type='button' className='close react-appointment-close' data-dismiss='modal' aria-label='Close'>
-                            <span aria-hidden='true'>&times;</span>
+
+                        <button type='button' className='close react-modal-close' onClick={() => setAppointmentModalIsOpen(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                         </button>
+                        <h5 className='modal-title text-left set-appointment' >Appointment Details</h5>
+
                     </ModalHeader>
                     <hr className="mt-0 mb-2" />
 
