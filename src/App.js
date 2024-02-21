@@ -21,14 +21,14 @@ const Buttons = lazy(() => import("./Pages/Elements/Buttons"));
 const Forms = lazy(() => import("./Pages/Forms"));
 const Stripe = lazy(() => import("./Pages/Stripe"));
 const CustomerPage = lazy(() => import("./Pages/CustomerPage"));
-const SellerCalendar = lazy(() => import("./Pages/Seller/Calendar"));
+const UserCalendar = lazy(() => import("./Pages/User/Calendar"));
 const Cart = lazy(() => import("./Pages/Cart"));
 const EcoFriendlyFabrics = lazy(() => import("./Pages/EcoFriendlyFabrics"));
 const DesignerProfile = lazy(() => import("./Pages/DesignerProfile"));
 const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
 const Appointments = lazy(() => import("./Pages/Appointments"));
-const SellerAppointments = lazy(() => import("./Pages/Seller/Appointments"));
-const OrdersSeller = lazy(() => import("./Pages/OrdersSeller"));
+const UserAppointments = lazy(() => import("./Pages/User/Appointments"));
+const UserOrders = lazy(() => import("./Pages/User/Orders"));
 const Orders = lazy(() => import("./Pages/Orders"));
 const Messages = lazy(() => import("./Pages/Messages"));
 const RateReview = lazy(() => import("./Pages/RateReview"));
@@ -46,13 +46,13 @@ const UserMeasurementGuide = lazy(() =>
 const Wishlists = lazy(() => import("./Pages/Wishlists"));
 
 // Portfolio
-const Portfolio = lazy(() => import("./Pages/Portfolio/Portfolio"));
+const UserPortfolio = lazy(() => import("./Pages/User/Portfolio"));
 const AddNewPortfolio = lazy(() => import("./Pages/Portfolio/AddNewPortfolio"));
 const EditPortfolio = lazy(() => import("./Pages/Portfolio/EditPortfolio"));
 const ViewPortfolio = lazy(() => import("./Pages/Portfolio/ViewPortfolio"));
 
 // Product
-const Products = lazy(() => import("./Pages/Product/Products"));
+const UserProducts = lazy(() => import("./Pages/User/Products"));
 const AddNewProduct = lazy(() => import("./Pages/Product/AddNewProduct"));
 const EditProduct = lazy(() => import("./Pages/Product/EditProduct"));
 const ViewProduct = lazy(() => import("./Pages/Product/ViewProduct"));
@@ -112,7 +112,7 @@ const App = () => {
             element={<EditUserProfile />}
           />
           <Route
-            path="/user/measurement-guide"
+            path="/user/center/guide"
             exact
             element={<UserMeasurementGuide />}
           />
@@ -129,7 +129,7 @@ const App = () => {
             exact
             element={<EditPortfolio />}
           />
-          <Route path="/user/portfolio" exact element={<Portfolio />} />
+          <Route path="/user/center/portfolio" exact element={<UserPortfolio />} />
 
           {/* Product */}
           <Route path="/product/add" exact element={<AddNewProduct />} />
@@ -139,7 +139,7 @@ const App = () => {
             exact
             element={<EditProduct />}
           />
-          <Route path="/user/products" exact element={<Products />} />
+          <Route path="/user/center/products" exact element={<UserProducts />} />
 
           {/* Designs */}
           <Route path="/find-designs" exact element={<Designs />} />
@@ -181,7 +181,7 @@ const App = () => {
           <Route
             path="/user/center/calendar"
             exact
-            element={<SellerCalendar />}
+            element={<UserCalendar />}
           />
           <Route path="/designer-profile" exact element={<DesignerProfile />} />
           <Route
@@ -189,7 +189,7 @@ const App = () => {
             exact
             element={<Appointments />}
           />
-          <Route path="/orders-seller" exact element={<OrdersSeller />} />
+          <Route path="/user/center/orders" exact element={<UserOrders />} />
           <Route path="/messages" exact element={<Messages />} />
           <Route
             path="/rate-review/:productId"
@@ -209,7 +209,7 @@ const App = () => {
           <Route
             path="/user/center/appointments"
             exact
-            element={<SellerAppointments />}
+            element={<UserAppointments />}
           />
           <Route
             path="/appointment/schedule/:designerId"

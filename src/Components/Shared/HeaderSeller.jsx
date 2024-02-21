@@ -272,7 +272,7 @@ const HeaderSeller = () => {
                                                     {userMenuOpen && (
                                                         <div className="action-box user-menu-seller">
                                                             <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog /> Profile</Link>
-                                                            {/* <Link to="/user/portfolio" className="mb-3 text-decoration-none d-block"><IoIosImages /> Portfolio</Link> */}
+                                                            {/* <Link to="/user/center/portfolio" className="mb-3 text-decoration-none d-block"><IoIosImages /> Portfolio</Link> */}
                                                             <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower /> Logout</p>
                                                         </div>
                                                     )}

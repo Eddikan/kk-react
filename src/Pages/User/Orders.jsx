@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import LayoutSellerCenter from '../Components/Layout/LayoutSellerCenter';
-import PlaceholderImage from '../Assets/images/placeholders/image.png';
+import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
+import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Container from 'react-bootstrap/Container';
-import User from '../Assets/images/user.png';
+import User from 'Assets/images/user.png';
 import InputEmoji from 'react-input-emoji';
-import '../Assets/styles/Order/style.css';
+import 'Assets/styles/Order/style.css';
 import Sidebar from 'Components/Shared/Sidebar';
 import { GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
@@ -30,7 +30,7 @@ const ToastCss = {
     progress: undefined,
 };
 
-const OrdersSeller = (props) => {
+const Orders = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole']);
     const { designerId } = useParams();
     const siteCookies = cookies[0];
@@ -1058,4 +1058,4 @@ const OrdersSeller = (props) => {
     );
 };
 
-export default OrdersSeller;
+export default Orders;
