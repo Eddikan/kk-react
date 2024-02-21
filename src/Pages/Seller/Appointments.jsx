@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import LayoutSellerCenter from '../Components/Layout/LayoutSellerCenter';
+import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
@@ -11,7 +11,7 @@ import { AiOutlineMessage } from "react-icons/ai";
 import { CiSearch } from 'react-icons/ci';
 import { useParams } from 'react-router-dom';
 import { IoEyeOutline } from "react-icons/io5";
-import '../Assets/styles/AppointmentList/style.css';
+import 'Assets/styles/AppointmentList/style.css';
 import UserPlaceholder from 'Assets/images/user.png';
 import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
@@ -19,11 +19,11 @@ import InputEmoji from 'react-input-emoji';
 import toast from 'react-hot-toast';
 import axios from "axios";
 
-const AppointmentList = (props) => {
+const Appointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const [reloadCount, setReloadCount] = useState(0);
     const currentUser = cookies.currentUser;
-    const { designerId } = useParams();
+    const designerId = cookies.currentUserDesigner;
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [inputClicked, setInputClicked] = useState(false);
@@ -406,4 +406,4 @@ const AppointmentList = (props) => {
     );
 };
 
-export default AppointmentList;
+export default Appointments;

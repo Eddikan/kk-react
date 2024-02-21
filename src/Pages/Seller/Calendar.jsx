@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import '../Assets/styles/DesignerCalendar/style.css'
+import 'Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import { RxCross2 } from "react-icons/rx";
 import Container from 'react-bootstrap/Container';
@@ -11,7 +11,7 @@ import { GoPlus } from "react-icons/go";
 import MyCalendar from 'Components/Shared/MyCalendar';
 import axios from "axios";
 import toast from 'react-hot-toast';
-import LayoutSellerCenter from '../Components/Layout/LayoutSellerCenter';
+import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 import { useParams } from 'react-router-dom';
 
 
@@ -25,10 +25,10 @@ const initialAppointments = {
 };
 
 
-const SellerCenter = (props) => {
+const Calendar = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
-    const { designerId } = useParams();
+    const designerId = cookies.currentUserDesigner;
     const [designerBusinessHoursModalShow, setDesignerBusinessHoursModalShow] = useState(false);
     const [isSundayChecked, setIsSundayChecked] = useState(false);
     const [isMondayChecked, setIsMondayChecked] = useState(false);
@@ -1343,4 +1343,4 @@ const SellerCenter = (props) => {
     );
 };
 
-export default SellerCenter;
+export default Calendar;

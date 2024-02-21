@@ -481,7 +481,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                         <Col lg="12" className='mt-0 text-left'>
                                             {startTime != "" || endTime != "" ?
                                                 <>
-                                                    <span className='title-appointment'>Schedule</span>
+                                                    <span className='title-appointment'>Availability</span>
                                                     {startTime == "" ?
                                                         <>
                                                             <p className='mb-0'>{endTime}</p>

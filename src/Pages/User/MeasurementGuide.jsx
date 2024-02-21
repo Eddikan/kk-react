@@ -280,7 +280,7 @@ const MeasurementGuide = (props) => {
                         id="measurement-guide"
                     >
                         <Modal.Header className="pb-0">
-                            <h4 className='text-left fs-25 fw-600 px-2'>{actionType == "add" ? "New Element" : "Edit Element"}</h4>
+                            <h4 className='text-left fs-25 fw-600 px-2'>{actionType == "add" ? "New Element" : "Edit Elements"}</h4>
                             <button type='button' className='close react-modal-close' onClick={toggleGuideModal} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                             </button>
                         </Modal.Header>

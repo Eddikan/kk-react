@@ -351,7 +351,7 @@ const Profile = () => {
                                     </Col>
                                     {user.is_designer == 1 && (
                                         <Col md="3" className="text-left">
-                                            <Button href={`/seller-center/${user.designer.id}`} type='button' id="btn-seller-profile" className='w-100'><GoArrowUpRight /><span className='ms-1'>Seller Center</span></Button>
+                                            <Button href={`/user/center/calendar`} type='button' id="btn-seller-profile" className='w-100'><GoArrowUpRight /><span className='ms-1'>Seller Center</span></Button>
                                         </Col>
                                     )}
                                 </Row>

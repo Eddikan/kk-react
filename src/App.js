@@ -21,13 +21,13 @@ const Buttons = lazy(() => import("./Pages/Elements/Buttons"));
 const Forms = lazy(() => import("./Pages/Forms"));
 const Stripe = lazy(() => import("./Pages/Stripe"));
 const CustomerPage = lazy(() => import("./Pages/CustomerPage"));
-const SellerCenter = lazy(() => import("./Pages/SellerCenter"));
+const SellerCalendar = lazy(() => import("./Pages/Seller/Calendar"));
 const Cart = lazy(() => import("./Pages/Cart"));
 const EcoFriendlyFabrics = lazy(() => import("./Pages/EcoFriendlyFabrics"));
 const DesignerProfile = lazy(() => import("./Pages/DesignerProfile"));
 const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
 const Appointments = lazy(() => import("./Pages/Appointments"));
-const AppointmentList = lazy(() => import("./Pages/AppointmentList"));
+const SellerAppointments = lazy(() => import("./Pages/Seller/Appointments"));
 const OrdersSeller = lazy(() => import("./Pages/OrdersSeller"));
 const Orders = lazy(() => import("./Pages/Orders"));
 const Messages = lazy(() => import("./Pages/Messages"));
@@ -179,9 +179,9 @@ const App = () => {
           <Route path="/eco-friendly" exact element={<EcoFriendlyFabrics />} />
           <Route path="/cart" exact element={<Cart />} />
           <Route
-            path="/seller-center/:designerId"
+            path="/user/center/calendar"
             exact
-            element={<SellerCenter />}
+            element={<SellerCalendar />}
           />
           <Route path="/designer-profile" exact element={<DesignerProfile />} />
           <Route
@@ -207,9 +207,9 @@ const App = () => {
             element={<OrderTrackingDetails />}
           />
           <Route
-            path="/appointment-list/:designerId"
+            path="/user/center/appointments"
             exact
-            element={<AppointmentList />}
+            element={<SellerAppointments />}
           />
           <Route
             path="/appointment/schedule/:designerId"

@@ -569,7 +569,7 @@ const ViewProduct = () => {
                                                             <div className="mb-4">
                                                                 <p className="mb-1 fs-16 fw-600">Certifications (Organic, sustainable, etc):</p>
                                                                 {product.certifications.map((certification) => (
-                                                                    <span className="design-tag bg-light fs-14 categories-color">
+                                                                    <span className="design-tag bg-light fs-14 categories-color mw-100">
                                                                         {certification}
                                                                     </span>
                                                                 ))}

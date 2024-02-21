@@ -65,10 +65,10 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
             <div id="sidebar">
                 <UncontrolledAccordion>
                     <AccordionItem className='padding-sidebar'>
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/seller-center/' + designerId)}><IoCalendarClearOutline size="20" className="me-2" />Calendar</div>
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/calendar')}><IoCalendarClearOutline size="20" className="me-2" />Calendar</div>
 
                         <a className="yellow-hover cursor-pointer text-decoration "
-                            href={`/appointment-list/${designerId}`}
+                            href={`/user/center/appointments`}
                         >
                             <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/portfolio')}><PiBriefcase size="22" className="me-2" />Appointments</div>
                         </a>
@@ -80,11 +80,11 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
 
                         {/* <AccordionBody accordionId="1">
                             <a className="yellow-hover cursor-pointer text-decoration "
-                                href={`/appointment-list/${designerId}`}
+                                href={`/user/center/appointments`}
                             >
                                 List
                             </a>
-                            <p className="yellow-hover cursor-pointer mt-3" onClick={() => navigate('/seller-center/' + designerId)}>Calendar</p>
+                            <p className="yellow-hover cursor-pointer mt-3" onClick={() => navigate('/user/center/calendar)}>Calendar</p>
                         </AccordionBody> */}
 
                         <AccordionHeader targetId="2" className='mt-2 hover-sidebar' onClick={() => navigate('/orders-seller')}>
