@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import 'Assets/styles/DesignerCalendar/style.css'
+import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import { RxCross2 } from "react-icons/rx";
 import Container from 'react-bootstrap/Container';
@@ -11,7 +11,7 @@ import { GoPlus } from "react-icons/go";
 import MyCalendar from 'Components/Shared/MyCalendar';
 import axios from "axios";
 import toast from 'react-hot-toast';
-import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
+import LayoutSellerCenter from '../Components/Layout/LayoutSellerCenter';
 import { useParams } from 'react-router-dom';
 
 
@@ -25,10 +25,10 @@ const initialAppointments = {
 };
 
 
-const Calendar = (props) => {
+const SellerCenter = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
-    const designerId = cookies.currentUserDesigner;
+    const { designerId } = useParams();
     const [designerBusinessHoursModalShow, setDesignerBusinessHoursModalShow] = useState(false);
     const [isSundayChecked, setIsSundayChecked] = useState(false);
     const [isMondayChecked, setIsMondayChecked] = useState(false);
@@ -886,7 +886,6 @@ const Calendar = (props) => {
                                                                             onChange={e => handleChangeTimeSunday(e, index)}
                                                                         />
                                                                     </Form.Group>
-
                                                                 </Col>
                                                             </>
                                                         )}
@@ -894,15 +893,15 @@ const Calendar = (props) => {
                                                 );
                                             })}
 
-                                            {!isSundayChecked &&
-                                                <Col md="2" className="pl-0" >
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddSundayHours}
-                                                    />
-                                                </Col>
-                                            }
+
+                                            <Col md="2" className="pl-0" >
+                                                <GoPlus
+                                                    size={25}
+                                                    className="plus-btn mt-2"
+                                                    onClick={handleAddSundayHours}
+                                                />
+                                            </Col>
+
 
                                         </Row>
                                     </Col >
@@ -967,15 +966,15 @@ const Calendar = (props) => {
                                                 );
                                             })}
 
-                                            {!isMondayChecked &&
-                                                <Col md="2" className="pl-0" >
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddMondayHours}
-                                                    />
-                                                </Col>
-                                            }
+
+                                            <Col md="2" className="pl-0" >
+                                                <GoPlus
+                                                    size={25}
+                                                    className="plus-btn mt-2"
+                                                    onClick={handleAddMondayHours}
+                                                />
+                                            </Col>
+
 
                                         </Row>
                                     </Col>
@@ -1041,15 +1040,16 @@ const Calendar = (props) => {
                                                 );
                                             })}
 
-                                            {!isTuesdayChecked &&
-                                                <Col md="2" className="pl-0" >
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddTuesdayHours}
-                                                    />
-                                                </Col>
-                                            }
+
+                                            <Col md="2" className="pl-0" >
+                                                <GoPlus
+                                                    size={25}
+                                                    className="plus-btn mt-2"
+                                                    onClick={handleAddTuesdayHours}
+                                                />
+                                            </Col>
+
+
                                         </Row>
                                     </Col>
                                 </Row>
@@ -1113,15 +1113,15 @@ const Calendar = (props) => {
                                                 );
                                             })}
 
-                                            {!isWednesdayChecked &&
-                                                <Col md="2" className="pl-0" >
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddWednesdayHours}
-                                                    />
-                                                </Col>
-                                            }
+
+                                            <Col md="2" className="pl-0" >
+                                                <GoPlus
+                                                    size={25}
+                                                    className="plus-btn mt-2"
+                                                    onClick={handleAddWednesdayHours}
+                                                />
+                                            </Col>
+
 
                                         </Row >
                                     </Col>
@@ -1186,15 +1186,15 @@ const Calendar = (props) => {
                                                 );
                                             })}
 
-                                            {!isThursdayChecked &&
-                                                <Col md="2" className="pl-0" >
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddThursdayHours}
-                                                    />
-                                                </Col>
-                                            }
+
+                                            <Col md="2" className="pl-0" >
+                                                <GoPlus
+                                                    size={25}
+                                                    className="plus-btn mt-2"
+                                                    onClick={handleAddThursdayHours}
+                                                />
+                                            </Col>
+
 
                                         </Row>
                                     </Col>
@@ -1259,15 +1259,15 @@ const Calendar = (props) => {
                                                 );
                                             })}
 
-                                            {!isFridayChecked &&
-                                                <Col md="2" className="pl-0" >
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddFridayHours}
-                                                    />
-                                                </Col>
-                                            }
+
+                                            <Col md="2" className="pl-0" >
+                                                <GoPlus
+                                                    size={25}
+                                                    className="plus-btn mt-2"
+                                                    onClick={handleAddFridayHours}
+                                                />
+                                            </Col>
+
 
                                         </Row >
                                     </Col>
@@ -1332,15 +1332,14 @@ const Calendar = (props) => {
                                                 );
                                             })}
 
-                                            {!isSaturdayChecked &&
-                                                <Col md="2" className="pl-0">
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddSaturdayHours}
-                                                    />
-                                                </Col>
-                                            }
+
+                                            <Col md="2" className="pl-0">
+                                                <GoPlus
+                                                    size={25}
+                                                    className="plus-btn mt-2"
+                                                    onClick={handleAddSaturdayHours}
+                                                />
+                                            </Col>
 
                                         </Row>
                                     </Col>
@@ -1369,4 +1368,4 @@ const Calendar = (props) => {
     );
 };
 
-export default Calendar;
+export default SellerCenter;

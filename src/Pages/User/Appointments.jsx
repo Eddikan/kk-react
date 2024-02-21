@@ -36,6 +36,9 @@ const Appointments = (props) => {
     const [text, setText] = useState('')
     const [designerData, setDesignerData] = useState('');
 
+
+    const [appointmentModalIsOpen, setAppointmentModalIsOpen] = useState(false);
+
     const getAppointments = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
     };
@@ -43,6 +46,11 @@ const Appointments = (props) => {
     const getDate = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
     };
+
+    // const closeAppointmentModal = () => {
+    //     setAppointmentModalIsOpen(false);
+    //     setSelectedEvent(null);
+    // }
 
     const chatBoxModal = (first_name, last_name, image, status) => {
         setChatBox(true);
@@ -400,6 +408,68 @@ const Appointments = (props) => {
                     </Card>
                 </Modal.Body>
             </Modal>
+
+            {/* <Modal
+                isOpen={appointmentModalIsOpen}
+                onRequestClose={closeAppointmentModal}
+                contentLabel="Appointment Details"
+
+            >
+                <div>
+                    <ModalHeader>
+                        <h5 className='modal-title text-left set-appointment'>Appointment Details</h5>
+                        <button type='button' className='close react-appointment-close' onClick={closeAppointmentModal} data-dismiss='modal' aria-label='Close'>
+                            <span aria-hidden='true'>&times;</span>
+                        </button>
+                    </ModalHeader>
+                    <hr className="mt-0 mb-2" />
+
+                    {selectedEvent && (
+                        <div className="px-3">
+
+                            {selectedEvent.title != "" &&
+                                <>
+                                    <div>
+                                        <h2 className="current-date fs-18 poppins-ft fw-600 mb-3 mt-3">{selectedEvent.title}</h2>
+                                    </div>
+
+                                </>
+                            }
+
+                            {selectedEvent.date != "" &&
+                                <>
+                                    <div className="d-flex">
+                                        <p className="fw-500 mb-2"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
+                                        <p className="current-date ms-2 mb-0 text-black">{selectedEvent.date}</p>
+                                    </div>
+                                </>
+                            }
+                            {selectedEvent.end != "" || selectedEvent.start != "" ?
+                                <>
+                                    <div className="d-flex">
+                                        <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color' /></p>
+                                        <p className="current-date ms-2 mb-0 text-black">{selectedEvent.start}&nbsp;-&nbsp;{selectedEvent.end}</p>
+                                    </div>
+                                </>
+                                :
+                                null
+                            }
+                            {selectedEvent.desc != "" &&
+                                <>
+                                    <div>
+                                        <p className="current-date fs-16 poppins-ft fw-400 text-black mb-2">{selectedEvent.desc}</p>
+                                    </div>
+                                </>
+                            }
+                        </div>
+                    )}
+                    <ModalFooter>
+                        <div className='text-right'>
+                            <Button className="cancel-btn me-2" onClick={closeAppointmentModal}>Close</Button>
+                        </div>
+                    </ModalFooter>
+                </div>
+            </Modal> */}
 
 
         </LayoutSellerCenter >
