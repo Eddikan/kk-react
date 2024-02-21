@@ -1,6 +1,6 @@
 import { Calendar, momentLocalizer, Views, DateLocalizer } from 'react-big-calendar';
 import { Container, CardFooter, Input, Label, UncontrolledAccordion, AccordionItem, AccordionHeader, AccordionBody, CardBody, Button, Card, Col, Modal, Table, Row, Form, } from 'reactstrap';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { PiPencilThin, PiTrashThin } from "react-icons/pi";
 import { AiOutlineClose } from "react-icons/ai";
@@ -167,6 +167,14 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
 
 
     }, []);
+
+    const { defaultDate, views } = useMemo(
+        () => ({
+            defaultDate: new Date(1970, 1, 1),
+            views: [Views.MONTH, Views.DAY, Views.WEEK],
+        }),
+        []
+    )
 
     const closeAppointmentModal = () => {
         setAppointmentModalIsOpen(false);
@@ -381,6 +389,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                     onSelectSlot={handleDateClick}
                     selectable
                     onSelectEvent={handleSelectEvent}
+                    views={views}
                 />
 
                 <Modal

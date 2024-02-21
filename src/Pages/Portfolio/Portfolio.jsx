@@ -166,11 +166,38 @@ const Portfolio = (props) => {
                                                                 </Link>
                                                             </div>
 
-                                                            <div className='d-flex mt-2'>
+                                                            <Row>
+                                                                <Col lg="6">
+                                                                    <div className="text-black text-decoration-none ellipsis rufina-family fs-18 mt-2">{object.name ?? "-"}</div>
+                                                                </Col>
+
+                                                                <Col lg="6" className='text-end'>
+                                                                    {object.views == null ?
+                                                                        <div className='mt-2'>
+                                                                            <IoEyeOutline className="text-black ms-2" /> 0
+                                                                        </div>
+                                                                        :
+                                                                        <div className='mt-2'>
+                                                                            <IoEyeOutline className="text-black ms-2" /> {object.views}
+                                                                        </div>
+                                                                    }
+                                                                </Col>
+                                                            </Row>
+                                                            {/* <div className='d-flex mt-2'>
                                                                 <div className="text-black text-decoration-none ellipsis rufina-family fs-18">{object.name ?? "-"}</div>
                                                                 <div><GoHeart className="text-black ms-3" /></div>
+
+                                                                {object.views == null ?
+                                                                    <div>
+                                                                        <IoEyeOutline className="text-black ms-2" /> 0
+                                                                    </div>
+                                                                    :
+                                                                    <div>
+                                                                        <IoEyeOutline className="text-black ms-2" /> {object.views}
+                                                                    </div>
+                                                                }
                                                                 <div><IoEyeOutline className="text-black ms-2" /> {object.views}</div>
-                                                            </div>
+                                                            </div> */}
                                                         </Col>
                                                     ))}
 

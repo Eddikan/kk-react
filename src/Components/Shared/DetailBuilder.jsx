@@ -108,16 +108,16 @@ const DetailBuilder = (props) => {
                                                         ) : element.type === 'Heading' ? (
                                                             <Form.Control type="text" value={element.value} onChange={(e) => handleInputChange(index, e.target.value)} placeholder='' />
                                                         ) : element.type === 'Image' ? (
-                                                            <ImageUploader type="product" images={element.value} onImagesChange={(e) => { handleElementImagesChange(index, e); } } size={size} />
-                                                            ) : element.type === 'Video' ? (
-                                                            <VideoUploader  type="product"  videoLink={element.value} onVideoChange={(e) => { handleElementVideoChange(index, e); } } />
-                                                        ) : null }
+                                                            <ImageUploader type="product" images={element.value} onImagesChange={(e) => { handleElementImagesChange(index, e); }} size={size} />
+                                                        ) : element.type === 'Video' ? (
+                                                            <VideoUploader type="product" videoLink={element.value} onVideoChange={(e) => { handleElementVideoChange(index, e); }} />
+                                                        ) : null}
                                                     </Form.Group>
                                                 </Col>
                                                 <Col lg={1}>
                                                     {element.type != "Line Break" ?
                                                         <div className="kouture-tooltip mt-5">
-                                                            <div className="action-button bg-danger me-2"  onClick={() => handleRemoveElement(index)}>
+                                                            <div className="action-button bg-danger me-2" onClick={() => handleRemoveElement(index)}>
                                                                 <GoX className="text-white" />
                                                             </div>
                                                             <div className="kouture-tooltiptext">
@@ -126,7 +126,7 @@ const DetailBuilder = (props) => {
                                                         </div>
                                                         :
                                                         <div className="kouture-tooltip">
-                                                            <div className="action-button bg-danger me-2"  onClick={() => handleRemoveElement(index)}>
+                                                            <div className="action-button bg-danger me-2" onClick={() => handleRemoveElement(index)}>
                                                                 <GoX className="text-white" />
                                                             </div>
                                                             <div className="kouture-tooltiptext">
@@ -134,18 +134,18 @@ const DetailBuilder = (props) => {
                                                             </div>
                                                         </div>
                                                     }
-                                                    
+
                                                 </Col>
                                             </Row>
                                         </Card.Body>
                                     </Card>
                                 ))}
-                                
+
                             </>
                         )}
                         <div className="text-right">
                             {/* Done button */}
-                            <Button className='btn-primary mt-4' type="button" onClick={handleDone}>Done</Button>
+                            <Button className='btn-primary mt-4' type="button" onClick={handleDone}>Save</Button>
                         </div>
                     </div>
                 </>
@@ -175,15 +175,15 @@ const DetailBuilder = (props) => {
                                     {elementType == "Paragraph" ?
                                         <Form.Control id="elementValue" as="textarea" rows={5} name='element_name' value={elementValue} onChange={(e) => setElementValue(e.target.value)} required placeholder='' />
                                         : elementType == "Heading" ?
-                                        <Form.Control id="elementValue" type='text' name='element_name' value={elementValue} onChange={(e) => setElementValue(e.target.value)} required placeholder='' />
-                                        : elementType == "Image" ?
-                                        <ImageDragAndDrop type="product" onImagesChange={(e) => { handleImagesChange(e); } } size={size} />
-                                        : elementType === 'YouTube Embed Link' || elementType === 'Vimeo Embed Link' ?
-                                        <Form.Control id="elementValue" type='text' name='element_name' value={elementValue} onChange={(e) => setElementValue(e.target.value)} required placeholder='' />
-                                        : elementType === 'Video' ?
-                                        <VideoDragAndDrop  type="product" onVideoChange={(e) => { handleVideoChange(e); } } />
-                                        :
-                                        null
+                                            <Form.Control id="elementValue" type='text' name='element_name' value={elementValue} onChange={(e) => setElementValue(e.target.value)} required placeholder='' />
+                                            : elementType == "Image" ?
+                                                <ImageDragAndDrop type="product" onImagesChange={(e) => { handleImagesChange(e); }} size={size} />
+                                                : elementType === 'YouTube Embed Link' || elementType === 'Vimeo Embed Link' ?
+                                                    <Form.Control id="elementValue" type='text' name='element_name' value={elementValue} onChange={(e) => setElementValue(e.target.value)} required placeholder='' />
+                                                    : elementType === 'Video' ?
+                                                        <VideoDragAndDrop type="product" onVideoChange={(e) => { handleVideoChange(e); }} />
+                                                        :
+                                                        null
                                     }
                                 </Form.Group>
                                 :
@@ -202,7 +202,7 @@ const DetailBuilder = (props) => {
                 </>
 
             }
-            
+
         </div>
     );
 };

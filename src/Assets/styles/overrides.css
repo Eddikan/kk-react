@@ -1575,9 +1575,10 @@ img.user-placeholder-header {
 .width-chat-card{
     width: 447px;
     border-color: #DFDFDF;
-    position: absolute;
+    position: fixed;
     bottom: 0;
-    right: 11px;
+    margin-bottom: 27px;
+    right: 27px;
 }
 span.name-of-portfolio {
     font-size: 16px;

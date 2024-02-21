@@ -410,7 +410,10 @@ const Designs = (props) => {
                                             </a>
 
                                             <div className='btn-book-bar'>
-                                                <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                                <a
+                                                    // href={`/appointment/schedule/${singleDesign.id}`}
+                                                    onClick={() => toggleUnderConstruction("Book a Consultation")}
+                                                >
                                                     <button className='btn btn-book-consultation'>Book a Consultation</button>
                                                 </a>
                                             </div>
@@ -474,9 +477,9 @@ const Designs = (props) => {
                                                         </div>
 
                                                         <hr />
-                                                        <div className='text-center'>
+                                                        <div className='text-center' onClick={() => toggleUnderConstruction("Book a Consultation")}>
                                                             <a className='book-consultation btn-book btn'
-                                                                href={`/appointment/schedule/${singleDesign.id}`}
+                                                            // href={`/appointment/schedule/${singleDesign.id}`}
                                                             ><IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
                                                         </div>
 
@@ -494,12 +497,12 @@ const Designs = (props) => {
                                     </div>
                                 </div>
 
-                                <div className='text-center mb-4' >
-                                    <a href={`/appointment/schedule/${singleDesign.id}`}>
-                                        <div className="action-button-designs bg-white">
-                                            <PiNotepadFill className="text-black mt-2" size={30} />
-                                        </div>
-                                    </a>
+                                <div className='text-center mb-4' onClick={() => toggleUnderConstruction("Book a Consultation")}>
+                                    {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
+                                    <div className="action-button-designs bg-white">
+                                        <PiNotepadFill className="text-black mt-2" size={30} />
+                                    </div>
+                                    {/* </a> */}
                                     <div className='icon-name-color fs-12 mt-2 fw-400'>Consultation</div>
                                 </div>
 

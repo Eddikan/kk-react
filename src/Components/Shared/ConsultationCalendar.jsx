@@ -265,7 +265,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                     setYouAreScheduleShow(!youAreScheduleShow);
                     setAppointmentFormData(initialAppointments);
                     toast.success('Consultation added successfully!');
-                    navigate('/appointments/'+currentUser)
+                    navigate('/appointments/' + currentUser)
                 } else {
                     setFormStatus('standby');
                     toast.error('Designer is not available at this time');

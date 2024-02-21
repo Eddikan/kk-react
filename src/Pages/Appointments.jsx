@@ -176,8 +176,8 @@ const Appointments = (props) => {
                                                                     </Col>
 
                                                                     <Col lg={2} className='d-flex justify-content-end'>
-                                                                        <div className="cursor-pointer appointments-tooltip" onClick={() => toggleUnderConstruction("Enter video conferencing")}>
-                                                                            <span className="icon-tooltiptext fs-14">Enter video conferencing</span>
+                                                                        <div className="cursor-pointer appointments-tooltip" onClick={() => toggleUnderConstruction("Video call")}>
+                                                                            <span className="icon-tooltiptext fs-14">Video call</span>
                                                                             <IoMdVideocam className='video-cam me-3' size={20} />
                                                                         </div>
 

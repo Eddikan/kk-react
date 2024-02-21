@@ -705,20 +705,20 @@ const SellerCenter = (props) => {
 
                                 }));
 
-                                setMondayHoursFormData(mappedMondayBusinessHours);
-                                setMondayHoursCopyFormData(mappedMondayBusinessHours);
-                                setTuesdayHoursFormData(mappedTuesdayBusinessHours);
-                                setTuesdayHoursCopyFormData(mappedTuesdayBusinessHours);
-                                setWednesdayHoursFormData(mappedWednesdayBusinessHours);
-                                setWednesdayHoursCopyFormData(mappedWednesdayBusinessHours);
-                                setThursdayHoursFormData(mappedThursdayBusinessHours);
-                                setThursdayHoursCopyFormData(mappedThursdayBusinessHours);
-                                setFridayHoursFormData(mappedFridayBusinessHours);
-                                setFridayHoursCopyFormData(mappedFridayBusinessHours);
-                                setSaturdayHoursFormData(mappedSaturdayBusinessHours);
-                                setSaturdayHoursCopyFormData(mappedSaturdayBusinessHours);
-                                setSundayHoursFormData(mappedSundayBusinessHours);
-                                setSundayHoursCopyFormData(mappedSundayBusinessHours);
+                                // setMondayHoursFormData(mappedMondayBusinessHours);
+                                // setMondayHoursCopyFormData(mappedMondayBusinessHours);
+                                // setTuesdayHoursFormData(mappedTuesdayBusinessHours);
+                                // setTuesdayHoursCopyFormData(mappedTuesdayBusinessHours);
+                                // setWednesdayHoursFormData(mappedWednesdayBusinessHours);
+                                // setWednesdayHoursCopyFormData(mappedWednesdayBusinessHours);
+                                // setThursdayHoursFormData(mappedThursdayBusinessHours);
+                                // setThursdayHoursCopyFormData(mappedThursdayBusinessHours);
+                                // setFridayHoursFormData(mappedFridayBusinessHours);
+                                // setFridayHoursCopyFormData(mappedFridayBusinessHours);
+                                // setSaturdayHoursFormData(mappedSaturdayBusinessHours);
+                                // setSaturdayHoursCopyFormData(mappedSaturdayBusinessHours);
+                                // setSundayHoursFormData(mappedSundayBusinessHours);
+                                // setSundayHoursCopyFormData(mappedSundayBusinessHours);
                                 if (mappedFridayBusinessHours.length <= 0) {
                                     //means that the day is unavailable
                                     setIsFridayChecked(true);
@@ -735,6 +735,42 @@ const SellerCenter = (props) => {
                                 } else if (mappedSaturdayBusinessHours.length <= 0) {
                                     setIsSaturdayChecked(true);
                                 }
+
+                                if (!isSundayChecked) {
+                                    setSundayHoursFormData(mappedSundayBusinessHours);
+                                    setSundayHoursCopyFormData(mappedSundayBusinessHours);
+                                }
+
+                                if (!isMondayChecked) {
+                                    setMondayHoursFormData(mappedMondayBusinessHours);
+                                    setMondayHoursCopyFormData(mappedMondayBusinessHours);
+                                }
+
+                                if (!isTuesdayChecked) {
+                                    setTuesdayHoursFormData(mappedTuesdayBusinessHours);
+                                    setTuesdayHoursCopyFormData(mappedTuesdayBusinessHours);
+                                }
+
+                                if (!isWednesdayChecked) {
+                                    setWednesdayHoursFormData(mappedWednesdayBusinessHours);
+                                    setWednesdayHoursCopyFormData(mappedWednesdayBusinessHours);
+                                }
+
+                                if (!isThursdayChecked) {
+                                    setThursdayHoursFormData(mappedThursdayBusinessHours);
+                                    setThursdayHoursCopyFormData(mappedThursdayBusinessHours);
+                                }
+
+                                if (!isFridayChecked) {
+                                    setFridayHoursFormData(mappedFridayBusinessHours);
+                                    setFridayHoursCopyFormData(mappedFridayBusinessHours);
+                                }
+
+                                if (!isSaturdayChecked) {
+                                    setSaturdayHoursFormData(mappedSaturdayBusinessHours);
+                                    setSaturdayHoursCopyFormData(mappedSaturdayBusinessHours);
+                                }
+
                             } else {
                                 setSundayHoursFormData([initialBusinessHours]);
                             }
@@ -766,7 +802,7 @@ const SellerCenter = (props) => {
                                 <Col lg={12} className="designer-calendar-container ms-4">
                                     <Row className="pb-4">
                                         <Col md={6} className='d-flex justify-content-left align-items-center'>
-                                            <h3 className="fs-30 fw-600 text-black mb-0">My Calendar</h3>
+                                            <h3 className="fs-30 fw-600 text-black mb-0">Calendar</h3>
                                         </Col>
                                         <Col md={6} className="text-right">
                                             <button className="btn-primary btn" onClick={handleShowDesignerBusinessHoursModal}>Settings</button>

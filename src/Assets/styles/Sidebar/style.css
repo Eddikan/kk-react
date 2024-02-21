@@ -12,7 +12,7 @@
     padding-left: 28px;
 }
 
-span.appointments,.orders,.portfolio,.fabrics {
+span.hover-sidebar {
     font-weight: 400;
     font-family: 'Poppins';
     font-size: 15px;
@@ -30,4 +30,7 @@ span.appointments,.orders,.portfolio,.fabrics {
 }
 .padding-sidebar {
     padding: 35px 0px 8px 15px;
+}
+.order-font {
+    font-family: 'Poppins';
 }
