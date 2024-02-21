@@ -47,14 +47,14 @@ const Wishlists = lazy(() => import("./Pages/Wishlists"));
 
 // Portfolio
 const UserPortfolio = lazy(() => import("./Pages/User/Portfolio"));
-const AddNewPortfolio = lazy(() => import("./Pages/Portfolio/AddNewPortfolio"));
-const EditPortfolio = lazy(() => import("./Pages/Portfolio/EditPortfolio"));
+const AddNewPortfolio = lazy(() => import("./Pages/User/AddNewPortfolio"));
+const EditPortfolio = lazy(() => import("./Pages/User/EditPortfolio"));
 const ViewPortfolio = lazy(() => import("./Pages/Portfolio/ViewPortfolio"));
 
 // Product
 const UserProducts = lazy(() => import("./Pages/User/Products"));
-const AddNewProduct = lazy(() => import("./Pages/Product/AddNewProduct"));
-const EditProduct = lazy(() => import("./Pages/Product/EditProduct"));
+const AddNewProduct = lazy(() => import("./Pages/User/AddNewProduct"));
+const EditProduct = lazy(() => import("./Pages/User/EditProduct"));
 const ViewProduct = lazy(() => import("./Pages/Product/ViewProduct"));
 
 // Design
@@ -125,7 +125,7 @@ const App = () => {
             element={<ViewPortfolio />}
           />
           <Route
-            path="/portfolio/:portfolioId/edit"
+            path="/user/center/design/:portfolioId/edit"
             exact
             element={<EditPortfolio />}
           />
@@ -135,7 +135,7 @@ const App = () => {
           <Route path="/product/add" exact element={<AddNewProduct />} />
           <Route path="/product/:productId" exact element={<ViewProduct />} />
           <Route
-            path="/product/:productId/edit"
+            path="/user/center/product/:productId/edit"
             exact
             element={<EditProduct />}
           />

@@ -444,7 +444,7 @@ const ViewProduct = () => {
                                                     {!isProductCurrentUser ?
                                                         <>
                                                             <div>
-                                                                <Link to={`/product/${product.id}/edit`} className="text-decoration-none">
+                                                                <Link to={`/user/center/product/${product.id}/edit`} className="text-decoration-none">
                                                                     <div class="kouture-tooltip">
                                                                         <div className="action-button bg-smgray me-2">
                                                                             <GoPencil className="text-black" />

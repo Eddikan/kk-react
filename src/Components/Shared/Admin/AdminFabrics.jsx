@@ -167,7 +167,7 @@ const ProductGrid = (props) => {
                                                             <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
                                                             {selectedItemIndex === index && (
                                                                 <div className="action-box">
-                                                                    <Link className="text-decoration-none" to={`/product/${product.id}/edit`}>
+                                                                    <Link className="text-decoration-none" to={`/user/center/product/${product.id}/edit`}>
                                                                         <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
                                                                     </Link>
                                                                     <p className="mb-3 cursor-pointer" onClick={function () { deleteConfirm(product.id); }}><GoTrash /> Delete</p>

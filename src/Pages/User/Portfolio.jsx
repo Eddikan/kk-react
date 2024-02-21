@@ -127,7 +127,7 @@ const Portfolio = (props) => {
                                                                         <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
                                                                         {selectedItemIndex === index && (
                                                                             <div className="action-box">
-                                                                                <Link className="text-decoration-none" to={`/portfolio/${object.id}/edit`}>
+                                                                                <Link className="text-decoration-none" to={`/user/center/design/${object.id}/edit`}>
                                                                                     <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
                                                                                 </Link>
                                                                                 <Link className="text-decoration-none" to={`/portfolio/${object.id}`}>
@@ -161,7 +161,7 @@ const Portfolio = (props) => {
                                                                     </div>
                                                                 </div>
 
-                                                                <Link to={`/portfolio/${object.id}/edit`} className="text-decoration-none">
+                                                                <Link to={`/user/center/design/${object.id}/edit`} className="text-decoration-none">
                                                                     <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
                                                                 </Link>
                                                             </div>

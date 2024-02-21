@@ -126,7 +126,7 @@ const Products = (props) => {
                                                                         <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
                                                                         {selectedItemIndex === index && (
                                                                             <div className="action-box">
-                                                                                <Link className="text-decoration-none" to={`/product/${object.id}/edit`}>
+                                                                                <Link className="text-decoration-none" to={`/user/center/product/${object.id}/edit`}>
                                                                                     <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
                                                                                 </Link>
                                                                                 <Link className="text-decoration-none" to={`/product/${object.id}`}>
@@ -162,7 +162,7 @@ const Products = (props) => {
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <Link to={`/product/${object.id}/edit`} className="text-decoration-none">
+                                                                <Link to={`/user/center/product/${object.id}/edit`} className="text-decoration-none">
                                                                     <div className="product-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
                                                                 </Link>
                                                             </div>
