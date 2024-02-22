@@ -89,9 +89,9 @@ const ViewPortFolio = () => {
                 }
 
                 if (currentUser == portfolioData.user.id) {
-                    setIsPortfolioCurrentUser(false);
-                } else {
                     setIsPortfolioCurrentUser(true);
+                } else {
+                    setIsPortfolioCurrentUser(false);
                 }
 
             } else {
@@ -191,7 +191,7 @@ const ViewPortFolio = () => {
 
                                                     </div>
 
-                                                    {isPortfolioCurrentUser ?
+                                                    {!isPortfolioCurrentUser ?
                                                         <>
 
                                                             <div className="action-button bg-smgray" onClick={() => toggleUnderConstruction("Share Portfolio")}>
@@ -261,7 +261,7 @@ const ViewPortFolio = () => {
                                                         </div>
                                                     </div>
 
-                                                    {isPortfolioCurrentUser ?
+                                                    {!isPortfolioCurrentUser ?
                                                         <>
                                                             <div>
                                                                 <div className="cursor-pointer" onClick={() => chatBoxModal("Message")}>
@@ -276,7 +276,7 @@ const ViewPortFolio = () => {
                                                 </div>
 
 
-                                                {isPortfolioCurrentUser ?
+                                                {!isPortfolioCurrentUser ?
                                                     <>
                                                         <span>
                                                             <p className='btn request-quote-btn mt-4 mb-0 fs-16 fw-400 bg-transparent text-black request-a-quote'
@@ -492,7 +492,7 @@ const ViewPortFolio = () => {
                                     <span className='d-flex'>
                                         {images && images.length > 0 ?
                                             <>
-                                                <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                                <div className="single-image-chat" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + images[0].image_url + ")" }}>
                                                 </div>
                                                 <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
                                             </>
@@ -637,8 +637,7 @@ const ViewPortFolio = () => {
                                                 <span className='d-flex'>
                                                     {images && images.length > 0 ?
                                                         <>
-                                                            <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-                                                            </div>
+                                                            <div className="single-image-chat" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + images[0].image_url + ")" }}></div>
                                                             <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>
                                                                 {portfolio.name ?? "-"}
                                                             </span>

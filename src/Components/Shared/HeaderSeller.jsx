@@ -196,11 +196,7 @@ const HeaderSeller = () => {
                                             <>
 
                                                 <div className="user-dropdown nav-link" ref={bellRef}>
-                                                    {userImage ?
-                                                        <div className="cursor-pointer nav-link"><GoBell size={25} onClick={toggleBellMenu} /></div>
-                                                        :
-                                                        <div className="cursor-pointer nav-link"><GoBell size={25} onClick={toggleBellMenu} /></div>
-                                                    }
+                                                    <div className="nav-link"><GoBell size={25} className="cursor-pointer" onClick={toggleBellMenu} /></div>
                                                     {userBellOpen && (
 
                                                         <div className="action-box-bell user-menu-bell">
@@ -229,11 +225,7 @@ const HeaderSeller = () => {
                                                 </div>
 
                                                 <div className="user-dropdown nav-link" ref={messageRef}>
-                                                    {userImage ?
-                                                        <div className="cursor-pointer nav-link"><BsEnvelope size={25} onClick={toggleEnvelopMenu} /></div>
-                                                        :
-                                                        <div className="cursor-pointer nav-link"><BsEnvelope size={25} onClick={toggleEnvelopMenu} /></div>
-                                                    }
+                                                    <div className="nav-link"><BsEnvelope  className="cursor-pointer" size={25} onClick={toggleEnvelopMenu} /></div>
                                                     {userEnvelopOpen && (
 
                                                         <div className="action-box-envelop user-menu-envelop">

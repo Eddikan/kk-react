@@ -288,7 +288,7 @@ const Cart = (props) => {
                                                                                 </div>
 
                                                                                 <div className='d-flex align-items-center user-image-chat'>
-                                                                                    {cartItem.seller.image ? 
+                                                                                    {cartItem.seller.image ?
                                                                                         <div
                                                                                             className='user-photo-chat'
                                                                                             style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${cartItem.seller.image})` }}
@@ -434,7 +434,7 @@ const Cart = (props) => {
                                     <div className='text-center mt-4'
                                     // onClick={() => toggleUnderConstruction("Check Out")}
                                     >
-                                        {selectedCartItems.length < 1 || cartItems.length < 1?
+                                        {selectedCartItems.length < 1 || cartItems.length < 1 ?
                                             <button className='btn btn-primary w-100' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
                                             :
                                             <button onClick={checkOutSubmit} className='btn btn-primary w-100'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
@@ -478,49 +478,27 @@ const Cart = (props) => {
                 size='lg'
                 centered
             >
-                <Modal.Header>
-                    <Modal.Title>Delete Item</Modal.Title>
-                    <AiOutlineClose role='button' onClick={() => setCartItemModalDelete(false)} />
+                <Modal.Header className='pb-0'>
+                    <h5 className='modal-title text-left'>Confirm Delete</h5>
+                    <button type='button' className='close react-modal-close' onClick={function () { setCartItemModalDelete(false); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
                 </Modal.Header>
 
-                <Modal.Body className="pb-0 pt-1">
-                    <Card className="border-none">
+                <Modal.Body>
+                    <Card>
                         <Card.Body>
-                            <p className="pt-0 fs-22">Are you sure about deleting the item?</p>
+                            <p className="mb-0">Are you sure you want to delete this design?</p>
                         </Card.Body>
                     </Card>
+                    <Card.Footer className="text-right mt-3">
+                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setCartItemModalDelete(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                        {formStatus !== "standby" ?
+                            <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Deleting...</button>
+                            :
+                            <button className="btn btn-primary" type="button" onClick={deleteCartItemSubmit} style={{ minWidth: '100px', padding: '9px 20px' }}>Delete</button>
+                        }
+                    </Card.Footer>
                 </Modal.Body>
-                <Modal.Footer className='text-right modal-footer-border pb-4'>
-                    <button
-                        type="button"
-                        className="btn-cart-cancel btn"
-                        onClick={() => setCartItemModalDelete(false)}
-                    >
-                        <AiOutlineClose
-                            size="20px"
-                            className="cancel-button me-1"
-                        />
-                        Cancel
-                    </button>
-
-                    {formStatus !== "standby" ?
-                        <button className='btn btn-primary' type='button'>
-                            <AiOutlineCheck size="20px" /> Deleting...
-                        </button>
-                        :
-                        <button
-                            className='btn btn-primary form-hover'
-                            type='button'
-                            onClick={deleteCartItemSubmit}
-                        >
-                            <PiTrashThin
-                                size="20px"
-                                className="cancel-button me-1"
-                            />
-                            Delete
-                        </button>
-                    }
-                </Modal.Footer>
             </Modal>
 
         </LayoutNoFooter >

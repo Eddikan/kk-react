@@ -239,15 +239,9 @@ const Header = () => {
                   <>
 
                     <div className="user-dropdown nav-link" ref={bellRef}>
-                      {userImage ?
-                        <div className="cursor-pointer nav-link" onClick={toggleBellMenu} >
-                          <GoBell size={25} />
-                        </div>
-                        :
-                        <div className="cursor-pointer nav-link" onClick={toggleBellMenu}>
-                          <GoBell size={25} />
-                        </div>
-                      }
+                      <div className="nav-link" >
+                        <GoBell className="cursor-pointer" onClick={toggleBellMenu} size={25} />
+                      </div>
                       {userBellOpen && (
 
                         <div className="action-box-bell user-menu-bell">
@@ -274,14 +268,9 @@ const Header = () => {
                     </div>
 
                     <div className="user-dropdown nav-link" ref={messageRef}>
-                      {userImage ?
-                        <div className="cursor-pointer nav-link" onClick={toggleEnvelopMenu}><BsEnvelope size={25}  /></div>
-                        :
-                        <div className="cursor-pointer nav-link" onClick={toggleEnvelopMenu}><BsEnvelope size={25} /></div>
-                      }
+                      <div className="nav-link"><BsEnvelope className="cursor-pointer" onClick={toggleEnvelopMenu} size={25}  /></div>
                       {userEnvelopOpen && (
                         <>
-
                           <div className="action-box-envelop user-menu-envelop">
                             {/* <div className='d-flex'>
                               <div><img src={User} className='user-placeholder-header' /></div>
@@ -319,21 +308,21 @@ const Header = () => {
 
                       )}
                     </div>
-                    <Nav.Link href="/wishlist"><GoHeart size={27} /></Nav.Link>
-                    <Nav.Link
-                      href={`/appointments/${currentUser}`}
-                    >
-                      <IoCalendarClearOutline size={25} />
-
-                    </Nav.Link>
-                    <Nav.Link
-                      href={`/cart/`}
-                    >
-                      <IoCartOutline size={26} />
-
-                    </Nav.Link>
-
-
+                    <div className="nav-link" >
+                      <a href={`/wishlist`}>
+                        <GoHeart size={25} />
+                      </a>
+                    </div>
+                    <div className="nav-link" >
+                      <a href={`/appointments/${currentUser}`}>
+                        <IoCalendarClearOutline size={25} />
+                      </a>
+                    </div>
+                    <div className="nav-link" >
+                      <a href={`/cart/`}>
+                        <IoCartOutline size={26} />
+                      </a>
+                    </div>
                     <div className="user-dropdown nav-link" ref={orderRef}>
                       <a href="/orders" className="text-decoration-none">
                         <div className="cursor-pointer nav-link" >Orders</div>

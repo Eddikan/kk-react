@@ -48,13 +48,14 @@ const Appointments = (props) => {
         setModalHeading(message);
     }
 
-    function toggleChatbox(first_name, last_name, image) {
+    function toggleChatbox(first_name, last_name, image,message) {
         setAskAQuestion(true);
         setNameDesigner({
             first_name: first_name ?? '-',
             last_name: last_name ?? '-',
             image: image ?? '-'
-        })
+        });
+        setModalHeading(message);
     }
 
     useEffect(() => {
@@ -182,7 +183,7 @@ const Appointments = (props) => {
                                                                         </div>
 
                                                                         <div className="cursor-pointer appointments-tooltip"
-                                                                            onClick={function () { toggleChatbox(appointment.designer?.first_name, appointment.designer?.last_name, appointment.designer?.image); }}
+                                                                            onClick={function () { toggleChatbox(appointment.designer?.first_name, appointment.designer?.last_name, appointment.designer?.image, "Under Construction"); }}
                                                                         >
                                                                             <span className="icon-tooltiptext fs-14">Message Designer</span>
                                                                             <span><AiFillMessage className='video-cam' size={20} /></span>
@@ -246,11 +247,11 @@ const Appointments = (props) => {
                                     <div className='mt-3 d-flex justify-content-between'>
 
                                         <div className='d-flex'>
-                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}>
+                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("Under Construction")}>
                                                 <LiaSmileBeam className='me-2' />
                                             </div>
 
-                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}>
+                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("Under Construction")}>
                                                 <IoIosAttach />
                                             </div>
                                         </div>

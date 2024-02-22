@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Row, Col, Button } from 'react-bootstrap';
-import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
+import { Card, Modal } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { BsThreeDots } from "react-icons/bs";
@@ -222,24 +222,23 @@ const PortfolioGrid = (props) => {
             </div>
             {/* Confirm Delete */}
             <Modal
-                isOpen={deleteConfirmShow}
+                show={deleteConfirmShow}
                 className='modal-preview'
                 fade={false}
                 centered
             >
-                <ModalHeader className="pb-0">
-                    <h5 className='modal-title text-uppercase text-left'></h5>
+                <Modal.Header className="pb-0">
+                    <h5 className='modal-title text-left'>Confirm Delete</h5>
                     <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
-                </ModalHeader>
-                <ModalBody>
-                    <h4 className='text-center fs-25 fw-600'>Confirm Delete</h4>
+                </Modal.Header>
+                <Modal.Body>
                     <Card>
-                        <CardBody className="text-center">
+                        <Card.Body>
                             <p className="mb-0">Are you sure you want to delete this design?</p>
-                        </CardBody>
+                        </Card.Body>
                     </Card>
-                    <CardFooter className="text-right mt-3">
+                    <Card.Footer className="text-right mt-3">
                         <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setDeleteConfirmShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
                         {portfolioDeleteLoading ?
                             <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Deleting...</button>
@@ -247,8 +246,8 @@ const PortfolioGrid = (props) => {
                             <button className="btn btn-primary" type="button" onClick={PortfolioDeleteSubmit} style={{ minWidth: '100px', padding: '9px 20px' }}>Delete</button>
                         }
 
-                    </CardFooter>
-                </ModalBody>
+                    </Card.Footer>
+                </Modal.Body>
             </Modal>
         </>
     );
