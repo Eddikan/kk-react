@@ -1,7 +1,7 @@
 import { Calendar, momentLocalizer, Views, DateLocalizer } from 'react-big-calendar';
-import { Container, CardFooter, Input, Label, UncontrolledAccordion, AccordionItem, AccordionHeader, AccordionBody, CardBody, Button, Card, Col, Modal, Table, Row, Form, } from 'reactstrap';
+import { Row, Col, Button, Modal } from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { PiPencilThin, PiTrashThin } from "react-icons/pi";
 import { AiOutlineClose } from "react-icons/ai";
 import { useNavigate, useParams, Link } from 'react-router-dom';
@@ -393,121 +393,119 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                 />
 
                 <Modal
-                    isOpen={modalIsOpen}
-                    onRequestClose={handleModalClose}
+                    show={modalIsOpen}
+                    onHide={handleModalClose}
                     contentLabel="Date Details"
                     id={'set-self-appointment'}
 
                 >
                     <form onSubmit={addAppointmentSubmit}>
-                        <ModalHeader>
-                            <h5 className='modal-title text-left set-appointment'>Set Appointment</h5>
-                            <button type='button' className='close react-appointment-close' onClick={handleModalClose} data-dismiss='modal' aria-label='Close'>
-                                <span aria-hidden='true'>&times;</span>
-                            </button>
-                        </ModalHeader>
+                        <Modal.Header closeButton>
+                            <Modal.Title><h5 className='modal-title text-left set-appointment'>Set Appointment</h5></Modal.Title>
+                        </Modal.Header>
                         <hr className="mt-0 mb-2" />
-
-                        {selectedDate && (
-                            <div>
-                                <Row className='padding-modal pt-3 pb-3'>
-                                    <Col lg="12" className='mb-2 mt-0 text-left'>
-                                        <span className='title-appointment'>Title</span>
-                                    </Col>
-
-                                    <Col lg="12">
-                                        <input
-                                            type="text"
-                                            name="title"
-                                            className='form-control'
-                                            value={consultationFormData.title}
-                                            onChange={handleChangeConsultation}
-                                            required
-                                        />
-                                    </Col>
-
-                                    <Col lg="8">
-                                        <Row className={`align-items-center mt-3 ${startTime != "" || endTime != "" ? "mb-3" : ""}`}>
-                                            {times.map((time, index) => {
-                                                return (
-                                                    <>
-                                                        {times.length > 0 && (
-                                                            <>
-
-
-                                                                <Col md="5" className="pe-0">
-                                                                    <p className="hours-header mb-2 text-left">Starts at</p>
-                                                                    <div className='mb-3'>
-                                                                        <input
-                                                                            type='time'
-                                                                            name='consultation_hour_start'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={consultationFormData?.consultation_hour_start}
-                                                                            onChange={e => handleChangeConsultation(e, index)}
-                                                                            required
-                                                                        />
-                                                                    </div>
-                                                                </Col>
-
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header mb-2 text-left">Ends at</p>
-
-                                                                    <div className='mb-3'>
-                                                                        <input
-                                                                            type='time'
-                                                                            name='consultation_hour_end'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={consultationFormData?.consultation_hour_end}
-                                                                            onChange={e => handleChangeConsultation(e, index)}
-                                                                            required
-                                                                        />
-                                                                    </div>
-                                                                </Col>
-                                                            </>
-                                                        )}
-                                                    </>
-                                                );
-                                            })}
-                                            {/* <Col md="2" className="px-0">
-                                                <GoPlus
-                                                    size={25}
-                                                    className="plus-btn mt-2"
-                                                    onClick={handleAppointments}
-                                                />
-                                            </Col> */}
-                                        </Row>
-                                    </Col>
-                                    {startTime != "" || endTime != "" ?
-                                        <Col lg="12" className='mt-0 text-left'>
-                                            {startTime != "" || endTime != "" ?
-                                                <>
-                                                    <span className='title-appointment'>Availability</span>
-                                                    {startTime == "" ?
-                                                        <>
-                                                            <p className='mb-0'>{endTime}</p>
-                                                        </>
-                                                        : endTime == "" ?
-                                                            <>
-                                                                <p className='mb-0'>{startTime}</p>
-                                                            </>
-                                                            :
-                                                            <>
-                                                                <p className='mb-0'>{startTime} - {endTime}</p>
-                                                            </>
-                                                    }
-                                                </>
-                                                :
-                                                null
-                                            }
+                        <Modal.Body>
+                            {selectedDate && (
+                                <Container>
+                                    <Row>
+                                        <Col lg="12" className='mb-2 mt-0 text-left'>
+                                            <span className='title-appointment'>Title</span>
                                         </Col>
-                                        :
-                                        null
-                                    }
 
-                                </Row>
-                            </div>
-                        )}
-                        <ModalFooter>
+                                        <Col lg="12">
+                                            <input
+                                                type="text"
+                                                name="title"
+                                                className='form-control'
+                                                value={consultationFormData.title}
+                                                onChange={handleChangeConsultation}
+                                                required
+                                            />
+                                        </Col>
+
+                                        <Col lg="8">
+                                            <Row className={`align-items-center mt-3 ${startTime != "" || endTime != "" ? "mb-3" : ""}`}>
+                                                {times.map((time, index) => {
+                                                    return (
+                                                        <>
+                                                            {times.length > 0 && (
+                                                                <>
+
+
+                                                                    <Col md="5" className="pe-0">
+                                                                        <p className="hours-header mb-2 text-left">Starts at</p>
+                                                                        <div className='mb-3'>
+                                                                            <input
+                                                                                type='time'
+                                                                                name='consultation_hour_start'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={consultationFormData?.consultation_hour_start}
+                                                                                onChange={e => handleChangeConsultation(e, index)}
+                                                                                required
+                                                                            />
+                                                                        </div>
+                                                                    </Col>
+
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header mb-2 text-left">Ends at</p>
+
+                                                                        <div className='mb-3'>
+                                                                            <input
+                                                                                type='time'
+                                                                                name='consultation_hour_end'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={consultationFormData?.consultation_hour_end}
+                                                                                onChange={e => handleChangeConsultation(e, index)}
+                                                                                required
+                                                                            />
+                                                                        </div>
+                                                                    </Col>
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    );
+                                                })}
+                                                {/* <Col md="2" className="px-0">
+                                                    <GoPlus
+                                                        size={25}
+                                                        className="plus-btn mt-2"
+                                                        onClick={handleAppointments}
+                                                    />
+                                                </Col> */}
+                                            </Row>
+                                        </Col>
+                                        {startTime != "" || endTime != "" ?
+                                            <Col lg="12" className='mt-0 text-left'>
+                                                {startTime != "" || endTime != "" ?
+                                                    <>
+                                                        <span className='title-appointment'>Availability</span>
+                                                        {startTime == "" ?
+                                                            <>
+                                                                <p className='mb-0'>{endTime}</p>
+                                                            </>
+                                                            : endTime == "" ?
+                                                                <>
+                                                                    <p className='mb-0'>{startTime}</p>
+                                                                </>
+                                                                :
+                                                                <>
+                                                                    <p className='mb-0'>{startTime} - {endTime}</p>
+                                                                </>
+                                                        }
+                                                    </>
+                                                    :
+                                                    null
+                                                }
+                                            </Col>
+                                            :
+                                            null
+                                        }
+
+                                    </Row>
+                                </Container>
+                            )}
+                        </Modal.Body>
+                        <Modal.Footer>
                             <div className='text-right'>
                                 <Button className="cancel-btn me-2" type="button" onClick={handleModalClose}>Cancel</Button>
                                 {formStatus != "standby" ?
@@ -516,69 +514,66 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                     <Button className="btn-save" type="submit">Save</Button>
                                 }
                             </div>
-                        </ModalFooter>
+                        </Modal.Footer>
                     </form>
                 </Modal>
 
                 <Modal
-                    isOpen={appointmentModalIsOpen}
-                    onRequestClose={closeAppointmentModal}
-                    contentLabel="Appointment Details"
+                    show={appointmentModalIsOpen}
+                    onHide={closeAppointmentModal}
 
                 >
                     <div>
-                        <ModalHeader>
-                            <h5 className='modal-title text-left set-appointment'>Appointment Details</h5>
-                            <button type='button' className='close react-appointment-close' onClick={closeAppointmentModal} data-dismiss='modal' aria-label='Close'>
-                                <span aria-hidden='true'>&times;</span>
-                            </button>
-                        </ModalHeader>
+                        <Modal.Header closeButton>
+                            <Modal.Title><h5 className='modal-title text-left set-appointment'>Appointment Details</h5></Modal.Title>
+                        </Modal.Header>
                         <hr className="mt-0 mb-2" />
+                        <Modal.Body>
+                            {selectedEvent && (
+                                <div className="appointment-details-container">
 
-                        {selectedEvent && (
-                            <div className="px-3">
+                                    {selectedEvent.title != "" &&
+                                        <>
+                                            <div>
+                                                <h2 className="current-date fs-18 poppins-ft fw-600 mb-3">{selectedEvent.title}</h2>
+                                            </div>
 
-                                {selectedEvent.title != "" &&
-                                    <>
-                                        <div>
-                                            <h2 className="current-date fs-18 poppins-ft fw-600 mb-3 mt-3">{selectedEvent.title}</h2>
-                                        </div>
+                                        </>
+                                    }
 
-                                    </>
-                                }
-
-                                {selectedEvent.date != "" &&
-                                    <>
-                                        <div className="d-flex">
-                                            <p className="fw-500 mb-2"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
-                                            <p className="current-date ms-2 mb-0 text-black">{selectedEvent.date}</p>
-                                        </div>
-                                    </>
-                                }
-                                {selectedEvent.end != "" || selectedEvent.start != "" ?
-                                    <>
-                                        <div className="d-flex">
-                                            <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color' /></p>
-                                            <p className="current-date ms-2 mb-0 text-black">{selectedEvent.start}&nbsp;-&nbsp;{selectedEvent.end}</p>
-                                        </div>
-                                    </>
-                                    :
-                                    null
-                                }
-                                {selectedEvent.desc != "" &&
-                                    <>
-                                        <div>
-                                            <p className="current-date fs-16 poppins-ft fw-400 text-black mb-2">{selectedEvent.desc}</p>
-                                        </div>
-                                    </>
-                                }
-                            </div>
-                        )}
-                        <ModalFooter>
+                                    {selectedEvent.date != "" &&
+                                        <>
+                                            <div className="d-flex">
+                                                <p className="fw-500 mb-2"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
+                                                <p className="current-date ms-2 mb-0 text-black">{selectedEvent.date}</p>
+                                            </div>
+                                        </>
+                                    }
+                                    {selectedEvent.end != "" || selectedEvent.start != "" ?
+                                        <>
+                                            <div className="d-flex">
+                                                <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color' /></p>
+                                                <p className="current-date ms-2 mb-0 text-black">{selectedEvent.start}&nbsp;-&nbsp;{selectedEvent.end}</p>
+                                            </div>
+                                        </>
+                                        :
+                                        null
+                                    }
+                                    {selectedEvent.desc != "" &&
+                                        <>
+                                            <div>
+                                                <p className="current-date fs-16 poppins-ft fw-400 text-black mb-2">{selectedEvent.desc}</p>
+                                            </div>
+                                        </>
+                                    }
+                                </div>
+                            )}
+                        </Modal.Body>
+                        <Modal.Footer>
                             <div className='text-right'>
                                 <Button className="cancel-btn me-2" onClick={closeAppointmentModal}>Close</Button>
                             </div>
-                        </ModalFooter>
+                        </Modal.Footer>
                     </div>
                 </Modal>
             </div>

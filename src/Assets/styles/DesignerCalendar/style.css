@@ -152,3 +152,8 @@ button.rbc-button-link {
 #set-self-appointment .close-container {
     right: 22px;
 }
+
+.appointment-details-container {
+    padding-left: 12px;
+    padding-right: 12px;
+}
