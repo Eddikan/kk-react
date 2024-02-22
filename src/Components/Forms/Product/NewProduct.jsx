@@ -11,6 +11,7 @@ import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
 import Countries from 'Utils/Countries';
 import VideoDragAndDrop from 'Components/Shared/VideoDragAndDrop';
+import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 
 const initialProductData = Object.freeze({
     image_urls: [],
@@ -464,7 +465,16 @@ const NewProduct = (props) => {
                                     <option value='Upload'>Upload Video</option>
                                 </Form.Control>
                                 {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Vimeo" ?
-                                    <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />
+                                    <>
+                                        <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />
+                                        {productData.video_demo_url && productData.video_demo_url != "" ?
+                                            <div className="mt-3">
+                                                <ResponsiveEmbedVideo src={productData.video_demo_url} title={productData.name} />
+                                            </div>
+                                            :
+                                            null
+                                        }
+                                    </>
                                     : productData.video_demo_type == "Upload" ?
                                     <div className="mt-3">
                                         <VideoDragAndDrop type="product" onVideoChange={handleVideoChange} size={size} />

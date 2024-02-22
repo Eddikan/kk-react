@@ -487,7 +487,40 @@ const ViewProduct = () => {
 
                                                         </>
                                                         :
-                                                        null
+                                                        <>
+                                                            <div>
+                                                                
+                                                                <div class="kouture-tooltip">
+                                                                    <div className="action-button bg-smgray me-2" onClick={toggleShareModal}>
+                                                                        <GoShareAndroid className="text-black" />
+                                                                    </div>
+                                                                    <div class="kouture-tooltiptext">
+                                                                        Share
+                                                                    </div>
+                                                                </div>
+
+                                                                {userWishlist ?
+                                                                    <div class="kouture-tooltip">
+                                                                        <div className="action-button bg-gold me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <GoHeart className="text-white" />
+                                                                        </div>
+                                                                        <div class="kouture-tooltiptext">
+                                                                            Remove from Wishlist
+                                                                        </div>
+                                                                    </div>
+                                                                    :
+                                                                    <div class="kouture-tooltip">
+                                                                        <div className="action-button bg-smgray me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <GoHeart className="text-black" />
+                                                                        </div>
+                                                                        <div class="kouture-tooltiptext">
+                                                                            Add to Wishlist
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            </div>
+
+                                                        </>
                                                     }
                                                 </Col>
 

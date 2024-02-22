@@ -7,9 +7,9 @@ import FormControl from 'react-bootstrap/FormControl';
 import { Container, Button, Dropdown, Col, Row } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import Logo from 'Assets/images/kouture-konect-logo.png';
-import { IoIosHeartEmpty, IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
+import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { IoCalendarClearOutline, IoCartOutline } from "react-icons/io5";
-import { GoBell } from "react-icons/go";
+import { GoBell, GoHeart } from "react-icons/go";
 import { BsEnvelope } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import UserPlaceholder from 'Assets/images/user.png';
@@ -240,12 +240,12 @@ const Header = () => {
 
                     <div className="user-dropdown nav-link" ref={bellRef}>
                       {userImage ?
-                        <div className="cursor-pointer nav-link">
-                          <GoBell size={25} onClick={toggleBellMenu} />
+                        <div className="cursor-pointer nav-link" onClick={toggleBellMenu} >
+                          <GoBell size={25} />
                         </div>
                         :
-                        <div className="cursor-pointer nav-link">
-                          <GoBell size={25} onClick={toggleBellMenu} />
+                        <div className="cursor-pointer nav-link" onClick={toggleBellMenu}>
+                          <GoBell size={25} />
                         </div>
                       }
                       {userBellOpen && (
@@ -275,9 +275,9 @@ const Header = () => {
 
                     <div className="user-dropdown nav-link" ref={messageRef}>
                       {userImage ?
-                        <div className="cursor-pointer nav-link"><BsEnvelope size={25} onClick={toggleEnvelopMenu} /></div>
+                        <div className="cursor-pointer nav-link" onClick={toggleEnvelopMenu}><BsEnvelope size={25}  /></div>
                         :
-                        <div className="cursor-pointer nav-link"><BsEnvelope size={25} onClick={toggleEnvelopMenu} /></div>
+                        <div className="cursor-pointer nav-link" onClick={toggleEnvelopMenu}><BsEnvelope size={25} /></div>
                       }
                       {userEnvelopOpen && (
                         <>
@@ -319,7 +319,7 @@ const Header = () => {
 
                       )}
                     </div>
-                    <Nav.Link href="/wishlist"><IoIosHeartEmpty size={25} /></Nav.Link>
+                    <Nav.Link href="/wishlist"><GoHeart size={27} /></Nav.Link>
                     <Nav.Link
                       href={`/appointments/${currentUser}`}
                     >
