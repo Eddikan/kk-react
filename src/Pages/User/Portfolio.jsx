@@ -2,18 +2,16 @@ import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
 import Container from 'react-bootstrap/Container';
 import { useNavigate, Link } from 'react-router-dom';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button, Card, Modal } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
-import Loading from 'Components/Shared/Loading';
 import '../../Assets/styles/Portfolio/ViewPortFolio/style.css';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import LoadingPage from 'Components/Shared/LoadingPage';
-import GoBack from 'Components/Shared/GoBack';
 import Sidebar from 'Components/Shared/Sidebar';
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 
@@ -24,7 +22,10 @@ const Portfolio = (props) => {
     const [portfolioLoading, setPortfolioLoading] = useState(true);
     const [portfolioDraftLoading, setPortfolioDraftLoading] = useState(false);
     const [portfolioPublishLoading, setPortfolioPublishLoading] = useState(false);
+    const [portfolioDeleteLoading, setPortfolioDeleteLoading] = useState(false);
+    const [deleteConfirmShow, setDeleteConfirmShow] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
+    const [portfolioId, setPortfolioId] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
 
     const token = cookies.token;
@@ -48,6 +49,11 @@ const Portfolio = (props) => {
             setPortfolioLoading(false);
             // Handle the error, if needed
         }
+    };
+
+    const deleteConfirm = (e) => {
+        setDeleteConfirmShow(true);
+        setPortfolioId(e);
     };
 
     const handleActionClick = (index) => {
@@ -95,13 +101,32 @@ const Portfolio = (props) => {
         });
     };
 
+    async function PortfolioDeleteSubmit(e) {
+        setPortfolioDeleteLoading(true);
+        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?user_id=' + currentUser + '&token=' + token).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                toast.success('Design deleted successfully!');
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                setPortfolioDeleteLoading(false);
+                setDeleteConfirmShow(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setPortfolioDeleteLoading(false);
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setPortfolioDraftLoading(false);
+        });
+    };
+
+
     useEffect(() => {
         fetchData(currentUser);
     }, [reloadCount]);
 
     return (
         <LayoutSellerCenter>
-
             {portfolioLoading ?
                 <LoadingPage />
                 :
@@ -121,7 +146,9 @@ const Portfolio = (props) => {
                                                 <Row>
                                                     {portfolio.map((object, index) => (
                                                         <Col className={`portfolio-grid-image mb-3`} xs="4" md="2">
-                                                            <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url + ")" }}>
+                                                            <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`}
+                                                                style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url + ")" }}
+                                                            >
                                                                 <div className="portfolio-overlay">
                                                                     <div className="portfolio-actions">
                                                                         <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
@@ -133,7 +160,10 @@ const Portfolio = (props) => {
                                                                                 <Link className="text-decoration-none" to={`/portfolio/${object.id}`}>
                                                                                     <p className="mb-3 text-decoration-none"><IoEyeOutline /> Preview</p>
                                                                                 </Link>
-                                                                                <p className="mb-3"><GoTrash /> Delete</p>
+                                                                                <p className="mb-3 cursor-pointer"
+                                                                                    onClick={function () { deleteConfirm(object.id); }}
+                                                                                >
+                                                                                    <GoTrash /> Delete</p>
                                                                                 {object.status != "Draft" ?
                                                                                     <p className="mb-0 cursor-pointer" onClick={function () { PortfolioDraftSubmit(object.id); }}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
                                                                                     :
@@ -168,7 +198,7 @@ const Portfolio = (props) => {
 
                                                             <Row>
                                                                 <Col lg="6">
-                                                                    <div className="text-black text-decoration-none ellipsis rufina-family fs-18 mt-2">{object.name ?? "-"}</div>
+                                                                    <div className="text-black text-decoration-none ellipsis-portfolio-seller rufina-family fs-18 mt-2">{object.name ?? "-"}</div>
                                                                 </Col>
 
                                                                 <Col lg="6" className='text-end'>
@@ -207,12 +237,9 @@ const Portfolio = (props) => {
                                                             <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
                                                         </div>
                                                     </Col>
-
                                                 </Row>
                                             </div>
                                         </Col>
-
-
                                     </>
                                     :
                                     <>
@@ -229,6 +256,35 @@ const Portfolio = (props) => {
                     </section>
                 </>
             }
+
+            <Modal
+                show={deleteConfirmShow}
+                className='modal-preview'
+                fade={false}
+                centered
+            >
+                <Modal.Header className="pb-0">
+                    <h5 className='modal-title text-left'>Confirm Delete</h5>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Card>
+                        <Card.Body>
+                            <p className="mb-0">Are you sure you want to delete this design?</p>
+                        </Card.Body>
+                    </Card>
+                    <Card.Footer className="text-right mt-3">
+                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setDeleteConfirmShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                        {portfolioDeleteLoading ?
+                            <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Deleting...</button>
+                            :
+                            <button className="btn btn-primary delete-btn" type="button" onClick={PortfolioDeleteSubmit} style={{ minWidth: '100px', padding: '9px 20px' }}>Delete</button>
+                        }
+                    </Card.Footer>
+                </Modal.Body>
+            </Modal>
         </LayoutSellerCenter >
     );
 };

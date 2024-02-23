@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { useLocation } from 'react-router-dom';
 import { GoHeart } from "react-icons/go";
+import '../../Assets/styles/Portfolio/ViewPortFolio/style.css';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from './Loading';
 
@@ -48,7 +49,7 @@ const PortfolioGrid = (props) => {
                 {portfolioLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
-                            <Loading className="bg-white" />
+                            <Loading className="bg-white loading-height" />
                         </p>
                     </>
                     :
@@ -89,8 +90,8 @@ const PortfolioGrid = (props) => {
                                                     </Link>
                                                 </div>
 
-                                                <div className='margin-img'>
-                                                    <span className="text-black text-decoration-none portfolio-name-img">{object.name ?? "-"}</span>
+                                                <div className='margin-img ellipsis-portfolio'>
+                                                    <span className="text-black text-decoration-none portfolio-name-img ">{object.name ?? "-"}</span>
                                                 </div>
                                             </Col>
                                         )

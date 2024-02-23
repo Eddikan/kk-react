@@ -1100,7 +1100,6 @@ form select::placeholder {
     position: relative;
 }
 
-
 .designer-details {
     position: absolute;
     width: 100%;
@@ -1134,6 +1133,11 @@ form select::placeholder {
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
+}
+.wishlist-details {
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .design-details {
@@ -1403,7 +1407,7 @@ form select::placeholder {
 
 .loading-featured-design,
 .top-selling-loading {
-    height: auto;
+    height: 150px;
 }
 
 .no-records-found {
@@ -1507,6 +1511,9 @@ section#profile {
 }
 .rufina-family {
     font-family: 'Rufina';
+}
+section#designer-profile {
+    background: #fafafa;
 }
 .no-available,.no-wishlist {
     font-style: italic;

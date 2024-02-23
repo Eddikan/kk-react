@@ -87,6 +87,15 @@ img.placeholder-chat {
 .follow,.you {
     color: #434343;
 }
+.ellipsis-portfolio-seller {
+    white-space: nowrap; 
+    width: 150% !important; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+  }
+.loading-height {
+    height: 240px !important;
+}
 .portfolio-designer-chat .designer-photo {
     min-width: 30px;
     min-height: 30px;
@@ -96,6 +105,12 @@ img.placeholder-chat {
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 50%;
+}
+.footer-top-border {
+    border-top: none;
+}
+.padding-card-review {
+    padding: 20px 25px 10px 25px;
 }
 .this-is-preview {
     font-size: 14px;
@@ -123,9 +138,9 @@ img.placeholder-chat {
     background-color: var(--black);
     border-color: var(--black);
 }
-.ellipsis {
+.ellipsis-portfolio {
     white-space: nowrap; 
-    width: 100%; 
+    width: 85% !important; 
     overflow: hidden;
     text-overflow: ellipsis; 
   }

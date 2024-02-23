@@ -10,6 +10,7 @@ import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from '../Loading';
+import '../../../Assets/styles/Portfolio/ViewPortFolio/style.css';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
@@ -134,7 +135,7 @@ const PortfolioGrid = (props) => {
                 {portfolioLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
-                            <Loading className="bg-white" />
+                            <Loading className="bg-white loading-height" />
                         </p>
                     </>
                     :
@@ -142,7 +143,6 @@ const PortfolioGrid = (props) => {
                         {portfolio && portfolio.length > 0 ?
                             <>
                                 <Row className="portfolio-row">
-                                    {/* <img src={object.url} className='portfolio-img'/> */}
                                     {portfolio.map((object, index) => {
                                         if (object.image_urls?.[0]?.image_url) {
                                             var portfolioImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url;

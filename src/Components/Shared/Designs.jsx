@@ -8,6 +8,7 @@ import { GoHeart, GoAlertFill } from "react-icons/go";
 import { IoIosArrowDown } from "react-icons/io";
 import PinIcon from '../../Assets/images/pin.png';
 import Modal from 'react-bootstrap/Modal';
+import User from '../../Assets/images/user.png';
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import { AiFillMessage } from "react-icons/ai";
@@ -337,7 +338,7 @@ const Designs = (props) => {
                                 >
                                 </div>
                             ) : (
-                                <img src={UserPlaceholder} className='placeholder-img ' />
+                                <img src={User} className='placeholder-img ' />
                             )}
 
                             <div className='ms-3'>
@@ -402,7 +403,7 @@ const Designs = (props) => {
                                                         >
                                                         </div>
                                                     ) : (
-                                                        <img src={UserPlaceholder} className='placeholder-img ' />
+                                                        <img src={User} className='placeholder-img ' />
                                                     )}
                                                     <div className='ms-3'>
                                                         <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
@@ -438,7 +439,7 @@ const Designs = (props) => {
                                             <Card.Body className="action_container font-weight">
                                                 <Row>
                                                     <Col>
-                                                        <div className='user-image-modal'>
+                                                        <div className='user-image-modal text-center'>
                                                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                                 <div
                                                                     className='user-photo-modal mb-2 '
@@ -446,7 +447,7 @@ const Designs = (props) => {
                                                                 >
                                                                 </div>
                                                             ) : (
-                                                                <img src={UserPlaceholder} className='placeholder-img-side mb-3' />
+                                                                <img src={User} className='placeholder-img-side mb-2' />
                                                             )}
                                                         </div>
                                                         <div className='modal-title text-center fs-18 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
@@ -459,7 +460,7 @@ const Designs = (props) => {
                                                                     {singleDesign.tags.length > 0 ?
                                                                         <>
                                                                             {singleDesign.tags.map((tag, index) => (
-                                                                                <span className="design-tags bg-light fs-14 categories-color">
+                                                                                <span className="design-tags bg-light fs-14 categories-color mt-2">
                                                                                     {tag}
                                                                                 </span>
                                                                             ))}
@@ -476,15 +477,17 @@ const Designs = (props) => {
                                                         {isDesignCurrentUser ?
                                                             <>
                                                                 <hr />
-                                                                <div className='text-center'>
+                                                                <div className='text-center'
+                                                                    onClick={() => { toggleUnderConstruction("Book a Consultation"); setProfileViewShow(false); }}
+                                                                >
                                                                     <a className='book-consultation btn-book btn w-100'
-                                                                        href={`/appointment/schedule/${singleDesign.id}`}
+                                                                    // href={`/appointment/schedule/${singleDesign.id}`}
                                                                     >
                                                                         <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
                                                                 </div>
 
                                                                 <div className='text-center mt-2'
-                                                                    onClick={() => toggleUnderConstruction("Message")}
+                                                                    onClick={() => { toggleUnderConstruction("Message"); setProfileViewShow(false); }}
                                                                 >
                                                                     <a className='book-consultation btn-message-designer btn w-100'
                                                                     >
@@ -513,7 +516,7 @@ const Designs = (props) => {
                                             >
                                             </div>
                                         ) : (
-                                            <img src={UserPlaceholder} className='placeholder-img-side mb-4' />
+                                            <img src={User} className='placeholder-img-side mb-4' />
                                         )}
 
 

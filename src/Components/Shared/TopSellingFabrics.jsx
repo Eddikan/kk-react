@@ -77,7 +77,7 @@ const ProductGrid = (props) => {
                                                                 null
                                                             }
 
-                                                            {user_id ?
+                                                            {/* {user_id ?
                                                                 <div className="other-actions">
                                                                     <div
                                                                         className={`heart-btn ${isClicked ? '#CEA835' : 'bg-white'}`}
@@ -88,7 +88,7 @@ const ProductGrid = (props) => {
                                                                 </div>
                                                                 :
                                                                 null
-                                                            }
+                                                            } */}
                                                         </div>
                                                     </div>
                                                     <Link to={`/product/${product.id}`} className="text-decoration-none">

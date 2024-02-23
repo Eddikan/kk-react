@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
-import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
-import { useNavigate, Link } from 'react-router-dom';
+import { Row, Col, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { GoAlertFill } from 'react-icons/go';
 import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
@@ -16,7 +15,6 @@ import { MdOutlineCalendarMonth } from "react-icons/md";
 import { IoEye } from "react-icons/io5";
 import 'Assets/styles/AppointmentList/style.css';
 import 'Assets/styles/Appointments/style.css';
-import UserPlaceholder from 'Assets/images/user.png';
 import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
 import InputEmoji from 'react-input-emoji';
@@ -27,10 +25,8 @@ const Appointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const { designerIdParams } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
-    // const designer_id = designerId ?? designerIdParams;
     const currentUser = cookies.currentUser;
     const designerId = cookies.currentUserDesigner;
-    const [events, setEvents] = useState([]);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [inputClicked, setInputClicked] = useState(false);
@@ -40,12 +36,9 @@ const Appointments = (props) => {
     const [date, setDate] = useState('');
     const [chatBox, setChatBox] = useState(false);
     const [query, setQuery] = useState('');
-    const [text, setText] = useState('')
+    const [text, setText] = useState('');
     const [designerData, setDesignerData] = useState('');
-
     const [singleAppointment, setSingleAppointment] = useState('');
-
-
     const [appointmentModalIsOpen, setAppointmentModalIsOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
@@ -84,7 +77,6 @@ const Appointments = (props) => {
     function toggleShowAppointment(first_name, last_name, title, created_at, consultation_hour_start, consultation_hour_end, consultation_details) {
         setAppointmentModalIsOpen(true);
 
-        
         setSingleAppointment({
             first_name: first_name || '-',
             last_name: last_name || '-',
@@ -98,6 +90,26 @@ const Appointments = (props) => {
 
     function handleOnEnter(text) {
         console.log('enter', text)
+    }
+
+    function returnFormattedDate(date) {
+        const targetDate = new Date(date);
+        const month = targetDate.toLocaleString('en-US', { month: 'long' });
+        const day = targetDate.getDate();
+        const year = targetDate.getFullYear();
+        const formattedDate = `${month} ${day}, ${year}`;
+        return formattedDate;
+    }
+
+    function returnFormattedTime(timeString) {
+        const [hours, minutes] = timeString.split(':').map(Number);
+        const ampm = hours >= 12 ? ' PM' : ' AM';
+
+        let formattedHours = hours % 12;
+        formattedHours = formattedHours === 0 ? 12 : formattedHours;
+
+        const formattedTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes}${ampm}`;
+        return formattedTime;
     }
 
     useEffect(() => {
@@ -140,30 +152,6 @@ const Appointments = (props) => {
 
     }, [reloadCount]);
 
-    function returnFormattedDate(date) {
-        const targetDate = new Date(date);
-        const month = targetDate.toLocaleString('en-US', { month: 'long' });
-        const day = targetDate.getDate();
-        const year = targetDate.getFullYear();
-        const formattedDate = `${month} ${day}, ${year}`;
-        return formattedDate;
-    }
-
-    function returnFormattedTime(timeString) {
-        const [hours, minutes] = timeString.split(':').map(Number);
-        const ampm = hours >= 12 ? ' PM' : ' AM';
-
-        // Convert hours to 12-hour format
-        let formattedHours = hours % 12;
-        formattedHours = formattedHours === 0 ? 12 : formattedHours;
-
-        // Format hours and minutes to include leading zeros if needed
-        const formattedTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes}${ampm}`;
-        return formattedTime;
-    }
-
-
-
     return (
         <LayoutSellerCenter>
             <section>
@@ -195,7 +183,7 @@ const Appointments = (props) => {
                                                             type="date"
                                                             className='form-control w-25 color-date cursor-pointer'
                                                             value={dateTo}
-                                                            onChange={(e) => { setDateTo(e.target.value); console.log('To value ', e.target.value) }}
+                                                            onChange={(e) => { setDateTo(e.target.value); }}
                                                         />
                                                         &nbsp;
                                                         <div className='d-flex justify-content-center align-items-center'>-</div>
@@ -204,7 +192,7 @@ const Appointments = (props) => {
                                                             type="date"
                                                             className='form-control w-25 color-date cursor-pointer'
                                                             value={dateFrom}
-                                                            onChange={(e) => { setDateFrom(e.target.value); console.log('To value ', e.target.value) }}
+                                                            onChange={(e) => { setDateFrom(e.target.value); }}
                                                         />
                                                     </div>
                                                 </div>
@@ -225,7 +213,6 @@ const Appointments = (props) => {
                                         </Row>
                                     </Col>
 
-                                    
                                     <Col lg={12}>
                                         <Card>
                                             <Card.Body className='bg-light'>
@@ -307,7 +294,7 @@ const Appointments = (props) => {
                                                                                     <span className='text-black'>{appointment.status}</span>
                                                                                 </Col>
 
-                                                                                
+
                                                                                 <Col lg={2} className='d-flex justify-content-end'>
                                                                                     <div className="cursor-pointer appointments-tooltip" onClick={() => toggleShowAppointment(appointment.customer?.first_name, appointment.customer?.last_name, appointment.title, appointment.created_at, appointment.consultation_hour_start, appointment.consultation_hour_end, appointment.consultation_details)}>
                                                                                         <span className="icon-tooltiptext fs-14">View Details</span>
@@ -426,7 +413,7 @@ const Appointments = (props) => {
                                             <div>
                                                 <div
                                                     className="cursor-pointer fw-500 position-absolute send-button"
-                                                    onClick={() => toggleUnderConstruction("Send Message")}
+                                                    onClick={() => { toggleUnderConstruction("Send Message"); setChatBox(false); }}
                                                 >
                                                     Send
                                                     <VscSend className='ms-1' />
@@ -439,7 +426,6 @@ const Appointments = (props) => {
                             :
                             null
                         }
-
                     </Row>
                 </Container>
             </section >
@@ -478,48 +464,44 @@ const Appointments = (props) => {
 
                         <button type='button' className='close react-modal-close' onClick={() => setAppointmentModalIsOpen(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                         </button>
-                        <h5 className='modal-title text-left set-appointment' >Appointment Details</h5>
+                        <h5 className='modal-title text-left rufina-family fs-20' >Appointment Details</h5>
 
                     </ModalHeader>
-                    <hr className="mt-0 mb-2" />
-
-                    <div>
+                    <hr className="mt-0 mb-0" />
+                    <Modal.Body className='bottom-padding'>
                         <div>
-                            <h2 className="current-date fs-18 poppins-ft fw-600 px-3 mb-3 mt-3">Appointment with&nbsp;{singleAppointment.first_name} {singleAppointment.last_name}</h2>
-                        </div>
+                            <div>
+                                <h2 className="current-date fs-18 poppins-ft fw-600 mb-3">Appointment with&nbsp;{singleAppointment.first_name} {singleAppointment.last_name}</h2>
+                            </div>
 
-                        <div className="d-flex">
-                            <p className="fw-500 mb-2 ps-3"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
-                            <p className="current-date ms-2 mb-0 text-black">
-                                {returnFormattedDate(singleAppointment.created_at ?? '-')}
-                            </p>
-                        </div>
+                            <div className="d-flex">
+                                <p className="fw-500 mb-2"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
+                                <p className="current-date ms-2 mb-0 text-black">
+                                    {returnFormattedDate(singleAppointment.created_at ?? '-')}
+                                </p>
+                            </div>
 
-                        <div className="d-flex">
-                            <p className="fw-500 mb-2 ps-3"><GiAlarmClock size="20" className='icon-color' /></p>
-                            <p className="current-date ms-2 mb-0 text-black ">
-                                {
-                                    returnFormattedTime(singleAppointment.consultation_hour_start ?? '-') + ' - ' + returnFormattedTime(singleAppointment.consultation_hour_end ?? '-')
-                                }
+                            <div className="d-flex">
+                                <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color' /></p>
+                                <p className="current-date ms-2 mb-0 text-black ">
+                                    {
+                                        returnFormattedTime(singleAppointment.consultation_hour_start ?? '-') + ' - ' + returnFormattedTime(singleAppointment.consultation_hour_end ?? '-')
+                                    }
+                                </p>
+                            </div>
 
-                                {/* {returnFormattedTime(singleAppointment.consultation_hour_start ?? '-')} */}
-                                {/* {singleAppointment.consultation_hour_start}&nbsp;-&nbsp;{singleAppointment.consultation_hour_end} */}
-                            </p>
+                            <div>
+                                <p className="current-date fs-16 poppins-ft fw-400 text-black mb-2">{singleAppointment.consultation_details}</p>
+                            </div>
                         </div>
-
-                        <div>
-                            <p className="current-date fs-16 poppins-ft fw-400 text-black mb-2 px-3">{singleAppointment.consultation_details}</p>
-                        </div>
-                    </div>
+                    </Modal.Body>
                     <ModalFooter>
                         <div className='text-right'>
-                            <Button className="cancel-btn me-2" onClick={closeAppointmentModal}>Close</Button>
+                            <button className="btn btn-secondary border-black bg-white text-black" type="button" onClick={closeAppointmentModal} style={{ minWidth: '100px', padding: '9px 20px' }}   >Close</button>
                         </div>
                     </ModalFooter>
                 </div>
             </Modal>
-
-
         </LayoutSellerCenter >
     );
 };

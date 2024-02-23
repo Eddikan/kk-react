@@ -7,11 +7,8 @@ import toast from 'react-hot-toast';
 import GetUserWishlistsData from 'Utils/GetUserWishlistsData';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import GoBack from 'Components/Shared/GoBack';
-import { GoHeart, GoBookmark, GoAlertFill } from "react-icons/go";
+import { GoHeart, GoAlertFill } from "react-icons/go";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
-import { IoIosArrowDown } from "react-icons/io";
-import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
-import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -24,7 +21,6 @@ const Wishlists = (props) => {
     const [wishlistsLoading, setWishlistsLoading] = useState(true);
     const [connectShow, setConnectShow] = useState(false);
     const [addToCartLoading, setAddToCartLoading] = useState(false);
-    const [isWishlistCurrentUser, setIsWishlistCurrentUser] = useState(false);
     const [clickedCartButtonIndex, setClickedCartButtonIndex] = useState();
 
     const [unitMeasurement, setUnitMeasurement] = useState(1.00);
@@ -44,18 +40,11 @@ const Wishlists = (props) => {
                 setWishlistsLoading(false);
             }
 
-            // if (currentUser == wishlistsData.user.id) {
-            //     setIsWishlistCurrentUser(false);
-            // } else {
-            //     setIsWishlistCurrentUser(true);
-            // }
-
         } catch (error) {
             toast.error('An error occured. Please try again or contact the administrator.');
             setWishlistsLoading(false);
         }
     };
-
 
     async function addToCart(e) {
         setAddToCartLoading(true);
@@ -172,12 +161,12 @@ const Wishlists = (props) => {
                                                                         <div className="portfolio-link">
                                                                             <Row>
                                                                                 <Col lg="3" xs="12">
-                                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(wishlist.product.id); navigate('/product/' + wishlist.product.id); }} style={{ backgroundImage: "url(" + wishlistImage + ")", minHeight: '140px' }}>
+                                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(wishlist.product.id); navigate('/product/' + wishlist.product.id); }} style={{ backgroundImage: "url(" + wishlistImage + ")", minHeight: '100%' }}>
 
                                                                                     </div>
                                                                                 </Col>
                                                                                 <Col lg="9" xs="12">
-                                                                                    <div className="design-details">
+                                                                                    <div className="wishlist-details">
                                                                                         <div className='d-flex align-items-center justify-content-between cursor-pointer' onClick={function () { toggleAddViewCount(wishlist.product.id); navigate('/product/' + wishlist.product.id); }}>
                                                                                             <p className="text-black fs-18 fw-600 mb-0 text-ellipsis">{wishlist.product?.name ?? '-'}</p>
                                                                                             {/* <div className='d-flex align-items-center'>
@@ -226,15 +215,11 @@ const Wishlists = (props) => {
                                                                                 </Col>
                                                                             </Row>
                                                                             <div className='save-link' style={{ opacity: 1, bottom: 'unset', top: '0', right: '0' }}>
-                                                                                {isWishlistCurrentUser ?
-                                                                                    <>
-                                                                                        <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: wishlist.product.id }); removeWishlist(wishlist.product.id) }}>
-                                                                                            <GoHeart className="text-white" />
-                                                                                        </div>
-                                                                                    </>
-                                                                                    :
-                                                                                    null
-                                                                                }
+
+                                                                                <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: wishlist.product.id }); removeWishlist(wishlist.product.id) }}>
+                                                                                    <GoHeart className="text-white" />
+                                                                                </div>
+
                                                                             </div>
                                                                         </div>
                                                                     </div>

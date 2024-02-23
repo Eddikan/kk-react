@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
 import { useNavigate, Link } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import GetUserProductsData from 'Utils/GetUserProductsData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 import { BsCart2 } from "react-icons/bs";
+import { ImLeaf } from 'react-icons/im';
 import Loading from 'Components/Shared/Loading';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -24,6 +25,9 @@ const Products = (props) => {
     const [productDraftLoading, setProductDraftLoading] = useState(false);
     const [productPublishLoading, setProductPublishLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
+    const [deleteConfirmShow, setDeleteConfirmShow] = useState(false);
+    const [productDeleteLoading, setProductDeleteLoading] = useState(false);
+    const [productId, setProductId] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
 
     const [count, setCount] = useState(0);
@@ -56,6 +60,11 @@ const Products = (props) => {
 
     const addNewProduct = () => {
         navigate('/user/center/product/add')
+    };
+
+    const deleteConfirm = (e) => {
+        setDeleteConfirmShow(true);
+        setProductId(e);
     };
 
     async function ProductDraftSubmit(e) {
@@ -91,6 +100,25 @@ const Products = (props) => {
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
             setProductPublishLoading(false);
+        });
+    };
+
+    async function ProductDeleteSubmit(e) {
+        setProductDeleteLoading(true);
+        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                toast.success('Fabric deleted successfully!');
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                setProductDeleteLoading(false);
+                setDeleteConfirmShow(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setProductDeleteLoading(false);
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setProductDraftLoading(false);
         });
     };
 
@@ -132,7 +160,10 @@ const Products = (props) => {
                                                                                 <Link className="text-decoration-none" to={`/product/${object.id}`}>
                                                                                     <p className="mb-3 text-decoration-none"><IoEyeOutline /> Preview</p>
                                                                                 </Link>
-                                                                                <p className="mb-3"><GoTrash /> Delete</p>
+                                                                                <p className="mb-3 cursor-pointer"
+                                                                                    onClick={function () { deleteConfirm(object.id); }}
+                                                                                >
+                                                                                    <GoTrash /> Delete</p>
                                                                                 {object.status != "Draft" ?
                                                                                     <p className="mb-0 cursor-pointer" onClick={function () { ProductDraftSubmit(object.id); }}><IoDocumentOutline /> {productDraftLoading ? "Drafting..." : "Draft"}</p>
                                                                                     :
@@ -169,7 +200,17 @@ const Products = (props) => {
 
                                                             <Row>
                                                                 <Col lg="12">
-                                                                    <div className="text-black text-decoration-none ellipsis rufina-family fs-18 mt-2">{object.name ?? "-"}</div>
+                                                                    <div className='d-flex align-items-center'>
+                                                                        <h2 className="text-black text-decoration-none rufina-family fs-18 mt-2">{object.name ?? "-"}</h2>
+                                                                        {object.eco_friendly != null && object.eco_friendly != '' && (
+                                                                            <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
+                                                                                <div className='tooltip-content'>
+                                                                                    <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
+                                                                                </div>
+                                                                                <ImLeaf color="#55d140" />
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
                                                                 </Col>
 
                                                                 {/* <Col lg="6" className='text-end'>
@@ -212,6 +253,35 @@ const Products = (props) => {
                     </section>
                 </>
             }
+
+            <Modal
+                show={deleteConfirmShow}
+                className='modal-preview'
+                fade={false}
+                centered
+            >
+                <Modal.Header className="pb-0">
+                    <h5 className='modal-title text-left'>Confirm Delete</h5>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card>
+                        <Card.Body>
+                            <p className="mb-0">Are you sure you want to delete this fabric?</p>
+                        </Card.Body>
+                    </Card>
+                    <Card.Footer className="text-right mt-3">
+                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setDeleteConfirmShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                        {productDeleteLoading ?
+                            <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Deleting...</button>
+                            :
+                            <button className="btn btn-primary" type="button" onClick={ProductDeleteSubmit} style={{ minWidth: '100px', padding: '9px 20px' }}>Delete</button>
+                        }
+
+                    </Card.Footer>
+                </Modal.Body>
+            </Modal>
         </LayoutSellerCenter >
     );
 };

@@ -456,7 +456,6 @@ const Fabrics = (props) => {
                                         </div>
                                     </Form.Group> */}
 
-
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Price Range</Form.Label>
                                         <Form.Group as={Row} className="mt-3 position-relative">
@@ -486,7 +485,6 @@ const Fabrics = (props) => {
                                 </div>
                             </Col>
                             <Col lg="9">
-
                                 <div id="profile-designs">
                                     {fabricsLoading ?
                                         <>
@@ -497,14 +495,13 @@ const Fabrics = (props) => {
                                             {fabrics && fabrics.length > 0 ?
                                                 <>
                                                     <Row className="designs-row">
-                                                        {/* <img src={object.url} className='designs-img'/> */}
                                                         {fabrics.map((fabric, index) => {
                                                             if (fabric.image_urls?.[0]?.image_url) {
                                                                 var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
                                                             } else {
                                                                 var fabricImage = PlaceholderImage;
                                                             }
-                                                            
+
                                                             var wishlist_user_ids = fabric.wishlist_user_ids;
                                                             const userWishlist = wishlist_user_ids.includes(currentUser);
 

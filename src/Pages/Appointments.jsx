@@ -11,6 +11,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { VscSend } from "react-icons/vsc";
 import { IoMdVideocam, IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
+import InputEmoji from 'react-input-emoji';
 import { AiFillMessage } from "react-icons/ai";
 import axios from "axios";
 import toast from 'react-hot-toast';
@@ -31,12 +32,13 @@ const Appointments = (props) => {
     // const { designerId } = useParams();
     const currentUser = cookies.currentUser;
     const [reloadCount, setReloadCount] = useState(0);
-    const [askAQuestion, setAskAQuestion] = useState(false);
+    const [chatBox, setChatBox] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [users, setUsers] = useState('');
     const [nameDesigner, setNameDesigner] = useState('');
     const [images, setImages] = useState([]);
+    const [text, setText] = useState('');
     const [appointments, setAppointments] = useState([]);
 
     const getAppointments = async () => {
@@ -48,8 +50,12 @@ const Appointments = (props) => {
         setModalHeading(message);
     }
 
-    function toggleChatbox(first_name, last_name, image,message) {
-        setAskAQuestion(true);
+    function handleOnEnter(text) {
+        console.log('enter', text)
+    }
+
+    function toggleChatbox(first_name, last_name, image, message) {
+        setChatBox(true);
         setNameDesigner({
             first_name: first_name ?? '-',
             last_name: last_name ?? '-',
@@ -223,7 +229,7 @@ const Appointments = (props) => {
                         </>
                     </Row>
 
-                    {askAQuestion ?
+                    {chatBox ?
                         <>
                             <Card className='width-chat-card px-0'>
                                 <Card.Header className='header-chat bg-white'>
@@ -232,23 +238,50 @@ const Appointments = (props) => {
                                             <span className='fw-500'>{nameDesigner.first_name} {nameDesigner.last_name}</span>
                                             {/* <span className='ms-2 active-now fs-14 fw-400'>Active Now</span> */}
                                         </div>
-                                        <div className="cursor-pointer" onClick={() => setAskAQuestion(false)}>
+                                        <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                             <IoCloseOutline color="#39393A" />
                                         </div>
                                     </div>
                                 </Card.Header>
                                 <Card.Body >
-                                    <p>No messages.</p>
+                                    <p>No messages found.</p>
 
-                                    <div className='mt-3'>
+                                    <div>
+                                        <InputEmoji
+                                            value={text}
+                                            onChange={setText}
+                                            cleanOnEnter
+                                            onEnter={handleOnEnter}
+                                            className="emoji-picker"
+                                        />
+                                        {/* <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div> */}
+                                        <div>
+                                            <div
+                                                className="cursor-pointer fw-500 position-absolute send-button"
+                                                onClick={() => { toggleUnderConstruction("Send Message"); setChatBox(false); }}
+                                            >
+                                                Send
+                                                <VscSend className='ms-1' />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* <div className='mt-3'>
                                         <input type="text" className='form-control' />
                                     </div>
 
                                     <div className='mt-3 d-flex justify-content-between'>
 
                                         <div className='d-flex'>
-                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("Under Construction")}>
-                                                <LiaSmileBeam className='me-2' />
+                                            <div className='cursor-pointer'>
+                                                <InputEmoji
+                                                    value={text}
+                                                    onChange={setText}
+                                                    cleanOnEnter
+                                                    onEnter={handleOnEnter}
+                                                    placeholder="Type a message"
+                                                    className="emoji-picker"
+                                                />
                                             </div>
 
                                             <div className='cursor-pointer' onClick={() => toggleUnderConstruction("Under Construction")}>
@@ -265,7 +298,7 @@ const Appointments = (props) => {
                                                 <VscSend className='ms-1' />
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </Card.Body>
                             </Card>
                         </>

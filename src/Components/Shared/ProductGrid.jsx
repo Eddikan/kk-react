@@ -5,8 +5,10 @@ import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 import GetUserProductsData from 'Utils/GetUserProductsData';
 import { GoHeart } from "react-icons/go";
+import '../../Assets/styles/Product/ViewProduct/style.css';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from './Loading';
+import { ImLeaf } from 'react-icons/im';
 import { useCookies } from 'react-cookie';
 
 const ProductGrid = (props) => {
@@ -58,7 +60,7 @@ const ProductGrid = (props) => {
                 {productsLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
-                            <Loading className="bg-white" />
+                            <Loading className="bg-white loading-height" />
                         </p>
                     </>
                     :
@@ -117,8 +119,16 @@ const ProductGrid = (props) => {
                                                     </Link>
                                                 </div>
 
-                                                <div className='margin-img'>
-                                                    <span className="text-black text-decoration-none portfolio-name-img">{product.name ?? "-"}</span>
+                                                <div className='d-flex align-items-center'>
+                                                    <h2 className="text-black text-decoration-none rufina-family fs-18 mt-2">{product.name ?? "-"}</h2>
+                                                    {product.eco_friendly != null && product.eco_friendly != '' && (
+                                                        <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
+                                                            <div className='tooltip-content'>
+                                                                <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
+                                                            </div>
+                                                            <ImLeaf color="#55d140" />
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </Col>
                                         )

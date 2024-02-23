@@ -20,7 +20,6 @@ import AdminPortfolio from 'Components/Shared/Admin/AdminPortfolio';
 import AdminFabrics from 'Components/Shared/Admin/AdminFabrics';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { GoPencil } from "react-icons/go";
-import { GoAlertFill } from 'react-icons/go';
 import axios from 'axios';
 import MyCalendar from 'Components/Shared/MyCalendar';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -235,14 +234,11 @@ const Profile = () => {
             } else {
                 setUserLoading(false);
                 toast.error('An error occured. Please try again or contact the administrator.');
-                console.log(userData);
             }
-            // Update state or perform other logic with userData
+
         } catch (error) {
             setUserLoading(false);
             toast.error('An error occured. Please try again or contact the administrator.');
-            console.log(error);
-            // Handle the error, if needed
         }
     };
 
@@ -380,7 +376,7 @@ const Profile = () => {
                             </Col>
                         </Row>
                         {aboutShow ?
-                            <div id="about-portfolio" className='mt-3'>
+                            <div id="about-portfolio">
                                 <Row>
                                     <Col lg="6">
                                         <p className='title-designer mb-2'>Title</p>
@@ -417,7 +413,7 @@ const Profile = () => {
                                         </div> */}
                                     </Col>
                                     <Col lg="6">
-                                        <div className='bg-lgray profile-details address mb-4'>
+                                        <div className='bg-lgray profile-details pt-0 address mb-4'>
                                             <div className='icons-d-flex'>
                                                 <img src={PinIcon} alt="location pin" className='profile-icon' />
                                                 {user.city || user.province || user.country ?

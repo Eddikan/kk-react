@@ -142,13 +142,18 @@ button.rbc-button-link {
     border-radius: 5px;
     height: auto;
 }
-
+.bottom-p {
+    padding-bottom: 10px;
+}
 .close-container {
     position: absolute;
     right: -7px;
     top: 4px;
 }
-
+.bottom-padding {
+    padding-bottom: 0px;
+    padding-top: 14px;
+}
 #set-self-appointment .close-container {
     right: 22px;
 }

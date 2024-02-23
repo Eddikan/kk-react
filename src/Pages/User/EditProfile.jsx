@@ -221,7 +221,7 @@ const EditProfile = () => {
                                                 }
                                             </h2>
                                             <div className='icons-d-flex'>
-                                                <img src={PinIcon} />
+                                                <img src={PinIcon} className='mt-1' />
                                                 {user.city || user.province || user.country ?
                                                     <p className='fs-16 color-light-blue'>
                                                         {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""}

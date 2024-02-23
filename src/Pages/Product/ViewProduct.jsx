@@ -14,15 +14,14 @@ import { useCookies } from 'react-cookie';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
-import axios from 'axios';
 import Loading from 'Components/Shared/Loading';
+import { ImLeaf } from 'react-icons/im';
 import { Rating } from 'react-simple-star-rating';
 import UserPlaceholder from 'Assets/images/user.png';
 import { BsArrowUpRightSquare } from "react-icons/bs";
-import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
-import { ImLeaf } from 'react-icons/im';
+import axios from 'axios';
 
 const initialReviewData = Object.freeze({
     rating: 0,
@@ -489,7 +488,7 @@ const ViewProduct = () => {
                                                         :
                                                         <>
                                                             <div>
-                                                                
+
                                                                 <div class="kouture-tooltip">
                                                                     <div className="action-button bg-smgray me-2" onClick={toggleShareModal}>
                                                                         <GoShareAndroid className="text-black" />
@@ -583,7 +582,7 @@ const ViewProduct = () => {
                                                         </Row>
                                                     </div>
                                                     <hr />
-                                                    
+
                                                     {product.colors && product.colors.length > 0 ?
                                                         <>
                                                             <div className="mb-2">
@@ -599,7 +598,7 @@ const ViewProduct = () => {
                                                         :
                                                         null
                                                     }
-                                                    
+
                                                     {product.certifications && product.certifications.length > 0 ?
                                                         <>
                                                             <div className="mb-2">
@@ -939,11 +938,11 @@ const ViewProduct = () => {
                     </button>
                 </Modal.Header>
                 <Modal.Body className='padding-card-review'>
-                    <h4 className='text-left fs-25 fw-600 mb-3'>{updateReview ? "Update Review" : "Review Item"}</h4>
+                    <h4 className='text-left fs-20 mb-0'>{updateReview ? "Update Review" : "Review Item"}</h4>
                     <Card className='review-card'>
                         <Card.Body className="text-center py-3 p-0">
                             <div className="product-review-container">
-                                <div className='product-portfolio-image mb-4'>
+                                <div className='product-portfolio-image mb-3'>
                                     <span className='d-flex'>
                                         {images && images.length > 0 ?
                                             <>
@@ -995,11 +994,11 @@ const ViewProduct = () => {
                             </div>
                         </Card.Body>
                         <Card.Footer className="text-right bg-white footer-top-border px-0">
-                            <Button className="w-auto mt-2 btn-primary-cancel me-3" onClick={() => setAddReviewShow(false)}>Cancel</Button>
+                            <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setAddReviewShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
                             {updateReview ?
-                                <Button className="w-auto mt-2 btn-primary" onClick={function () { reviewUpdate(); }}>{addReviewLoading ? "Updating..." : "Update"}</Button>
+                                <button className="btn btn-primary" type="button" onClick={function () { reviewUpdate(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Updating..." : "Update"}</button>
                                 :
-                                <Button className="w-auto mt-2 btn-primary" onClick={function () { reviewAdd(); }}>{addReviewLoading ? "Saving..." : "Submit"}</Button>
+                                <button className="btn btn-primary" type="button" onClick={function () { reviewAdd(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Saving..." : "Submit"} </button>
                             }
                         </Card.Footer>
                     </Card>

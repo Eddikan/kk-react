@@ -397,22 +397,23 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                     onHide={handleModalClose}
                     contentLabel="Date Details"
                     id={'set-self-appointment'}
+                    centered
 
                 >
                     <form onSubmit={addAppointmentSubmit}>
                         <Modal.Header closeButton>
-                            <Modal.Title><h5 className='modal-title text-left set-appointment'>Set Appointment</h5></Modal.Title>
+                            <Modal.Title><h5 className='modal-title text-left rufina-family fs-20'>Set Appointment</h5></Modal.Title>
                         </Modal.Header>
-                        <hr className="mt-0 mb-2" />
-                        <Modal.Body>
+                        <hr className="mt-0 mb-0" />
+                        <Modal.Body className='bottom-p'>
                             {selectedDate && (
                                 <Container>
                                     <Row>
-                                        <Col lg="12" className='mb-2 mt-0 text-left'>
+                                        <Col lg="12" className='mb-2 mt-0 text-left px-0'>
                                             <span className='title-appointment'>Title</span>
                                         </Col>
 
-                                        <Col lg="12">
+                                        <Col lg="12" className='px-0'>
                                             <input
                                                 type="text"
                                                 name="title"
@@ -423,7 +424,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                             />
                                         </Col>
 
-                                        <Col lg="8">
+                                        <Col lg="8" className='px-0'>
                                             <Row className={`align-items-center mt-3 ${startTime != "" || endTime != "" ? "mb-3" : ""}`}>
                                                 {times.map((time, index) => {
                                                     return (
@@ -475,7 +476,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                             </Row>
                                         </Col>
                                         {startTime != "" || endTime != "" ?
-                                            <Col lg="12" className='mt-0 text-left'>
+                                            <Col lg="12" className='mt-0 text-left px-0'>
                                                 {startTime != "" || endTime != "" ?
                                                     <>
                                                         <span className='title-appointment'>Availability</span>
@@ -507,11 +508,11 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                         </Modal.Body>
                         <Modal.Footer>
                             <div className='text-right'>
-                                <Button className="cancel-btn me-2" type="button" onClick={handleModalClose}>Cancel</Button>
+                                <button className="btn btn-secondary border-black bg-white text-black me-3" type="button" onClick={handleModalClose} style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
                                 {formStatus != "standby" ?
-                                    <Button className="btn-save" type="button">Saving...</Button>
+                                    <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Saving...</button>
                                     :
-                                    <Button className="btn-save" type="submit">Save</Button>
+                                    <button className="btn btn-primary" type="submit" style={{ minWidth: '100px', padding: '9px 20px' }}>Save</button>
                                 }
                             </div>
                         </Modal.Footer>
@@ -521,16 +522,17 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                 <Modal
                     show={appointmentModalIsOpen}
                     onHide={closeAppointmentModal}
+                    centered
 
                 >
                     <div>
                         <Modal.Header closeButton>
-                            <Modal.Title><h5 className='modal-title text-left set-appointment'>Appointment Details</h5></Modal.Title>
+                            <Modal.Title><h5 className='modal-title text-left rufina-family fs-20'>Appointment Details</h5></Modal.Title>
                         </Modal.Header>
-                        <hr className="mt-0 mb-2" />
-                        <Modal.Body>
+                        <hr className="mt-0 mb-0" />
+                        <Modal.Body className='bottom-padding'>
                             {selectedEvent && (
-                                <div className="appointment-details-container">
+                                <div>
 
                                     {selectedEvent.title != "" &&
                                         <>
@@ -571,7 +573,7 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                         </Modal.Body>
                         <Modal.Footer>
                             <div className='text-right'>
-                                <Button className="cancel-btn me-2" onClick={closeAppointmentModal}>Close</Button>
+                                <button className="btn btn-secondary border-black bg-white text-black" type="button" onClick={closeAppointmentModal} style={{ minWidth: '100px', padding: '9px 20px' }}   >Close</button>
                             </div>
                         </Modal.Footer>
                     </div>

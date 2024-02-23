@@ -33,6 +33,7 @@ const ViewPortFolio = () => {
     const [portfolio, setPortfolio] = useState('');
     const [activeImage, setActiveImage] = useState('');
     const [modalHeading, setModalHeading] = useState('');
+    const [updateReview, setUpdateReview] = useState(false);
     const [chatBox, setChatBox] = useState(false);
     const [reviewsTabShow, setReviewsTabShow] = useState(true);
     const [commentsTabShow, setCommentsTabShow] = useState(true);
@@ -315,13 +316,14 @@ const ViewPortFolio = () => {
                                     {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
                                     <span className={`text-black reviews-product cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews
 
-
-                                        <span className="cursor-pointer reviews-tooltip" onClick={() => toggleAddToReview()}>
-                                            <div className='tooltip-content'>
-                                                <span className="reviews-tooltiptext fs-14">Write Review</span>
-                                            </div>
-                                            <BsArrowUpRightSquare className='ms-2' color="#caa533" />
-                                        </span>
+                                        {!isPortfolioCurrentUser && (
+                                            <span className="cursor-pointer reviews-tooltip" onClick={toggleAddToReview}>
+                                                <div className='tooltip-content'>
+                                                    <span className="reviews-tooltiptext fs-14">Write Review</span>
+                                                </div>
+                                                <BsArrowUpRightSquare className='ms-2' color="#caa533" />
+                                            </span>
+                                        )}
 
                                     </span>
                                     <hr className='mt-2' />
@@ -613,7 +615,7 @@ const ViewPortFolio = () => {
                         </Modal>
 
 
-                        <Modal
+                        {/* <Modal
                             show={addReviewShow}
                             className='modal-preview'
                             fade={false}
@@ -627,7 +629,7 @@ const ViewPortFolio = () => {
                             </Modal.Header>
                             <Modal.Body className='padding-card-review'>
                                 <h4 className='te   xt-left fs-25 fw-600 mb-3'>
-                                    {/* {updateReview ? "Update Review" : "Review Item"} */}
+                                    {updateReview ? "Update Review" : "Review Item"}
                                 </h4>
                                 <Card className='review-card'>
                                     <Card.Body className="text-center py-3 p-0">
@@ -641,6 +643,87 @@ const ViewPortFolio = () => {
                                                             <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>
                                                                 {portfolio.name ?? "-"}
                                                             </span>
+                                                        </>
+                                                        :
+                                                        null
+                                                    }
+                                                </span>
+                                            </div>
+
+                                            <div className="text-left mt-3">
+                                                <span className="fs-14 me-3">Product Quality:</span> <Rating
+                                                    initialValue={reviewFormData.rating}
+                                                    allowFraction={true}
+                                                    size={25}
+                                                    className="star-rating"
+                                                    showTooltip={true}
+                                                    emptyColor="#dddddd"
+                                                    fillColor="#cea835"
+                                                    onClick={handlePointerMove}
+                                                    tooltipArray={[
+                                                        'Terrible',
+                                                        'Terrible',
+                                                        'Bad',
+                                                        'Bad',
+                                                        'Average',
+                                                        'Average',
+                                                        'Great',
+                                                        'Great',
+                                                        'Excellent',
+                                                        'Excellent'
+                                                    ]}
+                                                tooltipDefaultText={reviewText}
+                                                />
+                                                <Form.Control
+                                                    as="textarea"
+                                                    name="content"
+                                                    rows={5}
+                                                    value={reviewFormData.content}
+                                                    placeholder="Leave a comment about the product..."
+                                                    onChange={handleChangeReview}
+                                                    className="mt-3"
+                                                />
+                                            </div>
+                                        </div>
+                                    </Card.Body>
+                                    <Card.Footer className="text-right bg-white footer-top-border px-0">
+                                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setAddReviewShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                                        {updateReview ?
+                                            <button className="btn btn-primary" type="button" onClick={function () { reviewUpdate(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Updating..." : "Update"}</button>
+                                            :
+                                            <button className="btn btn-primary" type="button" onClick={function () { reviewAdd(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Saving..." : "Submit"} </button>
+                                        }
+                                    </Card.Footer>
+                                </Card>
+                            </Modal.Body>
+                        </Modal> */}
+
+
+                        {/* Add Review Item */}
+                        <Modal
+                            show={addReviewShow}
+                            className='modal-preview'
+                            fade={false}
+                            centered
+                            size="lg"
+                        >
+                            <Modal.Header className="py-0">
+                                <h5 className='modal-title text-uppercase text-left'></h5>
+                                <button type='button' className='close react-modal-close' onClick={toggleAddToReview} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                                </button>
+                            </Modal.Header>
+                            <Modal.Body className='padding-card-review'>
+                                <h4 className='text-left fs-20 mb-0'>{updateReview ? "Update Review" : "Review Item"}</h4>
+                                <Card className='border-none'>
+                                    <Card.Body className="text-center py-3 p-0">
+                                        <div className="product-review-container">
+                                            <div className='product-portfolio-image mb-4'>
+                                                <span className='d-flex'>
+                                                    {images && images.length > 0 ?
+                                                        <>
+                                                            <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                                            </div>
+                                                            <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
                                                         </>
                                                         :
                                                         null
@@ -671,11 +754,12 @@ const ViewPortFolio = () => {
                                                         'Excellent'
                                                     ]}
                                                 // tooltipDefaultText={reviewText}
+                                                /* Available Props */
                                                 />
                                                 <Form.Control
                                                     as="textarea"
                                                     name="content"
-                                                    rows={5}
+                                                    rows={5} // You can adjust the number of rows as needed
                                                     // value={reviewFormData.content}
                                                     placeholder="Leave a comment about the product..."
                                                     // onChange={handleChangeReview}
@@ -685,12 +769,27 @@ const ViewPortFolio = () => {
                                         </div>
                                     </Card.Body>
                                     <Card.Footer className="text-right bg-white footer-top-border px-0">
-                                        <Button className="w-auto mt-2 btn-primary-cancel me-3" onClick={() => setAddReviewShow(false)}>Cancel</Button>
-                                        {/* {updateReview ?
-                                <Button className="w-auto mt-2 btn-primary" onClick={function () { reviewUpdate(); }}>{addReviewLoading ? "Updating..." : "Update"}</Button>
-                                :
-                                <Button className="w-auto mt-2 btn-primary" onClick={function () { reviewAdd(); }}>{addReviewLoading ? "Saving..." : "Submit"}</Button>
-                            } */}
+                                        <button className="btn btn-secondary border-black bg-white text-black me-3 border-top" onClick={() => setAddReviewShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                                        {updateReview ?
+                                            <button
+                                                className="btn btn-primary"
+                                                type="button"
+                                                // onClick={function () { reviewUpdate(); }} 
+                                                style={{ minWidth: '100px', padding: '9px 20px' }}
+                                            >
+                                                {addReviewLoading ? "Updating..." : "Update"}
+                                            </button>
+                                            :
+                                            <button
+                                                className="btn btn-primary"
+                                                type="button"
+                                                // onClick={function () { reviewAdd(); }} 
+                                                onClick={() => { toggleUnderConstruction("Review Item"); setAddReviewShow(false); }}
+                                                style={{ minWidth: '100px', padding: '9px 20px' }}
+                                            >
+                                                {addReviewLoading ? "Saving..." : "Submit"}
+                                            </button>
+                                        }
                                     </Card.Footer>
                                 </Card>
                             </Modal.Body>

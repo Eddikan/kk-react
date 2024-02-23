@@ -380,7 +380,7 @@ const Calendar = (props) => {
         if (!isSundayChecked) {
             setSundayHoursFormData([]);
         } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setSundayHoursFormData([sundayHoursCopyFormData]);
         }
     };
@@ -391,7 +391,7 @@ const Calendar = (props) => {
         if (!isMondayChecked) {
             setMondayHoursFormData([]);
         } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setMondayHoursFormData([mondayHoursCopyFormData]);
         }
     };
@@ -402,7 +402,7 @@ const Calendar = (props) => {
         if (!isTuesdayChecked) {
             setTuesdayHoursFormData([]);
         } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setTuesdayHoursFormData([tuesdayHoursCopyFormData]);
         }
     };
@@ -413,7 +413,7 @@ const Calendar = (props) => {
         if (!isWednesdayChecked) {
             setWednesdayHoursFormData([]);
         } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setWednesdayHoursFormData([wednesdayHoursCopyFormData]);
         }
     };
@@ -424,7 +424,7 @@ const Calendar = (props) => {
         if (!isThursdayChecked) {
             setThursdayHoursFormData([]);
         } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setThursdayHoursFormData([thursdayHoursCopyFormData]);
         }
     };
@@ -436,7 +436,7 @@ const Calendar = (props) => {
         if (!isFridayChecked) {
             setFridayHoursFormData([]);
         } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setFridayHoursFormData([fridayHoursCopyFormData]);
         }
     };
@@ -447,7 +447,7 @@ const Calendar = (props) => {
         if (!isSaturdayChecked) {
             setSaturdayHoursFormData([]);
         } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
+            setScheduleReloadCount(scheduleReloadCount + 1);
             setSaturdayHoursFormData([saturdayHoursCopyFormData]);
         }
     };
@@ -826,9 +826,9 @@ const Calendar = (props) => {
                 id="business-hours-modal"
             >
                 <Modal.Header closeButton>
-                    <Modal.Title>Business Hours</Modal.Title>
+                    <Modal.Title className='rufina-family fs-20'>Business Hours</Modal.Title>
                 </Modal.Header>
-                <hr className="mt-0" />
+                <hr className="mt-0 mb-2" />
                 <Modal.Body>
                     <Container className="h-100">
                         <Row className="h-100">
@@ -1350,9 +1350,8 @@ const Calendar = (props) => {
                     </Container>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button className="btn-cancel" variant="primary" onClick={() => setDesignerBusinessHoursModalShow(false)}>Cancel</Button>
-
-                    <Button className="btn-primary" variant="primary" onClick={() => {
+                    <button className="btn btn-secondary border-black bg-white text-black me-3" type="button" onClick={() => setDesignerBusinessHoursModalShow(false)} style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                    <button className="btn btn-primary" style={{ minWidth: '100px', padding: '9px 20px' }} variant="primary" onClick={() => {
                         if (!times.length) {
                             BusinessHoursSubmitPost()
                         } else {
@@ -1361,7 +1360,7 @@ const Calendar = (props) => {
 
                     }}>
                         Save
-                    </Button>
+                    </button>
 
                 </Modal.Footer>
             </Modal>

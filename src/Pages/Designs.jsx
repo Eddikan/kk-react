@@ -5,11 +5,7 @@ import Layout from 'Components/Layout/Layout';
 import FormControl from 'react-bootstrap/FormControl';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
-// import getDesignsData from 'Utils/GetDesignsData';
-import GetDesignsData from 'Utils/GetDesignsData';
 import { Form, ModalHeader, ModalFooter } from 'react-bootstrap';
-import LoadingPage from 'Components/Shared/LoadingPage';
-import GoBack from 'Components/Shared/GoBack';
 import { Rating } from 'react-simple-star-rating';
 import { PiNotepadFill } from "react-icons/pi";
 import { GoHeart, GoAlertFill } from "react-icons/go";
@@ -304,8 +300,8 @@ const Designs = (props) => {
             province: province ?? '-',
             tags: tags ?? '-',
             description: description ?? '-'
-
         })
+
         setDesignImages(image_urls);
         if (image_urls?.[0]?.image_url) {
             setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
@@ -314,9 +310,9 @@ const Designs = (props) => {
         }
 
         if (currentUser == userId) {
-            setIsDesignCurrentUser(false);
-        } else {
             setIsDesignCurrentUser(true);
+        } else {
+            setIsDesignCurrentUser(false);
         }
     }
 
@@ -395,7 +391,6 @@ const Designs = (props) => {
         getPortfolioCategories();
     }, [mounted, searchValue, selectedCategories]);
 
-
     const toggleGetUser = (e) => {
         window.location.href = "/designer-profile?user_id=" + e;
     }
@@ -452,7 +447,6 @@ const Designs = (props) => {
                                         :
                                         null
                                     }
-
 
                                     {/* <Form.Check
                                         type={`checkbox`}
@@ -881,6 +875,8 @@ const Designs = (props) => {
                                             </a>
 
                                             {isDesignCurrentUser ?
+                                                null
+                                                :
                                                 <>
                                                     <div className='btn-book-bar'>
                                                         <a href={`/appointment/schedule/${singleDesign.id}`}>
@@ -888,8 +884,6 @@ const Designs = (props) => {
                                                         </a>
                                                     </div>
                                                 </>
-                                                :
-                                                null
                                             }
                                         </p>
                                     </div>
@@ -898,7 +892,6 @@ const Designs = (props) => {
                         </Col>
 
                         <Col lg={1}>
-
                             {profileViewShow &&
                                 <>
                                     <div>
@@ -910,7 +903,7 @@ const Designs = (props) => {
                                             <Card.Body className="action_container font-weight">
                                                 <Row>
                                                     <Col>
-                                                        <div className='user-image-modal'>
+                                                        <div className='user-image-modal text-center'>
                                                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                                 <div
                                                                     className='user-photo-modal mb-2 '
@@ -946,6 +939,8 @@ const Designs = (props) => {
                                                         </div>
 
                                                         {isDesignCurrentUser ?
+                                                            null
+                                                            :
                                                             <>
                                                                 <hr />
                                                                 <div className='text-center'>
@@ -956,26 +951,21 @@ const Designs = (props) => {
                                                                 </div>
 
                                                                 <div className='text-center mt-2'
-                                                                    onClick={() => toggleUnderConstruction("Message")}
+                                                                    onClick={() => { toggleUnderConstruction("Message"); setProfileViewShow(false); }}
                                                                 >
                                                                     <a className='book-consultation btn-message-designer btn w-100'
                                                                     >
                                                                         <AiFillMessage className="me-2" />Send Message</a>
                                                                 </div>
                                                             </>
-                                                            :
-                                                            null
                                                         }
-
                                                     </Col>
                                                 </Row>
                                             </Card.Body>
                                         </Card>
                                     </div>
                                 </>
-
                             }
-
 
                             <div>
                                 <div>
@@ -995,6 +985,8 @@ const Designs = (props) => {
                                 </div>
 
                                 {isDesignCurrentUser ?
+                                    null
+                                    :
                                     <>
                                         <div className='text-center mb-4' >
                                             <a href={`/appointment/schedule/${singleDesign.id}`}>
@@ -1018,11 +1010,9 @@ const Designs = (props) => {
                                             </div>
                                             <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
                                         </div>
-
                                     </>
-                                    :
-                                    null
                                 }
+
                                 <div className='text-center mb-4' onClick={toggleDescription}>
                                     <div className="action-button-designs bg-white">
                                         <IoInformationOutline className="text-black mt-2" size={30} />
@@ -1152,7 +1142,7 @@ const Designs = (props) => {
                                         {singleDesign.tags.length > 0 ?
                                             <>
                                                 {singleDesign.tags.map((tag, index) => (
-                                                    <span className="design-tags bg-light fs-14 categories-color">
+                                                    <span className="design-tags bg-light fs-14 categories-color mt-2">
                                                         {tag}
                                                     </span>
                                                 ))}
@@ -1167,6 +1157,8 @@ const Designs = (props) => {
                             </div>
 
                             {isDesignCurrentUser ?
+                                null
+                                :
                                 <>
                                     <hr />
                                     <div className='text-center'>
@@ -1184,8 +1176,6 @@ const Designs = (props) => {
                                             <AiFillMessage className="me-2" />Send Message</a>
                                     </div>
                                 </>
-                                :
-                                null
                             }
 
                         </Col>

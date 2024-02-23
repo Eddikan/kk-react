@@ -9,6 +9,7 @@ import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from '../Loading';
+import '../../../Assets/styles/Product/ViewProduct/style.css';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
@@ -35,7 +36,6 @@ const ProductGrid = (props) => {
             if (productsData) {
                 setProducts(productsData);
                 setProductsLoading(false);
-                // console.log(productsData);
 
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -141,7 +141,7 @@ const ProductGrid = (props) => {
                 {productsLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
-                            <Loading className="bg-white" />
+                            <Loading className="bg-white loading-height" />
                         </p>
                     </>
                     :
@@ -149,7 +149,6 @@ const ProductGrid = (props) => {
                         {products && products.length > 0 ?
                             <>
                                 <Row className="portfolio-row">
-                                    {/* <img src={product.url} className='portfolio-img'/> */}
                                     {products.map((product, index) => {
                                         if (product.image_urls?.[0]?.image_url) {
                                             var productImage = process.env.REACT_APP_STORAGE_URL + 'product/' + product.image_urls[0].image_url;

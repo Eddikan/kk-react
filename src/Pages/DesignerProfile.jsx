@@ -20,10 +20,9 @@ import { GoAlertFill } from 'react-icons/go';
 import { PiNotepadFill } from "react-icons/pi";
 import { IoCloseOutline, IoVideocam } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
-import { LiaSmileBeam } from "react-icons/lia";
+import InputEmoji from 'react-input-emoji';
 import { IoIosAttach } from "react-icons/io";
 import { VscSend } from "react-icons/vsc";
-import { FaUserCircle } from "react-icons/fa";
 import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
 import axios from 'axios';
@@ -83,10 +82,11 @@ const DesignerProfile = () => {
     const [designerSchedule, setDesignerSchedule] = useState([]);
     const [isDesignerCurrentUser, setIsDesignerCurrentUser] = useState(false);
     const [designerAvailable, setDesignerAvailable] = useState(false);
-
+    const [requestLoading, setRequestLoading] = useState(false);
     const [portfolio, setPortfolio] = useState('');
     const [images, setImages] = useState([]);
-
+    const [text, setText] = useState('');
+    const [designerInfo, setDesignerInfo] = useState('');
     const [guidePreviewModalShow, setGuidePreviewModalShow] = useState(false);
 
     const currentUser = cookies.currentUser;
@@ -107,9 +107,17 @@ const DesignerProfile = () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId);
     };
 
-    const chatBoxModal = (e) => {
+    const chatBoxModal = (first_name, last_name) => {
         setChatBox(true);
+        setDesignerInfo({
+            first_name: first_name || '-',
+            last_name: last_name || '-',
+        })
     };
+
+    function handleOnEnter(text) {
+        console.log('enter', text)
+    }
 
     function toggleRequestAQuote(message) {
         setRequestAQuoteModal(true);
@@ -183,12 +191,10 @@ const DesignerProfile = () => {
             } else {
                 setUserLoading(false);
                 toast.error('An error occured. Please try again or contact the administrator.');
-                console.log(userData);
             }
         } catch (error) {
             setUserLoading(false);
             toast.error('An error occured. Please try again or contact the administrator.');
-            console.log(error);
         }
     };
 
@@ -244,7 +250,6 @@ const DesignerProfile = () => {
                         }
                     }
                 }).catch((error) => {
-                    // console.log(error);
                     toast.error('There has been an error getting the schedules, please try again!');
                 });
             }
@@ -317,13 +322,18 @@ const DesignerProfile = () => {
                                                 null
                                                 :
                                                 <>
-                                                    <AiFillMessage className="ms-3 cursor-pointer" size={20} color="#CEA835" />
+                                                    <AiFillMessage
+                                                        className="ms-3 cursor-pointer"
+                                                        // onClick={() => toggleUnderConstruction("Chat Designer")} 
+                                                        onClick={() => chatBoxModal(user.first_name, user.last_name)}
+                                                        size={20} color="#CEA835"
+                                                    />
                                                 </>
                                             }
 
                                         </h2>
                                         <div className='icons-d-flex'>
-                                            <img src={PinIcon} alt="location pin" />
+                                            <img src={PinIcon} alt="location pin" className='mt-1' />
                                             {user.city || user.province || user.country ?
                                                 <p className='fs-16 place-family'>
                                                     {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""}
@@ -364,7 +374,7 @@ const DesignerProfile = () => {
                                                 </button>
                                             </span>
                                         }
-                                        
+
                                     </>
                                 }
                             </Col>
@@ -383,7 +393,7 @@ const DesignerProfile = () => {
                                 {elements && elements.length > 0 ? (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${guidePreviewModalShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { toggleGuidePreviewModal(); }}>Measurement Guide</span>
                                 )
-                                :
+                                    :
                                     null
                                 }
                                 <hr className='mt-2' />
@@ -391,7 +401,7 @@ const DesignerProfile = () => {
                         </Row>
 
                         {aboutShow ?
-                            <div id="about-portfolio" className='mt-3'>
+                            <div id="about-portfolio">
                                 <Row>
                                     <Col lg="6">
                                         <p className='mb-2 fw-600 text-black'>Title</p>
@@ -425,7 +435,7 @@ const DesignerProfile = () => {
                                     <Col lg="6">
                                         {user.is_designer == 1 && (
 
-                                            <div className='bg-lgray profile-featured  mb-4'>
+                                            <div className='bg-lgray profile-featured pt-0 mb-4'>
                                                 <div className='d-flex justify-content-between'>
                                                     <span className='fs-16 fw-600 text-black'>Featured Designs</span>
                                                 </div>
@@ -450,14 +460,14 @@ const DesignerProfile = () => {
                             null
                         }
                         {portfolioShow ?
-                            <div className='mt-3'>
+                            <div>
                                 <PortfolioGrid currentUser={user_id} reloadCount={reloadCount} />
                             </div>
                             :
                             null
                         }
                         {fabricShow ?
-                            <div className='mt-3'>
+                            <div>
                                 <ProductGrid currentUser={user_id} reloadCount={reloadCount} />
                             </div>
                             :
@@ -475,11 +485,13 @@ const DesignerProfile = () => {
                         {chatBox ?
                             <>
                                 <Card className='width-chat-card px-0'>
-                                    <Card.Header className='header-chat bg-white'>
+                                    <Card.Header className='order-chat bg-white pt-3 pb-3'>
                                         <div className='d-flex justify-content-between'>
                                             <div>
-                                                <span className='fw-500'>Dave Napoles</span>
-                                                {/* <span className='ms-2 active-now fs-14 fw-400'>Active Now</span> */}
+                                                <span className="fs-14 fw-500 mb-0 name-of-user-chat">
+                                                    <span className='fw-500'>{designerInfo.first_name} {designerInfo.last_name}</span>
+                                                </span>
+                                                {/* <span className='ms-3 active-now fs-14 fw-400 text-gold'>{designerData.status}</span> */}
                                             </div>
                                             <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                                 <IoCloseOutline color="#39393A" />
@@ -487,77 +499,23 @@ const DesignerProfile = () => {
                                         </div>
                                     </Card.Header>
 
-                                    <Card.Body >
-                                        <div className='product-portfolio-image'>
-                                            <span className='d-flex'>
-                                                {images && images.length > 0 ?
-                                                    <>
-                                                        <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-                                                        </div>
-                                                        <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{user.name ?? "-"}</span>
-                                                    </>
-                                                    :
-                                                    null
-                                                }
-                                            </span>
-                                        </div>
+                                    <Card.Body>
+                                        <p>No messages found.</p>
 
                                         <div>
-                                            <div className='mt-4 d-flex portfolio-designer-chat'>
-                                                {/* {portfolio.user.image && (
-                                                    <div
-                                                        className='designer-photo'
-                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
-                                                    >
-                                                    </div>
-                                                )} */}
-                                                <div className="designer-info mx-2">
-                                                    <div>
-                                                        {/* <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">{portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"}
-                                                            <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
-                                                        </p> */}
-                                                    </div>
-
-                                                    <div className='fs-14 ms-2 mt-2 name-of-user-chat'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-
-
-                                        <div className='mt-5 mb-4 text-right d-flex'>
-                                            <div>
-                                                <div className='time-chat-box fs-14 fw-400'>3:30 PM
-                                                    <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
-                                                <div className='mt-2 welcome-chat'>
-                                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
-                                                </div>
-                                            </div>
-
-                                            <div className=' d-flex align-items-center portfolio-designer ms-3'>
-                                                {/* {portfolio.user.image && (
-                                                    <div
-                                                        className='designer-photo'
-                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${portfolio.user.image})` }}
-                                                    >
-                                                    </div>
-                                                )} */}
-                                            </div>
-                                        </div>
-
-                                        <div className='mt-3'>
-                                            <input type="text" className='form-control' />
-                                        </div>
-
-                                        <div className='mt-3 d-flex justify-content-between'>
-                                            <div className='d-flex'>
-                                                <div className='cursor-pointer'><LiaSmileBeam className='me-2' /></div>
-                                                <div className='cursor-pointer'><IoIosAttach /></div>
-                                            </div>
+                                            <InputEmoji
+                                                value={text}
+                                                onChange={setText}
+                                                cleanOnEnter
+                                                onEnter={handleOnEnter}
+                                                placeholder="Type a message"
+                                                className="emoji-picker"
+                                            />
+                                            {/* <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div> */}
                                             <div>
                                                 <div
-                                                    className="cursor-pointer fw-500"
-                                                    onClick={() => toggleUnderConstruction("Send Message")}
+                                                    className="cursor-pointer fw-500 position-absolute send-button"
+                                                    onClick={() => { toggleUnderConstruction("Send Message"); setChatBox(false); }}
                                                 >
                                                     Send
                                                     <VscSend className='ms-1' />
@@ -580,15 +538,17 @@ const DesignerProfile = () => {
                 className='modal-preview'
                 fade={false}
                 size="sm"
+                centered
+
             >
                 <ModalHeader className='pt-2 pb-2'>
-                    <h5 className='modal-title text-left fs-25 rufina-family fw-600 '>New Quote Request</h5>
+                    <h5 className='modal-title text-left fs-20 rufina-family'>New Quote Request</h5>
                     <button type='button' className='close react-review-items-close' data-dismiss='modal' aria-label='Close' onClick={() => setRequestAQuoteModal(false)}>
                         <span aria-hidden='true'>&times;</span>
                     </button>
                 </ModalHeader>
                 <hr className="mt-0 mb-0" />
-                <Modal.Body className='pt-4 pb-2'>
+                <Modal.Body className='pt-3 pb-3'>
                     <Row>
                         <Col>
                             <div className='mb-2'>Title</div>
@@ -624,10 +584,11 @@ const DesignerProfile = () => {
                                     htmlFor="fileInput"
                                     className="file-label d-block text-center cursor-pointer"
                                 >
-                                    <p className="text-black rufina-family fs-18 mb-3 fw-600">Design Preference</p>
+                                    <p className="text-black rufina-family fs-18 mb-1 fw-600">Design Preference</p>
                                     <p className="text-black fs-16 mb-3">Share your design preferences to the designer.</p>
                                     <button
                                         className="btn btn-primary mb-4"
+                                        style={{ minWidth: '100px', padding: '9px 20px' }}
                                         onClick={() => { toggleUnderConstruction("Upload Design"); setRequestAQuoteModal(false); }}
                                     >
                                         Upload Design
@@ -638,10 +599,34 @@ const DesignerProfile = () => {
                     </Row>
 
                 </Modal.Body>
-                <ModalFooter className='mt-4'>
+                <ModalFooter className='mt-0'>
                     <div className='text-right'>
-                        <Button className="cancel-btn me-2" onClick={() => setRequestAQuoteModal(false)}>Cancel</Button>
-                        <Button className="btn-save" onClick={() => { toggleUnderConstruction("Request a Quote"); setRequestAQuoteModal(false); }}>Request a Quote</Button>
+                        <button
+                            className="btn btn-secondary border-black bg-white text-black me-3"
+                            onClick={() => setRequestAQuoteModal(false)}
+                            style={{ minWidth: '100px', padding: '9px 20px' }}
+                        >
+                            Cancel
+                        </button>
+
+                        {requestLoading ?
+                            <button
+                                className="btn btn-primary"
+                                type="button"
+                                style={{ minWidth: '100px', padding: '9px 20px' }}
+                            >
+                                Requesting...
+                            </button>
+                            :
+                            <button
+                                className="btn btn-primary"
+                                type="button"
+                                onClick={() => { toggleUnderConstruction("Request a Quote"); setRequestAQuoteModal(false); }}
+                                style={{ minWidth: '100px', padding: '9px 20px' }}
+                            >
+                                Request a Quote
+                            </button>
+                        }
                     </div>
                 </ModalFooter>
             </Modal>
@@ -676,13 +661,14 @@ const DesignerProfile = () => {
                 fade={false}
                 size="lg"
                 id="measurement-guide"
+                centered
             >
                 <Modal.Header className="pb-0">
-                    <h4 className='text-left fs-25 fw-600 px-2'>Measurement Guide</h4>
+                    <h4 className='text-left fs-20 mb-2 px-2'>Measurement Guide</h4>
                     <button type='button' className='close react-modal-close' onClick={toggleGuidePreviewModal} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body className='pt-0'>
                     <Card className='border-0'>
                         <Card.Body className='p-2'>
                             <Card>
@@ -694,15 +680,15 @@ const DesignerProfile = () => {
                                                 {elements.map((element, index) => (
                                                     <>
                                                         {element.type == "Heading" ?
-                                                            <h3 className='fw-600 mb-4' key={index}>{element.value}</h3>
+                                                            <h3 className='fs-20 mb-2' key={index}>{element.value}</h3>
                                                             : element.type == "Paragraph" ?
-                                                                <p key={index}>{element.value}</p>
+                                                                <p className="mb-0" key={index}>{element.value}</p>
                                                                 : element.type == "Image" ?
                                                                     <>
                                                                         {element.value && element.value.length > 0 && element.value != "" ?
                                                                             <>
                                                                                 {element.value.map((image, imageIndex) => (
-                                                                                    <img key={imageIndex} src={process.env.REACT_APP_STORAGE_URL + 'product/' + image?.image_url} className="w-100 h-auto mb-3" alt="" />
+                                                                                    <img key={imageIndex} src={process.env.REACT_APP_STORAGE_URL + 'product/' + image?.image_url} className="w-100 h-image mb-3" alt="" />
                                                                                 ))}
                                                                             </>
                                                                             :
@@ -749,7 +735,7 @@ const DesignerProfile = () => {
                     </Card>
                 </Modal.Body>
             </Modal>
-        </Layout>
+        </Layout >
     );
 };
 

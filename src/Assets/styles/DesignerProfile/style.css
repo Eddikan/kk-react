@@ -41,3 +41,32 @@
     border: none;
     padding: 25px;
 }
+
+.react-emoji {
+    display: block !important;
+}
+.react-input-emoji--container {
+    margin: 5px 0px !important;
+    
+}
+.react-input-emoji--container {
+    border-radius: 5px !important;
+}
+.react-input-emoji--button svg {
+    fill: #212529 !important;
+    width: 19px;
+}
+.attach-icon {
+    bottom: 18px;
+    left: 54px;
+}
+.send-button {
+    bottom: 18px;
+    right: 19px;
+}
+.h-image {
+    height: 700px;
+}
+.loading-height {
+    height: 240px !important;
+}

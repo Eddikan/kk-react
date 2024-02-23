@@ -23,6 +23,9 @@
 .review-card {
     border: none;
 }
+.loading-height {
+    height: 240px !important;
+}
 .footer-top-border {
     border-top: none;
 }
@@ -48,7 +51,7 @@
 }
 .ellipsis {
     white-space: nowrap; 
-    width: 100%; 
+    width: 60%; 
     overflow: hidden;
     text-overflow: ellipsis; 
   }
