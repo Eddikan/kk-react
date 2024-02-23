@@ -67,6 +67,12 @@ const EmailConfirmation = () => {
                     if (selectedUser.signup_type) {
                         setSignupType(selectedUser.signup_type);
                     }
+                    if (selectedUser.designer) {
+                        setCookie('currentUserDesigner', JSON.stringify(user.designer.id), { path: '/' });
+                    }
+                        if (selectedUser.seller) {
+                        setCookie('currentUserSeller', JSON.stringify(user.seller.id), { path: '/' });
+                    }
                 } else {
                     const message = 'Please verify your email first!';
                     toast.error(message);
