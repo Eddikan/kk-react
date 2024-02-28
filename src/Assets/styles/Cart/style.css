@@ -58,3 +58,37 @@ img.placeholder-cart {
     background-color: var(--black);
     border-color: var(--black);
 }
+.delete-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.delete-tooltip .icon-tooltiptext {
+    visibility: hidden;
+    width: 90px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 29px;
+    left: 10%;
+    margin-left: -16px;
+}
+
+.delete-tooltip .icon-tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 7px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
+}
+
+.delete-tooltip:hover .icon-tooltiptext {
+    visibility: visible;
+}

@@ -6,14 +6,14 @@
 .green-leaf-tooltip .green-leaf-tooltiptext {
     visibility: hidden;
     width: 175px;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: #000000f0;
     color: #fff;
     text-align: center;
     border-radius: 6px;
     padding: 5px 0;
     position: absolute;
     z-index: 1;
-    bottom: 34px;
+    bottom: 32px;
     left: 10%;
     margin-left: -126px;
 }
@@ -22,11 +22,11 @@
     content: "";
     position: absolute;
     top: 100%;
-    left: 70%;
+    left: 74%;
     margin-left: -5px;
-    border-width: 13px;
+    border-width: 8px;
     border-style: solid;
-    border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
+    border-color: #000000f0 transparent transparent transparent;
 }
 
 .green-leaf-tooltip:hover .green-leaf-tooltiptext {

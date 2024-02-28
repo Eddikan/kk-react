@@ -6,7 +6,6 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
-// import getDesignsData from 'Utils/GetFabricsData';
 import GetFabricsData from 'Utils/GetFabricsData';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { ImLeaf } from "react-icons/im";
@@ -415,16 +414,16 @@ const Fabrics = (props) => {
                                             </Form.Group>
                                         ))}
                                     </Form.Group>
+
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Colors</Form.Label>
-                                        <input type="text" name="colors" className='form-control' />
                                         {colors.map((color) => (
                                             <Form.Group key={color}>
                                                 <Form.Check
                                                     className="cursor-pointer"
                                                     type="checkbox"
                                                     label={color}
-                                                    name="eco_friendly"
+                                                    name="color"
                                                     checked={selectedColors.includes(color)}
                                                     onChange={() => handleColorChange(color)}
                                                 />
@@ -442,18 +441,6 @@ const Fabrics = (props) => {
                                                 </option>
                                             ))}
                                         </Form.Control>
-                                    </Form.Group> */}
-
-                                    {/* <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600">Price Range</Form.Label>
-                                        <div>
-                                            <select id="sort-by" className='form-control' >
-                                                <option value=""></option>
-                                                <option value="">1000</option>
-                                                <option value="">2000</option>
-                                                <option value="">3000</option>
-                                            </select>
-                                        </div>
                                     </Form.Group> */}
 
                                     <Form.Group className='mb-4'>
@@ -515,9 +502,6 @@ const Fabrics = (props) => {
 
                                                                                     </div>
                                                                                     <div className='save-link'>
-                                                                                        {/* <div className="action-button bg-white me-2">
-                                                                                    <GoBookmark className="text-black" />
-                                                                                </div> */}
                                                                                         {userWishlist ?
                                                                                             <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
                                                                                                 <GoHeart className="text-white" />
@@ -604,9 +588,6 @@ const Fabrics = (props) => {
 
                                                                                     </div>
                                                                                     <div className='save-link'>
-                                                                                        {/* <div className="action-button bg-white me-2">
-                                                                                    <GoBookmark className="text-black" />
-                                                                                </div> */}
                                                                                         {userWishlist ?
                                                                                             <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
                                                                                                 <GoHeart className="text-white" />

@@ -7,7 +7,7 @@ import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { BsThreeDots } from "react-icons/bs";
 // import { useLocation } from 'react-router-dom';
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
-import { IoDocumentOutline } from "react-icons/io5";
+import { IoDocumentOutline, IoCloseOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from '../Loading';
 import '../../../Assets/styles/Portfolio/ViewPortFolio/style.css';
@@ -228,8 +228,9 @@ const PortfolioGrid = (props) => {
                 centered
             >
                 <Modal.Header className="pb-0">
-                    <h5 className='modal-title text-left'>Confirm Delete</h5>
-                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <h5 className='modal-title text-left fs-22 text-black'>Confirm Delete</h5>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
                 </Modal.Header>
                 <Modal.Body>

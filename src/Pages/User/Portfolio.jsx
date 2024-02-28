@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
+import { IoCloseOutline } from "react-icons/io5";
 import { IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 import '../../Assets/styles/Portfolio/ViewPortFolio/style.css';
 import axios from 'axios';
@@ -264,10 +265,17 @@ const Portfolio = (props) => {
                 centered
             >
                 <Modal.Header className="pb-0">
-                    <h5 className='modal-title text-left'>Confirm Delete</h5>
-                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+
+                    <Modal.Title className='rufina-family fs-22 text-black'>Confirm Delete</Modal.Title>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
+
+                    {/* <h5 className='modal-title text-left fs-25'>Confirm Delete</h5>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button> */}
                 </Modal.Header>
+                {/* <hr className="mt-0 mb-0" /> */}
 
                 <Modal.Body>
                     <Card>

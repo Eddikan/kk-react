@@ -305,7 +305,7 @@ const Appointments = (props) => {
                                                                                         onClick={() => chatBoxModal(appointment.customer?.first_name, appointment.customer?.last_name, appointment.customer?.image, appointment.status)}
                                                                                     >
                                                                                         <span className="icon-tooltiptext fs-14">Message Customer</span>
-                                                                                        <span><AiFillMessage className='video-cam' size={20} /></span>
+                                                                                        <span><AiFillMessage className='video-cam' size={19} /></span>
                                                                                     </div>
                                                                                 </Col>
                                                                             </Row>
@@ -349,14 +349,14 @@ const Appointments = (props) => {
                                 <Card className='width-chat-card px-0'>
                                     <Card.Header className='order-chat bg-white pt-3 pb-3'>
                                         <div className='d-flex justify-content-between'>
-                                            <div>
+                                            <div className='d-flex align-items-center'>
                                                 <span className="fs-14 fw-500 mb-0 name-of-user-chat">
                                                     <span className='fw-500'>{designerData.first_name} {designerData.last_name}</span>
                                                 </span>
                                                 {/* <span className='ms-3 active-now fs-14 fw-400 text-gold'>{designerData.status}</span> */}
                                             </div>
                                             <div className="cursor-pointer" onClick={() => setChatBox(false)}>
-                                                <IoCloseOutline color="#39393A" />
+                                                <IoCloseOutline color="#7e7e7e" size={25} />
                                             </div>
                                         </div>
                                     </Card.Header>
@@ -460,42 +460,42 @@ const Appointments = (props) => {
                 centered
             >
                 <div>
-                    <ModalHeader>
-
-                        <button type='button' className='close react-modal-close' onClick={() => setAppointmentModalIsOpen(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <ModalHeader className='pb-0'>
+                        <button type='button' className='close react-modal-close' onClick={() => setAppointmentModalIsOpen(false)} data-dismiss='modal' aria-label='Close'>
+                            <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                         </button>
-                        <h5 className='modal-title text-left rufina-family fs-20' >Appointment Details</h5>
-
+                        <h5 className='modal-title text-left rufina-family fs-22' >Appointment Details</h5>
                     </ModalHeader>
-                    <hr className="mt-0 mb-0" />
                     <Modal.Body className='bottom-padding'>
-                        <div>
-                            <div>
-                                <h2 className="current-date fs-18 poppins-ft fw-600 mb-3">Appointment with&nbsp;{singleAppointment.first_name} {singleAppointment.last_name}</h2>
-                            </div>
+                        <Card>
+                            <Card.Body>
+                                <div>
+                                    <h2 className="current-date fs-18 poppins-ft fw-600 mb-3">Appointment with&nbsp;{singleAppointment.first_name} {singleAppointment.last_name}</h2>
+                                </div>
 
-                            <div className="d-flex">
-                                <p className="fw-500 mb-2"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
-                                <p className="current-date ms-2 mb-0 text-black">
-                                    {returnFormattedDate(singleAppointment.created_at ?? '-')}
-                                </p>
-                            </div>
+                                <div className="d-flex">
+                                    <p className="fw-500 mb-2"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
+                                    <p className="current-date ms-2 mb-0 text-black">
+                                        {returnFormattedDate(singleAppointment.created_at ?? '-')}
+                                    </p>
+                                </div>
 
-                            <div className="d-flex">
-                                <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color' /></p>
-                                <p className="current-date ms-2 mb-0 text-black ">
-                                    {
-                                        returnFormattedTime(singleAppointment.consultation_hour_start ?? '-') + ' - ' + returnFormattedTime(singleAppointment.consultation_hour_end ?? '-')
-                                    }
-                                </p>
-                            </div>
+                                <div className="d-flex">
+                                    <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color' /></p>
+                                    <p className="current-date ms-2 mb-0 text-black ">
+                                        {
+                                            returnFormattedTime(singleAppointment.consultation_hour_start ?? '-') + ' - ' + returnFormattedTime(singleAppointment.consultation_hour_end ?? '-')
+                                        }
+                                    </p>
+                                </div>
 
-                            <div>
-                                <p className="current-date fs-16 poppins-ft fw-400 text-black mb-2">{singleAppointment.consultation_details}</p>
-                            </div>
-                        </div>
+                                <div>
+                                    <p className="current-date fs-16 poppins-ft fw-400 text-black mb-0">{singleAppointment.consultation_details}</p>
+                                </div>
+                            </Card.Body>
+                        </Card>
                     </Modal.Body>
-                    <ModalFooter>
+                    <ModalFooter className='border-none'>
                         <div className='text-right'>
                             <button className="btn btn-secondary border-black bg-white text-black" type="button" onClick={closeAppointmentModal} style={{ minWidth: '100px', padding: '9px 20px' }}   >Close</button>
                         </div>

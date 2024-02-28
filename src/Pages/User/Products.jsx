@@ -8,6 +8,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 import { BsCart2 } from "react-icons/bs";
+import { IoCloseOutline } from "react-icons/io5";
 import { ImLeaf } from 'react-icons/im';
 import Loading from 'Components/Shared/Loading';
 import axios from 'axios';
@@ -261,9 +262,15 @@ const Products = (props) => {
                 centered
             >
                 <Modal.Header className="pb-0">
-                    <h5 className='modal-title text-left'>Confirm Delete</h5>
-                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <Modal.Title className='rufina-family fs-22 text-black'>Confirm Delete</Modal.Title>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
+
+                    {/* <h5 className='modal-title text-left fs-25'>Confirm Delete</h5>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'>
+                        <span aria-hidden='true'>&times;</span>
+                    </button> */}
                 </Modal.Header>
                 <Modal.Body>
                     <Card>

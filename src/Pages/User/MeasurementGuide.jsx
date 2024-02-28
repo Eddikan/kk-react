@@ -14,10 +14,12 @@ import { useCookies } from 'react-cookie';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import '../../Assets/styles/Product/ViewProduct/style.css';
 import Sidebar from 'Components/Shared/Sidebar';
+import { IoCloseOutline } from "react-icons/io5";
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 import DetailBuilder from 'Components/Shared/DetailBuilder';
 import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
+import '../../Assets/styles/Measurement/style.css';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const initialUserData = Object.freeze({
@@ -279,14 +281,16 @@ const MeasurementGuide = (props) => {
                         size="lg"
                         id="measurement-guide"
                     >
-                        <Modal.Header className="pb-0">
-                            <h4 className='text-left fs-25 fw-600 px-2'>{actionType == "add" ? "New Element" : "Edit Elements"}</h4>
-                            <button type='button' className='close react-modal-close' onClick={toggleGuideModal} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                        <Modal.Header className='pb-0'>
+                            <Modal.Title className='rufina-family fs-22 text-black'>{actionType == "add" ? "New Element" : "Edit Elements"}</Modal.Title>
+                            <button type='button' className='close react-modal-close' onClick={toggleGuideModal} data-dismiss='modal' aria-label='Close'>
+                                <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                             </button>
                         </Modal.Header>
+
                         <Modal.Body>
                             <Card className='border-0'>
-                                <Card.Body className='p-2'>
+                                <Card.Body className='p-0'>
                                     <DetailBuilder size="normal" addElement={handleAddElement} closeModal={toggleGuideModal} elements={elements} actionType={actionType} />
                                 </Card.Body>
                             </Card>

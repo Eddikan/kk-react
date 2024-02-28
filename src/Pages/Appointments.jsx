@@ -4,10 +4,9 @@ import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import '../Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
-import { GoAlertFill, GoShareAndroid } from 'react-icons/go';
+import { GoAlertFill } from 'react-icons/go';
 import '../Assets/styles/Appointments/style.css';
-import { LiaSmileBeam } from "react-icons/lia";
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { VscSend } from "react-icons/vsc";
 import { IoMdVideocam, IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
@@ -234,12 +233,12 @@ const Appointments = (props) => {
                             <Card className='width-chat-card px-0'>
                                 <Card.Header className='header-chat bg-white'>
                                     <div className='d-flex justify-content-between'>
-                                        <div>
+                                        <div className='d-flex align-items-center'>
                                             <span className='fw-500'>{nameDesigner.first_name} {nameDesigner.last_name}</span>
                                             {/* <span className='ms-2 active-now fs-14 fw-400'>Active Now</span> */}
                                         </div>
                                         <div className="cursor-pointer" onClick={() => setChatBox(false)}>
-                                            <IoCloseOutline color="#39393A" />
+                                            <IoCloseOutline color="#7e7e7e" size={25} />
                                         </div>
                                     </div>
                                 </Card.Header>
@@ -265,40 +264,6 @@ const Appointments = (props) => {
                                             </div>
                                         </div>
                                     </div>
-
-                                    {/* <div className='mt-3'>
-                                        <input type="text" className='form-control' />
-                                    </div>
-
-                                    <div className='mt-3 d-flex justify-content-between'>
-
-                                        <div className='d-flex'>
-                                            <div className='cursor-pointer'>
-                                                <InputEmoji
-                                                    value={text}
-                                                    onChange={setText}
-                                                    cleanOnEnter
-                                                    onEnter={handleOnEnter}
-                                                    placeholder="Type a message"
-                                                    className="emoji-picker"
-                                                />
-                                            </div>
-
-                                            <div className='cursor-pointer' onClick={() => toggleUnderConstruction("Under Construction")}>
-                                                <IoIosAttach />
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <div
-                                                className="cursor-pointer fw-500"
-                                                onClick={() => toggleUnderConstruction("Send Message")}
-                                            >
-                                                Send
-                                                <VscSend className='ms-1' />
-                                            </div>
-                                        </div>
-                                    </div> */}
                                 </Card.Body>
                             </Card>
                         </>
@@ -318,11 +283,11 @@ const Appointments = (props) => {
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-uppercase text-left'></h5>
                     <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
-                        <span aria-hidden='true'>&times;</span>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
                     </button>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+                    <h4 className='fs-22 rufina-family mb-3'>{modalHeading}</h4>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />
@@ -331,8 +296,6 @@ const Appointments = (props) => {
                     </Card>
                 </Modal.Body>
             </Modal>
-
-
         </LayoutNoFooter >
     );
 };

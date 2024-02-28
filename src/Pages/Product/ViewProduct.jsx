@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import ImageSlider from 'Components/Shared/ImageSlider';
 import { Form, Container, Row, Col, Button, Card, Modal } from 'react-bootstrap';
 import LoadingPage from 'Components/Shared/LoadingPage';
+import { IoCloseOutline, IoVideocam } from "react-icons/io5";
 import { useCookies } from 'react-cookie';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
@@ -95,6 +96,12 @@ const ViewProduct = () => {
 
     const toggleAddToReview = (e) => {
         setAddReviewShow(!addReviewShow);
+
+        if (e?.[0]?.image_url) {
+            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'product/' + e[0].image_url);
+        } else {
+            setActiveImage(PlaceholderImage);
+        }
     }
 
     function toggleReviewItem(message) {
@@ -433,7 +440,6 @@ const ViewProduct = () => {
                                                                 </>
                                                                 :
                                                                 <>
-
                                                                     <a className='text-decoration-none fs-12 you-products'>You</a>
                                                                 </>
                                                             }
@@ -446,40 +452,37 @@ const ViewProduct = () => {
                                                                 <Link to={`/user/center/product/${product.id}/edit`} className="text-decoration-none">
                                                                     <div class="kouture-tooltip">
                                                                         <div className="action-button bg-smgray me-2">
+                                                                            <span class="kouture-tooltiptext fs-14">Edit</span>
                                                                             <GoPencil className="text-black" />
                                                                         </div>
-                                                                        <div class="kouture-tooltiptext">
-                                                                            Edit
-                                                                        </div>
+
                                                                     </div>
                                                                 </Link>
 
-                                                                <div class="kouture-tooltip">
+                                                                <div class="kouture-tooltip" onClick={toggleShareModal}>
                                                                     <div className="action-button bg-smgray me-2">
-                                                                        <GoShareAndroid className="text-black" onClick={toggleShareModal} />
+                                                                        <span class="kouture-tooltiptext fs-14">
+                                                                            Share
+                                                                        </span>
+                                                                        <GoShareAndroid className="text-black" />
                                                                     </div>
-                                                                    <div class="kouture-tooltiptext">
-                                                                        Share
-                                                                    </div>
+
                                                                 </div>
 
                                                                 {userWishlist ?
-                                                                    <div class="kouture-tooltip">
-                                                                        <div className="action-button bg-gold me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                    <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                        <div className="action-button bg-gold me-2" >
+                                                                            <span class="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
                                                                             <GoHeart className="text-white" />
-                                                                        </div>
-                                                                        <div class="kouture-tooltiptext">
-                                                                            Remove from Wishlist
                                                                         </div>
                                                                     </div>
                                                                     :
-                                                                    <div class="kouture-tooltip">
-                                                                        <div className="action-button bg-smgray me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                    <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                        <div className="action-button bg-smgray me-2">
+                                                                            <span class="wishlist-tooltiptext fs-14">Add to Wishlist</span>
                                                                             <GoHeart className="text-black" />
                                                                         </div>
-                                                                        <div class="kouture-tooltiptext">
-                                                                            Add to Wishlist
-                                                                        </div>
+
                                                                     </div>
                                                                 }
                                                             </div>
@@ -489,32 +492,27 @@ const ViewProduct = () => {
                                                         <>
                                                             <div>
 
-                                                                <div class="kouture-tooltip">
-                                                                    <div className="action-button bg-smgray me-2" onClick={toggleShareModal}>
+                                                                <div class="kouture-tooltip" onClick={toggleShareModal}>
+                                                                    <div className="action-button bg-smgray me-2">
+                                                                        <span class="kouture-tooltiptext fs-14">  Share</span>
                                                                         <GoShareAndroid className="text-black" />
-                                                                    </div>
-                                                                    <div class="kouture-tooltiptext">
-                                                                        Share
                                                                     </div>
                                                                 </div>
 
                                                                 {userWishlist ?
-                                                                    <div class="kouture-tooltip">
-                                                                        <div className="action-button bg-gold me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                    <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                        <div className="action-button bg-gold me-2" >
+                                                                            <span class="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
                                                                             <GoHeart className="text-white" />
-                                                                        </div>
-                                                                        <div class="kouture-tooltiptext">
-                                                                            Remove from Wishlist
                                                                         </div>
                                                                     </div>
                                                                     :
-                                                                    <div class="kouture-tooltip">
-                                                                        <div className="action-button bg-smgray me-2" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                    <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                        <div className="action-button bg-smgray me-2" >
+                                                                            <span class="wishlist-tooltiptext fs-14">Add to Wishlist</span>
                                                                             <GoHeart className="text-black" />
                                                                         </div>
-                                                                        <div class="kouture-tooltiptext">
-                                                                            Add to Wishlist
-                                                                        </div>
+
                                                                     </div>
                                                                 }
                                                             </div>
@@ -783,7 +781,7 @@ const ViewProduct = () => {
 
                                         {!isProductCurrentUser ?
                                             <>
-                                                <span className="cursor-pointer reviews-tooltip" onClick={() => toggleAddToReview()}>
+                                                <span className="cursor-pointer reviews-tooltip" onClick={() => toggleAddToReview(product.image_urls)}>
                                                     <div className='tooltip-content'>
                                                         <span className="reviews-tooltiptext fs-14">Write Review</span>
                                                     </div>
@@ -884,11 +882,11 @@ const ViewProduct = () => {
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-uppercase text-left'></h5>
                     <button type='button' className='close react-modal-close' onClick={toggleShareModal} data-dismiss='modal' aria-label='Close'>
-                        <span aria-hidden='true'>&times;</span>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
                     </button>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4 className='fs-25 fw-600 mb-3'>Share Product</h4>
+                    <h4 className='fs-22 fw-600 mb-3'>Share Product</h4>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />
@@ -909,7 +907,8 @@ const ViewProduct = () => {
             >
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={toggleAddToCart} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={toggleAddToCart} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
                     </button>
                 </Modal.Header>
                 <Modal.Body>
@@ -932,15 +931,15 @@ const ViewProduct = () => {
                 centered
                 size="lg"
             >
-                <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={toggleAddToReview} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                <Modal.Header className="pb-0">
+                    <h5 className='modal-title text-left fs-22'>{updateReview ? "Update Review" : "Review Item"}</h5>
+                    <button type='button' className='close react-modal-close' onClick={toggleAddToReview} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
                 </Modal.Header>
-                <Modal.Body className='padding-card-review'>
-                    <h4 className='text-left fs-20 mb-0'>{updateReview ? "Update Review" : "Review Item"}</h4>
-                    <Card className='review-card'>
-                        <Card.Body className="text-center py-3 p-0">
+                <Modal.Body className=''>
+                    <Card>
+                        <Card.Body className="text-center p-4">
                             <div className="product-review-container">
                                 <div className='product-portfolio-image mb-3'>
                                     <span className='d-flex'>
@@ -951,7 +950,11 @@ const ViewProduct = () => {
                                                 <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{product.name ?? "-"}</span>
                                             </>
                                             :
-                                            null
+                                            <>
+                                                <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                                </div>
+                                                <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{product.name ?? "-"}</span>
+                                            </>
                                         }
                                     </span>
                                 </div>
@@ -993,15 +996,15 @@ const ViewProduct = () => {
                                 </div>
                             </div>
                         </Card.Body>
-                        <Card.Footer className="text-right bg-white footer-top-border px-0">
-                            <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setAddReviewShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
-                            {updateReview ?
-                                <button className="btn btn-primary" type="button" onClick={function () { reviewUpdate(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Updating..." : "Update"}</button>
-                                :
-                                <button className="btn btn-primary" type="button" onClick={function () { reviewAdd(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Saving..." : "Submit"} </button>
-                            }
-                        </Card.Footer>
                     </Card>
+                    <Card.Footer className="text-right bg-white px-0 pt-3 ">
+                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setAddReviewShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                        {updateReview ?
+                            <button className="btn btn-primary" type="button" onClick={function () { reviewUpdate(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Updating..." : "Update"}</button>
+                            :
+                            <button className="btn btn-primary" type="button" onClick={function () { reviewAdd(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Saving..." : "Submit"} </button>
+                        }
+                    </Card.Footer>
                 </Modal.Body>
             </Modal>
 
@@ -1013,12 +1016,14 @@ const ViewProduct = () => {
                 size="sm"
             >
                 <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left fs-25 '></h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <h5 className='modal-title text-uppercase text-left fs-25'></h5>
+                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                        {/* <span aria-hidden='true'>&times;</span> */}
+                        <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+                    <h4 className='fs-22 fw-600 mb-3'>{modalHeading}</h4>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />

@@ -7,6 +7,7 @@ import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import { CiCreditCard2 } from "react-icons/ci";
 import '../Assets/styles/Cart/style.css';
+import { IoCloseOutline } from "react-icons/io5";
 import PlaceholderImage from '../Assets/images/placeholders/image.png';
 import UserPlaceholder from 'Assets/images/user.png';
 import { AiOutlineCheck, AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
@@ -271,14 +272,14 @@ const Cart = (props) => {
                                                                     <Col lg={1}>
                                                                         <input
                                                                             type="checkbox"
-                                                                            className="check-box me-2 check-box-color"
+                                                                            className="check-box me-2 check-box-color cursor-pointer"
                                                                             checked={selectedCartItems.includes(cartItem.id)}
                                                                             onChange={(e) => { handleCheckboxChange(cartItem.id); }}
                                                                         />
                                                                     </Col>
                                                                     <Col lg={4}>
                                                                         <div className='d-flex'>
-                                                                            <div className="designs-grid-div fabric-image cursor-pointer"
+                                                                            <div className="designs-grid-div fabric-image"
                                                                                 style={{ backgroundImage: "url(" + fabricImage + ")" }}>
                                                                             </div>
 
@@ -323,9 +324,10 @@ const Cart = (props) => {
                                                                         ${(cartItem.product.price * cartItem.quantity).toFixed(2)}
                                                                     </Col>
 
-                                                                    <Col lg={1} className='text-center cursor-pointer'
+                                                                    <Col lg={1} className='text-center cursor-pointer delete-tooltip'
                                                                         onClick={function () { toggleDeleteCartItem(cartItem.id); }}
                                                                     >
+                                                                        <span className="icon-tooltiptext fs-14">Delete</span>
                                                                         <AiOutlineDelete size="20" />
                                                                     </Col>
                                                                 </Row>
@@ -479,8 +481,9 @@ const Cart = (props) => {
                 centered
             >
                 <Modal.Header className='pb-0'>
-                    <h5 className='modal-title text-left'>Confirm Delete</h5>
-                    <button type='button' className='close react-modal-close' onClick={function () { setCartItemModalDelete(false); }} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <h5 className='modal-title text-left fs-22'>Confirm Delete</h5>
+                    <button type='button' className='close react-modal-close' onClick={function () { setCartItemModalDelete(false); }} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
                 </Modal.Header>
 

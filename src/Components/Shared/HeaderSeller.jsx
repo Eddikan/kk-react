@@ -2,24 +2,20 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
 import Container from 'react-bootstrap/Container';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
-import { FaMagnifyingGlass } from "react-icons/fa6";
 import Logo from 'Assets/images/kouture-konect-logo.png';
-import { IoIosHeartEmpty, IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
-import { IoCalendarClearOutline } from "react-icons/io5";
+import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { GoBell } from "react-icons/go";
 import { BsEnvelope } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
+import { IoCloseOutline } from "react-icons/io5";
 import UserPlaceholder from 'Assets/images/user.png';
 import NewOrder from '../../Assets/images/new-order-icon.png';
 import NewAppointment from '../../Assets/images/new-appointment-icon.png';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import User from '../../Assets/images/user.png';
-import PlaceholderSquare from '../../Assets/images/square-placeholder.jpg';
 import { GoAlertFill } from 'react-icons/go';
 import '../../Assets/styles/HeaderSeller/style.css'
 import axios from "axios";
@@ -70,18 +66,18 @@ const HeaderSeller = () => {
     // Close the dropdown when clicking outside of it
     const handleClickOutside = (event) => {
         if (userRef.current && !userRef.current.contains(event.target)) {
-          setUserMenuOpen(false);
+            setUserMenuOpen(false);
         }
         if (bellRef.current && !bellRef.current.contains(event.target)) {
-          setUserBellOpen(false);
+            setUserBellOpen(false);
         }
         if (messageRef.current && !messageRef.current.contains(event.target)) {
-          setUserEnvelopOpen(false);
+            setUserEnvelopOpen(false);
         }
         if (orderRef.current && !orderRef.current.contains(event.target)) {
-          setUserOrdersOpen(false);
+            setUserOrdersOpen(false);
         }
-      };
+    };
 
     const toggleUserMenu = () => {
         setUserMenuOpen(!userMenuOpen);
@@ -195,8 +191,11 @@ const HeaderSeller = () => {
                                         {currentUser && currentUser != "" ?
                                             <>
 
-                                                <div className="user-dropdown nav-link" ref={bellRef}>
-                                                    <div className="nav-link"><GoBell size={25} className="cursor-pointer" onClick={toggleBellMenu} /></div>
+                                                <div className="user-dropdown nav-link position-relative d-block cursor-pointer" onClick={toggleBellMenu} ref={bellRef}>
+                                                    <div className="nav-link header-tooltip" >
+                                                        <span className="icon-tooltiptext fs-14">Notifications</span>
+                                                        <GoBell size={25} />
+                                                    </div>
                                                     {userBellOpen && (
 
                                                         <div className="action-box-bell user-menu-bell">
@@ -218,25 +217,28 @@ const HeaderSeller = () => {
                                                             </div>
                                                             <hr />
                                                             <div className='text-right text-gold fs-14 cursor-pointer'
-                                                                onClick={() => toggleUnderConstruction("Notifcations")}>View All
+                                                                onClick={() => toggleUnderConstruction("Notifications")}>View All
                                                             </div>
                                                         </div>
                                                     )}
                                                 </div>
 
-                                                <div className="user-dropdown nav-link" ref={messageRef}>
-                                                    <div className="nav-link"><BsEnvelope  className="cursor-pointer" size={25} onClick={toggleEnvelopMenu} /></div>
+                                                <div className="user-dropdown nav-link position-relative d-block cursor-pointer" onClick={toggleEnvelopMenu} ref={messageRef}>
+                                                    <div className="nav-link header-tooltip" >
+                                                        <span className="icon-tooltiptext fs-14">Messages</span>
+                                                        <BsEnvelope size={25} />
+                                                    </div>
                                                     {userEnvelopOpen && (
 
                                                         <div className="action-box-envelop user-menu-envelop">
                                                             <div className='d-flex'>
-                                                                <div style={{maxWidth: 100}}><img src={User} className='user-placeholder-header' /></div>
+                                                                <div style={{ maxWidth: 100 }}><img src={User} className='user-placeholder-header' /></div>
                                                                 <div className='fs-14 body-text-bell'>Admin
                                                                     <div className='mt-1'>Thank you for signing up to Kouture Konect!</div>
                                                                     <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
                                                                 </div>
                                                             </div>
-                                                             <hr />
+                                                            <hr />
                                                             {/*
                                                             <div className='d-flex'>
                                                                 <div><img src={User} className='user-placeholder-header' /></div>
@@ -292,11 +294,12 @@ const HeaderSeller = () => {
             >
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={() => toggleUnderConstruction("")} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={() => toggleUnderConstruction("")} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
                     </button>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+                    <h4 className='fs-22 fw-600 mb-3'>{modalHeading}</h4>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />

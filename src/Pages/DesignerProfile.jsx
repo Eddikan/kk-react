@@ -487,14 +487,14 @@ const DesignerProfile = () => {
                                 <Card className='width-chat-card px-0'>
                                     <Card.Header className='order-chat bg-white pt-3 pb-3'>
                                         <div className='d-flex justify-content-between'>
-                                            <div>
+                                            <div className='d-flex align-items-center'>
                                                 <span className="fs-14 fw-500 mb-0 name-of-user-chat">
                                                     <span className='fw-500'>{designerInfo.first_name} {designerInfo.last_name}</span>
                                                 </span>
                                                 {/* <span className='ms-3 active-now fs-14 fw-400 text-gold'>{designerData.status}</span> */}
                                             </div>
                                             <div className="cursor-pointer" onClick={() => setChatBox(false)}>
-                                                <IoCloseOutline color="#39393A" />
+                                                <IoCloseOutline color="#7e7e7e" size={25} />
                                             </div>
                                         </div>
                                     </Card.Header>
@@ -541,65 +541,68 @@ const DesignerProfile = () => {
                 centered
 
             >
-                <ModalHeader className='pt-2 pb-2'>
-                    <h5 className='modal-title text-left fs-20 rufina-family'>New Quote Request</h5>
+                <ModalHeader className='pb-0'>
+                    <h5 className='modal-title text-left fs-22 rufina-family'>New Quote Request</h5>
                     <button type='button' className='close react-review-items-close' data-dismiss='modal' aria-label='Close' onClick={() => setRequestAQuoteModal(false)}>
-                        <span aria-hidden='true'>&times;</span>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
                 </ModalHeader>
-                <hr className="mt-0 mb-0" />
                 <Modal.Body className='pt-3 pb-3'>
-                    <Row>
-                        <Col>
-                            <div className='mb-2'>Title</div>
-                            <div>
-                                <input type="text" className='form-control' name="title" />
-                            </div>
+                    <Card>
+                        <Card.Body>
+                            <Row>
+                                <Col>
+                                    <div className='mb-1'>Title</div>
+                                    <div>
+                                        <input type="text" className='form-control' name="title" />
+                                    </div>
 
-                            <div className='mt-3 mb-2'>Details</div>
-                            <div>
-                                <textarea
-                                    type="text"
-                                    name="description"
-                                    className="d-block form-control bg-white"
-                                    placeholder='Provide design details'
-                                />
-                            </div>
+                                    <div className='mt-3 mb-1'>Details</div>
+                                    <div>
+                                        <textarea
+                                            type="text"
+                                            name="description"
+                                            className="d-block form-control bg-white"
+                                            placeholder='Provide design details'
+                                        />
+                                    </div>
 
-                            <div
-                                className="image-drop-container-quote cursor-pointer mt-4"
-                            // onDrop={handleDrop}
-                            // onDragOver={handleDragOver}
-                            >
-                                <input
-                                    // type="file"
-                                    // key={fileInputKey} // Add a key to the file input
-                                    id="fileInput"
-                                    // onChange={handleFileInput}
-                                    className="file-input d-block opacity-0"
-                                    accept="image/*"
-                                    multiple
-                                />
-                                <label
-                                    htmlFor="fileInput"
-                                    className="file-label d-block text-center cursor-pointer"
-                                >
-                                    <p className="text-black rufina-family fs-18 mb-1 fw-600">Design Preference</p>
-                                    <p className="text-black fs-16 mb-3">Share your design preferences to the designer.</p>
-                                    <button
-                                        className="btn btn-primary mb-4"
-                                        style={{ minWidth: '100px', padding: '9px 20px' }}
-                                        onClick={() => { toggleUnderConstruction("Upload Design"); setRequestAQuoteModal(false); }}
+                                    <div
+                                        className="image-drop-container-quote cursor-pointer mt-4"
+                                    // onDrop={handleDrop}
+                                    // onDragOver={handleDragOver}
                                     >
-                                        Upload Design
-                                    </button>
-                                </label>
-                            </div>
-                        </Col>
-                    </Row>
+                                        <input
+                                            // type="file"
+                                            // key={fileInputKey} // Add a key to the file input
+                                            id="fileInput"
+                                            // onChange={handleFileInput}
+                                            className="file-input d-block opacity-0"
+                                            accept="image/*"
+                                            multiple
+                                        />
+                                        <label
+                                            htmlFor="fileInput"
+                                            className="file-label d-block text-center cursor-pointer"
+                                        >
+                                            <p className="text-black rufina-family fs-18 mb-1 fw-600">Design Preference</p>
+                                            <p className="text-black fs-16 mb-3">Share your design preferences to the designer.</p>
+                                            <button
+                                                className="btn btn-primary mb-4"
+                                                style={{ minWidth: '100px', padding: '9px 20px' }}
+                                                onClick={() => { toggleUnderConstruction("Upload Design"); setRequestAQuoteModal(false); }}
+                                            >
+                                                Upload Design
+                                            </button>
+                                        </label>
+                                    </div>
+                                </Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
 
                 </Modal.Body>
-                <ModalFooter className='mt-0'>
+                <ModalFooter className='mt-0 border-none pt-0'>
                     <div className='text-right'>
                         <button
                             className="btn btn-secondary border-black bg-white text-black me-3"
@@ -640,11 +643,12 @@ const DesignerProfile = () => {
             >
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
                     </button>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+                    <h4 className='fs-22 mb-3 rufina-family'>{modalHeading}</h4>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />
@@ -663,14 +667,15 @@ const DesignerProfile = () => {
                 id="measurement-guide"
                 centered
             >
-                <Modal.Header className="pb-0">
-                    <h4 className='text-left fs-20 mb-2 px-2'>Measurement Guide</h4>
-                    <button type='button' className='close react-modal-close' onClick={toggleGuidePreviewModal} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                <Modal.Header className="pb-0 pt-4">
+                    <h4 className='text-left fs-22 rufina-family'>Measurement Guide</h4>
+                    <button type='button' className='close react-modal-close' onClick={toggleGuidePreviewModal} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
                 </Modal.Header>
-                <Modal.Body className='pt-0'>
+                <Modal.Body>
                     <Card className='border-0'>
-                        <Card.Body className='p-2'>
+                        <Card.Body className='p-0'>
                             <Card>
                                 <Card.Body>
                                     <div>

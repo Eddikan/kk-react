@@ -76,7 +76,7 @@ button.rbc-button-link {
 .form-control-hours, .rti--container {
     border: 2px solid var(--gray) !important;
     border-radius: 5px !important;
-    padding: 10px 10px;
+    padding: 10px 5px;
     color: var(--gray-600);
     font-size: 14px;
 }

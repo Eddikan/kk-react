@@ -1,5 +1,5 @@
 import { Calendar, momentLocalizer, Views, DateLocalizer } from 'react-big-calendar';
-import { Row, Col, Button, Modal } from 'react-bootstrap';
+import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { PiPencilThin, PiTrashThin } from "react-icons/pi";
@@ -401,112 +401,113 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
 
                 >
                     <form onSubmit={addAppointmentSubmit}>
-                        <Modal.Header closeButton>
-                            <Modal.Title><h5 className='modal-title text-left rufina-family fs-20'>Set Appointment</h5></Modal.Title>
+                        <Modal.Header closeButton className='pb-0'>
+                            <Modal.Title><h5 className='modal-title text-left rufina-family fs-22'>Set Appointment</h5></Modal.Title>
                         </Modal.Header>
-                        <hr className="mt-0 mb-0" />
                         <Modal.Body className='bottom-p'>
                             {selectedDate && (
-                                <Container>
-                                    <Row>
-                                        <Col lg="12" className='mb-2 mt-0 text-left px-0'>
-                                            <span className='title-appointment'>Title</span>
-                                        </Col>
+                                <Card>
+                                    <Card.Body className='pt-1 pb-1'>
+                                        <Row className='p-3'>
+                                            <Col lg="12" className='mb-2 mt-0 text-left px-0'>
+                                                <span className='title-appointment'>Title</span>
+                                            </Col>
 
-                                        <Col lg="12" className='px-0'>
-                                            <input
-                                                type="text"
-                                                name="title"
-                                                className='form-control'
-                                                value={consultationFormData.title}
-                                                onChange={handleChangeConsultation}
-                                                required
-                                            />
-                                        </Col>
+                                            <Col lg="12" className='px-0'>
+                                                <input
+                                                    type="text"
+                                                    name="title"
+                                                    className='form-control'
+                                                    value={consultationFormData.title}
+                                                    onChange={handleChangeConsultation}
+                                                    required
+                                                />
+                                            </Col>
 
-                                        <Col lg="8" className='px-0'>
-                                            <Row className={`align-items-center mt-3 ${startTime != "" || endTime != "" ? "mb-3" : ""}`}>
-                                                {times.map((time, index) => {
-                                                    return (
-                                                        <>
-                                                            {times.length > 0 && (
-                                                                <>
+                                            <Col lg="8" className='px-0'>
+                                                <Row className={`align-items-center mt-3 ${startTime != "" || endTime != "" ? "mb-3" : ""}`}>
+                                                    {times.map((time, index) => {
+                                                        return (
+                                                            <>
+                                                                {times.length > 0 && (
+                                                                    <>
 
 
-                                                                    <Col md="5" className="pe-0">
-                                                                        <p className="hours-header mb-2 text-left">Starts at</p>
-                                                                        <div className='mb-3'>
-                                                                            <input
-                                                                                type='time'
-                                                                                name='consultation_hour_start'
-                                                                                className='mr-sm-2 form-control-hours'
-                                                                                value={consultationFormData?.consultation_hour_start}
-                                                                                onChange={e => handleChangeConsultation(e, index)}
-                                                                                required
-                                                                            />
-                                                                        </div>
-                                                                    </Col>
+                                                                        <Col md="5" className="pe-0">
+                                                                            <p className="hours-header mb-2 text-left">Starts at</p>
+                                                                            <div className='mb-3'>
+                                                                                <input
+                                                                                    type='time'
+                                                                                    name='consultation_hour_start'
+                                                                                    className='mr-sm-2 form-control-hours'
+                                                                                    value={consultationFormData?.consultation_hour_start}
+                                                                                    onChange={e => handleChangeConsultation(e, index)}
+                                                                                    required
+                                                                                />
+                                                                            </div>
+                                                                        </Col>
 
-                                                                    <Col md="5" className="pe-0 position-relative">
-                                                                        <p className="hours-header mb-2 text-left">Ends at</p>
+                                                                        <Col md="5" className="pe-0 position-relative">
+                                                                            <p className="hours-header mb-2 text-left">Ends at</p>
 
-                                                                        <div className='mb-3'>
-                                                                            <input
-                                                                                type='time'
-                                                                                name='consultation_hour_end'
-                                                                                className='mr-sm-2 form-control-hours'
-                                                                                value={consultationFormData?.consultation_hour_end}
-                                                                                onChange={e => handleChangeConsultation(e, index)}
-                                                                                required
-                                                                            />
-                                                                        </div>
-                                                                    </Col>
-                                                                </>
-                                                            )}
-                                                        </>
-                                                    );
-                                                })}
-                                                {/* <Col md="2" className="px-0">
+                                                                            <div className='mb-3'>
+                                                                                <input
+                                                                                    type='time'
+                                                                                    name='consultation_hour_end'
+                                                                                    className='mr-sm-2 form-control-hours'
+                                                                                    value={consultationFormData?.consultation_hour_end}
+                                                                                    onChange={e => handleChangeConsultation(e, index)}
+                                                                                    required
+                                                                                />
+                                                                            </div>
+                                                                        </Col>
+                                                                    </>
+                                                                )}
+                                                            </>
+                                                        );
+                                                    })}
+                                                    {/* <Col md="2" className="px-0">
                                                     <GoPlus
                                                         size={25}
                                                         className="plus-btn mt-2"
                                                         onClick={handleAppointments}
                                                     />
                                                 </Col> */}
-                                            </Row>
-                                        </Col>
-                                        {startTime != "" || endTime != "" ?
-                                            <Col lg="12" className='mt-0 text-left px-0'>
-                                                {startTime != "" || endTime != "" ?
-                                                    <>
-                                                        <span className='title-appointment'>Availability</span>
-                                                        {startTime == "" ?
-                                                            <>
-                                                                <p className='mb-0'>{endTime}</p>
-                                                            </>
-                                                            : endTime == "" ?
-                                                                <>
-                                                                    <p className='mb-0'>{startTime}</p>
-                                                                </>
-                                                                :
-                                                                <>
-                                                                    <p className='mb-0'>{startTime} - {endTime}</p>
-                                                                </>
-                                                        }
-                                                    </>
-                                                    :
-                                                    null
-                                                }
+                                                </Row>
                                             </Col>
-                                            :
-                                            null
-                                        }
+                                            {startTime != "" || endTime != "" ?
+                                                <Col lg="12" className='mt-0 text-left px-0'>
+                                                    {startTime != "" || endTime != "" ?
+                                                        <>
+                                                            <span className='title-appointment'>Availability</span>
+                                                            {startTime == "" ?
+                                                                <>
+                                                                    <p className='mb-0'>{endTime}</p>
+                                                                </>
+                                                                : endTime == "" ?
+                                                                    <>
+                                                                        <p className='mb-0'>{startTime}</p>
+                                                                    </>
+                                                                    :
+                                                                    <>
+                                                                        <p className='mb-0'>{startTime} - {endTime}</p>
+                                                                    </>
+                                                            }
+                                                        </>
+                                                        :
+                                                        null
+                                                    }
+                                                </Col>
+                                                :
+                                                null
+                                            }
 
-                                    </Row>
-                                </Container>
+                                        </Row>
+                                    </Card.Body>
+                                </Card>
                             )}
                         </Modal.Body>
-                        <Modal.Footer>
+                        <Modal.Footer className='border-none pt-0'>
                             <div className='text-right'>
                                 <button className="btn btn-secondary border-black bg-white text-black me-3" type="button" onClick={handleModalClose} style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
                                 {formStatus != "standby" ?
@@ -525,60 +526,63 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                     centered
 
                 >
-                    <div>
-                        <Modal.Header closeButton>
-                            <Modal.Title><h5 className='modal-title text-left rufina-family fs-20'>Appointment Details</h5></Modal.Title>
-                        </Modal.Header>
-                        <hr className="mt-0 mb-0" />
-                        <Modal.Body className='bottom-padding'>
-                            {selectedEvent && (
-                                <div>
 
-                                    {selectedEvent.title != "" &&
-                                        <>
-                                            <div>
-                                                <h2 className="current-date fs-18 poppins-ft fw-600 mb-3">{selectedEvent.title}</h2>
-                                            </div>
+                    <Modal.Header closeButton className='pb-0'>
+                        <Modal.Title><h5 className='modal-title text-left rufina-family fs-22'>Appointment Details</h5></Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body className='bottom-padding'>
+                        <Card>
+                            <Card.Body>
+                                {selectedEvent && (
+                                    <div>
 
-                                        </>
-                                    }
+                                        {selectedEvent.title != "" &&
+                                            <>
+                                                <div>
+                                                    <h2 className="current-date fs-18 poppins-ft fw-600 mb-3">{selectedEvent.title}</h2>
+                                                </div>
 
-                                    {selectedEvent.date != "" &&
-                                        <>
-                                            <div className="d-flex">
-                                                <p className="fw-500 mb-2"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
-                                                <p className="current-date ms-2 mb-0 text-black">{selectedEvent.date}</p>
-                                            </div>
-                                        </>
-                                    }
-                                    {selectedEvent.end != "" || selectedEvent.start != "" ?
-                                        <>
-                                            <div className="d-flex">
-                                                <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color' /></p>
-                                                <p className="current-date ms-2 mb-0 text-black">{selectedEvent.start}&nbsp;-&nbsp;{selectedEvent.end}</p>
-                                            </div>
-                                        </>
-                                        :
-                                        null
-                                    }
-                                    {selectedEvent.desc != "" &&
-                                        <>
-                                            <div>
-                                                <p className="current-date fs-16 poppins-ft fw-400 text-black mb-2">{selectedEvent.desc}</p>
-                                            </div>
-                                        </>
-                                    }
-                                </div>
-                            )}
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <div className='text-right'>
-                                <button className="btn btn-secondary border-black bg-white text-black" type="button" onClick={closeAppointmentModal} style={{ minWidth: '100px', padding: '9px 20px' }}   >Close</button>
-                            </div>
-                        </Modal.Footer>
-                    </div>
-                </Modal>
-            </div>
+                                            </>
+                                        }
+
+                                        {selectedEvent.date != "" &&
+                                            <>
+                                                <div className="d-flex">
+                                                    <p className="fw-500 mb-2"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
+                                                    <p className="current-date ms-2 mb-0 text-black">{selectedEvent.date}</p>
+                                                </div>
+                                            </>
+                                        }
+                                        {selectedEvent.end != "" || selectedEvent.start != "" ?
+                                            <>
+                                                <div className="d-flex">
+                                                    <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color' /></p>
+                                                    <p className="current-date ms-2 mb-0 text-black">{selectedEvent.start}&nbsp;-&nbsp;{selectedEvent.end}</p>
+                                                </div>
+                                            </>
+                                            :
+                                            null
+                                        }
+                                        {selectedEvent.desc != "" &&
+                                            <>
+                                                <div>
+                                                    <p className="current-date fs-16 poppins-ft mb-0 fw-400 text-black">{selectedEvent.desc}</p>
+                                                </div>
+                                            </>
+                                        }
+                                    </div>
+                                )}
+                            </Card.Body>
+                        </Card>
+                    </Modal.Body>
+                    <Modal.Footer className='border-none'>
+                        <div className='text-right'>
+                            <button className="btn btn-secondary border-black bg-white text-black" type="button" onClick={closeAppointmentModal} style={{ minWidth: '100px', padding: '9px 20px' }}   >Close</button>
+                        </div>
+                    </Modal.Footer>
+
+                </Modal >
+            </div >
         </>
     )
 }

@@ -825,531 +825,533 @@ const Calendar = (props) => {
                 onHide={() => setDesignerBusinessHoursModalShow(false)}
                 id="business-hours-modal"
             >
-                <Modal.Header closeButton>
-                    <Modal.Title className='rufina-family fs-20'>Business Hours</Modal.Title>
+                <Modal.Header closeButton className='pb-0'>
+                    <Modal.Title className='rufina-family fs-22'>Business Hours</Modal.Title>
                 </Modal.Header>
-                <hr className="mt-0 mb-2" />
                 <Modal.Body>
-                    <Container className="h-100">
-                        <Row className="h-100">
-                            <Col lg="12" className="">
+                    <Card>
+                        <Card.Body>
 
-                                <Row>
-                                    <Col lg="2">
-                                        <h4 className="day-header">Sunday</h4>
-                                        <Form.Check
-                                            type={`checkbox`}
-                                            id={`schedule-sunday`}
-                                            label={`Closed`}
-                                            name={`day`}
-                                            className
-                                            checked={isSundayChecked}
-                                            onChange={handleSundayCheckboxChangeClose}
-                                        />
-                                    </Col>
-                                    <Col lg="5" className='d-flex justify-content-end'>
-                                        <Row className="align-items-center">
-                                            {sundayHoursFormData.map((sunday, index) => {
-                                                return (
-                                                    <>
-                                                        {sundayHoursFormData.length > 0 && (
-                                                            <>
+                            <Row className="h-100">
+                                <Col lg="12" className="">
 
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Opens at</p>
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='start'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={sunday?.start}
-                                                                            onChange={e => handleChangeTimeSunday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
+                                    <Row>
+                                        <Col lg="2">
+                                            <h4 className="day-header">Sunday</h4>
+                                            <Form.Check
+                                                type={`checkbox`}
+                                                id={`schedule-sunday`}
+                                                label={`Closed`}
+                                                name={`day`}
+                                                className
+                                                checked={isSundayChecked}
+                                                onChange={handleSundayCheckboxChangeClose}
+                                            />
+                                        </Col>
+                                        <Col lg="5" className='d-flex justify-content-end'>
+                                            <Row className="align-items-center">
+                                                {sundayHoursFormData.map((sunday, index) => {
+                                                    return (
+                                                        <>
+                                                            {sundayHoursFormData.length > 0 && (
+                                                                <>
 
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Closes at</p>
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Opens at</p>
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='start'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={sunday?.start}
+                                                                                onChange={e => handleChangeTimeSunday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Closes at</p>
+                                                                        {index > 0 && (
+                                                                            <div className='close-container'>
+                                                                                <div className='cursor-pointer' onClick={() => handleRemoveSundayHours(index)}>
+                                                                                    <RxCross2 color='#000000' />
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='end'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={sunday?.end}
+                                                                                onChange={e => handleChangeTimeSunday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+
+                                                                    </Col>
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    );
+                                                })}
+
+                                                {!isSundayChecked &&
+                                                    <Col md="2" className="pl-0" >
+                                                        <GoPlus
+                                                            size={25}
+                                                            className="plus-btn mt-2"
+                                                            onClick={handleAddSundayHours}
+                                                        />
+                                                    </Col>
+                                                }
+
+                                            </Row>
+                                        </Col >
+                                    </Row>
+                                    <hr className="mb-4 mt-2" />
+
+                                    <Row>
+                                        <Col lg="2">
+                                            <h4 className="day-header">Monday</h4>
+                                            <Form.Check
+                                                type={`checkbox`}
+                                                id={`schedule-monday`}
+                                                label={`Closed`}
+                                                name={`day`}
+                                                checked={isMondayChecked}
+                                                onChange={handleMondayCheckboxChangeClose}
+                                            />
+                                        </Col>
+                                        <Col lg="5" className='d-flex justify-content-end'>
+                                            <Row className="align-items-center">
+                                                {mondayHoursFormData.map((monday, index) => {
+                                                    return (
+                                                        <>
+                                                            {mondayHoursFormData.length > 0 && (
+                                                                <>
+
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Opens at</p>
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='start'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={monday?.start}
+                                                                                onChange={e => handleChangeTimeMonday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Closes at</p>
+                                                                        {index > 0 && (
+                                                                            <div className='close-container'>
+                                                                                <div className='cursor-pointer' onClick={() => handleRemoveMondayHours(index)}>
+                                                                                    <RxCross2 color='#000000' />
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='end'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={monday?.end}
+                                                                                onChange={e => handleChangeTimeMonday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    );
+                                                })}
+
+                                                {!isMondayChecked &&
+                                                    <Col md="2" className="pl-0" >
+                                                        <GoPlus
+                                                            size={25}
+                                                            className="plus-btn mt-2"
+                                                            onClick={handleAddMondayHours}
+                                                        />
+                                                    </Col>
+                                                }
+
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                    <hr className="mb-4 mt-2" />
+
+                                    <Row>
+                                        <Col lg="2">
+                                            <h4 className="day-header">Tuesday</h4>
+                                            <Form.Check
+                                                type={`checkbox`}
+                                                id={`schedule-tuesday`}
+                                                label={`Closed`}
+                                                name={`day`}
+                                                checked={isTuesdayChecked}
+                                                onChange={handleTuesdayCheckboxChangeClose}
+                                            />
+                                        </Col>
+
+                                        <Col lg="5" className='d-flex justify-content-end'>
+                                            <Row className="align-items-center">
+                                                {tuesdayHoursFormData.map((tuesday, index) => {
+                                                    return (
+                                                        <>
+                                                            {tuesdayHoursFormData.length > 0 && (
+                                                                <>
+
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Opens at</p>
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='start'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={tuesday?.start}
+                                                                                onChange={e => handleChangeTimeTuesday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Closes at</p>
+                                                                        {index > 0 && (
+                                                                            <div className='close-container'>
+                                                                                <div className='cursor-pointer' onClick={() => handleRemoveTuesdayHours(index)}>
+                                                                                    <RxCross2 color='#000000' />
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='end'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={tuesday?.end}
+                                                                                onChange={e => handleChangeTimeTuesday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    );
+                                                })}
+
+                                                {!isTuesdayChecked &&
+                                                    <Col md="2" className="pl-0" >
+                                                        <GoPlus
+                                                            size={25}
+                                                            className="plus-btn mt-2"
+                                                            onClick={handleAddTuesdayHours}
+                                                        />
+                                                    </Col>
+                                                }
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                    <hr className="mb-4 mt-2" />
+
+                                    <Row>
+                                        <Col lg="2">
+                                            <h4 className="day-header">Wednesday</h4>
+                                            <Form.Check
+                                                type={`checkbox`}
+                                                id={`schedule-wednesday`}
+                                                label={`Closed`}
+                                                name={`day`}
+                                                checked={isWednesdayChecked}
+                                                onChange={handleWednesdayCheckboxChangeClose}
+                                            />
+                                        </Col>
+                                        <Col lg="5" className='d-flex justify-content-end'>
+                                            <Row className="align-items-center">
+                                                {wednesdayHoursFormData.map((wednesday, index) => {
+                                                    return (
+                                                        <>
+                                                            {wednesdayHoursFormData.length > 0 && (
+                                                                <>
+
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Opens at</p>
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='start'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={wednesday?.start}
+                                                                                onChange={e => handleChangeTimeWednesday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Closes at</p>
+                                                                        {index > 0 && (
+                                                                            <div className='close-container'>
+                                                                                <div className='cursor-pointer' onClick={() => handleRemoveWednesdayHours(index)}>
+                                                                                    <RxCross2 color='#000000' />
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='end'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={wednesday?.end}
+                                                                                onChange={e => handleChangeTimeWednesday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    );
+                                                })}
+
+                                                {!isWednesdayChecked &&
+                                                    <Col md="2" className="pl-0" >
+                                                        <GoPlus
+                                                            size={25}
+                                                            className="plus-btn mt-2"
+                                                            onClick={handleAddWednesdayHours}
+                                                        />
+                                                    </Col>
+                                                }
+
+                                            </Row >
+                                        </Col>
+                                    </Row>
+                                    <hr className="mb-4 mt-2" />
+
+                                    <Row>
+                                        <Col lg="2">
+                                            <h4 className="day-header">Thursday</h4>
+                                            <Form.Check
+                                                type={`checkbox`}
+                                                id={`schedule-thursday`}
+                                                label={`Closed`}
+                                                name={`day`}
+                                                checked={isThursdayChecked}
+                                                onChange={handleThursdayCheckboxChangeClose}
+                                            />
+                                        </Col>
+                                        <Col lg="5" className='d-flex justify-content-end'>
+                                            <Row className="align-items-center">
+                                                {thursdayHoursFormData.map((thursday, index) => {
+                                                    return (
+                                                        <>
+                                                            {thursdayHoursFormData.length > 0 && (
+                                                                <>
+
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Opens at</p>
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='start'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={thursday?.start}
+                                                                                onChange={e => handleChangeTimeThursday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Closes at</p>
+                                                                        {index > 0 && (
+                                                                            <div className='close-container'>
+                                                                                <div className='cursor-pointer' onClick={() => handleRemoveThursdayHours(index)}>
+                                                                                    <RxCross2 color='#000000' />
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='end'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={thursday?.end}
+                                                                                onChange={e => handleChangeTimeThursday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    );
+                                                })}
+
+                                                {!isThursdayChecked &&
+                                                    <Col md="2" className="pl-0" >
+                                                        <GoPlus
+                                                            size={25}
+                                                            className="plus-btn mt-2"
+                                                            onClick={handleAddThursdayHours}
+                                                        />
+                                                    </Col>
+                                                }
+
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                    <hr className="mb-4 mt-2" />
+
+                                    <Row>
+                                        <Col lg="2">
+                                            <h4 className="day-header">Friday</h4>
+                                            <Form.Check
+                                                type={`checkbox`}
+                                                id={`schedule-friday`}
+                                                label={`Closed`}
+                                                name={`day`}
+                                                checked={isFridayChecked}
+                                                onChange={handleFridayCheckboxChangeClose}
+                                            />
+                                        </Col>
+                                        <Col lg="5" className='d-flex justify-content-end'>
+                                            <Row className="align-items-center">
+                                                {fridayHoursFormData.map((friday, index) => {
+                                                    return (
+                                                        <>
+                                                            {fridayHoursFormData.length > 0 && (
+                                                                <>
+
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Opens at</p>
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='start'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={friday?.start}
+                                                                                onChange={e => handleChangeTimeFriday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Closes at</p>
+                                                                        {index > 0 && (
+                                                                            <div className='close-container'>
+                                                                                <div className='cursor-pointer' onClick={() => handleRemoveFridayHours(index)}>
+                                                                                    <RxCross2 color='#000000' />
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='end'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={friday?.end}
+                                                                                onChange={e => handleChangeTimeFriday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    );
+                                                })}
+
+                                                {!isFridayChecked &&
+                                                    <Col md="2" className="pl-0" >
+                                                        <GoPlus
+                                                            size={25}
+                                                            className="plus-btn mt-2"
+                                                            onClick={handleAddFridayHours}
+                                                        />
+                                                    </Col>
+                                                }
+
+                                            </Row >
+                                        </Col>
+                                    </Row>
+                                    <hr className="mb-4 mt-2" />
+
+                                    <Row>
+                                        <Col lg="2">
+                                            <h4 className="day-header">Saturday</h4>
+                                            <Form.Check
+                                                type={`checkbox`}
+                                                id={`schedule-saturday`}
+                                                label={`Closed`}
+                                                name={`day`}
+                                                checked={isSaturdayChecked}
+                                                onChange={handleSaturdayCheckboxChangeClose}
+                                            />
+                                        </Col>
+                                        <Col lg="5" className='d-flex justify-content-end'>
+
+                                            <Row className="align-items-center">
+                                                {saturdayHoursFormData.map((saturday, index) => {
+                                                    return (
+                                                        <>
+                                                            {saturdayHoursFormData.length > 0 && (
+                                                                <>
                                                                     {index > 0 && (
-                                                                        <div className='close-container'>
-                                                                            <div className='cursor-pointer' onClick={() => handleRemoveSundayHours(index)}>
+                                                                        <div className='w-100 d-flex justify-content-end mt-3'>
+                                                                            <div className='cursor-pointer' onClick={() => handleRemoveSaturdayHours(index)}>
                                                                                 <RxCross2 color='#000000' />
                                                                             </div>
                                                                         </div>
                                                                     )}
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='end'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={sunday?.end}
-                                                                            onChange={e => handleChangeTimeSunday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
 
-                                                                </Col>
-                                                            </>
-                                                        )}
-                                                    </>
-                                                );
-                                            })}
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Opens at</p>
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='start'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={saturday?.start}
+                                                                                onChange={e => handleChangeTimeSaturday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col md="5" className="pe-0 position-relative">
+                                                                        <p className="hours-header">Closes at</p>
+                                                                        <Form.Group className='mb-3'>
+                                                                            <FormControl
+                                                                                type='time'
+                                                                                name='end'
+                                                                                className='mr-sm-2 form-control-hours'
+                                                                                value={saturday?.end}
+                                                                                onChange={e => handleChangeTimeSaturday(e, index)}
+                                                                            />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                </>
+                                                            )}
+                                                        </>
+                                                    );
+                                                })}
 
-                                            {!isSundayChecked &&
-                                                <Col md="2" className="pl-0" >
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddSundayHours}
-                                                    />
-                                                </Col>
-                                            }
+                                                {!isSaturdayChecked &&
+                                                    <Col md="2" className="pl-0">
+                                                        <GoPlus
+                                                            size={25}
+                                                            className="plus-btn mt-2"
+                                                            onClick={handleAddSaturdayHours}
+                                                        />
+                                                    </Col>
+                                                }
 
-                                        </Row>
-                                    </Col >
-                                </Row>
-                                <hr className="mb-4 mt-2" />
-
-                                <Row>
-                                    <Col lg="2">
-                                        <h4 className="day-header">Monday</h4>
-                                        <Form.Check
-                                            type={`checkbox`}
-                                            id={`schedule-monday`}
-                                            label={`Closed`}
-                                            name={`day`}
-                                            checked={isMondayChecked}
-                                            onChange={handleMondayCheckboxChangeClose}
-                                        />
-                                    </Col>
-                                    <Col lg="5" className='d-flex justify-content-end'>
-                                        <Row className="align-items-center">
-                                            {mondayHoursFormData.map((monday, index) => {
-                                                return (
-                                                    <>
-                                                        {mondayHoursFormData.length > 0 && (
-                                                            <>
-
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Opens at</p>
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='start'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={monday?.start}
-                                                                            onChange={e => handleChangeTimeMonday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
-
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Closes at</p>
-                                                                    {index > 0 && (
-                                                                        <div className='close-container'>
-                                                                            <div className='cursor-pointer' onClick={() => handleRemoveMondayHours(index)}>
-                                                                                <RxCross2 color='#000000' />
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='end'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={monday?.end}
-                                                                            onChange={e => handleChangeTimeMonday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
-                                                            </>
-                                                        )}
-                                                    </>
-                                                );
-                                            })}
-
-                                            {!isMondayChecked &&
-                                                <Col md="2" className="pl-0" >
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddMondayHours}
-                                                    />
-                                                </Col>
-                                            }
-
-                                        </Row>
-                                    </Col>
-                                </Row>
-                                <hr className="mb-4 mt-2" />
-
-                                <Row>
-                                    <Col lg="2">
-                                        <h4 className="day-header">Tuesday</h4>
-                                        <Form.Check
-                                            type={`checkbox`}
-                                            id={`schedule-tuesday`}
-                                            label={`Closed`}
-                                            name={`day`}
-                                            checked={isTuesdayChecked}
-                                            onChange={handleTuesdayCheckboxChangeClose}
-                                        />
-                                    </Col>
-
-                                    <Col lg="5" className='d-flex justify-content-end'>
-                                        <Row className="align-items-center">
-                                            {tuesdayHoursFormData.map((tuesday, index) => {
-                                                return (
-                                                    <>
-                                                        {tuesdayHoursFormData.length > 0 && (
-                                                            <>
-
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Opens at</p>
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='start'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={tuesday?.start}
-                                                                            onChange={e => handleChangeTimeTuesday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
-
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Closes at</p>
-                                                                    {index > 0 && (
-                                                                        <div className='close-container'>
-                                                                            <div className='cursor-pointer' onClick={() => handleRemoveTuesdayHours(index)}>
-                                                                                <RxCross2 color='#000000' />
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='end'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={tuesday?.end}
-                                                                            onChange={e => handleChangeTimeTuesday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
-                                                            </>
-                                                        )}
-                                                    </>
-                                                );
-                                            })}
-
-                                            {!isTuesdayChecked &&
-                                                <Col md="2" className="pl-0" >
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddTuesdayHours}
-                                                    />
-                                                </Col>
-                                            }
-                                        </Row>
-                                    </Col>
-                                </Row>
-                                <hr className="mb-4 mt-2" />
-
-                                <Row>
-                                    <Col lg="2">
-                                        <h4 className="day-header">Wednesday</h4>
-                                        <Form.Check
-                                            type={`checkbox`}
-                                            id={`schedule-wednesday`}
-                                            label={`Closed`}
-                                            name={`day`}
-                                            checked={isWednesdayChecked}
-                                            onChange={handleWednesdayCheckboxChangeClose}
-                                        />
-                                    </Col>
-                                    <Col lg="5" className='d-flex justify-content-end'>
-                                        <Row className="align-items-center">
-                                            {wednesdayHoursFormData.map((wednesday, index) => {
-                                                return (
-                                                    <>
-                                                        {wednesdayHoursFormData.length > 0 && (
-                                                            <>
-
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Opens at</p>
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='start'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={wednesday?.start}
-                                                                            onChange={e => handleChangeTimeWednesday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Closes at</p>
-                                                                    {index > 0 && (
-                                                                        <div className='close-container'>
-                                                                            <div className='cursor-pointer' onClick={() => handleRemoveWednesdayHours(index)}>
-                                                                                <RxCross2 color='#000000' />
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='end'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={wednesday?.end}
-                                                                            onChange={e => handleChangeTimeWednesday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
-
-                                                            </>
-                                                        )}
-                                                    </>
-                                                );
-                                            })}
-
-                                            {!isWednesdayChecked &&
-                                                <Col md="2" className="pl-0" >
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddWednesdayHours}
-                                                    />
-                                                </Col>
-                                            }
-
-                                        </Row >
-                                    </Col>
-                                </Row>
-                                <hr className="mb-4 mt-2" />
-
-                                <Row>
-                                    <Col lg="2">
-                                        <h4 className="day-header">Thursday</h4>
-                                        <Form.Check
-                                            type={`checkbox`}
-                                            id={`schedule-thursday`}
-                                            label={`Closed`}
-                                            name={`day`}
-                                            checked={isThursdayChecked}
-                                            onChange={handleThursdayCheckboxChangeClose}
-                                        />
-                                    </Col>
-                                    <Col lg="5" className='d-flex justify-content-end'>
-                                        <Row className="align-items-center">
-                                            {thursdayHoursFormData.map((thursday, index) => {
-                                                return (
-                                                    <>
-                                                        {thursdayHoursFormData.length > 0 && (
-                                                            <>
-
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Opens at</p>
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='start'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={thursday?.start}
-                                                                            onChange={e => handleChangeTimeThursday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Closes at</p>
-                                                                    {index > 0 && (
-                                                                        <div className='close-container'>
-                                                                            <div className='cursor-pointer' onClick={() => handleRemoveThursdayHours(index)}>
-                                                                                <RxCross2 color='#000000' />
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='end'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={thursday?.end}
-                                                                            onChange={e => handleChangeTimeThursday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
-
-                                                            </>
-                                                        )}
-                                                    </>
-                                                );
-                                            })}
-
-                                            {!isThursdayChecked &&
-                                                <Col md="2" className="pl-0" >
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddThursdayHours}
-                                                    />
-                                                </Col>
-                                            }
-
-                                        </Row>
-                                    </Col>
-                                </Row>
-                                <hr className="mb-4 mt-2" />
-
-                                <Row>
-                                    <Col lg="2">
-                                        <h4 className="day-header">Friday</h4>
-                                        <Form.Check
-                                            type={`checkbox`}
-                                            id={`schedule-friday`}
-                                            label={`Closed`}
-                                            name={`day`}
-                                            checked={isFridayChecked}
-                                            onChange={handleFridayCheckboxChangeClose}
-                                        />
-                                    </Col>
-                                    <Col lg="5" className='d-flex justify-content-end'>
-                                        <Row className="align-items-center">
-                                            {fridayHoursFormData.map((friday, index) => {
-                                                return (
-                                                    <>
-                                                        {fridayHoursFormData.length > 0 && (
-                                                            <>
-
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Opens at</p>
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='start'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={friday?.start}
-                                                                            onChange={e => handleChangeTimeFriday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Closes at</p>
-                                                                    {index > 0 && (
-                                                                        <div className='close-container'>
-                                                                            <div className='cursor-pointer' onClick={() => handleRemoveFridayHours(index)}>
-                                                                                <RxCross2 color='#000000' />
-                                                                            </div>
-                                                                        </div>
-                                                                    )}
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='end'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={friday?.end}
-                                                                            onChange={e => handleChangeTimeFriday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
-
-                                                            </>
-                                                        )}
-                                                    </>
-                                                );
-                                            })}
-
-                                            {!isFridayChecked &&
-                                                <Col md="2" className="pl-0" >
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddFridayHours}
-                                                    />
-                                                </Col>
-                                            }
-
-                                        </Row >
-                                    </Col>
-                                </Row>
-                                <hr className="mb-4 mt-2" />
-
-                                <Row>
-                                    <Col lg="2">
-                                        <h4 className="day-header">Saturday</h4>
-                                        <Form.Check
-                                            type={`checkbox`}
-                                            id={`schedule-saturday`}
-                                            label={`Closed`}
-                                            name={`day`}
-                                            checked={isSaturdayChecked}
-                                            onChange={handleSaturdayCheckboxChangeClose}
-                                        />
-                                    </Col>
-                                    <Col lg="5" className='d-flex justify-content-end'>
-
-                                        <Row className="align-items-center">
-                                            {saturdayHoursFormData.map((saturday, index) => {
-                                                return (
-                                                    <>
-                                                        {saturdayHoursFormData.length > 0 && (
-                                                            <>
-                                                                {index > 0 && (
-                                                                    <div className='w-100 d-flex justify-content-end mt-3'>
-                                                                        <div className='cursor-pointer' onClick={() => handleRemoveSaturdayHours(index)}>
-                                                                            <RxCross2 color='#000000' />
-                                                                        </div>
-                                                                    </div>
-                                                                )}
-
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Opens at</p>
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='start'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={saturday?.start}
-                                                                            onChange={e => handleChangeTimeSaturday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
-                                                                <Col md="5" className="pe-0 position-relative">
-                                                                    <p className="hours-header">Closes at</p>
-                                                                    <Form.Group className='mb-3'>
-                                                                        <FormControl
-                                                                            type='time'
-                                                                            name='end'
-                                                                            className='mr-sm-2 form-control-hours'
-                                                                            value={saturday?.end}
-                                                                            onChange={e => handleChangeTimeSaturday(e, index)}
-                                                                        />
-                                                                    </Form.Group>
-                                                                </Col>
-                                                            </>
-                                                        )}
-                                                    </>
-                                                );
-                                            })}
-
-                                            {!isSaturdayChecked &&
-                                                <Col md="2" className="pl-0">
-                                                    <GoPlus
-                                                        size={25}
-                                                        className="plus-btn mt-2"
-                                                        onClick={handleAddSaturdayHours}
-                                                    />
-                                                </Col>
-                                            }
-
-                                        </Row>
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Row>
-                    </Container>
+                                            </Row>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer className='border-none pt-0'>
                     <button className="btn btn-secondary border-black bg-white text-black me-3" type="button" onClick={() => setDesignerBusinessHoursModalShow(false)} style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
                     <button className="btn btn-primary" style={{ minWidth: '100px', padding: '9px 20px' }} variant="primary" onClick={() => {
                         if (!times.length) {

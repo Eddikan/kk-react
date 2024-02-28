@@ -8,11 +8,10 @@ import toast from 'react-hot-toast';
 import { Form, ModalHeader, ModalFooter } from 'react-bootstrap';
 import { Rating } from 'react-simple-star-rating';
 import { PiNotepadFill } from "react-icons/pi";
-import { GoHeart, GoAlertFill } from "react-icons/go";
-import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
+import { GoAlertFill } from "react-icons/go";
 import UserPlaceholder from 'Assets/images/user.png';
 import PinIcon from '../Assets/images/pin.png';
-import { IoShareSocial, IoInformationOutline, IoVideocam } from "react-icons/io5";
+import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoHeartOutline, IoEyeOutline } from "react-icons/io5";
 import { useCookies } from 'react-cookie';
 import Countries from 'Utils/Countries';
 import { AiFillMessage } from "react-icons/ai";
@@ -27,7 +26,6 @@ import axios from 'axios';
 const Designs = (props) => {
     const navigate = useNavigate();
     const [mounted, setMounted] = useState(false);
-    const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [designs, setDesigns] = useState([]);
     const [designsLoading, setDesignsLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
@@ -724,7 +722,10 @@ const Designs = (props) => {
                                                                 <>
                                                                     <Col className="designs-grid mb-4" xs="12" md="4">
                                                                         <div className="portfolio-link">
-                                                                            <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { togglePortfolioImage(design.designer.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description, design.user.id); }} style={{ backgroundImage: "url(" + designImage + ")" }}>
+                                                                            <div
+                                                                                className="designs-grid-div w-100 cursor-pointer"
+                                                                                onClick={function () { togglePortfolioImage(design.designer.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description, design.user.id); }}
+                                                                                style={{ backgroundImage: "url(" + designImage + ")" }}>
                                                                             </div>
 
                                                                         </div>
@@ -780,7 +781,6 @@ const Designs = (props) => {
                                 </div>
                             </Col>
                         </Row>
-
                     </Container>
                 </section>
             </div>
@@ -897,7 +897,8 @@ const Designs = (props) => {
                                     <div>
                                         <Card className="table_content file-action mt-3 me-0 card-profile-designer">
                                             <Card.Header className='card-hr bg-white'>
-                                                <button type='button' className='close react-modal-close' onClick={() => setProfileViewShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                                                <button type='button' className='close react-modal-close' onClick={() => setProfileViewShow(false)} data-dismiss='modal' aria-label='Close'>
+                                                    <IoCloseOutline color="#7e7e7e" size={25} />
                                                 </button>
                                             </Card.Header>
                                             <Card.Body className="action_container font-weight">
@@ -914,6 +915,7 @@ const Designs = (props) => {
                                                                 <img src={UserPlaceholder} className='placeholder-img-side mb-3' />
                                                             )}
                                                         </div>
+
                                                         <div className='modal-title text-center fs-18 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
                                                         <div className='fs-14 text-center mt-2'>
                                                             <img src={PinIcon} alt="location pin" className='me-2' />
@@ -1032,7 +1034,8 @@ const Designs = (props) => {
                 size="sm"
             >
                 <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close' onClick={() => setMessageShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={() => setMessageShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
 
@@ -1071,8 +1074,9 @@ const Designs = (props) => {
                 id="under-construction"
             >
                 <Modal.Header className="py-0">
-                    <h5 className='modal-title text-left fw-600 fs-25 mt-2'>{modalHeading}</h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <h5 className='modal-title text-left fw-600 fs-22 mt-2'>{modalHeading}</h5>
+                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
 
@@ -1093,7 +1097,8 @@ const Designs = (props) => {
                 id="description-card"
             >
                 <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close description-close' onClick={() => setDescriptionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close description-close' onClick={() => setDescriptionShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
 
@@ -1111,7 +1116,8 @@ const Designs = (props) => {
                 size="sm"
             >
                 <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close' onClick={() => setDesignerProfileShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={() => setDesignerProfileShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
 
@@ -1177,7 +1183,6 @@ const Designs = (props) => {
                                     </div>
                                 </>
                             }
-
                         </Col>
                     </Row>
                 </Modal.Body>

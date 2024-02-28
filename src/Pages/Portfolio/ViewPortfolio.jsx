@@ -18,6 +18,7 @@ import { Card, Modal } from 'react-bootstrap';
 import { IoCloseOutline, IoVideocam } from "react-icons/io5";
 import { LiaSmileBeam } from "react-icons/lia";
 import { IoIosAttach } from "react-icons/io";
+import InputEmoji from 'react-input-emoji';
 import { VscSend } from "react-icons/vsc";
 import { useCookies } from 'react-cookie';
 import { BsArrowUpRightSquare } from "react-icons/bs";
@@ -35,6 +36,7 @@ const ViewPortFolio = () => {
     const [modalHeading, setModalHeading] = useState('');
     const [updateReview, setUpdateReview] = useState(false);
     const [chatBox, setChatBox] = useState(false);
+    const [text, setText] = useState('');
     const [reviewsTabShow, setReviewsTabShow] = useState(true);
     const [commentsTabShow, setCommentsTabShow] = useState(true);
     const [reviewItemModal, setReviewItemModal] = useState(false);
@@ -57,8 +59,18 @@ const ViewPortFolio = () => {
         setChatBox(true);
     };
 
+    function handleOnEnter(text) {
+        console.log('enter', text)
+    }
+
     const toggleAddToReview = (e) => {
         setAddReviewShow(!addReviewShow);
+
+        if (e?.[0]?.image_url) {
+            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + e[0].image_url);
+        } else {
+            setActiveImage(PlaceholderImage);
+        }
     }
 
     function toggleUnderConstruction(message) {
@@ -195,7 +207,10 @@ const ViewPortFolio = () => {
                                                     {!isPortfolioCurrentUser ?
                                                         <>
 
-                                                            <div className="action-button bg-smgray" onClick={() => toggleUnderConstruction("Share Portfolio")}>
+                                                            <div className="action-button kouture-tooltip bg-smgray" onClick={() => toggleUnderConstruction("Share Portfolio")}>
+                                                                <span class="kouture-tooltiptext fs-14">
+                                                                    Share
+                                                                </span>
                                                                 <GoShareAndroid className="text-black" />
                                                             </div>
 
@@ -314,10 +329,12 @@ const ViewPortFolio = () => {
                             </Col> */}
                                 <Col lg="12" className='mt-5'>
                                     {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
-                                    <span className={`text-black reviews-product cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews
+                                    <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews
 
                                         {!isPortfolioCurrentUser && (
-                                            <span className="cursor-pointer reviews-tooltip" onClick={toggleAddToReview}>
+                                            <span className="cursor-pointer reviews-tooltip"
+                                                onClick={() => toggleAddToReview(portfolio.image_urls)}
+                                            >
                                                 <div className='tooltip-content'>
                                                     <span className="reviews-tooltiptext fs-14">Write Review</span>
                                                 </div>
@@ -355,7 +372,7 @@ const ViewPortFolio = () => {
                                         <Card className='width-chat-card px-0'>
                                             <Card.Header className='header-chat bg-white'>
                                                 <div className='d-flex justify-content-between'>
-                                                    <div>
+                                                    <div className='d-flex align-items-center'>
                                                         <span className="fs-14 fw-500 mb-0 name-of-user-chat">
                                                             {portfolio.user.first_name && portfolio.user.first_name != "" ? portfolio.user.first_name : "-"} &nbsp;
                                                             {portfolio.user.last_name && portfolio.user.last_name != "" ? portfolio.user.last_name : "-"}
@@ -363,7 +380,7 @@ const ViewPortFolio = () => {
                                                         {/* <span className='ms-3 active-now fs-14 fw-400'>Active Now</span> */}
                                                     </div>
                                                     <div className="cursor-pointer" onClick={() => setChatBox(false)}>
-                                                        <IoCloseOutline color="#39393A" />
+                                                        <IoCloseOutline color="#7e7e7e" size={25} />
                                                     </div>
                                                 </div>
                                             </Card.Header>
@@ -418,19 +435,19 @@ const ViewPortFolio = () => {
                                                     <img src={User} className='placeholder-chat ms-3' />
                                                 </div> */}
 
-                                                <div className='mt-3'>
-                                                    <input type="text" className='form-control' />
-                                                </div>
-
-                                                <div className='mt-3 d-flex justify-content-between'>
-                                                    <div className='d-flex'>
-                                                        <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><LiaSmileBeam className='me-2' size={20} /></div>
-                                                        <div className='cursor-pointer' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
-                                                    </div>
+                                                <div>
+                                                    <InputEmoji
+                                                        value={text}
+                                                        onChange={setText}
+                                                        cleanOnEnter
+                                                        onEnter={handleOnEnter}
+                                                        className="emoji-picker"
+                                                    />
+                                                    {/* <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div> */}
                                                     <div>
                                                         <div
-                                                            className="cursor-pointer fw-500"
-                                                            onClick={() => toggleUnderConstruction("Send Message")}
+                                                            className="cursor-pointer fw-500 position-absolute send-button"
+                                                            onClick={() => { toggleUnderConstruction("Send Message"); setChatBox(false); }}
                                                         >
                                                             Send
                                                             <VscSend className='ms-1' />
@@ -455,12 +472,13 @@ const ViewPortFolio = () => {
                         >
                             <Modal.Header className="py-0">
                                 <h5 className='modal-title text-uppercase text-left'></h5>
-                                <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                                <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                                    <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
                                 </button>
                             </Modal.Header>
 
                             <Modal.Body>
-                                <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+                                <h4 className='fs-22 rufina-family mb-3'>{modalHeading}</h4>
                                 <Card>
                                     <Card.Body className="text-center py-5">
                                         <GoAlertFill size="60px" className="mb-2 text-gold" />
@@ -471,233 +489,87 @@ const ViewPortFolio = () => {
                         </Modal>
 
                         <Modal
-                            show={reviewItemModal}
-                            className='modal-preview'
-                            fade={false}
-                            size="sm"
-                        >
-                            <ModalHeader className='pt-2 pb-2'>
-                                <h5 className='modal-title text-left fs-25 rufina-family fw-600 '>Review Item</h5>
-                                <button
-                                    type='button'
-                                    className='close react-review-items-close'
-                                    data-dismiss='modal' aria-label='Close'
-                                    onClick={() => setReviewItemModal(false)}
-                                >
-                                    <span aria-hidden='true'>&times;</span>
-                                </button>
-                            </ModalHeader>
-
-                            <hr className="mt-0 mb-2" />
-                            <Modal.Body className='pt-4 pb-2'>
-                                <div className='product-portfolio-image mb-4'>
-                                    <span className='d-flex'>
-                                        {images && images.length > 0 ?
-                                            <>
-                                                <div className="single-image-chat" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + images[0].image_url + ")" }}>
-                                                </div>
-                                                <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
-                                            </>
-                                            :
-                                            null
-                                        }
-                                    </span>
-                                </div>
-
-                                <div className='d-flex mb-2'>
-                                    <div className='d-flex justify-content-center align-items-center'>
-                                        Product Quality:
-                                    </div>
-
-                                    <div className='mx-4'>
-                                        <Rating
-                                            // initialValue={rating}
-                                            readonly={true}
-                                            allowFraction={true}
-                                            size={30}
-                                            className="star-rating"
-                                            showTooltip={false}
-                                            emptyColor="#cea835"
-                                            fillColor="#cea835"
-                                        />
-                                    </div>
-
-                                    <div className='d-flex justify-content-center align-items-center'>
-                                        Excellent
-                                    </div>
-                                </div>
-                                <div className='mb-4'>
-                                    <textarea
-                                        type="text"
-                                        name="description"
-                                        className="d-block form-control bg-white"
-                                        placeholder='Leave a comment about the product...'
-                                    />
-                                </div>
-                            </Modal.Body>
-                            <ModalFooter className=''>
-                                <div className='text-right'>
-                                    <Button className="cancel-btn me-2" onClick={() => setReviewItemModal(false)}>Cancel</Button>
-                                    <Button className="btn-save" onClick={() => { toggleUnderConstruction("Submit"); setReviewItemModal(false); }}>Submit</Button>
-                                </div>
-                            </ModalFooter>
-                        </Modal>
-
-                        <Modal
                             show={requestAQuoteModal}
                             className='modal-preview'
                             fade={false}
                             size="sm"
                         >
-                            <ModalHeader className='pt-2 pb-2'>
-                                <h5 className='modal-title text-left fs-25 rufina-family fw-600 '>New Quote</h5>
+                            <ModalHeader className='pt-3 pb-0'>
+                                <h5 className='modal-title text-left fs-22 rufina-family'>New Quote</h5>
                                 <button type='button' className='close react-review-items-close' data-dismiss='modal' aria-label='Close' onClick={() => setRequestAQuoteModal(false)}>
-                                    <span aria-hidden='true'>&times;</span>
+                                    <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
                                 </button>
                             </ModalHeader>
-                            <hr className="mt-0 mb-0" />
-                            <Modal.Body className='pt-4 pb-2'>
-                                <Row>
-                                    <Col>
-                                        <div className='mb-2'>Title</div>
-                                        <div>
-                                            <input type="text" className='form-control' name="title" />
-                                        </div>
+                            <Modal.Body>
+                                <Card>
+                                    <Card.Body>
+                                        <Row>
+                                            <Col>
+                                                <div className='mb-2'>Title</div>
+                                                <div>
+                                                    <input type="text" className='form-control' name="title" />
+                                                </div>
 
-                                        <div className='mt-3 mb-2'>Details</div>
-                                        <div>
-                                            <textarea
-                                                type="text"
-                                                name="description"
-                                                className="d-block form-control bg-white"
-                                                placeholder='Provide design details'
-                                            />
-                                        </div>
+                                                <div className='mt-3 mb-2'>Details</div>
+                                                <div>
+                                                    <textarea
+                                                        type="text"
+                                                        name="description"
+                                                        className="d-block form-control bg-white"
+                                                        placeholder='Provide design details'
+                                                    />
+                                                </div>
 
-                                        <div
-                                            className="image-drop-container-quote cursor-pointer mt-4"
-                                        // onDrop={handleDrop}
-                                        // onDragOver={handleDragOver}
-                                        >
-                                            <input
-                                                // type="file"
-                                                // key={fileInputKey} // Add a key to the file input
-                                                id="fileInput"
-                                                // onChange={handleFileInput}
-                                                className="file-input d-block opacity-0"
-                                                accept="image/*"
-                                                multiple
-                                            />
-                                            <label
-                                                htmlFor="fileInput"
-                                                className="file-label d-block text-center cursor-pointer"
-                                            >
-                                                <p className="text-black rufina-family fs-18 mb-3 fw-600">Design Preference</p>
-                                                <p className="text-black fs-16 mb-3">Share your design preferences to the designer.</p>
-                                                <button
-                                                    className="btn btn-primary mb-4"
-                                                    onClick={() => { toggleUnderConstruction("Upload Design"); setRequestAQuoteModal(false); }}
+                                                <div
+                                                    className="image-drop-container-quote cursor-pointer mt-4"
+                                                // onDrop={handleDrop}
+                                                // onDragOver={handleDragOver}
                                                 >
-                                                    Upload Design
-                                                </button>
-                                            </label>
-                                        </div>
-                                    </Col>
-                                </Row>
-
+                                                    <input
+                                                        // type="file"
+                                                        // key={fileInputKey} // Add a key to the file input
+                                                        id="fileInput"
+                                                        // onChange={handleFileInput}
+                                                        className="file-input d-block opacity-0"
+                                                        accept="image/*"
+                                                        multiple
+                                                    />
+                                                    <label
+                                                        htmlFor="fileInput"
+                                                        className="file-label d-block text-center cursor-pointer"
+                                                    >
+                                                        <p className="text-black rufina-family fs-18 mb-3 fw-600">Design Preference</p>
+                                                        <p className="text-black fs-16 mb-3">Share your design preferences to the designer.</p>
+                                                        <button
+                                                            className="btn btn-primary mb-4"
+                                                            style={{ minWidth: '100px', padding: '9px 20px' }}
+                                                            onClick={() => { toggleUnderConstruction("Upload Design"); setRequestAQuoteModal(false); }}
+                                                        >
+                                                            Upload Design
+                                                        </button>
+                                                    </label>
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                    </Card.Body>
+                                </Card>
                             </Modal.Body>
-                            <ModalFooter className='mt-4'>
+                            <ModalFooter className='border-none pt-0'>
                                 <div className='text-right'>
-                                    <Button className="cancel-btn me-2" onClick={() => setRequestAQuoteModal(false)}>Cancel</Button>
-                                    <Button className="btn-save" onClick={() => { toggleUnderConstruction("Request a Quote"); setRequestAQuoteModal(false); }}>Request a Quote</Button>
+                                    <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setRequestAQuoteModal(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                                    <button
+                                        className="btn btn-primary"
+                                        type="button"
+                                        onClick={() => { toggleUnderConstruction("Request a Quote"); setRequestAQuoteModal(false); }}
+                                        style={{ minWidth: '100px', padding: '9px 20px' }}
+                                    >
+                                        Request a Quote
+                                    </button>
+
+                                    {/* <Button className="btn-save" onClick={() => { toggleUnderConstruction("Request a Quote"); setRequestAQuoteModal(false); }}>Request a Quote</Button> */}
                                 </div>
                             </ModalFooter>
                         </Modal>
-
-
-                        {/* <Modal
-                            show={addReviewShow}
-                            className='modal-preview'
-                            fade={false}
-                            centered
-                            size="lg"
-                        >
-                            <Modal.Header className="py-0">
-                                <h5 className='modal-title text-uppercase text-left'></h5>
-                                <button type='button' className='close react-modal-close' onClick={toggleAddToReview} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
-                                </button>
-                            </Modal.Header>
-                            <Modal.Body className='padding-card-review'>
-                                <h4 className='te   xt-left fs-25 fw-600 mb-3'>
-                                    {updateReview ? "Update Review" : "Review Item"}
-                                </h4>
-                                <Card className='review-card'>
-                                    <Card.Body className="text-center py-3 p-0">
-                                        <div className="product-review-container">
-
-                                            <div className='product-portfolio-image mb-4'>
-                                                <span className='d-flex'>
-                                                    {images && images.length > 0 ?
-                                                        <>
-                                                            <div className="single-image-chat" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + images[0].image_url + ")" }}></div>
-                                                            <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>
-                                                                {portfolio.name ?? "-"}
-                                                            </span>
-                                                        </>
-                                                        :
-                                                        null
-                                                    }
-                                                </span>
-                                            </div>
-
-                                            <div className="text-left mt-3">
-                                                <span className="fs-14 me-3">Product Quality:</span> <Rating
-                                                    initialValue={reviewFormData.rating}
-                                                    allowFraction={true}
-                                                    size={25}
-                                                    className="star-rating"
-                                                    showTooltip={true}
-                                                    emptyColor="#dddddd"
-                                                    fillColor="#cea835"
-                                                    onClick={handlePointerMove}
-                                                    tooltipArray={[
-                                                        'Terrible',
-                                                        'Terrible',
-                                                        'Bad',
-                                                        'Bad',
-                                                        'Average',
-                                                        'Average',
-                                                        'Great',
-                                                        'Great',
-                                                        'Excellent',
-                                                        'Excellent'
-                                                    ]}
-                                                tooltipDefaultText={reviewText}
-                                                />
-                                                <Form.Control
-                                                    as="textarea"
-                                                    name="content"
-                                                    rows={5}
-                                                    value={reviewFormData.content}
-                                                    placeholder="Leave a comment about the product..."
-                                                    onChange={handleChangeReview}
-                                                    className="mt-3"
-                                                />
-                                            </div>
-                                        </div>
-                                    </Card.Body>
-                                    <Card.Footer className="text-right bg-white footer-top-border px-0">
-                                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setAddReviewShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
-                                        {updateReview ?
-                                            <button className="btn btn-primary" type="button" onClick={function () { reviewUpdate(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Updating..." : "Update"}</button>
-                                            :
-                                            <button className="btn btn-primary" type="button" onClick={function () { reviewAdd(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Saving..." : "Submit"} </button>
-                                        }
-                                    </Card.Footer>
-                                </Card>
-                            </Modal.Body>
-                        </Modal> */}
-
 
                         {/* Add Review Item */}
                         <Modal
@@ -707,15 +579,15 @@ const ViewPortFolio = () => {
                             centered
                             size="lg"
                         >
-                            <Modal.Header className="py-0">
-                                <h5 className='modal-title text-uppercase text-left'></h5>
-                                <button type='button' className='close react-modal-close' onClick={toggleAddToReview} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                            <Modal.Header className="pb-0">
+                                <h5 className='modal-title text-left fs-22 rufina-family'>{updateReview ? "Update Review" : "Review Item"}</h5>
+                                <button type='button' className='close react-modal-close' onClick={toggleAddToReview} data-dismiss='modal' aria-label='Close'>
+                                    <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                                 </button>
                             </Modal.Header>
-                            <Modal.Body className='padding-card-review'>
-                                <h4 className='text-left fs-20 mb-0'>{updateReview ? "Update Review" : "Review Item"}</h4>
-                                <Card className='border-none'>
-                                    <Card.Body className="text-center py-3 p-0">
+                            <Modal.Body>
+                                <Card>
+                                    <Card.Body className="text-center p-4">
                                         <div className="product-review-container">
                                             <div className='product-portfolio-image mb-4'>
                                                 <span className='d-flex'>
@@ -726,7 +598,11 @@ const ViewPortFolio = () => {
                                                             <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
                                                         </>
                                                         :
-                                                        null
+                                                        <>
+                                                            <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
+                                                            </div>
+                                                            <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{portfolio.name ?? "-"}</span>
+                                                        </>
                                                     }
                                                 </span>
                                             </div>
@@ -768,30 +644,31 @@ const ViewPortFolio = () => {
                                             </div>
                                         </div>
                                     </Card.Body>
-                                    <Card.Footer className="text-right bg-white footer-top-border px-0">
-                                        <button className="btn btn-secondary border-black bg-white text-black me-3 border-top" onClick={() => setAddReviewShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
-                                        {updateReview ?
-                                            <button
-                                                className="btn btn-primary"
-                                                type="button"
-                                                // onClick={function () { reviewUpdate(); }} 
-                                                style={{ minWidth: '100px', padding: '9px 20px' }}
-                                            >
-                                                {addReviewLoading ? "Updating..." : "Update"}
-                                            </button>
-                                            :
-                                            <button
-                                                className="btn btn-primary"
-                                                type="button"
-                                                // onClick={function () { reviewAdd(); }} 
-                                                onClick={() => { toggleUnderConstruction("Review Item"); setAddReviewShow(false); }}
-                                                style={{ minWidth: '100px', padding: '9px 20px' }}
-                                            >
-                                                {addReviewLoading ? "Saving..." : "Submit"}
-                                            </button>
-                                        }
-                                    </Card.Footer>
                                 </Card>
+
+                                <Card.Footer className="text-right bg-white pt-3">
+                                    <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setAddReviewShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                                    {updateReview ?
+                                        <button
+                                            className="btn btn-primary"
+                                            type="button"
+                                            // onClick={function () { reviewUpdate(); }} 
+                                            style={{ minWidth: '100px', padding: '9px 20px' }}
+                                        >
+                                            {addReviewLoading ? "Updating..." : "Update"}
+                                        </button>
+                                        :
+                                        <button
+                                            className="btn btn-primary"
+                                            type="button"
+                                            // onClick={function () { reviewAdd(); }}
+                                            onClick={() => { toggleUnderConstruction("Review Item"); setAddReviewShow(false); }}
+                                            style={{ minWidth: '100px', padding: '9px 20px' }}
+                                        >
+                                            {addReviewLoading ? "Saving..." : "Submit"}
+                                        </button>
+                                    }
+                                </Card.Footer>
                             </Modal.Body>
                         </Modal>
                     </section>

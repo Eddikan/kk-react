@@ -8,7 +8,7 @@ import { Container, Button, Dropdown, Col, Row } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import Logo from 'Assets/images/kouture-konect-logo.png';
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
-import { IoCalendarClearOutline, IoCartOutline } from "react-icons/io5";
+import { IoCalendarClearOutline, IoCartOutline, IoCloseOutline } from "react-icons/io5";
 import { GoBell, GoHeart } from "react-icons/go";
 import { BsEnvelope } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
@@ -238,9 +238,10 @@ const Header = () => {
                 {currentUser && currentUser != "" ?
                   <>
 
-                    <div className="user-dropdown nav-link" ref={bellRef}>
-                      <div className="nav-link" >
-                        <GoBell className="cursor-pointer" onClick={toggleBellMenu} size={25} />
+                    <div className="user-dropdown nav-link cursor-pointer d-block position-relative" ref={bellRef} onClick={toggleBellMenu}>
+                      <div className="nav-link header-tooltip" >
+                        <span className="icon-tooltiptext fs-14">Notifications</span>
+                        <GoBell size={25} />
                       </div>
                       {userBellOpen && (
 
@@ -255,20 +256,23 @@ const Header = () => {
                           </div>
                           <hr /> */}
 
-                          <div className='d-flex p-3'>
+                          <div className='d-flex'>
                             <img src={NewAppointment} className='new-appointment-image' />
                             <div className='ms-3 fs-14 body-text-bell'>Congratulations! You can now start using Kouture Konect
                               <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
                             </div>
                           </div>
-                          <hr />
-                          <div className='text-right text-gold fs-14 cursor-pointer' onClick={() => toggleUnderConstruction("Notifcations")}>View All</div>
+                          <hr className='mt-2 ' />
+                          <div className='text-right text-gold fs-14 cursor-pointer' onClick={() => toggleUnderConstruction("Notifications")}>View All</div>
                         </div>
                       )}
                     </div>
 
-                    <div className="user-dropdown nav-link" ref={messageRef}>
-                      <div className="nav-link"><BsEnvelope className="cursor-pointer" onClick={toggleEnvelopMenu} size={25}  /></div>
+                    <div className="user-dropdown nav-link cursor-pointer d-block position-relative" ref={messageRef} onClick={toggleEnvelopMenu}>
+                      <div className="nav-link header-tooltip" >
+                        <span className="icon-tooltiptext fs-14">Messages</span>
+                        <BsEnvelope size={25} />
+                      </div>
                       {userEnvelopOpen && (
                         <>
                           <div className="action-box-envelop user-menu-envelop">
@@ -296,7 +300,7 @@ const Header = () => {
                                 <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
                               </div>
                             </div>
-
+                            <hr className='mt-2 ' />
 
                             <div className='text-right' onClick={() => toggleUnderConstruction("Messages")}>
                               <a
@@ -308,21 +312,27 @@ const Header = () => {
 
                       )}
                     </div>
-                    <div className="nav-link" >
-                      <a href={`/wishlist`}>
+                    <a href={`/wishlist`}>
+                      <div className="nav-link header-tooltip" >
+                        <span className="icon-tooltiptext fs-14">Wishlist</span>
                         <GoHeart size={25} />
-                      </a>
-                    </div>
-                    <div className="nav-link" >
-                      <a href={`/appointments/${currentUser}`}>
+                      </div>
+                    </a>
+
+                    <a href={`/appointments/${currentUser}`}>
+                      <div className="nav-link header-tooltip" >
+                        <span className="icon-tooltiptext fs-14">Appointments</span>
                         <IoCalendarClearOutline size={25} />
-                      </a>
-                    </div>
-                    <div className="nav-link" >
-                      <a href={`/cart/`}>
+                      </div>
+                    </a>
+
+                    <a href={`/cart/`}>
+                      <div className="nav-link header-tooltip" >
+                        <span className="icon-tooltiptext fs-14">Cart</span>
                         <IoCartOutline size={26} />
-                      </a>
-                    </div>
+                      </div>
+                    </a>
+
                     <div className="user-dropdown nav-link" ref={orderRef}>
                       <a href="/orders" className="text-decoration-none">
                         <div className="cursor-pointer nav-link" >Orders</div>
@@ -432,16 +442,16 @@ const Header = () => {
       >
         <Modal.Header className="py-0">
           <h5 className='modal-title text-uppercase text-left'></h5>
-          <button type='button' className='close react-modal-close' onClick={() => toggleUnderConstruction("")} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+          <button type='button' className='close react-modal-close' onClick={() => toggleUnderConstruction("")} data-dismiss='modal' aria-label='Close'>
+            <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
           </button>
         </Modal.Header>
         <Modal.Body>
-          <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+          <h4 className='fs-22 rufina-family mb-3'>{modalHeading}</h4>
           <Card>
             <Card.Body className="text-center py-5">
               <GoAlertFill size="60px" className="mb-2 text-gold" />
               <p className="fs-20 text-black">Under Construction</p>
-              {/* <DateTimePicker onTimeChange={handleTimeChange} onDone={handleDoneTimeChange} availability={currentAvailability} /> */}
             </Card.Body>
           </Card>
         </Modal.Body>

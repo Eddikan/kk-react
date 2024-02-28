@@ -14,7 +14,7 @@ import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import { AiFillMessage } from "react-icons/ai";
 import { PiNotepadFill } from "react-icons/pi";
 import '../../Assets/styles/Design/style.css';
-import { IoShareSocial, IoInformationOutline, IoVideocam } from "react-icons/io5";
+import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline } from "react-icons/io5";
 import axios from 'axios';
 import { Rating } from 'react-simple-star-rating';
 import Carousel from 'react-multi-carousel';
@@ -433,7 +433,8 @@ const Designs = (props) => {
                                     <div>
                                         <Card className="table_content file-action mt-3 me-0 card-profile-designer">
                                             <Card.Header className='card-hr bg-white'>
-                                                <button type='button' className='close react-modal-close' onClick={() => setProfileViewShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                                                <button type='button' className='close react-modal-close' onClick={() => setProfileViewShow(false)} data-dismiss='modal' aria-label='Close'>
+                                                    <IoCloseOutline color="#7e7e7e" size={25} />
                                                 </button>
                                             </Card.Header>
                                             <Card.Body className="action_container font-weight">
@@ -571,7 +572,8 @@ const Designs = (props) => {
                 id="under-construction"
             >
                 <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close' onClick={() => setMessageShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={() => setMessageShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
 
@@ -610,8 +612,9 @@ const Designs = (props) => {
                 id="under-construction"
             >
                 <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left fw-600 fs-25 mt-2'>{modalHeading}</h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <h5 className='modal-title text-uppercase text-left fw-600 fs-22 mt-2'>{modalHeading}</h5>
+                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
 
@@ -632,7 +635,8 @@ const Designs = (props) => {
                 id="description-card"
             >
                 <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close description-close' onClick={() => setDescriptionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close description-close' onClick={() => setDescriptionShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
 
