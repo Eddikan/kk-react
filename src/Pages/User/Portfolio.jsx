@@ -10,6 +10,7 @@ import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoCloseOutline } from "react-icons/io5";
 import { IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 import '../../Assets/styles/Portfolio/ViewPortFolio/style.css';
+import GoBack from '../../Components/Shared/GoBack';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import LoadingPage from 'Components/Shared/LoadingPage';
@@ -143,7 +144,21 @@ const Portfolio = (props) => {
                                     <>
                                         <Col lg={10} className='mt-5 col-right mx-auto' style={{ maxWidth: '1440px' }}>
                                             <div className='ms-4'>
-                                                <h2 className='fs-30 mb-3'>Portfolio</h2>
+
+                                                <Row>
+                                                    <Col lg={12}>
+                                                        <Row className="pb-4">
+                                                            <Col lg={10} className='d-flex justify-content-left align-items-center'>
+                                                                <h3 className="fs-30 fw-600 text-black mb-0">Portfolio</h3>
+                                                            </Col>
+
+                                                            <Col lg={2} className='text-right'>
+                                                                <GoBack fallBack="/" />
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+
                                                 <Row>
                                                     {portfolio.map((object, index) => (
                                                         <Col className={`portfolio-grid-image mb-3`} xs="4" md="2">

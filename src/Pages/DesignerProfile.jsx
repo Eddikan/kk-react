@@ -17,6 +17,7 @@ import ProductGrid from 'Components/Shared/ProductGrid';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import DesignerCalendar from 'Components/Shared/DesignerCalendar';
 import { GoAlertFill } from 'react-icons/go';
+import GoBack from '../Components/Shared/GoBack';
 import { PiNotepadFill } from "react-icons/pi";
 import { IoCloseOutline, IoVideocam } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
@@ -324,7 +325,6 @@ const DesignerProfile = () => {
                                                 <>
                                                     <AiFillMessage
                                                         className="ms-3 cursor-pointer"
-                                                        // onClick={() => toggleUnderConstruction("Chat Designer")} 
                                                         onClick={() => chatBoxModal(user.first_name, user.last_name)}
                                                         size={20} color="#CEA835"
                                                     />
@@ -347,36 +347,47 @@ const DesignerProfile = () => {
                             </Col>
 
                             <Col lg="6" className='text-right'>
-                                {isDesignerCurrentUser ?
-                                    null
-                                    :
-                                    <>
-                                        <span>
-                                            <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black request-a-quote'
-                                                onClick={() => toggleRequestAQuote(true)}
-                                            >
-                                                <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
-                                                Request a Quote
-                                            </p>
-                                        </span>
-                                        {designerAvailable ?
-                                            <span className='w-100'>
-                                                <a
-                                                    href={`/appointment/schedule/${designer.id}`}
-                                                    className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn'
-                                                >
-                                                    <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule a Consultation</a>
-                                            </span>
+                                <Row>
+                                    <Col lg={10}>
+                                        {isDesignerCurrentUser ?
+                                            null
                                             :
-                                            <span className='w-100'>
-                                                <button className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn' disabled>
-                                                    <IoVideocam color="#ffffff" className='me-2' size="20" />Unavailable for Consultation
-                                                </button>
-                                            </span>
-                                        }
+                                            <>
+                                                <span>
+                                                    <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black request-a-quote'
+                                                        onClick={() => toggleRequestAQuote(true)}
+                                                    >
+                                                        <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
+                                                        Request a Quote
+                                                    </p>
+                                                </span>
+                                                {designerAvailable ?
+                                                    <span className='w-100'>
+                                                        <a
+                                                            href={`/appointment/schedule/${designer.id}`}
+                                                            className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn'
+                                                        >
+                                                            <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule a Consultation</a>
+                                                    </span>
+                                                    :
+                                                    <span className='w-100'>
+                                                        <button className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn' disabled>
+                                                            <IoVideocam color="#ffffff" className='me-2' size="20" />Unavailable for Consultation
+                                                        </button>
+                                                    </span>
+                                                }
 
-                                    </>
-                                }
+                                            </>
+                                        }
+                                    </Col>
+
+                                    <Col lg={2}>
+                                        <GoBack fallBack="/" />
+                                    </Col>
+                                </Row>
+
+
+
                             </Col>
 
                             <Col lg="12" className='mt-4'>
@@ -409,7 +420,7 @@ const DesignerProfile = () => {
                                             {user.short_bio && user.short_bio != "" ? user.short_bio : "-"}
                                         </p>
                                         <p className='mb-1 fw-600 text-black'>Long Bio</p>
-                                        <p className='mb-5 text-black'>
+                                        <p className='mb-4 text-black scroll-body'>
                                             {user.long_bio && user.long_bio != "" ? user.long_bio : "-"}
                                         </p>
                                         {user.is_designer ?
@@ -437,7 +448,7 @@ const DesignerProfile = () => {
 
                                             <div className='bg-lgray profile-featured pt-0 mb-4'>
                                                 <div className='d-flex justify-content-between'>
-                                                    <span className='fs-16 fw-600 text-black'>Featured Designs</span>
+                                                    <span className='fs-16 fw-600 text-black mt-3'>Featured Designs</span>
                                                 </div>
                                                 <FeaturedDesign currentUser={user_id} reloadCount={reloadCount} />
                                             </div>
@@ -446,7 +457,7 @@ const DesignerProfile = () => {
                                         {user.is_seller == 1 && (
                                             <div className='bg-lgray profile-top-selling '>
                                                 <div className='d-flex justify-content-between'>
-                                                    <span className='fs-16 fw-600 text-black'>Top Selling Fabrics</span>
+                                                    <span className='fs-16 fw-600 text-black '>Top Selling Fabrics</span>
                                                 </div>
                                                 <TopSellingFabrics currentUser={user_id} reloadCount={reloadCount} />
                                             </div>

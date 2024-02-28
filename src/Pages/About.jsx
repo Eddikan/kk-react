@@ -3,6 +3,7 @@ import Layout from '../Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Card, CardBody } from 'reactstrap';
 import '../Assets/styles/About/style.css';
+import GoBack from '../Components/Shared/GoBack';
 import Professionalism from '../Assets/images/boy-icon.png';
 import Integrity from '../Assets/images/integrity.png';
 import Speed from '../Assets/images/response.png';
@@ -16,6 +17,15 @@ import CustomerExperience from '../Assets/images/customer-experience.png';
 const About = () => {
   return (
     <Layout>
+      <section className='go-back-section'>
+        <Container>
+          <Row>
+            <Col className='text-right'>
+              <GoBack fallBack="/" />
+            </Col>
+          </Row>
+        </Container>
+      </section>
       <section className='height-section'>
         <Container id="about-kouture" className="your-container-class">
           <Row>
@@ -27,7 +37,6 @@ const About = () => {
                 to top-tier, custom-made attire. Simultaneously, we empower designers, in Africa,
                 Europe, Asia, North America, to showcase their exceptional craftsmanship on a
                 global stage.</p>
-
             </Col>
           </Row>
         </Container>
@@ -186,7 +195,7 @@ const About = () => {
 
 
 
-    </Layout>
+    </Layout >
   );
 };
 

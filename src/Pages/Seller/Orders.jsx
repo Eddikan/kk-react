@@ -10,6 +10,7 @@ import { GoAlertFill, GoShareAndroid } from 'react-icons/go';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { VscSend } from "react-icons/vsc";
+import GoBack from '../../Components/Shared/GoBack';
 import { IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
@@ -56,7 +57,7 @@ const Orders = (props) => {
     const [dateFrom, setDateFrom] = useState('');
 
     const getOrders = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?status='+currentTab);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?status=' + currentTab);
     };
 
     const getFabrics = async () => {
@@ -134,13 +135,17 @@ const Orders = (props) => {
                             <Sidebar currentTab={currentTab} onChangeTab={(e) => setCurrentTab(e)} />
                         </Col>
 
-                        <Col lg={10} className='top-padding mx-auto' style={{maxWidth: '1440px'}}>
+                        <Col lg={10} className='top-padding mx-auto' style={{ maxWidth: '1440px' }}>
                             <div className='ms-4'>
                                 <Row>
                                     <Col lg={12}>
                                         <Row className="pb-4">
-                                            <Col md={12} className='d-flex justify-content-left align-items-center'>
+                                            <Col lg={10} className='d-flex justify-content-left align-items-center'>
                                                 <h3 className="fs-30 fw-600 text-black mb-0">Orders</h3>
+                                            </Col>
+
+                                            <Col lg={2} className='text-right'>
+                                                <GoBack fallBack="/" />
                                             </Col>
                                         </Row>
                                         <Row className="mb-4 d-none">
@@ -232,7 +237,7 @@ const Orders = (props) => {
 
                                 {underConstruction ?
                                     <>
-                                         <Card className='mt-3'>
+                                        <Card className='mt-3'>
                                             <Card.Body className="text-center py-5">
                                                 <GoAlertFill size="60px" color="#000" className="mb-2" />
                                                 <p className="fs-20 text-black">Under Construction</p>
@@ -274,12 +279,12 @@ const Orders = (props) => {
                                                                     const created_at = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
 
                                                                     // Use map() to extract quantities from each item
-                                                                    var quantities = order_items.map(function(item) {
+                                                                    var quantities = order_items.map(function (item) {
                                                                         return parseInt(item.quantity);
                                                                     });
 
                                                                     // Use reduce() to calculate the sum of quantities
-                                                                    var number_of_items = quantities.reduce(function(total, quantity) {
+                                                                    var number_of_items = quantities.reduce(function (total, quantity) {
                                                                         return total + quantity;
                                                                     }, 0);
 
@@ -355,7 +360,7 @@ const Orders = (props) => {
                                 }
 
 
-                                
+
 
                                 {chatBox ?
                                     <>

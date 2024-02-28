@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import Layout from 'Components/Layout/Layout';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
-import GetFabricsData from 'Utils/GetFabricsData';
-import LoadingPage from 'Components/Shared/LoadingPage';
 import { ImLeaf } from "react-icons/im";
 import GoBack from 'Components/Shared/GoBack';
-import { GoHeart, GoBookmark } from "react-icons/go";
+import { GoHeart } from "react-icons/go";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import axios from 'axios';
@@ -25,7 +23,6 @@ import { Rating } from 'react-simple-star-rating';
 const Fabrics = (props) => {
     const navigate = useNavigate();
     const [mounted, setMounted] = useState(false);
-    const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [fabrics, setFabrics] = useState([]);
     const [fabricsLoading, setFabricsLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
@@ -94,6 +91,7 @@ const Fabrics = (props) => {
             sortField: field, // Only the field without order
             sortOrder: null, // Reset order when changing field
             search: searchValue,
+            country: country,
         });
     };
 
@@ -110,6 +108,7 @@ const Fabrics = (props) => {
             sortField: selectedSortField,
             sortOrder: order,
             search: searchValue,
+            country: country,
         });
     };
 
@@ -202,7 +201,6 @@ const Fabrics = (props) => {
         setEcoFriendly(isChecked ? 0 : 1);
     };
 
-
     const handleChangeCountry = (e) => {
         setCountry(e.target.value);
     };
@@ -220,6 +218,7 @@ const Fabrics = (props) => {
                     sortField: selectedSortField,
                     sortOrder: selectedSortOrder,
                     search: searchValue,
+                    country: country,
                 });
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
@@ -290,13 +289,13 @@ const Fabrics = (props) => {
                 sortField: selectedSortField,
                 sortOrder: selectedSortOrder,
                 search: searchValue,
+                country: country,
             });
         } else {
             // Set the component as mounted
             setMounted(true);
         }
-    }, [ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue]);
-
+    }, [ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue, country]);
 
     return (
         <Layout>
@@ -304,19 +303,21 @@ const Fabrics = (props) => {
                 <section>
                     <Container>
                         <Row>
-                            <Col lg="12">
-                                <div className="narrow-850 text-center">
-                                    <h2 className='fs-40 text-center mb-3'>Explore Premium Fabrics</h2>
-                                    <p className='fs-16 fw-400 text-black line-height-24'>Fabrics are versatile materials composed of fibers, either natural or synthetic, that are woven, knitted, or bonded together to form a flexible and pliable structure. </p>
-                                </div>
+                            <Col lg="11">
+                                <h2 className='fs-40 text-left mb-3'>Explore Premium Fabrics</h2>
                             </Col>
-                            {/* <Col lg="4" className='text-right'>
+
+                            <Col lg="1" className='text-right'>
                                 <GoBack fallBack="/" />
-                            </Col> */}
+                            </Col>
+
+                            <Col lg="12">
+                                <p className='fs-16 fw-400 mb-3 text-black line-height-24'>Fabrics are versatile materials composed of fibers, either natural or synthetic, that are woven, knitted, or bonded together to form a flexible and pliable structure. </p>
+                            </Col>
                         </Row>
                     </Container>
                 </section>
-                {/* <hr className="border-black mb" /> */}
+
                 <section className="pt-3">
                     <Container>
                         <Row className="mt-2">
@@ -333,7 +334,7 @@ const Fabrics = (props) => {
                                             placeholder='Enter your search term...'
                                         />
                                     </Form.Group> */}
-                                    {/* <hr className="border-black" /> */}
+
                                     <div style={{ position: "relative" }} className="mb-4">
                                         <div>
                                             {/* <Form.Label className="fw-600">Sort By: </Form.Label> */}
@@ -356,8 +357,8 @@ const Fabrics = (props) => {
                                             )}
                                         </div>
                                     </div>
+
                                     <Form.Group className='mb-4'>
-                                        {/* <Form.Label className="fw-600">Environmentally Conscious</Form.Label> */}
                                         <Form.Label className="fw-600">Eco-Friendly</Form.Label>
                                         <div className='d-flex'>
                                             <div>
@@ -382,8 +383,8 @@ const Fabrics = (props) => {
                                                 />
                                             </div> */}
                                         </div>
-
                                     </Form.Group>
+
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Composition</Form.Label>
                                         {compositions.map((composition) => (
@@ -399,6 +400,7 @@ const Fabrics = (props) => {
                                             </Form.Group>
                                         ))}
                                     </Form.Group>
+
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Weave</Form.Label>
                                         {weaves.map((weave) => (
@@ -431,9 +433,15 @@ const Fabrics = (props) => {
                                         ))}
                                     </Form.Group> */}
 
-                                    {/* <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600">Origin</Form.Label>
-                                        <Form.Control as='select' name='country' value={country} className='mr-sm-2' onChange={handleChangeCountry}>
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Country</Form.Label>
+                                        <Form.Control
+                                            as='select'
+                                            name='country'
+                                            value={country}
+                                            className='mr-sm-2'
+                                            onChange={handleChangeCountry}
+                                        >
                                             <option value=''>Select Country</option>
                                             {Countries.map((country, index) => (
                                                 <option key={country + "-" + index} value={country}>
@@ -441,7 +449,7 @@ const Fabrics = (props) => {
                                                 </option>
                                             ))}
                                         </Form.Control>
-                                    </Form.Group> */}
+                                    </Form.Group>
 
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Price Range</Form.Label>
@@ -498,16 +506,26 @@ const Fabrics = (props) => {
                                                                         <>
                                                                             <Col className="designs-grid mb-3" xs="12" md="3">
                                                                                 <div className="portfolio-link">
-                                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }} style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}>
-
+                                                                                    <div
+                                                                                        className="designs-grid-div w-100 cursor-pointer"
+                                                                                        onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }}
+                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}
+                                                                                    >
                                                                                     </div>
+
                                                                                     <div className='save-link'>
                                                                                         {userWishlist ?
-                                                                                            <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                            <div
+                                                                                                className="action-button bg-gold"
+                                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
+                                                                                            >
                                                                                                 <GoHeart className="text-white" />
                                                                                             </div>
                                                                                             :
-                                                                                            <div className="action-button bg-white" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                            <div
+                                                                                                className="action-button bg-white"
+                                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
+                                                                                            >
                                                                                                 <GoHeart className="text-black" />
                                                                                             </div>
                                                                                         }
@@ -584,16 +602,26 @@ const Fabrics = (props) => {
                                                                         <>
                                                                             <Col className="designs-grid mb-3" xs="12" md="3">
                                                                                 <div className="portfolio-link">
-                                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }} style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}>
-
+                                                                                    <div
+                                                                                        className="designs-grid-div w-100 cursor-pointer"
+                                                                                        onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }}
+                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}
+                                                                                    >
                                                                                     </div>
+
                                                                                     <div className='save-link'>
                                                                                         {userWishlist ?
-                                                                                            <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                            <div
+                                                                                                className="action-button bg-gold"
+                                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
+                                                                                            >
                                                                                                 <GoHeart className="text-white" />
                                                                                             </div>
                                                                                             :
-                                                                                            <div className="action-button bg-white" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                            <div
+                                                                                                className="action-button bg-white"
+                                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
+                                                                                            >
                                                                                                 <GoHeart className="text-black" />
                                                                                             </div>
                                                                                         }
@@ -601,7 +629,7 @@ const Fabrics = (props) => {
                                                                                 </div>
                                                                                 <div className="design-details">
                                                                                     <div className='d-flex'>
-                                                                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis">{fabric.name ?? '-'}</h4>
+                                                                                        <h4 className="text-black fs-18 fw-600 mb-0 fabric-ellipsis">{fabric.name ?? '-'}</h4>
 
                                                                                         {currentUser ?
                                                                                             <div className='d-flex align-items-center'>
@@ -617,6 +645,7 @@ const Fabrics = (props) => {
                                                                                             :
                                                                                             null
                                                                                         }
+
                                                                                         {/* {currentUser ?
                                                                                     <div className='d-flex align-items-center'>
                                                                                         <span className='fs-14 text-no-wrap mx-2'>
@@ -629,6 +658,7 @@ const Fabrics = (props) => {
                                                                                     :
                                                                                     null
                                                                                 }    */}
+
                                                                                     </div>
                                                                                     <div className="star-ratings mt-1">
                                                                                         <Rating
@@ -672,14 +702,15 @@ const Fabrics = (props) => {
                                                     </Row>
                                                 </>
                                                 :
-                                                <p className="text-center mb-3 mt-3">No records found.</p>
+                                                <div className='height-no-records'>
+                                                    <p className="text-center fs-20 mb-3 mt-3">No records found.</p>
+                                                </div>
                                             }
                                         </>
                                     }
                                 </div>
                             </Col>
                         </Row>
-
                     </Container>
                 </section>
             </div >

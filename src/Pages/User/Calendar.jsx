@@ -9,6 +9,7 @@ import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
 import { GoPlus } from "react-icons/go";
 import MyCalendar from 'Components/Shared/MyCalendar';
+import GoBack from '../../Components/Shared/GoBack';
 import axios from "axios";
 import toast from 'react-hot-toast';
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
@@ -801,9 +802,14 @@ const Calendar = (props) => {
                             <Row>
                                 <Col lg={12} className="designer-calendar-container ms-4">
                                     <Row className="pb-4">
+                                        <Col lg={12} className='text-right mb-2'>
+                                            <GoBack fallBack="/" />
+                                        </Col>
+
                                         <Col md={6} className='d-flex justify-content-left align-items-center'>
                                             <h3 className="fs-30 fw-600 text-black mb-0">Calendar</h3>
                                         </Col>
+
                                         <Col md={6} className="text-right">
                                             <button className="btn-primary btn" onClick={handleShowDesignerBusinessHoursModal}>Settings</button>
                                         </Col>

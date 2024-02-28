@@ -136,7 +136,7 @@ const PortfolioGrid = (props) => {
                             :
                             <>
                                 <div className="text-center">
-                                    <p className="text-center no-records-found">No records found.</p>
+                                    <p className="text-center mt-3">No records found.</p>
                                 </div>
                             </>
                         }

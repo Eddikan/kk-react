@@ -754,10 +754,7 @@ const ViewProduct = () => {
                                         </Card.Body>
                                     </Card>
                                 </Col>
-                                {/* <Col lg={12} className="mt-4">
-                                <p className="mb-2"><strong>Description</strong></p>
-                                <p className="mb-4">{product.description ?? "-"}</p>
-                            </Col> */}
+
                                 <Col lg="12" className='mt-4'>
                                     {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
                                     {/* <div className="d-flex justify-content-between w-100 align-item-center">
@@ -886,7 +883,7 @@ const ViewProduct = () => {
                     </button>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4 className='fs-22 fw-600 mb-3'>Share Product</h4>
+                    <h4 className='fs-22 mb-3'>Share Product</h4>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />
@@ -950,11 +947,7 @@ const ViewProduct = () => {
                                                 <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{product.name ?? "-"}</span>
                                             </>
                                             :
-                                            <>
-                                                <div className="single-image-chat" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-                                                </div>
-                                                <span className='name-of-portfolio ms-3 d-flex justify-content-center align-items-center'>{product.name ?? "-"}</span>
-                                            </>
+                                            null
                                         }
                                     </span>
                                 </div>
@@ -1023,7 +1016,7 @@ const ViewProduct = () => {
                     </button>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4 className='fs-22 fw-600 mb-3'>{modalHeading}</h4>
+                    <h4 className='fs-22 mb-3'>{modalHeading}</h4>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />

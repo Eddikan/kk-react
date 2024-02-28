@@ -84,3 +84,13 @@ img.placeholder-appointments {
     bottom: 18px;
     right: 19px;
 }
+.placeholder-img {
+    min-width: 45px;
+    min-height: 45px;
+    max-width: 45px;
+    max-height: 45px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}

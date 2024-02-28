@@ -12,6 +12,7 @@ const stripePromise = loadStripe("pk_test_NuJ5XLTawKbspF46LKSgwDbk");
 
 const Home = lazy(() => import("./Pages/Home"));
 const LogIn = lazy(() => import("./Pages/LogIn"));
+const ForgotPassword = lazy(() => import("./Pages/ForgotPassword"));
 const SignUp = lazy(() => import("./Pages/SignUp"));
 const EmailConfirmation = lazy(() => import("./Pages/EmailConfirmation"));
 const EmailConfirmed = lazy(() => import("./Pages/EmailConfirmed"));
@@ -93,13 +94,18 @@ const App = () => {
         <Routes>
           <Route path="/" exact element={<Home />} />
           <Route path="/login" exact element={<LogIn />} />
+          <Route path="/forgot-password" exact element={<ForgotPassword />} />
           <Route path="/sign-up" exact element={<SignUp />} />
           <Route
             path="/email-confirmation"
             exact
             element={<EmailConfirmation />}
           />
-          <Route path="/email-confirmed/:userCode" exact element={<EmailConfirmed />} />
+          <Route
+            path="/email-confirmed/:userCode"
+            exact
+            element={<EmailConfirmed />}
+          />
           <Route path="/questionnaire" exact element={<Questionnaire />} />
           <Route path="/about" exact element={<About />} />
           <Route path="/elements/buttons" exact element={<Buttons />} />
@@ -118,7 +124,11 @@ const App = () => {
           />
 
           {/* Portfolio */}
-          <Route path="/user/center/design/add" exact element={<AddNewPortfolio />} />
+          <Route
+            path="/user/center/design/add"
+            exact
+            element={<AddNewPortfolio />}
+          />
           <Route
             path="/portfolio/:portfolioId"
             exact
@@ -129,17 +139,29 @@ const App = () => {
             exact
             element={<EditPortfolio />}
           />
-          <Route path="/user/center/portfolio" exact element={<UserPortfolio />} />
+          <Route
+            path="/user/center/portfolio"
+            exact
+            element={<UserPortfolio />}
+          />
 
           {/* Product */}
-          <Route path="/user/center/product/add" exact element={<AddNewProduct />} />
+          <Route
+            path="/user/center/product/add"
+            exact
+            element={<AddNewProduct />}
+          />
           <Route path="/product/:productId" exact element={<ViewProduct />} />
           <Route
             path="/user/center/product/:productId/edit"
             exact
             element={<EditProduct />}
           />
-          <Route path="/user/center/products" exact element={<UserProducts />} />
+          <Route
+            path="/user/center/products"
+            exact
+            element={<UserProducts />}
+          />
 
           {/* Designs */}
           <Route path="/find-designs" exact element={<Designs />} />

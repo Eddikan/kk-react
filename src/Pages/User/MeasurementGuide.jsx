@@ -9,6 +9,7 @@ import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 import { BsCart2 } from "react-icons/bs";
 import Loading from 'Components/Shared/Loading';
+import GoBack from '../../Components/Shared/GoBack';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import LoadingPage from 'Components/Shared/LoadingPage';
@@ -157,17 +158,22 @@ const MeasurementGuide = (props) => {
                                     <Sidebar />
                                 </Col>
 
+
                                 <Col lg={10} className='my-5 col-right mx-auto' style={{ maxWidth: '1440px' }}>
                                     <div className='ms-4'>
                                         <Row className="mb-3">
-                                            <Col lg={7}>
-                                                <h2 className='fs-30 mb-4'>Measurement Guide</h2>
+                                            <Col lg={12} className='text-right mb-2'>
+                                                <GoBack fallBack="/" />
                                             </Col>
-                                            <Col lg={5} className="text-right">
+                                            <Col lg={8}>
+                                                <h2 className='fs-30 fw-600 mb-4'>Measurement Guide</h2>
+                                            </Col>
+                                            <Col lg={4} className="text-right">
                                                 {elements && elements.length > 0 && (
                                                     <Button className='btn-primary bg-transparent border-black text-black bg-black-hover border-black-hover text-white-hover me-3' type="button" onClick={() => { toggleGuideModal(); handleActionType("edit"); }}><GoPencil size="20px" className='me-2' /> Edit</Button>
                                                 )}
                                                 <Button className='btn-primary bg-gold-hover border-gold-hover text-white-hover' type="button" onClick={() => { toggleGuideModal(); handleActionType("add"); }}><GoPlus size="20px" className='me-2' /> New Element</Button>
+
                                             </Col>
                                         </Row>
                                         <Row>

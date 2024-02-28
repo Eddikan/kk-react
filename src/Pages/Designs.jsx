@@ -5,6 +5,7 @@ import Layout from 'Components/Layout/Layout';
 import FormControl from 'react-bootstrap/FormControl';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
+import GoBack from '../Components/Shared/GoBack';
 import { Form, ModalHeader, ModalFooter } from 'react-bootstrap';
 import { Rating } from 'react-simple-star-rating';
 import { PiNotepadFill } from "react-icons/pi";
@@ -399,15 +400,21 @@ const Designs = (props) => {
                 <section>
                     <Container>
                         <Row className='mb-3'>
+                            <Col lg="10">
+                                <h2 className='fs-40 text-left mb-3'>Discover Captivating Designs.</h2>
+                            </Col>
+
+                            <Col lg="2" className='text-right'>
+                                <GoBack fallBack="/" />
+                            </Col>
+
                             <Col lg="12">
-                                <div className="narrow-850 text-center">
-                                    <h2 className='fs-40 text-center mb-3'>Discover Captivating Designs.</h2>
-                                    <p className='fs-16 fw-400 text-black line-height-24'>In the realm of fabric design, the designer intricately weaves together artistic concepts, skillfully navigating through color harmonies and textural nuances to conceive patterns that not only adorn but tell compelling visual stories through the medium of textiles.</p>
-                                </div>
+                                <p className='fs-16 fw-400 mb-0 text-black line-height-24'>In the realm of fabric design, the designer intricately weaves together artistic concepts, skillfully navigating through color harmonies and textural nuances to conceive patterns that not only adorn but tell compelling visual stories through the medium of textiles.</p>
                             </Col>
                         </Row>
                     </Container>
                 </section>
+
                 <section className="pt-3">
                     <Container>
                         <Row className="mt-2">
@@ -446,166 +453,6 @@ const Designs = (props) => {
                                         null
                                     }
 
-                                    {/* <Form.Check
-                                        type={`checkbox`}
-                                        label={`All`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Trends`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Casual Wear`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Sports and Active Wear`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Formal Wear`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Outerwear`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Loungewear`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Work Wear`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Ethnic Wear`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Street Wear`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Vintage/Retro Clothing`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Loungewear`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Maternity Wear`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Swimwear`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Undergarments`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Accessories`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Uniforms`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Adaptive Clothing`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Wedding Attire`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Travel Wear`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Seasonal Clothing`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Cultural or Religious Clothing`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    />
-
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`Costumes`}
-                                        name={`day`}
-                                        className={`mb-2`}
-                                    /> */}
 
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Search</Form.Label>
@@ -1074,7 +921,7 @@ const Designs = (props) => {
                 id="under-construction"
             >
                 <Modal.Header className="py-0">
-                    <h5 className='modal-title text-left fw-600 fs-22 mt-2'>{modalHeading}</h5>
+                    <h5 className='modal-title text-left fs-22 mt-2'>{modalHeading}</h5>
                     <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>

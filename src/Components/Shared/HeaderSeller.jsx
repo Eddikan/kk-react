@@ -299,7 +299,7 @@ const HeaderSeller = () => {
                     </button>
                 </Modal.Header>
                 <Modal.Body>
-                    <h4 className='fs-22 fw-600 mb-3'>{modalHeading}</h4>
+                    <h4 className='fs-22 mb-3'>{modalHeading}</h4>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />

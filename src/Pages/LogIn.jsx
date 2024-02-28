@@ -117,7 +117,7 @@ const LogIn = () => {
                     <Form.Label>Password</Form.Label>
                     <FormControl type='password' name='password' value={loginFormData.password} className='mr-sm-2' onChange={handleChange} required />
                   </Form.Group>
-                  <a className='forgot-password text-dgray fs-16'>Forgot Password</a>
+                  <a href="/forgot-password" className='forgot-password text-dgray fs-16'>Forgot Password</a>
                   {loginFormLoading ?
                     <Button className='w-100 mt-4' variant='primary' type='button'>Signing in...</Button>
                     :

@@ -120,7 +120,7 @@ const ProductGrid = (props) => {
                                                 </div>
 
                                                 <div className='d-flex align-items-center'>
-                                                    <h2 className="text-black text-decoration-none rufina-family fs-18 mt-2">{product.name ?? "-"}</h2>
+                                                    <h2 className="text-black text-decoration-none rufina-family fs-18 mt-2 ellipsis">{product.name ?? "-"}</h2>
                                                     {product.eco_friendly != null && product.eco_friendly != '' && (
                                                         <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
                                                             <div className='tooltip-content'>

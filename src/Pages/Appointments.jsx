@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import { VscSend } from "react-icons/vsc";
 import { IoMdVideocam, IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
+import UserPlaceholder from '../Assets/images/user.png';
 import InputEmoji from 'react-input-emoji';
 import { AiFillMessage } from "react-icons/ai";
 import axios from "axios";
@@ -149,17 +150,21 @@ const Appointments = (props) => {
                                                 return (
                                                     <Col lg={12}>
                                                         <Card className='mt-3'>
-                                                            <Card.Body className='bg-white'>
+                                                            <Card.Body >
                                                                 <Row className="align-items-center">
                                                                     <Col lg={4}>
                                                                         <div className='d-flex appointment-user-image'>
-                                                                            {appointment.designer?.image && (
+                                                                            {appointment.designer?.image != '' && appointment.designer?.image != null ? (
                                                                                 <div
                                                                                     className='user-photo-appointment'
                                                                                     style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.designer?.image})` }}
                                                                                 >
                                                                                 </div>
+                                                                            ) : (
+                                                                                <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
                                                                             )}
+
+
                                                                             <div>
                                                                                 <span className='d-flex ms-3 mt-0 mb-1 fs-18 text-black'>
                                                                                     {appointment.designer?.first_name}

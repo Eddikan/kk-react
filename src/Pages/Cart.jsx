@@ -10,8 +10,6 @@ import '../Assets/styles/Cart/style.css';
 import { IoCloseOutline } from "react-icons/io5";
 import PlaceholderImage from '../Assets/images/placeholders/image.png';
 import UserPlaceholder from 'Assets/images/user.png';
-import { AiOutlineCheck, AiOutlineClose, AiOutlinePlus } from 'react-icons/ai';
-import { PiGridFourThin, PiTableThin, PiTrashThin, PiPencilThin, PiUserCircleThin } from 'react-icons/pi';
 import { AiOutlineDelete } from "react-icons/ai";
 import { useParams } from 'react-router-dom';
 import { GoAlertFill } from 'react-icons/go';
@@ -52,11 +50,6 @@ const Cart = (props) => {
 
     const [subtotalAmount, setSubtotalAmount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
-
-    function toggleUnderConstruction(message) {
-        setUnderConstructionShow(true);
-        setModalHeading(message);
-    }
 
     const toggleDeleteCartItem = (id) => {
         setCartItemId(id);
@@ -433,9 +426,7 @@ const Cart = (props) => {
 
                                         </div>
                                     }
-                                    <div className='text-center mt-4'
-                                    // onClick={() => toggleUnderConstruction("Check Out")}
-                                    >
+                                    <div className='text-center mt-4'>
                                         {selectedCartItems.length < 1 || cartItems.length < 1 ?
                                             <button className='btn btn-primary w-100' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
                                             :
@@ -449,31 +440,6 @@ const Cart = (props) => {
                     </Row>
                 </Container>
             </section>
-
-            <Modal
-                show={underConstructionShow}
-                className='modal-preview'
-                fade={false}
-                centered
-                size="sm"
-            >
-                <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
-                        <span aria-hidden='true'>&times;</span>
-                    </button>
-                </Modal.Header>
-
-                <Modal.Body>
-                    <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
-                    <Card>
-                        <Card.Body className="text-center py-5">
-                            <GoAlertFill size="60px" className="mb-2 text-gold" />
-                            <p className="fs-20 text-black">Under Construction</p>
-                        </Card.Body>
-                    </Card>
-                </Modal.Body>
-            </Modal>
 
             <Modal
                 show={cartItemModalDelete}

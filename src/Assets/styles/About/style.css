@@ -20,6 +20,9 @@ section.height-section {
 .body-height {
     line-height: 24px;
 }
+section.go-back-section {
+    padding-top: 50px;
+}
 .black-card.card {
     background: #000;
 }

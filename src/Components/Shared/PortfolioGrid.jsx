@@ -91,7 +91,7 @@ const PortfolioGrid = (props) => {
                                                 </div>
 
                                                 <div className='margin-img ellipsis-portfolio'>
-                                                    <span className="text-black text-decoration-none portfolio-name-img ">{object.name ?? "-"}</span>
+                                                    <span className="text-black text-decoration-none portfolio-name-img ellipsis">{object.name ?? "-"}</span>
                                                 </div>
                                             </Col>
                                         )

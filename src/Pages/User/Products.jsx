@@ -9,6 +9,7 @@ import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 import { BsCart2 } from "react-icons/bs";
 import { IoCloseOutline } from "react-icons/io5";
+import GoBack from '../../Components/Shared/GoBack';
 import { ImLeaf } from 'react-icons/im';
 import Loading from 'Components/Shared/Loading';
 import axios from 'axios';
@@ -145,7 +146,21 @@ const Products = (props) => {
 
                                         <Col lg={10} className='mt-5 col-right mx-auto' style={{ maxWidth: '1440px' }}>
                                             <div className='ms-4'>
-                                                <h2 className='fs-30 mb-3'>Fabrics</h2>
+
+                                                <Row>
+                                                    <Col lg={12}>
+                                                        <Row className="pb-4">
+                                                            <Col lg={10} className='d-flex justify-content-left align-items-center'>
+                                                                <h3 className="fs-30 fw-600 text-black mb-0">Fabrics</h3>
+                                                            </Col>
+
+                                                            <Col lg={2} className='text-right'>
+                                                                <GoBack fallBack="/" />
+                                                            </Col>
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+
                                                 <Row>
                                                     {products.map((object, index) => (
                                                         <Col className={`product-grid-image mb-3`} xs="4" md="2">
@@ -202,7 +217,7 @@ const Products = (props) => {
                                                             <Row>
                                                                 <Col lg="12">
                                                                     <div className='d-flex align-items-center'>
-                                                                        <h2 className="text-black text-decoration-none rufina-family fs-18 mt-2">{object.name ?? "-"}</h2>
+                                                                        <h2 className="text-black text-decoration-none text-ellipsis rufina-family fs-18 mt-2">{object.name ?? "-"}</h2>
                                                                         {object.eco_friendly != null && object.eco_friendly != '' && (
                                                                             <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
                                                                                 <div className='tooltip-content'>

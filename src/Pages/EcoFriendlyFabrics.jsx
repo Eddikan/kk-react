@@ -8,6 +8,7 @@ import { ImLeaf } from "react-icons/im";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
 import { GoHeart } from "react-icons/go";
+import GoBack from '../Components/Shared/GoBack';
 import { useCookies } from 'react-cookie';
 import Countries from 'Utils/Countries';
 import Loading from 'Components/Shared/Loading';
@@ -87,6 +88,7 @@ const EcoFriendlyFabrics = (props) => {
             sortField: field, // Only the field without order
             sortOrder: null, // Reset order when changing field
             search: searchValue,
+            country: country,
         });
     };
 
@@ -103,6 +105,7 @@ const EcoFriendlyFabrics = (props) => {
             sortField: selectedSortField,
             sortOrder: order,
             search: searchValue,
+            country: country,
         });
     };
 
@@ -208,6 +211,7 @@ const EcoFriendlyFabrics = (props) => {
                     sortField: selectedSortField,
                     sortOrder: selectedSortOrder,
                     search: searchValue,
+                    country: country,
                 });
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
@@ -278,12 +282,13 @@ const EcoFriendlyFabrics = (props) => {
                 sortField: selectedSortField,
                 sortOrder: selectedSortOrder,
                 search: searchValue,
+                country: country,
             });
         } else {
             // Set the component as mounted
             setMounted(true);
         }
-    }, [mounted, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue]);
+    }, [mounted, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue, country]);
 
     return (
         <Layout>
@@ -291,11 +296,16 @@ const EcoFriendlyFabrics = (props) => {
                 <section>
                     <Container>
                         <Row>
-                            <Col lg="12">
-                                <div className="narrow-850 text-center">
-                                    <h2 className='fs-40 text-center mb-3 embrace-eco '>Embrace Eco-Friendly Fabrics!</h2>
-                                    <p className='fs-16 fw-400 text-black eco-body'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea </p>
-                                </div>
+                            <Col lg="10">
+                                <h2 className='fs-40 text-left mb-3 embrace-eco '>Embrace Eco-Friendly Fabrics!</h2>
+                            </Col>
+
+                            <Col lg="2" className='text-right'>
+                                <GoBack fallBack="/" />
+                            </Col>
+
+                            <Col lg="12" className='text-left'>
+                                <p className='fs-16 fw-400 text-black line-height-24'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea </p>
                             </Col>
                         </Row>
                     </Container>
@@ -394,8 +404,8 @@ const EcoFriendlyFabrics = (props) => {
                                         ))}
                                     </Form.Group> */}
 
-                                    {/* <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600">Origin</Form.Label>
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Country</Form.Label>
                                         <Form.Control as='select' name='country' value={country} className='mr-sm-2' onChange={handleChangeCountry}>
                                             <option value=''>Select Country</option>
                                             {Countries.map((country, index) => (
@@ -404,9 +414,7 @@ const EcoFriendlyFabrics = (props) => {
                                                 </option>
                                             ))}
                                         </Form.Control>
-                                    </Form.Group> */}
-
-
+                                    </Form.Group>
 
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Price Range</Form.Label>
@@ -414,7 +422,6 @@ const EcoFriendlyFabrics = (props) => {
                                             <MultiRangeSlider min={10} max={1000} onChange={priceRangeChange} />
                                         </Form.Group>
                                     </Form.Group>
-
 
                                     {/* <h2>Price Range</h2>
                                     <div>

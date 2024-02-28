@@ -13,8 +13,10 @@ import YoutubeIcon from 'Assets/images/youtube.png';
 import UserPlaceholder from 'Assets/images/user.png';
 import Loading from 'Assets/images/loading.gif'
 import GetUserData from 'Utils/GetUserData';
+import GoBack from '../../Components/Shared/GoBack';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
+import { PiPencilThin } from "react-icons/pi";
 import { GoArrowUpRight } from "react-icons/go";
 import AdminPortfolio from 'Components/Shared/Admin/AdminPortfolio';
 import AdminFabrics from 'Components/Shared/Admin/AdminFabrics';
@@ -343,20 +345,31 @@ const Profile = () => {
                                                 <p className='fs-16 color-light-blue'>-</p>
                                             }
                                         </div>
-
                                     </div>
                                 </div>
                             </Col>
                             <Col lg="6" className='mb-5'>
                                 <Row className="justify-content-end">
-                                    <Col md="3" className="text-right pe-0">
-                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className='w-100'>Edit Profile</Button>
+
+                                    <Col md="2" className="text-right pe-0 me-4">
+                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className='w-100'>
+                                            <GoPencil />
+                                            <span className='ms-1'>Edit Profile</span>
+                                        </Button>
                                     </Col>
+
                                     {user.is_designer == 1 && (
-                                        <Col md="3" className="text-left">
-                                            <Button href={`/user/center/calendar`} type='button' id="btn-seller-profile" className='w-100'><GoArrowUpRight /><span className='ms-1'>Seller Center</span></Button>
+                                        <Col md="2" className="text-left me-4">
+                                            <Button href={`/user/center/calendar`} type='button' id="btn-seller-profile" className='w-100 ms-2'>
+                                                <GoArrowUpRight />
+                                                <span className='ms-1'>Seller Center</span>
+                                            </Button>
                                         </Col>
                                     )}
+
+                                    <Col md="2" className="text-right">
+                                        <GoBack fallBack="/" />
+                                    </Col>
                                 </Row>
                             </Col>
                             <Col lg="12" className='mt-4'>
@@ -413,7 +426,7 @@ const Profile = () => {
                                         </div> */}
                                     </Col>
                                     <Col lg="6">
-                                        <div className='bg-lgray profile-details pt-0 address mb-4'>
+                                        <div className='bg-lgray profile-details address mb-4'>
                                             <div className='icons-d-flex'>
                                                 <img src={PinIcon} alt="location pin" className='profile-icon' />
                                                 {user.city || user.province || user.country ?

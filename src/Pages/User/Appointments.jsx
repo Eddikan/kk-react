@@ -6,7 +6,9 @@ import { GoAlertFill } from 'react-icons/go';
 import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { VscSend } from "react-icons/vsc";
 import { IoIosAttach } from "react-icons/io";
+import GoBack from '../../Components/Shared/GoBack';
 import { IoCloseOutline } from "react-icons/io5";
+import UserPlaceholder from '../../Assets/images/user.png';
 import { AiFillMessage } from "react-icons/ai";
 import { CiSearch } from 'react-icons/ci';
 import { useParams } from 'react-router-dom';
@@ -48,10 +50,6 @@ const Appointments = (props) => {
 
     const getDate = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
-    };
-
-    const getDesignerAppointment = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
     };
 
     const closeAppointmentModal = () => {
@@ -112,12 +110,6 @@ const Appointments = (props) => {
         return formattedTime;
     }
 
-    useEffect(() => {
-        if (inputClicked) {
-            fetchAppointmentList();
-        }
-    }, [query, inputClicked]);
-
     const fetchAppointmentList = async () => {
         try {
             const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment?user_id=' + currentUser, {
@@ -152,6 +144,12 @@ const Appointments = (props) => {
 
     }, [reloadCount]);
 
+    useEffect(() => {
+        if (inputClicked) {
+            fetchAppointmentList();
+        }
+    }, [query, inputClicked]);
+
     return (
         <LayoutSellerCenter>
             <section>
@@ -166,8 +164,12 @@ const Appointments = (props) => {
                                 <Row>
                                     <Col lg={12}>
                                         <Row className="pb-4">
-                                            <Col md={12} className='d-flex justify-content-left align-items-center'>
+                                            <Col lg={10} className='d-flex justify-content-left align-items-center'>
                                                 <h3 className="fs-30 fw-600 text-black mb-0">Appointments</h3>
+                                            </Col>
+
+                                            <Col lg={2} className='text-right'>
+                                                <GoBack fallBack="/" />
                                             </Col>
                                         </Row>
 
@@ -262,16 +264,18 @@ const Appointments = (props) => {
                                                             return (
                                                                 <Col lg={12}>
                                                                     <Card className='mt-3'>
-                                                                        <Card.Body className='bg-white'>
+                                                                        <Card.Body>
                                                                             <Row className="align-items-center">
                                                                                 <Col lg={4}>
                                                                                     <div className='d-flex appointment-user-image'>
-                                                                                        {appointment.customer?.image && (
+                                                                                        {appointment.customer?.image != '' && appointment.customer?.image != null ? (
                                                                                             <div
                                                                                                 className='user-photo-appointment'
                                                                                                 style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.customer?.image})` }}
                                                                                             >
                                                                                             </div>
+                                                                                        ) : (
+                                                                                            <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
                                                                                         )}
                                                                                         <div>
                                                                                             <span className='d-flex ms-3 mt-0 mb-1 fs-18 text-black'>
@@ -294,14 +298,17 @@ const Appointments = (props) => {
                                                                                     <span className='text-black'>{appointment.status}</span>
                                                                                 </Col>
 
-
                                                                                 <Col lg={2} className='d-flex justify-content-end'>
-                                                                                    <div className="cursor-pointer appointments-tooltip" onClick={() => toggleShowAppointment(appointment.customer?.first_name, appointment.customer?.last_name, appointment.title, appointment.created_at, appointment.consultation_hour_start, appointment.consultation_hour_end, appointment.consultation_details)}>
+                                                                                    <div
+                                                                                        className="cursor-pointer appointments-tooltip"
+                                                                                        onClick={() => toggleShowAppointment(appointment.customer?.first_name, appointment.customer?.last_name, appointment.title, appointment.created_at, appointment.consultation_hour_start, appointment.consultation_hour_end, appointment.consultation_details)}
+                                                                                    >
                                                                                         <span className="icon-tooltiptext fs-14">View Details</span>
                                                                                         <IoEye className='video-cam me-3' size={20} />
                                                                                     </div>
 
-                                                                                    <div className="cursor-pointer appointments-tooltip"
+                                                                                    <div
+                                                                                        className="cursor-pointer appointments-tooltip"
                                                                                         onClick={() => chatBoxModal(appointment.customer?.first_name, appointment.customer?.last_name, appointment.customer?.image, appointment.status)}
                                                                                     >
                                                                                         <span className="icon-tooltiptext fs-14">Message Customer</span>
@@ -314,7 +321,6 @@ const Appointments = (props) => {
                                                                 </Col>
                                                             );
                                                         })}
-
                                                     </>
                                                     :
                                                     <>
@@ -439,9 +445,16 @@ const Appointments = (props) => {
             >
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setUnderConstructionShow(false)}
+                        data-dismiss='modal' aria-label='Close'
+                    >
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
                     </button>
                 </Modal.Header>
+
                 <Modal.Body>
                     <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
                     <Card>

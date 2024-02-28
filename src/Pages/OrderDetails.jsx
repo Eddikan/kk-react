@@ -219,7 +219,7 @@ const Orders = (props) => {
                                                                         <Card.Body className='bg-white card-body-border'>
                                                                             {order_items && order_items.length > 0 ?
                                                                                 <>
-                                                                                    {order_items.map((order_item , index) => {
+                                                                                    {order_items.map((order_item, index) => {
                                                                                         var order_item_product = order_item.product;
                                                                                         if (order_item_product.image_urls) {
                                                                                             var image_urls = JSON.parse(order_item_product.image_urls);
@@ -232,7 +232,7 @@ const Orders = (props) => {
                                                                                             <>
                                                                                                 <Row className='align-items-center'>
                                                                                                     <Col lg={4} className='d-flex align-items-center'>
-                                                                                                        <div className="designs-grid-div fabric-image cursor-pointer"
+                                                                                                        <div className="designs-grid-div fabric-image"
                                                                                                             style={{ backgroundImage: "url(" + orderItemImage + ")", minHeight: '55px' }}>
                                                                                                         </div>
 
@@ -268,7 +268,7 @@ const Orders = (props) => {
                                                                                                     :
                                                                                                     null
                                                                                                 }
-                                                                                        </>
+                                                                                            </>
                                                                                         );
                                                                                     })}
                                                                                 </>
@@ -342,7 +342,7 @@ const Orders = (props) => {
                                                     <p className="mb-0">{user.country}</p>
                                                 </>
                                             }
-                                            
+
                                         </Card.Body>
                                     </Card>
                                     <Card className="mb-3">
@@ -379,14 +379,14 @@ const Orders = (props) => {
                                                     <p className="mb-0">{user.country}</p>
                                                 </>
                                             }
-                                            
+
                                         </Card.Body>
                                     </Card>
                                 </Col>
                             </Row>
                         </Col>
                     </Row>
-                    
+
 
                     {chatBox ?
                         <>
