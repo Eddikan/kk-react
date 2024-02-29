@@ -721,6 +721,7 @@ const Designs = (props) => {
                                                 </div>
                                             </a>
 
+
                                             {isDesignCurrentUser ?
                                                 null
                                                 :

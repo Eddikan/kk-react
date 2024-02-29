@@ -19,7 +19,7 @@ const initialQuestionnaire2Data = Object.freeze({
     design_inspirations: '',
     pricing_structure: '',
     lead_time: '',
-    areas_of_specialization : '',
+    areas_of_specialization: '',
     design_process: '',
     is_designer: 1,
 });
@@ -120,21 +120,23 @@ const Questionnaire2 = (props) => {
     const handleDocumentClick = (event) => {
         // Check if the click is outside the TagsInput component
         if (tagsInputRef.current && !tagsInputRef.current.contains(event.target)) {
-          // Simulate an "Enter" key press
-          if (event.key === 'Enter') {
-            tagsInputRef.current.handleKeyDown({ key: 'Enter' });
-          }
+            // Simulate an "Enter" key press
+            if (event.key === 'Enter') {
+                tagsInputRef.current.handleKeyDown({ key: 'Enter' });
+            }
         }
     };
 
     async function questionnaire2Submit(e) {
         e.preventDefault();
         setQuestionnaire2Loading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?user_id=' + currentUser + '&token=' + token, {...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, post_type: postType  }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?user_id=' + currentUser + '&token=' + token, { ...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, post_type: postType }).then((response) => {
             const success = response.data.status;
-            if(success == 'Success') {
+            if (success == 'Success') {
                 hideAll(3);
                 setQuestionnaire2Loading(false);
+                navigate('/');
+                setReloadCount(reloadCount + 1);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setQuestionnaire2Loading(false);
@@ -166,19 +168,19 @@ const Questionnaire2 = (props) => {
         const handleDocumentClick = (event) => {
             // Check if the click is outside the TagsInput component
             if (tagsInputRef.current && !tagsInputRef.current.contains(event.target)) {
-              // Simulate an "Enter" key press
-              if (event.key === 'Enter') {
-                tagsInputRef.current.handleKeyDown({ key: 'Enter' });
-              }
+                // Simulate an "Enter" key press
+                if (event.key === 'Enter') {
+                    tagsInputRef.current.handleKeyDown({ key: 'Enter' });
+                }
             }
         };
-      
-          // Attach the event listener when the component mounts
+
+        // Attach the event listener when the component mounts
         document.addEventListener('click', handleDocumentClick);
-    
+
         // Cleanup the event listener when the component unmounts
         return () => {
-        document.removeEventListener('click', handleDocumentClick);
+            document.removeEventListener('click', handleDocumentClick);
         };
     }, [reloadCount, user]);
 
@@ -216,7 +218,7 @@ const Questionnaire2 = (props) => {
                                                     e.target.value = "";
                                                 }
                                             }}
-                                            // placeholder="Fabric Type" // uncomment if needed
+                                        // placeholder="Fabric Type" // uncomment if needed
                                         />
                                     </Form.Group>
                                 </CardBody>
@@ -238,7 +240,7 @@ const Questionnaire2 = (props) => {
                                                                         <>
                                                                             {portfolioItem.image_urls.map((image, imageIndex) => (
                                                                                 <Col lg={4} key={image.id} className="image-preview mt-3">
-                                                                                    <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'portfolio/'+image.image_url+")", minHeight: '190px'}}>
+                                                                                    <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '190px' }}>
                                                                                         <div className="dnd-actions-overlay"></div>
                                                                                     </div>
                                                                                 </Col>
@@ -250,9 +252,9 @@ const Questionnaire2 = (props) => {
                                                                 </>
                                                             ))}
                                                             <Col className="mt-3" lg={4}>
-                                                                <div onClick={toggleuploadFile} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed" style={{minHeight: '190px'}}>
+                                                                <div onClick={toggleuploadFile} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed" style={{ minHeight: '190px' }}>
                                                                     <GoPlus color="#a4a4a4" size="130px" className="mt-3" />
-                                                                    <p className="text-dgray" style={{marginTop: '-15px'}}>Add More</p>
+                                                                    <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
                                                                 </div>
                                                             </Col>
                                                         </Row>
@@ -275,7 +277,7 @@ const Questionnaire2 = (props) => {
                                                         </Col>
                                                     </Row>
                                                 }
-                                                
+
                                             </CardBody>
                                             :
                                             <CardBody>

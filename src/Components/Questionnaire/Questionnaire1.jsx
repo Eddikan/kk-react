@@ -39,6 +39,7 @@ const Questionnaire1 = (props) => {
     const [clothingSizes, setClothingSizes] = useState(initialClothingSizes);
     const [questionnaire1Loading, setQuestionnaire1Loading] = useState(false);
     const [scheduleShow, setScheduleShow] = useState(false);
+    const [reloadCount, setReloadCount] = useState(0);
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
 
@@ -61,7 +62,7 @@ const Questionnaire1 = (props) => {
             target_date: e,
         })
     };
-    
+
     const handleChange = (e) => {
         setQuestionnaire1Data({
             ...questionnaire1Data,
@@ -84,6 +85,8 @@ const Questionnaire1 = (props) => {
             if (success == 'Success') {
                 reloadPage(true);
                 hideAll(2);
+                navigate('/');
+                setReloadCount(reloadCount + 1);
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
@@ -106,7 +109,7 @@ const Questionnaire1 = (props) => {
                 }
             }
         }
-        
+
         return () => {
             // ComponentWillUnmount logic goes here (optional)
             // This will be executed before the component is unmounted
@@ -209,7 +212,7 @@ const Questionnaire1 = (props) => {
                                                             </Form.Control>
                                                         </Form.Group>
                                                         <Form.Group as={Col}>
-                                                            <Form.Control as='select' name='pants_size' value={clothingSizes.pants_size}  onChange={handleChangeClothingSizes}>
+                                                            <Form.Control as='select' name='pants_size' value={clothingSizes.pants_size} onChange={handleChangeClothingSizes}>
                                                                 <option value=''></option>
                                                                 <option value='option1'>Option 1</option>
                                                                 <option value='option2'>Option 2</option>
@@ -313,7 +316,7 @@ const Questionnaire1 = (props) => {
                                                 onChange={handleChange}
                                             />
                                         </Form.Group>
-                                    :
+                                        :
                                         null
                                     }
                                 </CardBody>
@@ -348,7 +351,7 @@ const Questionnaire1 = (props) => {
                                             name="target_date"
                                             value={questionnaire1Data.target_date}
                                             onChange={handleChange}
-                                            style={{maxWidth: '250px'}}
+                                            style={{ maxWidth: '250px' }}
                                         />
                                         <Button className='btn-primary' onClick={toggleSchedule} type="button">Pick a Date</Button>
                                     </Form.Group>

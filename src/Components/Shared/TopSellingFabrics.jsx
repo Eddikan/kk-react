@@ -7,6 +7,8 @@ import { GoHeart } from "react-icons/go";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from './Loading';
 import { useLocation } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
 
 const ProductGrid = (props) => {
     const navigate = useNavigate();
@@ -14,6 +16,8 @@ const ProductGrid = (props) => {
     const [productsLoading, setProductsLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
     const [isClicked, setIsClicked] = useState(false);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
+    const currentUser = cookies.currentUser;
 
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
@@ -46,6 +50,19 @@ const ProductGrid = (props) => {
         fetchData(user_id);
     }, [reloadCount]);
 
+    async function wishlistUpdate(e) {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                setReloadCount(reloadCount + 1);
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
+        }).catch((error) => {
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    };
+
     return (
         <>
             <div id="profile-portfolio">
@@ -66,10 +83,33 @@ const ProductGrid = (props) => {
                                         } else {
                                             var productImage = PlaceholderImage;
                                         }
+
+                                        var wishlist_user_ids = product.wishlist_user_ids;
+                                        const userWishlist = wishlist_user_ids.includes(currentUser);
                                         return (
                                             <Col className={`mb-0`} lg="4">
-                                                <div className={`portfolio-grid-selling w-100 ${product.collection_type == "Limited" ? "limited" : " "} ${product.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + productImage + ")" }}>
-                                                    <div className="portfolio-overlay">
+                                                <div className="portfolio-link">
+                                                    <div className={`portfolio-grid-selling w-100 ${product.collection_type == "Limited" ? "limited" : " "} ${product.status == "Draft" ? "draft" : ""}`}
+                                                        style={{ backgroundImage: "url(" + productImage + ")" }}
+                                                    >
+                                                        {/* <div className="portfolio-overlay"> */}
+                                                        <div className='save-link'>
+                                                            {userWishlist ?
+                                                                <div
+                                                                    className="action-button bg-gold"
+                                                                    onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
+                                                                >
+                                                                    <GoHeart className="text-white" />
+                                                                </div>
+                                                                :
+                                                                <div
+                                                                    className="action-button bg-white"
+                                                                    onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
+                                                                >
+                                                                    <GoHeart className="text-black" />
+                                                                </div>
+                                                            }
+                                                        </div>
                                                         <div className="portfolio-details">
                                                             {product.status == "Draft" ?
                                                                 <span className="text-warning small fw-600">Draft</span>
@@ -90,10 +130,11 @@ const ProductGrid = (props) => {
                                                                 null
                                                             } */}
                                                         </div>
+                                                        {/* </div> */}
+                                                        <Link to={`/product/${product.id}`} className="text-decoration-none">
+                                                            <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
+                                                        </Link>
                                                     </div>
-                                                    <Link to={`/product/${product.id}`} className="text-decoration-none">
-                                                        <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
-                                                    </Link>
                                                 </div>
                                             </Col>
                                         )
@@ -109,7 +150,7 @@ const ProductGrid = (props) => {
                         }
                     </>
                 }
-            </div>
+            </div >
         </>
     );
 };

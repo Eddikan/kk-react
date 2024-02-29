@@ -86,9 +86,8 @@
 .bg-product {
     background-color: #FAFAFA;
 }
-.ellipsis {
+.ellipsis-products {
     white-space: nowrap; 
-    width: 60%; 
     overflow: hidden;
     text-overflow: ellipsis; 
   }
@@ -209,8 +208,26 @@
     border-style: solid;
     border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
 }
-
 .green-leaf-tooltip:hover .green-leaf-tooltiptext {
     visibility: visible;
+}
+
+.save-link {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
+.portfolio-link .save-link {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.portfolio-link:hover .save-link {
+    opacity: 1;
+}
+
+.portfolio-link .save-link .action-button {
+    pointer-events: auto;
 }
 

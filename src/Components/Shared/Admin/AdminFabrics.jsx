@@ -9,6 +9,7 @@ import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline, IoCloseOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from '../Loading';
+import { ImLeaf } from 'react-icons/im';
 import '../../../Assets/styles/Product/ViewProduct/style.css';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -185,7 +186,7 @@ const ProductGrid = (props) => {
                                                                 :
                                                                 null
                                                             }
-                                                            <span className="text-white text-decoration-none portfolio-name">{product.name ?? "-"}</span>
+
                                                             {currentUser != product.user.id ?
                                                                 <div className="other-actions">
                                                                     {userWishlist ?
@@ -209,6 +210,18 @@ const ProductGrid = (props) => {
                                                     <Link to={`/product/${product.id}`} className="text-decoration-none">
                                                         <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
                                                     </Link>
+                                                </div>
+
+                                                <div className='d-flex align-items-center'>
+                                                    <h2 className="text-black text-decoration-none rufina-family fs-18 mt-2 pb-3 ellipsis-products">{product.name ?? "-"}</h2>
+                                                    {product.eco_friendly != null && product.eco_friendly != '' && (
+                                                        <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
+                                                            <div className='tooltip-content'>
+                                                                <span className="green-leaf-tooltiptext"></span>
+                                                            </div>
+                                                            <ImLeaf color="#55d140" className='mb-3' />
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </Col>
                                         )

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../Components/Layout/Layout';
-import { Container, Row, Col, Button }  from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Logo from '../Assets/images/kouture-konect-logo.png';
 import '../Assets/styles/Questionnaire/style.css'
@@ -39,7 +39,7 @@ const Questionnaire = () => {
   const [questionnaire4Show, setQuestionnaire4Show] = useState(false);
   const [questionnaire5Show, setQuestionnaire5Show] = useState(false);
 
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn','userDetails','userRole', 'token']);
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
 
   const currentUser = cookies.currentUser;
   const signupType = cookies.signup_type;
@@ -86,30 +86,30 @@ const Questionnaire = () => {
 
   async function toggleCompleteQuestionnaire(input, value) {
     setFormStatus('loading');
-    putUser({[input]: value}).then((response) => {
-        const success = response.data.status;
-        if(success == 'Success') {
-          setCookie('completed_questionnaire', 1, { path: '/' });
-          navigate("/user/profile");
-          setFormStatus('standby');
-        } else {
-            toast.error('An error occured. Please try again or contact the administrator.');
-        }
-    }).catch(() => {
+    putUser({ [input]: value }).then((response) => {
+      const success = response.data.status;
+      if (success == 'Success') {
+        setCookie('completed_questionnaire', 1, { path: '/' });
+        navigate("/user/profile");
+        setFormStatus('standby');
+      } else {
         toast.error('An error occured. Please try again or contact the administrator.');
+      }
+    }).catch(() => {
+      toast.error('An error occured. Please try again or contact the administrator.');
     });
   }
 
   async function toggleSetValueOne(input, value) {
-    putUser({[input]: value}).then((response) => {
-        const success = response.data.status;
-        if(success == 'Success') {
+    putUser({ [input]: value }).then((response) => {
+      const success = response.data.status;
+      if (success == 'Success') {
 
-        } else {
-            toast.error('An error occured. Please try again or contact the administrator.');
-        }
-    }).catch(() => {
+      } else {
         toast.error('An error occured. Please try again or contact the administrator.');
+      }
+    }).catch(() => {
+      toast.error('An error occured. Please try again or contact the administrator.');
     });
   }
 
@@ -117,15 +117,15 @@ const Questionnaire = () => {
     // ComponentDidMount logic goes here
     // This will be executed after the component is mounted
     getUser().then(response => {
-        const selectedUser = response.data.data;
-        if (selectedUser) {
-          setUser(selectedUser);
-          setUserLoading(false);
-        } else {
-          const message = 'There has been an error getting the user, please try again!';
-          toast.error(message);
-          window.location.href = "/login";
-        }
+      const selectedUser = response.data.data;
+      if (selectedUser) {
+        setUser(selectedUser);
+        setUserLoading(false);
+      } else {
+        const message = 'There has been an error getting the user, please try again!';
+        toast.error(message);
+        window.location.href = "/login";
+      }
     }).catch((error) => {
       const message = 'There has been an error getting the user, please try again!';
       toast.error(message);
@@ -143,9 +143,9 @@ const Questionnaire = () => {
     }
 
     return () => {
-        // ComponentWillUnmount logic goes here (optional)
-        // This will be executed before the component is unmounted
-        //   console.log('Component is unmounted');
+      // ComponentWillUnmount logic goes here (optional)
+      // This will be executed before the component is unmounted
+      //   console.log('Component is unmounted');
     };
   }, [reloadCount]);
 
@@ -159,7 +159,9 @@ const Questionnaire = () => {
             <Container className='text-center'>
               <Row>
                 <Col lg='12'>
-                  <img src={Logo}/>  
+                  <a href='/'>
+                    <img src={Logo} />
+                  </a>
                 </Col>
               </Row>
             </Container>
@@ -175,10 +177,10 @@ const Questionnaire = () => {
               </Row>
               <Row className='narrow-400 mt-3'>
                 <Col lg='6' className='text-right'>
-                  <Button className='btn-outline' onClick={function() { setStep((prevStep) => prevStep + 1); }}>No</Button>
+                  <Button className='btn-outline' onClick={function () { setStep((prevStep) => prevStep + 1); }}>No</Button>
                 </Col>
                 <Col lg='6' className='text-left'>
-                  <Button className='btn-primary' onClick={function() { setQuestionnaire1Show((prevStatus) => true); }} >Yes</Button>
+                  <Button className='btn-primary' onClick={function () { setQuestionnaire1Show((prevStatus) => true); }} >Yes</Button>
                 </Col>
               </Row>
             </Container>
@@ -191,7 +193,7 @@ const Questionnaire = () => {
           :
           null
         }
-        {step == 2 && !questionnaire2Show  ?
+        {step == 2 && !questionnaire2Show ?
           <>
             <Container className='q1 narrow-600 py-5 px-3 mt-5 text-dgray'>
               <Row>
@@ -201,10 +203,10 @@ const Questionnaire = () => {
               </Row>
               <Row className='narrow-400 mt-3'>
                 <Col lg='6' className='text-right'>
-                  <Button className='btn-outline' onClick={function() { setStep((prevStep) => prevStep + 1); }}>No</Button>
+                  <Button className='btn-outline' onClick={function () { setStep((prevStep) => prevStep + 1); }}>No</Button>
                 </Col>
                 <Col lg='6' className='text-left'>
-                  <Button className='btn-primary' onClick={function() { setQuestionnaire2Show((prevStatus) => true); toggleSetValueOne('is_designer', 1); }} >Yes</Button>
+                  <Button className='btn-primary' onClick={function () { setQuestionnaire2Show((prevStatus) => true); toggleSetValueOne('is_designer', 1); }} >Yes</Button>
                 </Col>
               </Row>
             </Container>
@@ -217,25 +219,25 @@ const Questionnaire = () => {
           :
           null
         }
-        
-        {step == 3 && !questionnaire3Show  ?
-        <>
-          <Container className='q3 q2-no narrow-600 py-5 px-3 mt-5 text-dgray'>
-            <Row>
-              <Col lg='12' className='text-center'>
-                <h2 className='form-title pb-2'>Do you sell fabrics?</h2>
-              </Col>
-            </Row>
-            <Row className='narrow-400 mt-3'>
-              <Col lg='6' className='text-right'>
-                <Button className='btn-outline' onClick={function() { setStep((prevStep) => prevStep + 1); }}>No</Button>
-              </Col>
-              <Col lg='6' className='text-left'>
-                <Button className='btn-primary' onClick={function() { setQuestionnaire3Show((prevStatus) => true); toggleSetValueOne('is_seller', 1); }} >Yes</Button>
-              </Col>
-            </Row>
-          </Container>
-        </>
+
+        {step == 3 && !questionnaire3Show ?
+          <>
+            <Container className='q3 q2-no narrow-600 py-5 px-3 mt-5 text-dgray'>
+              <Row>
+                <Col lg='12' className='text-center'>
+                  <h2 className='form-title pb-2'>Do you sell fabrics?</h2>
+                </Col>
+              </Row>
+              <Row className='narrow-400 mt-3'>
+                <Col lg='6' className='text-right'>
+                  <Button className='btn-outline' onClick={function () { setStep((prevStep) => prevStep + 1); }}>No</Button>
+                </Col>
+                <Col lg='6' className='text-left'>
+                  <Button className='btn-primary' onClick={function () { setQuestionnaire3Show((prevStatus) => true); toggleSetValueOne('is_seller', 1); }} >Yes</Button>
+                </Col>
+              </Row>
+            </Container>
+          </>
           :
           null
         }
@@ -253,7 +255,7 @@ const Questionnaire = () => {
                   <Col lg='12'>
                     <h2 className='form-title pb-2'>Welcome to Kouture Konect</h2>
                     <p className="mb-3">
-                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed 
+                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
                       diam nonumy eirmod tempor invidunt ut aliquyam erat voluptua.
                     </p>
                     <div className='d-flex align-items-center mb-3'>
@@ -271,7 +273,7 @@ const Questionnaire = () => {
                         Saving your details...
                       </Button>
                       :
-                      <Button className='btn-primary mt-2' type="button" onClick={function() { toggleCompleteQuestionnaire('completed_questionnaire', 1); }}>
+                      <Button className='btn-primary mt-2' type="button" onClick={function () { toggleCompleteQuestionnaire('completed_questionnaire', 1); }}>
                         Take Me to My Profile
                       </Button>
                     }
@@ -284,9 +286,9 @@ const Questionnaire = () => {
           :
           null
         }
-        
+
       </section>
-      
+
     </Layout>
   );
 };

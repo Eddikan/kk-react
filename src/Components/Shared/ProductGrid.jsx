@@ -10,23 +10,38 @@ import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from './Loading';
 import { ImLeaf } from 'react-icons/im';
 import { useCookies } from 'react-cookie';
+import axios from 'axios';
 
 const ProductGrid = (props) => {
     const [products, setProducts] = useState([]);
     const [productsLoading, setProductsLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
+    const [fabrics, setFabrics] = useState([]);
     const [isProductCurrentUser, setIsProductCurrentUser] = useState(false);
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
     const currentUser = cookies.currentUser;
-
-
+    const token = cookies.token;
 
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
     }
     let query = useQuery();
     const user_id = query.get('user_id');
+
+
+    async function wishlistUpdate(e) {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                setReloadCount(reloadCount + 1);
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
+        }).catch((error) => {
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    };
 
     const fetchData = async (e) => {
         try {
@@ -74,53 +89,82 @@ const ProductGrid = (props) => {
                                         } else {
                                             var productImage = PlaceholderImage;
                                         }
+
+                                        var wishlist_user_ids = product.wishlist_user_ids;
+                                        const userWishlist = wishlist_user_ids.includes(currentUser);
                                         return (
                                             <Col className={`portfolio-grid mb-3`} xs="4" md="2">
-                                                <div className={`portfolio-grid-div w-100 ${product.collection_type == "Limited" ? "limited" : " "} ${product.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + productImage + ")" }}>
-                                                    <div className="portfolio-overlay">
-                                                        <div className="portfolio-details">
-                                                            {product.status == "Draft" ?
-                                                                <span className="text-warning small fw-600">Draft</span>
-                                                                :
-                                                                null
-                                                            }
-                                                            {user_id ?
-                                                                <div className="other-actions">
+                                                <div className="portfolio-link">
 
-                                                                    {user_id ?
-                                                                        <div className="other-actions">
-
-                                                                            {isProductCurrentUser ?
-                                                                                <>
-                                                                                    <div className="action-button bg-white">
-                                                                                        <GoHeart className="text-black" />
-                                                                                    </div>
-                                                                                </>
-                                                                                :
-                                                                                <>
-                                                                                    {/* <div className="action-button bg-white">
-                                                                                        <GoHeart className="text-black" />
-                                                                                    </div> */}
-                                                                                </>
-                                                                            }
-
-                                                                        </div>
-                                                                        :
-                                                                        null
-                                                                    }
-                                                                </div>
-                                                                :
-                                                                null
-                                                            }
-                                                        </div>
-                                                    </div>
                                                     <Link to={`/product/${product.id}`} className="text-decoration-none">
-                                                        <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
+                                                        <div className={`portfolio-grid-div w-100 ${product.collection_type == "Limited" ? "limited" : " "} ${product.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + productImage + ")" }}>
+                                                        </div>
                                                     </Link>
+
+                                                    <div className='save-link'>
+                                                        {userWishlist ?
+                                                            <div
+                                                                className="action-button bg-gold"
+                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
+                                                            >
+                                                                <GoHeart className="text-white" />
+                                                            </div>
+                                                            :
+                                                            <div
+                                                                className="action-button bg-white"
+                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
+                                                            >
+                                                                <GoHeart className="text-black" />
+                                                            </div>
+                                                        }
+                                                    </div>
+
                                                 </div>
 
+                                                <div className="">
+                                                    <div className="portfolio-details">
+                                                        {product.status == "Draft" ?
+                                                            <span className="text-warning small fw-600">Draft</span>
+                                                            :
+                                                            null
+                                                        }
+                                                        {/* {user_id ?
+                                                            <div className="other-actions">
+
+                                                                {user_id ?
+                                                                    <div className="other-actions">
+
+                                                                        {isProductCurrentUser ?
+                                                                            <>
+                                                                                <div className="action-button bg-white">
+                                                                                    <GoHeart className="text-black" />
+                                                                                </div>
+                                                                            </>
+                                                                            :
+                                                                            <>
+                                                                                <div className="action-button bg-white">
+                                                                                        <GoHeart className="text-black" />
+                                                                                    </div>
+                                                                            </>
+                                                                        }
+
+                                                                    </div>
+                                                                    :
+                                                                    null
+                                                                }
+                                                            </div>
+                                                            :
+                                                            null
+                                                        } */}
+                                                    </div>
+                                                </div>
+                                                {/* <Link to={`/product/${product.id}`} className="text-decoration-none">
+                                                    <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
+                                                </Link> */}
+
+
                                                 <div className='d-flex align-items-center'>
-                                                    <h2 className="text-black text-decoration-none rufina-family fs-18 mt-2 ellipsis">{product.name ?? "-"}</h2>
+                                                    <h2 className="text-black text-decoration-none rufina-family fs-18 mt-2 pb-3 ellipsis-products">{product.name ?? "-"}</h2>
                                                     {product.eco_friendly != null && product.eco_friendly != '' && (
                                                         <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
                                                             <div className='tooltip-content'>

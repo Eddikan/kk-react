@@ -97,7 +97,7 @@ const ForgotPassword = () => {
                                 <div className="divider-small mb-3 mt-4"></div>
 
                                 <Form onSubmit={forgotPasswordSubmit}>
-                                    <Form.Group className='mb-0 mt-5' controlId='formBasicEmail'>
+                                    <Form.Group className='mb-0 mt-0' controlId='formBasicEmail'>
                                         <Form.Label>Email Address</Form.Label>
                                         <FormControl
                                             type='email'

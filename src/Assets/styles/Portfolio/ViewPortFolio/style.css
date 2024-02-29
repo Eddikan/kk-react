@@ -141,8 +141,7 @@ img.placeholder-chat {
     border-color: var(--black);
 }
 .ellipsis-portfolio {
-    white-space: nowrap; 
-    width: 85% !important; 
+    white-space: nowrap;  
     overflow: hidden;
     text-overflow: ellipsis; 
   }
