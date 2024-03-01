@@ -152,22 +152,6 @@ const Designs = (props) => {
         });
     }
 
-    async function onWishlistChange(data) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
-            const selectedDesigns = response.data.data;
-            if (selectedDesigns) {
-                setDesigns(selectedDesigns);
-                setDesignsLoading(false);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setDesignsLoading(false);
-            }
-        }).catch(() => {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setDesignsLoading(false);
-        });
-    }
-
     const handleCompositionChange = (composition) => {
         const updatedCompositions = [...selectedCompositions];
 
@@ -216,10 +200,6 @@ const Designs = (props) => {
         setSearchValue(e);
     }, 1000); // 1000 milliseconds (2 seconds) delay
 
-    const handleChangeCheckbox = (isChecked) => {
-        setEcoFriendly(isChecked ? 1 : 0);
-    };
-
     const handleChangeAllCategories = (isChecked) => {
         setSelectedAllCategories(isChecked ? true : false);
         setSelectedCategories([]);
@@ -227,28 +207,6 @@ const Designs = (props) => {
 
     const handleChangeCountry = (e) => {
         setCountry(e.target.value);
-    };
-
-    async function wishlistUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
-            const success = response.data.status;
-            if (success == 'Success') {
-                onWishlistChange({
-                    eco_friendly: ecoFriendly ? 1 : null,
-                    composition: selectedCompositions,
-                    weave: selectedWeaves,
-                    colors: selectedColors,
-                    price_range: priceRange,
-                    sortField: selectedSortField,
-                    sortOrder: selectedSortOrder,
-                    search: searchValue,
-                });
-            } else {
-                toast.error('Something went wrong, please contact the administrator!');
-            }
-        }).catch((error) => {
-            toast.error('Something went wrong, please contact the administrator!');
-        });
     };
 
     const priceRangeChange = (e) => {
@@ -331,20 +289,6 @@ const Designs = (props) => {
         });
     }
 
-    async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
-            const success = response.data.status;
-            if (success == 'Success') {
-                // toast.success('Design saved as draft successfully!');
-                // setReloadCount((prevReloadCount) => prevReloadCount + 1);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-            }
-        }).catch(() => {
-            toast.error('An error occured. Please try again or contact the administrator.');
-        });
-    }
-
     async function getPortfolioCategories() {
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/categories').then((response) => {
             const data = response.data;
@@ -377,6 +321,7 @@ const Designs = (props) => {
         // Only run the filter API call after the component has mounted
         if (mounted) {
             // Call the API with the updated filter values
+
             onFilterChange({
                 sortField: selectedSortField,
                 sortOrder: selectedSortOrder,
@@ -387,12 +332,12 @@ const Designs = (props) => {
             // Set the component as mounted
             setMounted(true);
         }
-        getPortfolioCategories();
+
     }, [mounted, searchValue, selectedCategories]);
 
-    const toggleGetUser = (e) => {
-        window.location.href = "/designer-profile?user_id=" + e;
-    }
+    useEffect(() => {
+        getPortfolioCategories();
+    }, []);
 
     return (
         <Layout>
@@ -956,85 +901,6 @@ const Designs = (props) => {
             </Modal>
 
 
-            <Modal
-                show={designerProfileShow}
-                fade={false}
-                centered
-                id="profile-card"
-                size="sm"
-            >
-                <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close' onClick={() => setDesignerProfileShow(false)} data-dismiss='modal' aria-label='Close'>
-                        <IoCloseOutline color="#7e7e7e" size={25} />
-                    </button>
-                </Modal.Header>
-
-                <Modal.Body className='card-profile align-items-center'>
-                    <Row>
-                        <Col>
-                            <div className='user-image-modal'>
-                                {singleDesign.image !== '' && singleDesign.image !== '-' ? (
-                                    <div
-                                        className='user-photo-modal mb-2 '
-                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
-                                    >
-                                    </div>
-                                ) : (
-                                    <img src={UserPlaceholder} className='placeholder-img-side mb-3' />
-                                )}
-
-                            </div>
-
-                            <div className='modal-title text-center fs-18 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
-                            <div className='fs-14 text-center mt-2 mb-2'>
-                                <img src={PinIcon} alt="location pin" className='me-2' />
-                                {singleDesign.address_line_1}{singleDesign.province}</div>
-                            {/* <div className='fs-18 fw-600 text-center mt-3 mb-1 specialization'>Specialization and Expertise</div> */}
-                            <div className="mb-2 text-center">
-                                {singleDesign.tags ?
-                                    <>
-                                        {singleDesign.tags.length > 0 ?
-                                            <>
-                                                {singleDesign.tags.map((tag, index) => (
-                                                    <span className="design-tags bg-light fs-14 categories-color mt-2">
-                                                        {tag}
-                                                    </span>
-                                                ))}
-                                            </>
-                                            :
-                                            null
-                                        }
-                                    </>
-                                    :
-                                    null
-                                }
-                            </div>
-
-                            {isDesignCurrentUser ?
-                                null
-                                :
-                                <>
-                                    <hr />
-                                    <div className='text-center'>
-                                        <a className='book-consultation btn-book btn w-100'
-                                            href={`/appointment/schedule/${singleDesign.id}`}
-                                        >
-                                            <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
-                                    </div>
-
-                                    <div className='text-center mt-2'
-                                        onClick={() => toggleUnderConstruction("Message")}
-                                    >
-                                        <a className='book-consultation btn-message-designer btn w-100'
-                                        >
-                                            <AiFillMessage className="me-2" />Send Message</a>
-                                    </div>
-                                </>
-                            }
-                        </Col>
-                    </Row>
-                </Modal.Body>
-            </Modal>
         </Layout >
     );
 };

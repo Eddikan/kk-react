@@ -30,7 +30,7 @@ const ProductGrid = (props) => {
     const user_id = query.get('user_id');
 
 
-    async function wishlistUpdate(e) {
+    async function wishlistUpdate(e, id) {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
@@ -38,6 +38,7 @@ const ProductGrid = (props) => {
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
+
         }).catch((error) => {
             toast.error('Something went wrong, please contact the administrator!');
         });
@@ -50,18 +51,17 @@ const ProductGrid = (props) => {
                 setProducts(productsData);
                 setProductsLoading(false);
             } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
                 setProductsLoading(false);
             }
 
-            if (currentUser == productsData.user.id) {
+            if (currentUser == productsData.id) {
                 setIsProductCurrentUser(true);
             } else {
                 setIsProductCurrentUser(false);
             }
+
         } catch (error) {
-            // toast.error('An error occured. Please try again or contact the administrator.');
-            // setProductsLoading(false);
+            toast.error('An error occured. Please try again or contact the administrator.');
         }
     };
 
@@ -101,24 +101,29 @@ const ProductGrid = (props) => {
                                                         </div>
                                                     </Link>
 
-                                                    <div className='save-link'>
-                                                        {userWishlist ?
-                                                            <div
-                                                                className="action-button bg-gold"
-                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
-                                                            >
-                                                                <GoHeart className="text-white" />
+                                                    {isProductCurrentUser ?
+                                                        null
+                                                        :
+                                                        <>
+                                                            <div className='save-link'>
+                                                                {userWishlist ?
+                                                                    <div
+                                                                        className="action-button bg-gold"
+                                                                        onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
+                                                                    >
+                                                                        <GoHeart className="text-white" />
+                                                                    </div>
+                                                                    :
+                                                                    <div
+                                                                        className="action-button bg-white"
+                                                                        onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
+                                                                    >
+                                                                        <GoHeart className="text-black" />
+                                                                    </div>
+                                                                }
                                                             </div>
-                                                            :
-                                                            <div
-                                                                className="action-button bg-white"
-                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
-                                                            >
-                                                                <GoHeart className="text-black" />
-                                                            </div>
-                                                        }
-                                                    </div>
-
+                                                        </>
+                                                    }
                                                 </div>
 
                                                 <div className="">
@@ -128,34 +133,7 @@ const ProductGrid = (props) => {
                                                             :
                                                             null
                                                         }
-                                                        {/* {user_id ?
-                                                            <div className="other-actions">
 
-                                                                {user_id ?
-                                                                    <div className="other-actions">
-
-                                                                        {isProductCurrentUser ?
-                                                                            <>
-                                                                                <div className="action-button bg-white">
-                                                                                    <GoHeart className="text-black" />
-                                                                                </div>
-                                                                            </>
-                                                                            :
-                                                                            <>
-                                                                                <div className="action-button bg-white">
-                                                                                        <GoHeart className="text-black" />
-                                                                                    </div>
-                                                                            </>
-                                                                        }
-
-                                                                    </div>
-                                                                    :
-                                                                    null
-                                                                }
-                                                            </div>
-                                                            :
-                                                            null
-                                                        } */}
                                                     </div>
                                                 </div>
                                                 {/* <Link to={`/product/${product.id}`} className="text-decoration-none">
@@ -168,9 +146,8 @@ const ProductGrid = (props) => {
                                                     {product.eco_friendly != null && product.eco_friendly != '' && (
                                                         <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
                                                             <div className='tooltip-content'>
-                                                                <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
                                                             </div>
-                                                            <ImLeaf color="#55d140" />
+                                                            <ImLeaf color="#55d140" className='mb-3' />
                                                         </span>
                                                     )}
                                                 </div>

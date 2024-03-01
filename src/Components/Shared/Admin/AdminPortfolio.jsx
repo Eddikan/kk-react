@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Row, Col, Button, Card, Modal, ModalHeader } from 'react-bootstrap';
+import { Row, Col, Button, Card, Modal, ModalHeader, ModalFooter } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { BsThreeDots } from "react-icons/bs";
@@ -39,6 +39,7 @@ const PortfolioGrid = (props) => {
     const [designImages, setDesignImages] = useState([]);
     const [activeImage, setActiveImage] = useState('');
     const [portfoliosImage, setPortfolioImage] = useState(false);
+    const [messageShow, setMessageShow] = useState(false);
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -90,6 +91,10 @@ const PortfolioGrid = (props) => {
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
+    }
+
+    function toggleMessage() {
+        setMessageShow(true);
     }
 
     function toggleDescription() {
@@ -219,45 +224,35 @@ const PortfolioGrid = (props) => {
                                         }
                                         return (
                                             <Col className={`portfolio-grid mb-3`} xs="4" md="2">
+                                                <div
+                                                    className={`portfolio-grid-div cursor-pointer w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`}
+                                                    style={{ backgroundImage: "url(" + portfolioImage + ")" }}
+                                                >
+                                                    <div className="portfolio-overlay">
+                                                        <div className="portfolio-actions" >
+                                                            <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
+                                                            {selectedItemIndex === index && (
+                                                                <div className="action-box">
+                                                                    <Link className="text-decoration-none" to={`/user/center/design/${object.id}/edit`}>
+                                                                        <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
+                                                                    </Link>
+                                                                    <p className="mb-3 cursor-pointer" onClick={function () { deleteConfirm(object.id); }}><GoTrash /> Delete</p>
+                                                                    {object.status != "Draft" ?
+                                                                        <p className="mb-0 cursor-pointer" onClick={function () { PortfolioDraftSubmit(object.id); }}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
+                                                                        :
+                                                                        <p className="mb-0 cursor-pointer" onClick={function () { PortfolioPublishSubmit(object.id); }}><IoDocumentOutline /> {portfolioPublishLoading ? "Publishing..." : "Publish"}</p>
+                                                                    }
+                                                                </div>
+                                                            )}
+                                                        </div>
 
-                                                <div onClick={function () { togglePortfolioImage(object.designer.id, object.user.first_name, object.user.last_name, object.image_urls, object.user.image, object.user.address_line_1, object.user.province, object.tags, object.description, object.user.id); }}>
-                                                    <div className={`portfolio-grid-div cursor-pointer w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + portfolioImage + ")" }}>
-                                                        <div className="portfolio-overlay">
-                                                            <div className="portfolio-actions">
-                                                                <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
-                                                                {selectedItemIndex === index && (
-                                                                    <div className="action-box">
-                                                                        <Link className="text-decoration-none" to={`/user/center/design/${object.id}/edit`}>
-                                                                            <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
-                                                                        </Link>
-                                                                        <p className="mb-3 cursor-pointer" onClick={function () { deleteConfirm(object.id); }}><GoTrash /> Delete</p>
-                                                                        {object.status != "Draft" ?
-                                                                            <p className="mb-0 cursor-pointer" onClick={function () { PortfolioDraftSubmit(object.id); }}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
-                                                                            :
-                                                                            <p className="mb-0 cursor-pointer" onClick={function () { PortfolioPublishSubmit(object.id); }}><IoDocumentOutline /> {portfolioPublishLoading ? "Publishing..." : "Publish"}</p>
-                                                                        }
-
-
-                                                                    </div>
-                                                                )}
-                                                            </div>
+                                                        <div
+                                                            className="portfolio-overlay portfolio-toggle"
+                                                            onClick={function () { togglePortfolioImage(object.designer.id, object.user.first_name, object.user.last_name, object.image_urls, object.user.image, object.user.address_line_1, object.user.province, object.tags, object.description, object.user.id); }}>
 
                                                             <div className="portfolio-details">
                                                                 {object.status == "Draft" ?
                                                                     <span className="text-warning small fw-600">Draft</span>
-                                                                    :
-                                                                    null
-                                                                }
-
-                                                                {currentUser != object.user.id ?
-                                                                    <div className="other-actions">
-                                                                        <div className="action-button bg-white me-2">
-                                                                            <GoHeart className="text-black" />
-                                                                        </div>
-                                                                        <div className="action-button bg-white">
-                                                                            <GoBookmark className="text-black" />
-                                                                        </div>
-                                                                    </div>
                                                                     :
                                                                     null
                                                                 }
@@ -322,7 +317,6 @@ const PortfolioGrid = (props) => {
                     </Card.Footer>
                 </Modal.Body>
             </Modal>
-
 
             <Modal
                 show={portfoliosImage}
@@ -539,7 +533,9 @@ const PortfolioGrid = (props) => {
                                             <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                         </div>
 
-                                        <div className='text-center mb-4' onClick={() => toggleUnderConstruction("Message")}>
+                                        <div className='text-center mb-4'
+                                            onClick={() => toggleUnderConstruction("Message")}
+                                        >
                                             <div className="action-button-designs bg-white">
                                                 <AiFillMessage className="text-black mt-2" size={30} />
                                             </div>
@@ -607,6 +603,44 @@ const PortfolioGrid = (props) => {
                         </Card.Body>
                     </Card>
                 </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={messageShow}
+                className='modal-preview'
+                fade={false}
+                size="sm"
+            >
+                <Modal.Header className="py-0">
+                    <button type='button' className='close react-modal-close' onClick={() => setMessageShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} />
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Card className='border-none'>
+                        <Card.Body className="text-center px-0 pt-2 pb-2">
+                            <div className='user-image-message thumbnail-table'>
+                                {singleDesign.image && (
+                                    <div
+                                        className='user-photo-message mb-2 '
+                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                    >
+                                    </div>
+                                )}
+                            </div>
+                            <div className='modal-title text-center fs-20 fw-600 text-black mb-3'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                            <textarea className='form-control text-height' placeholder='Your message'></textarea>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+
+                <ModalFooter>
+                    <div className='text-right'>
+                        <Button className="btn-cancel-message btn me-2" onClick={() => { setMessageShow(false); }}>Cancel</Button>
+                        <Button className="btn-primary btn" onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}>Send Message</Button>
+                    </div>
+                </ModalFooter>
             </Modal>
         </>
     );

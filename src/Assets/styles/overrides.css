@@ -1427,6 +1427,10 @@ span.featured-designs {
     font-weight: bold;
     color: #000;
 }
+.btn-style{
+    min-width: 100px;
+    padding: 9px 20px;
+}
 
 .title-designer,
 .long-bio-title,

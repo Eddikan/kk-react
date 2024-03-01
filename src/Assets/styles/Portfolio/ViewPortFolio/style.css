@@ -123,6 +123,11 @@ img.placeholder-chat {
     text-align: center;
     width: 100%;
 }
+.portfolio-toggle {
+    background: transparent;
+    height: 183px;
+    bottom: 0;
+}
 .request-quote-btn {
     padding: 10px 20px;
     min-width: 190px;
@@ -146,7 +151,10 @@ img.placeholder-chat {
     text-overflow: ellipsis; 
   }
 
-  
+  .portfolio-actions .action-menu {
+    position: absolute;
+    right: 10px;
+}
 .react-emoji {
     display: block !important;
 }

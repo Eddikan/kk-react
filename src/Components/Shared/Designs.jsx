@@ -592,8 +592,29 @@ const Designs = (props) => {
 
                 <ModalFooter>
                     <div className='text-right'>
-                        <Button className="btn-cancel-message btn me-2" onClick={() => { setMessageShow(false); }}>Cancel</Button>
-                        <Button className="btn-primary btn" onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}>Send Message</Button>
+                        {/* <Button className="btn-cancel-message btn me-2" onClick={() => { setMessageShow(false); }}>Cancel</Button>
+                        <Button className="btn-primary btn" onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}>Send Message</Button> */}
+
+                        <button
+                            className="btn btn-secondary border-black bg-white text-black me-3"
+                            onClick={() => { setMessageShow(false); }}
+                            type="button"
+                            style={{ minWidth: '100px', padding: '9px 20px' }}
+                        >
+                            Cancel
+                        </button>
+                        {/* {portfolioSendLoading ?
+                            <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Sending...</button>
+                            : */}
+                        <button
+                            className="btn btn-primary"
+                            type="button"
+                            onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}
+                            style={{ minWidth: '100px', padding: '9px 20px' }}
+                        >
+                            Send Message
+                        </button>
+                        {/* } */}
                     </div>
                 </ModalFooter>
             </Modal>
@@ -607,7 +628,7 @@ const Designs = (props) => {
                 id="under-construction"
             >
                 <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left fw-600 fs-22 mt-2'>{modalHeading}</h5>
+                    <h5 className='modal-title text-uppercase text-left fs-22 mt-2'>{modalHeading}</h5>
                     <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>

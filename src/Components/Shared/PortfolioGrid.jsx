@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Row, Col, Button, ModalHeader, Modal, Card } from 'react-bootstrap';
+import { Row, Col, Button, ModalHeader, Modal, Card, ModalFooter } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { useLocation } from 'react-router-dom';
@@ -37,6 +37,7 @@ const PortfolioGrid = (props) => {
     const [profileViewShow, setProfileViewShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
+    const [messageShow, setMessageShow] = useState(false);
 
 
     const useQuery = () => {
@@ -66,6 +67,10 @@ const PortfolioGrid = (props) => {
 
     function toggleDescription() {
         setDescriptionShow(true);
+    }
+
+    function toggleMessage() {
+        setMessageShow(true);
     }
 
     function toggleUnderConstruction(message) {
@@ -158,8 +163,6 @@ const PortfolioGrid = (props) => {
                                                                 :
                                                                 null
                                                             }
-
-
                                                         </div>
                                                     </div>
                                                     {/* <Link to={`/portfolio/${object.id}`} className="text-decoration-none">
@@ -405,7 +408,10 @@ const PortfolioGrid = (props) => {
                                             <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                         </div>
 
-                                        <div className='text-center mb-4' onClick={() => toggleUnderConstruction("Message")}>
+                                        <div className='text-center mb-4'
+                                            // onClick={toggleMessage}
+                                            onClick={() => toggleUnderConstruction("Message")}
+                                        >
                                             <div className="action-button-designs bg-white">
                                                 <AiFillMessage className="text-black mt-2" size={30} />
                                             </div>
@@ -473,6 +479,59 @@ const PortfolioGrid = (props) => {
                         </Card.Body>
                     </Card>
                 </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={messageShow}
+                className='modal-preview'
+                fade={false}
+                size="sm"
+                id="under-construction"
+            >
+                <Modal.Header className="py-0">
+                    <button type='button' className='close react-modal-close' onClick={() => setMessageShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} />
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Card className='border-none'>
+                        <Card.Body className="text-center py-5 pt-2 pb-2">
+                            <div className='user-image-message thumbnail-table'>
+                                {singleDesign.image && (
+                                    <div
+                                        className='user-photo-message mb-2 '
+                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
+                                    >
+                                    </div>
+                                )}
+                            </div>
+                            <div className='modal-title text-center fs-20 fw-600 text-black mb-3'>{singleDesign.first_name} {singleDesign.last_name}</div>
+                            <textarea className='form-control text-height' placeholder='Your message'></textarea>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+
+                <ModalFooter>
+                    <div className='text-right'>
+                        {/* <button className="btn-cancel-message btn me-2" onClick={() => { setMessageShow(false); }}>Cancel</button>
+                        <button className="btn-primary btn" onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}>Send Message</button> */}
+
+                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => { setMessageShow(false); }} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                        {/* {portfolioSendLoading ?
+                            <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Sending...</button>
+                            : */}
+                        <button
+                            className="btn btn-primary"
+                            type="button"
+                            onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}
+                            style={{ minWidth: '100px', padding: '9px 20px' }}
+
+                        >Send Message
+                        </button>
+                        {/* } */}
+                    </div>
+                </ModalFooter>
             </Modal>
         </>
     );

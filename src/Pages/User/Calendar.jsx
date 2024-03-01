@@ -430,7 +430,6 @@ const Calendar = (props) => {
         }
     };
 
-
     const handleFridayCheckboxChangeClose = () => {
         setIsFridayChecked(!isFridayChecked);
 
@@ -559,10 +558,10 @@ const Calendar = (props) => {
                 toast.success('Availability added successfully!');
             } else {
                 setFormStatus('standby');
-                toast.error('There has been an error saving the appointment, please try again!');
+                toast.error('There has been an error saving the availability hours, please try again!');
             }
         }).catch(() => {
-            toast.error('There has been an error saving the appointment, please try again!');
+            toast.error('There has been an error saving the availability hours, please try again!');
         });
     }
 
@@ -608,10 +607,10 @@ const Calendar = (props) => {
                 toast.success('Availability added successfully!');
             } else {
                 setFormStatus('standby');
-                toast.error('There has been an error saving the appointment, please try again!');
+                toast.error('There has been an error saving the availability hours, please try again!');
             }
         }).catch(() => {
-            toast.error('There has been an error saving the appointment, please try again!');
+            toast.error('There has been an error saving the availability hours, please try again!');
         });
     }
 
@@ -627,7 +626,6 @@ const Calendar = (props) => {
 
 
     useEffect(() => {
-
         getBusinessHours()
             .then((response) => {
                 const selectedTime = response.data.data;
@@ -637,7 +635,6 @@ const Calendar = (props) => {
                 }
                 else {
                     if (selectedTime) {
-                        // console.log(selectedTime.content)
                         setTimes(selectedTime.content);
                         if (selectedTime && selectedTime.content && selectedTime.content.length > 0) {
 
@@ -706,20 +703,6 @@ const Calendar = (props) => {
 
                                 }));
 
-                                // setMondayHoursFormData(mappedMondayBusinessHours);
-                                // setMondayHoursCopyFormData(mappedMondayBusinessHours);
-                                // setTuesdayHoursFormData(mappedTuesdayBusinessHours);
-                                // setTuesdayHoursCopyFormData(mappedTuesdayBusinessHours);
-                                // setWednesdayHoursFormData(mappedWednesdayBusinessHours);
-                                // setWednesdayHoursCopyFormData(mappedWednesdayBusinessHours);
-                                // setThursdayHoursFormData(mappedThursdayBusinessHours);
-                                // setThursdayHoursCopyFormData(mappedThursdayBusinessHours);
-                                // setFridayHoursFormData(mappedFridayBusinessHours);
-                                // setFridayHoursCopyFormData(mappedFridayBusinessHours);
-                                // setSaturdayHoursFormData(mappedSaturdayBusinessHours);
-                                // setSaturdayHoursCopyFormData(mappedSaturdayBusinessHours);
-                                // setSundayHoursFormData(mappedSundayBusinessHours);
-                                // setSundayHoursCopyFormData(mappedSundayBusinessHours);
                                 if (mappedFridayBusinessHours.length <= 0) {
                                     //means that the day is unavailable
                                     setIsFridayChecked(true);
