@@ -72,14 +72,14 @@ const Appointments = (props) => {
         setModalHeading(message);
     }
 
-    function toggleShowAppointment(first_name, last_name, title, created_at, consultation_hour_start, consultation_hour_end, consultation_details) {
+    function toggleShowAppointment(first_name, last_name, title, consultation_date, consultation_hour_start, consultation_hour_end, consultation_details) {
         setAppointmentModalIsOpen(true);
 
         setSingleAppointment({
             first_name: first_name || '-',
             last_name: last_name || '-',
             title: title || '-',
-            created_at: created_at || '-',
+            consultation_date: consultation_date || '-',
             consultation_hour_start: consultation_hour_start || '-',
             consultation_hour_end: consultation_hour_end || '-',
             consultation_details: consultation_details || '-',
@@ -301,7 +301,15 @@ const Appointments = (props) => {
                                                                                 <Col lg={2} className='d-flex justify-content-end'>
                                                                                     <div
                                                                                         className="cursor-pointer appointments-tooltip"
-                                                                                        onClick={() => toggleShowAppointment(appointment.customer?.first_name, appointment.customer?.last_name, appointment.title, appointment.created_at, appointment.consultation_hour_start, appointment.consultation_hour_end, appointment.consultation_details)}
+                                                                                        onClick={() => toggleShowAppointment(
+                                                                                            appointment.customer?.first_name,
+                                                                                            appointment.customer?.last_name,
+                                                                                            appointment.title,
+                                                                                            appointment.consultation_date,
+                                                                                            appointment.consultation_hour_start,
+                                                                                            appointment.consultation_hour_end,
+                                                                                            appointment.consultation_details
+                                                                                        )}
                                                                                     >
                                                                                         <span className="icon-tooltiptext fs-14">View Details</span>
                                                                                         <IoEye className='video-cam me-3' size={20} />
@@ -309,7 +317,12 @@ const Appointments = (props) => {
 
                                                                                     <div
                                                                                         className="cursor-pointer appointments-tooltip"
-                                                                                        onClick={() => chatBoxModal(appointment.customer?.first_name, appointment.customer?.last_name, appointment.customer?.image, appointment.status)}
+                                                                                        onClick={() => chatBoxModal(
+                                                                                            appointment.customer?.first_name,
+                                                                                            appointment.customer?.last_name,
+                                                                                            appointment.customer?.image,
+                                                                                            appointment.status
+                                                                                        )}
                                                                                     >
                                                                                         <span className="icon-tooltiptext fs-14">Message Customer</span>
                                                                                         <span><AiFillMessage className='video-cam' size={19} /></span>
@@ -487,14 +500,16 @@ const Appointments = (props) => {
                                 </div>
 
                                 <div className="d-flex">
-                                    <p className="fw-500 mb-2"><MdOutlineCalendarMonth size="20" className='icon-color' /></p>
+                                    <p className="fw-500 mb-2">
+                                        <MdOutlineCalendarMonth size="20" className='icon-color mb-1' />
+                                    </p>
                                     <p className="current-date ms-2 mb-0 text-black">
-                                        {returnFormattedDate(singleAppointment.created_at ?? '-')}
+                                        {returnFormattedDate(singleAppointment.consultation_date ?? '-')}
                                     </p>
                                 </div>
 
                                 <div className="d-flex">
-                                    <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color' /></p>
+                                    <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color mb-1' /></p>
                                     <p className="current-date ms-2 mb-0 text-black ">
                                         {
                                             returnFormattedTime(singleAppointment.consultation_hour_start ?? '-') + ' - ' + returnFormattedTime(singleAppointment.consultation_hour_end ?? '-')

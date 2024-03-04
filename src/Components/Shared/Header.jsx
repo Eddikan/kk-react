@@ -10,7 +10,7 @@ import Logo from 'Assets/images/kouture-konect-logo.png';
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { IoCalendarClearOutline, IoCartOutline, IoCloseOutline } from "react-icons/io5";
 import { GoBell, GoHeart } from "react-icons/go";
-import { BsEnvelope } from "react-icons/bs";
+import { BsEnvelope, BsShopWindow } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import UserPlaceholder from 'Assets/images/user.png';
 import { Link } from 'react-router-dom';
@@ -312,19 +312,13 @@ const Header = () => {
 
                       )}
                     </div>
-                    <a href={`/wishlist`}>
-                      <div className="nav-link header-tooltip" >
-                        <span className="icon-tooltiptext fs-14">Wishlist</span>
-                        <GoHeart size={25} />
-                      </div>
-                    </a>
 
-                    <a href={`/appointments/${currentUser}`}>
-                      <div className="nav-link header-tooltip" >
-                        <span className="icon-tooltiptext fs-14">Appointments</span>
-                        <IoCalendarClearOutline size={25} />
-                      </div>
-                    </a>
+                    {/* <a href={`/wishlist`}> */}
+                    <div className="nav-link header-tooltip cursor-pointer" onClick={() => toggleUnderConstruction("Shop Manager")}>
+                      <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                      <BsShopWindow size={23} />
+                    </div>
+                    {/* </a> */}
 
                     <a href={`/cart/`}>
                       <div className="nav-link header-tooltip" >
@@ -415,9 +409,11 @@ const Header = () => {
                       }
                       {userMenuOpen && (
                         <div className="action-box user-menu">
-                          <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog /> Profile</Link>
+                          <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-1' /> Profile</Link>
+                          <Link to={`/wishlist`} className="mb-3 text-decoration-none d-block"><GoHeart className='me-2' />Wishlist</Link>
+                          <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2' />Appointments</Link>
                           {/* <Link to="/user/center/portfolio" className="mb-3 text-decoration-none d-block"><IoIosImages /> Portfolio</Link> */}
-                          <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower /> Logout</p>
+                          <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower className='me-1' /> Logout</p>
                         </div>
                       )}
                     </div>

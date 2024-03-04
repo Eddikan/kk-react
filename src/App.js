@@ -24,6 +24,7 @@ const Forms = lazy(() => import("./Pages/Forms"));
 const CustomerPage = lazy(() => import("./Pages/CustomerPage"));
 const UserCalendar = lazy(() => import("./Pages/User/Calendar"));
 const Cart = lazy(() => import("./Pages/Cart"));
+const ViewDesign = lazy(() => import("./Pages/ViewDesign"));
 const EcoFriendlyFabrics = lazy(() => import("./Pages/EcoFriendlyFabrics"));
 const DesignerProfile = lazy(() => import("./Pages/DesignerProfile"));
 const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
@@ -200,6 +201,11 @@ const App = () => {
           <Route path="/designs" exact element={<Designs />} />
           <Route path="/eco-friendly" exact element={<EcoFriendlyFabrics />} />
           <Route path="/cart" exact element={<Cart />} />
+          <Route
+            path="/view-design/:portfolioId"
+            exact
+            element={<ViewDesign />}
+          />
           <Route
             path="/user/center/calendar"
             exact

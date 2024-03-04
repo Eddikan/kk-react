@@ -97,6 +97,17 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability?date=' + e);
     };
 
+    const convertToDateOnly = (selectedDate) => {
+        const resultDate = new Date(selectedDate);
+
+        const year = resultDate.getFullYear();
+        const month = String(resultDate.getMonth() + 1).padStart(2, '0');
+        const day = String(resultDate.getDate()).padStart(2, '0');
+
+        const dateOnly = `${year}-${month}-${day}`;
+
+        return dateOnly;
+    };
 
     const convertHoursToDatetime = (time) => {
         const [hours, minutes, period] = time.split(/[: ]/);
@@ -237,6 +248,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
             consultation_date_time: convertHoursToDatetime(selectedTimeSlot),
             consultation_hour_end: addOneHour(selectedTimeSlot),
             consultation_hour_start: selectedTimeSlot,
+            consultation_date: convertToDateOnly(selectedDate),
             timezone: currentTimezone,
         });
         setCurrentStep(2);

@@ -18,20 +18,11 @@ import { AiFillMessage } from "react-icons/ai";
 import axios from "axios";
 import toast from 'react-hot-toast';
 
-const ToastCss = {
-    position: "top-right",
-    autoClose: 1500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-};
-
 const intitialConsultationData = {
     consultation_date_time: '',
     consultation_hour_start: '',
     consultation_hour_end: '',
+    consultation_date: '',
     email: '',
     first_name: '',
     last_name: '',
@@ -43,6 +34,7 @@ const initialAppointments = {
     consultation_date_time: '',
     consultation_hour_start: '',
     consultation_hour_end: '',
+    consultation_date: '',
     email: '',
     first_name: '',
     last_name: '',
@@ -51,9 +43,7 @@ const initialAppointments = {
 };
 
 const Appointments = (props) => {
-    const { designerId } = useParams();
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const currentUserDetails = cookies.userDetails;
     const currentUser = cookies.currentUser;
     const [reloadCount, setReloadCount] = useState(0);
     const [chatBox, setChatBox] = useState(false);
@@ -61,17 +51,18 @@ const Appointments = (props) => {
     const [modalHeading, setModalHeading] = useState('');
     const [nameDesigner, setNameDesigner] = useState('');
     const [text, setText] = useState('');
+    const [saveLoading, setSaveLoading] = useState(false);
     const [appointments, setAppointments] = useState([]);
     const [appointmentEditModal, setAppointmentEditModal] = useState(false);
-    const [saveLoading, setSaveLoading] = useState(false);
-
     const [appointmentLoading, setAppointmentLoading] = useState(true);
-
     const [appointmentId, setAppointmentId] = useState('');
     const [times, setTimes] = useState([initialAppointments]);
     const [currentTimezone, setCurrentTimezone] = useState(null);
-
     const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
+
+    const consultationDateTimeString = "2024-02-22T16:11:00.000Z";
+    const consultationDateTime = new Date(consultationDateTimeString);
+    const currentDate = new Date().toISOString().split('T')[0];
 
     const getAppointments = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment');
@@ -81,45 +72,7 @@ const Appointments = (props) => {
         return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId, data);
     };
 
-    // const handleChangeConsultation = (e) => {
-    //     const { name, value } = e.target;
-    //     setConsultationFormData({
-    //         ...consultationFormData,
-    //         [name]: value,
-    //     });
-    // }
-
-    const handleChangeConsultation = (e) => {
-        const { name, value } = e.target;
-
-        // Set the form data for fields other than date and time
-        if (name !== 'consultation_date_time' && name !== 'consultation_hour_start') {
-            setConsultationFormData({
-                ...consultationFormData,
-                [name]: value,
-            });
-            return; // Exit the function for non-date and non-time fields
-        }
-
-        // If the changed field is consultation_date_time or consultation_hour_start, convert them to ISO
-        const date = name === 'consultation_date_time' ? value : consultationFormData.consultation_date_time;
-        const time = name === 'consultation_hour_start' ? value : consultationFormData.consultation_hour_start;
-
-        // Combine date and time and create a new Date object
-        const combinedDateTimeString = `${date}T${time}:00`;
-        const isoDateTime = new Date(combinedDateTimeString).toISOString();
-
-        // Update the consultation_date_time field directly with the ISO formatted datetime
-        setConsultationFormData(prevState => ({
-            ...prevState,
-            consultation_date_time: isoDateTime
-        }));
-
-        console.log("consultationFormData", consultationFormData);
-    }
-
-
-    const editAppointmentModal = (id) => {
+    const toggleEditAppointmentModal = (id) => {
         setAppointmentId(id)
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment/' + id).then(response => {
             const result = response.data.data;
@@ -133,10 +86,6 @@ const Appointments = (props) => {
         setModalHeading(message);
     }
 
-    function handleOnEnter(text) {
-        console.log('enter', text)
-    }
-
     function toggleChatbox(first_name, last_name, image, message) {
         setChatBox(true);
         setNameDesigner({
@@ -147,7 +96,25 @@ const Appointments = (props) => {
         setModalHeading(message);
     }
 
-    const editScheduleSubmit = (e) => {
+    function handleOnEnter(text) {
+        console.log('enter', text)
+    }
+
+    const handleChangeConsultation = (e) => {
+        const { name, value } = e.target;
+        setConsultationFormData({
+            ...consultationFormData,
+            [name]: value,
+        });
+    }
+
+    const convert24hrTo12hr = (time24hr) => {
+        const [hours, minutes] = time24hr.split(':');
+        const date = new Date(2000, 0, 1, hours, minutes);
+        return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    };
+
+    const saveReScheduleSubmit = (e) => {
         setSaveLoading(true);
         e.preventDefault();
         setAppointmentId();
@@ -169,19 +136,6 @@ const Appointments = (props) => {
         });
     }
 
-    const convertDate = (inputDate) => {
-        const date = new Date(inputDate);
-        const year = date.getUTCFullYear();
-        const month = ('0' + (date.getUTCMonth() + 1)).slice(-2);
-        const day = ('0' + date.getUTCDate()).slice(-2);
-        return `${year}-${month}-${day}`;
-    };
-    useEffect(() => {
-        document.body.classList.add('designer-calendar-body');
-    }, []);
-
-
-
     useEffect(() => {
         if (currentUser) {
             getAppointments()
@@ -191,11 +145,11 @@ const Appointments = (props) => {
                     if (selectedAppointments) {
                         setAppointments(selectedAppointments);
                     } else {
-                        toast.error('There has been an error getting the user, please try again!');
+                        toast.error('There has been an error getting the appointments, please try again!');
                     }
                 })
                 .catch((error) => {
-                    toast.error('There has been an error getting the user, please try again!');
+                    toast.error('There has been an error getting the appointments, please try again!');
                 });
         }
     },
@@ -208,13 +162,11 @@ const Appointments = (props) => {
         };
         getTimezone();
     }, []);
-    const consultationDateTimeString = "2024-02-22T16:11:00.000Z";
-    const consultationDateTime = new Date(consultationDateTimeString);
 
-    const formattedDate = consultationDateTime.toLocaleDateString(); // Formats date as per user's locale
-    const formattedTime = consultationDateTime.toLocaleTimeString();
+    useEffect(() => {
+        document.body.classList.add('designer-calendar-body');
+    }, []);
 
-    console.log("Convert Date", convertDate(consultationDateTimeString));
 
     return (
         <LayoutNoFooter>
@@ -253,7 +205,6 @@ const Appointments = (props) => {
                                                 </Col>
 
                                                 <Col lg={2}>
-
                                                 </Col>
                                             </Row>
                                         </Card.Body>
@@ -272,12 +223,10 @@ const Appointments = (props) => {
                                                             day: 'numeric',
                                                         };
                                                         const today = (new Date(appointment.created_at)).toLocaleDateString('en-ES', options);
-                                                        const formattedDate = (new Date(appointment.consultation_date_time)).toLocaleString('en-US', {
+                                                        const formattedDate = (new Date(appointment.consultation_date)).toLocaleString('en-US', {
                                                             year: 'numeric',
                                                             month: 'long',
                                                             day: 'numeric',
-                                                            hour: 'numeric',
-                                                            minute: 'numeric',
                                                             timeZone: 'UTC',
                                                         });
 
@@ -312,7 +261,7 @@ const Appointments = (props) => {
                                                                             </Col>
 
                                                                             <Col lg={4}>
-                                                                                <span className='text-black'>{formattedDate}</span>
+                                                                                <span className='text-black'>{formattedDate} at {convert24hrTo12hr(appointment.consultation_hour_start)}</span>
                                                                             </Col>
 
                                                                             <Col lg={2}>
@@ -320,13 +269,31 @@ const Appointments = (props) => {
                                                                             </Col>
 
                                                                             <Col lg={2} className='d-flex justify-content-end'>
-
-                                                                                <div className="cursor-pointer appointments-tooltip"
-                                                                                    onClick={function () { editAppointmentModal(appointment.id) }}
-                                                                                >
-                                                                                    <span className="icon-tooltiptext fs-14">Edit</span>
-                                                                                    <BiSolidPencil className='video-cam me-3' size={20} />
-                                                                                </div>
+                                                                                {currentDate !== appointment.consultation_date ? (
+                                                                                    <>
+                                                                                        {appointment.consultation_date < currentDate ? (
+                                                                                            <div className="cursor-pointer appointments-tooltip">
+                                                                                                <span className="icon-tooltiptext fs-14">Unavailable to Edit</span>
+                                                                                                <BiSolidPencil className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                            </div>
+                                                                                        ) : (
+                                                                                            <div
+                                                                                                className="cursor-pointer appointments-tooltip"
+                                                                                                onClick={() => toggleEditAppointmentModal(appointment.id)}
+                                                                                            >
+                                                                                                <span className="icon-tooltiptext fs-14">Edit</span>
+                                                                                                <BiSolidPencil className='video-cam me-3' size={20} />
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </>
+                                                                                ) :
+                                                                                    <>
+                                                                                        <div className="cursor-pointer appointments-tooltip" disabled>
+                                                                                            <span className="icon-tooltiptext fs-14">Unavailable to Edit</span>
+                                                                                            <BiSolidPencil className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                        </div>
+                                                                                    </>
+                                                                                }
 
                                                                                 <div className="cursor-pointer appointments-tooltip" onClick={() => toggleUnderConstruction("Video call")}>
                                                                                     <span className="icon-tooltiptext fs-14">Video call</span>
@@ -334,7 +301,13 @@ const Appointments = (props) => {
                                                                                 </div>
 
                                                                                 <div className="cursor-pointer appointments-tooltip"
-                                                                                    onClick={function () { toggleChatbox(appointment.designer?.first_name, appointment.designer?.last_name, appointment.designer?.image, "Under Construction"); }}
+                                                                                    onClick={function () {
+                                                                                        toggleChatbox(
+                                                                                            appointment.designer?.first_name,
+                                                                                            appointment.designer?.last_name,
+                                                                                            appointment.designer?.image,
+                                                                                            "Under Construction");
+                                                                                    }}
                                                                                 >
                                                                                     <span className="icon-tooltiptext fs-14">Message Designer</span>
                                                                                     <span><AiFillMessage className='video-cam' size={20} /></span>
@@ -346,7 +319,6 @@ const Appointments = (props) => {
                                                             </Col>
                                                         );
                                                     })}
-
                                                 </>
                                                 :
                                                 <>
@@ -431,7 +403,13 @@ const Appointments = (props) => {
             >
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setUnderConstructionShow(false)}
+                        data-dismiss='modal'
+                        aria-label='Close'
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
                     </button>
                 </Modal.Header>
@@ -487,14 +465,6 @@ const Appointments = (props) => {
                                     <Col lg="8" className='px-0'>
                                         <Row>
                                             {times.map((time, index) => {
-                                                // const formattedDate = (new Date(time.consultation_date_time)).toLocaleString('en-US', {
-                                                //     year: 'numeric',
-                                                //     month: 'long',
-                                                //     day: 'numeric',
-                                                //     hour: 'numeric',
-                                                //     minute: 'numeric',
-                                                //     timeZone: 'UTC',
-                                                // });
                                                 return (
                                                     <>
                                                         {times.length > 0 && (
@@ -529,14 +499,13 @@ const Appointments = (props) => {
                                                                 </Col>
 
                                                                 <Col lg="12" className="pe-0 position-relative">
-                                                                    <p className="hours-header mb-2 text-left">Date and Time</p>
+                                                                    <p className="hours-header mb-2 text-left">Date</p>
                                                                     <div className='mb-3'>
                                                                         <input
                                                                             type='date'
-                                                                            name='consultation_date_time'
+                                                                            name='consultation_date'
                                                                             className='form-control'
-                                                                            value={convertDate(consultationFormData?.consultation_date_time)}
-                                                                            // value={formattedDate + ', ' + formattedTime}
+                                                                            value={consultationFormData?.consultation_date}
                                                                             onChange={e => handleChangeConsultation(e, index)}
                                                                             required
                                                                         />
@@ -566,7 +535,7 @@ const Appointments = (props) => {
                             {saveLoading ?
                                 <button className="btn btn-primary btn-style ms-3" type="button" >Saving...</button>
                                 :
-                                <button className="btn btn-primary ms-3 btn-style" type="button" onClick={editScheduleSubmit}>Save</button>
+                                <button className="btn btn-primary ms-3 btn-style" type="button" onClick={saveReScheduleSubmit}>Save</button>
                             }
                         </div>
                     </ModalFooter>
