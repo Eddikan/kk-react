@@ -36,6 +36,7 @@ const Messages = lazy(() => import("./Pages/Messages"));
 const RateReview = lazy(() => import("./Pages/RateReview"));
 const OrderTrackingDetails = lazy(() => import("./Pages/OrderTrackingDetails"));
 const OrderDetails = lazy(() => import("./Pages/OrderDetails"));
+const VideoConferencing = lazy(() => import("./Pages/VideoConferencing"));
 
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
@@ -123,7 +124,6 @@ const App = () => {
             exact
             element={<UserMeasurementGuide />}
           />
-
           {/* Portfolio */}
           <Route
             path="/user/center/design/add"
@@ -145,7 +145,6 @@ const App = () => {
             exact
             element={<UserPortfolio />}
           />
-
           {/* Product */}
           <Route
             path="/user/center/product/add"
@@ -163,7 +162,6 @@ const App = () => {
             exact
             element={<UserProducts />}
           />
-
           {/* Designs */}
           <Route path="/find-designs" exact element={<Designs />} />
           <Route path="/designs" exact element={<Designs />} />
@@ -172,14 +170,11 @@ const App = () => {
             exact
             element={<ViewPortfolio />}
           />
-
           {/* Under Construction */}
-
           <Route path="/inspirations" exact element={<UnderConstruction />} />
           <Route path="/blog" exact element={<UnderConstruction />} />
           <Route path="/wishlist" exact element={<Wishlists />} />
           <Route path="/orders" exact element={<Orders />} />
-
           <Route path="/category/tops" exact element={<UnderConstruction />} />
           <Route
             path="/category/dresses"
@@ -192,10 +187,8 @@ const App = () => {
             exact
             element={<UnderConstruction />}
           />
-
           <Route path="/about-kouture-konect" exact element={<About />} />
           <Route path="/how-it-works" exact element={<UnderConstruction />} />
-
           <Route path="/designers" exact element={<Designers />} />
           <Route path="/fabrics" exact element={<Fabrics />} />
           <Route path="/designs" exact element={<Designs />} />
@@ -239,6 +232,12 @@ const App = () => {
             exact
             element={<UserAppointments />}
           />
+          <Route
+            path="/consultation-meeting/:appointmentId"
+            exact
+            element={<VideoConferencing />}
+          />
+
           <Route
             path="/appointment/schedule/:designerId"
             exact

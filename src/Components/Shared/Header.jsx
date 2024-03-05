@@ -313,12 +313,12 @@ const Header = () => {
                       )}
                     </div>
 
-                    {/* <a href={`/wishlist`}> */}
-                    <div className="nav-link header-tooltip cursor-pointer" onClick={() => toggleUnderConstruction("Shop Manager")}>
-                      <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                      <BsShopWindow size={23} />
-                    </div>
-                    {/* </a> */}
+                    <a href={`/user/center/calendar`}>
+                      <div className="nav-link header-tooltip cursor-pointer" >
+                        <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                        <BsShopWindow size={23} />
+                      </div>
+                    </a>
 
                     <a href={`/cart/`}>
                       <div className="nav-link header-tooltip" >

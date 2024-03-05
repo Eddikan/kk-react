@@ -9,6 +9,7 @@ import GoBack from '../Components/Shared/GoBack';
 import { Form, ModalHeader, ModalFooter } from 'react-bootstrap';
 import { Rating } from 'react-simple-star-rating';
 import { PiNotepadFill } from "react-icons/pi";
+import { IoIosCheckmarkCircle } from "react-icons/io";
 import { GoAlertFill } from "react-icons/go";
 import UserPlaceholder from 'Assets/images/user.png';
 import PinIcon from '../Assets/images/pin.png';
@@ -17,6 +18,7 @@ import { useCookies } from 'react-cookie';
 import { ImEmbed2 } from "react-icons/im";
 import { LuLink } from "react-icons/lu";
 import Countries from 'Utils/Countries';
+import CopyTo from '../Utils/CopyLink';
 import { AiFillMessage } from "react-icons/ai";
 import Loading from 'Components/Shared/Loading';
 import '../Assets/styles/FabricsHomePage/style.css';
@@ -50,6 +52,8 @@ const Designs = (props) => {
     const [activeImage, setActiveImage] = useState('');
     const [descriptionShow, setDescriptionShow] = useState(false);
     const [shareShowModal, setShareShowModal] = useState(false);
+    const [copyEmbedLink, setCopyEmbedLink] = useState(false);
+
     const [designerProfileShow, setDesignerProfileShow] = useState(false);
     const [messageShow, setMessageShow] = useState(false);
     const [selectedSortField, setSelectedSortField] = useState(null);
@@ -62,7 +66,7 @@ const Designs = (props) => {
 
     const [shareViewShow, setShareViewShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
-
+    const [copy, setCopy] = useState(false);
 
     const compositions = ['Polyamide', 'Polyester', 'Polyurethane', 'Acrylic', 'Cashmere', 'Mental']; // Replace with your array of composition options
     const weaves = ['Plain', 'Twill', 'Satin', 'Basket', 'Herringbone', 'Jacquard', 'Dobby', 'Leno']; // Replace with your array of weave options
@@ -108,6 +112,10 @@ const Designs = (props) => {
 
     function toggleShareModal() {
         setShareShowModal(true);
+    }
+
+    function toggleCopyEmbedLinkModal() {
+        setCopyEmbedLink(true);
     }
 
     function toggleProfileCardShow() {
@@ -254,11 +262,12 @@ const Designs = (props) => {
         }
     };
 
-    function togglePortfolioImage(id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId) {
+    function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId) {
         setPortfolioImage(true);
         setSingleDesign({
             id: id ?? 0,
             userId: userId ?? 0,
+            portfolioId: portfolioId ?? 0,
             first_name: first_name ?? '-',
             last_name: last_name ?? '-',
             image: image ?? '-',
@@ -348,6 +357,8 @@ const Designs = (props) => {
         getPortfolioCategories();
     }, []);
 
+    let iframeLink = `<iframe src="https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+
     return (
         <Layout>
             <div className='py-5 px-2'>
@@ -385,7 +396,7 @@ const Designs = (props) => {
                                         type={`checkbox`}
                                         label={`All`}
                                         name={`day`}
-                                        className={`mb-2`}
+                                        className={`mb - 2`}
                                         onChange={(e) => handleChangeAllCategories(e.target.checked)}
                                         checked={portfolioCategories.length == selectedCategories.length || selectedAllCategories}
                                     />
@@ -527,6 +538,7 @@ const Designs = (props) => {
                                                                                 className="designs-grid-div w-100 cursor-pointer"
                                                                                 onClick={function () {
                                                                                     togglePortfolioImage(
+                                                                                        design.id,
                                                                                         design.designer.id,
                                                                                         design.user.first_name,
                                                                                         design.user.last_name,
@@ -666,7 +678,7 @@ const Designs = (props) => {
                                 <div>
                                     <div className='text-white book-consultation-bar w-100 d-flex justify-content-center'>
                                         <p className='request d-flex justify-content-between mb-5'>
-                                            <a href={`/designer-profile?user_id=${singleDesign.userId}`} className='text-decoration-none'>
+                                            <a href={`/designer-profile?user_id=${singleDesign.userId} `} className='text-decoration-none'>
                                                 <div className='d-flex justify-content-center align-items-center user-image'>
 
                                                     {singleDesign.image !== '' && singleDesign.image !== '-' ? (
@@ -821,9 +833,7 @@ const Designs = (props) => {
                                         </div>
 
                                         <div className='text-center mb-4'
-                                            toggleShareModal
                                             onClick={toggleShareModal}
-                                        // onClick={() => setShareViewShow(true)}
                                         >
                                             <div className="action-button-designs bg-white">
                                                 <IoShareSocial className="text-black mt-2" size={30} />
@@ -950,18 +960,6 @@ const Designs = (props) => {
                 id="description-card"
                 className='share-modal-view'
             >
-                {/* <Modal.Header className="py-0">
-                    <button
-                        type='button'
-                        className='close react-modal-close description-close'
-                        onClick={() => setShareShowModal(false)}
-                        data-dismiss='modal'
-                        aria-label='Close'
-                    >
-                        <IoCloseOutline color="#7e7e7e" size={25} />
-                    </button>
-                </Modal.Header> */}
-
                 <Modal.Body>
                     <div>
                         <Card className="table_content file-action mt-3 me-0 card-share-popup">
@@ -970,7 +968,7 @@ const Designs = (props) => {
                                     <IoCloseOutline color="#7e7e7e" size={25} />
                                 </button>
                             </Card.Header>
-                            <Card.Body className="action_container font-weight pb-5">
+                            <Card.Body className="action_container font-weight pb-5 padding-share-card">
                                 <Row>
                                     <Col lg='12'>
                                         <div className='text-center fs-22 mb-2 fw-600 mt-4'>Share Design</div>
@@ -1001,12 +999,12 @@ const Designs = (props) => {
 
                                                                     {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                                         <div
-                                                                            className='user-photo-share'
+                                                                            className='user-photo-share mt-1'
                                                                             style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${singleDesign.image})` }}
                                                                         >
                                                                         </div>
                                                                     ) : (
-                                                                        <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
+                                                                        <img src={UserPlaceholder} className='placeholder-img-share' alt="User Placeholder" />
                                                                     )}
 
                                                                     <div className='ms-2'>
@@ -1016,8 +1014,9 @@ const Designs = (props) => {
                                                                                 <>
                                                                                     {singleDesign.tags.length > 0 ?
                                                                                         <>
-                                                                                            {singleDesign.tags.map((tag, index) => (
-                                                                                                <span className="design-tags-share bg-white fs-12 categories-color">
+
+                                                                                            {singleDesign.tags.slice(0, 3).map((tag, index) => (
+                                                                                                <span key={index} className="design-tags-view-bar bg-light fs-14 categories-color text-black">
                                                                                                     {tag}
                                                                                                 </span>
                                                                                             ))}
@@ -1045,28 +1044,89 @@ const Designs = (props) => {
                                     </Col>
 
                                     <Col lg='12' className='text-center'>
-                                        <button
-                                            className="btn btn-copy-link border-black bg-white text-black mt-2"
-                                            type="button"
-                                            onClick={() => { toggleUnderConstruction("Copy Link"); setShareShowModal(false); }}
-                                        >
-                                            <LuLink className='me-2' />
-                                            Copy Link
-                                        </button>
+                                        <CopyTo
+                                            text={`https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}`}
+                                            classes="btn btn-copy-link border-black bg-white text-black mt-2"
+                                            standbyTitle="Copy Link"
+                                            icon={true}
+                                        />
 
                                         <button
                                             className="btn btn-copy-link border-black bg-white text-black mt-2"
                                             type="button"
-                                            onClick={() => { toggleUnderConstruction("Copy Embed Code"); setShareShowModal(false); }}
+                                            onClick={toggleCopyEmbedLinkModal}
                                         >
-                                            <ImEmbed2 className='me-2' />
+                                            <ImEmbed2 className='me-2' size={17} />
                                             Copy Embed Code
                                         </button>
-                                    </Col>
-                                </Row>
-                            </Card.Body>
-                        </Card>
-                    </div>
+                                    </Col >
+                                </Row >
+                            </Card.Body >
+                        </Card >
+                    </div >
+                </Modal.Body >
+            </Modal >
+
+            <Modal
+                show={copyEmbedLink}
+                id='modal-preview-embed'
+                fade={false}
+                centered
+                className='embed-modal-view'
+
+            >
+                <Modal.Header className="py-0">
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setCopyEmbedLink(false)}
+                        data-dismiss='modal'
+                        aria-label='Close'
+                    >
+                        <IoCloseOutline color="#7e7e7e" size={25} />
+                    </button>
+                </Modal.Header>
+                <Modal.Body className='embed-height'>
+
+                    <Row>
+                        <Col lg='12' className='text-center mt-4'>
+                            <div className='mb-2 fs-20 fw-600'>Embed Design</div>
+                        </Col>
+
+                        <Col lg='12'>
+                            <p className='fs-13 text-center mb-2'>Copy and paste this code into your website.</p>
+                        </Col>
+
+                        <Col lg='12' className='px-3'>
+                            <textarea className='text-area-embed mt-4'>
+                                {iframeLink}
+
+                            </textarea>
+                        </Col>
+
+                        <Col lg='6' className='mt-3 px-3 d-flex'>
+                            <CopyTo
+                                text={iframeLink}
+                                classes="btn btn-copy-embed me-3"
+                                standbyTitle="Copy"
+                                icon={false}
+                                onCopy={() => setCopy(true)}
+                            />
+                            <button className="cancel-btn-embed" onClick={() => setCopyEmbedLink(false)}>Cancel</button>
+                        </Col>
+
+                        <Col lg='6' className='mt-3 px-3 d-flex align-items-center justify-content-end'>
+                            {copy ?
+                                <>
+                                    <IoIosCheckmarkCircle className='me-1' color='#058900' />
+                                    <span className='fs-12'>Embed code copied</span>
+                                </>
+                                :
+                                <>
+                                </>
+                            }
+                        </Col>
+                    </Row>
                 </Modal.Body>
             </Modal>
 

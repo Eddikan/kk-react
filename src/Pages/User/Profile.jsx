@@ -358,14 +358,14 @@ const Profile = () => {
                                         </Button>
                                     </Col>
 
-                                    {user.is_designer == 1 && (
+                                    {/* {user.is_designer == 1 && (
                                         <Col md="2" className="text-left me-4">
                                             <Button href={`/user/center/calendar`} type='button' id="btn-seller-profile" className='w-100 ms-2'>
                                                 <GoArrowUpRight />
                                                 <span className='ms-1'>Seller Center</span>
                                             </Button>
                                         </Col>
-                                    )}
+                                    )} */}
 
                                     <Col md="2" className="text-right">
                                         <GoBack fallBack="/" />

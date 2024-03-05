@@ -71,7 +71,16 @@ select#sort-by {
 .sign-up-share {
     bottom: 16px;
 }
-
+.design-tags-view-bar {
+    padding: 1px 8px;
+    border-radius: 5px;
+    margin-right: 5px;
+    display: inline-block;
+    min-width: 70px;
+    max-width: 100%;
+    text-align: center;
+    text-wrap: nowrap;
+}
 .user-image-side .user-photo-side {
     min-width: 54px;
     min-height: 54px;
@@ -156,8 +165,32 @@ select#sort-by {
     background-color: var(--white);
     border-color: var(--black);
 }
-.share-modal-view {
+.share-modal-view,.embed-modal-view {
     background: #000000cc !important;
+}
+.text-area-embed {
+    padding: 10px;
+    width: 100%;
+    height: 170px;
+    border-radius: 5px;
+    border-color: #ccc;
+    font-size: 12px;
+}
+.btn-copy-embed {
+    font-size: 12px;
+    padding: 5px 0px;
+    min-width: 100px;
+    border-radius: 50px;
+    border-width: 2px;
+    color: var(--white);
+    background-color: var(--black);
+    border-color: var(--black);
+}
+
+.btn-copy-embed:hover {
+    color: var(--white);
+    background-color: var(--black);
+    border-color: var(--black);
 }
 .card-share-popup {
     width: 100%;
@@ -242,7 +275,7 @@ select#sort-by {
 .image-share-popup {
     position: absolute;
     bottom: 38px;
-    left: 55px;
+    left: 16px;
 }
 .book-consultation-bar {
     position: absolute;
@@ -300,15 +333,20 @@ select#sort-by {
 .btn-copy-link {
     padding: 5px 0px;
     border-radius: 50px;
-    width: 70%;
+    width: 360px;
     border-color: #eaeaea !important;
     font-size: 14px;
 }
-
+.placeholder-img-share {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-top: 6px;
+}
 .btn-copy-link:hover {
     padding: 5px 0px;
     border-radius: 50px;
-    width: 70%;
+    width: 360px;
     border-color: #eaeaea !important;
     background: #f1f1f1 !important;
     font-size: 14px;
@@ -323,14 +361,18 @@ select#sort-by {
     width: 900px;
     border-radius: 5px;
 }
+.padding-share-card {
+    padding-right: 50px;
+    padding-left: 50px;
+}
 .single-image-slider-share {
-    width: 375px;
+    width: 100%;
     min-height: 284px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 5px;
-    margin-left: 40px;
+   
 }
 .card-profile {
     background: #ffffff;
@@ -338,7 +380,19 @@ select#sort-by {
     border-radius: 5px;
 }
 
-
+#modal-preview-embed .modal-content {
+    max-width: 480px;
+    left: 9px;
+}
+.embed-height {
+    height: 390px;
+}
+.cancel-btn-embed {
+    background: none;
+    border: none;
+    color: #696969;
+    font-size: 13px;
+}
 #description-card .modal-content {
     right: 205px;
     position: absolute;
@@ -363,6 +417,13 @@ select#sort-by {
     text-align: center;
     cursor: pointer;
     font-size: 24px;
+}
+.view-bar-share {
+    padding: 10px 20px 10px 20px;
+    width: 830px;
+    background: #202a44e8 !important;
+    border: none;
+    border-radius: 7px;
 }
 .specialization {
 color:#F6D46D;

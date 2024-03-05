@@ -1,0 +1,78 @@
+.chat-height {
+    height: 500px;
+}
+.video-height {
+    height: 445px;
+}
+
+.action-button-meeting {
+    background: var(--white);
+    color: var(--black);
+    padding: 3px 5px 5px 5px;
+    height: 52px;
+    display: inline-block;
+    width: 50px;
+    border-radius: 50%;
+    text-align: center;
+    cursor: pointer;
+}
+.off-cam-icon {
+    margin-top: 14px;
+}
+.bg-red-icon {
+    background-color: #dc3f3f !important
+}
+.chat-height-card {
+    height: 350px;
+}
+.send-icon {
+    position: absolute;
+    bottom: 44px;
+    right: 33px;
+}
+.video-turn-off-button {
+    background-color: #7f8185 !important;
+}
+.bg-gold-icon {
+    background-color: #cea835;
+}
+.bg-gray-icon {
+    background-color: #7f8185;
+}
+.meeting-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.meeting-tooltip .icon-tooltiptext {
+    visibility: hidden;
+    width: 138px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 60px;
+    left: 10%;
+    margin-left: -52px;
+}
+
+.meeting-tooltip .icon-tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 7px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
+}
+
+.meeting-tooltip:hover .icon-tooltiptext {
+    visibility: visible;
+}
+.height-camera {
+    height: 519px;
+}

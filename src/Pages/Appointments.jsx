@@ -277,6 +277,7 @@ const Appointments = (props) => {
                                                                                                 <BiSolidPencil className='video-cam me-3' color='#0000005c' size={20} />
                                                                                             </div>
                                                                                         ) : (
+
                                                                                             <div
                                                                                                 className="cursor-pointer appointments-tooltip"
                                                                                                 onClick={() => toggleEditAppointmentModal(appointment.id)}
@@ -295,10 +296,12 @@ const Appointments = (props) => {
                                                                                     </>
                                                                                 }
 
-                                                                                <div className="cursor-pointer appointments-tooltip" onClick={() => toggleUnderConstruction("Video call")}>
-                                                                                    <span className="icon-tooltiptext fs-14">Video call</span>
-                                                                                    <IoMdVideocam className='video-cam me-3' size={20} />
-                                                                                </div>
+                                                                                <a href={`/consultation-meeting/${appointment.id}`}>
+                                                                                    <div className="cursor-pointer appointments-tooltip">
+                                                                                        <span className="icon-tooltiptext fs-14">Video call</span>
+                                                                                        <IoMdVideocam className='video-cam me-3' size={20} />
+                                                                                    </div>
+                                                                                </a>
 
                                                                                 <div className="cursor-pointer appointments-tooltip"
                                                                                     onClick={function () {
