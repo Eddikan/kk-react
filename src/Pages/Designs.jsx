@@ -671,7 +671,6 @@ const Designs = (props) => {
                                     </>
                                     :
                                     <>
-
                                     </>
                                 }
 
@@ -723,7 +722,11 @@ const Designs = (props) => {
                                     <div>
                                         <Card className="table_content file-action mt-3 me-0 card-profile-designer">
                                             <Card.Header className='card-hr bg-white'>
-                                                <button type='button' className='close react-modal-close' onClick={() => setProfileViewShow(false)} data-dismiss='modal' aria-label='Close'>
+                                                <button
+                                                    type='button'
+                                                    className='close react-modal-close'
+                                                    onClick={() => setProfileViewShow(false)}
+                                                >
                                                     <IoCloseOutline color="#7e7e7e" size={25} />
                                                 </button>
                                             </Card.Header>
@@ -866,8 +869,7 @@ const Designs = (props) => {
                         type='button'
                         className='close react-modal-close'
                         onClick={() => setMessageShow(false)}
-                        data-dismiss='modal'
-                        aria-label='Close'>
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
@@ -912,8 +914,6 @@ const Designs = (props) => {
                         type='button'
                         className='close react-modal-close'
                         onClick={() => setUnderConstructionShow(false)}
-                        data-dismiss='modal'
-                        aria-label='Close'
                     >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
@@ -940,8 +940,6 @@ const Designs = (props) => {
                         type='button'
                         className='close react-modal-close description-close'
                         onClick={() => setDescriptionShow(false)}
-                        data-dismiss='modal'
-                        aria-label='Close'
                     >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
@@ -964,7 +962,11 @@ const Designs = (props) => {
                     <div>
                         <Card className="table_content file-action mt-3 me-0 card-share-popup">
                             <Card.Header className='card-hr bg-white'>
-                                <button type='button' className='close react-modal-close' onClick={() => setShareShowModal(false)} data-dismiss='modal' aria-label='Close'>
+                                <button
+                                    type='button'
+                                    className='close react-modal-close'
+                                    onClick={() => setShareShowModal(false)}
+                                >
                                     <IoCloseOutline color="#7e7e7e" size={25} />
                                 </button>
                             </Card.Header>
@@ -1016,7 +1018,7 @@ const Designs = (props) => {
                                                                                         <>
 
                                                                                             {singleDesign.tags.slice(0, 3).map((tag, index) => (
-                                                                                                <span key={index} className="design-tags-view-bar bg-light fs-14 categories-color text-black">
+                                                                                                <span key={index} className="design-tags-view-bar bg-light fs-12 categories-color text-black">
                                                                                                     {tag}
                                                                                                 </span>
                                                                                             ))}
@@ -1080,8 +1082,6 @@ const Designs = (props) => {
                         type='button'
                         className='close react-modal-close'
                         onClick={() => setCopyEmbedLink(false)}
-                        data-dismiss='modal'
-                        aria-label='Close'
                     >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>

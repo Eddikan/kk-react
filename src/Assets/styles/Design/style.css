@@ -383,6 +383,7 @@ select#sort-by {
 #modal-preview-embed .modal-content {
     max-width: 480px;
     left: 9px;
+    bottom: 50px;
 }
 .embed-height {
     height: 390px;

@@ -486,7 +486,7 @@ const EcoFriendlyFabrics = (props) => {
                                                                                 </div>
                                                                                 <div className="design-details">
                                                                                     <div className='d-flex align-items-center'>
-                                                                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis">{fabric.name ?? '-'}</h4>
+                                                                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis pb-1">{fabric.name ?? '-'}</h4>
                                                                                         {currentUser ?
                                                                                             <div className='d-flex align-items-center'>
                                                                                                 {fabric.eco_friendly != null && fabric.eco_friendly != '' && (
@@ -494,7 +494,7 @@ const EcoFriendlyFabrics = (props) => {
                                                                                                         <div className='tooltip-content'>
                                                                                                             <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
                                                                                                         </div>
-                                                                                                        <ImLeaf color="#55d140" />
+                                                                                                        <ImLeaf color="#55d140" className='mb-1' />
                                                                                                     </span>
                                                                                                 )}
                                                                                             </div>

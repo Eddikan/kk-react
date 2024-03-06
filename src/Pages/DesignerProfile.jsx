@@ -228,7 +228,6 @@ const DesignerProfile = () => {
                                 const availableHours = selectedTime.content;
                                 const events = [];
 
-                                // Map over the content array to format events
                                 if (availableHours) {
                                     availableHours.forEach(({ day, availabilities }) => {
                                         availabilities.forEach(({ start, end }) => {
@@ -330,8 +329,8 @@ const DesignerProfile = () => {
                                                     />
                                                 </>
                                             }
-
                                         </h2>
+
                                         <div className='icons-d-flex'>
                                             <img src={PinIcon} alt="location pin" className='mt-1' />
                                             {user.city || user.province || user.country ?
@@ -376,7 +375,6 @@ const DesignerProfile = () => {
                                                         </button>
                                                     </span>
                                                 }
-
                                             </>
                                         }
                                     </Col>
@@ -385,9 +383,6 @@ const DesignerProfile = () => {
                                         <GoBack fallBack="/" />
                                     </Col>
                                 </Row>
-
-
-
                             </Col>
 
                             <Col lg="12" className='mt-4'>
@@ -696,9 +691,9 @@ const DesignerProfile = () => {
                                                 {elements.map((element, index) => (
                                                     <>
                                                         {element.type == "Heading" ?
-                                                            <h3 className='fs-20 mb-2' key={index}>{element.value}</h3>
+                                                            <h3 className='fs-20 mb-3 mt-1' key={index}>{element.value}</h3>
                                                             : element.type == "Paragraph" ?
-                                                                <p className="mb-0" key={index}>{element.value}</p>
+                                                                <p className="mb-3 mt-3" key={index}>{element.value}</p>
                                                                 : element.type == "Image" ?
                                                                     <>
                                                                         {element.value && element.value.length > 0 && element.value != "" ?
@@ -726,7 +721,7 @@ const DesignerProfile = () => {
                                                                                     </div>
                                                                                 </>
                                                                                 : element.type == "Line Break" ?
-                                                                                    <p className="py-4 mb-0"></p>
+                                                                                    <p className="mb-0"></p>
                                                                                     :
                                                                                     null
                                                                         }

@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 import { Row, Col, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { GoAlertFill } from 'react-icons/go';
 import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { VscSend } from "react-icons/vsc";
-import { IoIosAttach } from "react-icons/io";
-import GoBack from '../../Components/Shared/GoBack';
+import { IoMdVideocam, IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
-import UserPlaceholder from '../../Assets/images/user.png';
 import { AiFillMessage } from "react-icons/ai";
 import { CiSearch } from 'react-icons/ci';
 import { useParams } from 'react-router-dom';
@@ -17,6 +14,9 @@ import { MdOutlineCalendarMonth } from "react-icons/md";
 import { IoEye } from "react-icons/io5";
 import 'Assets/styles/AppointmentList/style.css';
 import 'Assets/styles/Appointments/style.css';
+import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
+import UserPlaceholder from '../../Assets/images/user.png';
+import GoBack from '../../Components/Shared/GoBack';
 import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
 import InputEmoji from 'react-input-emoji';
@@ -25,7 +25,6 @@ import axios from "axios";
 
 const Appointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const { designerIdParams } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
     const currentUser = cookies.currentUser;
     const designerId = cookies.currentUserDesigner;
@@ -43,6 +42,7 @@ const Appointments = (props) => {
     const [singleAppointment, setSingleAppointment] = useState('');
     const [appointmentModalIsOpen, setAppointmentModalIsOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const currentDate = new Date().toISOString().split('T')[0];
 
     const getAppointments = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
@@ -89,6 +89,12 @@ const Appointments = (props) => {
     function handleOnEnter(text) {
         console.log('enter', text)
     }
+
+    const convert24hrTo12hr = (time24hr) => {
+        const [hours, minutes] = time24hr.split(':');
+        const date = new Date(2000, 0, 1, hours, minutes);
+        return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    };
 
     function returnFormattedDate(date) {
         const targetDate = new Date(date);
@@ -232,7 +238,6 @@ const Appointments = (props) => {
                                                     </Col>
 
                                                     <Col lg={2}>
-
                                                     </Col>
                                                 </Row>
                                             </Card.Body>
@@ -252,12 +257,10 @@ const Appointments = (props) => {
                                                                 day: 'numeric',
                                                             };
                                                             const today = (new Date(appointment.created_at)).toLocaleDateString('en-ES', options);
-                                                            const formattedDate = (new Date(appointment.consultation_date_time)).toLocaleString('en-US', {
+                                                            const formattedDate = (new Date(appointment.consultation_date)).toLocaleString('en-US', {
                                                                 year: 'numeric',
                                                                 month: 'long',
                                                                 day: 'numeric',
-                                                                hour: 'numeric',
-                                                                minute: 'numeric',
                                                                 timeZone: 'UTC',
                                                             });
 
@@ -291,7 +294,7 @@ const Appointments = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={4}>
-                                                                                    <span className='text-black'>{formattedDate}</span>
+                                                                                    <span className='text-black'>{formattedDate} at {convert24hrTo12hr(appointment.consultation_hour_start)}</span>
                                                                                 </Col>
 
                                                                                 <Col lg={2}>
@@ -314,6 +317,33 @@ const Appointments = (props) => {
                                                                                         <span className="icon-tooltiptext fs-14">View Details</span>
                                                                                         <IoEye className='video-cam me-3' size={20} />
                                                                                     </div>
+
+                                                                                    {currentDate === appointment.consultation_date ? (
+                                                                                        <a href={`/consultation-meeting/${appointment.id}`}>
+                                                                                            <div className="cursor-pointer appointments-tooltip">
+                                                                                                <span className="icon-tooltiptext fs-14">
+                                                                                                    Video call
+                                                                                                </span>
+                                                                                                <IoMdVideocam className='video-cam me-3' size={20} />
+                                                                                            </div>
+                                                                                        </a>
+                                                                                    ) : (
+                                                                                        currentDate < appointment.consultation_date ? (
+                                                                                            <div className="cursor-pointer appointments-tooltip">
+                                                                                                <span className="icon-tooltiptext fs-14">
+                                                                                                    Not time for video conferencing
+                                                                                                </span>
+                                                                                                <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                            </div>
+                                                                                        ) : (
+                                                                                            <div className="cursor-pointer appointments-tooltip">
+                                                                                                <span className="icon-tooltiptext fs-14">
+                                                                                                    This video conferencing is finished
+                                                                                                </span>
+                                                                                                <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                            </div>
+                                                                                        )
+                                                                                    )}
 
                                                                                     <div
                                                                                         className="cursor-pointer appointments-tooltip"
@@ -462,7 +492,6 @@ const Appointments = (props) => {
                         type='button'
                         className='close react-modal-close'
                         onClick={() => setUnderConstructionShow(false)}
-                        data-dismiss='modal' aria-label='Close'
                     >
                         <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
                     </button>
@@ -487,7 +516,11 @@ const Appointments = (props) => {
             >
                 <div>
                     <ModalHeader className='pb-0'>
-                        <button type='button' className='close react-modal-close' onClick={() => setAppointmentModalIsOpen(false)} data-dismiss='modal' aria-label='Close'>
+                        <button
+                            type='button'
+                            className='close react-modal-close'
+                            onClick={() => setAppointmentModalIsOpen(false)}
+                        >
                             <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                         </button>
                         <h5 className='modal-title text-left rufina-family fs-22' >Appointment Details</h5>
@@ -511,9 +544,7 @@ const Appointments = (props) => {
                                 <div className="d-flex">
                                     <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color mb-1' /></p>
                                     <p className="current-date ms-2 mb-0 text-black ">
-                                        {
-                                            returnFormattedTime(singleAppointment.consultation_hour_start ?? '-') + ' - ' + returnFormattedTime(singleAppointment.consultation_hour_end ?? '-')
-                                        }
+                                        {returnFormattedTime(singleAppointment.consultation_hour_start ?? '-') + ' - ' + returnFormattedTime(singleAppointment.consultation_hour_end ?? '-')}
                                     </p>
                                 </div>
 
@@ -525,7 +556,7 @@ const Appointments = (props) => {
                     </Modal.Body>
                     <ModalFooter className='border-none'>
                         <div className='text-right'>
-                            <button className="btn btn-secondary border-black bg-white text-black" type="button" onClick={closeAppointmentModal} style={{ minWidth: '100px', padding: '9px 20px' }}   >Close</button>
+                            <button className="btn btn-secondary border-black bg-white text-black btn-style" type="button" onClick={closeAppointmentModal} >Close</button>
                         </div>
                     </ModalFooter>
                 </div>

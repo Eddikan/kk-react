@@ -146,10 +146,12 @@ const Appointments = (props) => {
                         setAppointments(selectedAppointments);
                     } else {
                         toast.error('There has been an error getting the appointments, please try again!');
+                        setAppointmentLoading(false);
                     }
                 })
                 .catch((error) => {
                     toast.error('There has been an error getting the appointments, please try again!');
+                    setAppointmentLoading(false);
                 });
         }
     },
@@ -166,7 +168,6 @@ const Appointments = (props) => {
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
     }, []);
-
 
     return (
         <LayoutNoFooter>
@@ -277,7 +278,6 @@ const Appointments = (props) => {
                                                                                                 <BiSolidPencil className='video-cam me-3' color='#0000005c' size={20} />
                                                                                             </div>
                                                                                         ) : (
-
                                                                                             <div
                                                                                                 className="cursor-pointer appointments-tooltip"
                                                                                                 onClick={() => toggleEditAppointmentModal(appointment.id)}
@@ -296,12 +296,26 @@ const Appointments = (props) => {
                                                                                     </>
                                                                                 }
 
-                                                                                <a href={`/consultation-meeting/${appointment.id}`}>
-                                                                                    <div className="cursor-pointer appointments-tooltip">
-                                                                                        <span className="icon-tooltiptext fs-14">Video call</span>
-                                                                                        <IoMdVideocam className='video-cam me-3' size={20} />
-                                                                                    </div>
-                                                                                </a>
+                                                                                {currentDate === appointment.consultation_date ? (
+                                                                                    <a href={`/consultation-meeting/${appointment.id}`}>
+                                                                                        <div className="cursor-pointer appointments-tooltip">
+                                                                                            <span className="icon-tooltiptext fs-14">Video call</span>
+                                                                                            <IoMdVideocam className='video-cam me-3' size={20} />
+                                                                                        </div>
+                                                                                    </a>
+                                                                                ) : (
+                                                                                    currentDate < appointment.consultation_date ? (
+                                                                                        <div className="cursor-pointer appointments-tooltip">
+                                                                                            <span className="icon-tooltiptext fs-14">Not time for video conferencing</span>
+                                                                                            <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <div className="cursor-pointer appointments-tooltip">
+                                                                                            <span className="icon-tooltiptext fs-14">This video conferencing is finished</span>
+                                                                                            <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                        </div>
+                                                                                    )
+                                                                                )}
 
                                                                                 <div className="cursor-pointer appointments-tooltip"
                                                                                     onClick={function () {
@@ -410,8 +424,6 @@ const Appointments = (props) => {
                         type='button'
                         className='close react-modal-close'
                         onClick={() => setUnderConstructionShow(false)}
-                        data-dismiss='modal'
-                        aria-label='Close'
                     >
                         <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
                     </button>
@@ -439,7 +451,6 @@ const Appointments = (props) => {
                             type='button'
                             className='close react-modal-close'
                             onClick={() => setAppointmentEditModal(false)}
-                            data-dismiss='modal' aria-label='Close'
                         >
                             <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                         </button>

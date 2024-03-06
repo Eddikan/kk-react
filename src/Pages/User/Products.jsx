@@ -230,18 +230,6 @@ const Products = (props) => {
                                                                         )}
                                                                     </div>
                                                                 </Col>
-
-                                                                {/* <Col lg="6" className='text-end'>
-                                                                    {object.views == null ?
-                                                                        <div className='mt-2'>
-                                                                            <IoEyeOutline className="text-black ms-2" /> 0
-                                                                        </div>
-                                                                        :
-                                                                        <div className='mt-2'>
-                                                                            <IoEyeOutline className="text-black ms-2" /> {object.views}
-                                                                        </div>
-                                                                    }
-                                                                </Col> */}
                                                             </Row>
                                                         </Col>
 
@@ -261,12 +249,21 @@ const Products = (props) => {
                                 </>
                                 :
                                 <>
-                                    <div className="text-center">
-                                        <p className="text-center mb-3 mt-3">No records found.</p>
-                                        <Link to="/user/center/product/add">
-                                            <Button className="btn btn-primary">Add Product</Button>
-                                        </Link>
-                                    </div>
+                                    <Row>
+                                        <Col lg={2}>
+                                            <Sidebar />
+                                        </Col>
+
+                                        <Col lg={10} className='bg-light d-flex justify-content-center align-items-center'>
+                                            <div className="text-center">
+                                                <p className="text-center mb-3">No records found.</p>
+                                                <Link to="/user/center/product/add">
+                                                    <Button className="btn btn-primary">Add Product</Button>
+                                                </Link>
+                                            </div>
+                                        </Col>
+                                    </Row>
+
                                 </>
                             }
                         </Container>
@@ -282,14 +279,9 @@ const Products = (props) => {
             >
                 <Modal.Header className="pb-0">
                     <Modal.Title className='rufina-family fs-22 text-black'>Confirm Delete</Modal.Title>
-                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} >
                         <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
-
-                    {/* <h5 className='modal-title text-left fs-25'>Confirm Delete</h5>
-                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'>
-                        <span aria-hidden='true'>&times;</span>
-                    </button> */}
                 </Modal.Header>
                 <Modal.Body>
                     <Card>

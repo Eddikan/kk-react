@@ -334,12 +334,21 @@ const Portfolio = (props) => {
                                     </>
                                     :
                                     <>
-                                        <div className="text-center">
-                                            <p className="text-center mb-3 mt-3">No records found.</p>
-                                            <Link to="/user/center/design/add">
-                                                <Button className="btn btn-primary">Add Portfolio</Button>
-                                            </Link>
-                                        </div>
+                                        <Row>
+                                            <Col lg={2}>
+                                                <Sidebar />
+                                            </Col>
+
+                                            <Col lg={10} className='bg-light d-flex justify-content-center align-items-center'>
+                                                <div className="text-center">
+                                                    <p className="text-center mb-3">No records found.</p>
+                                                    <Link to="/user/center/design/add">
+                                                        <Button className="btn btn-primary">Add Portfolio</Button>
+                                                    </Link>
+                                                </div>
+                                            </Col>
+                                        </Row>
+
                                     </>
                                 }
                             </Row>
@@ -356,7 +365,7 @@ const Portfolio = (props) => {
             >
                 <Modal.Header className="pb-0">
                     <Modal.Title className='rufina-family fs-22 text-black'>Confirm Delete</Modal.Title>
-                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} >
                         <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
                 </Modal.Header>
@@ -492,7 +501,11 @@ const Portfolio = (props) => {
                                     <div>
                                         <Card className="table_content file-action mt-3 me-0 card-profile-designer">
                                             <Card.Header className='card-hr bg-white'>
-                                                <button type='button' className='close react-modal-close' onClick={() => setProfileViewShow(false)} data-dismiss='modal' aria-label='Close'>
+                                                <button
+                                                    type='button'
+                                                    className='close react-modal-close'
+                                                    onClick={() => setProfileViewShow(false)}
+                                                >
                                                     <IoCloseOutline color="#7e7e7e" size={25} />
                                                 </button>
                                             </Card.Header>
@@ -629,7 +642,11 @@ const Portfolio = (props) => {
                 id="description-card"
             >
                 <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close description-close' onClick={() => setDescriptionShow(false)} data-dismiss='modal' aria-label='Close'>
+                    <button
+                        type='button'
+                        className='close react-modal-close description-close'
+                        onClick={() => setDescriptionShow(false)}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
@@ -649,7 +666,11 @@ const Portfolio = (props) => {
             >
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-left fs-22 mt-2'>{modalHeading}</h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setUnderConstructionShow(false)}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>

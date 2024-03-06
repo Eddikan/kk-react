@@ -4,7 +4,11 @@
 .video-height {
     height: 445px;
 }
-
+.consulatation-top-bottom {
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background: #fafafa;
+}
 .action-button-meeting {
     background: var(--white);
     color: var(--black);
@@ -16,8 +20,12 @@
     text-align: center;
     cursor: pointer;
 }
+.card-video {
+    padding-bottom: 9px;
+}
 .off-cam-icon {
-    margin-top: 14px;
+    margin-left: 6px;
+    margin-top: 7px;
 }
 .bg-red-icon {
     background-color: #dc3f3f !important
@@ -54,9 +62,9 @@
     padding: 6px 0;
     position: absolute;
     z-index: 1;
-    bottom: 60px;
+    bottom: 63px;
     left: 10%;
-    margin-left: -52px;
+    margin-left: -49px;
 }
 
 .meeting-tooltip .icon-tooltiptext::after {
@@ -73,6 +81,33 @@
 .meeting-tooltip:hover .icon-tooltiptext {
     visibility: visible;
 }
-.height-camera {
-    height: 519px;
+span.icon-tooltiptext.call-icons {
+    bottom: 63px !important;
+    left: 19% !important;
+}
+.video-button {
+    width: 55px !important;
+    height: 55px !important;
+    border-radius: 50% !important;
+    padding: 12px !important;
+    margin: 0 8px !important;
+    border: none !important;
+}
+
+.video-button-on {
+    background-color: #dc3f3f !important;
+}
+
+.video-button-share-on {
+    background-color: #cea835 !important;
+}
+
+.video-button-off {
+    background-color: #7F8185 !important;
+}
+
+.rowButton-MQdq.isSelected-mVgN {
+    background-color: var(--color-background-grey);
+    color: #cea835;
+    cursor: unset;
 }

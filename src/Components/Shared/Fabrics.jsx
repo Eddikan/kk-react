@@ -242,7 +242,7 @@ const Fabrics = (props) => {
                                                         }
                                                         <div className="design-details">
                                                             <div className='d-flex align-items-center justify-content-between'>
-                                                                <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis mt-2">{fabric.name ?? '-'}</h4>
+                                                                <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis mt-2 pb-1">{fabric.name ?? '-'}</h4>
                                                                 {/* {currentUser ?
                                                                     <div className='d-flex align-items-center'>
                                                                         <span className='fs-14 text-no-wrap mx-2'>

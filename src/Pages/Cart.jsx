@@ -48,6 +48,8 @@ const Cart = (props) => {
     const [selectedCartItems, setSelectedCartItems] = useState([]);
     const [cartItemModalDelete, setCartItemModalDelete] = useState(false);
 
+    const [deleteLoading, setDeleteLoading] = useState(false);
+
     const [subtotalAmount, setSubtotalAmount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
 
@@ -121,7 +123,7 @@ const Cart = (props) => {
     }
 
     const deleteCartItemSubmit = (cartItemId) => {
-        setFormStatus('loading');
+        setDeleteLoading(true);
         deleteCartItem(cartItemId).then(response => {
             const success = response.data.status;
             if (success) {
@@ -132,9 +134,11 @@ const Cart = (props) => {
             } else {
                 setFormStatus('standby');
                 toast.error('There has been an error getting the item, please try again!');
+                setDeleteLoading(false);
             }
         }).catch(() => {
             toast.error('There has been an error getting the item, please try again!');
+            setDeleteLoading(false);
         });
     }
 
@@ -448,7 +452,11 @@ const Cart = (props) => {
             >
                 <Modal.Header className='pb-0'>
                     <h5 className='modal-title text-left fs-22'>Confirm Delete</h5>
-                    <button type='button' className='close react-modal-close' onClick={function () { setCartItemModalDelete(false); }} data-dismiss='modal' aria-label='Close'>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={function () { setCartItemModalDelete(false); }}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
                 </Modal.Header>
@@ -460,11 +468,11 @@ const Cart = (props) => {
                         </Card.Body>
                     </Card>
                     <Card.Footer className="text-right mt-3">
-                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setCartItemModalDelete(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
-                        {formStatus !== "standby" ?
-                            <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Deleting...</button>
+                        <button className="btn btn-secondary border-black bg-white text-black me-3 btn-style" onClick={() => setCartItemModalDelete(false)} type="button" >Cancel</button>
+                        {deleteLoading ?
+                            <button className="btn btn-primary btn-style" type="button">Deleting...</button>
                             :
-                            <button className="btn btn-primary" type="button" onClick={deleteCartItemSubmit} style={{ minWidth: '100px', padding: '9px 20px' }}>Delete</button>
+                            <button className="btn btn-primary btn-style" type="button" onClick={deleteCartItemSubmit}>Delete</button>
                         }
                     </Card.Footer>
                 </Modal.Body>

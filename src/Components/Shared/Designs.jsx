@@ -46,6 +46,7 @@ const Designs = (props) => {
     const [copyEmbedLink, setCopyEmbedLink] = useState(false);
     const [copy, setCopy] = useState(false)
 
+    let iframeLink = `<iframe src="https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
 
     const responsive = {
         desktop: {
@@ -113,9 +114,9 @@ const Designs = (props) => {
         }
 
         if (currentUser == userId) {
-            setIsDesignCurrentUser(false);
-        } else {
             setIsDesignCurrentUser(true);
+        } else {
+            setIsDesignCurrentUser(false);
         }
     }
 
@@ -168,7 +169,7 @@ const Designs = (props) => {
         fetchData(currentUser);
     }, [reloadCount]);
 
-    let iframeLink = `<iframe src="https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+
 
     return (
         <>
@@ -386,7 +387,6 @@ const Designs = (props) => {
                                             autoPlaySpeed={1000}
                                         >
                                             {designImages.map((image, index) => {
-                                                console.log('Image in carousel: ' + image.image_url)
                                                 return (
                                                     <>
                                                         <div key={index} className="single-image-slider-fabrics"
@@ -431,11 +431,17 @@ const Designs = (props) => {
                                                 </div>
                                             </a>
 
-                                            <div className='btn-book-bar'>
-                                                <a href={`/appointment/schedule/${singleDesign.id}`}>
-                                                    <button className='btn btn-book-consultation'>Book a Consultation</button>
-                                                </a>
-                                            </div>
+                                            {isDesignCurrentUser ?
+                                                null
+                                                :
+                                                <>
+                                                    <div className='btn-book-bar'>
+                                                        <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                                            <button className='btn btn-book-consultation'>Book a Consultation</button>
+                                                        </a>
+                                                    </div>
+                                                </>
+                                            }
                                         </p>
                                     </div>
                                 </div>
@@ -443,13 +449,16 @@ const Designs = (props) => {
                         </Col>
 
                         <Col lg={1}>
-
                             {profileViewShow &&
                                 <>
                                     <div>
                                         <Card className="table_content file-action mt-3 me-0 card-profile-designer">
                                             <Card.Header className='card-hr bg-white'>
-                                                <button type='button' className='close react-modal-close' onClick={() => setProfileViewShow(false)} data-dismiss='modal' aria-label='Close'>
+                                                <button
+                                                    type='button'
+                                                    className='close react-modal-close'
+                                                    onClick={() => setProfileViewShow(false)}
+                                                >
                                                     <IoCloseOutline color="#7e7e7e" size={25} />
                                                 </button>
                                             </Card.Header>
@@ -492,6 +501,8 @@ const Designs = (props) => {
                                                         </div>
 
                                                         {isDesignCurrentUser ?
+                                                            null
+                                                            :
                                                             <>
                                                                 <hr />
                                                                 <div className='text-center'>
@@ -509,8 +520,6 @@ const Designs = (props) => {
                                                                         <AiFillMessage className="me-2" />Send Message</a>
                                                                 </div>
                                                             </>
-                                                            :
-                                                            null
                                                         }
 
                                                     </Col>
@@ -538,39 +547,42 @@ const Designs = (props) => {
                                     </div>
                                 </div>
 
-                                <div className='text-center mb-4' >
-                                    <a href={`/appointment/schedule/${singleDesign.id}`}>
-                                        <div className="action-button-designs bg-white">
-                                            <PiNotepadFill className="text-black mt-2" size={30} />
+                                {isDesignCurrentUser ?
+                                    null
+                                    :
+                                    <>
+                                        <div className='text-center mb-4' >
+                                            <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                                <div className="action-button-designs bg-white">
+                                                    <PiNotepadFill className="text-black mt-2" size={30} />
+                                                </div>
+                                            </a>
+                                            <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                         </div>
-                                    </a>
-                                    <div className='icon-name-color fs-12 mt-2 fw-400'>Consultation</div>
-                                </div>
 
-                                <div className='text-center mb-4'
-                                    // onClick={toggleMessage}
-                                    onClick={() => toggleUnderConstruction("Message")}
-                                >
-                                    <div className="action-button-designs bg-white">
-                                        <AiFillMessage className="text-black mt-2" size={30} />
-                                    </div>
-                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-400'>Message</div>
-                                </div>
+                                        <div className='text-center mb-4' onClick={() => toggleUnderConstruction("Message")}>
+                                            <div className="action-button-designs bg-white">
+                                                <AiFillMessage className="text-black mt-2" size={30} />
+                                            </div>
+                                            <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
+                                        </div>
 
-                                <div className='text-center mb-4'
-                                    onClick={toggleShareModal}
-                                >
-                                    <div className="action-button-designs bg-white">
-                                        <IoShareSocial className="text-black mt-2" size={30} />
-                                    </div>
-                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-400'>Share</div>
-                                </div>
+                                        <div className='text-center mb-4'
+                                            onClick={toggleShareModal}
+                                        >
+                                            <div className="action-button-designs bg-white">
+                                                <IoShareSocial className="text-black mt-2" size={30} />
+                                            </div>
+                                            <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
+                                        </div>
+                                    </>
+                                }
 
-                                <div className='text-center mb-4' onClick={toggleDescription} >
+                                <div className='text-center mb-4' onClick={toggleDescription}>
                                     <div className="action-button-designs bg-white">
                                         <IoInformationOutline className="text-black mt-2" size={30} />
                                     </div>
-                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-400'>Description</div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Description</div>
                                 </div>
                             </div>
                         </Col>
@@ -586,7 +598,11 @@ const Designs = (props) => {
                 id="under-construction"
             >
                 <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close' onClick={() => setMessageShow(false)} data-dismiss='modal' aria-label='Close'>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setMessageShow(false)}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
@@ -648,7 +664,11 @@ const Designs = (props) => {
             >
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-uppercase text-left fs-22 mt-2'>{modalHeading}</h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setUnderConstructionShow(false)}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
@@ -670,7 +690,11 @@ const Designs = (props) => {
                 id="description-card"
             >
                 <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close description-close' onClick={() => setDescriptionShow(false)} data-dismiss='modal' aria-label='Close'>
+                    <button
+                        type='button'
+                        className='close react-modal-close description-close'
+                        onClick={() => setDescriptionShow(false)}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
@@ -691,7 +715,11 @@ const Designs = (props) => {
                     <div>
                         <Card className="table_content file-action mt-3 me-0 card-share-popup">
                             <Card.Header className='card-hr bg-white'>
-                                <button type='button' className='close react-modal-close' onClick={() => setShareShowModal(false)} data-dismiss='modal' aria-label='Close'>
+                                <button
+                                    type='button'
+                                    className='close react-modal-close'
+                                    onClick={() => setShareShowModal(false)}
+                                >
                                     <IoCloseOutline color="#7e7e7e" size={25} />
                                 </button>
                             </Card.Header>
@@ -743,7 +771,7 @@ const Designs = (props) => {
                                                                                         <>
 
                                                                                             {singleDesign.tags.slice(0, 3).map((tag, index) => (
-                                                                                                <span key={index} className="design-tags-view-bar bg-light fs-14 categories-color text-black">
+                                                                                                <span key={index} className="design-tags-view-bar bg-light fs-12 categories-color text-black">
                                                                                                     {tag}
                                                                                                 </span>
                                                                                             ))}
@@ -807,8 +835,6 @@ const Designs = (props) => {
                         type='button'
                         className='close react-modal-close'
                         onClick={() => setCopyEmbedLink(false)}
-                        data-dismiss='modal'
-                        aria-label='Close'
                     >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
