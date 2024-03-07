@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@firebase/firestore": "^4.4.3",
     "@stripe/react-stripe-js": "^2.1.2",
     "@stripe/stripe-js": "^2.1.0",
     "@testing-library/jest-dom": "^5.17.0",
@@ -11,6 +12,7 @@
     "axios": "^1.6.2",
     "bootstrap": "^5.3.1",
     "emoji-picker-react": "^4.7.17",
+    "firebase": "^10.8.1",
     "helmet": "^7.1.0",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",

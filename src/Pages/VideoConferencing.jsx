@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Button, Card, Modal, ModalFooter } from 'react-bootstrap';
 import Layout from 'Components/Layout/Layout';
 import '../Assets/styles/EcoFriendly/style.css';
@@ -19,6 +19,25 @@ import { LuAlarmClock } from "react-icons/lu";
 import { Helmet } from "react-helmet";
 import toast from 'react-hot-toast';
 import axios from 'axios';
+
+import { BsPeopleFill, BsFillChatLeftTextFill } from 'react-icons/bs';
+import { RiInformationLine } from 'react-icons/ri';
+
+import { FaCrown } from 'react-icons/fa';
+import MeetingChat from '../Components/Chat/MeetingChat';
+import UserPlaceholder from 'Components/Elements/UserPlaceholder';
+// import UserImage from 'components/Image/UserImage';
+
+
+const ToastCss = {
+    position: "top-right",
+    autoClose: 1500,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+};
 
 const intitialConsultationData = {
     consultation_date_time: '',
@@ -53,7 +72,15 @@ const VideoConferencing = (props) => {
     const [endMeetingLoading, setEndMeetingLoading] = useState(false);
 
     const [modalHeading, setModalHeading] = useState('');
-    // const [appointmentId, setAppointmentId] = useState('');
+
+    const [meeting, setMeeting] = useState([]);
+
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    };
+    let query = useQuery();
+    const meeting_id = query.get("meeting_id");
+    const video_call = query.get("video_call");
 
     let room = document.querySelector("whereby-embed");
 
@@ -64,6 +91,11 @@ const VideoConferencing = (props) => {
     const putSchedule = async (data) => {
         return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId, data);
     };
+
+    // const getMeeting = async () => {
+    //     return await axios.get(process.env.REACT_APP_API_ENDPOINT + "meeting/" + meeting_id + "?user_id=" + currentUser);
+    // };
+
 
     const toggleSaveAppointmentModal = () => {
         setEndMeetingModal(!endMeetingModal);
@@ -95,6 +127,16 @@ const VideoConferencing = (props) => {
         } else {
             room.toggleScreenshare(false);
             setShareScreenVisible(false);
+        }
+    };
+
+    const toastAlert = (type, message) => {
+        if (type === "error") {
+            toast.error(message, ToastCss);
+        } else if (type === "warning") {
+            toast.warning(message, ToastCss);
+        } else {
+            toast.success(message, ToastCss);
         }
     };
 
@@ -147,11 +189,11 @@ const VideoConferencing = (props) => {
                 navigate('/user/center/appointments');
                 setEndMeetingLoading(false);
             } else {
-                toast.error('There has been an error ending the schedule, please try again!');
+                toast.error('There has been an error ending the meeting, please try again!');
                 setEndMeetingLoading(false);
             }
         }).catch(() => {
-            toast.error('There has been an error ending the schedule, please try again!');
+            toast.error('There has been an error ending the meeting, please try again!');
             setEndMeetingLoading(false);
         });
     }
@@ -178,6 +220,29 @@ const VideoConferencing = (props) => {
     },
         [reloadCount]);
 
+
+    // useEffect(() => {
+    //     getMeeting()
+    //         .then((response) => {
+    //             const selectedUser = response.data.data;
+
+    //             if (selectedUser) {
+    //                 setMeeting(selectedUser);
+    //                 setAppointmentLoading(false);
+    //             } else {
+    //                 const message = "There has been an error getting the user, please try again!";
+    //                 toastAlert("error", message);
+    //             }
+    //         })
+    //         .catch((error) => {
+    //             const message = "There has been an error getting the user, please try again!";
+    //             toastAlert("error", message);
+    //         });
+
+    //     return () => { };
+    // }, [reloadCount]);
+
+
     return (
         <Layout>
             <Helmet>
@@ -198,7 +263,7 @@ const VideoConferencing = (props) => {
                                 </Col>
                             </Row>
                             <Col lg="8">
-                                <Card>
+                                <Card className="bordered-top-primary">
                                     <Card.Body>
                                         <Row>
                                             <Col lg="12">
@@ -212,6 +277,7 @@ const VideoConferencing = (props) => {
                                                     <span className='mt-1'>{returnFormattedDate(appointment?.consultation_date ?? '-')}</span>
                                                 </div>
                                             </Col>
+
                                             <Col lg="6">
                                                 <div className='mt-1 mb-2'><LuAlarmClock size="20" className='text-gold me-2 mb-1' />
                                                     <span className='fw-600 me-2'>Time:</span>
@@ -281,7 +347,6 @@ const VideoConferencing = (props) => {
 
                                 <Col lg="12" className='d-flex justify-content-center align-items-center mt-3'>
                                     <div className='d-flex'>
-
                                         <div className="meeting-tooltip">
                                             <button
                                                 onClick={toggleMic}
@@ -344,7 +409,6 @@ const VideoConferencing = (props) => {
                                                     </button>
                                                 </>
                                             }
-
                                         </div>
                                     </div>
                                 </Col>
@@ -352,7 +416,7 @@ const VideoConferencing = (props) => {
 
                             <Col lg="4">
                                 <Card>
-                                    <Card.Body className='chat-height'>
+                                    <Card.Body>
                                         {chatShow ?
                                             <>
                                                 <Row>
@@ -362,16 +426,11 @@ const VideoConferencing = (props) => {
                                                     </Col>
 
                                                     <Col lg="12">
-                                                        <Card className='border-none'>
-                                                            <Card.Body className='chat-height-card'>
-
-                                                            </Card.Body>
-                                                        </Card>
-                                                    </Col>
-
-                                                    <Col lg="12">
-                                                        <input type='text' className='form-control bg-light position-relative' placeholder='Type your message...' />
-                                                        <VscSend className="send-icon cursor-pointer" size={25} onClick={() => toggleUnderConstruction("Send Message")} />
+                                                        <MeetingChat
+                                                            currentUser={currentUser}
+                                                            appointmentId={appointmentId}
+                                                            user={userDetails}
+                                                        />
                                                     </Col>
                                                 </Row>
                                             </>
@@ -379,7 +438,7 @@ const VideoConferencing = (props) => {
                                             null
                                         }
 
-                                        {participantsShow ?
+                                        {/* {participantsShow ?
                                             <>
                                                 <Row>
                                                     <Col lg="12">
@@ -419,7 +478,7 @@ const VideoConferencing = (props) => {
                                             </>
                                             :
                                             null
-                                        }
+                                        } */}
 
                                     </Card.Body>
                                 </Card>
@@ -427,7 +486,7 @@ const VideoConferencing = (props) => {
                                 <Row>
                                     <Col className='d-flex justify-content-end mt-3'>
                                         {/* <div
-                                            className={`cursor - pointer video - button meeting - tooltip tab - family mb - 3 fs - 16 ${ agendaShow? 'bg-gold-icon text-gold': 'bg-gray-icon text-black' }`}
+                                            className={`cursor - pointer video - button meeting - tooltip tab - family mb - 3 fs - 16 ${agendaShow ? 'bg-gold-icon text-gold' : 'bg-gray-icon text-black'}`}
                                             onClick={function () { showTab("agenda"); }}
                                         >
                                             <span className="icon-tooltiptext fs-14">Agenda</span>
@@ -435,7 +494,7 @@ const VideoConferencing = (props) => {
                                         </div>
 
                                         <div
-                                            className={`cursor - pointer video - button meeting - tooltip tab - family mx - 3 mb - 3 fs - 16 ${ participantsShow? 'bg-gold-icon text-gold': 'bg-gray-icon text-black' }`}
+                                            className={`cursor - pointer video - button meeting - tooltip tab - family mx - 3 mb - 3 fs - 16 ${participantsShow ? 'bg-gold-icon text-gold' : 'bg-gray-icon text-black'}`}
                                             onClick={function () { showTab("participants"); }}
                                         >
                                             <span className="icon-tooltiptext fs-14">Participants</span>
@@ -443,7 +502,7 @@ const VideoConferencing = (props) => {
                                         </div> */}
 
                                         <div
-                                            className={`cursor - pointer video - button meeting - tooltip  ${chatShow ? 'bg-gold-icon text-gold' : 'bg-gray-icon text-black'}`}
+                                            className={`cursor-pointer video-button meeting-tooltip ${chatShow ? 'bg-gold-icon text-gold' : 'bg-gray-icon text-black'}`}
                                             onClick={function () { showTab("chat"); }}
                                         >
                                             <span className="icon-tooltiptext fs-14">Message</span>

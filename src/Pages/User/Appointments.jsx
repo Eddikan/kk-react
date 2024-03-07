@@ -17,6 +17,7 @@ import 'Assets/styles/Appointments/style.css';
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 import UserPlaceholder from '../../Assets/images/user.png';
 import GoBack from '../../Components/Shared/GoBack';
+import Pagination from 'Components/Pagination/Pagination';
 import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
 import InputEmoji from 'react-input-emoji';
@@ -34,6 +35,7 @@ const Appointments = (props) => {
     const [dateTo, setDateTo] = useState('');
     const [dateFrom, setDateFrom] = useState('');
     const [appointments, setAppointments] = useState('');
+    const [appointmentsLoading, setAppointmentsLoading] = useState(true);
     const [date, setDate] = useState('');
     const [chatBox, setChatBox] = useState(false);
     const [query, setQuery] = useState('');
@@ -43,6 +45,12 @@ const Appointments = (props) => {
     const [appointmentModalIsOpen, setAppointmentModalIsOpen] = useState(false);
     const [selectedEvent, setSelectedEvent] = useState(null);
     const currentDate = new Date().toISOString().split('T')[0];
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
+
+    let PageSize = 10;
 
     const getAppointments = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
@@ -140,6 +148,7 @@ const Appointments = (props) => {
                 const selectedAppointments = response.data.data;
                 if (selectedAppointments) {
                     setAppointments(selectedAppointments);
+                    setPageCount(() => response.data.meta.total);
                 } else {
                     toast.error('There has been an error getting the appointment, please try again!');
                 }
@@ -155,6 +164,32 @@ const Appointments = (props) => {
             fetchAppointmentList();
         }
     }, [query, inputClicked]);
+
+
+    const handleChangePage = (pageNumber) => {
+        setAppointmentsLoading(true);
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment?page=' + pageNumber + '&user_id=' + currentUser)
+
+            // 'designer/' + designerId + '/appointment'
+            .then((response) => {
+                const data = response.data;
+                const result = data.data;
+                setCurrentPage(pageNumber);
+                const selectedAppointments = response.data.data;
+                if (selectedAppointments) {
+                    setAppointments(selectedAppointments);
+                    setCurrentPage(() => data.meta.current_page);
+                    setPageCount(() => data.meta.total);
+                    setPageSize(() => data.meta.per_page);
+                } else {
+                    setAppointmentsLoading(false);
+                    toast.error('There has been an error getting the appointment, please try again!');
+                }
+            }).catch(error => {
+                setAppointmentsLoading(false);
+                toast.error('There has been an error getting the appointment, please try again!');
+            });
+    };
 
     return (
         <LayoutSellerCenter>
@@ -391,6 +426,14 @@ const Appointments = (props) => {
                                     </>
                                 </Row>
                             </div>
+
+                            <Pagination
+                                className="pagination-bar mt-4"
+                                currentPage={currentPage}
+                                totalCount={pageCount}
+                                pageSize={PageSize}
+                                onPageChange={page => handleChangePage(page)}
+                            />
                         </Col>
 
                         {chatBox ?

@@ -179,7 +179,7 @@ const MeasurementGuide = (props) => {
                                         <Row>
                                             <Col lg={8}>
                                                 <Card>
-                                                    <Card.Body className="bg-white">
+                                                    <Card.Body>
                                                         <h4 className="fw-600 mb-3">Preview</h4>
                                                         <div>
                                                             {elements && elements.length > 0 ?
@@ -197,7 +197,7 @@ const MeasurementGuide = (props) => {
                                                                                             {element.value && element.value.length > 0 && element.value != "" ?
                                                                                                 <>
                                                                                                     {element.value.map((image, imageIndex) => (
-                                                                                                        <img key={imageIndex} src={process.env.REACT_APP_STORAGE_URL + 'product/' + image?.image_url} className="w-100 h-auto mb-3" alt="" />
+                                                                                                        <img key={imageIndex} src={process.env.REACT_APP_STORAGE_URL + 'product/' + image?.image_url} className="w-100 mb-3 image-height-preview" alt="" />
                                                                                                     ))}
                                                                                                 </>
                                                                                                 :

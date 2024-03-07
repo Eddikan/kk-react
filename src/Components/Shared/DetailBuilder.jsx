@@ -95,7 +95,7 @@ const DetailBuilder = (props) => {
                             <>
                                 {/* Input fields based on selected input type */}
                                 {elements.map((element, index) => (
-                                    <Card>
+                                    <Card className='mb-3'>
                                         <Card.Body className='p-4'>
                                             <Card className={`${elements.length > 1 ? "mb-3" : ""}`}>
                                                 <Card.Body className="bg-lgray">
@@ -150,14 +150,14 @@ const DetailBuilder = (props) => {
 
                         <div className="text-right">
                             {/* Done button */}
-                            <button className='btn-primary mt-4' type="button" onClick={handleDone} style={{ minWidth: '100px', padding: '9px 20px' }}>Save</button>
+                            <button className='btn-primary mt-2' type="button" onClick={handleDone} style={{ minWidth: '100px', padding: '9px 20px' }}>Save</button>
                         </div>
                     </div>
                 </>
                 :
                 <>
                     {/* Form for inputting element name and type */}
-                    <Card>
+                    <Card className='mb-3'>
                         <Card.Body className='p-4'>
                             <Card>
                                 <Card.Body className='bg-lgray'>
@@ -203,9 +203,9 @@ const DetailBuilder = (props) => {
                     <div className="text-right">
                         {/* Add button */}
                         {elementType == "Line Break" ?
-                            <Button className='btn-primary mt-4' type="button" onClick={handleAddElement} style={{ minWidth: '100px', padding: '9px 20px' }}>Add</Button>
+                            <Button className='btn-primary mt-2 btn-style' type="button" onClick={handleAddElement}>Add</Button>
                             :
-                            <Button className='btn-primary mt-4' type="button" onClick={handleAddElement} disabled={!elementType || !elementValue} style={{ minWidth: '100px', padding: '9px 20px' }}>Add</Button>
+                            <Button className='btn-primary mt-2 btn-style' type="button" onClick={handleAddElement} disabled={!elementType || !elementValue} >Add</Button>
                         }
                     </div>
                 </>

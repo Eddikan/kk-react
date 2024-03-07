@@ -19,6 +19,7 @@ import { ImEmbed2 } from "react-icons/im";
 import { LuLink } from "react-icons/lu";
 import Countries from 'Utils/Countries';
 import CopyTo from '../Utils/CopyLink';
+import DressPlaceholder from '../Assets/images/placeholder-dress.jpeg';
 import { AiFillMessage } from "react-icons/ai";
 import Loading from 'Components/Shared/Loading';
 import '../Assets/styles/FabricsHomePage/style.css';
@@ -527,7 +528,7 @@ const Designs = (props) => {
                                                             if (design.image_urls?.[0]?.image_url) {
                                                                 var designImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + design.image_urls[0].image_url;
                                                             } else {
-                                                                var designImage = PlaceholderImage;
+                                                                var designImage = DressPlaceholder;
                                                             }
 
                                                             return (
@@ -667,10 +668,11 @@ const Designs = (props) => {
                                                     </>
                                                 )
                                             })}
-                                        </Carousel>;
+                                        </Carousel>
                                     </>
                                     :
                                     <>
+                                        <img src={DressPlaceholder} className='w-100 img-placeholder-height' />
                                     </>
                                 }
 
@@ -697,7 +699,6 @@ const Designs = (props) => {
 
                                                 </div>
                                             </a>
-
 
                                             {isDesignCurrentUser ?
                                                 null
@@ -749,7 +750,7 @@ const Designs = (props) => {
                                                         <div className='fs-14 text-center mt-2'>
                                                             <img src={PinIcon} alt="location pin" className='me-2' />
                                                             {singleDesign.address_line_1}{singleDesign.province}</div>
-                                                        <div className="mb-3 text-center">
+                                                        <div className="mb-2 text-center">
                                                             {singleDesign.tags ?
                                                                 <>
                                                                     {singleDesign.tags.length > 0 ?

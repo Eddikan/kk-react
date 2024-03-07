@@ -17,6 +17,7 @@ import { PiNotepadFill } from "react-icons/pi";
 import { ImEmbed2 } from "react-icons/im";
 import CopyTo from 'Utils/CopyLink';
 import '../../Assets/styles/Design/style.css';
+import DressPlaceholder from '../../Assets/images/placeholder-dress.jpeg';
 import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline } from "react-icons/io5";
 import axios from 'axios';
 import { Rating } from 'react-simple-star-rating';
@@ -394,7 +395,7 @@ const Designs = (props) => {
                                                                 backgroundImage:
                                                                     `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
                                                             }}
-                                                        // style={{ backgroundImage: "url(" + activeImage + ")" }}
+
                                                         >
                                                         </div>
 
@@ -405,8 +406,7 @@ const Designs = (props) => {
                                     </>
                                     :
                                     <>
-                                        <div className="single-image-slider" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-                                        </div>
+                                        <img src={DressPlaceholder} className='w-100 img-placeholder-height' />
                                     </>
                                 }
 
@@ -480,7 +480,7 @@ const Designs = (props) => {
                                                         <div className='fs-14 text-center mt-2'>
                                                             <img src={PinIcon} alt="location pin" className='me-2' />
                                                             {singleDesign.address_line_1}{singleDesign.province}</div>
-                                                        <div className="mb-3 text-center">
+                                                        <div className="mb-2 text-center">
                                                             {singleDesign.tags ?
                                                                 <>
                                                                     {singleDesign.tags.length > 0 ?
@@ -631,10 +631,9 @@ const Designs = (props) => {
                         <Button className="btn-primary btn" onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}>Send Message</Button> */}
 
                         <button
-                            className="btn btn-secondary border-black bg-white text-black me-3"
+                            className="btn btn-secondary border-black btn-style bg-white text-black me-3"
                             onClick={() => { setMessageShow(false); }}
                             type="button"
-                            style={{ minWidth: '100px', padding: '9px 20px' }}
                         >
                             Cancel
                         </button>
@@ -642,10 +641,9 @@ const Designs = (props) => {
                             <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Sending...</button>
                             : */}
                         <button
-                            className="btn btn-primary"
+                            className="btn btn-primary btn-style"
                             type="button"
                             onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}
-                            style={{ minWidth: '100px', padding: '9px 20px' }}
                         >
                             Send Message
                         </button>
