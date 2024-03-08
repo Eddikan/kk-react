@@ -30,7 +30,7 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
             <div id="sidebar">
                 <UncontrolledAccordion>
                     <AccordionItem className='padding-sidebar pt-4'>
-                        <p className="fs-20"><strong>Seller Center</strong></p>
+                        <p className="fs-20"><strong>Shop Manager</strong></p>
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/calendar')}>
                             <IoCalendarClearOutline size="20" className="me-2 mb-1" />Calendar</div>
 

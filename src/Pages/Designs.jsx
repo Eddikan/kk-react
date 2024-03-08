@@ -558,14 +558,6 @@ const Designs = (props) => {
                                                                         <div className="design-details">
                                                                             <div className='d-flex align-items-center justify-content-between'>
                                                                                 <p className="text-black fs-18 fw-400 mb-0 text-ellipsis rufina-family">{design.name ?? '-'}</p>
-                                                                                {/* <div className='d-flex align-items-center'>
-                                                                                    <span className='fs-14 text-no-wrap mx-2'>
-                                                                                        <IoHeartOutline /> 0
-                                                                                    </span>
-                                                                                    <span className='fs-14 text-no-wrap'>
-                                                                                        <IoEyeOutline /> {design.views}
-                                                                                    </span>
-                                                                                </div> */}
                                                                             </div>
                                                                             {/* <div className="star-ratings mt-1">
                                                                                 <Rating
@@ -835,17 +827,17 @@ const Designs = (props) => {
                                             </div>
                                             <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
                                         </div>
-
-                                        <div className='text-center mb-4'
-                                            onClick={toggleShareModal}
-                                        >
-                                            <div className="action-button-designs bg-white">
-                                                <IoShareSocial className="text-black mt-2" size={30} />
-                                            </div>
-                                            <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
-                                        </div>
                                     </>
                                 }
+
+                                <div className='text-center mb-4'
+                                    onClick={toggleShareModal}
+                                >
+                                    <div className="action-button-designs bg-white">
+                                        <IoShareSocial className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
+                                </div>
 
                                 <div className='text-center mb-4' onClick={toggleDescription}>
                                     <div className="action-button-designs bg-white">

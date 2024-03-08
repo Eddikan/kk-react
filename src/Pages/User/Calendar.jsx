@@ -781,9 +781,9 @@ const Calendar = (props) => {
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='col-right-calendar mx-auto' style={{ maxWidth: '1440px' }}>
+                        <Col lg={10} className='mx-auto' style={{ maxWidth: '1440px' }}>
                             <Row>
-                                <Col lg={12} className="designer-calendar-container ms-4">
+                                <Col lg={12} className="designer-calendar-container">
                                     <Row className="pb-4">
                                         <Col lg={12} className='text-right mb-2'>
                                             <GoBack fallBack="/" />

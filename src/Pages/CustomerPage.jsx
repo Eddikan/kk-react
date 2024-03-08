@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, CardBody, CardHeader, CardFooter, Container, Row, Col, Modal, ModalBody, ModalHeader, Input, Label, Table} from 'reactstrap';
+import { Card, CardBody, CardHeader, CardFooter, Container, Row, Col, Modal, ModalBody, ModalHeader, Input, Label, Table } from 'reactstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import 'Assets/styles/Customer/style.css';
@@ -83,11 +83,9 @@ const CustomerPage = () => {
             const result = response.data.data;
             if (result) {
                 setCustomers(result);
-                console.log('customers',result);
                 setCustomersLoading(false);
             }
         }).catch((error) => {
-            console.log(error);
             setCustomersLoading(false);
             const message = 'There has been an error getting customers, please try again later!';
             toastAlert('error', message);
@@ -109,7 +107,6 @@ const CustomerPage = () => {
             ...newCustomerFormData
         };
         submitCustomer(toSubmit).then((response) => {
-            console.log(response);
             const status = response.data.status;
             setFormStatus('standby');
             if (status === 'Success') {
@@ -159,14 +156,13 @@ const CustomerPage = () => {
                 setShowEditModal(!showEditModal);
             }
         }).catch((error) => {
-            console.log(error);
             setFormStatus('standby');
             const message = 'There has been an error with the server, please try again later!';
             toastAlert(isError, message);
             setShowEditModal(!showEditModal);
         });
     }
-    
+
     const handleChange = (e) => {
         setEditCustomerFormData({
             ...editCustomerFormData,
@@ -244,7 +240,7 @@ const CustomerPage = () => {
 
     const toggleEditModal = (index) => {
         setEditCustomerFormData({
-          ...customers[index]
+            ...customers[index]
         });
         setShowEditModal(!showEditModal);
     }
@@ -268,7 +264,7 @@ const CustomerPage = () => {
                             ADD CUSTOMER
                         </span>
                     </div>
-                    {customers && customers.length > 0 ? 
+                    {customers && customers.length > 0 ?
                         <Table>
                             <thead>
                                 <tr>
@@ -304,25 +300,25 @@ const CustomerPage = () => {
                                         <td>
                                             <div className="action_table">
                                                 <BsThreeDotsVertical />
-                                                    <Card className="action_content">
-                                                        <CardBody className="action_container">
-                                                            <div className="link_container" onClick={() => toggleEditModal(index)}>
-                                                                <FaPencilAlt /><a>EDIT</a>
-                                                            </div>
-                                                            <hr />
-                                                            <div className="link_container d-flex justify-content-between" onClick={() => toggleDeleteModal(id)}>
-                                                                <BsTrash /> <a>DELETE</a>
-                                                            </div>
-                                                        </CardBody>
-                                                    </Card>
+                                                <Card className="action_content">
+                                                    <CardBody className="action_container">
+                                                        <div className="link_container" onClick={() => toggleEditModal(index)}>
+                                                            <FaPencilAlt /><a>EDIT</a>
+                                                        </div>
+                                                        <hr />
+                                                        <div className="link_container d-flex justify-content-between" onClick={() => toggleDeleteModal(id)}>
+                                                            <BsTrash /> <a>DELETE</a>
+                                                        </div>
+                                                    </CardBody>
+                                                </Card>
                                             </div>
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </Table>
-                    :
-                    null
+                        :
+                        null
                     }
                 </Col>
             </Row>
@@ -330,8 +326,8 @@ const CustomerPage = () => {
                 <ModalHeader className='text-uppercase text-left'>
                     ADD CUSTOMER
                     <button type='button' className='close react-modal-close' data-dismiss='modal' aria-label='Close'
-                    onClick={handleClose}>
-                    <span aria-hidden='true'>&times;</span>
+                        onClick={handleClose}>
+                        <span aria-hidden='true'>&times;</span>
                     </button>
                 </ModalHeader>
                 <ModalBody>
@@ -404,8 +400,8 @@ const CustomerPage = () => {
                 <ModalHeader className='text-uppercase text-left'>
                     EDIT CUSTOMER
                     <button type='button' className='close react-modal-close' data-dismiss='modal' aria-label='Close'
-                    onClick={handleClose}>
-                    <span aria-hidden='true'>&times;</span>
+                        onClick={handleClose}>
+                        <span aria-hidden='true'>&times;</span>
                     </button>
                 </ModalHeader>
                 <ModalBody>
@@ -478,7 +474,7 @@ const CustomerPage = () => {
                 <ModalHeader className="text-uppercase text-left">
                     Delete blurb?
                     <button type="button" className="close react-modal-close" data-dismiss="modal" aria-label="Close" onClick={handleClose}>
-                    <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">&times;</span>
                     </button>
                 </ModalHeader>
                 <ModalBody>
@@ -491,9 +487,9 @@ const CustomerPage = () => {
                                 <CardFooter className="text-right">
                                     <button type="button" className="btn btn-main btn-main-alt mr-2" data-dismiss="modal" onClick={handleClose}>Close</button>
                                     {formStatus !== "standby" ?
-                                    <button className="action-btn btn newbtntheme text-uppercase primary-btn">Deleting...</button>
-                                    :
-                                    <button className="action-btn btn newbtntheme text-uppercase primary-btn" onClick={promptDelete}>Delete</button>
+                                        <button className="action-btn btn newbtntheme text-uppercase primary-btn">Deleting...</button>
+                                        :
+                                        <button className="action-btn btn newbtntheme text-uppercase primary-btn" onClick={promptDelete}>Delete</button>
                                     }
                                 </CardFooter>
                             </Card>

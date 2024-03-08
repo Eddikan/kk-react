@@ -92,11 +92,6 @@ const VideoConferencing = (props) => {
         return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId, data);
     };
 
-    // const getMeeting = async () => {
-    //     return await axios.get(process.env.REACT_APP_API_ENDPOINT + "meeting/" + meeting_id + "?user_id=" + currentUser);
-    // };
-
-
     const toggleSaveAppointmentModal = () => {
         setEndMeetingModal(!endMeetingModal);
     }
@@ -219,29 +214,6 @@ const VideoConferencing = (props) => {
         }
     },
         [reloadCount]);
-
-
-    // useEffect(() => {
-    //     getMeeting()
-    //         .then((response) => {
-    //             const selectedUser = response.data.data;
-
-    //             if (selectedUser) {
-    //                 setMeeting(selectedUser);
-    //                 setAppointmentLoading(false);
-    //             } else {
-    //                 const message = "There has been an error getting the user, please try again!";
-    //                 toastAlert("error", message);
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             const message = "There has been an error getting the user, please try again!";
-    //             toastAlert("error", message);
-    //         });
-
-    //     return () => { };
-    // }, [reloadCount]);
-
 
     return (
         <Layout>
@@ -438,6 +410,7 @@ const VideoConferencing = (props) => {
                                             null
                                         }
 
+
                                         {/* {participantsShow ?
                                             <>
                                                 <Row>
@@ -501,13 +474,13 @@ const VideoConferencing = (props) => {
                                             <HiMiniUsers className="text-white off-cam-icon" size={20} />
                                         </div> */}
 
-                                        <div
+                                        {/* <div
                                             className={`cursor-pointer video-button meeting-tooltip ${chatShow ? 'bg-gold-icon text-gold' : 'bg-gray-icon text-black'}`}
                                             onClick={function () { showTab("chat"); }}
                                         >
                                             <span className="icon-tooltiptext fs-14">Message</span>
                                             <BiSolidMessageDetail className="text-white off-cam-icon" size={20} />
-                                        </div>
+                                        </div> */}
                                     </Col>
                                 </Row>
                             </Col>

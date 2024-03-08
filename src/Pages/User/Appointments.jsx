@@ -169,8 +169,6 @@ const Appointments = (props) => {
     const handleChangePage = (pageNumber) => {
         setAppointmentsLoading(true);
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment?page=' + pageNumber + '&user_id=' + currentUser)
-
-            // 'designer/' + designerId + '/appointment'
             .then((response) => {
                 const data = response.data;
                 const result = data.data;
@@ -200,8 +198,8 @@ const Appointments = (props) => {
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='mx-auto top-bottom col-right' style={{ maxWidth: '1440px' }}>
-                            <div className='ms-4'>
+                        <Col lg={10} className='mx-auto top-bottom' style={{ maxWidth: '1440px' }}>
+                            <div>
                                 <Row>
                                     <Col lg={12}>
                                         <Row className="pb-4">
@@ -353,16 +351,16 @@ const Appointments = (props) => {
                                                                                         <IoEye className='video-cam me-3' size={20} />
                                                                                     </div>
 
-                                                                                    {currentDate === appointment.consultation_date ? (
-                                                                                        <a href={`/consultation-meeting/${appointment.id}`}>
-                                                                                            <div className="cursor-pointer appointments-tooltip">
-                                                                                                <span className="icon-tooltiptext fs-14">
-                                                                                                    Video call
-                                                                                                </span>
-                                                                                                <IoMdVideocam className='video-cam me-3' size={20} />
-                                                                                            </div>
-                                                                                        </a>
-                                                                                    ) : (
+                                                                                    {/* {currentDate === appointment.consultation_date ? ( */}
+                                                                                    <a href={`/consultation-meeting/${appointment.id}`}>
+                                                                                        <div className="cursor-pointer appointments-tooltip">
+                                                                                            <span className="icon-tooltiptext fs-14">
+                                                                                                Video call
+                                                                                            </span>
+                                                                                            <IoMdVideocam className='video-cam me-3' size={20} />
+                                                                                        </div>
+                                                                                    </a>
+                                                                                    {/* ) : (
                                                                                         currentDate < appointment.consultation_date ? (
                                                                                             <div className="cursor-pointer appointments-tooltip">
                                                                                                 <span className="icon-tooltiptext fs-14">
@@ -378,7 +376,7 @@ const Appointments = (props) => {
                                                                                                 <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
                                                                                             </div>
                                                                                         )
-                                                                                    )}
+                                                                                    )} */}
 
                                                                                     <div
                                                                                         className="cursor-pointer appointments-tooltip"

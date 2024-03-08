@@ -566,17 +566,17 @@ const Designs = (props) => {
                                             </div>
                                             <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
                                         </div>
-
-                                        <div className='text-center mb-4'
-                                            onClick={toggleShareModal}
-                                        >
-                                            <div className="action-button-designs bg-white">
-                                                <IoShareSocial className="text-black mt-2" size={30} />
-                                            </div>
-                                            <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
-                                        </div>
                                     </>
                                 }
+
+                                <div className='text-center mb-4'
+                                    onClick={toggleShareModal}
+                                >
+                                    <div className="action-button-designs bg-white">
+                                        <IoShareSocial className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
+                                </div>
 
                                 <div className='text-center mb-4' onClick={toggleDescription}>
                                     <div className="action-button-designs bg-white">

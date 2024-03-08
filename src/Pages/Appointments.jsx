@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Modal, Card, ModalFooter, ModalHeader } from 'react-bootstrap';
 import '../Assets/styles/DesignerCalendar/style.css'
+import Pagination from 'Components/Pagination/Pagination';
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import { GoAlertFill } from 'react-icons/go';
@@ -17,6 +18,7 @@ import InputEmoji from 'react-input-emoji';
 import { AiFillMessage } from "react-icons/ai";
 import axios from "axios";
 import toast from 'react-hot-toast';
+import MeetingChat from '../Components/Chat/MeetingChat';
 
 const intitialConsultationData = {
     consultation_date_time: '',
@@ -45,6 +47,8 @@ const initialAppointments = {
 const Appointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
+    const userDetails = cookies.userDetails;
+    // const { appointmentId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
     const [chatBox, setChatBox] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
@@ -63,6 +67,11 @@ const Appointments = (props) => {
     const consultationDateTimeString = "2024-02-22T16:11:00.000Z";
     const consultationDateTime = new Date(consultationDateTimeString);
     const currentDate = new Date().toISOString().split('T')[0];
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
+
+    let PageSize = 10;
 
     const getAppointments = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment');
@@ -86,7 +95,7 @@ const Appointments = (props) => {
         setModalHeading(message);
     }
 
-    function toggleChatbox(first_name, last_name, image, message) {
+    function toggleChatbox(id, first_name, last_name, image, message) {
         setChatBox(true);
         setNameDesigner({
             first_name: first_name ?? '-',
@@ -136,6 +145,29 @@ const Appointments = (props) => {
         });
     }
 
+    const handleChangePage = (pageNumber) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment?page=' + pageNumber + '&user_id=' + currentUser)
+            .then((response) => {
+                const data = response.data;
+                const result = data.data;
+                setCurrentPage(pageNumber);
+                const selectedAppointments = response.data.data;
+                if (selectedAppointments) {
+                    setAppointments(selectedAppointments);
+                    setCurrentPage(() => data.meta.current_page);
+                    setPageCount(() => data.meta.total);
+                    setPageSize(() => data.meta.per_page);
+                    setAppointmentLoading(false);
+                } else {
+                    setAppointmentLoading(false);
+                    toast.error('There has been an error getting the appointments, please try again!');
+                }
+            }).catch(error => {
+                setAppointmentLoading(false);
+                toast.error('There has been an error getting the appointments, please try again!');
+            });
+    };
+
     useEffect(() => {
         if (currentUser) {
             getAppointments()
@@ -144,6 +176,7 @@ const Appointments = (props) => {
                     const selectedAppointments = response.data.data;
                     if (selectedAppointments) {
                         setAppointments(selectedAppointments);
+                        setPageCount(() => response.data.meta.total);
                     } else {
                         toast.error('There has been an error getting the appointments, please try again!');
                         setAppointmentLoading(false);
@@ -296,34 +329,36 @@ const Appointments = (props) => {
                                                                                     </>
                                                                                 }
 
-                                                                                {currentDate === appointment.consultation_date ? (
-                                                                                    <a href={`/consultation-meeting/${appointment.id}`}>
-                                                                                        <div className="cursor-pointer appointments-tooltip">
-                                                                                            <span className="icon-tooltiptext fs-14">Video call</span>
-                                                                                            <IoMdVideocam className='video-cam me-3' size={20} />
-                                                                                        </div>
-                                                                                    </a>
-                                                                                ) : (
-                                                                                    currentDate < appointment.consultation_date ? (
-                                                                                        <div className="cursor-pointer appointments-tooltip">
-                                                                                            <span className="icon-tooltiptext fs-14">Not time for video conferencing</span>
-                                                                                            <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
-                                                                                        </div>
-                                                                                    ) : (
-                                                                                        <div className="cursor-pointer appointments-tooltip">
-                                                                                            <span className="icon-tooltiptext fs-14">This video conferencing is finished</span>
-                                                                                            <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
-                                                                                        </div>
-                                                                                    )
-                                                                                )}
+                                                                                {/* {currentDate === appointment.consultation_date ? ( */}
+                                                                                <a href={`/consultation-meeting/${appointment.id}`}>
+                                                                                    <div className="cursor-pointer appointments-tooltip">
+                                                                                        <span className="icon-tooltiptext fs-14">Video call</span>
+                                                                                        <IoMdVideocam className='video-cam me-3' size={20} />
+                                                                                    </div>
+                                                                                </a>
+                                                                                {/* // ) : (
+                                                                                //     currentDate < appointment.consultation_date ? (
+                                                                                //         <div className="cursor-pointer appointments-tooltip">
+                                                                                //             <span className="icon-tooltiptext fs-14">Not time for video conferencing</span>
+                                                                                //             <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                //         </div>
+                                                                                //     ) : (
+                                                                                //         <div className="cursor-pointer appointments-tooltip">
+                                                                                //             <span className="icon-tooltiptext fs-14">This video conferencing is finished</span>
+                                                                                //             <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                //         </div>
+                                                                                //     )
+                                                                                // )} */}
 
                                                                                 <div className="cursor-pointer appointments-tooltip"
                                                                                     onClick={function () {
                                                                                         toggleChatbox(
+                                                                                            appointment.id,
                                                                                             appointment.designer?.first_name,
                                                                                             appointment.designer?.last_name,
                                                                                             appointment.designer?.image,
                                                                                             "Under Construction");
+                                                                                        setAppointmentId(appointment.id,); console.log(appointment.id);
                                                                                     }}
                                                                                 >
                                                                                     <span className="icon-tooltiptext fs-14">Message Designer</span>
@@ -361,8 +396,14 @@ const Appointments = (props) => {
                                         </>
                                     }
                                 </>
+                                <Pagination
+                                    className="pagination-bar mt-4"
+                                    currentPage={currentPage}
+                                    totalCount={pageCount}
+                                    pageSize={PageSize}
+                                    onPageChange={page => handleChangePage(page)}
+                                />
                             </Row>
-
                             {chatBox ?
                                 <>
                                     <Card className='width-chat-card px-0'>
@@ -370,7 +411,7 @@ const Appointments = (props) => {
                                             <div className='d-flex justify-content-between'>
                                                 <div className='d-flex align-items-center'>
                                                     <span className='fw-500'>{nameDesigner.first_name} {nameDesigner.last_name}</span>
-                                                    {/* <span className='ms-2 active-now fs-14 fw-400'>Active Now</span> */}
+                                                    <span className='ms-2 active-now fs-14 fw-400'>Active Now</span>
                                                 </div>
                                                 <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                                     <IoCloseOutline color="#7e7e7e" size={25} />
@@ -378,28 +419,11 @@ const Appointments = (props) => {
                                             </div>
                                         </Card.Header>
                                         <Card.Body >
-
-                                            <p>No messages found.</p>
-
-                                            <div>
-                                                <InputEmoji
-                                                    value={text}
-                                                    onChange={setText}
-                                                    cleanOnEnter
-                                                    onEnter={handleOnEnter}
-                                                    className="emoji-picker"
-                                                />
-                                                {/* <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div> */}
-                                                <div>
-                                                    <div
-                                                        className="cursor-pointer fw-500 position-absolute send-button"
-                                                        onClick={() => { toggleUnderConstruction("Send Message"); setChatBox(false); }}
-                                                    >
-                                                        Send
-                                                        <VscSend className='ms-1' />
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <MeetingChat
+                                                currentUser={currentUser}
+                                                appointmentId="49"
+                                                user={userDetails}
+                                            />
                                         </Card.Body>
                                     </Card>
                                 </>

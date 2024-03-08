@@ -13,7 +13,6 @@ import PlaceholderImage from '../Assets/images/placeholders/image.png';
 import UserPlaceholder from 'Assets/images/user.png';
 import { AiOutlineDelete } from "react-icons/ai";
 import { useParams } from 'react-router-dom';
-import { GoAlertFill } from 'react-icons/go';
 import axios from "axios";
 import toast from 'react-hot-toast';
 
@@ -35,23 +34,16 @@ const Cart = (props) => {
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
-    const token = cookies.currentUser;
-    const userDetails = cookies.userDetails;
-    const { designerId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
     const [radioButtonValue, setRadioButtonValue] = useState(0);
-    const [underConstructionShow, setUnderConstructionShow] = useState(false);
-    const [modalHeading, setModalHeading] = useState('');
     const [cartItems, setCartItems] = useState('');
     const [cartItemId, setCartItemId] = useState('');
     const [checkOutFormData, setCheckOutFormData] = useState(initialCheckOut);
     const [selectedCartItems, setSelectedCartItems] = useState([]);
     const [cartItemModalDelete, setCartItemModalDelete] = useState(false);
     const [cartLoading, setCartLoading] = useState(true);
-
     const [deleteLoading, setDeleteLoading] = useState(false);
-
     const [subtotalAmount, setSubtotalAmount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
 
@@ -114,7 +106,6 @@ const Cart = (props) => {
         updateQuantity({ user_id: currentUser, quantity: data.quantity, id: data.id }).then(response => {
             const success = response.data.status;
             if (success == success) {
-                // toast.success('Product quantity updated successfully!');
                 setReloadCount(reloadCount + 1);
             } else {
                 toast.error('There has been an error adding the order, please try again!');
@@ -152,9 +143,7 @@ const Cart = (props) => {
     useEffect(() => {
         let cart_total = 0;
         if (cartItems.length > 0 && selectedCartItems.length > 0) {
-            // Calculate subtotal for each selected item and sum up to get the total
             cart_total = cartItems.reduce((acc, item) => {
-                // Check if the item is selected
                 if (selectedCartItems.includes(item.id)) {
                     const subtotal = item.product.price * item.quantity;
                     return acc + subtotal;
@@ -206,7 +195,6 @@ const Cart = (props) => {
                 </>
                 :
                 <>
-
                     <section>
                         <Container className='top-bottom'>
                             <Row>
@@ -328,7 +316,15 @@ const Cart = (props) => {
                                                                             </Col>
 
                                                                             <Col lg={2}>
-                                                                                <input type="number" className="form-control p-2 d-inline-block" min="1" style={{ maxWidth: 60 }} defaultValue={cartItem.quantity} onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id })} /> {cartItem.product.unit_measurement}
+                                                                                <input
+                                                                                    type="number"
+                                                                                    className="form-control p-2 d-inline-block"
+                                                                                    min="1"
+                                                                                    style={{ maxWidth: 60 }}
+                                                                                    defaultValue={cartItem.quantity}
+                                                                                    onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id })}
+                                                                                />
+                                                                                {cartItem.product.unit_measurement}
                                                                             </Col>
 
                                                                             <Col lg={2}>
@@ -377,7 +373,6 @@ const Cart = (props) => {
                                     </Card>
                                 </Col>
 
-
                                 <Col lg={3}>
                                     <Card>
                                         <Card.Body>
@@ -405,7 +400,6 @@ const Cart = (props) => {
                                             {radioButtonValue == 1 &&
                                                 <div>
                                                     <hr />
-
                                                     <div className='mb-4'>
                                                         <div className='mb-2'>Card Name:</div>
                                                         <input
@@ -461,7 +455,6 @@ const Cart = (props) => {
                 </>
             }
 
-
             <Modal
                 show={cartItemModalDelete}
                 size='lg'
@@ -485,7 +478,13 @@ const Cart = (props) => {
                         </Card.Body>
                     </Card>
                     <Card.Footer className="text-right mt-3">
-                        <button className="btn btn-secondary border-black bg-white text-black me-3 btn-style" onClick={() => setCartItemModalDelete(false)} type="button" >Cancel</button>
+                        <button
+                            className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                            onClick={() => setCartItemModalDelete(false)} type="button"
+                        >
+                            Cancel
+                        </button>
+
                         {deleteLoading ?
                             <button className="btn btn-primary btn-style" type="button">Deleting...</button>
                             :

@@ -159,8 +159,8 @@ const MeasurementGuide = (props) => {
                                 </Col>
 
 
-                                <Col lg={10} className='my-5 col-right mx-auto' style={{ maxWidth: '1440px' }}>
-                                    <div className='ms-4'>
+                                <Col lg={10} className='my-5 mx-auto' style={{ maxWidth: '1440px' }}>
+                                    <div>
                                         <Row className="mb-3">
                                             <Col lg={12} className='text-right mb-2'>
                                                 <GoBack fallBack="/" />
