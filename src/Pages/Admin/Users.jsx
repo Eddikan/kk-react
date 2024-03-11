@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { BiSolidPencil } from "react-icons/bi";
@@ -18,6 +19,8 @@ import axios from "axios";
 const Users = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'token', 'userRole']);
     const currentUser = cookies.currentUser;
+    const userRole = cookies.userRole;
+    const navigate = useNavigate();
     const [reloadCount, setReloadCount] = useState(0);
     const [users, setUsers] = useState([]);
     const [modalHeading, setModalHeading] = useState('');
@@ -61,6 +64,9 @@ const Users = (props) => {
     };
 
     useEffect(() => {
+        if (userRole !== 'Admin') {
+            navigate('/')
+        }
         getUsers()
             .then((response) => {
                 setUsersLoading(false);

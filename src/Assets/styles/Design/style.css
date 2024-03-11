@@ -72,7 +72,7 @@ select#sort-by {
     bottom: 16px;
 }
 .design-tags-view-bar {
-    padding: 1px 8px;
+    padding: 3px 8px;
     border-radius: 5px;
     margin-right: 5px;
     display: inline-block;
@@ -312,11 +312,13 @@ select#sort-by {
     border: none;
     border-radius: 7px;
 }
+
 .btn-book-bar {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
+
 .btn-book-consultation {
     font-size: 15px;
     padding: 5px 13px;
@@ -326,35 +328,41 @@ select#sort-by {
     color: var(--black);
     background-color: var(--white);
 }
+
 .btn-book-consultation:hover {
     color: var(--black);
     background-color: var(--white);
 }
+
 .btn-copy-link {
     padding: 5px 0px;
     border-radius: 50px;
-    width: 360px;
+    width: 300px;
     border-color: #eaeaea !important;
     font-size: 14px;
 }
+
 .placeholder-img-share {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-top: 6px;
 }
+
 .btn-copy-link:hover {
     padding: 5px 0px;
     border-radius: 50px;
-    width: 360px;
+    width: 300px;
     border-color: #eaeaea !important;
     background: #f1f1f1 !important;
     font-size: 14px;
 }
+
 #bg-transparent-card .modal-content {
     background-color: transparent!important;
     border: none;
 }
+
 .card-description {
     background: #000000e3;
     border: none;
@@ -362,12 +370,14 @@ select#sort-by {
     border-radius: 5px;
 }
 .padding-share-card {
-    padding-right: 50px;
-    padding-left: 50px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    padding-right: 30px;
+    padding-left: 33px;
 }
 .single-image-slider-share {
     width: 100%;
-    min-height: 284px;
+    min-height: 280px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -382,12 +392,30 @@ select#sort-by {
 
 #modal-preview-embed .modal-content {
     max-width: 480px;
-    left: 9px;
-    bottom: 50px;
+    left: 11px;
+    top: 240px;
 }
-.embed-height {
-    height: 390px;
+
+#share-modal .modal-content {
+    right: 99px;
+    position: absolute;
+    top: 130px;
+    background: #ffffff;
+    border: none;
 }
+
+.embed-modal-view .modal-content {
+    right: 99px;
+    position: absolute;
+    top: 130px;
+    background: #ffffff;
+    border: none;
+}
+
+.modal-preview-share .modal-content {
+    width: 500px;
+} 
+
 .cancel-btn-embed {
     background: none;
     border: none;

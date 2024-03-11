@@ -53,7 +53,6 @@ const Products = (props) => {
     };
 
     const handleActionClick = (index) => {
-        // Toggle the selected item index
         setSelectedItemIndex((prevIndex) => (prevIndex === index ? null : index));
     };
 
@@ -117,7 +116,7 @@ const Products = (props) => {
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
-            setProductDraftLoading(false);
+            setProductDeleteLoading(false);
         });
     };
 

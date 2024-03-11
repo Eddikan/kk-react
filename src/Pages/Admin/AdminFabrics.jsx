@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { GoAlertFill } from 'react-icons/go';
@@ -18,6 +19,9 @@ import axios from "axios";
 const AdminFabrics = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'token', 'userRole']);
     const currentUser = cookies.currentUser;
+    const token = cookies.token;
+    const userRole = cookies.userRole;
+    const navigate = useNavigate();
     const [reloadCount, setReloadCount] = useState(0);
     const [fabrics, setFabrics] = useState([]);
     const [modalHeading, setModalHeading] = useState('');
@@ -26,11 +30,19 @@ const AdminFabrics = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCount, setPageCount] = useState(1);
     const [pageSize, setPageSize] = useState(1);
+    const [productId, setProductId] = useState('');
+    const [deleteConfirmShow, setDeleteConfirmShow] = useState(false);
+    const [productDeleteLoading, setProductDeleteLoading] = useState(false);
 
     let PageSize = 10;
 
     const getProducts = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product');
+    };
+
+    const deleteConfirm = (e) => {
+        setDeleteConfirmShow(true);
+        setProductId(e);
     };
 
     function toggleUnderConstruction(message) {
@@ -60,7 +72,29 @@ const AdminFabrics = (props) => {
             });
     };
 
+    async function ProductDeleteSubmit(e) {
+        setProductDeleteLoading(true);
+        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                toast.success('Fabric deleted successfully!');
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                setProductDeleteLoading(false);
+                setDeleteConfirmShow(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setProductDeleteLoading(false);
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setProductDeleteLoading(false);
+        });
+    };
+
     useEffect(() => {
+        if (userRole !== 'Admin') {
+            navigate('/')
+        }
         getProducts()
             .then((response) => {
                 setFabricsLoading(false);
@@ -148,37 +182,40 @@ const AdminFabrics = (props) => {
                                                                         <Card className='mt-3'>
                                                                             <Card.Body >
                                                                                 <Row>
-                                                                                    <Col lg={5} className='d-flex'>
-                                                                                        <div className=" image-fabrics-admin "
-                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")" }}
-                                                                                        >
-                                                                                        </div>
-
-                                                                                        <div className='ms-3'>
-                                                                                            <div>
-                                                                                                <span className='d-flex mt-0 mb-1 fs-16 text-black'>{fabric.name}</span>
+                                                                                    <Col lg={5}>
+                                                                                        <Link to={`/product/${fabric.id}`} className='d-flex text-decoration-none'>
+                                                                                            <div className=" image-fabrics-admin "
+                                                                                                style={{ backgroundImage: "url(" + fabricImage + ")" }}
+                                                                                            >
                                                                                             </div>
 
-                                                                                            <div>
-                                                                                                {fabric.categories ?
-                                                                                                    <>
-                                                                                                        {fabric.categories.length > 0 ?
-                                                                                                            <>
-                                                                                                                {fabric.categories.slice(0, 3).map((category, index) => (
-                                                                                                                    <span key={index} className="fabrics-tags-view-bar bg-light fs-12 categories-color text-black">
-                                                                                                                        {category}
-                                                                                                                    </span>
-                                                                                                                ))}
-                                                                                                            </>
-                                                                                                            :
-                                                                                                            null
-                                                                                                        }
-                                                                                                    </>
-                                                                                                    :
-                                                                                                    null
-                                                                                                }
+                                                                                            <div className='ms-3'>
+                                                                                                <div className='mb-2'>
+                                                                                                    <span className='fs-16 text-black'>{fabric.name}</span>
+                                                                                                </div>
+
+                                                                                                <div>
+                                                                                                    {fabric.categories ?
+                                                                                                        <>
+                                                                                                            {fabric.categories.length > 0 ?
+                                                                                                                <>
+                                                                                                                    {fabric.categories.slice(0, 3).map((category, index) => (
+                                                                                                                        <span key={index} className="fabrics-tags-view-bar bg-light fs-12 categories-color text-black">
+                                                                                                                            {category}
+                                                                                                                        </span>
+                                                                                                                    ))}
+                                                                                                                </>
+                                                                                                                :
+                                                                                                                null
+                                                                                                            }
+                                                                                                        </>
+                                                                                                        :
+                                                                                                        null
+                                                                                                    }
+                                                                                                </div>
                                                                                             </div>
-                                                                                        </div>
+                                                                                        </Link>
+
                                                                                     </Col>
 
                                                                                     <Col lg={3}>
@@ -191,11 +228,16 @@ const AdminFabrics = (props) => {
 
                                                                                     <Col lg={1}>
                                                                                         <div className='d-flex'>
-                                                                                            <div className="fabrics-tooltip cursor-pointer" onClick={() => { toggleUnderConstruction("Edit") }}>
-                                                                                                <span className="icon-tooltiptext fs-14">Edit</span>
-                                                                                                <BiSolidPencil className='me-3' color='#000000' size={20} />
-                                                                                            </div>
-                                                                                            <div className="fabrics-tooltip cursor-pointer" onClick={() => { toggleUnderConstruction("Delete") }}>
+                                                                                            <Link className="text-decoration-none" to={`/user/center/product/${fabric.id}/edit`}>
+                                                                                                <div className="fabrics-tooltip cursor-pointer">
+                                                                                                    <span className="icon-tooltiptext fs-14">Edit</span>
+                                                                                                    <BiSolidPencil className='me-3' color='#000000' size={20} />
+                                                                                                </div>
+                                                                                            </Link>
+
+                                                                                            <div className="fabrics-tooltip cursor-pointer"
+                                                                                                onClick={function () { deleteConfirm(fabric.id); }}
+                                                                                            >
                                                                                                 <span className="icon-tooltiptext fs-14">Delete</span>
                                                                                                 <AiFillDelete className='me-3' color='#000000' size={20} />
                                                                                             </div>
@@ -276,7 +318,37 @@ const AdminFabrics = (props) => {
                     </Card>
                 </Modal.Body>
             </Modal>
-        </LayoutAdmin >
+
+            <Modal
+                show={deleteConfirmShow}
+                className='modal-preview'
+                fade={false}
+                centered
+            >
+                <Modal.Header className="pb-0">
+                    <Modal.Title className='rufina-family fs-22 text-black'>Confirm Delete</Modal.Title>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} >
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card>
+                        <Card.Body>
+                            <p className="mb-0">Are you sure you want to delete this fabric?</p>
+                        </Card.Body>
+                    </Card>
+                    <Card.Footer className="text-right mt-3">
+                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setDeleteConfirmShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                        {productDeleteLoading ?
+                            <button className="btn btn-primary btn-style" type="button">Deleting...</button>
+                            :
+                            <button className="btn btn-primary btn-style" type="button" onClick={ProductDeleteSubmit}>Delete</button>
+                        }
+
+                    </Card.Footer>
+                </Modal.Body>
+            </Modal>
+        </LayoutAdmin>
     );
 };
 
