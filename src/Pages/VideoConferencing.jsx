@@ -70,10 +70,7 @@ const VideoConferencing = (props) => {
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [endMeetingModal, setEndMeetingModal] = useState(false);
     const [endMeetingLoading, setEndMeetingLoading] = useState(false);
-
     const [modalHeading, setModalHeading] = useState('');
-
-    const [meeting, setMeeting] = useState([]);
 
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
@@ -122,16 +119,6 @@ const VideoConferencing = (props) => {
         } else {
             room.toggleScreenshare(false);
             setShareScreenVisible(false);
-        }
-    };
-
-    const toastAlert = (type, message) => {
-        if (type === "error") {
-            toast.error(message, ToastCss);
-        } else if (type === "warning") {
-            toast.warning(message, ToastCss);
-        } else {
-            toast.success(message, ToastCss);
         }
     };
 
@@ -262,7 +249,7 @@ const VideoConferencing = (props) => {
                                             <Col lg="12">
                                                 <div className='mt-1'><FiUser size="20" className='text-gold me-2 mb-1' />
                                                     <span className='fw-600 me-2'>Customer:</span>
-                                                    <span className='mt-1'>{appointment?.user?.first_name}&nbsp;{appointment?.user?.last_name}</span>
+                                                    <span className='mt-1'>{appointment?.designer?.first_name}&nbsp;{appointment?.designer?.last_name}</span>
                                                 </div>
                                             </Col>
 

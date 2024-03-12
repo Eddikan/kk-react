@@ -1,27 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Row, Col, Button, Form, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
+import { Row, Col, Button, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import toast from 'react-hot-toast';
 import GetDesignsData from 'Utils/GetDesignsData';
-import { GoHeart, GoAlertFill } from "react-icons/go";
-import { IoIosArrowDown } from "react-icons/io";
+import { GoAlertFill } from "react-icons/go";
 import PinIcon from '../../Assets/images/pin.png';
 import Modal from 'react-bootstrap/Modal';
 import User from '../../Assets/images/user.png';
-import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import { AiFillMessage } from "react-icons/ai";
-import { IoIosCheckmarkCircle } from "react-icons/io";
 import { PiNotepadFill } from "react-icons/pi";
 import { ImEmbed2 } from "react-icons/im";
-import CopyTo from 'Utils/CopyLink';
-import '../../Assets/styles/Design/style.css';
 import DressPlaceholder from '../../Assets/images/placeholder-dress.jpeg';
 import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline } from "react-icons/io5";
-import axios from 'axios';
-import { Rating } from 'react-simple-star-rating';
+import '../../Assets/styles/Design/style.css';
 import Carousel from 'react-multi-carousel';
+import CopyTo from 'Utils/CopyLink';
+import axios from 'axios';
 
 const Designs = (props) => {
     const navigate = useNavigate();
@@ -38,7 +34,6 @@ const Designs = (props) => {
     const [activeImage, setActiveImage] = useState('');
     const [messageShow, setMessageShow] = useState(false);
     const [descriptionShow, setDescriptionShow] = useState(false);
-    const [designerProfileShow, setDesignerProfileShow] = useState(false);
     const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [profileViewShow, setProfileViewShow] = useState(false);
@@ -169,8 +164,6 @@ const Designs = (props) => {
     useEffect(() => {
         fetchData(currentUser);
     }, [reloadCount]);
-
-
 
     return (
         <>
@@ -757,7 +750,11 @@ const Designs = (props) => {
             >
                 <Modal.Header className="pb-0">
                     <Modal.Title className='rufina-family fs-22 text-black'>Share Design</Modal.Title>
-                    <button type='button' className='close react-modal-close' onClick={function () { setShareShowModal(false); }} >
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={function () { setShareShowModal(false); }}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
                 </Modal.Header>

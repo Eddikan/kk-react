@@ -403,7 +403,7 @@ const Portfolio = (props) => {
                         </Card.Body>
                     </Card>
                     <Card.Footer className="text-right mt-3">
-                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setDeleteConfirmShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                        <button className="btn btn-secondary border-black bg-white text-black me-3 btn-style" onClick={() => setDeleteConfirmShow(false)} type="button">Cancel</button>
                         {portfolioDeleteLoading ?
                             <button className="btn btn-primary btn-style" type="button" >Deleting...</button>
                             :

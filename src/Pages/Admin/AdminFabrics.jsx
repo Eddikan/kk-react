@@ -182,51 +182,52 @@ const AdminFabrics = (props) => {
                                                                         <Card className='mt-3'>
                                                                             <Card.Body >
                                                                                 <Row>
-                                                                                    <Col lg={5}>
-                                                                                        <Link to={`/product/${fabric.id}`} className='d-flex text-decoration-none'>
+                                                                                    <Col lg={5} className='d-flex justify-content-left align-items-center'>
+                                                                                        <Link to={`/product/${fabric.id}`} className='d-flex justify-content-left align-items-center text-decoration-none'>
                                                                                             <div className=" image-fabrics-admin "
                                                                                                 style={{ backgroundImage: "url(" + fabricImage + ")" }}
                                                                                             >
                                                                                             </div>
-
-                                                                                            <div className='ms-3'>
-                                                                                                <div className='mb-2'>
-                                                                                                    <span className='fs-16 text-black'>{fabric.name}</span>
-                                                                                                </div>
-
-                                                                                                <div>
-                                                                                                    {fabric.categories ?
-                                                                                                        <>
-                                                                                                            {fabric.categories.length > 0 ?
-                                                                                                                <>
-                                                                                                                    {fabric.categories.slice(0, 3).map((category, index) => (
-                                                                                                                        <span key={index} className="fabrics-tags-view-bar bg-light fs-12 categories-color text-black">
-                                                                                                                            {category}
-                                                                                                                        </span>
-                                                                                                                    ))}
-                                                                                                                </>
-                                                                                                                :
-                                                                                                                null
-                                                                                                            }
-                                                                                                        </>
-                                                                                                        :
-                                                                                                        null
-                                                                                                    }
-                                                                                                </div>
-                                                                                            </div>
                                                                                         </Link>
 
+                                                                                        <div className='ms-3'>
+                                                                                            <Link to={`/product/${fabric.id}`} className='d-flex justify-content-left align-items-center text-decoration-none'>
+                                                                                                <div className='mb-1'>
+                                                                                                    <span className='fs-16 text-black'>{fabric.name}</span>
+                                                                                                </div>
+                                                                                            </Link>
+
+                                                                                            <div>
+                                                                                                {fabric.categories ?
+                                                                                                    <>
+                                                                                                        {fabric.categories.length > 0 ?
+                                                                                                            <>
+                                                                                                                {fabric.categories.slice(0, 3).map((category, index) => (
+                                                                                                                    <span key={index} className="fabrics-tags-view-bar bg-light fs-12 categories-color text-black">
+                                                                                                                        {category}
+                                                                                                                    </span>
+                                                                                                                ))}
+                                                                                                            </>
+                                                                                                            :
+                                                                                                            null
+                                                                                                        }
+                                                                                                    </>
+                                                                                                    :
+                                                                                                    null
+                                                                                                }
+                                                                                            </div>
+                                                                                        </div>
                                                                                     </Col>
 
-                                                                                    <Col lg={3}>
+                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
                                                                                         {fabric.country}
                                                                                     </Col>
 
-                                                                                    <Col lg={3}>
+                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
                                                                                         {fabric.status}
                                                                                     </Col>
 
-                                                                                    <Col lg={1}>
+                                                                                    <Col lg={1} className='d-flex justify-content-left align-items-center'>
                                                                                         <div className='d-flex'>
                                                                                             <Link className="text-decoration-none" to={`/user/center/product/${fabric.id}/edit`}>
                                                                                                 <div className="fabrics-tooltip cursor-pointer">
@@ -277,7 +278,7 @@ const AdminFabrics = (props) => {
                                     </Row>
 
                                     <Pagination
-                                        className="mt-4"
+                                        className="mt-4 mb-0"
                                         currentPage={currentPage}
                                         totalCount={pageCount}
                                         pageSize={PageSize}
@@ -348,7 +349,7 @@ const AdminFabrics = (props) => {
                     </Card.Footer>
                 </Modal.Body>
             </Modal>
-        </LayoutAdmin>
+        </LayoutAdmin >
     );
 };
 

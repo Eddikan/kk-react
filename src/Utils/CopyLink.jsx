@@ -11,7 +11,6 @@ const CopyTo = ({ text, classes, standbyTitle, loadingTitle, icon, onCopy }) => 
         try {
             await navigator.clipboard.writeText(text);
             setIsCopied(true);
-            // onCopy(true);
             setTimeout(() => setIsCopied(false), 1000);
         } catch (error) {
         }

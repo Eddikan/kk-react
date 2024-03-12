@@ -48,7 +48,7 @@ const Appointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
-    // const { appointmentId } = useParams();
+    const { appointmentId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
     const [chatBox, setChatBox] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
@@ -59,7 +59,7 @@ const Appointments = (props) => {
     const [appointments, setAppointments] = useState([]);
     const [appointmentEditModal, setAppointmentEditModal] = useState(false);
     const [appointmentLoading, setAppointmentLoading] = useState(true);
-    const [appointmentId, setAppointmentId] = useState('');
+    const [appointmentEditId, setAppointmentEditId] = useState('');
     const [times, setTimes] = useState([initialAppointments]);
     const [currentTimezone, setCurrentTimezone] = useState(null);
     const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
@@ -78,11 +78,11 @@ const Appointments = (props) => {
     };
 
     const putReschedule = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentEditId, data);
     };
 
     const toggleEditAppointmentModal = (id) => {
-        setAppointmentId(id)
+        setAppointmentEditId(id)
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment/' + id).then(response => {
             const result = response.data.data;
             setConsultationFormData(result);
@@ -98,6 +98,7 @@ const Appointments = (props) => {
     function toggleChatbox(id, first_name, last_name, image, message) {
         setChatBox(true);
         setNameDesigner({
+            id: id ?? 0,
             first_name: first_name ?? '-',
             last_name: last_name ?? '-',
             image: image ?? '-'
@@ -126,7 +127,7 @@ const Appointments = (props) => {
     const saveReScheduleSubmit = (e) => {
         setSaveLoading(true);
         e.preventDefault();
-        setAppointmentId();
+        setAppointmentEditId();
         putReschedule({ ...consultationFormData }).then(response => {
             const success = response.data.status;
             if (success == success) {
@@ -201,6 +202,7 @@ const Appointments = (props) => {
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
     }, []);
+
 
     return (
         <LayoutNoFooter>
@@ -358,7 +360,7 @@ const Appointments = (props) => {
                                                                                             appointment.designer?.last_name,
                                                                                             appointment.designer?.image,
                                                                                             "Under Construction");
-                                                                                        setAppointmentId(appointment.id,); console.log(appointment.id);
+                                                                                        // setAppointmentId(appointment.id,);
                                                                                     }}
                                                                                 >
                                                                                     <span className="icon-tooltiptext fs-14">Message Designer</span>
@@ -397,7 +399,7 @@ const Appointments = (props) => {
                                     }
                                 </>
                                 <Pagination
-                                    className="pagination-bar mt-4"
+                                    className="pagination-bar mt-4 mb-0"
                                     currentPage={currentPage}
                                     totalCount={pageCount}
                                     pageSize={PageSize}
@@ -421,7 +423,7 @@ const Appointments = (props) => {
                                         <Card.Body >
                                             <MeetingChat
                                                 currentUser={currentUser}
-                                                appointmentId="49"
+                                                appointmentId={appointmentId}
                                                 user={userDetails}
                                             />
                                         </Card.Body>

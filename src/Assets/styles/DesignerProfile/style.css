@@ -3,15 +3,32 @@
     padding: 10px 20px;
     min-width: 190px;
     border-radius: 5px;
-    border-width: 2px;
-    color: var(--white);
-    background-color: var(--black);
+    border-width: 1px;
+    color: var(--black);
+    background-color: var(--white);
     border-color: var(--black);
 }
 
 .request-quote-btn:hover {
     color: var(--white);
     background-color: var(--black);
+    border-color: var(--black);
+}
+
+.btn-consultation {
+    font-size: 15px;
+    padding: 10px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 1px;
+    color: var(--white);
+    background-color: var(--black);
+    border-color: var(--black);
+}
+
+.btn-consultation:hover {
+    color: var(--black);
+    background-color: var(--white);
     border-color: var(--black);
 }
 

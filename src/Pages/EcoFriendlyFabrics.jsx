@@ -16,6 +16,7 @@ import MultiRangeSlider from 'Components/Forms/MultiRangeSlider';
 import { debounce } from 'lodash';
 import { Rating } from 'react-simple-star-rating';
 import '../Assets/styles/EcoFriendly/style.css';
+import Pagination from 'Components/Pagination/Pagination';
 import axios from 'axios';
 
 const EcoFriendlyFabrics = (props) => {
@@ -35,6 +36,11 @@ const EcoFriendlyFabrics = (props) => {
     const [search, setSearch] = useState('');
     const [searchValue, setSearchValue] = useState('');
 
+    // Pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
+
     const colors = ['Red', 'Blue', 'Green', 'Yellow']; // Replace with your array of colors
     const compositions = ['Polyamide', 'Polyester', 'Polyurethane', 'Acrylic', 'Cashmere', 'Mental']; // Replace with your array of composition options
     const weaves = ['Plain', 'Twill', 'Satin', 'Basket', 'Herringbone', 'Jacquard', 'Dobby', 'Leno']; // Replace with your array of weave options
@@ -42,6 +48,7 @@ const EcoFriendlyFabrics = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const token = cookies.token;
+    let PageSize = 10;
 
     const [sortOptions] = useState([
         { value: 'created_at', label: 'Date' },
@@ -116,6 +123,7 @@ const EcoFriendlyFabrics = (props) => {
             if (selectedDesigns) {
                 setEcofabrics(selectedDesigns);
                 setEcoFabricsLoading(false);
+                setPageCount(() => response.data.meta.total);
             } else {
                 toast.error('Product does not exist!');
                 setEcoFabricsLoading(false);
@@ -268,6 +276,29 @@ const EcoFriendlyFabrics = (props) => {
             toast.error('An error occured. Please try again or contact the administrator.');
         });
     }
+
+    // Pagination
+    const handleChangePage = (pageNumber) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page=' + pageNumber + '&user_id=' + currentUser)
+            .then((response) => {
+                const data = response.data;
+                setCurrentPage(pageNumber);
+                const selectedDesigns = response.data.data;
+                if (selectedDesigns) {
+                    setEcofabrics(selectedDesigns);
+                    setEcoFabricsLoading(false);
+                    setCurrentPage(() => data.meta.current_page);
+                    setPageCount(() => data.meta.total);
+                    setPageSize(() => data.meta.per_page);
+                } else {
+                    setEcoFabricsLoading(false);
+                    toast.error('There has been an error getting the products, please try again!');
+                }
+            }).catch(error => {
+                setEcoFabricsLoading(false);
+                toast.error('There has been an error getting the products, please try again!');
+            });
+    };
 
     useEffect(() => {
         // Only run the filter API call after the component has mounted
@@ -537,6 +568,15 @@ const EcoFriendlyFabrics = (props) => {
                                     }
                                 </div>
                             </Col>
+
+                            <Pagination
+                                className="mt-4 mb-0"
+                                currentPage={currentPage}
+                                totalCount={pageCount}
+                                pageSize={PageSize}
+                                onPageChange={page => handleChangePage(page)}
+                            />
+
                         </Row>
                     </Container>
                 </section>

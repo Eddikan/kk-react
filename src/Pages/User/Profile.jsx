@@ -16,7 +16,6 @@ import GetUserData from 'Utils/GetUserData';
 import GoBack from '../../Components/Shared/GoBack';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
-import { PiPencilThin } from "react-icons/pi";
 import { GoArrowUpRight } from "react-icons/go";
 import AdminPortfolio from 'Components/Shared/Admin/AdminPortfolio';
 import AdminFabrics from 'Components/Shared/Admin/AdminFabrics';
@@ -178,6 +177,7 @@ const Profile = () => {
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
             setCookie('activeProfileTab', 'about', { path: '/' });
+
         } else if (tab === "portfolio") {
             setPortfolioShow(true);
             setAboutShow(false);
@@ -186,6 +186,7 @@ const Profile = () => {
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
             setCookie('activeProfileTab', 'portfolio', { path: '/' });
+
         } else if (tab === "fabric") {
             setFabricShow(true);
             setPortfolioShow(false);
@@ -194,6 +195,7 @@ const Profile = () => {
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
             setCookie('activeProfileTab', 'fabric', { path: '/' });
+
         } else if (tab === "process") {
             setProcessShow(true);
             setPortfolioShow(false);
@@ -202,6 +204,7 @@ const Profile = () => {
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
             setCookie('activeProfileTab', 'process', { path: '/' });
+
         } else if (tab === "calendar") {
             setLimitedDesignShow(true);
             setProcessShow(false);
@@ -210,6 +213,7 @@ const Profile = () => {
             setFabricShow(false);
             setMyCalendarShow(false);
             setCookie('activeProfileTab', 'calendar', { path: '/' });
+
         } else if (tab == "my_calendar") {
             setLimitedDesignShow(false);
             setProcessShow(false);
@@ -255,6 +259,7 @@ const Profile = () => {
                 setProcessShow(false);
                 setLimitedDesignShow(false);
                 setMyCalendarShow(false);
+
             } else if (activeProfileTab === "portfolio") {
                 setPortfolioShow(true);
                 setAboutShow(false);
@@ -262,6 +267,7 @@ const Profile = () => {
                 setProcessShow(false);
                 setLimitedDesignShow(false);
                 setMyCalendarShow(false);
+
             } else if (activeProfileTab === "fabric") {
                 setFabricShow(true);
                 setPortfolioShow(false);
@@ -269,6 +275,7 @@ const Profile = () => {
                 setProcessShow(false);
                 setLimitedDesignShow(false);
                 setMyCalendarShow(false);
+
             } else if (activeProfileTab === "process") {
                 setProcessShow(true);
                 setPortfolioShow(false);
@@ -276,6 +283,7 @@ const Profile = () => {
                 setFabricShow(false);
                 setLimitedDesignShow(false);
                 setMyCalendarShow(false);
+
             } else if (activeProfileTab === "calendar") {
                 setLimitedDesignShow(true);
                 setProcessShow(false);
@@ -283,6 +291,7 @@ const Profile = () => {
                 setAboutShow(false);
                 setFabricShow(false);
                 setMyCalendarShow(false);
+
             } else if (activeProfileTab == "my_calendar") {
                 setLimitedDesignShow(false);
                 setProcessShow(false);
@@ -352,10 +361,10 @@ const Profile = () => {
                                 <Row className="justify-content-end">
 
                                     <Col md="2" className="text-right pe-0 me-4">
-                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className='w-100'>
+                                        <button href="/user/profile/edit" type='button' id="btn-edit-profile" className='w-100'>
                                             <GoPencil />
                                             <span className='ms-1'>Edit Profile</span>
-                                        </Button>
+                                        </button>
                                     </Col>
 
                                     {/* {user.is_designer == 1 && (

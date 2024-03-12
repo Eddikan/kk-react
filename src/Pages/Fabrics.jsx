@@ -19,6 +19,7 @@ import MultiRangeSlider from 'Components/Forms/MultiRangeSlider';
 import { debounce } from 'lodash';
 import '../Assets/styles/FabricsListView/style.css'
 import { Rating } from 'react-simple-star-rating';
+import Pagination from 'Components/Pagination/Pagination';
 
 const Fabrics = (props) => {
     const navigate = useNavigate();
@@ -37,6 +38,9 @@ const Fabrics = (props) => {
     const [priceRange, setPriceRange] = useState({ from: '', to: '' });
     const [search, setSearch] = useState('');
     const [searchValue, setSearchValue] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
 
     const colors = ['Red', 'Blue', 'Green', 'Yellow']; // Replace with your array of colors
     const compositions = ['Polyamide', 'Polyester', 'Polyurethane', 'Acrylic', 'Cashmere', 'Mental']; // Replace with your array of composition options
@@ -45,6 +49,7 @@ const Fabrics = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const token = cookies.token;
+    let PageSize = 10;
 
     const [sortOptions] = useState([
         { value: 'created_at', label: 'Date' },
@@ -119,6 +124,7 @@ const Fabrics = (props) => {
             if (selectedDesigns) {
                 setFabrics(selectedDesigns);
                 setFabricsLoading(false);
+                setPageCount(() => response.data.meta.total);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setFabricsLoading(false);
@@ -276,6 +282,29 @@ const Fabrics = (props) => {
         });
     }
 
+    // Pagination
+    const handleChangePage = (pageNumber) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page=' + pageNumber + '&user_id=' + currentUser)
+            .then((response) => {
+                const data = response.data;
+                setCurrentPage(pageNumber);
+                const selectedDesigns = response.data.data;
+                if (selectedDesigns) {
+                    setFabrics(selectedDesigns);
+                    setFabricsLoading(false);
+                    setCurrentPage(() => data.meta.current_page);
+                    setPageCount(() => data.meta.total);
+                    setPageSize(() => data.meta.per_page);
+                } else {
+                    setFabricsLoading(false);
+                    toast.error('There has been an error getting the products, please try again!');
+                }
+            }).catch(error => {
+                setFabricsLoading(false);
+                toast.error('There has been an error getting the products, please try again!');
+            });
+    };
+
     useEffect(() => {
         // Only run the filter API call after the component has mounted
         if (mounted) {
@@ -296,6 +325,7 @@ const Fabrics = (props) => {
             setMounted(true);
         }
     }, [ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue, country]);
+
 
     return (
         <Layout>
@@ -710,6 +740,15 @@ const Fabrics = (props) => {
                                     }
                                 </div>
                             </Col>
+
+                            <Pagination
+                                className="mt-4 mb-0"
+                                currentPage={currentPage}
+                                totalCount={pageCount}
+                                pageSize={PageSize}
+                                onPageChange={page => handleChangePage(page)}
+                            />
+
                         </Row>
                     </Container>
                 </section>

@@ -148,7 +148,7 @@ p {
     padding: 10px 20px;
     min-width: 190px;
     border-radius: 5px;
-    border-width: 2px;
+    border-width: 1px;
     color: var(--white);
     background-color: var(--black);
     border-color: var(--black);
@@ -763,6 +763,20 @@ form select::placeholder {
     column-gap: 10px;
 }
 
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.icon-loading {
+    animation: rotate 1s linear infinite;
+}
+
 .icons-d-flex a {
     text-decoration: none;
 }
@@ -779,6 +793,8 @@ form select::placeholder {
     min-width: 130px !important;
     color: #000000 !important;
     background: #ffffff;
+    border-radius: 5px;
+    border: 1px solid #000;
 }
 
 #btn-seller-profile {

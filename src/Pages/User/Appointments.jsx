@@ -20,6 +20,7 @@ import GoBack from '../../Components/Shared/GoBack';
 import Pagination from 'Components/Pagination/Pagination';
 import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
+import MeetingChat from 'Components/Chat/MeetingChat';
 import InputEmoji from 'react-input-emoji';
 import toast from 'react-hot-toast';
 import axios from "axios";
@@ -27,7 +28,9 @@ import axios from "axios";
 const Appointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const [reloadCount, setReloadCount] = useState(0);
+    const { appointmentId } = useParams();
     const currentUser = cookies.currentUser;
+    const userDetails = cookies.userDetails;
     const designerId = cookies.currentUserDesigner;
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
@@ -189,6 +192,10 @@ const Appointments = (props) => {
             });
     };
 
+    console.log("currentUser", currentUser);
+    console.log("appointmentId", appointmentId);
+    console.log("userDetails", userDetails);
+
     return (
         <LayoutSellerCenter>
             <section>
@@ -348,7 +355,7 @@ const Appointments = (props) => {
                                                                                         )}
                                                                                     >
                                                                                         <span className="icon-tooltiptext fs-14">View Details</span>
-                                                                                        <IoEye className='video-cam me-3' size={20} />
+                                                                                        <IoEye className='video-cam me-3' size={20} color="#000000" />
                                                                                     </div>
 
                                                                                     {/* {currentDate === appointment.consultation_date ? ( */}
@@ -357,7 +364,7 @@ const Appointments = (props) => {
                                                                                             <span className="icon-tooltiptext fs-14">
                                                                                                 Video call
                                                                                             </span>
-                                                                                            <IoMdVideocam className='video-cam me-3' size={20} />
+                                                                                            <IoMdVideocam className='video-cam me-3' size={20} color="#000000" />
                                                                                         </div>
                                                                                     </a>
                                                                                     {/* ) : (
@@ -388,7 +395,7 @@ const Appointments = (props) => {
                                                                                         )}
                                                                                     >
                                                                                         <span className="icon-tooltiptext fs-14">Message Customer</span>
-                                                                                        <span><AiFillMessage className='video-cam' size={19} /></span>
+                                                                                        <span><AiFillMessage className='video-cam' size={19} color="#000000" /></span>
                                                                                     </div>
                                                                                 </Col>
                                                                             </Row>
@@ -426,7 +433,7 @@ const Appointments = (props) => {
                             </div>
 
                             <Pagination
-                                className="pagination-bar mt-4"
+                                className="pagination-bar mt-4 mb-0"
                                 currentPage={currentPage}
                                 totalCount={pageCount}
                                 pageSize={PageSize}
@@ -452,64 +459,11 @@ const Appointments = (props) => {
                                     </Card.Header>
 
                                     <Card.Body>
-                                        <p>No messages found.</p>
-                                        {/* <div>
-                                            <span className='d-flex'>
-
-                                                {designerData.image !== null && designerData.image !== '' ? (
-                                                    <div
-                                                        className='user-photo-designer'
-                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designerData.image})` }}
-                                                    >
-                                                    </div>
-                                                ) : (
-                                                    <img src={UserPlaceholder} className='placeholder-img me-2' />
-                                                )}
-
-                                                <div className="designer-info mx-2">
-                                                    <div>
-                                                        <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">
-                                                            <span className=''>{designerData.first_name}{designerData.last_name}</span>
-                                                            <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
-                                                        </p>
-                                                    </div>
-
-                                                    <div className='fs-14 ms-2 mt-2 name-of-user-chat'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</div>
-                                                </div>
-                                            </span>
-                                        </div>
-
-                                        <div className='mt-5 mb-4 text-right d-flex'>
-                                            <div>
-                                                <div className='time-chat-box fs-14 fw-400'>3:30 PM
-                                                    <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
-                                                <div className='mt-2 welcome-chat'>
-                                                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
-                                                </div>
-                                            </div>
-                                            <img src={UserPlaceholder} className='placeholder-img-chat ms-3' />
-                                        </div> */}
-
-                                        <div>
-                                            <InputEmoji
-                                                value={text}
-                                                onChange={setText}
-                                                cleanOnEnter
-                                                onEnter={handleOnEnter}
-                                                placeholder="Type a message"
-                                                className="emoji-picker"
-                                            />
-                                            {/* <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div> */}
-                                            <div>
-                                                <div
-                                                    className="cursor-pointer fw-500 position-absolute send-button"
-                                                    onClick={() => { toggleUnderConstruction("Send Message"); setChatBox(false); }}
-                                                >
-                                                    Send
-                                                    <VscSend className='ms-1' />
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <MeetingChat
+                                            currentUser={currentUser}
+                                            appointmentId={appointmentId}
+                                            user={userDetails}
+                                        />
                                     </Card.Body>
                                 </Card>
                             </>
@@ -597,7 +551,13 @@ const Appointments = (props) => {
                     </Modal.Body>
                     <ModalFooter className='border-none'>
                         <div className='text-right'>
-                            <button className="btn btn-secondary border-black bg-white text-black btn-style" type="button" onClick={closeAppointmentModal} >Close</button>
+                            <button
+                                className="btn btn-secondary border-black bg-white text-black btn-style"
+                                type="button"
+                                onClick={closeAppointmentModal}
+                            >
+                                Close
+                            </button>
                         </div>
                     </ModalFooter>
                 </div>

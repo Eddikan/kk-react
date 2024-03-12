@@ -781,9 +781,9 @@ const Calendar = (props) => {
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='mx-auto' style={{ maxWidth: '1440px' }}>
+                        <Col lg={10} className='mx-auto py-5' style={{ maxWidth: '1440px' }}>
                             <Row>
-                                <Col lg={12} className="designer-calendar-container">
+                                <Col lg={12}>
                                     <Row className="pb-4">
                                         <Col lg={12} className='text-right mb-2'>
                                             <GoBack fallBack="/" />
@@ -1341,8 +1341,15 @@ const Calendar = (props) => {
                     </Card>
                 </Modal.Body>
                 <Modal.Footer className='border-none pt-0'>
-                    <button className="btn btn-secondary border-black bg-white text-black me-3" type="button" onClick={() => setDesignerBusinessHoursModalShow(false)} style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
-                    <button className="btn btn-primary" style={{ minWidth: '100px', padding: '9px 20px' }} variant="primary" onClick={() => {
+                    <button
+                        className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                        type="button"
+                        onClick={() => setDesignerBusinessHoursModalShow(false)}
+                    >
+                        Cancel
+                    </button>
+
+                    <button className="btn btn-primary btn-style" variant="primary" onClick={() => {
                         if (!times.length) {
                             BusinessHoursSubmitPost()
                         } else {

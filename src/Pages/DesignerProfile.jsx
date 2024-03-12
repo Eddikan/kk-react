@@ -353,10 +353,10 @@ const DesignerProfile = () => {
                                             :
                                             <>
                                                 <span>
-                                                    <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 bg-transparent text-black request-a-quote'
+                                                    <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 btn-style'
                                                         onClick={() => toggleRequestAQuote(true)}
                                                     >
-                                                        <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
+                                                        <PiNotepadFill className='me-2' size="20" />
                                                         Request a Quote
                                                     </p>
                                                 </span>
@@ -364,14 +364,14 @@ const DesignerProfile = () => {
                                                     <span className='w-100'>
                                                         <a
                                                             href={`/appointment/schedule/${designer.id}`}
-                                                            className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn'
+                                                            className='btn ms-3 btn-consultation fs-16 fw-400 btn-style'
                                                         >
-                                                            <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule a Consultation</a>
+                                                            <IoVideocam className='me-2' size="20" />Schedule a Consultation</a>
                                                     </span>
                                                     :
                                                     <span className='w-100'>
-                                                        <button className='btn ms-3 btn-primary fs-16 fw-400 consultation-btn' disabled>
-                                                            <IoVideocam color="#ffffff" className='me-2' size="20" />Unavailable for Consultation
+                                                        <button className='btn ms-3 btn-consultation fs-16 fw-400 btn-style' disabled>
+                                                            <IoVideocam className='me-2' size="20" />Unavailable for Consultation
                                                         </button>
                                                     </span>
                                                 }
@@ -594,8 +594,7 @@ const DesignerProfile = () => {
                                             <p className="text-black rufina-family fs-18 mb-1 fw-600">Design Preference</p>
                                             <p className="text-black fs-16 mb-3">Share your design preferences to the designer.</p>
                                             <button
-                                                className="btn btn-primary mb-4"
-                                                style={{ minWidth: '100px', padding: '9px 20px' }}
+                                                className="btn btn-primary mb-4 btn-style"
                                                 onClick={() => { toggleUnderConstruction("Upload Design"); setRequestAQuoteModal(false); }}
                                             >
                                                 Upload Design
@@ -611,27 +610,24 @@ const DesignerProfile = () => {
                 <ModalFooter className='mt-0 border-none pt-0'>
                     <div className='text-right'>
                         <button
-                            className="btn btn-secondary border-black bg-white text-black me-3"
+                            className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
                             onClick={() => setRequestAQuoteModal(false)}
-                            style={{ minWidth: '100px', padding: '9px 20px' }}
                         >
                             Cancel
                         </button>
 
                         {requestLoading ?
                             <button
-                                className="btn btn-primary"
+                                className="btn btn-primary btn-style"
                                 type="button"
-                                style={{ minWidth: '100px', padding: '9px 20px' }}
                             >
                                 Requesting...
                             </button>
                             :
                             <button
-                                className="btn btn-primary"
+                                className="btn btn-primary btn-style"
                                 type="button"
                                 onClick={() => { toggleUnderConstruction("Request a Quote"); setRequestAQuoteModal(false); }}
-                                style={{ minWidth: '100px', padding: '9px 20px' }}
                             >
                                 Request a Quote
                             </button>

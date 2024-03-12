@@ -23,7 +23,7 @@ const Forms = lazy(() => import("./Pages/Forms"));
 // const Stripe = lazy(() => import("./Pages/Stripe"));
 const CustomerPage = lazy(() => import("./Pages/CustomerPage"));
 const UserCalendar = lazy(() => import("./Pages/User/Calendar"));
-const Users = lazy(() => import("./Pages/Admin/Users"));
+const Users = lazy(() => import("./Pages/Admin/AdminUsers"));
 const Cart = lazy(() => import("./Pages/Cart"));
 const ViewDesign = lazy(() => import("./Pages/ViewDesign"));
 const EcoFriendlyFabrics = lazy(() => import("./Pages/EcoFriendlyFabrics"));
@@ -39,8 +39,10 @@ const OrderTrackingDetails = lazy(() => import("./Pages/OrderTrackingDetails"));
 const OrderDetails = lazy(() => import("./Pages/OrderDetails"));
 const VideoConferencing = lazy(() => import("./Pages/VideoConferencing"));
 
+// Admin
 const AdminFabrics = lazy(() => import("./Pages/Admin/AdminFabrics"));
 const AdminDesigns = lazy(() => import("./Pages/Admin/AdminDesigns"));
+const EditUser = lazy(() => import("./Pages/Admin/EditUser"));
 
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
@@ -123,6 +125,8 @@ const App = () => {
             exact
             element={<EditUserProfile />}
           />
+          <Route path="/admin/edit/:userId" exact element={<EditUser />} />
+
           <Route
             path="/user/center/guide"
             exact
@@ -215,7 +219,7 @@ const App = () => {
           />
           <Route path="/designer-profile" exact element={<DesignerProfile />} />
           <Route
-            path="/appointments/:designerId"
+            path="/appointments/:c"
             exact
             element={<Appointments />}
           />

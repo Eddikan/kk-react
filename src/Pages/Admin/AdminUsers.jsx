@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { BiSolidPencil } from "react-icons/bi";
@@ -29,6 +29,9 @@ const Users = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCount, setPageCount] = useState(1);
     const [pageSize, setPageSize] = useState(1);
+    const [deleteConfirmShow, setDeleteConfirmShow] = useState(false);
+    const [userId, setUserId] = useState('');
+    const [userDeleteLoading, setUserDeleteLoading] = useState(false);
 
     let PageSize = 10;
 
@@ -40,6 +43,11 @@ const Users = (props) => {
         setUnderConstructionShow(true);
         setModalHeading(message);
     }
+
+    const deleteConfirm = (e) => {
+        setDeleteConfirmShow(true);
+        setUserId(e);
+    };
 
     const handleChangePage = (pageNumber) => {
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'user?page=' + pageNumber + '&user_id=' + currentUser)
@@ -61,6 +69,25 @@ const Users = (props) => {
                 setUsersLoading(false);
                 toast.error('There has been an error getting the users, please try again!');
             });
+    };
+
+    async function userDeleteSubmit(id) {
+        setUserDeleteLoading(true);
+        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'user/' + userId).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                toast.success('User deleted successfully!');
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                setUsersLoading(false);
+                setDeleteConfirmShow(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setUserDeleteLoading(false);
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setUserDeleteLoading(false);
+        });
     };
 
     useEffect(() => {
@@ -139,6 +166,7 @@ const Users = (props) => {
                                                 </Card.Body>
                                             </Card>
                                         </Col>
+
                                         <>
                                             {users ?
                                                 <>
@@ -150,17 +178,17 @@ const Users = (props) => {
                                                                         <Card className='mt-3'>
                                                                             <Card.Body >
                                                                                 <Row>
-                                                                                    <Col lg={4} className='d-flex'>
-                                                                                        <div className='d-flex align-items-center user-image'>
+                                                                                    <Col lg={4} className='d-flex justify-content-left align-items-center'>
+                                                                                        <div className='d-flex align-items-center user-image-admin'>
                                                                                             {user.image ?
                                                                                                 <div
-                                                                                                    className='user-photo'
+                                                                                                    className='user-photo-admin'
                                                                                                     style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${user.image})` }}
                                                                                                 >
                                                                                                 </div>
                                                                                                 :
                                                                                                 <div
-                                                                                                    className='user-photo'
+                                                                                                    className='user-photo-admin'
                                                                                                     style={{ backgroundImage: `url(${UserPlaceholder})` }}
                                                                                                 >
                                                                                                 </div>
@@ -169,47 +197,44 @@ const Users = (props) => {
 
                                                                                         <div className='ms-3'>
                                                                                             <div>
-                                                                                                <span className='d-flex mt-0 mb-1 fs-16 text-black'>
+                                                                                                <span className='mt-0 mb-1 fs-16 text-black'>
                                                                                                     {user.first_name}&nbsp;{user.last_name}
                                                                                                 </span>
-                                                                                            </div>
-                                                                                            <div>
+                                                                                                <br />
                                                                                                 <span className='fs-14 text-black'>{user.email}</span>
                                                                                             </div>
                                                                                         </div>
                                                                                     </Col>
 
-                                                                                    <Col lg={3}>
-                                                                                        <div>
-                                                                                            <span className='fs-16 text-black'>{user.phone_number}</span>
-                                                                                        </div>
+                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
+                                                                                        <span className='fs-16 text-black '>{user.phone_number}</span>
                                                                                     </Col>
 
-                                                                                    <Col lg={2}>
-                                                                                        <div>
-                                                                                            <span className='fs-16 text-black'>{user.country}</span>
-                                                                                        </div>
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
+                                                                                        <span className='fs-16 text-black'>{user.country}</span>
                                                                                     </Col>
 
-                                                                                    <Col lg={2}>
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
                                                                                         <div>
                                                                                             <span className='fs-16 text-black'>{user.status}</span>
                                                                                         </div>
                                                                                     </Col>
 
-                                                                                    <Col lg={1}>
+                                                                                    <Col lg={1} className='d-flex justify-content-left align-items-center'>
                                                                                         <div className='d-flex'>
-                                                                                            <div
-                                                                                                className="users-tooltip cursor-pointer"
-                                                                                                onClick={() => { toggleUnderConstruction("Edit") }}
-                                                                                            >
-                                                                                                <span className="icon-tooltiptext fs-14">Edit</span>
-                                                                                                <BiSolidPencil className='me-3' color='#000000' size={20} />
-                                                                                            </div>
+                                                                                            <Link to={`/admin/edit/${user.id}`}>
+                                                                                                <div
+                                                                                                    className="users-tooltip cursor-pointer"
+                                                                                                // onClick={() => { toggleUnderConstruction("Edit") }}
+                                                                                                >
+                                                                                                    <span className="icon-tooltiptext fs-14">Edit</span>
+                                                                                                    <BiSolidPencil className='me-3' color='#000000' size={20} />
+                                                                                                </div>
+                                                                                            </Link>
 
                                                                                             <div
                                                                                                 className="users-tooltip cursor-pointer"
-                                                                                                onClick={() => { toggleUnderConstruction("Delete") }}
+                                                                                                onClick={function () { deleteConfirm(user.id); }}
                                                                                             >
                                                                                                 <span className="icon-tooltiptext fs-14">Delete</span>
                                                                                                 <AiFillDelete className='me-3' color='#000000' size={20} />
@@ -250,7 +275,7 @@ const Users = (props) => {
                                     </Row>
 
                                     <Pagination
-                                        className="mt-4"
+                                        className="mt-4 mb-0"
                                         currentPage={currentPage}
                                         totalCount={pageCount}
                                         pageSize={PageSize}
@@ -289,6 +314,37 @@ const Users = (props) => {
                             <p className="fs-20 text-black">Under Construction</p>
                         </Card.Body>
                     </Card>
+                </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={deleteConfirmShow}
+                className='modal-preview'
+                fade={false}
+                centered
+            >
+                <Modal.Header className="pb-0">
+                    <Modal.Title className='rufina-family fs-22 text-black'>Confirm Delete</Modal.Title>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} >
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Card>
+                        <Card.Body>
+                            <p className="mb-0">Are you sure you want to delete this user?</p>
+                        </Card.Body>
+                    </Card>
+
+                    <Card.Footer className="text-right mt-3">
+                        <button className="btn btn-secondary border-black bg-white text-black me-3 btn-style" onClick={() => setDeleteConfirmShow(false)} type="button" >Cancel</button>
+                        {userDeleteLoading ?
+                            <button className="btn btn-primary btn-style" type="button" >Deleting...</button>
+                            :
+                            <button className="btn btn-primary btn-style" type="button" onClick={userDeleteSubmit} >Delete</button>
+                        }
+                    </Card.Footer>
                 </Modal.Body>
             </Modal>
         </LayoutAdmin >

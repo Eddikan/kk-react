@@ -27,6 +27,7 @@ import MultiRangeSlider from 'Components/Forms/MultiRangeSlider';
 import '../Assets/styles/Design/style.css';
 import Carousel from 'react-multi-carousel';
 import { debounce } from 'lodash';
+import Pagination from 'Components/Pagination/Pagination';
 import axios from 'axios';
 
 const Designs = (props) => {
@@ -69,6 +70,10 @@ const Designs = (props) => {
     const [modalHeading, setModalHeading] = useState('');
     const [copy, setCopy] = useState(false);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
+
     const compositions = ['Polyamide', 'Polyester', 'Polyurethane', 'Acrylic', 'Cashmere', 'Mental']; // Replace with your array of composition options
     const weaves = ['Plain', 'Twill', 'Satin', 'Basket', 'Herringbone', 'Jacquard', 'Dobby', 'Leno']; // Replace with your array of weave options
 
@@ -76,6 +81,7 @@ const Designs = (props) => {
     const currentUser = cookies.currentUser;
     const token = cookies.token;
     let iframeLink = `<iframe src="https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+    let PageSize = 10;
 
     const [sortOptions] = useState([
         { value: 'created_at', label: 'All' },
@@ -161,6 +167,7 @@ const Designs = (props) => {
             if (selectedDesigns) {
                 setDesigns(selectedDesigns);
                 setDesignsLoading(false);
+                setPageCount(() => response.data.meta.total);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setDesignsLoading(false);
@@ -337,6 +344,29 @@ const Designs = (props) => {
         }
     };
 
+    // Pagination
+    const handleChangePage = (pageNumber) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?page=' + pageNumber + '&user_id=' + currentUser)
+            .then((response) => {
+                const data = response.data;
+                setCurrentPage(pageNumber);
+                const selectedDesigns = response.data.data;
+                if (selectedDesigns) {
+                    setDesigns(selectedDesigns);
+                    setDesignsLoading(false);
+                    setCurrentPage(() => data.meta.current_page);
+                    setPageCount(() => data.meta.total);
+                    setPageSize(() => data.meta.per_page);
+                } else {
+                    setDesignsLoading(false);
+                    toast.error('There has been an error getting the portfolio, please try again!');
+                }
+            }).catch(error => {
+                setDesignsLoading(false);
+                toast.error('There has been an error getting the portfolio, please try again!');
+            });
+    };
+
     useEffect(() => {
         // Only run the filter API call after the component has mounted
         if (mounted) {
@@ -418,7 +448,6 @@ const Designs = (props) => {
                                         :
                                         null
                                     }
-
 
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Search</Form.Label>
@@ -598,6 +627,13 @@ const Designs = (props) => {
                                     }
                                 </div>
                             </Col>
+                            <Pagination
+                                className="mt-4 mb-0"
+                                currentPage={currentPage}
+                                totalCount={pageCount}
+                                pageSize={PageSize}
+                                onPageChange={page => handleChangePage(page)}
+                            />
                         </Row>
                     </Container>
                 </section>
@@ -1080,7 +1116,14 @@ const Designs = (props) => {
                     </Row>
                 </Modal.Body>
                 <Modal.Footer className="text-right border-none">
-                    <button className="btn btn-secondary border-black bg-white text-black me-3 btn-style" onClick={() => setCopyEmbedLink(false)} type="button" >Cancel</button>
+                    <button
+                        className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                        onClick={() => setCopyEmbedLink(false)}
+                        type="button"
+                    >
+                        Cancel
+                    </button>
+
                     <CopyTo
                         text={iframeLink}
                         classes="btn btn-primary btn-style"

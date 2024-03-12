@@ -6,6 +6,8 @@
     background-repeat: no-repeat;
     position: relative;
     width: 50px;
+    max-width: 50px !important;
+    max-height: 50px !important;
 }   
 .bg-design {
     background: #fafafa;

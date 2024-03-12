@@ -111,7 +111,7 @@ const NewProductNormal = (props) => {
         var { name, value } = e.target;
         setOtherComposition("");
         setComposition(value);
-        
+
     };
 
     const handleChangeOtherComposition = (e) => {
@@ -134,7 +134,7 @@ const NewProductNormal = (props) => {
         var { name, value } = e.target;
         setOtherUnitMeasurement("");
         setUnitMeasurement(value);
-        
+
     };
 
     const handleChangeOtherUnitMeasurement = (e) => {
@@ -153,7 +153,7 @@ const NewProductNormal = (props) => {
         setProductData({
             ...productData,
             video_demo_url: url,
-        }); 
+        });
     }
 
     const handleImagesChange = (images) => {
@@ -173,17 +173,17 @@ const NewProductNormal = (props) => {
 
     useEffect(() => {
         const resizeObserver = new ResizeObserver(() => {
-          // Your resize logic here
+            // Your resize logic here
         });
-    
+
         if (formRef.current) {
-          resizeObserver.observe(formRef.current);
+            resizeObserver.observe(formRef.current);
         }
-    
+
         return () => {
-          if (formRef.current) {
-            resizeObserver.unobserve(formRef.current);
-          }
+            if (formRef.current) {
+                resizeObserver.unobserve(formRef.current);
+            }
         };
     }, []);
 
@@ -192,17 +192,17 @@ const NewProductNormal = (props) => {
         e.preventDefault();
         if (size == "small") {
             setProductLoading(true);
-            setTimeout(function(){
+            setTimeout(function () {
                 setProductLoading(false);
-                saveProductItems({...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' });
+                saveProductItems({ ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' });
                 handleCancel();
             }, 1000);
         } else {
             if (productData.image_urls) {
                 setProductLoading(true);
-                axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+                axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
                     const success = response.data.status;
-                    if(success == 'Success') {
+                    if (success == 'Success') {
                         toast.success('Fabric added successfully!');
                         setProductLoading(false);
                         reloadPage(true);
@@ -217,7 +217,7 @@ const NewProductNormal = (props) => {
                     setProductLoading(false);
                     formSuccess(false);
                 });
-                
+
             } else {
                 toast.error('Please upload design images!');
             }
@@ -227,9 +227,9 @@ const NewProductNormal = (props) => {
     async function ProductDraftSubmit(e) {
         e.preventDefault();
         setProductDraftLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
-            if(success == 'Success') {
+            if (success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
                 setProductDraftLoading(false);
                 reloadPage(true);
@@ -297,7 +297,7 @@ const NewProductNormal = (props) => {
                                                             <option value='yard'>Yard</option>
                                                             <option value='Other'>Other</option>
                                                         </Form.Control>
-                                                        {(unitMeasurement != "centimeter" && unitMeasurement != "meter" && unitMeasurement != "inch" && unitMeasurement != "feet" && unitMeasurement != "yard" || unitMeasurement == "Other") && unitMeasurement != ""  ?
+                                                        {(unitMeasurement != "centimeter" && unitMeasurement != "meter" && unitMeasurement != "inch" && unitMeasurement != "feet" && unitMeasurement != "yard" || unitMeasurement == "Other") && unitMeasurement != "" ?
                                                             <FormControl type='text' name='unit_measurement' value={otherUnitMeasurement} className='mr-sm-2' onChange={handleChangeOtherUnitMeasurement} placeholder='' />
                                                             :
                                                             null
@@ -326,13 +326,13 @@ const NewProductNormal = (props) => {
                                                 <Col lg="6">
                                                     <Form.Group className='my-1'>
                                                         <Form.Label>Price (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
-                                                        <FormControl type='number' name='price' value={productData.price} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                        <FormControl type='number' name='price' value={productData.price} className='mr-sm-2' onChange={handleChange} placeholder='' required />
                                                     </Form.Group>
                                                 </Col>
                                                 <Col lg="6">
                                                     <Form.Group className='my-1'>
                                                         <Form.Label>Stock Quantity</Form.Label>
-                                                        <FormControl type='number' name='quantity' value={productData.quantity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                        <FormControl type='number' name='quantity' value={productData.quantity} className='mr-sm-2' onChange={handleChange} placeholder='' required />
                                                     </Form.Group>
                                                 </Col>
                                             </Row>
@@ -369,16 +369,16 @@ const NewProductNormal = (props) => {
                         <div className="text-left mt-5">
                             <Button className='btn-outline me-3' type="button" onClick={handleCancel}>Cancel</Button>
                             {productLoading ?
-                                <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..." }</Button>
+                                <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..."}</Button>
                                 :
-                                <Button className='btn-primary' type="submit">{size == "small" ? "Upload" : "Save" }</Button>
+                                <Button className='btn-primary' type="submit">{size == "small" ? "Upload" : "Save"}</Button>
                             }
                             {withDraft ?
                                 <>
                                     {productDraftLoading ?
                                         <span className="cursor-pointer text-black ms-3">Saving as Draft...</span>
                                         :
-                                        <span className="cursor-pointer text-black ms-3" onClick={ProductDraftSubmit}>Save as Draft <HiOutlineArrowLongRight className="align-text-center"/></span>
+                                        <span className="cursor-pointer text-black ms-3" onClick={ProductDraftSubmit}>Save as Draft <HiOutlineArrowLongRight className="align-text-center" /></span>
                                     }
                                 </>
                                 :
@@ -394,7 +394,7 @@ const NewProductNormal = (props) => {
                                     <Form.Control as='select' name='country' value={productData.country} className='mr-sm-2' onChange={handleChange} required>
                                         <option value=''>Select Country</option>
                                         {Countries.map((country, index) => (
-                                            <option key={country+"-"+index} value={country}>
+                                            <option key={country + "-" + index} value={country}>
                                                 {country}
                                             </option>
                                         ))}
@@ -443,7 +443,7 @@ const NewProductNormal = (props) => {
                                         <option value='Mental'>Mental</option>
                                         <option value='Other'>Other</option>
                                     </Form.Control>
-                                    {(composition != "Polyamide" && composition != "Polyester" && composition != "Acrylic" && composition != "Polyurethane" && composition != "Cashmere" && composition != "Mental" || composition == "Other") && composition != ""  ?
+                                    {(composition != "Polyamide" && composition != "Polyester" && composition != "Acrylic" && composition != "Polyurethane" && composition != "Cashmere" && composition != "Mental" || composition == "Other") && composition != "" ?
                                         <FormControl type='text' name='composition' value={otherComposition} className='mr-sm-2' onChange={handleChangeOtherComposition} placeholder='' />
                                         :
                                         null
@@ -463,7 +463,7 @@ const NewProductNormal = (props) => {
                                         <option value='Leno'>Leno</option>
                                         <option value='Other'>Other</option>
                                     </Form.Control>
-                                    {(weave != "Plain" && weave != "Twill" && weave != "Satin" && weave != "Basket" && weave != "Herringbone" && weave != "Jacquard" && weave != "Dobby" && weave != "Leno" || weave == "Other") && weave != ""  ?
+                                    {(weave != "Plain" && weave != "Twill" && weave != "Satin" && weave != "Basket" && weave != "Herringbone" && weave != "Jacquard" && weave != "Dobby" && weave != "Leno" || weave == "Other") && weave != "" ?
                                         <FormControl type='text' name='weave' value={otherWeave} className='mr-sm-2' onChange={handleChangeOtherWeave} placeholder='' />
                                         :
                                         null
@@ -559,15 +559,15 @@ const NewProductNormal = (props) => {
                                                             }
                                                         </>
                                                         : productData.video_demo_type == "Upload" ?
-                                                        <div className="mt-3">
-                                                            <VideoDragAndDrop type="product" onVideoChange={handleVideoChange} size={size} />
-                                                        </div>
-                                                        :
-                                                        null
+                                                            <div className="mt-3">
+                                                                <VideoDragAndDrop type="product" onVideoChange={handleVideoChange} size={size} />
+                                                            </div>
+                                                            :
+                                                            null
                                                     }
                                                 </Form.Group>
                                             </Col>
-                                            
+
                                         </Row>
                                     </Card.Body>
                                 </Card>

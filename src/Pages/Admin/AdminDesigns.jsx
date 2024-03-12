@@ -258,9 +258,30 @@ const AdminDesigns = (props) => {
                                                                         <Card className='mt-3'>
                                                                             <Card.Body >
                                                                                 <Row>
-                                                                                    <Col lg={5}>
-                                                                                        <div className='d-flex'>
-                                                                                            <div className="cursor-pointer image-design-admin"
+                                                                                    <Col lg={5} className='d-flex justify-content-left align-items-center'>
+                                                                                        <div className="cursor-pointer  image-design-admin"
+                                                                                            onClick={function () {
+                                                                                                togglePortfolioImage(
+                                                                                                    design.id,
+                                                                                                    design.designer.id,
+                                                                                                    design.user.first_name,
+                                                                                                    design.user.last_name,
+                                                                                                    design.image_urls,
+                                                                                                    design.user.image,
+                                                                                                    design.user.address_line_1,
+                                                                                                    design.user.province,
+                                                                                                    design.tags,
+                                                                                                    design.description,
+                                                                                                    design.user.id
+                                                                                                );
+                                                                                            }}
+                                                                                            style={{ backgroundImage: "url(" + designImage + ")" }}
+                                                                                        >
+                                                                                        </div>
+
+                                                                                        <div className='ms-3'>
+                                                                                            <div
+                                                                                                className='d-flex mt-0 mb-1 fs-16 text-black cursor-pointer'
                                                                                                 onClick={function () {
                                                                                                     togglePortfolioImage(
                                                                                                         design.id,
@@ -276,57 +297,32 @@ const AdminDesigns = (props) => {
                                                                                                         design.user.id
                                                                                                     );
                                                                                                 }}
-                                                                                                style={{ backgroundImage: "url(" + designImage + ")" }}
                                                                                             >
+                                                                                                {design.name}
                                                                                             </div>
-
-                                                                                            <div className='ms-3'>
-                                                                                                <div>
-                                                                                                    <span
-                                                                                                        className='d-flex mt-0 mb-1 fs-16 text-black cursor-pointer'
-                                                                                                        onClick={function () {
-                                                                                                            togglePortfolioImage(
-                                                                                                                design.id,
-                                                                                                                design.designer.id,
-                                                                                                                design.user.first_name,
-                                                                                                                design.user.last_name,
-                                                                                                                design.image_urls,
-                                                                                                                design.user.image,
-                                                                                                                design.user.address_line_1,
-                                                                                                                design.user.province,
-                                                                                                                design.tags,
-                                                                                                                design.description,
-                                                                                                                design.user.id
-                                                                                                            );
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        {design.name}
-                                                                                                    </span>
-                                                                                                </div>
-                                                                                                <div>
-                                                                                                    {design.tags ?
-                                                                                                        <>
-                                                                                                            {design.tags.length > 0 ?
-                                                                                                                <>
-                                                                                                                    {design.tags.slice(0, 3).map((tag, index) => (
-                                                                                                                        <span key={index} className="designs-tags-view-bar bg-light fs-12 categories-color text-black">
-                                                                                                                            {tag}
-                                                                                                                        </span>
-                                                                                                                    ))}
-                                                                                                                </>
-                                                                                                                :
-                                                                                                                null
-                                                                                                            }
-                                                                                                        </>
-                                                                                                        :
-                                                                                                        null
-                                                                                                    }
-                                                                                                </div>
+                                                                                            <div>
+                                                                                                {design.tags ?
+                                                                                                    <>
+                                                                                                        {design.tags.length > 0 ?
+                                                                                                            <>
+                                                                                                                {design.tags.slice(0, 3).map((tag, index) => (
+                                                                                                                    <span key={index} className="designs-tags-view-bar bg-light fs-12 categories-color text-black">
+                                                                                                                        {tag}
+                                                                                                                    </span>
+                                                                                                                ))}
+                                                                                                            </>
+                                                                                                            :
+                                                                                                            null
+                                                                                                        }
+                                                                                                    </>
+                                                                                                    :
+                                                                                                    null
+                                                                                                }
                                                                                             </div>
                                                                                         </div>
                                                                                     </Col>
 
-                                                                                    <Col lg={3}>
+                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
                                                                                         <div>
                                                                                             {design.categories ?
                                                                                                 <>
@@ -348,11 +344,11 @@ const AdminDesigns = (props) => {
                                                                                         </div>
                                                                                     </Col>
 
-                                                                                    <Col lg={3}>
+                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
                                                                                         {design.status}
                                                                                     </Col>
 
-                                                                                    <Col lg={1}>
+                                                                                    <Col lg={1} className='d-flex justify-content-left align-items-center'>
                                                                                         <div className='d-flex'>
                                                                                             <Link className="text-decoration-none" to={`/user/center/design/${design.id}/edit`}>
                                                                                                 <div className="design-tooltip cursor-pointer">
@@ -404,7 +400,7 @@ const AdminDesigns = (props) => {
                                     </Row>
 
                                     <Pagination
-                                        className="mt-4"
+                                        className="mt-4 mb-0"
                                         currentPage={currentPage}
                                         totalCount={pageCount}
                                         pageSize={PageSize}
@@ -892,7 +888,7 @@ const AdminDesigns = (props) => {
                     />
                 </Modal.Footer>
             </Modal>
-        </LayoutAdmin>
+        </LayoutAdmin >
     );
 };
 
