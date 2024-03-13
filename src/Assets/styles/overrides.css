@@ -1409,6 +1409,10 @@ form select::placeholder {
     vertical-align: middle !important;
 }
 
+.max-width-column {
+    max-width: 1440px;
+}
+
 .profile-image.small {
     width: 40px;
     height: 40px;

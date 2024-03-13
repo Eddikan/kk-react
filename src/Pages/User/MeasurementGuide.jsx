@@ -159,7 +159,7 @@ const MeasurementGuide = (props) => {
                                 </Col>
 
 
-                                <Col lg={10} className='my-5 mx-auto' style={{ maxWidth: '1440px' }}>
+                                <Col lg={10} className='my-5 mx-auto max-width-column'>
                                     <div>
                                         <Row className="mb-3">
                                             <Col lg={12} className='text-right mb-2'>

@@ -11,7 +11,7 @@ import { PiNotepadFill } from "react-icons/pi";
 import { AiFillDelete, AiFillMessage } from "react-icons/ai";
 import { GoAlertFill } from 'react-icons/go';
 import { ImEmbed2 } from "react-icons/im";
-import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoHeartOutline, IoEyeOutline } from "react-icons/io5";
+import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoHeartOutline, IoEyeOutline, IoEye } from "react-icons/io5";
 import CopyTo from 'Utils/CopyLink';
 import AdminSidebar from 'Components/Shared/AdminSidebar';
 import 'Assets/styles/AdminDesigns/style.css';
@@ -205,7 +205,7 @@ const AdminDesigns = (props) => {
                                     <AdminSidebar />
                                 </Col>
 
-                                <Col lg={10} className='py-5 col-right-calendar mx-auto' style={{ maxWidth: '1440px' }}>
+                                <Col lg={10} className='py-5 col-right-calendar mx-auto max-width-column'>
                                     <Row>
                                         <Col lg={12}>
                                             <Row className="pb-4">
@@ -350,6 +350,29 @@ const AdminDesigns = (props) => {
 
                                                                                     <Col lg={1} className='d-flex justify-content-left align-items-center'>
                                                                                         <div className='d-flex'>
+
+                                                                                            <div
+                                                                                                className="design-tooltip cursor-pointer"
+                                                                                                onClick={function () {
+                                                                                                    togglePortfolioImage(
+                                                                                                        design.id,
+                                                                                                        design.designer.id,
+                                                                                                        design.user.first_name,
+                                                                                                        design.user.last_name,
+                                                                                                        design.image_urls,
+                                                                                                        design.user.image,
+                                                                                                        design.user.address_line_1,
+                                                                                                        design.user.province,
+                                                                                                        design.tags,
+                                                                                                        design.description,
+                                                                                                        design.user.id
+                                                                                                    );
+                                                                                                }}
+                                                                                            >
+                                                                                                <span className="icon-tooltiptext fs-14">View</span>
+                                                                                                <IoEye className='me-3' color='#000000' size={20} />
+                                                                                            </div>
+
                                                                                             <Link className="text-decoration-none" to={`/user/center/design/${design.id}/edit`}>
                                                                                                 <div className="design-tooltip cursor-pointer">
                                                                                                     <span className="icon-tooltiptext fs-14">Edit</span>
@@ -822,20 +845,19 @@ const AdminDesigns = (props) => {
                                     </>
                                     :
                                     <>
-
                                     </>
                                 }
 
                                 <div lg='12' className='text-center'>
                                     <CopyTo
                                         text={`https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}`}
-                                        classes="btn btn-copy-link border-black bg-white text-black mt-2"
+                                        classes="btn btn-copy-link border-black bg-white text-black mt-2 w-100"
                                         standbyTitle="Copy Link"
                                         icon={true}
                                     />
 
                                     <button
-                                        className="btn btn-copy-link border-black bg-white text-black mt-2"
+                                        className="btn btn-copy-link border-black bg-white text-black mt-2 w-100"
                                         type="button"
                                         onClick={toggleCopyEmbedLinkModal}
                                     >
@@ -872,19 +894,26 @@ const AdminDesigns = (props) => {
                         <Col lg='12' className='px-3'>
                             <textarea className='text-area-embed'>
                                 {iframeLink}
-
                             </textarea>
                         </Col>
                     </Row>
                 </Modal.Body>
                 <Modal.Footer className="text-right border-none">
-                    <button className="btn btn-secondary border-black bg-white text-black me-3 btn-style" onClick={() => setCopyEmbedLink(false)} type="button" >Cancel</button>
+                    <button
+                        className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                        onClick={() => setCopyEmbedLink(false)}
+                        type="button"
+                    >
+                        Cancel
+                    </button>
+
                     <CopyTo
                         text={iframeLink}
                         classes="btn btn-primary btn-style"
                         standbyTitle="Copy"
                         icon={false}
                         onCopy={() => setCopy(true)}
+                        loadingTitle="Embed Copied"
                     />
                 </Modal.Footer>
             </Modal>

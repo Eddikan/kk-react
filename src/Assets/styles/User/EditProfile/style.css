@@ -71,3 +71,12 @@
     overflow: auto;
     height: 136px;
 }
+.profile-image-view {
+    width: 120px;
+    height: 120px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+    border-radius: 50%;
+}

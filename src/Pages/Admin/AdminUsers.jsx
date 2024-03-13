@@ -5,14 +5,14 @@ import { useCookies } from 'react-cookie';
 import { BiSolidPencil } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { GoAlertFill } from 'react-icons/go';
-import { IoCloseOutline } from 'react-icons/io5';
+import { IoCloseOutline, IoEye } from 'react-icons/io5';
 import Pagination from 'Components/Pagination/Pagination';
 import AdminSidebar from 'Components/Shared/AdminSidebar';
 import LayoutAdmin from 'Components/Layout/LayoutAdmin';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import UserPlaceholder from 'Assets/images/user.png';
 import GoBack from 'Components/Shared/GoBack';
-import 'Assets/styles/Users/style.css';
+import 'Assets/styles/AdminUsers/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
 
@@ -126,7 +126,7 @@ const Users = (props) => {
                                     <AdminSidebar />
                                 </Col>
 
-                                <Col lg={10} className='py-5 col-right-calendar mx-auto' style={{ maxWidth: '1440px' }}>
+                                <Col lg={10} className='py-5 col-right-calendar mx-auto max-width-column'>
                                     <Row>
                                         <Col lg={12}>
                                             <Row className="pb-4">
@@ -179,30 +179,34 @@ const Users = (props) => {
                                                                             <Card.Body >
                                                                                 <Row>
                                                                                     <Col lg={4} className='d-flex justify-content-left align-items-center'>
-                                                                                        <div className='d-flex align-items-center user-image-admin'>
-                                                                                            {user.image ?
-                                                                                                <div
-                                                                                                    className='user-photo-admin'
-                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${user.image})` }}
-                                                                                                >
-                                                                                                </div>
-                                                                                                :
-                                                                                                <div
-                                                                                                    className='user-photo-admin'
-                                                                                                    style={{ backgroundImage: `url(${UserPlaceholder})` }}
-                                                                                                >
-                                                                                                </div>
-                                                                                            }
-                                                                                        </div>
+                                                                                        <Link to={`/admin/profile/user/${user.id}`}>
+                                                                                            <div className='d-flex align-items-center user-image-admin'>
+                                                                                                {user.image ?
+                                                                                                    <div
+                                                                                                        className='user-photo-admin'
+                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${user.image})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                    :
+                                                                                                    <div
+                                                                                                        className='user-photo-admin'
+                                                                                                        style={{ backgroundImage: `url(${UserPlaceholder})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                }
+                                                                                            </div>
+                                                                                        </Link>
 
                                                                                         <div className='ms-3'>
-                                                                                            <div>
-                                                                                                <span className='mt-0 mb-1 fs-16 text-black'>
-                                                                                                    {user.first_name}&nbsp;{user.last_name}
-                                                                                                </span>
-                                                                                                <br />
-                                                                                                <span className='fs-14 text-black'>{user.email}</span>
-                                                                                            </div>
+                                                                                            <Link to={`/admin/profile/user/${user.id}`} className='text-decoration-none'>
+                                                                                                <div>
+                                                                                                    <span className='mt-0 mb-1 fs-16 text-black'>
+                                                                                                        {user.first_name}&nbsp;{user.last_name}
+                                                                                                    </span>
+                                                                                                    <br />
+                                                                                                    <span className='fs-14 text-black'>{user.email}</span>
+                                                                                                </div>
+                                                                                            </Link>
                                                                                         </div>
                                                                                     </Col>
 
@@ -222,10 +226,17 @@ const Users = (props) => {
 
                                                                                     <Col lg={1} className='d-flex justify-content-left align-items-center'>
                                                                                         <div className='d-flex'>
-                                                                                            <Link to={`/admin/edit/${user.id}`}>
+
+                                                                                            <Link to={`/admin/profile/user/${user.id}`} className="text-decoration-none">
+                                                                                                <div className="users-tooltip cursor-pointer">
+                                                                                                    <span className="icon-tooltiptext fs-14">View</span>
+                                                                                                    <IoEye className='me-3' color='#000000' size={20} />
+                                                                                                </div>
+                                                                                            </Link>
+
+                                                                                            <Link to={`/admin/edit/user/${user.id}`}>
                                                                                                 <div
                                                                                                     className="users-tooltip cursor-pointer"
-                                                                                                // onClick={() => { toggleUnderConstruction("Edit") }}
                                                                                                 >
                                                                                                     <span className="icon-tooltiptext fs-14">Edit</span>
                                                                                                     <BiSolidPencil className='me-3' color='#000000' size={20} />

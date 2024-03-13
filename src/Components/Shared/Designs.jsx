@@ -737,6 +737,7 @@ const Designs = (props) => {
                         standbyTitle="Copy"
                         icon={false}
                         onCopy={() => setCopy(true)}
+                        loadingTitle="Embed Copied"
                     />
                 </Modal.Footer>
             </Modal >

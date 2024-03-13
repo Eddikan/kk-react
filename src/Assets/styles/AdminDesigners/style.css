@@ -1,4 +1,4 @@
-.image-fabrics-admin {
+.image-design-admin {
     min-height: 50px;
     border-radius: 5px;
     background-size: cover;
@@ -7,15 +7,15 @@
     position: relative;
     width: 50px;
 }   
-.bg-fabrics {
+.bg-designers{
     background: #fafafa;
 }
-.fabrics-tooltip {
+.designers-tooltip {
     position: relative;
     display: inline-block;
 }
 
-.fabrics-tooltip .icon-tooltiptext {
+.designers-tooltip .icon-tooltiptext {
     visibility: hidden;
     width: 155px;
     background-color: rgba(0, 0, 0, 0.5);
@@ -27,10 +27,10 @@
     z-index: 1;
     bottom: 29px;
     left: 10%;
-    margin-left: -73px;
+    margin-left: -74px;
 }
 
-.fabrics-tooltip .icon-tooltiptext::after {
+.designers-tooltip .icon-tooltiptext::after {
     content: "";
     position: absolute;
     top: 100%;
@@ -41,10 +41,10 @@
     border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
 }
 
-.fabrics-tooltip:hover .icon-tooltiptext {
+.designers-tooltip:hover .icon-tooltiptext {
     visibility: visible;
 }
-.fabrics-tags-view-bar {
+.designs-tags-view-bar {
     padding: 3px 8px;
     border-radius: 5px;
     margin-right: 5px;
@@ -53,4 +53,14 @@
     max-width: 100%;
     text-align: center;
     text-wrap: nowrap;
+}
+.designers-image-admin .designer-photo-admin {
+    min-width: 40px;
+    min-height: 40px;
+    max-width: 45px;
+    max-height: 45px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
 }

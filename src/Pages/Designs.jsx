@@ -1067,13 +1067,14 @@ const Designs = (props) => {
                                 <div lg='12' className='text-center'>
                                     <CopyTo
                                         text={`https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}`}
-                                        classes="btn btn-copy-link border-black bg-white text-black mt-2"
+                                        classes="btn btn-copy-link border-black bg-white text-black w-100 mt-2 w-100"
                                         standbyTitle="Copy Link"
                                         icon={true}
+
                                     />
 
                                     <button
-                                        className="btn btn-copy-link border-black bg-white text-black mt-2"
+                                        className="btn btn-copy-link border-black bg-white text-black w-100 mt-2 w-100"
                                         type="button"
                                         onClick={toggleCopyEmbedLinkModal}
                                     >
@@ -1130,6 +1131,7 @@ const Designs = (props) => {
                         standbyTitle="Copy"
                         icon={false}
                         onCopy={() => setCopy(true)}
+                        loadingTitle="Embed Copied"
                     />
                 </Modal.Footer>
             </Modal >

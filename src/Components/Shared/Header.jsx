@@ -419,8 +419,7 @@ const Header = () => {
                             <Link to={`/admin/users`} className="mb-3 text-decoration-none d-block"><RxDashboard className='me-2' />Dashboard</Link>
                           }
 
-                          <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2' />Appointments</Link>
-                          {/* <Link to="/user/center/portfolio" className="mb-3 text-decoration-none d-block"><IoIosImages /> Portfolio</Link> */}
+                          <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' />Appointments</Link>
                           <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower className='me-1' /> Logout</p>
                         </div>
                       )}

@@ -36,8 +36,6 @@ const Designers = (props) => {
         }
     };
 
-
-
     useEffect(() => {
         fetchData(currentUser);
     }, [reloadCount]);

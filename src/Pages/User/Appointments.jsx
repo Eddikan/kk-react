@@ -1,54 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Modal, Card } from 'react-bootstrap';
+import LayoutNoFooter from 'Components/Layout/LayoutNoFooter';
+import { Container, Row, Col, Button, Modal, Card, ModalFooter, ModalHeader } from 'react-bootstrap';
+import 'Assets/styles/DesignerCalendar/style.css'
+import Pagination from 'Components/Pagination/Pagination';
 import { useCookies } from 'react-cookie';
+import GoBack from 'Components/Shared/GoBack';
 import { GoAlertFill } from 'react-icons/go';
-import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import 'Assets/styles/Appointments/style.css';
+import { useParams } from 'react-router-dom';
 import { VscSend } from "react-icons/vsc";
+import LoadingPage from 'Components/Shared/LoadingPage';
 import { IoMdVideocam, IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
-import { AiFillMessage } from "react-icons/ai";
-import { CiSearch } from 'react-icons/ci';
-import { useParams } from 'react-router-dom';
-import { GiAlarmClock } from "react-icons/gi";
-import { MdOutlineCalendarMonth } from "react-icons/md";
-import { IoEye } from "react-icons/io5";
-import 'Assets/styles/AppointmentList/style.css';
-import 'Assets/styles/Appointments/style.css';
-import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
-import UserPlaceholder from '../../Assets/images/user.png';
-import GoBack from '../../Components/Shared/GoBack';
-import Pagination from 'Components/Pagination/Pagination';
-import Container from 'react-bootstrap/Container';
-import Sidebar from 'Components/Shared/Sidebar';
-import MeetingChat from 'Components/Chat/MeetingChat';
+import { BiSolidPencil } from "react-icons/bi";
+import UserPlaceholder from 'Assets/images/user.png';
 import InputEmoji from 'react-input-emoji';
-import toast from 'react-hot-toast';
+import { AiFillMessage } from "react-icons/ai";
 import axios from "axios";
+import toast from 'react-hot-toast';
+import MeetingChat from 'Components/Chat/MeetingChat';
+
+const intitialConsultationData = {
+    consultation_date_time: '',
+    consultation_hour_start: '',
+    consultation_hour_end: '',
+    consultation_date: '',
+    email: '',
+    first_name: '',
+    last_name: '',
+    timezone: '',
+    consultation_details: '',
+}
+
+const initialAppointments = {
+    consultation_date_time: '',
+    consultation_hour_start: '',
+    consultation_hour_end: '',
+    consultation_date: '',
+    email: '',
+    first_name: '',
+    last_name: '',
+    timezone: '',
+    consultation_details: '',
+};
 
 const Appointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const [reloadCount, setReloadCount] = useState(0);
-    const { appointmentId } = useParams();
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
-    const designerId = cookies.currentUserDesigner;
+    const [appointmentId, setAppointmentId] = useState('');
+    const [reloadCount, setReloadCount] = useState(0);
+    const [chatBox, setChatBox] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
-    const [inputClicked, setInputClicked] = useState(false);
-    const [dateTo, setDateTo] = useState('');
-    const [dateFrom, setDateFrom] = useState('');
-    const [appointments, setAppointments] = useState('');
-    const [appointmentsLoading, setAppointmentsLoading] = useState(true);
-    const [date, setDate] = useState('');
-    const [chatBox, setChatBox] = useState(false);
-    const [query, setQuery] = useState('');
+    const [customer, setCustomer] = useState('');
     const [text, setText] = useState('');
-    const [designerData, setDesignerData] = useState('');
-    const [singleAppointment, setSingleAppointment] = useState('');
-    const [appointmentModalIsOpen, setAppointmentModalIsOpen] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState(null);
-    const currentDate = new Date().toISOString().split('T')[0];
+    const [saveLoading, setSaveLoading] = useState(false);
+    const [appointments, setAppointments] = useState([]);
+    const [appointmentEditModal, setAppointmentEditModal] = useState(false);
+    const [appointmentLoading, setAppointmentLoading] = useState(true);
+    const [appointmentEditId, setAppointmentEditId] = useState('');
+    const [times, setTimes] = useState([initialAppointments]);
+    const [currentTimezone, setCurrentTimezone] = useState(null);
+    const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
 
+    const consultationDateTimeString = "2024-02-22T16:11:00.000Z";
+    const consultationDateTime = new Date(consultationDateTimeString);
+    const currentDate = new Date().toISOString().split('T')[0];
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCount, setPageCount] = useState(1);
     const [pageSize, setPageSize] = useState(1);
@@ -56,49 +74,49 @@ const Appointments = (props) => {
     let PageSize = 10;
 
     const getAppointments = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment');
     };
 
-    const getDate = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + '/#');
+    const putReschedule = async (data) => {
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentEditId, data);
     };
 
-    const closeAppointmentModal = () => {
-        setAppointmentModalIsOpen(false);
-        setSelectedEvent(null);
-    }
-
-    const chatBoxModal = (first_name, last_name, image, status) => {
-        setChatBox(true);
-        setDesignerData({
-            first_name: first_name || '-',
-            last_name: last_name || '-',
-            image: image || '-',
-            status: status || '-'
+    const toggleEditAppointmentModal = (id) => {
+        setAppointmentEditId(id)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment/' + id).then(response => {
+            const result = response.data.data;
+            setConsultationFormData(result);
         })
-    };
+        setAppointmentEditModal(true);
+    }
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
     }
 
-    function toggleShowAppointment(first_name, last_name, title, consultation_date, consultation_hour_start, consultation_hour_end, consultation_details) {
-        setAppointmentModalIsOpen(true);
-
-        setSingleAppointment({
-            first_name: first_name || '-',
-            last_name: last_name || '-',
-            title: title || '-',
-            consultation_date: consultation_date || '-',
-            consultation_hour_start: consultation_hour_start || '-',
-            consultation_hour_end: consultation_hour_end || '-',
-            consultation_details: consultation_details || '-',
-        })
+    function toggleChatbox(id, first_name, last_name, image, message) {
+        setChatBox(true);
+        setAppointmentId(id.toString());
+        setCustomer({
+            id: id ?? 0,
+            first_name: first_name ?? '-',
+            last_name: last_name ?? '-',
+            image: image ?? '-'
+        });
+        setModalHeading(message);
     }
 
     function handleOnEnter(text) {
         console.log('enter', text)
+    }
+
+    const handleChangeConsultation = (e) => {
+        const { name, value } = e.target;
+        setConsultationFormData({
+            ...consultationFormData,
+            [name]: value,
+        });
     }
 
     const convert24hrTo12hr = (time24hr) => {
@@ -107,71 +125,30 @@ const Appointments = (props) => {
         return date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
     };
 
-    function returnFormattedDate(date) {
-        const targetDate = new Date(date);
-        const month = targetDate.toLocaleString('en-US', { month: 'long' });
-        const day = targetDate.getDate();
-        const year = targetDate.getFullYear();
-        const formattedDate = `${month} ${day}, ${year}`;
-        return formattedDate;
+    const saveReScheduleSubmit = (e) => {
+        setSaveLoading(true);
+        e.preventDefault();
+        setAppointmentEditId();
+        putReschedule({ ...consultationFormData }).then(response => {
+            const success = response.data.status;
+            if (success == success) {
+                setConsultationFormData(consultationFormData);
+                setAppointmentEditModal(false);
+                setReloadCount(reloadCount + 1);
+                toast.success('Schedule updated successfully!');
+                setSaveLoading(false);
+            } else {
+                toast.error('There has been an error editing the schedule, please try again!');
+                setSaveLoading(false);
+            }
+        }).catch(() => {
+            toast.error('There has been an error editing the schedule, please try again!');
+            setSaveLoading(false);
+        });
     }
-
-    function returnFormattedTime(timeString) {
-        const [hours, minutes] = timeString.split(':').map(Number);
-        const ampm = hours >= 12 ? ' PM' : ' AM';
-
-        let formattedHours = hours % 12;
-        formattedHours = formattedHours === 0 ? 12 : formattedHours;
-
-        const formattedTime = `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes}${ampm}`;
-        return formattedTime;
-    }
-
-    const fetchAppointmentList = async () => {
-        try {
-            const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment?user_id=' + currentUser, {
-                params: {
-                    query: query
-                }
-            });
-
-            setAppointments(response.data.data);
-        } catch (error) {
-            console.error('Error fetching appointments:', error);
-        }
-    };
-
-    useEffect(() => {
-        document.body.classList.add('designer-calendar-body');
-    }, []);
-
-    useEffect(() => {
-        getAppointments()
-            .then((response) => {
-                const selectedAppointments = response.data.data;
-                if (selectedAppointments) {
-                    setAppointments(selectedAppointments);
-                    setPageCount(() => response.data.meta.total);
-                } else {
-                    toast.error('There has been an error getting the appointment, please try again!');
-                }
-            })
-            .catch((error) => {
-                toast.error('There has been an error getting the appointment, please try again!');
-            });
-
-    }, [reloadCount]);
-
-    useEffect(() => {
-        if (inputClicked) {
-            fetchAppointmentList();
-        }
-    }, [query, inputClicked]);
-
 
     const handleChangePage = (pageNumber) => {
-        setAppointmentsLoading(true);
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/appointment?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment?page=' + pageNumber + '&user_id=' + currentUser)
             .then((response) => {
                 const data = response.data;
                 const result = data.data;
@@ -182,297 +159,284 @@ const Appointments = (props) => {
                     setCurrentPage(() => data.meta.current_page);
                     setPageCount(() => data.meta.total);
                     setPageSize(() => data.meta.per_page);
+                    setAppointmentLoading(false);
                 } else {
-                    setAppointmentsLoading(false);
-                    toast.error('There has been an error getting the appointment, please try again!');
+                    setAppointmentLoading(false);
+                    toast.error('There has been an error getting the appointments, please try again!');
                 }
             }).catch(error => {
-                setAppointmentsLoading(false);
-                toast.error('There has been an error getting the appointment, please try again!');
+                setAppointmentLoading(false);
+                toast.error('There has been an error getting the appointments, please try again!');
             });
     };
 
-    console.log("currentUser", currentUser);
-    console.log("appointmentId", appointmentId);
-    console.log("userDetails", userDetails);
+    useEffect(() => {
+        if (currentUser) {
+            getAppointments()
+                .then((response) => {
+                    setAppointmentLoading(false);
+                    const selectedAppointments = response.data.data;
+                    if (selectedAppointments) {
+                        setAppointments(selectedAppointments);
+                        setPageCount(() => response.data.meta.total);
+                    } else {
+                        toast.error('There has been an error getting the appointments, please try again!');
+                        setAppointmentLoading(false);
+                    }
+                })
+                .catch((error) => {
+                    toast.error('There has been an error getting the appointments, please try again!');
+                    setAppointmentLoading(false);
+                });
+        }
+    },
+        [reloadCount]);
+
+    useEffect(() => {
+        const getTimezone = () => {
+            const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
+            setCurrentTimezone(timezone);
+        };
+        getTimezone();
+    }, []);
+
+    useEffect(() => {
+        document.body.classList.add('designer-calendar-body');
+    }, []);
+
 
     return (
-        <LayoutSellerCenter>
-            <section>
-                <Container fluid>
-                    <Row className='bg-color-page'>
-                        <Col lg={2} className='p-0'>
-                            <Sidebar />
-                        </Col>
+        <LayoutNoFooter>
+            {appointmentLoading ?
+                <LoadingPage />
+                :
+                <>
+                    <section>
+                        <Container className='top-bottom'>
+                            <Row>
+                                <Col lg={12}>
+                                    <Row className="pb-4">
+                                        <Col md={6} className='d-flex justify-content-left align-items-center'>
+                                            <h3 className="fs-30 fw-600 text-black mb-0">Appointments</h3>
+                                        </Col>
+                                        <Col md={6} className="text-right">
+                                            <GoBack fallBack="/#" />
+                                        </Col>
+                                    </Row>
+                                </Col>
 
-                        <Col lg={10} className='mx-auto top-bottom' style={{ maxWidth: '1440px' }}>
-                            <div>
-                                <Row>
-                                    <Col lg={12}>
-                                        <Row className="pb-4">
-                                            <Col lg={10} className='d-flex justify-content-left align-items-center'>
-                                                <h3 className="fs-30 fw-600 text-black mb-0">Appointments</h3>
-                                            </Col>
-
-                                            <Col lg={2} className='text-right'>
-                                                <GoBack fallBack="/" />
-                                            </Col>
-                                        </Row>
-
-                                        <Row className="mb-4">
-                                            <Col lg='8'>
-                                                <div className='w-100 d-flex'>
-                                                    <div className='text-nowrap me-3 d-flex justify-content-center align-items-center'>
-                                                        <div className='appointment-date fs-16'>Appointment Date</div>
-                                                    </div>
-
-                                                    <div className='w-100 d-flex'>
-                                                        <input
-                                                            type="date"
-                                                            className='form-control w-25 color-date cursor-pointer'
-                                                            value={dateTo}
-                                                            onChange={(e) => { setDateTo(e.target.value); }}
-                                                        />
-                                                        &nbsp;
-                                                        <div className='d-flex justify-content-center align-items-center'>-</div>
-                                                        &nbsp;
-                                                        <input
-                                                            type="date"
-                                                            className='form-control w-25 color-date cursor-pointer'
-                                                            value={dateFrom}
-                                                            onChange={(e) => { setDateFrom(e.target.value); }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </Col>
-
-                                            <Col lg='4'>
-                                                <div className='d-flex align-items-end w-100 justify-content-end position-relative'>
-                                                    <input
-                                                        className='search-bar'
-                                                        type="text"
-                                                        placeholder="Search"
-                                                        value={query}
-                                                        onChange={(e) => { setQuery(e.target.value); setInputClicked(true); }}
-                                                    />
-                                                    <CiSearch size="20px" className='search-style' />
-                                                </div>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-
-                                    <Col lg={12}>
-                                        <Card>
-                                            <Card.Body className='bg-light'>
-                                                <Row>
-                                                    <Col lg={4}>
-                                                        <span className='fw-500'>Customer</span>
-                                                    </Col>
-
-                                                    <Col lg={4}>
-                                                        <span className='fw-500'>Appointment Date & Time</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                        <span className='fw-500'>Status</span>
-                                                    </Col>
-
-                                                    <Col lg={2}>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-
-                                    <>
-                                        {appointments ?
-                                            <>
-                                                {appointments.length > 0 ?
-                                                    <>
-                                                        {appointments.map((appointment) => {
-
-                                                            const options = {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                            };
-                                                            const today = (new Date(appointment.created_at)).toLocaleDateString('en-ES', options);
-                                                            const formattedDate = (new Date(appointment.consultation_date)).toLocaleString('en-US', {
-                                                                year: 'numeric',
-                                                                month: 'long',
-                                                                day: 'numeric',
-                                                                timeZone: 'UTC',
-                                                            });
-
-                                                            return (
-                                                                <Col lg={12}>
-                                                                    <Card className='mt-3'>
-                                                                        <Card.Body>
-                                                                            <Row className="align-items-center">
-                                                                                <Col lg={4}>
-                                                                                    <div className='d-flex appointment-user-image'>
-                                                                                        {appointment.customer?.image != '' && appointment.customer?.image != null ? (
-                                                                                            <div
-                                                                                                className='user-photo-appointment'
-                                                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.customer?.image})` }}
-                                                                                            >
-                                                                                            </div>
-                                                                                        ) : (
-                                                                                            <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
-                                                                                        )}
-                                                                                        <div>
-                                                                                            <span className='d-flex ms-3 mt-0 mb-1 fs-18 text-black'>
-                                                                                                {appointment.customer?.first_name}
-                                                                                                &nbsp;
-                                                                                                {appointment.customer?.last_name}
-                                                                                            </span>
-                                                                                            <div className='ms-3 fs-16 text-black'>
-                                                                                                <span className='fw-600 me-1'>Created:</span>&nbsp;{today}
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </Col>
-
-                                                                                <Col lg={4}>
-                                                                                    <span className='text-black'>{formattedDate} at {convert24hrTo12hr(appointment.consultation_hour_start)}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2}>
-                                                                                    <span className='text-black'>{appointment.status}</span>
-                                                                                </Col>
-
-                                                                                <Col lg={2} className='d-flex justify-content-end'>
-                                                                                    <div
-                                                                                        className="cursor-pointer appointments-tooltip"
-                                                                                        onClick={() => toggleShowAppointment(
-                                                                                            appointment.customer?.first_name,
-                                                                                            appointment.customer?.last_name,
-                                                                                            appointment.title,
-                                                                                            appointment.consultation_date,
-                                                                                            appointment.consultation_hour_start,
-                                                                                            appointment.consultation_hour_end,
-                                                                                            appointment.consultation_details
-                                                                                        )}
-                                                                                    >
-                                                                                        <span className="icon-tooltiptext fs-14">View Details</span>
-                                                                                        <IoEye className='video-cam me-3' size={20} color="#000000" />
-                                                                                    </div>
-
-                                                                                    {/* {currentDate === appointment.consultation_date ? ( */}
-                                                                                    <a href={`/consultation-meeting/${appointment.id}`}>
-                                                                                        <div className="cursor-pointer appointments-tooltip">
-                                                                                            <span className="icon-tooltiptext fs-14">
-                                                                                                Video call
-                                                                                            </span>
-                                                                                            <IoMdVideocam className='video-cam me-3' size={20} color="#000000" />
-                                                                                        </div>
-                                                                                    </a>
-                                                                                    {/* ) : (
-                                                                                        currentDate < appointment.consultation_date ? (
-                                                                                            <div className="cursor-pointer appointments-tooltip">
-                                                                                                <span className="icon-tooltiptext fs-14">
-                                                                                                    Not time for video conferencing
-                                                                                                </span>
-                                                                                                <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
-                                                                                            </div>
-                                                                                        ) : (
-                                                                                            <div className="cursor-pointer appointments-tooltip">
-                                                                                                <span className="icon-tooltiptext fs-14">
-                                                                                                    This video conferencing is finished
-                                                                                                </span>
-                                                                                                <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
-                                                                                            </div>
-                                                                                        )
-                                                                                    )} */}
-
-                                                                                    <div
-                                                                                        className="cursor-pointer appointments-tooltip"
-                                                                                        onClick={() => chatBoxModal(
-                                                                                            appointment.customer?.first_name,
-                                                                                            appointment.customer?.last_name,
-                                                                                            appointment.customer?.image,
-                                                                                            appointment.status
-                                                                                        )}
-                                                                                    >
-                                                                                        <span className="icon-tooltiptext fs-14">Message Customer</span>
-                                                                                        <span><AiFillMessage className='video-cam' size={19} color="#000000" /></span>
-                                                                                    </div>
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </Card.Body>
-                                                                    </Card>
-                                                                </Col>
-                                                            );
-                                                        })}
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <Col lg={12}>
-                                                            <Card className='mt-3'>
-                                                                <Card.Body>
-                                                                    <p className="text-center mb-0">No records found.</p>
-                                                                </Card.Body>
-                                                            </Card>
-                                                        </Col>
-                                                    </>
-                                                }
-                                            </>
-                                            :
-                                            <>
-                                                <Col lg={12}>
-                                                    <Card className='mt-3'>
-                                                        <Card.Body>
-                                                            <p className="text-center mb-0">No records found.</p>
-                                                        </Card.Body>
-                                                    </Card>
+                                <Col lg={12}>
+                                    <Card>
+                                        <Card.Body className='bg-light'>
+                                            <Row>
+                                                <Col lg={4}>
+                                                    <span className='fw-500'>Fashion Designer</span>
                                                 </Col>
-                                            </>
-                                        }
-                                    </>
-                                </Row>
-                            </div>
 
-                            <Pagination
-                                className="pagination-bar mt-4 mb-0"
-                                currentPage={currentPage}
-                                totalCount={pageCount}
-                                pageSize={PageSize}
-                                onPageChange={page => handleChangePage(page)}
-                            />
-                        </Col>
+                                                <Col lg={4}>
+                                                    <span className='fw-500'>Appointment Date & Time</span>
+                                                </Col>
 
-                        {chatBox ?
-                            <>
-                                <Card className='width-chat-card px-0'>
-                                    <Card.Header className='order-chat bg-white pt-3 pb-3'>
-                                        <div className='d-flex justify-content-between'>
-                                            <div className='d-flex align-items-center'>
-                                                <span className="fs-14 fw-500 mb-0 name-of-user-chat">
-                                                    <span className='fw-500'>{designerData.first_name} {designerData.last_name}</span>
-                                                </span>
-                                                {/* <span className='ms-3 active-now fs-14 fw-400 text-gold'>{designerData.status}</span> */}
+                                                <Col lg={2}>
+                                                    <span className='fw-500'>Status</span>
+                                                </Col>
+
+                                                <Col lg={2}>
+                                                </Col>
+                                            </Row>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                                <>
+                                    {appointments ?
+                                        <>
+                                            {appointments.length > 0 ?
+                                                <>
+                                                    {appointments.map((appointment) => {
+
+                                                        const options = {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: 'numeric',
+                                                        };
+                                                        const today = (new Date(appointment.created_at)).toLocaleDateString('en-ES', options);
+                                                        const formattedDate = (new Date(appointment.consultation_date)).toLocaleString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'long',
+                                                            day: 'numeric',
+                                                            timeZone: 'UTC',
+                                                        });
+
+                                                        return (
+                                                            <Col lg={12}>
+                                                                <Card className='mt-3'>
+                                                                    <Card.Body >
+                                                                        <Row className="align-items-center">
+                                                                            <Col lg={4}>
+                                                                                <div className='d-flex appointment-user-image'>
+                                                                                    {appointment.designer?.image != '' && appointment.designer?.image != null ? (
+                                                                                        <div
+                                                                                            className='user-photo-appointment'
+                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.designer?.image})` }}
+                                                                                        >
+                                                                                        </div>
+                                                                                    ) : (
+                                                                                        <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
+                                                                                    )}
+
+                                                                                    <div>
+                                                                                        <span className='d-flex ms-3 mt-0 mb-1 fs-18 text-black'>
+                                                                                            {appointment.designer?.first_name}
+                                                                                            &nbsp;
+                                                                                            {appointment.designer?.last_name}
+                                                                                        </span>
+                                                                                        <div className='ms-3 fs-16 text-black'>
+                                                                                            <span className='fw-600 me-1'>Created:</span>&nbsp;{today}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </Col>
+
+                                                                            <Col lg={4}>
+                                                                                <span className='text-black'>{formattedDate} at {convert24hrTo12hr(appointment.consultation_hour_start)}</span>
+                                                                            </Col>
+
+                                                                            <Col lg={2}>
+                                                                                <span className='text-black'>{appointment.status}</span>
+                                                                            </Col>
+
+                                                                            <Col lg={2} className='d-flex justify-content-end'>
+                                                                                {currentDate !== appointment.consultation_date ? (
+                                                                                    <>
+                                                                                        {appointment.consultation_date < currentDate ? (
+                                                                                            <div className="cursor-pointer appointments-tooltip">
+                                                                                                <span className="icon-tooltiptext fs-14">Unavailable to Edit</span>
+                                                                                                <BiSolidPencil className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                            </div>
+                                                                                        ) : (
+                                                                                            <div
+                                                                                                className="cursor-pointer appointments-tooltip"
+                                                                                                onClick={() => toggleEditAppointmentModal(appointment.id)}
+                                                                                            >
+                                                                                                <span className="icon-tooltiptext fs-14">Edit</span>
+                                                                                                <BiSolidPencil className='video-cam me-3' size={20} />
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </>
+                                                                                ) :
+                                                                                    <>
+                                                                                        <div className="cursor-pointer appointments-tooltip" disabled>
+                                                                                            <span className="icon-tooltiptext fs-14">Unavailable to Edit</span>
+                                                                                            <BiSolidPencil className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                        </div>
+                                                                                    </>
+                                                                                }
+
+                                                                                {/* {currentDate === appointment.consultation_date ? ( */}
+                                                                                <a href={`/consultation-meeting/${appointment.id}`}>
+                                                                                    <div className="cursor-pointer appointments-tooltip">
+                                                                                        <span className="icon-tooltiptext fs-14">Video call</span>
+                                                                                        <IoMdVideocam className='video-cam me-3' size={20} />
+                                                                                    </div>
+                                                                                </a>
+                                                                                {/* // ) : (
+                                                                                //     currentDate < appointment.consultation_date ? (
+                                                                                //         <div className="cursor-pointer appointments-tooltip">
+                                                                                //             <span className="icon-tooltiptext fs-14">Not time for video conferencing</span>
+                                                                                //             <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                //         </div>
+                                                                                //     ) : (
+                                                                                //         <div className="cursor-pointer appointments-tooltip">
+                                                                                //             <span className="icon-tooltiptext fs-14">This video conferencing is finished</span>
+                                                                                //             <IoMdVideocam className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                //         </div>
+                                                                                //     )
+                                                                                // )} */}
+
+                                                                                <div className="cursor-pointer appointments-tooltip"
+                                                                                    onClick={function () {
+                                                                                        toggleChatbox(
+                                                                                            appointment.id,
+                                                                                            appointment.designer?.first_name,
+                                                                                            appointment.designer?.last_name,
+                                                                                            appointment.designer?.image,
+                                                                                            "Under Construction");
+                                                                                        // setAppointmentId(appointment.id,);
+                                                                                    }}
+                                                                                >
+                                                                                    <span className="icon-tooltiptext fs-14">Message Designer</span>
+                                                                                    <span><AiFillMessage className='video-cam' size={20} /></span>
+                                                                                </div>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    </Card.Body>
+                                                                </Card>
+                                                            </Col>
+                                                        );
+                                                    })}
+                                                </>
+                                                :
+                                                <>
+                                                    <Col lg={12}>
+                                                        <Card className='mt-3'>
+                                                            <Card.Body>
+                                                                <p className="text-center mb-0">No records found.</p>
+                                                            </Card.Body>
+                                                        </Card>
+                                                    </Col>
+                                                </>
+                                            }
+                                        </>
+                                        :
+                                        <>
+                                            <Col lg={12}>
+                                                <Card className='mt-3'>
+                                                    <Card.Body>
+                                                        <p className="text-center mb-0">No records found.</p>
+                                                    </Card.Body>
+                                                </Card>
+                                            </Col>
+                                        </>
+                                    }
+                                </>
+                                <Pagination
+                                    className="pagination-bar mt-4 mb-0"
+                                    currentPage={currentPage}
+                                    totalCount={pageCount}
+                                    pageSize={PageSize}
+                                    onPageChange={page => handleChangePage(page)}
+                                />
+                            </Row>
+                            {chatBox ?
+                                <>
+                                    <Card className='width-chat-card px-0'>
+                                        <Card.Header className='header-chat bg-white'>
+                                            <div className='d-flex justify-content-between'>
+                                                <div className='d-flex align-items-center'>
+                                                    <span className='fw-500'>{customer.first_name} {customer.last_name}</span>
+                                                    {/* <span className='ms-2 active-now fs-14 fw-400'>Active Now</span> */}
+                                                </div>
+                                                <div className="cursor-pointer" onClick={() => setChatBox(false)}>
+                                                    <IoCloseOutline color="#7e7e7e" size={25} />
+                                                </div>
                                             </div>
-                                            <div className="cursor-pointer" onClick={() => setChatBox(false)}>
-                                                <IoCloseOutline color="#7e7e7e" size={25} />
-                                            </div>
-                                        </div>
-                                    </Card.Header>
-
-                                    <Card.Body>
-                                        <MeetingChat
-                                            currentUser={currentUser}
-                                            appointmentId={appointmentId}
-                                            user={userDetails}
-                                        />
-                                    </Card.Body>
-                                </Card>
-                            </>
-                            :
-                            null
-                        }
-                    </Row>
-                </Container>
-            </section >
+                                        </Card.Header>
+                                        <Card.Body >
+                                            <MeetingChat
+                                                currentUser={currentUser}
+                                                appointmentId={appointmentId}
+                                                user={userDetails}
+                                            />
+                                        </Card.Body>
+                                    </Card>
+                                </>
+                                :
+                                null
+                            }
+                        </Container>
+                    </section>
+                </>
+            }
 
             <Modal
                 show={underConstructionShow}
@@ -491,9 +455,8 @@ const Appointments = (props) => {
                         <IoCloseOutline color="#7e7e7e" size={25} className='mt-1' />
                     </button>
                 </Modal.Header>
-
                 <Modal.Body>
-                    <h4 className='fs-25 fw-600 mb-3'>{modalHeading}</h4>
+                    <h4 className='fs-22 rufina-family mb-3'>{modalHeading}</h4>
                     <Card>
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />
@@ -504,7 +467,7 @@ const Appointments = (props) => {
             </Modal>
 
             <Modal
-                show={appointmentModalIsOpen}
+                show={appointmentEditModal}
                 className='modal-preview'
                 fade={false}
                 centered
@@ -514,55 +477,112 @@ const Appointments = (props) => {
                         <button
                             type='button'
                             className='close react-modal-close'
-                            onClick={() => setAppointmentModalIsOpen(false)}
+                            onClick={() => setAppointmentEditModal(false)}
                         >
                             <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                         </button>
-                        <h5 className='modal-title text-left rufina-family fs-22' >Appointment Details</h5>
+                        <h5 className='modal-title text-left rufina-family fs-22' >Edit Schedule</h5>
                     </ModalHeader>
+
                     <Modal.Body className='bottom-padding'>
                         <Card>
-                            <Card.Body>
-                                <div>
-                                    <h2 className="current-date fs-18 poppins-ft fw-600 mb-3">Appointment with&nbsp;{singleAppointment.first_name} {singleAppointment.last_name}</h2>
-                                </div>
+                            <Card.Body className='pt-1 pb-1'>
+                                <Row className='p-3'>
+                                    <Col lg="12" className='mb-2 mt-0 text-left px-0'>
+                                        <span className='title-appointment'>Details</span>
+                                    </Col>
 
-                                <div className="d-flex">
-                                    <p className="fw-500 mb-2">
-                                        <MdOutlineCalendarMonth size="20" className='icon-color mb-1' />
-                                    </p>
-                                    <p className="current-date ms-2 mb-0 text-black">
-                                        {returnFormattedDate(singleAppointment.consultation_date ?? '-')}
-                                    </p>
-                                </div>
+                                    <Col lg="12" className='px-0'>
+                                        <input
+                                            type="text"
+                                            name="consultation_details"
+                                            className='form-control'
+                                            value={consultationFormData.consultation_details}
+                                            onChange={handleChangeConsultation}
+                                            required
+                                        />
+                                    </Col>
 
-                                <div className="d-flex">
-                                    <p className="fw-500 mb-2"><GiAlarmClock size="20" className='icon-color mb-1' /></p>
-                                    <p className="current-date ms-2 mb-0 text-black ">
-                                        {returnFormattedTime(singleAppointment.consultation_hour_start ?? '-') + ' - ' + returnFormattedTime(singleAppointment.consultation_hour_end ?? '-')}
-                                    </p>
-                                </div>
+                                    <Col lg="8" className='px-0'>
+                                        <Row>
+                                            {times.map((time, index) => {
+                                                return (
+                                                    <>
+                                                        {times.length > 0 && (
+                                                            <>
+                                                                <Col md="5" className="pe-0 mt-3">
+                                                                    <p className="hours-header mb-2 text-left">Starts at</p>
+                                                                    <div className='mb-3'>
+                                                                        <input
+                                                                            type='time'
+                                                                            name='consultation_hour_start'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={consultationFormData?.consultation_hour_start}
+                                                                            onChange={e => handleChangeConsultation(e, index)}
+                                                                            required
+                                                                        />
+                                                                    </div>
+                                                                </Col>
 
-                                <div>
-                                    <p className="current-date fs-16 poppins-ft fw-400 text-black mb-0">{singleAppointment.consultation_details}</p>
-                                </div>
+                                                                <Col md="5" className="pe-0 position-relative mt-3">
+                                                                    <p className="hours-header mb-2 text-left">Ends at</p>
+
+                                                                    <div className='mb-3'>
+                                                                        <input
+                                                                            type='time'
+                                                                            name='consultation_hour_end'
+                                                                            className='mr-sm-2 form-control-hours'
+                                                                            value={consultationFormData?.consultation_hour_end}
+                                                                            onChange={e => handleChangeConsultation(e, index)}
+                                                                            required
+                                                                        />
+                                                                    </div>
+                                                                </Col>
+
+                                                                <Col lg="12" className="pe-0 position-relative">
+                                                                    <p className="hours-header mb-2 text-left">Date</p>
+                                                                    <div className='mb-3'>
+                                                                        <input
+                                                                            type='date'
+                                                                            name='consultation_date'
+                                                                            className='form-control'
+                                                                            value={consultationFormData?.consultation_date}
+                                                                            onChange={e => handleChangeConsultation(e, index)}
+                                                                            required
+                                                                        />
+                                                                    </div>
+                                                                </Col>
+                                                            </>
+                                                        )}
+                                                    </>
+                                                );
+                                            })}
+                                        </Row>
+                                    </Col>
+                                </Row>
                             </Card.Body>
                         </Card>
                     </Modal.Body>
+
                     <ModalFooter className='border-none'>
                         <div className='text-right'>
                             <button
                                 className="btn btn-secondary border-black bg-white text-black btn-style"
-                                type="button"
-                                onClick={closeAppointmentModal}
-                            >
-                                Close
+                                onClick={() => setAppointmentEditModal(false)}
+                                type="button">
+                                Cancel
                             </button>
+
+                            {saveLoading ?
+                                <button className="btn btn-primary btn-style ms-3" type="button" >Saving...</button>
+                                :
+                                <button className="btn btn-primary ms-3 btn-style" type="button" onClick={saveReScheduleSubmit}>Save</button>
+                            }
                         </div>
                     </ModalFooter>
                 </div>
             </Modal>
-        </LayoutSellerCenter >
+        </LayoutNoFooter >
     );
 };
 

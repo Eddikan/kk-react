@@ -781,7 +781,7 @@ const Calendar = (props) => {
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='mx-auto py-5' style={{ maxWidth: '1440px' }}>
+                        <Col lg={10} className='mx-auto py-5 max-width-column'>
                             <Row>
                                 <Col lg={12}>
                                     <Row className="pb-4">

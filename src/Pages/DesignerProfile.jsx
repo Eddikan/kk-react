@@ -26,6 +26,7 @@ import { IoIosAttach } from "react-icons/io";
 import { VscSend } from "react-icons/vsc";
 import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
+import MeetingChat from 'Components/Chat/MeetingChat';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -71,26 +72,25 @@ const DesignerProfile = () => {
     const [fabricShow, setFabricShow] = useState(false);
     const [calendarShow, setCalendarShow] = useState(false);
     const [processShow, setProcessShow] = useState(false);
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
     const [areasOfSpecialization, setAreaOfSpecialization] = useState([]);
     const [portfolioItems, setPortfolioItems] = useState([]);
     const [seller, setSeller] = useState([]);
     const [requestAQuoteModal, setRequestAQuoteModal] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
-    const [activeImage, setActiveImage] = useState('');
     const [elements, setElements] = useState([]);
     const [designerSchedule, setDesignerSchedule] = useState([]);
     const [isDesignerCurrentUser, setIsDesignerCurrentUser] = useState(false);
     const [designerAvailable, setDesignerAvailable] = useState(false);
     const [requestLoading, setRequestLoading] = useState(false);
-    const [portfolio, setPortfolio] = useState('');
     const [images, setImages] = useState([]);
-    const [text, setText] = useState('');
-    const [designerInfo, setDesignerInfo] = useState('');
+    const [customer, setCustomer] = useState('');
+    const [appointmentId, setAppointmentId] = useState('');
     const [guidePreviewModalShow, setGuidePreviewModalShow] = useState(false);
 
     const currentUser = cookies.currentUser;
+    const userDetails = cookies.userDetails;
     const token = cookies.token;
     const activeProfileTab = cookies.activeProfileTab;
 
@@ -108,16 +108,16 @@ const DesignerProfile = () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId);
     };
 
-    const chatBoxModal = (first_name, last_name) => {
+    function toggleChatbox(id, first_name, last_name, image, message) {
         setChatBox(true);
-        setDesignerInfo({
-            first_name: first_name || '-',
-            last_name: last_name || '-',
-        })
-    };
-
-    function handleOnEnter(text) {
-        console.log('enter', text)
+        setAppointmentId(id.toString());
+        setCustomer({
+            id: id ?? 0,
+            first_name: first_name ?? '-',
+            last_name: last_name ?? '-',
+            image: image ?? '-'
+        });
+        setModalHeading(message);
     }
 
     function toggleRequestAQuote(message) {
@@ -244,7 +244,6 @@ const DesignerProfile = () => {
                                     });
                                     setDesignerAvailable(true);
                                 }
-
                                 setDesignerSchedule(events);
                             }
                         }
@@ -324,7 +323,7 @@ const DesignerProfile = () => {
                                                 <>
                                                     <AiFillMessage
                                                         className="ms-3 cursor-pointer"
-                                                        onClick={() => chatBoxModal(user.first_name, user.last_name)}
+                                                        onClick={() => toggleChatbox(user.designer.id, user.first_name, user.last_name)}
                                                         size={20} color="#CEA835"
                                                     />
                                                 </>
@@ -491,43 +490,23 @@ const DesignerProfile = () => {
                         {chatBox ?
                             <>
                                 <Card className='width-chat-card px-0'>
-                                    <Card.Header className='order-chat bg-white pt-3 pb-3'>
+                                    <Card.Header className='header-chat bg-white'>
                                         <div className='d-flex justify-content-between'>
                                             <div className='d-flex align-items-center'>
-                                                <span className="fs-14 fw-500 mb-0 name-of-user-chat">
-                                                    <span className='fw-500'>{designerInfo.first_name} {designerInfo.last_name}</span>
-                                                </span>
-                                                {/* <span className='ms-3 active-now fs-14 fw-400 text-gold'>{designerData.status}</span> */}
+                                                <span className='fw-500'>{customer.first_name} {customer.last_name}</span>
+                                                {/* <span className='ms-2 active-now fs-14 fw-400'>Active Now</span> */}
                                             </div>
                                             <div className="cursor-pointer" onClick={() => setChatBox(false)}>
                                                 <IoCloseOutline color="#7e7e7e" size={25} />
                                             </div>
                                         </div>
                                     </Card.Header>
-
-                                    <Card.Body>
-                                        <p>No messages found.</p>
-
-                                        <div>
-                                            <InputEmoji
-                                                value={text}
-                                                onChange={setText}
-                                                cleanOnEnter
-                                                onEnter={handleOnEnter}
-                                                placeholder="Type a message"
-                                                className="emoji-picker"
-                                            />
-                                            {/* <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div> */}
-                                            <div>
-                                                <div
-                                                    className="cursor-pointer fw-500 position-absolute send-button"
-                                                    onClick={() => { toggleUnderConstruction("Send Message"); setChatBox(false); }}
-                                                >
-                                                    Send
-                                                    <VscSend className='ms-1' />
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <Card.Body >
+                                        <MeetingChat
+                                            currentUser={currentUser}
+                                            appointmentId={appointmentId}
+                                            user={userDetails}
+                                        />
                                     </Card.Body>
                                 </Card>
                             </>

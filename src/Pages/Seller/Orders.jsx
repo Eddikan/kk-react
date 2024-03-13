@@ -135,7 +135,7 @@ const Orders = (props) => {
                             <Sidebar currentTab={currentTab} onChangeTab={(e) => setCurrentTab(e)} />
                         </Col>
 
-                        <Col lg={10} className='top-padding mx-auto' style={{ maxWidth: '1440px' }}>
+                        <Col lg={10} className='top-padding mx-auto max-width-column'>
                             <div className='ms-4'>
                                 <Row>
                                     <Col lg={12}>

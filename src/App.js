@@ -29,8 +29,8 @@ const ViewDesign = lazy(() => import("./Pages/ViewDesign"));
 const EcoFriendlyFabrics = lazy(() => import("./Pages/EcoFriendlyFabrics"));
 const DesignerProfile = lazy(() => import("./Pages/DesignerProfile"));
 const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
-const Appointments = lazy(() => import("./Pages/Appointments"));
-const UserAppointments = lazy(() => import("./Pages/User/Appointments"));
+const Appointments = lazy(() => import("./Pages/User/Appointments"));
+const UserAppointments = lazy(() => import("./Pages/Seller/Appointments"));
 const UserOrders = lazy(() => import("./Pages/Seller/Orders"));
 const Orders = lazy(() => import("./Pages/Orders"));
 const Messages = lazy(() => import("./Pages/Messages"));
@@ -42,7 +42,13 @@ const VideoConferencing = lazy(() => import("./Pages/VideoConferencing"));
 // Admin
 const AdminFabrics = lazy(() => import("./Pages/Admin/AdminFabrics"));
 const AdminDesigns = lazy(() => import("./Pages/Admin/AdminDesigns"));
+const AdminDesigners = lazy(() => import("./Pages/Admin/AdminDesigners"));
+const AdminSellers = lazy(() => import("./Pages/Admin/AdminSeller"));
 const EditUser = lazy(() => import("./Pages/Admin/EditUser"));
+const EditDesigner = lazy(() => import("./Pages/Admin/EditDesigner"));
+const EditSeller = lazy(() => import("./Pages/Admin/EditSeller"));
+const ViewSellerProfile = lazy(() => import("./Pages/Admin/ViewSellerProfile"));
+const ViewUserProfile = lazy(() => import("./Pages/Admin/ViewUserProfile"));
 
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
@@ -125,7 +131,18 @@ const App = () => {
             exact
             element={<EditUserProfile />}
           />
-          <Route path="/admin/edit/:userId" exact element={<EditUser />} />
+          <Route path="/admin/edit/user/:userId" exact element={<EditUser />} />
+          <Route
+            path="/admin/edit/designer/:designerId"
+            exact
+            element={<EditDesigner />}
+          />
+
+          <Route
+            path="/admin/edit/seller/:sellerId"
+            exact
+            element={<EditSeller />}
+          />
 
           <Route
             path="/user/center/guide"
@@ -170,10 +187,24 @@ const App = () => {
             exact
             element={<UserProducts />}
           />
-          <Route path="/admin/users" exact element={<Users />} />
 
+          {/* Admin */}
+          <Route path="/admin/users" exact element={<Users />} />
+          <Route path="/admin/designers" exact element={<AdminDesigners />} />
+          <Route path="/admin/sellers" exact element={<AdminSellers />} />
           <Route path="/admin/fabrics" exact element={<AdminFabrics />} />
           <Route path="/admin/designs" exact element={<AdminDesigns />} />
+          <Route
+            path="/admin/profile/user/:userId"
+            exact
+            element={<ViewUserProfile />}
+          />
+
+          <Route
+            path="/admin/profile/seller/:sellerId"
+            exact
+            element={<ViewSellerProfile />}
+          />
 
           {/* Designs */}
           <Route path="/find-designs" exact element={<Designs />} />
@@ -218,11 +249,7 @@ const App = () => {
             element={<UserCalendar />}
           />
           <Route path="/designer-profile" exact element={<DesignerProfile />} />
-          <Route
-            path="/appointments/:c"
-            exact
-            element={<Appointments />}
-          />
+          <Route path="/appointments/:c" exact element={<Appointments />} />
           <Route path="/user/center/orders" exact element={<UserOrders />} />
           <Route path="/messages" exact element={<Messages />} />
           <Route

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Header from '../Shared/Header'
-import HeaderSeller from "Components/Shared/HeaderSeller";
+import HeaderSeller from "Components/Shared/ShopManagerHeader";
 import Footer from '../Shared/Footer'
 import toast, { Toaster } from 'react-hot-toast';
 

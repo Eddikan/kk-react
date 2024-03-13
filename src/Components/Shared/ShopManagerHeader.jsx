@@ -6,14 +6,15 @@ import Container from 'react-bootstrap/Container';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import Logo from 'Assets/images/kouture-konect-logo.png';
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
-import { GoBell } from "react-icons/go";
+import { GoBell, GoHeart } from "react-icons/go";
 import { BsEnvelope } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
-import { IoCloseOutline } from "react-icons/io5";
+import { IoCloseOutline, IoCalendarClearOutline } from "react-icons/io5";
 import UserPlaceholder from 'Assets/images/user.png';
 import NewOrder from '../../Assets/images/new-order-icon.png';
 import NewAppointment from '../../Assets/images/new-appointment-icon.png';
 import { Link } from 'react-router-dom';
+import { RxDashboard } from "react-icons/rx";
 import toast from 'react-hot-toast';
 import User from '../../Assets/images/user.png';
 import { GoAlertFill } from 'react-icons/go';
@@ -33,8 +34,9 @@ const HeaderSeller = () => {
     const [reloadCount, setReloadCount] = useState(0);
     const [designerId, setDesignerId] = useState('');
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole']);
     const [userType, setUserType] = useState('user');
+    const userRole = cookies.userRole;
     const userRef = useRef(null);
     const bellRef = useRef(null);
     const messageRef = useRef(null);
@@ -266,6 +268,13 @@ const HeaderSeller = () => {
                                                     {userMenuOpen && (
                                                         <div className="action-box user-menu-seller">
                                                             <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog /> Profile</Link>
+                                                            <Link to={`/wishlist`} className="mb-3 text-decoration-none d-block"><GoHeart className='me-2' />Wishlist</Link>
+
+                                                            {userRole == 'Admin' &&
+                                                                <Link to={`/admin/users`} className="mb-3 text-decoration-none d-block"><RxDashboard className='me-2 mb-1' />Dashboard</Link>
+                                                            }
+
+                                                            <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' />Appointments</Link>
                                                             {/* <Link to="/user/center/portfolio" className="mb-3 text-decoration-none d-block"><IoIosImages /> Portfolio</Link> */}
                                                             <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower /> Logout</p>
                                                         </div>

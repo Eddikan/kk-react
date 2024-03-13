@@ -140,7 +140,7 @@ const Products = (props) => {
                                             <Sidebar />
                                         </Col>
 
-                                        <Col lg={10} className='mt-5 mx-auto' style={{ maxWidth: '1440px' }}>
+                                        <Col lg={10} className='mt-5 mx-auto max-width-column'>
                                             <div>
                                                 <Row>
                                                     <Col lg={12}>
