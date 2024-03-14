@@ -153,12 +153,12 @@ const AdminFabrics = (props) => {
                                                             <span className='fw-500'>Country</span>
                                                         </Col>
 
-                                                        <Col lg={3}>
+                                                        <Col lg={2}>
                                                             <span className='fw-500'>Status</span>
                                                         </Col>
 
-                                                        <Col lg={1}>
-                                                            <span className='fw-500'>Action</span>
+                                                        <Col lg={2} className='text-right'>
+                                                            <span className='fw-500 me-3'>Action</span>
                                                         </Col>
                                                     </Row>
                                                 </Card.Body>
@@ -223,11 +223,11 @@ const AdminFabrics = (props) => {
                                                                                         {fabric.country}
                                                                                     </Col>
 
-                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
                                                                                         {fabric.status}
                                                                                     </Col>
 
-                                                                                    <Col lg={1} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={2} className='d-flex justify-content-end align-items-center'>
                                                                                         <div className='d-flex'>
 
                                                                                             <Link to={`/product/${fabric.id}`} className="text-decoration-none">
@@ -248,7 +248,7 @@ const AdminFabrics = (props) => {
                                                                                                 onClick={function () { deleteConfirm(fabric.id); }}
                                                                                             >
                                                                                                 <span className="icon-tooltiptext fs-14">Delete</span>
-                                                                                                <AiFillDelete className='me-3' color='#000000' size={20} />
+                                                                                                <AiFillDelete color='#000000' size={20} />
                                                                                             </div>
                                                                                         </div>
                                                                                     </Col>

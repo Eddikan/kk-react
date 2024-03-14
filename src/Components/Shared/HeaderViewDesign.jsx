@@ -15,13 +15,13 @@ import { useCookies } from 'react-cookie';
 import UserPlaceholder from 'Assets/images/user.png';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import NewOrder from '../../Assets/images/new-order-icon.png';
-import NewAppointment from '../../Assets/images/new-appointment-icon.png';
+import NewOrder from 'Assets/images/new-order-icon.png';
+import NewAppointment from 'Assets/images/new-appointment-icon.png';
 import { Card, Modal } from 'react-bootstrap';
-import User from '../../Assets/images/user.png';
-import PlaceholderSquare from '../../Assets/images/square-placeholder.jpg';
+import User from 'Assets/images/user.png';
+import PlaceholderSquare from 'Assets/images/square-placeholder.jpg';
 import { GoAlertFill } from 'react-icons/go';
-import '../../Assets/styles/Headers/style.css';
+import 'Assets/styles/Headers/style.css';
 import axios from "axios";
 
 const HeaderViewDesign = () => {

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import Layout from '../Components/Layout/Layout';
+import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Card, CardBody } from 'reactstrap';
-import '../Assets/styles/About/style.css';
-import GoBack from '../Components/Shared/GoBack';
-import Professionalism from '../Assets/images/boy-icon.png';
-import Integrity from '../Assets/images/integrity.png';
-import Speed from '../Assets/images/response.png';
-import Reliability from '../Assets/images/reliability.png';
-import Excellence from '../Assets/images/excellence.png';
-import SuperiorQuality from '../Assets/images/high-standard.png';
-import CustomerExperience from '../Assets/images/customer-experience.png';
+import 'Assets/styles/About/style.css';
+import GoBack from 'Components/Shared/GoBack';
+import Professionalism from 'Assets/images/boy-icon.png';
+import Integrity from 'Assets/images/integrity.png';
+import Speed from 'Assets/images/response.png';
+import Reliability from 'Assets/images/reliability.png';
+import Excellence from 'Assets/images/excellence.png';
+import SuperiorQuality from 'Assets/images/high-standard.png';
+import CustomerExperience from 'Assets/images/customer-experience.png';
 
 
 

@@ -1453,6 +1453,7 @@ span.featured-designs {
     font-weight: bold;
     color: #000;
 }
+
 .btn-style{
     min-width: 100px;
     padding: 9px 20px;
@@ -1465,6 +1466,7 @@ span.featured-designs {
     color: #000000;
     font-weight: bold;
 }
+
 .short-bio-designer,
 .long-bio-designer {
     color: #000;
@@ -1473,9 +1475,11 @@ span.featured-designs {
 .item-designer {
     color: #39393A;
 }
+
 .btn-close {
     font-size: 12px;
 }
+
 .place-family {
     color: #000000;
 }
@@ -1483,9 +1487,11 @@ span.featured-designs {
 .margin-img {
     margin-top: 10px;
 }
+
 .poppins-ft {
     font-family: 'Poppins';
 }
+
 .heart-btn {
     background: #CEA835;
     color: var(--white);
@@ -1502,9 +1508,11 @@ button.ask-question {
     border: none;
     background: none;
 }
+
 .height-portfolio {
     height: auto;
 }
+
 button.schedule-consultation {
     background: #000000;
     color: #ffffff;
@@ -1512,12 +1520,15 @@ button.schedule-consultation {
     border-radius: 5px;
     width: 100%;
 }
+
 video#home-video {
     border-radius: 10px;
 }
+
 .hero-cards {
     border-radius: 10px;
 }
+
 .react-appointment-close {
     position: absolute;
     top: 22px;
@@ -1528,34 +1539,43 @@ video#home-video {
     line-height: 1;
     z-index: 9;
 }
+
 section#profile {
     background: #FFFFFF;
 }
+
 .rbc-event {
     background-color: #000000 !important;
 }
+
 .icon-color {
     color: #CEA835;
 }
+
 .explore-premium-fabrics,
 .discover-design {
     margin-bottom: 40px;
 }
+
 .rufina-family {
     font-family: 'Rufina';
 }
+
 section#designer-profile {
     background: #ffffff;
 }
+
 .no-available,.no-wishlist {
     font-style: italic;
 }
+
 .product-portfolio-image {
     border: 1px solid #FFEAAC;
     background: #FFFBF0;
     padding: 5px 10px 5px 10px;
     border-radius: 5px;
 }
+
 .sign-up,.login {
     color: #CEA835;
 }
@@ -1563,6 +1583,7 @@ section#designer-profile {
 .rating-color {
     color: #393939;
 }
+
 img.user-placeholder-header {
     width: 70%;
 }

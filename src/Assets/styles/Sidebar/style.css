@@ -34,3 +34,64 @@ span.hover-sidebar {
 .order-font {
     font-family: 'Poppins';
 }
+
+.users-table:hover .table_content {
+    visibility: visible !important;
+}
+.users-table .table_content {
+    visibility: hidden;
+    width: 112px !important;
+    padding: 0;
+    left: 164px !important;
+    top: 169px !important;
+    position: absolute;
+    z-index: 1;
+}
+
+.action_container .users_container:hover {
+    background: #fafafa;
+    color: #000000;
+}
+
+.action_container .users_container {
+    padding: 5px 0;
+    text-align: left !important;
+}
+
+.action_container {
+    padding: 0;
+    border-radius: 3px !important;
+}
+
+.action_container a {
+    text-decoration: none;
+    color: #1c1b1b;
+    font-size: 14px;
+    font-weight: 300;
+    padding-left: 12px;
+    display: inline-block;
+    width: 115px;
+}
+
+.shop-manager-table:hover .table_content {
+    visibility: visible !important;
+}
+.shop-manager-table .table_content {
+    visibility: hidden;
+    width: 205px !important;
+    padding: 0;
+    left: 85px !important;
+    top: 255px !important;
+    position: absolute;
+    z-index: 1;
+}
+
+.action_container .shop_container:hover {
+    background: #fafafa;
+    color: #000000;
+}
+
+.action_container .shop_container {
+    padding: 5px 0;
+    text-align: left !important;
+}

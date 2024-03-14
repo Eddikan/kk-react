@@ -139,7 +139,7 @@ const AdminDesigners = (props) => {
                                             <Card>
                                                 <Card.Body className='bg-light'>
                                                     <Row>
-                                                        <Col lg={4}>
+                                                        <Col lg={3}>
                                                             <span className='fw-500'>Name</span>
                                                         </Col>
 
@@ -151,12 +151,12 @@ const AdminDesigners = (props) => {
                                                             <span className='fw-500'>Country</span>
                                                         </Col>
 
-                                                        <Col lg={2}>
+                                                        <Col lg={2} className='text-center'>
                                                             <span className='fw-500'>Status</span>
                                                         </Col>
 
-                                                        <Col lg={1}>
-                                                            <span className='fw-500'>Action</span>
+                                                        <Col lg={2} className='text-right'>
+                                                            <span className='fw-500 me-3'>Action</span>
                                                         </Col>
                                                     </Row>
                                                 </Card.Body>
@@ -174,7 +174,7 @@ const AdminDesigners = (props) => {
                                                                         <Card className='mt-3'>
                                                                             <Card.Body >
                                                                                 <Row>
-                                                                                    <Col lg={4} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
                                                                                         <div className='d-flex align-items-center designers-image-admin'>
                                                                                             {designer?.user?.image ?
                                                                                                 <div
@@ -212,13 +212,13 @@ const AdminDesigners = (props) => {
                                                                                         <span className='fs-16 text-black'>{designer.user.country}</span>
                                                                                     </Col>
 
-                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={2} className='d-flex justify-content-center align-items-center'>
                                                                                         <div>
                                                                                             <span className='fs-16 text-black'>{designer.user.status}</span>
                                                                                         </div>
                                                                                     </Col>
 
-                                                                                    <Col lg={1} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={2} className='d-flex justify-content-end align-items-center'>
                                                                                         <div className='d-flex'>
 
                                                                                             <div className="designers-tooltip cursor-pointer"
@@ -242,7 +242,7 @@ const AdminDesigners = (props) => {
                                                                                                 onClick={function () { deleteConfirm(designer.id); }}
                                                                                             >
                                                                                                 <span className="icon-tooltiptext fs-14">Delete</span>
-                                                                                                <AiFillDelete className='me-3' color='#000000' size={20} />
+                                                                                                <AiFillDelete color='#000000' size={20} />
                                                                                             </div>
                                                                                         </div>
                                                                                     </Col>

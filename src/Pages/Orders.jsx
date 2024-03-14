@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
-import '../Assets/styles/DesignerCalendar/style.css'
+import 'Assets/styles/DesignerCalendar/style.css'
 import GoBack from 'Components/Shared/GoBack';
-import '../Assets/styles/Order/style.css';
-import User from '../Assets/images/user.png';
+import 'Assets/styles/Order/style.css';
+import User from 'Assets/images/user.png';
 import { useCookies } from 'react-cookie';
 import { AiFillMessage } from "react-icons/ai";
 import { IoEyeOutline } from "react-icons/io5";
@@ -15,7 +15,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import { IoMdStarOutline, IoIosAttach } from "react-icons/io";
 import { VscSend } from "react-icons/vsc";
 import InputEmoji from 'react-input-emoji'
-import PlaceholderImage from '../Assets/images/placeholders/image.png';
+import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
 import axios from "axios";
 

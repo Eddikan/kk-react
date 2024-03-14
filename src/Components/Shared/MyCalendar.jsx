@@ -8,7 +8,7 @@ import { GoPlus } from "react-icons/go";
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import PropTypes from 'prop-types'
-import '../../Assets/styles/DesignerCalendar/style.css';
+import 'Assets/styles/DesignerCalendar/style.css';
 import axios from "axios";
 import toast from 'react-hot-toast';
 import { GiAlarmClock } from "react-icons/gi";

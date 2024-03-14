@@ -4,8 +4,8 @@ import { Row, Col, Button, ModalHeader, Modal, Card, ModalFooter } from 'react-b
 import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import { useLocation } from 'react-router-dom';
-import '../../Assets/styles/Portfolio/ViewPortFolio/style.css';
-import CopyTo from '../../Utils/CopyLink';
+import 'Assets/styles/Portfolio/ViewPortFolio/style.css';
+import CopyTo from 'Utils/CopyLink';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import { GoHeart, GoAlertFill } from "react-icons/go";
 import UserPlaceholder from 'Assets/images/user.png';
@@ -13,12 +13,12 @@ import { AiFillMessage } from "react-icons/ai";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { PiNotepadFill } from "react-icons/pi";
 import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline } from "react-icons/io5";
-import PinIcon from '../../Assets/images/pin.png';
+import PinIcon from 'Assets/images/pin.png';
 import { ImEmbed2 } from "react-icons/im";
-import User from '../../Assets/images/user.png';
+import User from 'Assets/images/user.png';
 import Loading from './Loading';
 import { useCookies } from 'react-cookie';
-import '../../Assets/styles/Design/style.css';
+import 'Assets/styles/Design/style.css';
 import Carousel from 'react-multi-carousel';
 
 const PortfolioGrid = (props) => {

@@ -26,6 +26,9 @@
     background-color: #ffffff;
     color: #000000;
 }
+.bg-color-portfolio {
+    background-color: #fafafa !important;
+}
 .col-right {
     padding-right: 60px;
     padding-left: 0px;

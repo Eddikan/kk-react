@@ -9,7 +9,6 @@ import toast from 'react-hot-toast';
 import { ImLeaf } from "react-icons/im";
 import GoBack from 'Components/Shared/GoBack';
 import { GoHeart } from "react-icons/go";
-import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -17,7 +16,7 @@ import Countries from 'Utils/Countries';
 import Loading from 'Components/Shared/Loading';
 import MultiRangeSlider from 'Components/Forms/MultiRangeSlider';
 import { debounce } from 'lodash';
-import '../Assets/styles/FabricsListView/style.css'
+import 'Assets/styles/FabricsListView/style.css'
 import { Rating } from 'react-simple-star-rating';
 import Pagination from 'Components/Pagination/Pagination';
 
@@ -30,7 +29,6 @@ const Fabrics = (props) => {
 
     // Filter
     const [ecoFriendly, setEcoFriendly] = useState(0);
-    const [notEcoFriendly, setNotEcoFriendly] = useState(0);
     const [selectedCompositions, setSelectedCompositions] = useState([]);
     const [selectedWeaves, setSelectedWeaves] = useState([]);
     const [selectedColors, setSelectedColors] = useState([]);
@@ -509,7 +507,7 @@ const Fabrics = (props) => {
                                     </div> */}
                                 </div>
                             </Col>
-                            <Col lg="9">
+                            <Col lg="9" className='d-flex justify-content-center'>
                                 <div id="profile-designs">
                                     {fabricsLoading ?
                                         <>
@@ -563,7 +561,7 @@ const Fabrics = (props) => {
                                                                                 </div>
                                                                                 <div className="design-details">
                                                                                     <div className='d-flex'>
-                                                                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis">{fabric.name ?? '-'}</h4>
+                                                                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis pb-1">{fabric.name ?? '-'}</h4>
 
                                                                                         {currentUser ?
                                                                                             <div className='d-flex align-items-center'>
@@ -572,26 +570,15 @@ const Fabrics = (props) => {
                                                                                                         <div className='tooltip-content'>
                                                                                                             <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
                                                                                                         </div>
-                                                                                                        <ImLeaf color="#55d140" />
+                                                                                                        <ImLeaf color="#55d140" className='mb-1' />
                                                                                                     </span>
                                                                                                 )}
                                                                                             </div>
                                                                                             :
                                                                                             null
                                                                                         }
-                                                                                        {/* {currentUser ?
-                                                                                    <div className='d-flex align-items-center'>
-                                                                                        <span className='fs-14 text-no-wrap mx-2'>
-                                                                                            <IoHeartOutline /> {fabric.wishlist_count}
-                                                                                        </span>
-                                                                                        <span className='fs-14 text-no-wrap'>
-                                                                                            <IoEyeOutline /> {fabric.views}
-                                                                                        </span>
                                                                                     </div>
-                                                                                    :
-                                                                                    null
-                                                                                }    */}
-                                                                                    </div>
+
                                                                                     <div className="star-ratings mt-1">
                                                                                         <Rating
                                                                                             initialValue={0}
@@ -675,21 +662,8 @@ const Fabrics = (props) => {
                                                                                             :
                                                                                             null
                                                                                         }
-
-                                                                                        {/* {currentUser ?
-                                                                                    <div className='d-flex align-items-center'>
-                                                                                        <span className='fs-14 text-no-wrap mx-2'>
-                                                                                            <IoHeartOutline /> {fabric.wishlist_count}
-                                                                                        </span>
-                                                                                        <span className='fs-14 text-no-wrap'>
-                                                                                            <IoEyeOutline /> {fabric.views}
-                                                                                        </span>
                                                                                     </div>
-                                                                                    :
-                                                                                    null
-                                                                                }    */}
 
-                                                                                    </div>
                                                                                     <div className="star-ratings mt-1">
                                                                                         <Rating
                                                                                             initialValue={0}
@@ -732,9 +706,7 @@ const Fabrics = (props) => {
                                                     </Row>
                                                 </>
                                                 :
-                                                <div className='height-no-records'>
-                                                    <p className="text-center fs-20 mb-3 mt-3">No records found.</p>
-                                                </div>
+                                                <p className="text-center fs-20 mb-3 mt-3">No records found.</p>
                                             }
                                         </>
                                     }

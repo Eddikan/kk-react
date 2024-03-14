@@ -7,7 +7,7 @@ import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import UnknownPlaceholder from 'Assets/images/placeholders/unknown-placeholder-1.png';
 import toast from 'react-hot-toast';
-import Ecofriendly from '../../Assets/images/echo-friendly-bg.png'
+import Ecofriendly from 'Assets/images/echo-friendly-bg.png'
 import GetDesignersData from 'Utils/GetDesignersData';
 import { Modal } from 'react-bootstrap';
 import { BsThreeDots } from "react-icons/bs";

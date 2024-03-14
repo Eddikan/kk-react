@@ -8,8 +8,8 @@ import { AiFillMessage } from "react-icons/ai";
 import { PiNotepadFill } from "react-icons/pi";
 import { BsThreeDots } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
-import '../../Assets/styles/Portfolio/ViewPortFolio/style.css';
-import GoBack from '../../Components/Shared/GoBack';
+import 'Assets/styles/Portfolio/ViewPortFolio/style.css';
+import GoBack from 'Components/Shared/GoBack';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import axios from 'axios';
 import CopyTo from 'Utils/CopyLink';
@@ -17,7 +17,7 @@ import { ImEmbed2 } from "react-icons/im";
 import toast from 'react-hot-toast';
 import Carousel from 'react-multi-carousel';
 import UserPlaceholder from 'Assets/images/user.png';
-import PinIcon from '../../Assets/images/pin.png';
+import PinIcon from 'Assets/images/pin.png';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import Sidebar from 'Components/Shared/Sidebar';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
@@ -218,13 +218,12 @@ const Portfolio = (props) => {
                 <>
                     <section>
                         <Container fluid className='p-0'>
-                            <Row className="portfolio-row bg-portfolio">
-                                <Col lg={2}>
-                                    <Sidebar />
-                                </Col>
-
-                                {portfolio && portfolio.length > 0 ?
-                                    <>
+                            {portfolio && portfolio.length > 0 ?
+                                <>
+                                    <Row className="portfolio-row bg-portfolio">
+                                        <Col lg={2}>
+                                            <Sidebar />
+                                        </Col>
                                         <Col lg={10} className='mt-5 mx-auto max-width-column'>
                                             <div>
                                                 <Row>
@@ -357,27 +356,26 @@ const Portfolio = (props) => {
                                                 </Row>
                                             </div>
                                         </Col>
-                                    </>
-                                    :
-                                    <>
-                                        <Row>
-                                            <Col lg={2}>
-                                                <Sidebar />
-                                            </Col>
+                                    </Row>
+                                </>
+                                :
+                                <>
+                                    <Row>
+                                        <Col lg={2}>
+                                            <Sidebar />
+                                        </Col>
 
-                                            <Col lg={10} className='bg-light d-flex justify-content-center align-items-center'>
-                                                <div className="text-center">
-                                                    <p className="text-center mb-3">No records found.</p>
-                                                    <Link to="/user/center/design/add">
-                                                        <Button className="btn btn-primary">Add Portfolio</Button>
-                                                    </Link>
-                                                </div>
-                                            </Col>
-                                        </Row>
-
-                                    </>
-                                }
-                            </Row>
+                                        <Col lg={10} className='bg-color-portfolio d-flex justify-content-center align-items-center'>
+                                            <div className="text-center">
+                                                <p className="text-center mb-3">No records found.</p>
+                                                <Link to="/user/center/design/add">
+                                                    <Button className="btn btn-primary">Add Portfolio</Button>
+                                                </Link>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </>
+                            }
                         </Container>
                     </section>
                 </>

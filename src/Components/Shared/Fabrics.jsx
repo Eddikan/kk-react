@@ -3,15 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Form, ModalFooter, ModalHeader, Card } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import GetFabricsData from 'Utils/GetFabricsData';
-import Carousel from 'react-multi-carousel';
-import PinIcon from '../../Assets/images/pin.png';
+import PinIcon from 'Assets/images/pin.png';
 import { GoHeart, GoAlertFill } from "react-icons/go";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
-import ImageSlider from 'Components/Shared/ImageSlider';
 import { IoShareSocial, IoInformationOutline, IoVideocam } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
 import { PiNotepadFill } from "react-icons/pi";
-import '../../Assets/styles/FabricsHomePage/style.css';
+import 'Assets/styles/FabricsHomePage/style.css';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import { Rating } from 'react-simple-star-rating';
@@ -21,13 +19,10 @@ const Fabrics = (props) => {
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
     const limit = props.limit ?? 16;
-    const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [fabrics, setFabrics] = useState([]);
     const [fabricsLoading, setFabricsLoading] = useState(true);
     const [productsImage, setProductsImage] = useState(false);
-    const [rating, setRating] = useState(5);
     const [messageShow, setMessageShow] = useState(false);
-    const [modalHeading, setModalHeading] = useState('');
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [activeImage, setActiveImage] = useState('');
     const [singleFabric, setSingleFabric] = useState('');
@@ -39,27 +34,6 @@ const Fabrics = (props) => {
 
     function toggleUnderConstruction() {
         setUnderConstructionShow(true);
-    }
-
-    function toggleProductsImage(id, first_name, last_name, image_urls, image, address_line_1, province) {
-        setProductsImage(true);
-        setSingleFabric({
-            id: id ?? 0,
-            first_name: first_name ?? '-',
-            last_name: last_name ?? '-',
-            image: image ?? '-',
-            address_line_1: address_line_1 ?? '-',
-            province: province ?? '-'
-
-        })
-        setFabricImages([image_urls]);
-        console.log("image_urls", image_urls);
-
-        if (image_urls?.[0]?.image_url) {
-            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url);
-        } else {
-            setActiveImage(PlaceholderImage);
-        }
     }
 
     const fetchData = async (e) => {

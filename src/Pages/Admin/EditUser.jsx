@@ -130,6 +130,7 @@ const EditUser = () => {
                 setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
                 toast.success('User updated successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                navigate('/admin/users');
             } else {
                 const errors = response.data.errors;
             }

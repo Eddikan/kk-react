@@ -1,11 +1,13 @@
 .sample-categories {
     font-size: 20px;
 }
+
 span.all-sort {
     font-size: 20px;
     font-family: 'Rufina';
     margin-left: 2px;
 }
+
 select#sort-by {
     border: none;
     color: #444444;
@@ -17,6 +19,7 @@ select#sort-by {
     border-radius: 5px;
     border-color: #DFDFDF;
 }
+
 .design-tags {
     padding: 5px 15px;
     border-radius: 5px;
@@ -28,21 +31,27 @@ select#sort-by {
     text-align: center;
     text-wrap: nowrap;
 }
+
 .bg-transparent {
     background-color: transparent!important;
 }
+
 .modal-full-width .modal-dialog {
     max-width: 1200px !important;
 }
+
 .modal-full-width {
     background: #000000ab !important;
 }
+
 .modal-full-width .modal-dialog {
     max-width: 1200px !important;
 }
+
 .modal-full-width {
     background: #000000ab !important;
 }
+
 .action-button-designs {
     background: var(--white);
     color: var(--black);
@@ -54,9 +63,11 @@ select#sort-by {
     text-align: center;
     cursor: pointer;
 }
+
 .icon-name-color {
     color: #878787 !important;
 }
+
 .user-image .user-photo {
     min-width: 60px;
     min-height: 60px;
@@ -71,6 +82,7 @@ select#sort-by {
 .sign-up-share {
     bottom: 16px;
 }
+
 .design-tags-view-bar {
     padding: 3px 8px;
     border-radius: 5px;
@@ -81,6 +93,7 @@ select#sort-by {
     text-align: center;
     text-wrap: nowrap;
 }
+
 .user-image-side .user-photo-side {
     min-width: 54px;
     min-height: 54px;
@@ -93,6 +106,7 @@ select#sort-by {
     margin-left: auto;
     margin-right: auto;
 }
+
 .card-profile-designer {
     width: 100%;
     right: 475px;
@@ -102,12 +116,15 @@ select#sort-by {
     margin-left: auto;
     margin-right: auto;
 }
+
 .thumbnail-table:hover .table_content {
     visibility: visible !important;
 }
+
 .fashion-designer {
     color: #d3b668;
 }
+
 .thumbnail-table .table_content {
     visibility: hidden;
     width: 350px;
@@ -117,6 +134,7 @@ select#sort-by {
     position: absolute;
     z-index: 1;
 }
+
 .user-image-side .user-photo-card {
     min-width: 90px;
     min-height: 90px;
@@ -129,9 +147,11 @@ select#sort-by {
     margin-left: auto;
     margin-right: auto;
 }
+
 .card-hr {
     border-bottom: none;
 }
+
 .user-image-modal .user-photo-modal {
     min-width: 60px;
     min-height: 60px;
@@ -165,9 +185,11 @@ select#sort-by {
     background-color: var(--white);
     border-color: var(--black);
 }
+
 .share-modal-view,.embed-modal-view {
     background: #000000cc !important;
 }
+
 .text-area-embed {
     padding: 10px;
     width: 100%;
@@ -176,6 +198,7 @@ select#sort-by {
     border-color: #ccc;
     font-size: 12px;
 }
+
 .btn-copy-embed {
     font-size: 12px;
     padding: 5px 0px;
@@ -192,6 +215,7 @@ select#sort-by {
     background-color: var(--black);
     border-color: var(--black);
 }
+
 .card-share-popup {
     width: 100%;
     right: -104px;
@@ -203,6 +227,7 @@ select#sort-by {
     top: 7px !important;
     top: -97px !important;
 }
+
 .btn-book {
     font-size: 15px;
     padding: 5px 40px;
@@ -213,9 +238,11 @@ select#sort-by {
     background-color: var(--black);
     border-color: var(--black);
 }
+
 .text-height {
     height: 240px;
 }
+
 .design-tags-share {
     padding: 2px 10px;
     border-radius: 5px;
@@ -226,11 +253,13 @@ select#sort-by {
     text-align: center;
     text-wrap: nowrap;
 }
+
 .btn-book:hover {
     color: var(--white);
     background-color: var(--black);
     border-color: var(--black);
 }
+
 .user-image-message .user-photo-message{
     min-width: 80px;
     min-height: 80px;
@@ -243,6 +272,7 @@ select#sort-by {
     margin-left: auto;
     margin-right: auto;
 }
+
 .btn-cancel-message {
     font-size: 15px;
     padding: 10px 20px;
@@ -253,11 +283,13 @@ select#sort-by {
     background-color: var(--white);
     border-color: var(--black);
 }
+
 .btn-cancel-message:hover {
     color: var(--black);
     background-color: var(--white);
     border-color: var(--black);
 }
+
 .modal-close {
     border: none;
     color: #ffffff;
@@ -272,21 +304,25 @@ select#sort-by {
     background-repeat: no-repeat;
     border-radius: 5px;
 }
+
 .image-share-popup {
     position: absolute;
     bottom: 38px;
     left: 16px;
 }
+
 .book-consultation-bar {
     position: absolute;
     bottom: 0;
     right: 0;
 }
+
 .placeholder-img {
     width: 60px;
     height: 60px;
     border-radius: 50%;
 }
+
 .user-image-share .user-photo-share {
     min-width: 40px;
     min-height: 40px;
@@ -297,14 +333,17 @@ select#sort-by {
     background-repeat: no-repeat;
     border-radius: 50%;
 }
+
 .placeholder-img-side {
     width: 52px;
     height: 50px;
     border-radius: 50%;
 }
+
 .image-fabrics {
     position: relative;
 }
+
 .request {
     padding: 10px 20px 10px 20px;
     width: 670px;
@@ -369,12 +408,14 @@ select#sort-by {
     width: 900px;
     border-radius: 5px;
 }
+
 .padding-share-card {
-    padding-top: 30px;
-    padding-bottom: 30px;
-    padding-right: 30px;
-    padding-left: 33px;
+    padding-top: 23px;
+    padding-bottom: 23px;
+    padding-right: 31px;
+    padding-left: 32px;
 }
+
 .single-image-slider-share {
     width: 100%;
     min-height: 280px;
@@ -384,6 +425,7 @@ select#sort-by {
     border-radius: 5px;
    
 }
+
 .card-profile {
     background: #ffffff;
     border: none;
@@ -399,7 +441,7 @@ select#sort-by {
 #share-modal .modal-content {
     right: 99px;
     position: absolute;
-    top: 130px;
+    top: 143px;
     background: #ffffff;
     border: none;
 }
@@ -422,6 +464,7 @@ select#sort-by {
     color: #696969;
     font-size: 13px;
 }
+
 #description-card .modal-content {
     right: 205px;
     position: absolute;
@@ -429,12 +472,14 @@ select#sort-by {
     background: transparent;
     border: none;
 }
+
 .description-close {
     left: 865px;
     font-size: 24px;
     color: #fff;
     top: 8px;
 }
+
 .close-button-image {
     background: var(--white);
     color: var(--white);
@@ -447,6 +492,7 @@ select#sort-by {
     cursor: pointer;
     font-size: 24px;
 }
+
 .view-bar-share {
     padding: 10px 20px 10px 20px;
     width: 830px;
@@ -454,9 +500,11 @@ select#sort-by {
     border: none;
     border-radius: 7px;
 }
+
 .specialization {
 color:#F6D46D;
 }
+
 #profile-card .modal-content {
     width: 100% !important;
     max-width: 400px !important;

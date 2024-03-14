@@ -9,12 +9,12 @@ import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 import { BsCart2 } from "react-icons/bs";
 import { IoCloseOutline } from "react-icons/io5";
-import GoBack from '../../Components/Shared/GoBack';
+import GoBack from 'Components/Shared/GoBack';
 import { ImLeaf } from 'react-icons/im';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import LoadingPage from 'Components/Shared/LoadingPage';
-import '../../Assets/styles/Product/ViewProduct/style.css';
+import 'Assets/styles/Product/ViewProduct/style.css';
 import Sidebar from 'Components/Shared/Sidebar';
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 
@@ -132,7 +132,6 @@ const Products = (props) => {
                 <>
                     <section>
                         <Container fluid className='p-0'>
-
                             {products && products.length > 0 ?
                                 <>
                                     <Row className="portfolio-row bg-product">
@@ -252,7 +251,7 @@ const Products = (props) => {
                                             <Sidebar />
                                         </Col>
 
-                                        <Col lg={10} className='bg-light d-flex justify-content-center align-items-center'>
+                                        <Col lg={10} className='bg-product d-flex justify-content-center align-items-center'>
                                             <div className="text-center">
                                                 <p className="text-center mb-3">No records found.</p>
                                                 <Link to="/user/center/product/add">

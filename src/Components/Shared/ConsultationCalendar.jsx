@@ -10,7 +10,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import PropTypes from 'prop-types'
-import '../../Assets/styles/DesignerCalendar/style.css';
+import 'Assets/styles/DesignerCalendar/style.css';
 import { useCookies } from 'react-cookie';
 import { Modal } from 'react-bootstrap';
 import { GoAlertFill } from 'react-icons/go';

@@ -9,13 +9,15 @@ import { useLocation } from 'react-router-dom'
 import Carousel from 'react-multi-carousel';
 import Loading from './Loading';
 import { AiFillMessage } from "react-icons/ai";
-import CopyTo from '../../Utils/CopyLink';
+import CopyTo from 'Utils/CopyLink';
 import { PiNotepadFill } from "react-icons/pi";
 import { GoAlertFill } from "react-icons/go";
+import DressPlaceholder from 'Assets/images/placeholder-dress.jpeg';
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import UserPlaceholder from 'Assets/images/user.png';
+import User from 'Assets/images/user.png';
 import { ImEmbed2 } from "react-icons/im";
-import PinIcon from '../../Assets/images/pin.png';
+import PinIcon from 'Assets/images/pin.png';
 import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoHeartOutline, IoEyeOutline } from "react-icons/io5";
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -234,7 +236,7 @@ const PortfolioGrid = (props) => {
             >
                 <ModalHeader className='pt-2 pb-3 bg-transparent-card d-flex align-items-start'>
                     <a href={`/designer-profile?user_id=${singleDesign.userId}`} className='text-decoration-none'>
-                        <div className='d-flex user-image'>
+                        <div className='d-flex justify-content-center align-items-center user-image'>
 
                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                 <div
@@ -243,7 +245,7 @@ const PortfolioGrid = (props) => {
                                 >
                                 </div>
                             ) : (
-                                <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
+                                <img src={User} className='placeholder-img ' />
                             )}
 
                             <div className='ms-3'>
@@ -252,10 +254,12 @@ const PortfolioGrid = (props) => {
                             </div>
                         </div>
                     </a>
+
                     <button type='button' className='close modal-close close-button-image bg-black' aria-label='Close' onClick={() => setPortfolioImage(false)}>
                         <span aria-hidden='true'>&times;</span>
                     </button>
                 </ModalHeader>
+
                 <Modal.Body className='p-0'>
                     <Row>
                         <Col lg={11} className='image-fabrics'>
@@ -270,7 +274,6 @@ const PortfolioGrid = (props) => {
                                             autoPlaySpeed={1000}
                                         >
                                             {designImages.map((image, index) => {
-
                                                 return (
                                                     <>
                                                         <div key={index} className="single-image-slider-fabrics"
@@ -278,8 +281,10 @@ const PortfolioGrid = (props) => {
                                                                 backgroundImage:
                                                                     `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
                                                             }}
+
                                                         >
                                                         </div>
+
                                                     </>
                                                 )
                                             })}
@@ -287,7 +292,7 @@ const PortfolioGrid = (props) => {
                                     </>
                                     :
                                     <>
-
+                                        <img src={DressPlaceholder} className='w-100 img-placeholder-height' />
                                     </>
                                 }
 
@@ -296,7 +301,6 @@ const PortfolioGrid = (props) => {
                                         <p className='request d-flex justify-content-between mb-5'>
                                             <a href={`/designer-profile?user_id=${singleDesign.userId}`} className='text-decoration-none'>
                                                 <div className='d-flex justify-content-center align-items-center user-image'>
-
                                                     {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                         <div
                                                             className='user-photo'
@@ -304,17 +308,14 @@ const PortfolioGrid = (props) => {
                                                         >
                                                         </div>
                                                     ) : (
-                                                        <img src={UserPlaceholder} className='placeholder-img' />
+                                                        <img src={User} className='placeholder-img ' />
                                                     )}
-
                                                     <div className='ms-3'>
                                                         <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
                                                         <div className='fashion-designer fs-16'>Fashion Designer</div>
                                                     </div>
-
                                                 </div>
                                             </a>
-
 
                                             {isDesignCurrentUser ?
                                                 null
@@ -339,7 +340,11 @@ const PortfolioGrid = (props) => {
                                     <div>
                                         <Card className="table_content file-action mt-3 me-0 card-profile-designer">
                                             <Card.Header className='card-hr bg-white'>
-                                                <button type='button' className='close react-modal-close' onClick={() => setProfileViewShow(false)} data-dismiss='modal' aria-label='Close'>
+                                                <button
+                                                    type='button'
+                                                    className='close react-modal-close'
+                                                    onClick={() => setProfileViewShow(false)}
+                                                >
                                                     <IoCloseOutline color="#7e7e7e" size={25} />
                                                 </button>
                                             </Card.Header>
@@ -354,21 +359,20 @@ const PortfolioGrid = (props) => {
                                                                 >
                                                                 </div>
                                                             ) : (
-                                                                <img src={UserPlaceholder} className='placeholder-img-side mb-3' />
+                                                                <img src={User} className='placeholder-img-side mb-2' />
                                                             )}
                                                         </div>
-
                                                         <div className='modal-title text-center fs-18 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
                                                         <div className='fs-14 text-center mt-2'>
                                                             <img src={PinIcon} alt="location pin" className='me-2' />
                                                             {singleDesign.address_line_1}{singleDesign.province}</div>
-                                                        <div className="mb-3 text-center">
+                                                        <div className="mb-2 text-center">
                                                             {singleDesign.tags ?
                                                                 <>
                                                                     {singleDesign.tags.length > 0 ?
                                                                         <>
                                                                             {singleDesign.tags.map((tag, index) => (
-                                                                                <span className="design-tags bg-light fs-14 categories-color">
+                                                                                <span className="design-tags bg-light fs-14 categories-color mt-2">
                                                                                     {tag}
                                                                                 </span>
                                                                             ))}
@@ -403,6 +407,7 @@ const PortfolioGrid = (props) => {
                                                                 </div>
                                                             </>
                                                         }
+
                                                     </Col>
                                                 </Row>
                                             </Card.Body>
@@ -421,7 +426,7 @@ const PortfolioGrid = (props) => {
                                             >
                                             </div>
                                         ) : (
-                                            <img src={UserPlaceholder} className='placeholder-img-side mb-4' />
+                                            <img src={User} className='placeholder-img-side mb-4' />
                                         )}
 
 
@@ -447,15 +452,17 @@ const PortfolioGrid = (props) => {
                                             </div>
                                             <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
                                         </div>
-
-                                        <div className='text-center mb-4' onClick={toggleShareModal}>
-                                            <div className="action-button-designs bg-white">
-                                                <IoShareSocial className="text-black mt-2" size={30} />
-                                            </div>
-                                            <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
-                                        </div>
                                     </>
                                 }
+
+                                <div className='text-center mb-4'
+                                    onClick={toggleShareModal}
+                                >
+                                    <div className="action-button-designs bg-white">
+                                        <IoShareSocial className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Share</div>
+                                </div>
 
                                 <div className='text-center mb-4' onClick={toggleDescription}>
                                     <div className="action-button-designs bg-white">
@@ -467,23 +474,28 @@ const PortfolioGrid = (props) => {
                         </Col>
                     </Row>
                 </Modal.Body>
-            </Modal>
+            </Modal >
 
             <Modal
                 show={messageShow}
                 className='modal-preview'
                 fade={false}
                 size="sm"
+                id="under-construction"
             >
                 <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close' onClick={() => setMessageShow(false)} data-dismiss='modal' aria-label='Close'>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setMessageShow(false)}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
 
                 <Modal.Body>
                     <Card className='border-none'>
-                        <Card.Body className="text-center px-0 pt-2 pb-2">
+                        <Card.Body className="text-center py-5 pt-2 pb-2">
                             <div className='user-image-message thumbnail-table'>
                                 {singleDesign.image && (
                                     <div
@@ -501,8 +513,27 @@ const PortfolioGrid = (props) => {
 
                 <ModalFooter>
                     <div className='text-right'>
-                        <Button className="btn-cancel-message btn me-2" onClick={() => { setMessageShow(false); }}>Cancel</Button>
-                        <Button className="btn-primary btn" onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}>Send Message</Button>
+                        {/* <Button className="btn-cancel-message btn me-2" onClick={() => { setMessageShow(false); }}>Cancel</Button>
+                        <Button className="btn-primary btn" onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}>Send Message</Button> */}
+
+                        <button
+                            className="btn btn-secondary border-black btn-style bg-white text-black me-3"
+                            onClick={() => { setMessageShow(false); }}
+                            type="button"
+                        >
+                            Cancel
+                        </button>
+                        {/* {portfolioSendLoading ?
+                            <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Sending...</button>
+                            : */}
+                        <button
+                            className="btn btn-primary btn-style"
+                            type="button"
+                            onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}
+                        >
+                            Send Message
+                        </button>
+                        {/* } */}
                     </div>
                 </ModalFooter>
             </Modal>
@@ -516,8 +547,12 @@ const PortfolioGrid = (props) => {
                 id="under-construction"
             >
                 <Modal.Header className="py-0">
-                    <h5 className='modal-title text-left fs-22 mt-2'>{modalHeading}</h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                    <h5 className='modal-title text-uppercase text-left fs-22 mt-2'>{modalHeading}</h5>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setUnderConstructionShow(false)}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
@@ -539,7 +574,11 @@ const PortfolioGrid = (props) => {
                 id="description-card"
             >
                 <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close description-close' onClick={() => setDescriptionShow(false)} data-dismiss='modal' aria-label='Close'>
+                    <button
+                        type='button'
+                        className='close react-modal-close description-close'
+                        onClick={() => setDescriptionShow(false)}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
@@ -550,6 +589,53 @@ const PortfolioGrid = (props) => {
             </Modal>
 
             <Modal
+                show={copyEmbedLink}
+                id='modal-preview-embed'
+                fade={false}
+                centered
+                className='embed-modal-view'
+
+            >
+                <Modal.Header className="p-3 pb-0">
+                    <h5 className='mb-0 rufina-family fs-22 text-black'>Embed Design</h5>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setCopyEmbedLink(false)}
+                    >
+                        <IoCloseOutline color="#7e7e7e" size={25} />
+                    </button>
+                </Modal.Header>
+                <Modal.Body className='pb-0 pt-4'>
+                    <Row>
+                        <Col lg='12' className='px-3'>
+                            <textarea className='text-area-embed'>
+                                {iframeLink}
+
+                            </textarea>
+                        </Col>
+                    </Row>
+                </Modal.Body>
+                <Modal.Footer className="text-right border-none">
+                    <button
+                        className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                        onClick={() => setCopyEmbedLink(false)}
+                        type="button" >
+                        Cancel
+                    </button>
+
+                    <CopyTo
+                        text={iframeLink}
+                        classes="btn btn-primary btn-style"
+                        standbyTitle="Copy"
+                        icon={false}
+                        onCopy={() => setCopy(true)}
+                        loadingTitle="Embed Copied"
+                    />
+                </Modal.Footer>
+            </Modal >
+
+            <Modal
                 show={shareShowModal}
                 className='modal-preview-share'
                 fade={false}
@@ -558,7 +644,11 @@ const PortfolioGrid = (props) => {
             >
                 <Modal.Header className="pb-0">
                     <Modal.Title className='rufina-family fs-22 text-black'>Share Design</Modal.Title>
-                    <button type='button' className='close react-modal-close' onClick={function () { setShareShowModal(false); }} >
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={function () { setShareShowModal(false); }}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
                 </Modal.Header>
@@ -656,47 +746,6 @@ const PortfolioGrid = (props) => {
                     </Card>
                 </Modal.Body>
             </Modal>
-
-            <Modal
-                show={copyEmbedLink}
-                id='modal-preview-embed'
-                fade={false}
-                centered
-                className='embed-modal-view'
-
-            >
-                <Modal.Header className="p-3 pb-0">
-                    <h5 className='mb-0 rufina-family fs-22 text-black'>Embed Design</h5>
-                    <button
-                        type='button'
-                        className='close react-modal-close'
-                        onClick={() => setCopyEmbedLink(false)}
-                    >
-                        <IoCloseOutline color="#7e7e7e" size={25} />
-                    </button>
-                </Modal.Header>
-                <Modal.Body className='pb-0 pt-4'>
-                    <Row>
-                        <Col lg='12' className='px-3'>
-                            <textarea className='text-area-embed'>
-                                {iframeLink}
-
-                            </textarea>
-                        </Col>
-                    </Row>
-                </Modal.Body>
-                <Modal.Footer className="text-right border-none">
-                    <button className="btn btn-secondary border-black bg-white text-black me-3 btn-style" onClick={() => setCopyEmbedLink(false)} type="button" >Cancel</button>
-                    <CopyTo
-                        text={iframeLink}
-                        classes="btn btn-primary btn-style"
-                        standbyTitle="Copy"
-                        icon={false}
-                        onCopy={() => setCopy(true)}
-                        loadingTitle="Embed Copied"
-                    />
-                </Modal.Footer>
-            </Modal >
         </>
     );
 };

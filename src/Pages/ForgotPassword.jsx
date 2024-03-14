@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
+import LayoutNoFooter from 'Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import '../Assets/styles/LogIn/style.css';
+import 'Assets/styles/LogIn/style.css';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';

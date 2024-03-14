@@ -4,9 +4,9 @@ import { AccordionItem, UncontrolledAccordion, AccordionBody, AccordionHeader } 
 import { PiDressLight, PiPantsLight } from "react-icons/pi";
 import { PiUsersLight } from "react-icons/pi";
 import { IoIosArrowDown } from "react-icons/io";
+import { Row, Col, Button, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import '../../Assets/styles/Sidebar/style.css';
-import { useCookies } from 'react-cookie';
+import 'Assets/styles/Sidebar/style.css';
 
 const Sidebar = ({ }) => {
     const navigate = useNavigate();
@@ -16,15 +16,41 @@ const Sidebar = ({ }) => {
             <div id="sidebar">
                 <UncontrolledAccordion>
                     <AccordionItem className='padding-sidebar pt-4'>
-                        <p className="fs-20"><strong>Admin</strong></p>
-                        {/* <div
-                            className="hover-sidebar cursor-pointer yellow-hover mt-3"
-                            onClick={() => navigate('/admin/users')}
-                        >
-                            <HiOutlineUsers size="20" className="me-2 mb-1" />Users
-                        </div> */}
+                        <p className="fs-20 text-black"><strong>Admin</strong></p>
 
-                        <AccordionHeader
+                        <div className='d-flex justify-content-between'>
+                            <span
+                                className='cursor-pointer users-title yellow-hover'
+                                onClick={() => navigate('/admin/users')}
+                            >
+                                <PiUsersLight size="22" className="me-2 mb-1" color='#000000' />
+                                Users
+                            </span>
+
+                            <span className="users-table">
+                                <span><IoIosArrowDown className='me-4' color='#000000' /></span>
+
+                                <Card className="table_content file-action">
+                                    <Card.Body className="action_container font-weight">
+                                        <div
+                                            className="users_container cursor-pointer p-2"
+                                            onClick={() => navigate('/admin/designers')}
+                                        >
+                                            <span className='yellow-hover'>Designers</span>
+                                        </div>
+
+                                        <div
+                                            className="users_container cursor-pointer p-2"
+                                            onClick={() => navigate('/admin/sellers')}
+                                        >
+                                            <span className='yellow-hover'>Sellers</span>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </span>
+                        </div>
+
+                        {/* <AccordionHeader
                             targetId="2"
                             className='mt-2 hover-sidebar'
                             onClick={() => navigate('/admin/users')}
@@ -47,7 +73,7 @@ const Sidebar = ({ }) => {
                                 onClick={() => navigate('/admin/sellers')}>
                                 Sellers
                             </div>
-                        </AccordionBody>
+                        </AccordionBody> */}
 
                         <div
                             className="hover-sidebar cursor-pointer yellow-hover mt-3"

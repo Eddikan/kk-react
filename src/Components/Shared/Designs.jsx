@@ -5,18 +5,19 @@ import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import toast from 'react-hot-toast';
 import GetDesignsData from 'Utils/GetDesignsData';
 import { GoAlertFill } from "react-icons/go";
-import PinIcon from '../../Assets/images/pin.png';
+import PinIcon from 'Assets/images/pin.png';
 import Modal from 'react-bootstrap/Modal';
-import User from '../../Assets/images/user.png';
+import User from 'Assets/images/user.png';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import { AiFillMessage } from "react-icons/ai";
 import { PiNotepadFill } from "react-icons/pi";
 import { ImEmbed2 } from "react-icons/im";
-import DressPlaceholder from '../../Assets/images/placeholder-dress.jpeg';
+import DressPlaceholder from 'Assets/images/placeholder-dress.jpeg';
 import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline } from "react-icons/io5";
-import '../../Assets/styles/Design/style.css';
+import 'Assets/styles/Design/style.css';
 import Carousel from 'react-multi-carousel';
 import CopyTo from 'Utils/CopyLink';
+import MeetingChat from 'Components/Chat/MeetingChat';
 import axios from 'axios';
 
 const Designs = (props) => {
@@ -613,7 +614,12 @@ const Designs = (props) => {
                                 )}
                             </div>
                             <div className='modal-title text-center fs-20 fw-600 text-black mb-3'>{singleDesign.first_name} {singleDesign.last_name}</div>
-                            <textarea className='form-control text-height' placeholder='Your message'></textarea>
+                            {/* <textarea className='form-control text-height' placeholder='Your message'></textarea> */}
+                            {/* <MeetingChat
+                                currentUser={currentUser}
+                                appointmentId={appointmentId}
+                                user={userDetails}
+                            /> */}
                         </Card.Body>
                     </Card>
                 </Modal.Body>
@@ -654,7 +660,7 @@ const Designs = (props) => {
                 id="under-construction"
             >
                 <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left fs-22 mt-2'>{modalHeading}</h5>
+                    <h5 className='modal-title text-left fs-22 mt-2'>{modalHeading}</h5>
                     <button
                         type='button'
                         className='close react-modal-close'
@@ -834,13 +840,13 @@ const Designs = (props) => {
                                 <div lg='12' className='text-center'>
                                     <CopyTo
                                         text={`https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}`}
-                                        classes="btn btn-copy-link border-black bg-white text-black mt-2"
+                                        classes="btn btn-copy-link border-black bg-white text-black mt-2 w-100"
                                         standbyTitle="Copy Link"
                                         icon={true}
                                     />
 
                                     <button
-                                        className="btn btn-copy-link border-black bg-white text-black mt-2"
+                                        className="btn btn-copy-link border-black bg-white text-black mt-2 w-100"
                                         type="button"
                                         onClick={toggleCopyEmbedLinkModal}
                                     >

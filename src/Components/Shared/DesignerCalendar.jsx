@@ -5,7 +5,7 @@ import { Container, CardFooter, Input, Label, UncontrolledAccordion, AccordionIt
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import PropTypes from 'prop-types'
-import '../../Assets/styles/DesignerCalendar/style.css';
+import 'Assets/styles/DesignerCalendar/style.css';
 
 const localizer = momentLocalizer(moment)
 

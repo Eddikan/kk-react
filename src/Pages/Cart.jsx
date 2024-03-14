@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
+import LayoutNoFooter from 'Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
-import '../Assets/styles/DesignerCalendar/style.css'
+import 'Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import { CiCreditCard2 } from "react-icons/ci";
 import LoadingPage from 'Components/Shared/LoadingPage';
-import '../Assets/styles/Cart/style.css';
+import 'Assets/styles/Cart/style.css';
 import { IoCloseOutline } from "react-icons/io5";
-import PlaceholderImage from '../Assets/images/placeholders/image.png';
+import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import UserPlaceholder from 'Assets/images/user.png';
 import { AiOutlineDelete } from "react-icons/ai";
 import { useParams } from 'react-router-dom';

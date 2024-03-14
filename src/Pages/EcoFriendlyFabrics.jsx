@@ -83,17 +83,16 @@ const EcoFriendlyFabrics = (props) => {
 
     const handleSortFieldChange = (field) => {
         setSelectedSortField(field);
-        setSelectedSortOrder(null); // Reset order when changing field
+        setSelectedSortOrder(null);
 
-        // Call the API with the updated filter values and sorting parameters
         onFilterChange({
             eco_friendly: ecoFriendly ? 1 : null,
             composition: selectedCompositions,
             weave: selectedWeaves,
             colors: selectedColors,
             price_range: priceRange,
-            sortField: field, // Only the field without order
-            sortOrder: null, // Reset order when changing field
+            sortField: field,
+            sortOrder: null,
             search: searchValue,
             country: country,
         });
@@ -102,7 +101,6 @@ const EcoFriendlyFabrics = (props) => {
     const handleSortOrderChange = (order) => {
         setSelectedSortOrder(order);
 
-        // Call the API with the updated filter values and sorting parameters
         onFilterChange({
             eco_friendly: ecoFriendly ? 1 : null,
             composition: selectedCompositions,

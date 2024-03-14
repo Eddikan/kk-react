@@ -4,7 +4,7 @@ import { Container, Row, Col, Button, Card, Modal, NavItem } from 'react-bootstr
 import { ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { useCookies } from 'react-cookie';
 import { useLocation } from 'react-router-dom';
-import '../Assets/styles/DesignerProfile/style.css';
+import 'Assets/styles/DesignerProfile/style.css';
 import PinIcon from 'Assets/images/pin.png';
 import UserPlaceholder from 'Assets/images/user.png';
 import Loading from 'Assets/images/loading.gif'
@@ -17,7 +17,7 @@ import ProductGrid from 'Components/Shared/ProductGrid';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import DesignerCalendar from 'Components/Shared/DesignerCalendar';
 import { GoAlertFill } from 'react-icons/go';
-import GoBack from '../Components/Shared/GoBack';
+import GoBack from 'Components/Shared/GoBack';
 import { PiNotepadFill } from "react-icons/pi";
 import { IoCloseOutline, IoVideocam } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
@@ -314,10 +314,10 @@ const DesignerProfile = () => {
                                                 :
                                                 <span>-</span>
                                             }
-                                            {isDesignerCurrentUser ?
-                                                // <>
-                                                //     <AiFillMessage className="ms-3 cursor-pointer" size={20} color="#CEA835" onClick={() => toggleUnderConstruction("Chat Designer")} />
-                                                // </>
+                                            {/* {isDesignerCurrentUser ?
+                                                <>
+                                                    <AiFillMessage className="ms-3 cursor-pointer" size={20} color="#CEA835" onClick={() => toggleUnderConstruction("Chat Designer")} />
+                                                </>
                                                 null
                                                 :
                                                 <>
@@ -327,7 +327,7 @@ const DesignerProfile = () => {
                                                         size={20} color="#CEA835"
                                                     />
                                                 </>
-                                            }
+                                            } */}
                                         </h2>
 
                                         <div className='icons-d-flex'>

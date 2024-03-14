@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 import GetUserProductsData from 'Utils/GetUserProductsData';
 import { GoHeart } from "react-icons/go";
-import '../../Assets/styles/Product/ViewProduct/style.css';
+import 'Assets/styles/Product/ViewProduct/style.css';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Loading from './Loading';
 import { ImLeaf } from 'react-icons/im';

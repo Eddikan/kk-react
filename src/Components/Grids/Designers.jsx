@@ -5,8 +5,9 @@ import { Container, Row, Col, Button } from 'react-bootstrap';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import toast from 'react-hot-toast';
-import GetDesignersData from 'Utils/GetDesignersData';
+import Pagination from 'Components/Pagination/Pagination';
 import 'react-multi-carousel/lib/styles.css';
+import axios from "axios";
 
 const Designers = (props) => {
     const navigate = useNavigate();
@@ -15,30 +16,60 @@ const Designers = (props) => {
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [designers, setDesigners] = useState([]);
     const [designersLoading, setDesignersLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
+    let PageSize = 10;
+
+    const getDesigners = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer');
+    };
 
     const toggleGetUser = (e) => {
         window.location.href = "/designer-profile?user_id=" + e;
     }
 
-    const fetchData = async (e) => {
-        try {
-            const designersData = await GetDesignersData(e);
-            if (designersData) {
-                setDesigners(designersData);
+    const handleChangePage = (pageNumber) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer?page=' + pageNumber + '&user_id=' + currentUser)
+            .then((response) => {
+                const data = response.data;
+                setCurrentPage(pageNumber);
+                const selectedDesigners = response.data.data;
+                if (selectedDesigners) {
+                    setDesigners(selectedDesigners);
+                    setCurrentPage(() => data.meta.current_page);
+                    setPageCount(() => data.meta.total);
+                    setPageSize(() => data.meta.per_page);
+                    setDesignersLoading(false);
+                } else {
+                    setDesignersLoading(false);
+                    toast.error('There has been an error getting the designers, please try again!');
+                }
+            }).catch(error => {
                 setDesignersLoading(false);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setDesignersLoading(false);
-            }
-        } catch (error) {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setDesignersLoading(false);
-        }
+                toast.error('There has been an error getting the designers, please try again!');
+            });
     };
 
     useEffect(() => {
-        fetchData(currentUser);
-    }, [reloadCount]);
+        getDesigners()
+            .then((response) => {
+                setDesignersLoading(false);
+                const selectedDesigners = response.data.data;
+                if (selectedDesigners) {
+                    setDesigners(selectedDesigners);
+                    setPageCount(() => response.data.meta.total);
+                } else {
+                    toast.error('There has been an error getting the designers, please try again!');
+                    setDesignersLoading(false);
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the designers, please try again!');
+                setDesignersLoading(false);
+            });
+    },
+        [reloadCount]);
 
     return (
         <>
@@ -91,6 +122,14 @@ const Designers = (props) => {
                         )}
                     </>
                 }
+
+                <Pagination
+                    className="mt-4 mb-0"
+                    currentPage={currentPage}
+                    totalCount={pageCount}
+                    pageSize={PageSize}
+                    onPageChange={page => handleChangePage(page)}
+                />
             </div>
         </>
     );

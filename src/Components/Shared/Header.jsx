@@ -16,13 +16,13 @@ import { useCookies } from 'react-cookie';
 import UserPlaceholder from 'Assets/images/user.png';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import NewOrder from '../../Assets/images/new-order-icon.png';
-import NewAppointment from '../../Assets/images/new-appointment-icon.png';
+import NewOrder from 'Assets/images/new-order-icon.png';
+import NewAppointment from 'Assets/images/new-appointment-icon.png';
 import { Card, Modal } from 'react-bootstrap';
-import User from '../../Assets/images/user.png';
-import PlaceholderSquare from '../../Assets/images/square-placeholder.jpg';
+import User from 'Assets/images/user.png';
+import PlaceholderSquare from 'Assets/images/square-placeholder.jpg';
 import { GoAlertFill } from 'react-icons/go';
-import '../../Assets/styles/Headers/style.css';
+import 'Assets/styles/Headers/style.css';
 import axios from "axios";
 
 const Header = () => {
@@ -412,15 +412,27 @@ const Header = () => {
                       }
                       {userMenuOpen && (
                         <div className="action-box user-menu">
-                          <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-1' /> Profile</Link>
-                          <Link to={`/wishlist`} className="mb-3 text-decoration-none d-block"><GoHeart className='me-2' />Wishlist</Link>
+                          <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-2' color='#000000' />
+                            <span className='text-black'>Profile</span>
+                          </Link>
+
+                          <Link to={`/wishlist`} className="mb-3 text-decoration-none d-block"><GoHeart className='me-2' color='#000000' />
+                            <span className='text-black'>Wishlist</span>
+                          </Link>
 
                           {userRole == 'Admin' &&
-                            <Link to={`/admin/users`} className="mb-3 text-decoration-none d-block"><RxDashboard className='me-2' />Dashboard</Link>
+                            <Link to={`/admin/users`} className="mb-3 text-decoration-none d-block"><RxDashboard className='me-2' color='#000000' />
+                              <span className='text-black'>Dashboard</span>
+                            </Link>
                           }
 
-                          <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' />Appointments</Link>
-                          <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower className='me-1' /> Logout</p>
+                          <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' color='#000000' />
+                            <span className='text-black'>Appointments</span>
+                          </Link>
+
+                          <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower className='me-2' color='#000000' />
+                            <span className='text-black'>Logout</span>
+                          </p>
                         </div>
                       )}
                     </div>

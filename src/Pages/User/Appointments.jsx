@@ -319,7 +319,7 @@ const Appointments = (props) => {
                                                                                                 onClick={() => toggleEditAppointmentModal(appointment.id)}
                                                                                             >
                                                                                                 <span className="icon-tooltiptext fs-14">Edit</span>
-                                                                                                <BiSolidPencil className='video-cam me-3' size={20} />
+                                                                                                <BiSolidPencil className='video-cam me-3' size={20} color='#000000' />
                                                                                             </div>
                                                                                         )}
                                                                                     </>
@@ -336,7 +336,7 @@ const Appointments = (props) => {
                                                                                 <a href={`/consultation-meeting/${appointment.id}`}>
                                                                                     <div className="cursor-pointer appointments-tooltip">
                                                                                         <span className="icon-tooltiptext fs-14">Video call</span>
-                                                                                        <IoMdVideocam className='video-cam me-3' size={20} />
+                                                                                        <IoMdVideocam className='video-cam me-3' size={20} color='#000000' />
                                                                                     </div>
                                                                                 </a>
                                                                                 {/* // ) : (
@@ -365,7 +365,7 @@ const Appointments = (props) => {
                                                                                     }}
                                                                                 >
                                                                                     <span className="icon-tooltiptext fs-14">Message Designer</span>
-                                                                                    <span><AiFillMessage className='video-cam' size={20} /></span>
+                                                                                    <span><AiFillMessage className='video-cam' size={20} color='#000000' /></span>
                                                                                 </div>
                                                                             </Col>
                                                                         </Row>

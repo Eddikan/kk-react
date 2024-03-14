@@ -9,18 +9,18 @@ import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 import { BsCart2 } from "react-icons/bs";
 import Loading from 'Components/Shared/Loading';
-import GoBack from '../../Components/Shared/GoBack';
+import GoBack from 'Components/Shared/GoBack';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import LoadingPage from 'Components/Shared/LoadingPage';
-import '../../Assets/styles/Product/ViewProduct/style.css';
+import 'Assets/styles/Product/ViewProduct/style.css';
 import Sidebar from 'Components/Shared/Sidebar';
 import { IoCloseOutline } from "react-icons/io5";
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 import DetailBuilder from 'Components/Shared/DetailBuilder';
 import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
-import '../../Assets/styles/Measurement/style.css';
+import 'Assets/styles/Measurement/style.css';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const initialUserData = Object.freeze({

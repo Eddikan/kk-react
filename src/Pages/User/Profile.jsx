@@ -13,7 +13,7 @@ import YoutubeIcon from 'Assets/images/youtube.png';
 import UserPlaceholder from 'Assets/images/user.png';
 import Loading from 'Assets/images/loading.gif'
 import GetUserData from 'Utils/GetUserData';
-import GoBack from '../../Components/Shared/GoBack';
+import GoBack from 'Components/Shared/GoBack';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
 import { GoArrowUpRight } from "react-icons/go";

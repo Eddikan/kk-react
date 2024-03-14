@@ -9,7 +9,7 @@ import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
 import { GoPlus } from "react-icons/go";
 import MyCalendar from 'Components/Shared/MyCalendar';
-import GoBack from '../../Components/Shared/GoBack';
+import GoBack from 'Components/Shared/GoBack';
 import axios from "axios";
 import toast from 'react-hot-toast';
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
