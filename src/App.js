@@ -44,6 +44,7 @@ const AdminFabrics = lazy(() => import("./Pages/Admin/AdminFabrics"));
 const AdminDesigns = lazy(() => import("./Pages/Admin/AdminDesigns"));
 const AdminDesigners = lazy(() => import("./Pages/Admin/AdminDesigners"));
 const AdminSellers = lazy(() => import("./Pages/Admin/AdminSeller"));
+const AdminAppointments = lazy(() => import("./Pages/Admin/AdminAppointments"));
 const EditUser = lazy(() => import("./Pages/Admin/EditUser"));
 const EditDesigner = lazy(() => import("./Pages/Admin/EditDesigner"));
 const EditSeller = lazy(() => import("./Pages/Admin/EditSeller"));
@@ -201,6 +202,7 @@ const App = () => {
           <Route path="/admin/sellers" exact element={<AdminSellers />} />
           <Route path="/admin/fabrics" exact element={<AdminFabrics />} />
           <Route path="/admin/designs" exact element={<AdminDesigns />} />
+          <Route path="/admin/appointments" exact element={<AdminAppointments />} />
           <Route
             path="/admin/profile/user/:userId"
             exact

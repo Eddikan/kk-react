@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Header from '../Shared/Header'
 import toast, { Toaster } from 'react-hot-toast';
+import Tawkto from "Components/Chat/TawkTo";
 
 const LayoutNoFooter = ({ children, className }) => {
 
@@ -11,6 +12,7 @@ const LayoutNoFooter = ({ children, className }) => {
 
   return (
     <>
+      <Tawkto />
       <Toaster
         position="top-right"
         reverseOrder={false}

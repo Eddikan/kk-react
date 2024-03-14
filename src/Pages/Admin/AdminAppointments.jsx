@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import LayoutNoFooter from 'Components/Layout/LayoutNoFooter';
-import { Container, Row, Col, Button, Modal, Card, ModalFooter, ModalHeader } from 'react-bootstrap';
-import 'Assets/styles/DesignerCalendar/style.css'
-import Pagination from 'Components/Pagination/Pagination';
-import { useCookies } from 'react-cookie';
-import GoBack from 'Components/Shared/GoBack';
-import { GoAlertFill } from 'react-icons/go';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Container, Row, Col, Modal, Card, ModalFooter, ModalHeader } from 'react-bootstrap';
+import 'Assets/styles/DesignerCalendar/style.css';
 import 'Assets/styles/Appointments/style.css';
-import { useParams } from 'react-router-dom';
-import { VscSend } from "react-icons/vsc";
-import LoadingPage from 'Components/Shared/LoadingPage';
-import { IoMdVideocam, IoIosAttach } from "react-icons/io";
-import { IoCloseOutline } from "react-icons/io5";
+import { useCookies } from 'react-cookie';
+import { GoAlertFill } from 'react-icons/go';
 import { BiSolidPencil } from "react-icons/bi";
+import { AiFillDelete, AiFillMessage } from "react-icons/ai";
+import { IoCloseOutline, IoEye } from 'react-icons/io5';
+import { IoMdVideocam } from 'react-icons/io';
+import Pagination from 'Components/Pagination/Pagination';
+import AdminSidebar from 'Components/Shared/AdminSidebar';
+import LayoutAdmin from 'Components/Layout/LayoutAdmin';
+import LoadingPage from 'Components/Shared/LoadingPage';
 import UserPlaceholder from 'Assets/images/user.png';
-import InputEmoji from 'react-input-emoji';
-import { AiFillMessage, AiFillDelete } from "react-icons/ai";
-import axios from "axios";
+import GoBack from 'Components/Shared/GoBack';
+import 'Assets/styles/AdminAppointments/style.css';
 import toast from 'react-hot-toast';
-import MeetingChat from 'Components/Chat/MeetingChat';
+import axios from "axios";
 
 const intitialConsultationData = {
     consultation_date_time: '',
@@ -44,7 +43,7 @@ const initialAppointments = {
     consultation_details: '',
 };
 
-const Appointments = (props) => {
+const AdminAppointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
@@ -76,7 +75,7 @@ const Appointments = (props) => {
     let PageSize = 10;
 
     const getAppointments = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment');
     };
 
     const putReschedule = async (data) => {
@@ -185,10 +184,8 @@ const Appointments = (props) => {
         }
     }
 
-    
-
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'appointment?page=' + pageNumber + '&user_id=' + currentUser)
             .then((response) => {
                 const data = response.data;
                 const result = data.data;
@@ -244,146 +241,151 @@ const Appointments = (props) => {
         document.body.classList.add('designer-calendar-body');
     }, []);
 
-
     return (
-        <LayoutNoFooter>
+        <LayoutAdmin>
             {appointmentLoading ?
                 <LoadingPage />
                 :
                 <>
-                    <section>
-                        <Container className='top-bottom'>
+                    <section className='bg-sellers'>
+                        <Container fluid>
                             <Row>
-                                <Col lg={12}>
-                                    <Row className="pb-4">
-                                        <Col md={6} className='d-flex justify-content-left align-items-center'>
-                                            <h3 className="fs-30 fw-600 text-black mb-0">Appointments</h3>
-                                        </Col>
-                                        <Col md={6} className="text-right">
-                                            <GoBack fallBack="/#" />
-                                        </Col>
-                                    </Row>
+                                <Col lg={2} className='p-0'>
+                                    <AdminSidebar />
                                 </Col>
 
-                                <Col lg={12}>
-                                    <Card>
-                                        <Card.Body className='bg-light'>
-                                            <Row>
-                                                <Col lg={4}>
-                                                    <span className='fw-500'>Fashion Designer</span>
+                                <Col lg={10} className='py-5 mx-auto max-width-column'>
+                                    <Row>
+                                        <Col lg={12}>
+                                            <Row className="pb-4">
+                                                <Col md={6} className='d-flex justify-content-left align-items-center'>
+                                                    <h3 className="fs-30 fw-600 text-black mb-0">Appointments</h3>
                                                 </Col>
-
-                                                <Col lg={4}>
-                                                    <span className='fw-500'>Appointment Date & Time</span>
-                                                </Col>
-
-                                                <Col lg={2}>
-                                                    <span className='fw-500'>Status</span>
-                                                </Col>
-
-                                                <Col lg={2}>
+                                                <Col md={6} className="text-right">
+                                                    <GoBack fallBack="/#" />
                                                 </Col>
                                             </Row>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                                <>
-                                    {appointments ?
+                                        </Col>
+
+                                        <Col lg={12}>
+                                            <Card>
+                                                <Card.Body className='bg-light'>
+                                                    <Row>
+                                                        <Col lg={4}>
+                                                            <span className='fw-500'>Fashion Designer</span>
+                                                        </Col>
+
+                                                        <Col lg={4}>
+                                                            <span className='fw-500'>Appointment Date & Time</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='fw-500'>Status</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                        </Col>
+                                                    </Row>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
                                         <>
-                                            {appointments.length > 0 ?
+                                            {appointments ?
                                                 <>
-                                                    {appointments.map((appointment) => {
+                                                    {appointments.length > 0 ?
+                                                        <>
+                                                            {appointments.map((appointment) => {
 
-                                                        const options = {
-                                                            year: 'numeric',
-                                                            month: 'long',
-                                                            day: 'numeric',
-                                                        };
-                                                        const today = (new Date(appointment.created_at)).toLocaleDateString('en-ES', options);
-                                                        const formattedDate = (new Date(appointment.consultation_date)).toLocaleString('en-US', {
-                                                            year: 'numeric',
-                                                            month: 'long',
-                                                            day: 'numeric',
-                                                            timeZone: 'UTC',
-                                                        });
+                                                                const options = {
+                                                                    year: 'numeric',
+                                                                    month: 'long',
+                                                                    day: 'numeric',
+                                                                };
+                                                                const today = (new Date(appointment.created_at)).toLocaleDateString('en-ES', options);
+                                                                const formattedDate = (new Date(appointment.consultation_date)).toLocaleString('en-US', {
+                                                                    year: 'numeric',
+                                                                    month: 'long',
+                                                                    day: 'numeric',
+                                                                    timeZone: 'UTC',
+                                                                });
 
-                                                        return (
-                                                            <Col lg={12}>
-                                                                <Card className='mt-3'>
-                                                                    <Card.Body >
-                                                                        <Row className="align-items-center">
-                                                                            <Col lg={4}>
-                                                                                <div className='d-flex appointment-user-image'>
-                                                                                    {appointment.designer?.image != '' && appointment.designer?.image != null ? (
-                                                                                        <div
-                                                                                            className='user-photo-appointment'
-                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.designer?.image})` }}
-                                                                                        >
-                                                                                        </div>
-                                                                                    ) : (
-                                                                                        <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
-                                                                                    )}
-
-                                                                                    <div>
-                                                                                        <span className='d-flex ms-3 mt-0 mb-1 fs-18 text-black'>
-                                                                                            {appointment.designer?.first_name}
-                                                                                            &nbsp;
-                                                                                            {appointment.designer?.last_name}
-                                                                                        </span>
-                                                                                        <div className='ms-3 fs-16 text-black'>
-                                                                                            <span className='fw-600 me-1'>Created:</span>&nbsp;{today}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </Col>
-
-                                                                            <Col lg={4}>
-                                                                                <span className='text-black'>{formattedDate} at {convert24hrTo12hr(appointment.consultation_hour_start)}</span>
-                                                                            </Col>
-
-                                                                            <Col lg={2}>
-                                                                                <span className='text-black'>{appointment.status}</span>
-                                                                            </Col>
-
-                                                                            <Col lg={2} className='d-flex justify-content-end'>
-                                                                                {appointment.status != "Cancelled" ?
-                                                                                    <>
-                                                                                        {currentDate !== appointment.consultation_date ? (
-                                                                                            <>
-                                                                                                {appointment.consultation_date < currentDate ? (
-                                                                                                    <div className=" appointments-tooltip">
-                                                                                                        {/* <span className="icon-tooltiptext fs-14">Unavailable to Edit</span> */}
-                                                                                                        <BiSolidPencil className='video-cam me-3' color='#0000005c' size={20} />
-                                                                                                    </div>
-                                                                                                ) : (
-                                                                                                    <div
-                                                                                                        className="cursor-pointer appointments-tooltip"
-                                                                                                        onClick={() => toggleEditAppointmentModal(appointment.id)}
-                                                                                                    >
-                                                                                                        <span className="icon-tooltiptext fs-14">Reschedule</span>
-                                                                                                        <BiSolidPencil className='video-cam me-3' size={20} color='#000000' />
-                                                                                                    </div>
-                                                                                                )}
-                                                                                            </>
-                                                                                        ) :
-                                                                                            <>
-                                                                                                <div className=" appointments-tooltip" disabled>
-                                                                                                    {/* <span className="icon-tooltiptext fs-14">Unavailable to Edit</span> */}
-                                                                                                    <BiSolidPencil className='video-cam me-3' color='#0000005c' size={20} />
+                                                                return (
+                                                                    <Col lg={12}>
+                                                                        <Card className='mt-3'>
+                                                                            <Card.Body >
+                                                                                <Row className="align-items-center">
+                                                                                    <Col lg={4}>
+                                                                                        <div className='d-flex appointment-user-image'>
+                                                                                            {appointment.designer?.image != '' && appointment.designer?.image != null ? (
+                                                                                                <div
+                                                                                                    className='user-photo-appointment'
+                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${appointment.designer?.image})` }}
+                                                                                                >
                                                                                                 </div>
-                                                                                            </>
-                                                                                        }
+                                                                                            ) : (
+                                                                                                <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
+                                                                                            )}
 
-                                                                                        {/* {currentDate === appointment.consultation_date ? ( */}
-                                                                                        <a href={`/consultation-meeting/${appointment.id}`}>
-                                                                                            <div className="cursor-pointer appointments-tooltip">
-                                                                                                <span className="icon-tooltiptext fs-14">Video call</span>
-                                                                                                <IoMdVideocam className='video-cam me-3' size={20} color='#000000' />
+                                                                                            <div>
+                                                                                                <span className='d-flex ms-3 mt-0 mb-1 fs-18 text-black'>
+                                                                                                    {appointment.designer?.first_name}
+                                                                                                    &nbsp;
+                                                                                                    {appointment.designer?.last_name}
+                                                                                                </span>
+                                                                                                <div className='ms-3 fs-16 text-black'>
+                                                                                                    <span className='fw-600 me-1'>Created:</span>&nbsp;{today}
+                                                                                                </div>
                                                                                             </div>
-                                                                                        </a>
+                                                                                        </div>
+                                                                                    </Col>
 
-                                                                                        
-                                                                                        {/* // ) : (
+                                                                                    <Col lg={4}>
+                                                                                        <span className='text-black'>{formattedDate} at {convert24hrTo12hr(appointment.consultation_hour_start)}</span>
+                                                                                    </Col>
+
+                                                                                    <Col lg={2}>
+                                                                                        <span className='text-black'>{appointment.status}</span>
+                                                                                    </Col>
+
+                                                                                    <Col lg={2} className='d-flex justify-content-end'>
+                                                                                        {appointment.status != "Cancelled" ?
+                                                                                            <>
+                                                                                                {currentDate !== appointment.consultation_date ? (
+                                                                                                    <>
+                                                                                                        {appointment.consultation_date < currentDate ? (
+                                                                                                            <div className=" appointments-tooltip">
+                                                                                                                {/* <span className="icon-tooltiptext fs-14">Unavailable to Edit</span> */}
+                                                                                                                <BiSolidPencil className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                                            </div>
+                                                                                                        ) : (
+                                                                                                            <div
+                                                                                                                className="cursor-pointer appointments-tooltip"
+                                                                                                                onClick={() => toggleEditAppointmentModal(appointment.id)}
+                                                                                                            >
+                                                                                                                <span className="icon-tooltiptext fs-14">Reschedule</span>
+                                                                                                                <BiSolidPencil className='video-cam me-3' size={20} color='#000000' />
+                                                                                                            </div>
+                                                                                                        )}
+                                                                                                    </>
+                                                                                                ) :
+                                                                                                    <>
+                                                                                                        <div className=" appointments-tooltip" disabled>
+                                                                                                            {/* <span className="icon-tooltiptext fs-14">Unavailable to Edit</span> */}
+                                                                                                            <BiSolidPencil className='video-cam me-3' color='#0000005c' size={20} />
+                                                                                                        </div>
+                                                                                                    </>
+                                                                                                }
+
+                                                                                                {/* {currentDate === appointment.consultation_date ? ( */}
+                                                                                                <a href={`/consultation-meeting/${appointment.id}`}>
+                                                                                                    <div className="cursor-pointer appointments-tooltip">
+                                                                                                        <span className="icon-tooltiptext fs-14">Video call</span>
+                                                                                                        <IoMdVideocam className='video-cam me-3' size={20} color='#000000' />
+                                                                                                    </div>
+                                                                                                </a>
+
+
+                                                                                                {/* // ) : (
                                                                                         //     currentDate < appointment.consultation_date ? (
                                                                                         //         <div className="cursor-pointer appointments-tooltip">
                                                                                         //             <span className="icon-tooltiptext fs-14">Not time for video conferencing</span>
@@ -397,53 +399,65 @@ const Appointments = (props) => {
                                                                                         //     )
                                                                                         // )} */}
 
-                                                                                        <div className="cursor-pointer appointments-tooltip me-3"
-                                                                                            onClick={function () {
-                                                                                                toggleChatbox(
-                                                                                                    appointment.id,
-                                                                                                    appointment.designer?.first_name,
-                                                                                                    appointment.designer?.last_name,
-                                                                                                    appointment.designer?.image,
-                                                                                                    "Under Construction");
-                                                                                                // setAppointmentId(appointment.id,);
-                                                                                            }}
-                                                                                        >
-                                                                                            <span className="icon-tooltiptext fs-14">Message Designer</span>
-                                                                                            <span><AiFillMessage className='video-cam' size={20} color='#000000' /></span>
-                                                                                        </div>
+                                                                                                <div className="cursor-pointer appointments-tooltip me-3"
+                                                                                                    onClick={function () {
+                                                                                                        toggleChatbox(
+                                                                                                            appointment.id,
+                                                                                                            appointment.designer?.first_name,
+                                                                                                            appointment.designer?.last_name,
+                                                                                                            appointment.designer?.image,
+                                                                                                            "Under Construction");
+                                                                                                        // setAppointmentId(appointment.id,);
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <span className="icon-tooltiptext fs-14">Message Designer</span>
+                                                                                                    <span><AiFillMessage className='video-cam' size={20} color='#000000' /></span>
+                                                                                                </div>
 
-                                                                                        <div
-                                                                                            className="cursor-pointer appointments-tooltip"
-                                                                                            onClick={() => toggleCancelAppointmentModal(appointment.id)}
-                                                                                        >
-                                                                                            <span className="icon-tooltiptext fs-14">Cancel</span>
-                                                                                            <AiFillDelete className='video-cam' size={20} color='#000000' />
-                                                                                        </div>
-                                                                                    </>
-                                                                                    :
-                                                                                    <>
-                                                                                        <div className="appointments-tooltip me-3" disabled>
-                                                                                            <BiSolidPencil className='video-cam' color='#0000005c' size={20} />
-                                                                                        </div>
-                                                                                        <div className="appointments-tooltip me-3" disabled>
-                                                                                            <IoMdVideocam className='video-cam' color='#0000005c' size={20} />
-                                                                                        </div>
-                                                                                        <div className="appointments-tooltip me-3" disabled>
-                                                                                            <AiFillMessage className='video-cam' color='#0000005c' size={20} />
-                                                                                        </div>
-                                                                                        <div className="appointments-tooltip" disabled>
-                                                                                            <AiFillDelete className='video-cam' color='#0000005c' size={20} />
-                                                                                        </div>
-                                                                                    </>
-                                                                                }
-                                                                                
-                                                                            </Col>
-                                                                        </Row>
+                                                                                                <div
+                                                                                                    className="cursor-pointer appointments-tooltip"
+                                                                                                    onClick={() => toggleCancelAppointmentModal(appointment.id)}
+                                                                                                >
+                                                                                                    <span className="icon-tooltiptext fs-14">Cancel</span>
+                                                                                                    <AiFillDelete className='video-cam' size={20} color='#000000' />
+                                                                                                </div>
+                                                                                            </>
+                                                                                            :
+                                                                                            <>
+                                                                                                <div className="appointments-tooltip me-3" disabled>
+                                                                                                    <BiSolidPencil className='video-cam' color='#0000005c' size={20} />
+                                                                                                </div>
+                                                                                                <div className="appointments-tooltip me-3" disabled>
+                                                                                                    <IoMdVideocam className='video-cam' color='#0000005c' size={20} />
+                                                                                                </div>
+                                                                                                <div className="appointments-tooltip me-3" disabled>
+                                                                                                    <AiFillMessage className='video-cam' color='#0000005c' size={20} />
+                                                                                                </div>
+                                                                                                <div className="appointments-tooltip" disabled>
+                                                                                                    <AiFillDelete className='video-cam' color='#0000005c' size={20} />
+                                                                                                </div>
+                                                                                            </>
+                                                                                        }
+
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            </Card.Body>
+                                                                        </Card>
+                                                                    </Col>
+                                                                );
+                                                            })}
+                                                        </>
+                                                        :
+                                                        <>
+                                                            <Col lg={12}>
+                                                                <Card className='mt-3'>
+                                                                    <Card.Body>
+                                                                        <p className="text-center mb-0">No records found.</p>
                                                                     </Card.Body>
                                                                 </Card>
                                                             </Col>
-                                                        );
-                                                    })}
+                                                        </>
+                                                    }
                                                 </>
                                                 :
                                                 <>
@@ -457,58 +471,23 @@ const Appointments = (props) => {
                                                 </>
                                             }
                                         </>
-                                        :
-                                        <>
-                                            <Col lg={12}>
-                                                <Card className='mt-3'>
-                                                    <Card.Body>
-                                                        <p className="text-center mb-0">No records found.</p>
-                                                    </Card.Body>
-                                                </Card>
-                                            </Col>
-                                        </>
-                                    }
-                                </>
-                                <Pagination
-                                    className="pagination-bar mt-4 mb-0"
-                                    currentPage={currentPage}
-                                    totalCount={pageCount}
-                                    pageSize={PageSize}
-                                    onPageChange={page => handleChangePage(page)}
-                                />
+                                        <Pagination
+                                            className="pagination-bar mt-4 mb-0"
+                                            currentPage={currentPage}
+                                            totalCount={pageCount}
+                                            pageSize={PageSize}
+                                            onPageChange={page => handleChangePage(page)}
+                                        />
+                                    </Row>
+
+                                </Col>
                             </Row>
-                            {chatBox ?
-                                <>
-                                    <Card className='width-chat-card px-0'>
-                                        <Card.Header className='header-chat bg-white'>
-                                            <div className='d-flex justify-content-between'>
-                                                <div className='d-flex align-items-center'>
-                                                    <span className='fw-500'>{customer.first_name} {customer.last_name}</span>
-                                                    {/* <span className='ms-2 active-now fs-14 fw-400'>Active Now</span> */}
-                                                </div>
-                                                <div className="cursor-pointer" onClick={() => setChatBox(false)}>
-                                                    <IoCloseOutline color="#7e7e7e" size={25} />
-                                                </div>
-                                            </div>
-                                        </Card.Header>
-                                        <Card.Body >
-                                            <MeetingChat
-                                                currentUser={currentUser}
-                                                appointmentId={appointmentId}
-                                                user={userDetails}
-                                            />
-                                        </Card.Body>
-                                    </Card>
-                                </>
-                                :
-                                null
-                            }
                         </Container>
                     </section>
                 </>
             }
 
-            <Modal
+<Modal
                 show={underConstructionShow}
                 className='modal-preview'
                 fade={false}
@@ -712,8 +691,8 @@ const Appointments = (props) => {
                     </ModalFooter>
                 </div>
             </Modal>
-        </LayoutNoFooter >
+        </LayoutAdmin >
     );
 };
 
-export default Appointments;
+export default AdminAppointments;

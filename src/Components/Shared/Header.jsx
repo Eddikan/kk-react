@@ -321,7 +321,7 @@ const Header = () => {
                       <a href={`/admin/users`}>
                         <div className="nav-link header-tooltip cursor-pointer">
                           <span className="icon-tooltiptext fs-14">Administration</span>
-                          <MdOutlineAdminPanelSettings size={23} />
+                          <MdOutlineAdminPanelSettings size={28} />
                         </div>
                       </a>
                     }

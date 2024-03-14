@@ -1,0 +1,48 @@
+.col-right {
+    padding-right: 41px;
+}
+.col-left {
+    padding-left: 41px;
+}
+.user-menu-seller.action-box {
+    background: #fff;
+    position: absolute;
+    width: 160px;
+    padding: 12px;
+    border-radius: 5px;
+    right: 75px;
+    top: 61px;
+    box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    -webkit-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    -moz-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    z-index: 10;
+    text-align: left;
+}
+.user-menu-envelop.action-box-envelop {
+    background: #fff;
+    position: absolute;
+    width: 560px;
+    padding: 15px;
+    border-radius: 5px;
+    right: 22px;
+    top: 50px;
+    box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    -webkit-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    -moz-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    z-index: 10;
+    text-align: left;
+}
+.user-menu-bell.action-box-bell {
+    background: #fff;
+    position: absolute;
+    width: 560px;
+    padding: 15px;
+    border-radius: 5px;
+    right: 22px;
+    top: 50px;
+    box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    -webkit-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    -moz-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    z-index: 10;
+    text-align: left;
+}

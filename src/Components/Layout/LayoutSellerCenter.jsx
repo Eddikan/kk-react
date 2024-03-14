@@ -3,6 +3,7 @@ import Header from '../Shared/Header'
 import HeaderSeller from "Components/Shared/HeaderSeller";
 import Footer from '../Shared/Footer'
 import toast, { Toaster } from 'react-hot-toast';
+import Tawkto from "Components/Chat/TawkTo";
 
 const LayoutSellerCenter = ({ children }) => {
 
@@ -13,6 +14,7 @@ const LayoutSellerCenter = ({ children }) => {
 
     return (
         <>
+            <Tawkto />
             <Toaster
                 position="top-right"
                 reverseOrder={false}

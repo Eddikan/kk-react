@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { AccordionItem, UncontrolledAccordion, AccordionBody, AccordionHeader } from 'reactstrap';
-import { PiDressLight, PiPantsLight } from "react-icons/pi";
+import { PiDressLight, PiPantsLight, PiCalendar } from "react-icons/pi";
 import { PiUsersLight } from "react-icons/pi";
 import { IoIosArrowDown } from "react-icons/io";
 import { Row, Col, Button, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
@@ -86,6 +86,11 @@ const Sidebar = ({ }) => {
                             className="hover-sidebar cursor-pointer yellow-hover mt-3"
                             onClick={() => navigate('/admin/designs')}>
                             <PiPantsLight size="22" className="me-2 mb-1" color='#000000' />Portfolio
+                        </div>
+                        <div
+                            className="hover-sidebar cursor-pointer yellow-hover mt-3"
+                            onClick={() => navigate('/admin/appointments')}>
+                            <PiCalendar size="22" className="me-2 mb-1" color='#000000' />Appointments
                         </div>
                     </AccordionItem>
                 </UncontrolledAccordion>
