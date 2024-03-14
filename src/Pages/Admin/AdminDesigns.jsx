@@ -222,12 +222,16 @@ const AdminDesigns = (props) => {
                                             <Card>
                                                 <Card.Body className='bg-light'>
                                                     <Row>
-                                                        <Col lg={5}>
+                                                        <Col lg={3}>
                                                             <span className='fw-500'>Name</span>
                                                         </Col>
 
-                                                        <Col lg={3}>
+                                                        <Col lg={2}>
                                                             <span className='fw-500'>Categories</span>
+                                                        </Col>
+
+                                                        <Col lg={3}>
+                                                            <span className='fw-500'>Tags</span>
                                                         </Col>
 
                                                         <Col lg={2}>
@@ -258,7 +262,7 @@ const AdminDesigns = (props) => {
                                                                         <Card className='mt-3'>
                                                                             <Card.Body >
                                                                                 <Row>
-                                                                                    <Col lg={5} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
                                                                                         <div className="cursor-pointer  image-design-admin"
                                                                                             onClick={function () {
                                                                                                 togglePortfolioImage(
@@ -300,29 +304,35 @@ const AdminDesigns = (props) => {
                                                                                             >
                                                                                                 {design.name}
                                                                                             </div>
-                                                                                            <div>
-                                                                                                {design.tags ?
-                                                                                                    <>
-                                                                                                        {design.tags.length > 0 ?
-                                                                                                            <>
-                                                                                                                {design.tags.slice(0, 3).map((tag, index) => (
-                                                                                                                    <span key={index} className="designs-tags-view-bar bg-light fs-12 categories-color text-black">
-                                                                                                                        {tag}
-                                                                                                                    </span>
-                                                                                                                ))}
-                                                                                                            </>
-                                                                                                            :
-                                                                                                            null
-                                                                                                        }
-                                                                                                    </>
-                                                                                                    :
-                                                                                                    null
-                                                                                                }
-                                                                                            </div>
+
+                                                                                            <Link
+                                                                                                to={`/designer-profile?user_id=${design.user.id}`}
+                                                                                                className="text-decoration-none">
+                                                                                                <div className='d-flex align-items-center user-image-chat'>
+                                                                                                    {design.user.image ?
+                                                                                                        <div
+                                                                                                            className='user-photo-chat'
+                                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${design.user.image})` }}
+                                                                                                        >
+                                                                                                        </div>
+                                                                                                        :
+                                                                                                        <div
+                                                                                                            className='user-photo-chat'
+                                                                                                            style={{ backgroundImage: `url(${UserPlaceholder})` }}
+                                                                                                        >
+                                                                                                        </div>
+                                                                                                    }
+                                                                                                    <span className='name-user ms-2'>
+                                                                                                        {design.user.first_name}
+                                                                                                        &nbsp;
+                                                                                                        {design.user.last_name}
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </Link>
                                                                                         </div>
                                                                                     </Col>
 
-                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
                                                                                         <div>
                                                                                             {design.categories ?
                                                                                                 <>
@@ -345,10 +355,33 @@ const AdminDesigns = (props) => {
                                                                                     </Col>
 
                                                                                     <Col lg={3} className='d-flex justify-content-left align-items-center'>
+
+                                                                                        <div>
+                                                                                            {design.tags ?
+                                                                                                <>
+                                                                                                    {design.tags.length > 0 ?
+                                                                                                        <>
+                                                                                                            {design.tags.slice(0, 3).map((tag, index) => (
+                                                                                                                <span key={index} className="designs-tags-view-bar bg-light fs-16 mb-1 categories-color text-black">
+                                                                                                                    {tag}
+                                                                                                                </span>
+                                                                                                            ))}
+                                                                                                        </>
+                                                                                                        :
+                                                                                                        null
+                                                                                                    }
+                                                                                                </>
+                                                                                                :
+                                                                                                null
+                                                                                            }
+                                                                                        </div>
+                                                                                    </Col>
+
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
                                                                                         {design.status}
                                                                                     </Col>
 
-                                                                                    <Col lg={1} className='d-flex justify-content-end align-items-center'>
+                                                                                    <Col lg={2} className='d-flex justify-content-end align-items-center'>
                                                                                         <div className='d-flex'>
 
                                                                                             <div
@@ -373,7 +406,7 @@ const AdminDesigns = (props) => {
                                                                                                 <IoEye className='me-3' color='#000000' size={20} />
                                                                                             </div>
 
-                                                                                            <Link className="text-decoration-none" to={`/user/center/design/${design.id}/edit`}>
+                                                                                            <Link className="text-decoration-none" to={`/admin/design/${design.id}/edit`}>
                                                                                                 <div className="design-tooltip cursor-pointer">
                                                                                                     <span className="icon-tooltiptext fs-14">Edit</span>
                                                                                                     <BiSolidPencil className='me-3' color='#000000' size={20} />

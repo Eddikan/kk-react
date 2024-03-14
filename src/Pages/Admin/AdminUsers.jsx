@@ -147,12 +147,13 @@ const Users = (props) => {
                                                             <span className='fw-500'>Name</span>
                                                         </Col>
 
-                                                        <Col lg={2}>
-                                                            <span className='fw-500'>Phone Number</span>
-                                                        </Col>
 
                                                         <Col lg={2}>
                                                             <span className='fw-500'>Gender</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='fw-500'>Phone Number</span>
                                                         </Col>
 
                                                         <Col lg={2}>
@@ -203,23 +204,43 @@ const Users = (props) => {
 
                                                                                         <div className='ms-3'>
                                                                                             <Link to={`/admin/profile/user/${user.id}`} className='text-decoration-none'>
-                                                                                                <div>
+                                                                                                <div className='mb-1'>
                                                                                                     <span className='mt-0 mb-1 fs-16 text-black'>
                                                                                                         {user.first_name}&nbsp;{user.last_name}
                                                                                                     </span>
-                                                                                                    <br />
+                                                                                                </div>
+
+                                                                                                <div className='mb-1'>
                                                                                                     <span className='fs-14 text-black'>{user.email}</span>
+                                                                                                </div>
+
+                                                                                                <div className='mb-1'>
+                                                                                                    {user.is_designer == 1 &&
+                                                                                                        <>
+                                                                                                            <span className='fs-14 text-black'>Designer</span>
+                                                                                                        </>
+                                                                                                    }
+                                                                                                </div>
+
+                                                                                                <div>
+                                                                                                    {user.is_seller == 1 &&
+                                                                                                        <>
+                                                                                                            <span className='fs-14 text-black'>Seller</span>
+                                                                                                        </>
+                                                                                                    }
                                                                                                 </div>
                                                                                             </Link>
                                                                                         </div>
+
+
+                                                                                    </Col>
+
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
+                                                                                        <span className='fs-16 text-black'>{user.gender}</span>
                                                                                     </Col>
 
                                                                                     <Col lg={2} className='d-flex justify-content-left align-items-center'>
                                                                                         <span className='fs-16 text-black '>{user.phone_number}</span>
-                                                                                    </Col>
-
-                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
-                                                                                        <span className='fs-16 text-black'>{user.country}</span>
                                                                                     </Col>
 
                                                                                     <Col lg={2} className='d-flex justify-content-left align-items-center'>

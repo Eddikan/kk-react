@@ -10,6 +10,8 @@ import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Pagination from 'Components/Pagination/Pagination';
 import AdminSidebar from 'Components/Shared/AdminSidebar';
 import LoadingPage from 'Components/Shared/LoadingPage';
+import UserPlaceholder from 'Assets/images/user.png';
+import { ImLeaf } from 'react-icons/im';
 import LayoutAdmin from 'Components/Layout/LayoutAdmin';
 import GoBack from 'Components/Shared/GoBack';
 import 'Assets/styles/AdminFabrics/style.css';
@@ -145,16 +147,24 @@ const AdminFabrics = (props) => {
                                             <Card>
                                                 <Card.Body className='bg-light'>
                                                     <Row>
-                                                        <Col lg={5}>
+                                                        <Col lg={3}>
                                                             <span className='fw-500'>Name</span>
                                                         </Col>
 
-                                                        <Col lg={3}>
+                                                        <Col lg={2}>
                                                             <span className='fw-500'>Country</span>
                                                         </Col>
 
                                                         <Col lg={2}>
                                                             <span className='fw-500'>Status</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
+                                                            <span className='fw-500'>Price</span>
+                                                        </Col>
+
+                                                        <Col lg={1}>
+                                                            <span className='fw-500'>Quantity</span>
                                                         </Col>
 
                                                         <Col lg={2} className='text-right'>
@@ -182,7 +192,7 @@ const AdminFabrics = (props) => {
                                                                         <Card className='mt-3'>
                                                                             <Card.Body >
                                                                                 <Row>
-                                                                                    <Col lg={5} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
                                                                                         <Link to={`/product/${fabric.id}`} className='d-flex justify-content-left align-items-center text-decoration-none'>
                                                                                             <div className=" image-fabrics-admin "
                                                                                                 style={{ backgroundImage: "url(" + fabricImage + ")" }}
@@ -194,10 +204,39 @@ const AdminFabrics = (props) => {
                                                                                             <Link to={`/product/${fabric.id}`} className='d-flex justify-content-left align-items-center text-decoration-none'>
                                                                                                 <div className='mb-1'>
                                                                                                     <span className='fs-16 text-black'>{fabric.name}</span>
+                                                                                                    <span>
+                                                                                                        {fabric.eco_friendly != null && fabric.eco_friendly != '' && (
+                                                                                                            <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
+                                                                                                                <ImLeaf color="#55d140" className='mb-1' size={13} />
+                                                                                                            </span>
+                                                                                                        )}</span>
                                                                                                 </div>
                                                                                             </Link>
 
-                                                                                            <div>
+                                                                                            <Link to={`/admin/profile/seller/${fabric.user.id}`} className="text-decoration-none">
+                                                                                                <div className='d-flex align-items-center user-image-chat'>
+                                                                                                    {fabric.user.image ?
+                                                                                                        <div
+                                                                                                            className='user-photo-chat'
+                                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${fabric.user.image})` }}
+                                                                                                        >
+                                                                                                        </div>
+                                                                                                        :
+                                                                                                        <div
+                                                                                                            className='user-photo-chat'
+                                                                                                            style={{ backgroundImage: `url(${UserPlaceholder})` }}
+                                                                                                        >
+                                                                                                        </div>
+                                                                                                    }
+                                                                                                    <span className='name-user ms-2'>
+                                                                                                        {fabric.user.first_name}
+                                                                                                        &nbsp;
+                                                                                                        {fabric.user.last_name}
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </Link>
+
+                                                                                            {/* <div>
                                                                                                 {fabric.categories ?
                                                                                                     <>
                                                                                                         {fabric.categories.length > 0 ?
@@ -215,16 +254,24 @@ const AdminFabrics = (props) => {
                                                                                                     :
                                                                                                     null
                                                                                                 }
-                                                                                            </div>
+                                                                                            </div> */}
                                                                                         </div>
                                                                                     </Col>
 
-                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
                                                                                         {fabric.country}
                                                                                     </Col>
 
                                                                                     <Col lg={2} className='d-flex justify-content-left align-items-center'>
                                                                                         {fabric.status}
+                                                                                    </Col>
+
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
+                                                                                        ${fabric.price}
+                                                                                    </Col>
+
+                                                                                    <Col lg={1} className='d-flex justify-content-left align-items-center'>
+                                                                                        {fabric.quantity}
                                                                                     </Col>
 
                                                                                     <Col lg={2} className='d-flex justify-content-end align-items-center'>

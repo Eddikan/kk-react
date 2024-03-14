@@ -267,14 +267,19 @@ const HeaderSeller = () => {
                                                     }
                                                     {userMenuOpen && (
                                                         <div className="action-box user-menu-seller">
-                                                            <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-2' color='#000000' />
-                                                                <span className='text-black'>Profile</span>
-                                                            </Link>
-                                                            <Link to={`/wishlist`} className="mb-3 text-decoration-none d-block"><GoHeart className='me-2' color='#000000' />
-                                                                <span className='text-black'>Wishlist</span>
-                                                            </Link>
+                                                            {userRole !== 'Admin' &&
+                                                                <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-2' color='#000000' />
+                                                                    <span className='text-black'>Profile</span>
+                                                                </Link>
+                                                            }
 
-                                                            {userRole == 'Admin' &&
+                                                            {userRole !== 'Admin' &&
+                                                                <Link to={`/wishlist`} className="mb-3 text-decoration-none d-block"><GoHeart className='me-2' color='#000000' />
+                                                                    <span className='text-black'>Wishlist</span>
+                                                                </Link>
+                                                            }
+
+                                                            {userRole !== 'Admin' &&
                                                                 <Link to={`/admin/users`} className="mb-3 text-decoration-none d-block"><RxDashboard className='me-2 mb-1' color='#000000' />
                                                                     <span className='text-black'>Dashboard</span>
                                                                 </Link>

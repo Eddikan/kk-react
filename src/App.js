@@ -49,6 +49,7 @@ const EditDesigner = lazy(() => import("./Pages/Admin/EditDesigner"));
 const EditSeller = lazy(() => import("./Pages/Admin/EditSeller"));
 const ViewSellerProfile = lazy(() => import("./Pages/Admin/ViewSellerProfile"));
 const ViewUserProfile = lazy(() => import("./Pages/Admin/ViewUserProfile"));
+const EditDesign = lazy(() => import("./Pages/Admin/EditDesigns"));
 
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
@@ -164,6 +165,12 @@ const App = () => {
             path="/user/center/design/:portfolioId/edit"
             exact
             element={<EditPortfolio />}
+          />
+
+          <Route
+            path="/admin/design/:portfolioId/edit"
+            exact
+            element={<EditDesign />}
           />
           <Route
             path="/user/center/portfolio"

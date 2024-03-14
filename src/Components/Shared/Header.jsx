@@ -17,6 +17,7 @@ import UserPlaceholder from 'Assets/images/user.png';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import NewOrder from 'Assets/images/new-order-icon.png';
+import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import NewAppointment from 'Assets/images/new-appointment-icon.png';
 import { Card, Modal } from 'react-bootstrap';
 import User from 'Assets/images/user.png';
@@ -316,63 +317,78 @@ const Header = () => {
                       )}
                     </div>
 
-                    <a href={`/user/center/calendar`}>
-                      <div className="nav-link header-tooltip cursor-pointer">
-                        <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                        <BsShopWindow size={23} />
-                      </div>
-                    </a>
-
-                    <a href={`/cart/`}>
-                      <div className="nav-link header-tooltip">
-                        <span className="icon-tooltiptext fs-14">Cart</span>
-                        <IoCartOutline size={26} />
-                      </div>
-                    </a>
-
-                    <div className="user-dropdown nav-link" ref={orderRef}>
-                      <a href="/orders" className="text-decoration-none">
-                        <div className="cursor-pointer nav-link" >Orders</div>
+                    {userRole == 'Admin' &&
+                      <a href={`/admin/users`}>
+                        <div className="nav-link header-tooltip cursor-pointer">
+                          <span className="icon-tooltiptext fs-14">Administration</span>
+                          <MdOutlineAdminPanelSettings size={23} />
+                        </div>
                       </a>
-                      {/* <div className="cursor-pointer nav-link" onClick={toggleOrdersMenu}>Orders</div> */}
-                      {userOrdersOpen && (
+                    }
 
-                        <div className="action-box-orders user-menu-orders">
-                          {userOrders.length > 0 ? (
-                            <>
-                              {userOrders.slice(0, 4).map((order) => {
-                                const productImageArray = order?.order_items[0].product.image_urls;
-                                let imageName;
-                                let imageURL;
-                                if (productImageArray) {
-                                  imageName = JSON.parse(productImageArray);
-                                  imageURL = process.env.REACT_APP_STORAGE_URL + 'product/' + imageName[0].image_url;
-                                }
-                                return (
-                                  <>
-                                    <Row>
-                                      <Col
-                                        lg="3"
-                                        className='cursor-pointer product-size me-3 mt-1'
-                                        style={{ backgroundImage: `url(${productImageArray ? imageURL : PlaceholderSquare})` }}
-                                      >
-                                      </Col>
+                    {userRole !== 'Admin' &&
+                      <a href={`/user/center/calendar`}>
+                        <div className="nav-link header-tooltip cursor-pointer">
+                          <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                          <BsShopWindow size={23} />
+                        </div>
+                      </a>
+                    }
 
-                                      <Col lg="9" className='mt-1'>
-                                        <div className='fs-14 body-text-bell mb-3'>
-                                          {order.order_items[0].product.name}
-                                          <div className='mt-1'>
-                                            {truncateDescription(order.order_items[0].product.description, 10)}
+                    {userRole !== 'Admin' &&
+                      <a href={`/cart/`}>
+                        <div className="nav-link header-tooltip">
+                          <span className="icon-tooltiptext fs-14">Cart</span>
+                          <IoCartOutline size={26} />
+                        </div>
+                      </a>
+                    }
+
+                    {userRole !== 'Admin' &&
+                      <div className="user-dropdown nav-link" ref={orderRef}>
+                        <a href="/orders" className="text-decoration-none">
+                          <div className="cursor-pointer nav-link" >Orders</div>
+                        </a>
+
+                        {/* <div className="cursor-pointer nav-link" onClick={toggleOrdersMenu}>Orders</div> */}
+                        {userOrdersOpen && (
+
+                          <div className="action-box-orders user-menu-orders">
+                            {userOrders.length > 0 ? (
+                              <>
+                                {userOrders.slice(0, 4).map((order) => {
+                                  const productImageArray = order?.order_items[0].product.image_urls;
+                                  let imageName;
+                                  let imageURL;
+                                  if (productImageArray) {
+                                    imageName = JSON.parse(productImageArray);
+                                    imageURL = process.env.REACT_APP_STORAGE_URL + 'product/' + imageName[0].image_url;
+                                  }
+                                  return (
+                                    <>
+                                      <Row>
+                                        <Col
+                                          lg="3"
+                                          className='cursor-pointer product-size me-3 mt-1'
+                                          style={{ backgroundImage: `url(${productImageArray ? imageURL : PlaceholderSquare})` }}
+                                        >
+                                        </Col>
+
+                                        <Col lg="9" className='mt-1'>
+                                          <div className='fs-14 body-text-bell mb-3'>
+                                            {order.order_items[0].product.name}
+                                            <div className='mt-1'>
+                                              {truncateDescription(order.order_items[0].product.description, 10)}
+                                            </div>
+                                            <div className='mt-1'>
+                                              <span className='price-color-orders'>${order.total_amount}</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>{order.status}</span>
+                                            </div>
                                           </div>
-                                          <div className='mt-1'>
-                                            <span className='price-color-orders'>${order.total_amount}</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>{order.status}</span>
-                                          </div>
-                                        </div>
-                                      </Col>
-                                      <hr />
-                                    </Row>
+                                        </Col>
+                                        <hr />
+                                      </Row>
 
-                                    {/* <div className='d-flex cursor-pointer' key={order.id}>
+                                      {/* <div className='d-flex cursor-pointer' key={order.id}>
                                       <img src={productImageArray ? imageURL : PlaceholderSquare} className='item-placeholder-header' alt="User" />
                                       <div className='fs-14 body-text-bell'>
                                         {order.order_items[0].product.name}
@@ -384,23 +400,24 @@ const Header = () => {
                                         </div>
                                       </div>
                                     </div> */}
-                                  </>
-                                );
-                              })}
-                              <div className='text-right'>
-                                <a href="/orders" className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All</a>
+                                    </>
+                                  );
+                                })}
+                                <div className='text-right'>
+                                  <a href="/orders" className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All</a>
+                                </div>
+                              </>
+                            ) : (
+                              <div className='text-center'>
+                                <GoAlertFill size="50px" className="mb-2 text-gold" />
+                                <p className="mb-0">No orders found.</p>
                               </div>
-                            </>
-                          ) : (
-                            <div className='text-center'>
-                              <GoAlertFill size="50px" className="mb-2 text-gold" />
-                              <p className="mb-0">No orders found.</p>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                            )}
+                          </div>
+                        )}
 
-                    </div>
+                      </div>
+                    }
 
                     {/* <Nav.Link href="/orders" className='fs-16'>Orders</Nav.Link> */}
 
@@ -412,15 +429,19 @@ const Header = () => {
                       }
                       {userMenuOpen && (
                         <div className="action-box user-menu">
-                          <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-2' color='#000000' />
-                            <span className='text-black'>Profile</span>
-                          </Link>
+                          {userRole !== 'Admin' &&
+                            <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-2' color='#000000' />
+                              <span className='text-black'>Profile</span>
+                            </Link>
+                          }
 
-                          <Link to={`/wishlist`} className="mb-3 text-decoration-none d-block"><GoHeart className='me-2' color='#000000' />
-                            <span className='text-black'>Wishlist</span>
-                          </Link>
+                          {userRole !== 'Admin' &&
+                            <Link to={`/wishlist`} className="mb-3 text-decoration-none d-block"><GoHeart className='me-2' color='#000000' />
+                              <span className='text-black'>Wishlist</span>
+                            </Link>
+                          }
 
-                          {userRole == 'Admin' &&
+                          {userRole !== 'Admin' &&
                             <Link to={`/admin/users`} className="mb-3 text-decoration-none d-block"><RxDashboard className='me-2' color='#000000' />
                               <span className='text-black'>Dashboard</span>
                             </Link>
