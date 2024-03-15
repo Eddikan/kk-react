@@ -66,3 +66,10 @@
     background-repeat: no-repeat;
     border-radius: 50%;
 }
+.admin-ellipsis-design {
+    width: 220px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}

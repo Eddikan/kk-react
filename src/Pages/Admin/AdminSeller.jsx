@@ -118,7 +118,7 @@ const AdminSeller = (props) => {
                                     <AdminSidebar />
                                 </Col>
 
-                                <Col lg={10} className='py-5 mx-auto max-width-column'>
+                                <Col lg={10} className='py-5 mx-auto padding-right-admin max-width-column'>
                                     <Row>
                                         <Col lg={12}>
                                             <Row className="pb-4">
@@ -139,7 +139,11 @@ const AdminSeller = (props) => {
                                                             <span className='fw-500'>Name</span>
                                                         </Col>
 
-                                                        <Col lg={3}>
+                                                        <Col lg={2}>
+                                                            <span className='fw-500'>Gender</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
                                                             <span className='fw-500'>Phone Number</span>
                                                         </Col>
 
@@ -147,7 +151,7 @@ const AdminSeller = (props) => {
                                                             <span className='fw-500'>Country</span>
                                                         </Col>
 
-                                                        <Col lg={2} className='text-center'>
+                                                        <Col lg={1} className='text-center'>
                                                             <span className='fw-500'>Status</span>
                                                         </Col>
 
@@ -193,17 +197,20 @@ const AdminSeller = (props) => {
                                                                                             <Link to={`/admin/profile/seller/${seller.user.id}`} className="text-decoration-none">
                                                                                                 <div
                                                                                                     className='cursor-pointer'>
-                                                                                                    <span className='mt-0 mb-1 fs-16 text-black'>
+                                                                                                    <div className='mt-0 mb-1 fs-18 text-black fw-500'>
                                                                                                         {seller.user.first_name}&nbsp;{seller.user.last_name}
-                                                                                                    </span>
-                                                                                                    <br />
-                                                                                                    <span className='fs-14 text-black'>{seller.user.email}</span>
+                                                                                                    </div>
+                                                                                                    <div className='fs-16 text-black'>{seller.user.email}</div>
                                                                                                 </div>
                                                                                             </Link>
                                                                                         </div>
                                                                                     </Col>
 
-                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
+                                                                                        <span className='fs-16 text-black'>{seller.user.gender}</span>
+                                                                                    </Col>
+
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
                                                                                         <span className='fs-16 text-black '>{seller.user.phone_number}</span>
                                                                                     </Col>
 
@@ -211,7 +218,7 @@ const AdminSeller = (props) => {
                                                                                         <span className='fs-16 text-black'>{seller.user.country}</span>
                                                                                     </Col>
 
-                                                                                    <Col lg={2} className='d-flex justify-content-center align-items-center'>
+                                                                                    <Col lg={1} className='d-flex justify-content-center align-items-center'>
                                                                                         <span className='fs-16 text-black'>{seller.user.status}</span>
                                                                                     </Col>
 

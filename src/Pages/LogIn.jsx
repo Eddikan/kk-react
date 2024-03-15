@@ -50,19 +50,36 @@ const LogIn = () => {
         if (user.seller) {
           setCookie('currentUserSeller', JSON.stringify(user.seller.id), { path: '/' });
         }
-        toast.success('Successfully signed in!');
-        setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
-        setCookie('userRole', JSON.stringify(user.role), { path: '/' });
-        const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email }
-        setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-        setCookie('isLoggedIn', true, { path: '/' });
-        setCookie('token', data.token, { path: '/' });
-        setCookie('signup_type', user.signup_type, { path: '/' });
-        setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
-        setCookie('token', data.token, { path: '/' });
-        setTimeout(function () {
-          navigate("/");
-        }, 1000);
+        if (user.role == 'Admin') {
+          toast.success('Successfully signed in!');
+          setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
+          setCookie('userRole', JSON.stringify(user.role), { path: '/' });
+          const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email }
+          setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+          setCookie('isLoggedIn', true, { path: '/' });
+          setCookie('token', data.token, { path: '/' });
+          setCookie('signup_type', user.signup_type, { path: '/' });
+          setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
+          setCookie('token', data.token, { path: '/' });
+          setTimeout(function () {
+            navigate("/admin/users");
+          }, 1000);
+        } else {
+          toast.success('Successfully signed in!');
+          setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
+          setCookie('userRole', JSON.stringify(user.role), { path: '/' });
+          const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email }
+          setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+          setCookie('isLoggedIn', true, { path: '/' });
+          setCookie('token', data.token, { path: '/' });
+          setCookie('signup_type', user.signup_type, { path: '/' });
+          setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
+          setCookie('token', data.token, { path: '/' });
+          setTimeout(function () {
+            navigate("/");
+          }, 1000);
+        }
+
       } else {
         const errors = response.data.errors;
         if (errors.email) {

@@ -1616,6 +1616,7 @@ img.user-placeholder-header {
 .text-decoration-none {
     text-decoration: none !important;
 }
+
 .single-image-chat {
     width: 11%;
     min-height: 36px;
@@ -1624,6 +1625,7 @@ img.user-placeholder-header {
     background-repeat: no-repeat;
     border-radius: 5px;
 }
+
 .width-chat-card{
     width: 447px;
     border-color: #DFDFDF;
@@ -1632,15 +1634,18 @@ img.user-placeholder-header {
     margin-bottom: 27px;
     right: 27px;
 }
+
 span.name-of-portfolio {
     font-size: 16px;
     font-family: 'Rufina';
     font-weight: bold;
 }
+
 .welcome-chat {
     font-size: 14px;
     color: #39393A;
 }
+
 a.schedule-consultation {
     border: 1px solid #000000;
     border-radius: 5px;
@@ -1701,6 +1706,10 @@ a.schedule-consultation {
     display: contents;
 }
 
+.padding-right-admin {
+    padding-right: 40px;
+}
+
 /* Disable Button on Calendar */
 .rbc-date-cell.past-date {
     background-color: #e6e6e6 !important;
@@ -1752,7 +1761,7 @@ a.schedule-consultation {
 }
 
 .right-msg .msg-bubble {
-    background: #cea835db !important;
+    background: #fbe6a7 !important;
     color: #393C41;
     border-bottom-right-radius: 0;
 }
@@ -1780,6 +1789,7 @@ a.schedule-consultation {
     font-weight: bold;
     font-size: 14px;
 }
+
 .collab-msg-text {
     font-size: 14px;
 }
@@ -1787,6 +1797,7 @@ a.schedule-consultation {
 .msg-info-time {
     font-size: 12px;
 }
+
 .msger-inputarea {
     display: flex;
 }
@@ -1817,16 +1828,19 @@ a.schedule-consultation {
     justify-content: center;
     flex-direction: column;
 }
+
 .msger-chat {
     flex: 1 1;
     min-height: 305px;
 }
+
 .form-control-bg {
     background: #f9f9f9 !important;
     border: none !important;
     border-top-right-radius: 0px !important;
     border-bottom-right-radius: 0px !important;
 }
+
 .bordered-top-primary {
     border-top: 7px solid #cea835;
 }
@@ -1843,8 +1857,10 @@ a.schedule-consultation {
     min-width: 40px;
     width: 40px;
 }
+
 .scroll-chat {
     overflow: scroll;
     height: 100px;
     overflow-x: hidden;
 }
+

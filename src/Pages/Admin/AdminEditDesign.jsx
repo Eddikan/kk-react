@@ -4,12 +4,12 @@ import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'Assets/styles/User/Profile/style.css';
 import GoBack from 'Components/Shared/GoBack';
-import EditDesign from 'Components/Forms/Portolio/EditDesign';
+import AdminPortfolioEdit from 'Components/Forms/Portolio/AdminPortfolioEdit';
 import GetSinglePortfolioData from 'Utils/GetSinglePortfolioData';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import toast from 'react-hot-toast';
 
-const EditDesigns = () => {
+const AdminEditDesign = () => {
     const navigate = useNavigate();
     const { portfolioId } = useParams();
     const [portfolio, setPortfolio] = useState('');
@@ -70,9 +70,16 @@ const EditDesigns = () => {
                                 <GoBack fallBack="/user/profile" />
                             </Col>
                         </Row>
-                        <EditDesign size="normal" portfolioId={portfolioId} portfolio={portfolio} images={images} withDraft={true}
+                        <AdminPortfolioEdit
+                            size="normal"
+                            portfolioId={portfolioId}
+                            portfolio={portfolio}
+                            images={images}
+                            withDraft={true}
                             onSuccess={editSuccess}
-                            onReloadPage={reloadPage} onCancel={cancel} />
+                            onReloadPage={reloadPage}
+                            onCancel={cancel}
+                        />
                     </Container>
                 </section>
             }
@@ -80,4 +87,4 @@ const EditDesigns = () => {
     );
 };
 
-export default EditDesigns;
+export default AdminEditDesign;

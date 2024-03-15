@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
-import { Link, useNavigate, useParams } from 'react-router-dom';
 import 'Assets/styles/Components/ImageDragAndDrop/style.css'
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
@@ -29,7 +28,6 @@ const EditPortfolio = (props) => {
     const portfolioId = props.portfolioId;
 
     const fileInputRef = useRef(null);
-    const navigate = useNavigate();
 
     const [portfolioData, setPortfolioData] = useState(initialPortfolioData);
     const [images, setImages] = useState([]);
@@ -71,7 +69,6 @@ const EditPortfolio = (props) => {
     };
 
     const handleAddMore = () => {
-        // Trigger the file input when the "Add More" button is clicked
         fileInputRef.current.click();
     };
 
@@ -122,12 +119,6 @@ const EditPortfolio = (props) => {
                     let reader = new FileReader();
 
                     reader.onloadend = () => {
-                        // Do something with the uploaded image, if needed
-                        // For example, update state or perform additional actions
-                        // setDocuments((prevDocuments) => [
-                        //   ...prevDocuments,
-                        //   { media_id: mediaId, name: imageInfo.file.name, url: reader.result, type: imageInfo.file.type }
-                        // ]);
                     };
 
                     reader.readAsDataURL(imageInfo.file);
@@ -145,44 +136,14 @@ const EditPortfolio = (props) => {
             } catch (error) {
                 toast.error("An error occurred. Please try again or contact the administrator.");
                 setUploadStatus("standby");
-                // Handle error if needed
             }
         }
-
-        // All images have been uploaded
         setUploadStatus("standby");
     };
 
     const handleRemove = (e) => {
         setImages((prevImages) => prevImages.filter((img, index) => index !== e));
     };
-
-    useEffect(() => {
-        if (portfolio) {
-            setPortfolioData({ ...portfolio, user_id: currentUser });
-            if (portfolio.colors) {
-                setColors(portfolio.colors);
-            }
-            if (portfolio.materials) {
-                setMaterials(portfolio.materials);
-            }
-            if (portfolio.tags) {
-                setTags(portfolio.tags);
-            }
-            if (portfolio.categories) {
-                setCategories(portfolio.categories);
-            }
-            if (image_urls) {
-                setImages(image_urls);
-            }
-        } else {
-            toast.error('Design does not exist!');
-            setTimeout(function () {
-                handleCancel();
-            }, 1500);
-        }
-    }, [reloadCount]);
-
 
     async function PortfolioSubmit(e) {
         e.preventDefault();
@@ -195,7 +156,6 @@ const EditPortfolio = (props) => {
                     setPortfolioLoading(false);
                     reloadPage(true);
                     formSuccess(true);
-                    navigate('/admin/designs');
                 } else {
                     toast.error('An error occured. Please try again or contact the administrator.');
                     setPortfolioLoading(false);
@@ -233,6 +193,32 @@ const EditPortfolio = (props) => {
             formSuccess(false);
         });
     };
+
+    useEffect(() => {
+        if (portfolio) {
+            setPortfolioData({ ...portfolio, user_id: currentUser });
+            if (portfolio.colors) {
+                setColors(portfolio.colors);
+            }
+            if (portfolio.materials) {
+                setMaterials(portfolio.materials);
+            }
+            if (portfolio.tags) {
+                setTags(portfolio.tags);
+            }
+            if (portfolio.categories) {
+                setCategories(portfolio.categories);
+            }
+            if (image_urls) {
+                setImages(image_urls);
+            }
+        } else {
+            toast.error('Design does not exist!');
+            setTimeout(function () {
+                handleCancel();
+            }, 1500);
+        }
+    }, [reloadCount]);
 
     return (
         <Form onSubmit={PortfolioSubmit}>
@@ -310,13 +296,13 @@ const EditPortfolio = (props) => {
                                                                         }
                                                                     </>
                                                             }
-
                                                         </>
                                                     ))}
                                                 </>
                                                 :
                                                 null
                                             }
+
                                             {uploadStatus != "standby" ?
                                                 <>
                                                     {size == "small" ?
@@ -389,7 +375,7 @@ const EditPortfolio = (props) => {
                                         </Row>
                                         <input
                                             type="file"
-                                            key={fileInputKey} // Add a key to the file input
+                                            key={fileInputKey}
                                             id="fileInput"
                                             onChange={handleFileInput}
                                             className="file-input d-block opacity-0 d-none"
@@ -412,7 +398,7 @@ const EditPortfolio = (props) => {
                                 <Form.Label>Description</Form.Label>
                                 <FormControl as="textarea"
                                     name="description"
-                                    rows={3} // You can adjust the number of rows as needed
+                                    rows={3}
                                     value={portfolioData.description}
                                     placeholder=''
                                     onChange={handleChange} required />

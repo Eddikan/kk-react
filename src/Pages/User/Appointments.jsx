@@ -185,7 +185,7 @@ const Appointments = (props) => {
         }
     }
 
-    
+
 
     const handleChangePage = (pageNumber) => {
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment?page=' + pageNumber + '&user_id=' + currentUser)
@@ -382,7 +382,7 @@ const Appointments = (props) => {
                                                                                             </div>
                                                                                         </a>
 
-                                                                                        
+
                                                                                         {/* // ) : (
                                                                                         //     currentDate < appointment.consultation_date ? (
                                                                                         //         <div className="cursor-pointer appointments-tooltip">
@@ -405,7 +405,6 @@ const Appointments = (props) => {
                                                                                                     appointment.designer?.last_name,
                                                                                                     appointment.designer?.image,
                                                                                                     "Under Construction");
-                                                                                                // setAppointmentId(appointment.id,);
                                                                                             }}
                                                                                         >
                                                                                             <span className="icon-tooltiptext fs-14">Message Designer</span>
@@ -436,7 +435,7 @@ const Appointments = (props) => {
                                                                                         </div>
                                                                                     </>
                                                                                 }
-                                                                                
+
                                                                             </Col>
                                                                         </Row>
                                                                     </Card.Body>

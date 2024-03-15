@@ -50,16 +50,16 @@ const initialDesignerData = Object.freeze({
     areas_of_specialization: [""],
 });
 
-const EditSeller = () => {
-    const { sellerId } = useParams();
+const EditDesigner = () => {
+    const { designerId } = useParams();
     const navigate = useNavigate();
     const [user, setUser] = useState(initialUserData);
-    const [seller, setDesigner] = useState()
+    const [designer, setDesigner] = useState()
     const [userLoading, setUserLoading] = useState(true);
     const [userFormData, setUserFormData] = useState(initialUserData);
     const [userFormLoading, setUserFormLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
-    const [sellerShow, setSellerShow] = useState(true);
+    const [designerShow, setDesignerShow] = useState(true);
     const [addressShow, setAddressShow] = useState(false);
     const [contactShow, setContactShow] = useState(false);
     const [socialMediaShow, setSocialMediaShow] = useState(false);
@@ -79,34 +79,34 @@ const EditSeller = () => {
 
     const showTab = (tab) => {
         if (tab == "user") {
-            setSellerShow(true);
+            setDesignerShow(true);
             setAddressShow(false);
             setContactShow(false);
             setSocialMediaShow(false);
             setSkillShow(false);
         } else if (tab === "address") {
             setAddressShow(true);
-            setSellerShow(false);
+            setDesignerShow(false);
             setContactShow(false);
             setSocialMediaShow(false);
             setSkillShow(false);
         } else if (tab === "contact") {
             setContactShow(true);
             setAddressShow(false);
-            setSellerShow(false);
+            setDesignerShow(false);
             setSocialMediaShow(false);
             setSkillShow(false);
         } else if (tab === "social_media") {
             setSocialMediaShow(true);
             setAddressShow(false);
-            setSellerShow(false);
+            setDesignerShow(false);
             setContactShow(false);
             setSkillShow(false);
         } else if (tab === "skill") {
             setSkillShow(true);
             setSocialMediaShow(false);
             setAddressShow(false);
-            setSellerShow(false);
+            setDesignerShow(false);
             setContactShow(false);
         }
     }
@@ -121,15 +121,18 @@ const EditSeller = () => {
     async function submitProfile(e) {
         e.preventDefault();
         setUserFormLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + sellerId + '?user_id=' + sellerId + '&token=' + token, userFormData).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + designerId + '?user_id=' + designerId + '&token=' + token, userFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
                 const user = data.user;
-                const user_details = { sellerId: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
+                const user_details = { designerId: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
                 setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-                toast.success('Seller updated successfully!');
-                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                toast.success('Designer updated successfully!');
+                setTimeout(() => {
+                    setReloadCount(prevReloadCount => prevReloadCount + 1);
+                    navigate('/admin/designers');
+                }, 1000);
             } else {
                 const errors = response.data.errors;
             }
@@ -140,17 +143,20 @@ const EditSeller = () => {
         });
     }
 
-    async function submitSeller(e) {
+    async function submitDesigner(e) {
         if (areasOfSpecializationData.length > 0) {
             e.preventDefault();
             setUserFormLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'seller/' + seller.id + '?user_id=' + sellerId + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer.id + '?user_id=' + designerId + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;
                     const user = data.user;
-                    toast.success('Seller updated successfully!');
-                    setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                    toast.success('Designer updated successfully!');
+                    setTimeout(() => {
+                        setReloadCount(prevReloadCount => prevReloadCount + 1);
+                        navigate('/admin/designers');
+                    }, 1000);
                 } else {
                     const errors = response.data.errors;
                 }
@@ -175,10 +181,10 @@ const EditSeller = () => {
                 setUserImage(userData.image);
                 setCookie('userDetails', JSON.stringify(userData), { path: '/' });
                 setUserLoading(false);
-                if (userData.seller) {
-                    setDesigner(userData.seller);
-                    setAreaOfSpecialization(userData.seller.areas_of_specialization);
-                    setAreaOfSpecializationData(userData.seller.areas_of_specialization);
+                if (userData.designer) {
+                    setDesigner(userData.designer);
+                    setAreaOfSpecialization(userData.designer.areas_of_specialization);
+                    setAreaOfSpecializationData(userData.designer.areas_of_specialization);
                 }
             } else {
                 setUserLoading(false);
@@ -191,7 +197,7 @@ const EditSeller = () => {
     };
 
     useEffect(() => {
-        fetchData({ currentUser: sellerId, token: token });
+        fetchData({ currentUser: designerId, token: token });
     }, [reloadCount]);
 
     return (
@@ -243,11 +249,11 @@ const EditSeller = () => {
                                 <Col md="3" className='flex-grow-1 flex-shrink-0'>
                                     <Card className='h-100'>
                                         <Card.Body>
-                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${sellerShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("user"); }}>About</p>
+                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${designerShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("user"); }}>About</p>
                                             <p className={`cursor-pointer me-5 mb-3 fs-16 ${addressShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("address"); }}>Address</p>
                                             <p className={`cursor-pointer me-5 mb-3 fs-16 ${contactShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("contact") }}>Contact</p>
                                             <p className={`cursor-pointer me-5 mb-3 fs-16 ${socialMediaShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("social_media") }}>Social Media</p>
-                                            {user && user.is_seller ?
+                                            {user && user.is_designer ?
                                                 <p className={`cursor-pointer me-5 mb-0 fs-16 ${skillShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("skill"); }}>Skills</p>
                                                 :
                                                 null
@@ -258,7 +264,7 @@ const EditSeller = () => {
                                 <Col md="9" className='flex-grow-1 flex-shrink-0'>
                                     <Card className='h-100'>
                                         <Card.Body>
-                                            {sellerShow ?
+                                            {designerShow ?
                                                 <div className="edit-profile mt-3">
                                                     <Row>
                                                         <Col lg="6">
@@ -507,7 +513,7 @@ const EditSeller = () => {
                                                         {userFormLoading ?
                                                             <Button type='button' className="btn-save">Saving...</Button>
                                                             :
-                                                            <Button type='button' onClick={submitSeller} className="btn-save">Save</Button>
+                                                            <Button type='button' onClick={submitDesigner} className="btn-save">Save</Button>
                                                         }
                                                     </div>
                                                 </div>
@@ -527,4 +533,4 @@ const EditSeller = () => {
     );
 };
 
-export default EditSeller;
+export default EditDesigner;

@@ -50,16 +50,16 @@ const initialDesignerData = Object.freeze({
     areas_of_specialization: [""],
 });
 
-const EditUser = () => {
-    const { userId } = useParams();
+const EditSeller = () => {
+    const { sellerId } = useParams();
     const navigate = useNavigate();
     const [user, setUser] = useState(initialUserData);
-    const [designer, setDesigner] = useState()
+    const [seller, setDesigner] = useState()
     const [userLoading, setUserLoading] = useState(true);
     const [userFormData, setUserFormData] = useState(initialUserData);
     const [userFormLoading, setUserFormLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
-    const [userShow, setUserShow] = useState(true);
+    const [sellerShow, setSellerShow] = useState(true);
     const [addressShow, setAddressShow] = useState(false);
     const [contactShow, setContactShow] = useState(false);
     const [socialMediaShow, setSocialMediaShow] = useState(false);
@@ -79,34 +79,34 @@ const EditUser = () => {
 
     const showTab = (tab) => {
         if (tab == "user") {
-            setUserShow(true);
+            setSellerShow(true);
             setAddressShow(false);
             setContactShow(false);
             setSocialMediaShow(false);
             setSkillShow(false);
         } else if (tab === "address") {
             setAddressShow(true);
-            setUserShow(false);
+            setSellerShow(false);
             setContactShow(false);
             setSocialMediaShow(false);
             setSkillShow(false);
         } else if (tab === "contact") {
             setContactShow(true);
             setAddressShow(false);
-            setUserShow(false);
+            setSellerShow(false);
             setSocialMediaShow(false);
             setSkillShow(false);
         } else if (tab === "social_media") {
             setSocialMediaShow(true);
             setAddressShow(false);
-            setUserShow(false);
+            setSellerShow(false);
             setContactShow(false);
             setSkillShow(false);
         } else if (tab === "skill") {
             setSkillShow(true);
             setSocialMediaShow(false);
             setAddressShow(false);
-            setUserShow(false);
+            setSellerShow(false);
             setContactShow(false);
         }
     }
@@ -121,16 +121,18 @@ const EditUser = () => {
     async function submitProfile(e) {
         e.preventDefault();
         setUserFormLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + userId + '?user_id=' + userId + '&token=' + token, userFormData).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + sellerId + '?user_id=' + sellerId + '&token=' + token, userFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
                 const user = data.user;
-                const user_details = { userId: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
+                const user_details = { sellerId: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
                 setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-                toast.success('User updated successfully!');
-                setReloadCount((prevReloadCount) => prevReloadCount + 1);
-                navigate('/admin/users');
+                toast.success('Seller updated successfully!');
+                setTimeout(() => {
+                    setReloadCount(prevReloadCount => prevReloadCount + 1);
+                    navigate('/admin/sellers');
+                }, 1000);
             } else {
                 const errors = response.data.errors;
             }
@@ -141,17 +143,20 @@ const EditUser = () => {
         });
     }
 
-    async function submitDesigner(e) {
+    async function submitSeller(e) {
         if (areasOfSpecializationData.length > 0) {
             e.preventDefault();
             setUserFormLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer.id + '?user_id=' + userId + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'seller/' + seller.id + '?user_id=' + sellerId + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;
                     const user = data.user;
-                    toast.success('User updated successfully!');
-                    setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                    toast.success('Seller updated successfully!');
+                    setTimeout(() => {
+                        setReloadCount(prevReloadCount => prevReloadCount + 1);
+                        navigate('/admin/sellers');
+                    }, 1000);
                 } else {
                     const errors = response.data.errors;
                 }
@@ -176,10 +181,10 @@ const EditUser = () => {
                 setUserImage(userData.image);
                 setCookie('userDetails', JSON.stringify(userData), { path: '/' });
                 setUserLoading(false);
-                if (userData.designer) {
-                    setDesigner(userData.designer);
-                    setAreaOfSpecialization(userData.designer.areas_of_specialization);
-                    setAreaOfSpecializationData(userData.designer.areas_of_specialization);
+                if (userData.seller) {
+                    setDesigner(userData.seller);
+                    setAreaOfSpecialization(userData.seller.areas_of_specialization);
+                    setAreaOfSpecializationData(userData.seller.areas_of_specialization);
                 }
             } else {
                 setUserLoading(false);
@@ -192,7 +197,7 @@ const EditUser = () => {
     };
 
     useEffect(() => {
-        fetchData({ currentUser: userId, token: token });
+        fetchData({ currentUser: sellerId, token: token });
     }, [reloadCount]);
 
     return (
@@ -208,9 +213,9 @@ const EditUser = () => {
                                     <div className="d-flex column-gap-20">
                                         <div>
                                             {userImage ?
-                                                <div className="profile-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                                <div className="profile-image-view" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                                 :
-                                                <div className="profile-image" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
+                                                <div className="profile-image-view" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                             }
                                         </div>
                                         <div>
@@ -244,11 +249,11 @@ const EditUser = () => {
                                 <Col md="3" className='flex-grow-1 flex-shrink-0'>
                                     <Card className='h-100'>
                                         <Card.Body>
-                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${userShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("user"); }}>About</p>
+                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${sellerShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("user"); }}>About</p>
                                             <p className={`cursor-pointer me-5 mb-3 fs-16 ${addressShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("address"); }}>Address</p>
                                             <p className={`cursor-pointer me-5 mb-3 fs-16 ${contactShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("contact") }}>Contact</p>
                                             <p className={`cursor-pointer me-5 mb-3 fs-16 ${socialMediaShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("social_media") }}>Social Media</p>
-                                            {user && user.is_designer ?
+                                            {user && user.is_seller ?
                                                 <p className={`cursor-pointer me-5 mb-0 fs-16 ${skillShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("skill"); }}>Skills</p>
                                                 :
                                                 null
@@ -259,7 +264,7 @@ const EditUser = () => {
                                 <Col md="9" className='flex-grow-1 flex-shrink-0'>
                                     <Card className='h-100'>
                                         <Card.Body>
-                                            {userShow ?
+                                            {sellerShow ?
                                                 <div className="edit-profile mt-3">
                                                     <Row>
                                                         <Col lg="6">
@@ -343,6 +348,7 @@ const EditUser = () => {
                                                 :
                                                 null
                                             }
+
                                             {addressShow ?
                                                 <div className='edit-address mt-3'>
                                                     <Col lg="12">
@@ -400,6 +406,7 @@ const EditUser = () => {
                                                 :
                                                 null
                                             }
+
                                             {contactShow ?
                                                 <div className="edit-contact mt-3">
                                                     <Col lg="12">
@@ -477,6 +484,7 @@ const EditUser = () => {
                                                 :
                                                 null
                                             }
+
                                             {skillShow ?
                                                 <div className="edit-skills mt-3">
                                                     <Form.Label className='mb-1 fs-18'>
@@ -505,7 +513,7 @@ const EditUser = () => {
                                                         {userFormLoading ?
                                                             <Button type='button' className="btn-save">Saving...</Button>
                                                             :
-                                                            <Button type='button' onClick={submitDesigner} className="btn-save">Save</Button>
+                                                            <Button type='button' onClick={submitSeller} className="btn-save">Save</Button>
                                                         }
                                                     </div>
                                                 </div>
@@ -525,4 +533,4 @@ const EditUser = () => {
     );
 };
 
-export default EditUser;
+export default EditSeller;

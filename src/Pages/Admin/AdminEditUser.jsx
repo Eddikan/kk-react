@@ -50,8 +50,8 @@ const initialDesignerData = Object.freeze({
     areas_of_specialization: [""],
 });
 
-const EditDesigner = () => {
-    const { designerId } = useParams();
+const EditUser = () => {
+    const { userId } = useParams();
     const navigate = useNavigate();
     const [user, setUser] = useState(initialUserData);
     const [designer, setDesigner] = useState()
@@ -59,7 +59,7 @@ const EditDesigner = () => {
     const [userFormData, setUserFormData] = useState(initialUserData);
     const [userFormLoading, setUserFormLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
-    const [designerShow, setDesignerShow] = useState(true);
+    const [userShow, setUserShow] = useState(true);
     const [addressShow, setAddressShow] = useState(false);
     const [contactShow, setContactShow] = useState(false);
     const [socialMediaShow, setSocialMediaShow] = useState(false);
@@ -79,34 +79,34 @@ const EditDesigner = () => {
 
     const showTab = (tab) => {
         if (tab == "user") {
-            setDesignerShow(true);
+            setUserShow(true);
             setAddressShow(false);
             setContactShow(false);
             setSocialMediaShow(false);
             setSkillShow(false);
         } else if (tab === "address") {
             setAddressShow(true);
-            setDesignerShow(false);
+            setUserShow(false);
             setContactShow(false);
             setSocialMediaShow(false);
             setSkillShow(false);
         } else if (tab === "contact") {
             setContactShow(true);
             setAddressShow(false);
-            setDesignerShow(false);
+            setUserShow(false);
             setSocialMediaShow(false);
             setSkillShow(false);
         } else if (tab === "social_media") {
             setSocialMediaShow(true);
             setAddressShow(false);
-            setDesignerShow(false);
+            setUserShow(false);
             setContactShow(false);
             setSkillShow(false);
         } else if (tab === "skill") {
             setSkillShow(true);
             setSocialMediaShow(false);
             setAddressShow(false);
-            setDesignerShow(false);
+            setUserShow(false);
             setContactShow(false);
         }
     }
@@ -121,15 +121,18 @@ const EditDesigner = () => {
     async function submitProfile(e) {
         e.preventDefault();
         setUserFormLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + designerId + '?user_id=' + designerId + '&token=' + token, userFormData).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + userId + '?user_id=' + userId + '&token=' + token, userFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
                 const user = data.user;
-                const user_details = { designerId: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
+                const user_details = { userId: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
                 setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-                toast.success('Designer updated successfully!');
-                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                toast.success('User updated successfully!');
+                setTimeout(() => {
+                    setReloadCount(prevReloadCount => prevReloadCount + 1);
+                    navigate('/admin/users');
+                }, 1000);
             } else {
                 const errors = response.data.errors;
             }
@@ -144,13 +147,17 @@ const EditDesigner = () => {
         if (areasOfSpecializationData.length > 0) {
             e.preventDefault();
             setUserFormLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer.id + '?user_id=' + designerId + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer.id + '?user_id=' + userId + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;
                     const user = data.user;
-                    toast.success('Designer updated successfully!');
+                    toast.success('User updated successfully!');
                     setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                    setTimeout(() => {
+                        setReloadCount(prevReloadCount => prevReloadCount + 1);
+                        navigate('/admin/users');
+                    }, 1000);
                 } else {
                     const errors = response.data.errors;
                 }
@@ -191,7 +198,7 @@ const EditDesigner = () => {
     };
 
     useEffect(() => {
-        fetchData({ currentUser: designerId, token: token });
+        fetchData({ currentUser: userId, token: token });
     }, [reloadCount]);
 
     return (
@@ -207,9 +214,9 @@ const EditDesigner = () => {
                                     <div className="d-flex column-gap-20">
                                         <div>
                                             {userImage ?
-                                                <div className="profile-image-view" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                                <div className="profile-image" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                                 :
-                                                <div className="profile-image-view" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
+                                                <div className="profile-image" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                             }
                                         </div>
                                         <div>
@@ -243,7 +250,7 @@ const EditDesigner = () => {
                                 <Col md="3" className='flex-grow-1 flex-shrink-0'>
                                     <Card className='h-100'>
                                         <Card.Body>
-                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${designerShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("user"); }}>About</p>
+                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${userShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("user"); }}>About</p>
                                             <p className={`cursor-pointer me-5 mb-3 fs-16 ${addressShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("address"); }}>Address</p>
                                             <p className={`cursor-pointer me-5 mb-3 fs-16 ${contactShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("contact") }}>Contact</p>
                                             <p className={`cursor-pointer me-5 mb-3 fs-16 ${socialMediaShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("social_media") }}>Social Media</p>
@@ -258,7 +265,7 @@ const EditDesigner = () => {
                                 <Col md="9" className='flex-grow-1 flex-shrink-0'>
                                     <Card className='h-100'>
                                         <Card.Body>
-                                            {designerShow ?
+                                            {userShow ?
                                                 <div className="edit-profile mt-3">
                                                     <Row>
                                                         <Col lg="6">
@@ -342,7 +349,6 @@ const EditDesigner = () => {
                                                 :
                                                 null
                                             }
-
                                             {addressShow ?
                                                 <div className='edit-address mt-3'>
                                                     <Col lg="12">
@@ -400,7 +406,6 @@ const EditDesigner = () => {
                                                 :
                                                 null
                                             }
-
                                             {contactShow ?
                                                 <div className="edit-contact mt-3">
                                                     <Col lg="12">
@@ -478,7 +483,6 @@ const EditDesigner = () => {
                                                 :
                                                 null
                                             }
-
                                             {skillShow ?
                                                 <div className="edit-skills mt-3">
                                                     <Form.Label className='mb-1 fs-18'>
@@ -527,4 +531,4 @@ const EditDesigner = () => {
     );
 };
 
-export default EditDesigner;
+export default EditUser;

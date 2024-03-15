@@ -205,7 +205,7 @@ const AdminDesigns = (props) => {
                                     <AdminSidebar />
                                 </Col>
 
-                                <Col lg={10} className='py-5 col-right-calendar mx-auto max-width-column'>
+                                <Col lg={10} className='py-5 padding-right-admin mx-auto max-width-column'>
                                     <Row>
                                         <Col lg={12}>
                                             <Row className="pb-4">
@@ -226,7 +226,7 @@ const AdminDesigns = (props) => {
                                                             <span className='fw-500'>Name</span>
                                                         </Col>
 
-                                                        <Col lg={2}>
+                                                        <Col lg={3}>
                                                             <span className='fw-500'>Categories</span>
                                                         </Col>
 
@@ -234,11 +234,11 @@ const AdminDesigns = (props) => {
                                                             <span className='fw-500'>Tags</span>
                                                         </Col>
 
-                                                        <Col lg={2}>
+                                                        {/* <Col lg={2}>
                                                             <span className='fw-500'>Status</span>
-                                                        </Col>
+                                                        </Col> */}
 
-                                                        <Col lg={2} className='text-right'>
+                                                        <Col lg={3} className='text-right'>
                                                             <span className='fw-500 me-3'>Action</span>
                                                         </Col>
                                                     </Row>
@@ -285,7 +285,7 @@ const AdminDesigns = (props) => {
 
                                                                                         <div className='ms-3'>
                                                                                             <div
-                                                                                                className='d-flex mt-0 mb-1 fs-16 text-black cursor-pointer'
+                                                                                                className='d-flex mt-0 mb-1 fs-18 text-black cursor-pointer'
                                                                                                 onClick={function () {
                                                                                                     togglePortfolioImage(
                                                                                                         design.id,
@@ -302,12 +302,12 @@ const AdminDesigns = (props) => {
                                                                                                     );
                                                                                                 }}
                                                                                             >
-                                                                                                {design.name}
+                                                                                                <span className="admin-ellipsis-design fw-500">{design.name}</span>
                                                                                             </div>
 
                                                                                             <Link
                                                                                                 to={`/designer-profile?user_id=${design.user.id}`}
-                                                                                                className="text-decoration-none">
+                                                                                                className="text-decoration-none text-black">
                                                                                                 <div className='d-flex align-items-center user-image-chat'>
                                                                                                     {design.user.image ?
                                                                                                         <div
@@ -322,7 +322,7 @@ const AdminDesigns = (props) => {
                                                                                                         >
                                                                                                         </div>
                                                                                                     }
-                                                                                                    <span className='name-user ms-2'>
+                                                                                                    <span className='name-user ms-2 fs-16 admin-ellipsis-design'>
                                                                                                         {design.user.first_name}
                                                                                                         &nbsp;
                                                                                                         {design.user.last_name}
@@ -332,7 +332,7 @@ const AdminDesigns = (props) => {
                                                                                         </div>
                                                                                     </Col>
 
-                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
                                                                                         <div>
                                                                                             {design.categories ?
                                                                                                 <>
@@ -377,11 +377,11 @@ const AdminDesigns = (props) => {
                                                                                         </div>
                                                                                     </Col>
 
-                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
+                                                                                    {/* <Col lg={2} className='d-flex justify-content-left align-items-center'>
                                                                                         {design.status}
-                                                                                    </Col>
+                                                                                    </Col> */}
 
-                                                                                    <Col lg={2} className='d-flex justify-content-end align-items-center'>
+                                                                                    <Col lg={3} className='d-flex justify-content-end align-items-center'>
                                                                                         <div className='d-flex'>
 
                                                                                             <div
@@ -406,7 +406,7 @@ const AdminDesigns = (props) => {
                                                                                                 <IoEye className='me-3' color='#000000' size={20} />
                                                                                             </div>
 
-                                                                                            <Link className="text-decoration-none" to={`/admin/design/${design.id}/edit`}>
+                                                                                            <Link className="text-decoration-none" to={`/admin/portfolio/${design.id}/edit`}>
                                                                                                 <div className="design-tooltip cursor-pointer">
                                                                                                     <span className="icon-tooltiptext fs-14">Edit</span>
                                                                                                     <BiSolidPencil className='me-3' color='#000000' size={20} />

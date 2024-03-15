@@ -216,13 +216,13 @@ const VideoConferencing = (props) => {
                 <section>
                     <Container>
                         <Row>
-                            <Row>
-                                <Col md={12} className="text-right">
+                            <Row className='px-0'>
+                                <Col md={12} className="text-right px-0">
                                     <GoBack fallBack="/#" />
                                 </Col>
                             </Row>
                             <Col lg="8">
-                                <Card className="bordered-top-primary">
+                                {/* <Card className="bordered-top-primary">
                                     <Card.Body>
                                         <Row>
                                             <Col lg="12">
@@ -263,17 +263,11 @@ const VideoConferencing = (props) => {
                                                     </Card.Body>
                                                 </Card>
                                             </Col>
-                                            {/* <Col lg="12">
-                                                <div className='mt-1'><BiDetail size="20" className='text-gold me-2 mb-1' />
-                                                    <span className='fw-600 me-2'>Details:</span>
-                                                    <span className='mt-1'>{appointment?.consultation_details}</span>
-                                                </div>
-                                            </Col> */}
                                         </Row>
                                     </Card.Body>
-                                </Card>
+                                </Card> */}
 
-                                <Card className='mt-3'>
+                                <Card>
                                     <Card.Body className='card-video'>
                                         <Row>
                                             <Col lg="12">

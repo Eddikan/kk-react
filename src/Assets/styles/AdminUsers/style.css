@@ -15,6 +15,14 @@
     display: inline-block;
 }
 
+.admin-ellipsis-user {
+    width: 220px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+}
+
 .users-tooltip .icon-tooltiptext {
     visibility: hidden;
     width: 155px;

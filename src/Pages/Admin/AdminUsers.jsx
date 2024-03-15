@@ -126,7 +126,7 @@ const Users = (props) => {
                                     <AdminSidebar />
                                 </Col>
 
-                                <Col lg={10} className='py-5 col-right-calendar mx-auto max-width-column'>
+                                <Col lg={10} className='py-5 padding-right-admin mx-auto max-width-column'>
                                     <Row>
                                         <Col lg={12}>
                                             <Row className="pb-4">
@@ -156,11 +156,11 @@ const Users = (props) => {
                                                             <span className='fw-500'>Phone Number</span>
                                                         </Col>
 
-                                                        <Col lg={2}>
+                                                        <Col lg={2} className='px-0'>
                                                             <span className='fw-500'>Country</span>
                                                         </Col>
 
-                                                        <Col lg={1}>
+                                                        <Col lg={1} className='px-0'>
                                                             <span className='fw-500'>Status</span>
                                                         </Col>
 
@@ -205,13 +205,13 @@ const Users = (props) => {
                                                                                         <div className='ms-3'>
                                                                                             <Link to={`/admin/profile/user/${user.id}`} className='text-decoration-none'>
                                                                                                 <div className='mb-1'>
-                                                                                                    <span className='mt-0 mb-1 fs-16 text-black'>
+                                                                                                    <span className='mt-0 mb-1 fs-18 text-black admin-ellipsis-user fw-500'>
                                                                                                         {user.first_name}&nbsp;{user.last_name}
                                                                                                     </span>
                                                                                                 </div>
 
                                                                                                 <div className='mb-1'>
-                                                                                                    <span className='fs-14 text-black'>{user.email}</span>
+                                                                                                    <span className='fs-16 text-black admin-ellipsis-user'>{user.email}</span>
                                                                                                 </div>
 
                                                                                                 <div className='mb-1'>
@@ -231,15 +231,13 @@ const Users = (props) => {
                                                                                                 </div>
                                                                                             </Link>
                                                                                         </div>
-
-
                                                                                     </Col>
 
                                                                                     <Col lg={2} className='d-flex justify-content-left align-items-center'>
                                                                                         <span className='fs-16 text-black'>{user.gender}</span>
                                                                                     </Col>
 
-                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center admin-ellipsis-user'>
                                                                                         <span className='fs-16 text-black '>{user.phone_number}</span>
                                                                                     </Col>
 

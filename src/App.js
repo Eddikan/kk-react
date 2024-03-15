@@ -39,22 +39,26 @@ const OrderTrackingDetails = lazy(() => import("./Pages/OrderTrackingDetails"));
 const OrderDetails = lazy(() => import("./Pages/OrderDetails"));
 const VideoConferencing = lazy(() => import("./Pages/VideoConferencing"));
 
+const LiveStream = lazy(() => import("./Pages/Designer/LiveStreams"));
+
 // Admin
 const AdminFabrics = lazy(() => import("./Pages/Admin/AdminFabrics"));
 const AdminDesigns = lazy(() => import("./Pages/Admin/AdminDesigns"));
 const AdminDesigners = lazy(() => import("./Pages/Admin/AdminDesigners"));
 const AdminSellers = lazy(() => import("./Pages/Admin/AdminSeller"));
 const AdminAppointments = lazy(() => import("./Pages/Admin/AdminAppointments"));
-const EditUser = lazy(() => import("./Pages/Admin/EditUser"));
-const EditDesigner = lazy(() => import("./Pages/Admin/EditDesigner"));
-const EditSeller = lazy(() => import("./Pages/Admin/EditSeller"));
+const AdminEditUser = lazy(() => import("./Pages/Admin/AdminEditUser"));
+const AdminEditDesigner = lazy(() => import("./Pages/Admin/AdminEditDesigner"));
+const AdminEditSeller = lazy(() => import("./Pages/Admin/AdminEditSeller"));
 const ViewSellerProfile = lazy(() => import("./Pages/Admin/ViewSellerProfile"));
 const ViewUserProfile = lazy(() => import("./Pages/Admin/ViewUserProfile"));
-const EditDesign = lazy(() => import("./Pages/Admin/EditDesigns"));
+const AdminEditDesign = lazy(() => import("./Pages/Admin/AdminEditDesign"));
+const AdminEditProduct = lazy(() => import("./Pages/Admin/AdminEditProduct"));
 
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
 const EditUserProfile = lazy(() => import("./Pages/User/EditProfile"));
+const LiveStreamPage = lazy(() => import("./Pages/User/LiveStreamPage"));
 const UserMeasurementGuide = lazy(() =>
   import("./Pages/User/MeasurementGuide")
 );
@@ -133,17 +137,21 @@ const App = () => {
             exact
             element={<EditUserProfile />}
           />
-          <Route path="/admin/edit/user/:userId" exact element={<EditUser />} />
+          <Route
+            path="/admin/edit/user/:userId"
+            exact
+            element={<AdminEditUser />}
+          />
           <Route
             path="/admin/edit/designer/:designerId"
             exact
-            element={<EditDesigner />}
+            element={<AdminEditDesigner />}
           />
 
           <Route
             path="/admin/edit/seller/:sellerId"
             exact
-            element={<EditSeller />}
+            element={<AdminEditSeller />}
           />
 
           <Route
@@ -169,9 +177,9 @@ const App = () => {
           />
 
           <Route
-            path="/admin/design/:portfolioId/edit"
+            path="/admin/portfolio/:portfolioId/edit"
             exact
-            element={<EditDesign />}
+            element={<AdminEditDesign />}
           />
           <Route
             path="/user/center/portfolio"
@@ -190,6 +198,13 @@ const App = () => {
             exact
             element={<EditProduct />}
           />
+
+          <Route
+            path="/admin/product/:productId/edit"
+            exact
+            element={<AdminEditProduct />}
+          />
+
           <Route
             path="/user/center/products"
             exact
@@ -202,7 +217,11 @@ const App = () => {
           <Route path="/admin/sellers" exact element={<AdminSellers />} />
           <Route path="/admin/fabrics" exact element={<AdminFabrics />} />
           <Route path="/admin/designs" exact element={<AdminDesigns />} />
-          <Route path="/admin/appointments" exact element={<AdminAppointments />} />
+          <Route
+            path="/admin/appointments"
+            exact
+            element={<AdminAppointments />}
+          />
           <Route
             path="/admin/profile/user/:userId"
             exact
@@ -285,6 +304,17 @@ const App = () => {
             path="/consultation-meeting/:appointmentId"
             exact
             element={<VideoConferencing />}
+          />
+
+          <Route
+            path="/designer/live/stream/:livestreamId"
+            exact
+            element={<LiveStream />}
+          />
+          <Route
+            path="/user/center/live/stream"
+            exact
+            element={<LiveStreamPage />}
           />
 
           <Route

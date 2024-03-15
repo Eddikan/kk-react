@@ -6,12 +6,12 @@ import { GoAlertFill } from 'react-icons/go';
 import { IoCloseOutline, IoEye } from "react-icons/io5";
 import { AiFillDelete } from "react-icons/ai";
 import { BiSolidPencil } from "react-icons/bi";
+import { ImLeaf } from 'react-icons/im';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import Pagination from 'Components/Pagination/Pagination';
 import AdminSidebar from 'Components/Shared/AdminSidebar';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import UserPlaceholder from 'Assets/images/user.png';
-import { ImLeaf } from 'react-icons/im';
 import LayoutAdmin from 'Components/Layout/LayoutAdmin';
 import GoBack from 'Components/Shared/GoBack';
 import 'Assets/styles/AdminFabrics/style.css';
@@ -46,11 +46,6 @@ const AdminFabrics = (props) => {
         setDeleteConfirmShow(true);
         setProductId(e);
     };
-
-    function toggleUnderConstruction(message) {
-        setUnderConstructionShow(true);
-        setModalHeading(message);
-    }
 
     const handleChangePage = (pageNumber) => {
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'product?page=' + pageNumber + '&user_id=' + currentUser)
@@ -129,7 +124,7 @@ const AdminFabrics = (props) => {
                                     <AdminSidebar />
                                 </Col>
 
-                                <Col lg={10} className='py-5 mx-auto max-width-column'>
+                                <Col lg={10} className='py-5 mx-auto max-width-column padding-right-admin'>
                                     <Row>
                                         <Col lg={12}>
                                             <Row className="pb-4">
@@ -194,26 +189,34 @@ const AdminFabrics = (props) => {
                                                                                 <Row>
                                                                                     <Col lg={3} className='d-flex justify-content-left align-items-center'>
                                                                                         <Link to={`/product/${fabric.id}`} className='d-flex justify-content-left align-items-center text-decoration-none'>
-                                                                                            <div className=" image-fabrics-admin "
+                                                                                            <div
+                                                                                                className=" image-fabrics-admin "
                                                                                                 style={{ backgroundImage: "url(" + fabricImage + ")" }}
                                                                                             >
                                                                                             </div>
                                                                                         </Link>
 
                                                                                         <div className='ms-3'>
-                                                                                            <Link to={`/product/${fabric.id}`} className='d-flex justify-content-left align-items-center text-decoration-none'>
-                                                                                                <div className='mb-1'>
-                                                                                                    <span className='fs-16 text-black'>{fabric.name}</span>
-                                                                                                    <span>
-                                                                                                        {fabric.eco_friendly != null && fabric.eco_friendly != '' && (
-                                                                                                            <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
-                                                                                                                <ImLeaf color="#55d140" className='mb-1' size={13} />
-                                                                                                            </span>
-                                                                                                        )}</span>
+                                                                                            <Link to={`/product/${fabric.id}`} className='d-flex justify-content-left align-items-center text-decoration-none mb-1'>
+                                                                                                <div className='mb-1 d-flex'>
+                                                                                                    <span className='fs-18 text-black admin-ellipsis-fabrics fw-500'>{fabric.name}</span>
+
+                                                                                                    {fabric.eco_friendly != null && fabric.eco_friendly != '' && (
+                                                                                                        <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
+                                                                                                            <div className='tooltip-content'>
+                                                                                                                <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
+                                                                                                            </div>
+                                                                                                            <ImLeaf color="#55d140" />
+                                                                                                        </span>
+                                                                                                    )}
                                                                                                 </div>
                                                                                             </Link>
 
-                                                                                            <Link to={`/admin/profile/seller/${fabric.user.id}`} className="text-decoration-none">
+                                                                                            <Link
+                                                                                                to={`/admin/profile/seller/${fabric.user.id}`}
+                                                                                                className="text-decoration-none text-black"
+                                                                                            >
+
                                                                                                 <div className='d-flex align-items-center user-image-chat'>
                                                                                                     {fabric.user.image ?
                                                                                                         <div
@@ -228,33 +231,13 @@ const AdminFabrics = (props) => {
                                                                                                         >
                                                                                                         </div>
                                                                                                     }
-                                                                                                    <span className='name-user ms-2'>
+                                                                                                    <span className='name-user ms-2 fs-16 admin-ellipsis-fabrics'>
                                                                                                         {fabric.user.first_name}
                                                                                                         &nbsp;
                                                                                                         {fabric.user.last_name}
                                                                                                     </span>
                                                                                                 </div>
                                                                                             </Link>
-
-                                                                                            {/* <div>
-                                                                                                {fabric.categories ?
-                                                                                                    <>
-                                                                                                        {fabric.categories.length > 0 ?
-                                                                                                            <>
-                                                                                                                {fabric.categories.slice(0, 3).map((category, index) => (
-                                                                                                                    <span key={index} className="fabrics-tags-view-bar bg-light fs-12 categories-color text-black">
-                                                                                                                        {category}
-                                                                                                                    </span>
-                                                                                                                ))}
-                                                                                                            </>
-                                                                                                            :
-                                                                                                            null
-                                                                                                        }
-                                                                                                    </>
-                                                                                                    :
-                                                                                                    null
-                                                                                                }
-                                                                                            </div> */}
                                                                                         </div>
                                                                                     </Col>
 
@@ -284,7 +267,7 @@ const AdminFabrics = (props) => {
                                                                                                 </div>
                                                                                             </Link>
 
-                                                                                            <Link className="text-decoration-none" to={`/user/center/product/${fabric.id}/edit`}>
+                                                                                            <Link className="text-decoration-none" to={`/admin/product/${fabric.id}/edit`}>
                                                                                                 <div className="fabrics-tooltip cursor-pointer">
                                                                                                     <span className="icon-tooltiptext fs-14">Edit</span>
                                                                                                     <BiSolidPencil className='me-3' color='#000000' size={20} />

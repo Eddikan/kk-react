@@ -1,29 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { Card, Modal } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import { Container, Button, Dropdown, Col, Row } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
-import Logo from 'Assets/images/kouture-konect-logo.png';
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { IoCalendarClearOutline, IoCartOutline, IoCloseOutline } from "react-icons/io5";
-import { GoBell, GoHeart } from "react-icons/go";
+import { GoBell, GoHeart, GoAlertFill } from "react-icons/go";
 import { BsEnvelope, BsShopWindow } from "react-icons/bs";
 import { RxDashboard } from "react-icons/rx";
 import { useCookies } from 'react-cookie';
-import UserPlaceholder from 'Assets/images/user.png';
+import { LiaUserTieSolid } from "react-icons/lia";
 import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import NewOrder from 'Assets/images/new-order-icon.png';
 import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import NewAppointment from 'Assets/images/new-appointment-icon.png';
-import { Card, Modal } from 'react-bootstrap';
 import User from 'Assets/images/user.png';
 import PlaceholderSquare from 'Assets/images/square-placeholder.jpg';
-import { GoAlertFill } from 'react-icons/go';
+import UserPlaceholder from 'Assets/images/user.png';
+import Logo from 'Assets/images/kouture-konect-logo.png';
 import 'Assets/styles/Headers/style.css';
+import toast from 'react-hot-toast';
 import axios from "axios";
 
 const Header = () => {
@@ -307,13 +307,10 @@ const Header = () => {
                             <hr className='mt-2 ' />
 
                             <div className='text-right' onClick={() => toggleUnderConstruction("Messages")}>
-                              <a
-                                // href="/messages"
-                                className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All</a>
+                              <a className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All</a>
                             </div>
                           </div>
                         </>
-
                       )}
                     </div>
 
@@ -321,7 +318,7 @@ const Header = () => {
                       <a href={`/admin/users`}>
                         <div className="nav-link header-tooltip cursor-pointer">
                           <span className="icon-tooltiptext fs-14">Administration</span>
-                          <MdOutlineAdminPanelSettings size={28} />
+                          <LiaUserTieSolid size={28} />
                         </div>
                       </a>
                     }
@@ -350,9 +347,7 @@ const Header = () => {
                           <div className="cursor-pointer nav-link" >Orders</div>
                         </a>
 
-                        {/* <div className="cursor-pointer nav-link" onClick={toggleOrdersMenu}>Orders</div> */}
                         {userOrdersOpen && (
-
                           <div className="action-box-orders user-menu-orders">
                             {userOrders.length > 0 ? (
                               <>
@@ -441,15 +436,18 @@ const Header = () => {
                             </Link>
                           }
 
-                          {userRole !== 'Admin' &&
+                          {/* {userRole !== 'Admin' &&
                             <Link to={`/admin/users`} className="mb-3 text-decoration-none d-block"><RxDashboard className='me-2' color='#000000' />
                               <span className='text-black'>Dashboard</span>
                             </Link>
-                          }
+                          } */}
 
-                          <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' color='#000000' />
-                            <span className='text-black'>Appointments</span>
-                          </Link>
+
+                          {userRole !== 'Admin' &&
+                            <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' color='#000000' />
+                              <span className='text-black'>Appointments</span>
+                            </Link>
+                          }
 
                           <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower className='me-2' color='#000000' />
                             <span className='text-black'>Logout</span>

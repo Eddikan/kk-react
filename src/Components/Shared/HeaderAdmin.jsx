@@ -4,22 +4,22 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
-import Logo from 'Assets/images/kouture-konect-logo.png';
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
-import { GoBell, GoHeart } from "react-icons/go";
+import { GoBell, GoHeart, GoAlertFill } from "react-icons/go";
 import { BsEnvelope } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import { IoCloseOutline, IoCalendarClearOutline } from "react-icons/io5";
+import { Link } from 'react-router-dom';
+import { RxDashboard } from "react-icons/rx";
+import { LiaUserTieSolid } from "react-icons/lia";
+import { MdOutlineAdminPanelSettings } from 'react-icons/md';
 import UserPlaceholder from 'Assets/images/user.png';
 import NewOrder from 'Assets/images/new-order-icon.png';
 import NewAppointment from 'Assets/images/new-appointment-icon.png';
-import { Link } from 'react-router-dom';
-import { RxDashboard } from "react-icons/rx";
-import { MdOutlineAdminPanelSettings } from 'react-icons/md';
-import toast from 'react-hot-toast';
+import Logo from 'Assets/images/kouture-konect-logo.png';
 import User from 'Assets/images/user.png';
-import { GoAlertFill } from 'react-icons/go';
 import 'Assets/styles/HeaderAdmin/style.css'
+import toast from 'react-hot-toast';
 import axios from "axios";
 
 const HeaderAdmin = () => {
@@ -262,8 +262,8 @@ const HeaderAdmin = () => {
 
                                                 <a href={`/admin/users`}>
                                                     <div className="nav-link header-tooltip cursor-pointer">
-                                                    <span className="icon-tooltiptext fs-14">Administration</span>
-                                                    <MdOutlineAdminPanelSettings size={28} />
+                                                        <span className="icon-tooltiptext fs-14">Administration</span>
+                                                        <LiaUserTieSolid size={28} />
                                                     </div>
                                                 </a>
 

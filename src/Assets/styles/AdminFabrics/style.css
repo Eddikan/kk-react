@@ -6,13 +6,29 @@
     background-repeat: no-repeat;
     position: relative;
     width: 50px;
-}   
+} 
+
 .bg-fabrics {
     background: #fafafa;
 }
+
+.admin-ellipsis-fabrics {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    display: block;
+}
+
 .fabrics-tooltip {
     position: relative;
     display: inline-block;
+}
+
+.fabric-ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .fabrics-tooltip .icon-tooltiptext {
@@ -44,6 +60,7 @@
 .fabrics-tooltip:hover .icon-tooltiptext {
     visibility: visible;
 }
+
 .fabrics-tags-view-bar {
     padding: 3px 8px;
     border-radius: 5px;
@@ -64,4 +81,39 @@
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 50%;
+}
+
+.green-leaf-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.green-leaf-tooltip .green-leaf-tooltiptext {
+    visibility: hidden;
+    width: 175px;
+    background-color: #00000080;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 28px;
+    left: 10%;
+    margin-left: -126px;
+}
+
+.green-leaf-tooltip .green-leaf-tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 74%;
+    margin-left: -5px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: #00000080 transparent transparent transparent;
+}
+
+.green-leaf-tooltip:hover .green-leaf-tooltiptext {
+    visibility: visible;
 }

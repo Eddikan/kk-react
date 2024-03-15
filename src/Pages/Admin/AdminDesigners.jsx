@@ -122,7 +122,7 @@ const AdminDesigners = (props) => {
                                     <AdminSidebar />
                                 </Col>
 
-                                <Col lg={10} className='py-5 mx-auto' style={{ maxWidth: '1440px' }}>
+                                <Col lg={10} className='py-5 mx-auto padding-right-admin max-width-column'>
                                     <Row>
                                         <Col lg={12}>
                                             <Row className="pb-4">
@@ -143,7 +143,11 @@ const AdminDesigners = (props) => {
                                                             <span className='fw-500'>Name</span>
                                                         </Col>
 
-                                                        <Col lg={3}>
+                                                        <Col lg={2}>
+                                                            <span className='fw-500'>Gender</span>
+                                                        </Col>
+
+                                                        <Col lg={2}>
                                                             <span className='fw-500'>Phone Number</span>
                                                         </Col>
 
@@ -151,7 +155,7 @@ const AdminDesigners = (props) => {
                                                             <span className='fw-500'>Country</span>
                                                         </Col>
 
-                                                        <Col lg={2} className='text-center'>
+                                                        <Col lg={1} className='text-center'>
                                                             <span className='fw-500'>Status</span>
                                                         </Col>
 
@@ -195,16 +199,19 @@ const AdminDesigners = (props) => {
 
                                                                                         <div className='ms-3'>
                                                                                             <div onClick={() => toggleGetUser(designer.user.id)} className='cursor-pointer'>
-                                                                                                <span className='mt-0 mb-1 fs-16 text-black'>
+                                                                                                <div className='mt-0 mb-1 fs-18 text-black fw-500 admin-ellipsis-designer'>
                                                                                                     {designer.user.first_name}&nbsp;{designer.user.last_name}
-                                                                                                </span>
-                                                                                                <br />
-                                                                                                <span className='fs-14 text-black'>{designer.user.email}</span>
+                                                                                                </div>
+                                                                                                <div className='fs-16 text-black admin-ellipsis-designer'>{designer.user.email}</div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </Col>
 
-                                                                                    <Col lg={3} className='d-flex justify-content-left align-items-center'>
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
+                                                                                        <span className='fs-16 text-black'>{designer.user.gender}</span>
+                                                                                    </Col>
+
+                                                                                    <Col lg={2} className='d-flex justify-content-left align-items-center'>
                                                                                         <span className='fs-16 text-black '>{designer.user.phone_number}</span>
                                                                                     </Col>
 
@@ -212,7 +219,7 @@ const AdminDesigners = (props) => {
                                                                                         <span className='fs-16 text-black'>{designer.user.country}</span>
                                                                                     </Col>
 
-                                                                                    <Col lg={2} className='d-flex justify-content-center align-items-center'>
+                                                                                    <Col lg={1} className='d-flex justify-content-center align-items-center'>
                                                                                         <div>
                                                                                             <span className='fs-16 text-black'>{designer.user.status}</span>
                                                                                         </div>

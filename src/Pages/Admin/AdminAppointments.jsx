@@ -16,6 +16,7 @@ import LoadingPage from 'Components/Shared/LoadingPage';
 import UserPlaceholder from 'Assets/images/user.png';
 import GoBack from 'Components/Shared/GoBack';
 import 'Assets/styles/AdminAppointments/style.css';
+import MeetingChat from 'Components/Chat/MeetingChat';
 import toast from 'react-hot-toast';
 import axios from "axios";
 
@@ -53,7 +54,6 @@ const AdminAppointments = (props) => {
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [customer, setCustomer] = useState('');
-    const [text, setText] = useState('');
     const [saveLoading, setSaveLoading] = useState(false);
     const [appointments, setAppointments] = useState([]);
     const [appointmentEditModal, setAppointmentEditModal] = useState(false);
@@ -254,7 +254,7 @@ const AdminAppointments = (props) => {
                                     <AdminSidebar />
                                 </Col>
 
-                                <Col lg={10} className='py-5 mx-auto max-width-column'>
+                                <Col lg={10} className='py-5 mx-auto max-width-column padding-right-admin'>
                                     <Row>
                                         <Col lg={12}>
                                             <Row className="pb-4">
@@ -327,13 +327,13 @@ const AdminAppointments = (props) => {
                                                                                             )}
 
                                                                                             <div>
-                                                                                                <span className='d-flex ms-3 mt-0 mb-1 fs-18 text-black'>
+                                                                                                <span className='d-flex ms-3 mt-0 mb-1 fs-18 text-black fw-500'>
                                                                                                     {appointment.designer?.first_name}
                                                                                                     &nbsp;
                                                                                                     {appointment.designer?.last_name}
                                                                                                 </span>
                                                                                                 <div className='ms-3 fs-16 text-black'>
-                                                                                                    <span className='fw-600 me-1'>Created:</span>&nbsp;{today}
+                                                                                                    <span className='me-1'>Created:</span>&nbsp;{today}
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
@@ -407,7 +407,6 @@ const AdminAppointments = (props) => {
                                                                                                             appointment.designer?.last_name,
                                                                                                             appointment.designer?.image,
                                                                                                             "Under Construction");
-                                                                                                        // setAppointmentId(appointment.id,);
                                                                                                     }}
                                                                                                 >
                                                                                                     <span className="icon-tooltiptext fs-14">Message Designer</span>
@@ -471,6 +470,7 @@ const AdminAppointments = (props) => {
                                                 </>
                                             }
                                         </>
+
                                         <Pagination
                                             className="pagination-bar mt-4 mb-0"
                                             currentPage={currentPage}
@@ -482,12 +482,39 @@ const AdminAppointments = (props) => {
 
                                 </Col>
                             </Row>
+
+                            {chatBox ?
+                                <>
+                                    <Card className='width-chat-card px-0'>
+                                        <Card.Header className='header-chat bg-white'>
+                                            <div className='d-flex justify-content-between'>
+                                                <div className='d-flex align-items-center'>
+                                                    <span className='fw-500'>{customer.first_name} {customer.last_name}</span>
+                                                    {/* <span className='ms-2 active-now fs-14 fw-400'>Active Now</span> */}
+                                                </div>
+                                                <div className="cursor-pointer" onClick={() => setChatBox(false)}>
+                                                    <IoCloseOutline color="#7e7e7e" size={25} />
+                                                </div>
+                                            </div>
+                                        </Card.Header>
+                                        <Card.Body >
+                                            <MeetingChat
+                                                currentUser={currentUser}
+                                                appointmentId={appointmentId}
+                                                user={userDetails}
+                                            />
+                                        </Card.Body>
+                                    </Card>
+                                </>
+                                :
+                                null
+                            }
                         </Container>
                     </section>
                 </>
             }
 
-<Modal
+            <Modal
                 show={underConstructionShow}
                 className='modal-preview'
                 fade={false}
