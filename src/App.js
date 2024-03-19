@@ -90,6 +90,12 @@ const Designers = lazy(() => import("./Pages/Designers"));
 // Under Construction
 const UnderConstruction = lazy(() => import("./Pages/UnderConstruction"));
 
+//Body Gram 
+const BodyGram = lazy(() => import("./Pages/BodyGram"));
+
+//Measurement
+const Measurement = lazy(() => import("./Pages/Measurement"));
+
 const LoadingPage = () => {
   return (
     <>
@@ -327,6 +333,16 @@ const App = () => {
             path="/designer/:designerId/appointment/schedule/:scheduleId"
             exact
             element={<ScheduleConsultation />}
+          />
+          <Route
+            path="/body-gram"
+            exact
+            element={<BodyGram />}
+          />
+          <Route
+            path="/measurement"
+            exact
+            element={<Measurement />}
           />
         </Routes>
       </Suspense>
