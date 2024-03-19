@@ -4,14 +4,14 @@ import { Container, Row, Col, Button, Card, Modal, ModalFooter } from 'react-boo
 import Layout from 'Components/Layout/Layout';
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
-import { MdOutlineVideocam, MdOutlineVideocamOff, MdOutlineCalendarMonth } from 'react-icons/md';
-import { BiDetail } from "react-icons/bi";
+import { LuSubtitles } from "react-icons/lu";
 import { GoAlertFill } from 'react-icons/go';
-import { IoCloseOutline } from "react-icons/io5";
+import { BiDetail } from "react-icons/bi";
+import { IoCloseOutline, IoCalendarOutline } from "react-icons/io5";
 import 'Assets/styles/DesignerLiveStream/style.css';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-import LiveStream from 'Components/Chat/LiveStream';
+import LiveStream from 'Components/Chat/LiveStreamChat';
 
 const LiveStreams = (props) => {
     const navigate = useNavigate();
@@ -86,14 +86,20 @@ const LiveStreams = (props) => {
 
                                             <Col lg="6">
                                                 <div className='mt-1 mb-2'>
-                                                    <span className='fw-600 me-2'>Title:</span>
+                                                    <span className='fw-600 me-2'>
+                                                        <LuSubtitles className='text-gold me-2 mb-1' size="20" />
+                                                        Title:
+                                                    </span>
                                                     <span className='mt-1'>{live.title}</span>
                                                 </div>
                                             </Col>
 
                                             <Col lg="6">
                                                 <div className='mt-1 mb-2'>
-                                                    <span className='fw-600 me-2'>Date:</span>
+                                                    <span className='fw-600 me-2'>
+                                                        <IoCalendarOutline className='text-gold me-2 mb-1' size="20" />
+                                                        Date:
+                                                    </span>
                                                     <span className='mt-1'>{returnFormattedDate(live.date ?? '-')}</span>
                                                 </div>
                                             </Col>
@@ -102,7 +108,10 @@ const LiveStreams = (props) => {
                                                 <Card className='mt-3'>
                                                     <Card.Body>
                                                         <div className='mt-1'>
-                                                            <span className='fw-600 me-2'>Description:</span>
+                                                            <span className='fw-600 me-2'>
+                                                                <BiDetail size="20" className='text-gold me-2 mb-1' />
+                                                                Description:
+                                                            </span>
                                                             <div className='mt-3'>{live?.description}</div>
                                                         </div>
                                                     </Card.Body>
@@ -117,8 +126,8 @@ const LiveStreams = (props) => {
                                         <Row>
                                             <Col lg="12">
                                                 <iframe
-                                                    // src={live.url} 
-                                                    src="https://kouture-konect.web.app/admin/users"
+                                                    src={live.url}
+                                                    // src="https://kouture-konect.web.app/admin/users"
                                                     height="385" width="817"
                                                 >
                                                 </iframe>

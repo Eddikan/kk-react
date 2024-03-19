@@ -317,8 +317,14 @@ const App = () => {
             element={<LiveStreamPage />}
           />
 
+          {/* <Route
+            path="/appointment/schedule/:designerId/reschedule/:scheduleId"
+            exact
+            element={<ScheduleConsultation />}
+          /> */}
+
           <Route
-            path="/appointment/schedule/:designerId"
+            path="/designer/:designerId/appointment/schedule/:scheduleId"
             exact
             element={<ScheduleConsultation />}
           />

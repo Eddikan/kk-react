@@ -18,6 +18,7 @@ import InputEmoji from 'react-input-emoji';
 import { AiFillMessage, AiFillDelete } from "react-icons/ai";
 import axios from "axios";
 import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
 import MeetingChat from 'Components/Chat/MeetingChat';
 
 const intitialConsultationData = {
@@ -46,6 +47,8 @@ const initialAppointments = {
 
 const Appointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const { rescheduleId } = useParams();
+
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const [appointmentId, setAppointmentId] = useState('');
@@ -184,8 +187,6 @@ const Appointments = (props) => {
             toast.error('Please fill up cancellation reason!');
         }
     }
-
-
 
     const handleChangePage = (pageNumber) => {
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment?page=' + pageNumber + '&user_id=' + currentUser)
@@ -356,13 +357,15 @@ const Appointments = (props) => {
                                                                                                         <BiSolidPencil className='video-cam me-3' color='#0000005c' size={20} />
                                                                                                     </div>
                                                                                                 ) : (
-                                                                                                    <div
-                                                                                                        className="cursor-pointer appointments-tooltip"
-                                                                                                        onClick={() => toggleEditAppointmentModal(appointment.id)}
-                                                                                                    >
-                                                                                                        <span className="icon-tooltiptext fs-14">Reschedule</span>
-                                                                                                        <BiSolidPencil className='video-cam me-3' size={20} color='#000000' />
-                                                                                                    </div>
+                                                                                                    <Link to={`/designer/${appointment.designer.designer_id}/appointment/schedule/${appointment.id}`}>
+                                                                                                        <div
+                                                                                                            className="cursor-pointer appointments-tooltip"
+                                                                                                            onClick={() => toggleEditAppointmentModal(appointment.id)}
+                                                                                                        >
+                                                                                                            <span className="icon-tooltiptext fs-14">Reschedule</span>
+                                                                                                            <BiSolidPencil className='video-cam me-3' size={20} color='#000000' />
+                                                                                                        </div>
+                                                                                                    </Link>
                                                                                                 )}
                                                                                             </>
                                                                                         ) :

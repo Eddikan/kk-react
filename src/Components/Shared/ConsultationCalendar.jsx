@@ -88,14 +88,21 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const [youAreScheduleShow, setYouAreScheduleShow] = useState(false);
     const [modalHeading, setModalHeading] = useState();
     const [scheduleLoading, setScheduleLoading] = useState(false);
+    const [appointmentId, setAppointmentId] = useState('');
 
     const postSetAppointment = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment?user_id=' + currentUser, data);
     };
 
+    const putSetAppointment = async (data) => {
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId + '?user_id=' + currentUser, data);
+    };
+
     const getSetAppointment = async (e) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability?date=' + e);
     };
+
+    console.log("appointmentId", appointmentId);
 
     const convertToDateOnly = (selectedDate) => {
         const resultDate = new Date(selectedDate);
@@ -287,6 +294,28 @@ const ConsultationCalendar = ({ toggleEvent }) => {
             });
     }
 
+    const putAppointmentSubmit = (e) => {
+        setFormStatus('loading');
+        setAppointmentId();
+        putSetAppointment({ ...consultationFormData })
+            .then(response => {
+                const status = response.data.status;
+                if (status === "Success") {
+                    setFormStatus('standby');
+                    setReloadCount(reloadCount + 1);
+                    setYouAreScheduleShow(!youAreScheduleShow);
+                    setAppointmentFormData(initialAppointments);
+                    toast.success('Consultation added successfully!');
+                    navigate('/appointments/' + currentUser)
+                } else {
+                    setFormStatus('standby');
+                    toast.error('Designer is not available at this time');
+                }
+            }).catch(() => {
+                toast.error('Designer is not available at this time');
+            });
+    }
+
     useEffect(() => {
         const getTimezone = () => {
             const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -431,12 +460,23 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                         <div className="send-btn-container">
                             <button className="btn btn-primary bg-transparent text-black" onClick={() => { setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate(''); setSelectedHoursArray([]); }}>Cancel</button>
                             {formStatus != "loading" ?
-                                // <button className="btn btn-primary" onClick={addAppointmentSubmit}>Schedule Now</button>
-                                <button className="btn btn-primary" onClick={() => addAppointmentSubmit("You are Scheduled!")}>Schedule Now</button>
+                                <button className="btn btn-primary" onClick={() => putAppointmentSubmit("You are Scheduled!")}>Schedule Now</button>
 
                                 :
                                 <button className="btn btn-primary" onClick={handleDefault}>Loading...</button>
                             }
+
+                            {/* <button className="btn btn-primary" onClick={() => {
+                                if (selectedDate) {
+                                    addAppointmentSubmit()
+                                } else {
+                                    putAppointmentSubmit()
+                                }
+
+                            }}
+                            >
+                                Schedule Now
+                            </button> */}
                         </div>
                     </div>
                 }

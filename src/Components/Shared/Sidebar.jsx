@@ -21,6 +21,8 @@ import { RiLiveLine } from "react-icons/ri";
 const Sidebar = ({ currentTab, onChangeTab }) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
+
+    const module = window.location.pathname.split('/').pop();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -58,7 +60,12 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                             </div>
 
                             <span className="shop-manager-table">
-                                <span><IoIosArrowDown className='me-4' color='#000000' /></span>
+                                {module == 'orders' &&
+                                    <>
+                                        <span><IoIosArrowDown className='me-4' color='#000000' /></span>
+                                    </>
+                                }
+
 
                                 <Card className="table_content file-action">
                                     <Card.Body className="action_container font-weight">

@@ -12,7 +12,7 @@ import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 import GoBack from '../../Components/Shared/GoBack';
 import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
-import MeetingChat from 'Components/Chat/MeetingChat';
+import LiveStreamChat from 'Components/Chat/LiveStreamChat';
 import toast from 'react-hot-toast';
 import axios from "axios";
 
@@ -24,7 +24,7 @@ const initialStreamFormData = Object.freeze({
 
 const LiveStreamPage = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const [appointmentId, setAppointmentId] = useState('');
+    const [livestreamId, setLiveStreamId] = useState('');
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
@@ -36,6 +36,7 @@ const LiveStreamPage = (props) => {
     const [streamLoading, setStreamLoading] = useState(false);
     const [formStatus, setFormStatus] = useState('standby');
     const [streamFormData, setStreamFormData] = useState(initialStreamFormData);
+    const [designer, setDesigner] = useState('');
 
 
     function toggleCreateStream() {
@@ -60,6 +61,7 @@ const LiveStreamPage = (props) => {
         setStreamFormData({
             ...streamFormData,
             [name]: value,
+            date: new Date(),
         });
     }
 
@@ -109,6 +111,18 @@ const LiveStreamPage = (props) => {
             });
 
     }, [reloadCount]);
+
+    function toggleChatbox(id, first_name, last_name, image, message) {
+        setChatBox(true);
+        setLiveStreamId(id.toString());
+        setDesigner({
+            id: id ?? 0,
+            first_name: first_name ?? '-',
+            last_name: last_name ?? '-',
+            image: image ?? '-'
+        });
+        setModalHeading(message);
+    }
 
     return (
         <LayoutSellerCenter>
@@ -222,9 +236,17 @@ const LiveStreamPage = (props) => {
                                                                                     </Link>
 
                                                                                     <div className="cursor-pointer live-tooltip"
-                                                                                        onClick={() => toggleUnderConstruction("Message")}>
+                                                                                        onClick={function () {
+                                                                                            toggleChatbox(
+                                                                                                stream.id,
+                                                                                                stream.user?.first_name,
+                                                                                                stream.user?.last_name,
+                                                                                                stream.user?.image,
+                                                                                                "Under Construction");
+                                                                                        }}
+                                                                                    >
                                                                                         <span className="icon-tooltiptext fs-14">Message</span>
-                                                                                        <span><AiFillMessage className='video-cam' size={19} color="#000000" /></span>
+                                                                                        <span><AiFillMessage className='video-cam' size={20} color="#000000" /></span>
                                                                                     </div>
                                                                                 </Col>
                                                                             </Row>
@@ -269,7 +291,7 @@ const LiveStreamPage = (props) => {
                                     <Card.Header className='header-chat bg-white'>
                                         <div className='d-flex justify-content-between'>
                                             <div className='d-flex align-items-center'>
-                                                {/* <span className='fw-500'>{designer.first_name} {designer.last_name}</span> */}
+                                                <span className='fw-500'>{designer?.first_name} {designer?.last_name}</span>
                                                 {/* <span className='ms-2 active-now fs-14 fw-400'>Active Now</span> */}
                                             </div>
                                             <div className="cursor-pointer" onClick={() => setChatBox(false)}>
@@ -278,9 +300,9 @@ const LiveStreamPage = (props) => {
                                         </div>
                                     </Card.Header>
                                     <Card.Body >
-                                        <MeetingChat
+                                        <LiveStreamChat
                                             currentUser={currentUser}
-                                            appointmentId={appointmentId}
+                                            livestreamId={livestreamId}
                                             user={userDetails}
                                         />
                                     </Card.Body>
@@ -348,19 +370,6 @@ const LiveStreamPage = (props) => {
                                             className='form-control'
                                             onChange={handleChangeStream}
                                             value={streamFormData.title}
-                                        />
-                                    </div>
-                                </Col>
-
-                                <Col lg="12" className='mt-3'>
-                                    <div className='mb-1'>Date</div>
-                                    <div>
-                                        <input
-                                            type="date"
-                                            name="date"
-                                            className='form-control'
-                                            onChange={handleChangeStream}
-                                            value={streamFormData.date}
                                         />
                                     </div>
                                 </Col>

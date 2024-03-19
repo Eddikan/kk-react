@@ -1356,7 +1356,8 @@ const Calendar = (props) => {
                             BusinessHoursSubmitPut()
                         }
 
-                    }}>
+                    }}
+                    >
                         Save
                     </button>
 
