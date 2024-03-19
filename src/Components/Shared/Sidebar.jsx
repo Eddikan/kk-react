@@ -35,13 +35,18 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                 <UncontrolledAccordion>
                     <AccordionItem className='padding-sidebar pt-4'>
                         <p className="fs-20 text-black"><strong>Shop Manager</strong></p>
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/calendar')}>
+                        <div
+                            className="hover-sidebar cursor-pointer yellow-hover mt-3"
+                            onClick={() => navigate('/user/center/calendar')}
+                        >
                             <IoCalendarClearOutline size="20" className="me-2 mb-1" />Calendar</div>
 
                         <a className="yellow-hover cursor-pointer text-decoration "
                             href={`/user/center/appointments`}
                         >
-                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/portfolio')}>
+                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3"
+                                onClick={() => navigate('/user/center/appointments')}
+                            >
                                 <PiBriefcase size="22" className="me-2 mb-1" />
                                 Appointments
                             </div>

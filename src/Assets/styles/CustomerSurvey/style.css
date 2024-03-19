@@ -1,0 +1,50 @@
+.user-content-photo {
+    width: 642px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+.customer-survey {
+    padding-right: 630px;
+    padding-left: 630px;
+    padding-bottom: 20px;
+    background-color: #cea8354d;
+}
+.radio-size {
+    min-width: 19px;
+    min-height: 19px;
+}
+.checkbox-size {
+    min-width: 19px;
+    min-height: 19px;
+}
+.indicate-question {
+    color: #d93025;
+}
+.question-concerns {
+    width: 100%;
+    border: none;
+}
+button.clear-form {
+    border: none;
+    background: none;
+    color: #cea835;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.btn-submit{
+    font-size: 15px;
+    padding: 10px 20px;
+    min-width: 120px;
+    border-radius: 5px;
+    border-width: 1px;
+    color: #ffffff !important;
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+.btn-submit:hover {
+    color: #ffffff !important;
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+}

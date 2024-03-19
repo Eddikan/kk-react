@@ -41,6 +41,14 @@ const VideoConferencing = lazy(() => import("./Pages/VideoConferencing"));
 
 const LiveStream = lazy(() => import("./Pages/Designer/LiveStreams"));
 
+const CustomerSatisfaction = lazy(() =>
+  import("./Pages/Survey/CustomerSatisfaction")
+);
+
+const PostPurchaseSurvey = lazy(() =>
+  import("./Pages/Survey/PostPurchaseSurvey")
+);
+
 // Admin
 const AdminFabrics = lazy(() => import("./Pages/Admin/AdminFabrics"));
 const AdminDesigns = lazy(() => import("./Pages/Admin/AdminDesigns"));
@@ -153,13 +161,11 @@ const App = () => {
             exact
             element={<AdminEditDesigner />}
           />
-
           <Route
             path="/admin/edit/seller/:sellerId"
             exact
             element={<AdminEditSeller />}
           />
-
           <Route
             path="/user/center/guide"
             exact
@@ -181,7 +187,6 @@ const App = () => {
             exact
             element={<EditPortfolio />}
           />
-
           <Route
             path="/admin/portfolio/:portfolioId/edit"
             exact
@@ -204,19 +209,16 @@ const App = () => {
             exact
             element={<EditProduct />}
           />
-
           <Route
             path="/admin/product/:productId/edit"
             exact
             element={<AdminEditProduct />}
           />
-
           <Route
             path="/user/center/products"
             exact
             element={<UserProducts />}
           />
-
           {/* Admin */}
           <Route path="/admin/users" exact element={<Users />} />
           <Route path="/admin/designers" exact element={<AdminDesigners />} />
@@ -233,13 +235,11 @@ const App = () => {
             exact
             element={<ViewUserProfile />}
           />
-
           <Route
             path="/admin/profile/seller/:sellerId"
             exact
             element={<ViewSellerProfile />}
           />
-
           {/* Designs */}
           <Route path="/find-designs" exact element={<Designs />} />
           <Route path="/designs" exact element={<Designs />} />
@@ -283,6 +283,15 @@ const App = () => {
             element={<UserCalendar />}
           />
           <Route path="/designer-profile" exact element={<DesignerProfile />} />
+
+          {/* Survey */}
+          <Route
+            path="/customer-satisfaction"
+            exact
+            element={<CustomerSatisfaction />}
+          />
+          <Route path="/post-purchase" exact element={<PostPurchaseSurvey />} />
+
           <Route path="/appointments/:c" exact element={<Appointments />} />
           <Route path="/user/center/orders" exact element={<UserOrders />} />
           <Route path="/messages" exact element={<Messages />} />
@@ -311,7 +320,6 @@ const App = () => {
             exact
             element={<VideoConferencing />}
           />
-
           <Route
             path="/designer/live/stream/:livestreamId"
             exact
@@ -322,15 +330,13 @@ const App = () => {
             exact
             element={<LiveStreamPage />}
           />
-
           {/* <Route
-            path="/appointment/schedule/:designerId/reschedule/:scheduleId"
+            path="/appointment/schedule/:designerId"
             exact
             element={<ScheduleConsultation />}
           /> */}
-
           <Route
-            path="/designer/:designerId/appointment/schedule/:scheduleId"
+            path="/designer/:designerId/appointment/schedule/:appointmentscheduleId"
             exact
             element={<ScheduleConsultation />}
           />

@@ -781,11 +781,14 @@ const Calendar = (props) => {
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='mx-auto py-5 max-width-column'>
+                        <Col lg={10} className='mx-auto py-5 padding-right-admin max-width-column'>
                             <Row>
                                 <Col lg={12}>
                                     <Row className="pb-4">
-                                        <Col lg={12} className='text-right mb-2'>
+                                        <Col lg={11}>
+                                        </Col>
+
+                                        <Col lg={1} className='text-right'>
                                             <GoBack fallBack="/" />
                                         </Col>
 
@@ -1331,7 +1334,6 @@ const Calendar = (props) => {
                                                         />
                                                     </Col>
                                                 }
-
                                             </Row>
                                         </Col>
                                     </Row>
@@ -1349,18 +1351,20 @@ const Calendar = (props) => {
                         Cancel
                     </button>
 
-                    <button className="btn btn-primary btn-style" variant="primary" onClick={() => {
-                        if (!times.length) {
-                            BusinessHoursSubmitPost()
-                        } else {
-                            BusinessHoursSubmitPut()
-                        }
+                    <button
+                        className="btn btn-primary btn-style"
+                        variant="primary"
+                        onClick={() => {
+                            if (!times.length) {
+                                BusinessHoursSubmitPost()
+                            } else {
+                                BusinessHoursSubmitPut()
+                            }
 
-                    }}
+                        }}
                     >
                         Save
                     </button>
-
                 </Modal.Footer>
             </Modal>
         </LayoutSellerCenter >

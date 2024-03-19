@@ -168,8 +168,20 @@ const PortfolioGrid = (props) => {
                                                 {/* <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + portfolioImage + ")" }}> */}
                                                 <div
                                                     className='portfolio-link cursor-pointer'
-                                                    onClick={function () { togglePortfolioImage(object.id, object.designer.id, object.user.first_name, object.user.last_name, object.image_urls, object.user.image, object.user.address_line_1, object.user.province, object.tags, object.description, object.user.id); }}
-
+                                                    onClick={function () {
+                                                        togglePortfolioImage(
+                                                            object.id,
+                                                            object.designer.id,
+                                                            object.user.first_name,
+                                                            object.user.last_name,
+                                                            object.image_urls,
+                                                            object.user.image,
+                                                            object.user.address_line_1,
+                                                            object.user.province,
+                                                            object.tags,
+                                                            object.description,
+                                                            object.user.id);
+                                                    }}
                                                 >
                                                     <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '200px' }}></div>
                                                     <div className="portfolio-overlay">
@@ -207,7 +219,6 @@ const PortfolioGrid = (props) => {
                     </>
                 }
             </div>
-
 
             <Modal
                 show={portfoliosImage}
@@ -270,7 +281,6 @@ const PortfolioGrid = (props) => {
                                     </>
                                     :
                                     <>
-
                                     </>
                                 }
 
@@ -298,13 +308,13 @@ const PortfolioGrid = (props) => {
                                                 </div>
                                             </a>
 
-
                                             {isDesignCurrentUser ?
                                                 null
                                                 :
                                                 <>
                                                     <div className='btn-book-bar'>
-                                                        <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                                        {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
+                                                        <a href={`/designer/${singleDesign.id}/appointment/schedule/0`}>
                                                             <button className='btn btn-book-consultation'>Book a Consultation</button>
                                                         </a>
                                                     </div>
@@ -371,18 +381,25 @@ const PortfolioGrid = (props) => {
                                                             <>
                                                                 <hr />
                                                                 <div className='text-center'>
-                                                                    <a className='book-consultation btn-book btn w-100'
+                                                                    {/* <a className='book-consultation btn-book btn w-100'
                                                                         href={`/appointment/schedule/${singleDesign.id}`}
+                                                                    > */}
+                                                                    <a
+                                                                        className='book-consultation btn-book btn w-100'
+                                                                        href={`/designer/${singleDesign.id}/appointment/schedule/0`}
                                                                     >
-                                                                        <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
+                                                                        <IoVideocam className="me-2" color="#ffffff" />
+                                                                        Book a Consultation
+                                                                    </a>
                                                                 </div>
 
                                                                 <div className='text-center mt-2'
                                                                     onClick={() => { toggleUnderConstruction("Message"); setProfileViewShow(false); }}
                                                                 >
-                                                                    <a className='book-consultation btn-message-designer btn w-100'
-                                                                    >
-                                                                        <AiFillMessage className="me-2" />Send Message</a>
+                                                                    <a className='book-consultation btn-message-designer btn w-100'>
+                                                                        <AiFillMessage className="me-2" />
+                                                                        Send Message
+                                                                    </a>
                                                                 </div>
                                                             </>
                                                         }
@@ -416,7 +433,8 @@ const PortfolioGrid = (props) => {
                                     :
                                     <>
                                         <div className='text-center mb-4' >
-                                            <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                            {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
+                                            <a href={`/designer/${singleDesign.id}/appointment/schedule/0`}>
                                                 <div className="action-button-designs bg-white">
                                                     <PiNotepadFill className="text-black mt-2" size={30} />
                                                 </div>
@@ -462,7 +480,11 @@ const PortfolioGrid = (props) => {
                 id="description-card"
             >
                 <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close description-close' onClick={() => setDescriptionShow(false)} data-dismiss='modal' aria-label='Close'>
+                    <button
+                        type='button'
+                        className='close react-modal-close description-close'
+                        onClick={() => setDescriptionShow(false)}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
@@ -482,7 +504,12 @@ const PortfolioGrid = (props) => {
             >
                 <Modal.Header className="py-0">
                     <h5 className='modal-title text-uppercase text-left fs-22 mt-2'>{modalHeading}</h5>
-                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setUnderConstructionShow(false)}
+                    >
+
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
@@ -505,7 +532,11 @@ const PortfolioGrid = (props) => {
                 id="under-construction"
             >
                 <Modal.Header className="py-0">
-                    <button type='button' className='close react-modal-close' onClick={() => setMessageShow(false)} data-dismiss='modal' aria-label='Close'>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setMessageShow(false)}
+                    >
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
@@ -560,7 +591,12 @@ const PortfolioGrid = (props) => {
             >
                 <Modal.Header className="pb-0">
                     <Modal.Title className='rufina-family fs-22 text-black'>Share Design</Modal.Title>
-                    <button type='button' className='close react-modal-close' onClick={function () { setShareShowModal(false); }} >
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={function () { setShareShowModal(false); }}
+                    >
+
                         <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
                 </Modal.Header>
@@ -688,7 +724,14 @@ const PortfolioGrid = (props) => {
                     </Row>
                 </Modal.Body>
                 <Modal.Footer className="text-right border-none">
-                    <button className="btn btn-secondary border-black bg-white text-black me-3 btn-style" onClick={() => setCopyEmbedLink(false)} type="button" >Cancel</button>
+                    <button
+                        className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                        onClick={() => setCopyEmbedLink(false)}
+                        type="button"
+                    >
+                        Cancel
+                    </button>
+
                     <CopyTo
                         text={iframeLink}
                         classes="btn btn-primary btn-style"
