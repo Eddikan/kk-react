@@ -361,9 +361,13 @@ const DesignerProfile = () => {
                                                 </span>
                                                 {designerAvailable ?
                                                     <span className='w-100'>
-                                                        <a
+                                                        {/* <a
                                                             href={`/appointment/schedule/${designer.id}`}
                                                             className='btn ms-3 btn-consultation fs-16 fw-400 btn-style'
+                                                        > */}
+                                                        <a
+                                                            className='btn ms-3 btn-consultation fs-16 fw-400 btn-style'
+                                                            href={`/designer/${designer.id}/appointment/schedule/0`}
                                                         >
                                                             <IoVideocam className='me-2' size="20" />Schedule a Consultation</a>
                                                     </span>

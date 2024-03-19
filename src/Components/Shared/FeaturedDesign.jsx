@@ -322,7 +322,8 @@ const PortfolioGrid = (props) => {
                                                 :
                                                 <>
                                                     <div className='btn-book-bar'>
-                                                        <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                                        {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
+                                                        <a href={`/designer/${singleDesign.id}/appointment/schedule/0`}>
                                                             <button className='btn btn-book-consultation'>Book a Consultation</button>
                                                         </a>
                                                     </div>
@@ -392,8 +393,12 @@ const PortfolioGrid = (props) => {
                                                             <>
                                                                 <hr />
                                                                 <div className='text-center'>
-                                                                    <a className='book-consultation btn-book btn w-100'
+                                                                    {/* <a className='book-consultation btn-book btn w-100'
                                                                         href={`/appointment/schedule/${singleDesign.id}`}
+                                                                    > */}
+                                                                    <a
+                                                                        className='book-consultation btn-book btn w-100'
+                                                                        href={`/designer/${singleDesign.id}/appointment/schedule/0`}
                                                                     >
                                                                         <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
                                                                 </div>
@@ -438,7 +443,8 @@ const PortfolioGrid = (props) => {
                                     :
                                     <>
                                         <div className='text-center mb-4' >
-                                            <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                            {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
+                                            <a href={`/designer/${singleDesign.id}/appointment/schedule/0`}>
                                                 <div className="action-button-designs bg-white">
                                                     <PiNotepadFill className="text-black mt-2" size={30} />
                                                 </div>

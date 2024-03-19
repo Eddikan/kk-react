@@ -135,17 +135,20 @@ const Orders = (props) => {
                             <Sidebar currentTab={currentTab} onChangeTab={(e) => setCurrentTab(e)} />
                         </Col>
 
-                        <Col lg={10} className='top-padding mx-auto max-width-column'>
-                            <div className='ms-4'>
+                        <Col lg={10} className='py-5 mx-auto padding-right-admin max-width-column'>
+                            <div>
                                 <Row>
                                     <Col lg={12}>
                                         <Row className="pb-4">
-                                            <Col lg={10} className='d-flex justify-content-left align-items-center'>
-                                                <h3 className="fs-30 fw-600 text-black mb-0">Orders</h3>
+                                            <Col lg={11}>
                                             </Col>
 
-                                            <Col lg={2} className='text-right'>
+                                            <Col lg={1} className='text-right'>
                                                 <GoBack fallBack="/" />
+                                            </Col>
+
+                                            <Col lg={12} className='d-flex justify-content-left align-items-center'>
+                                                <h3 className="fs-30 fw-600 text-black mb-0">Orders</h3>
                                             </Col>
                                         </Row>
                                         <Row className="mb-4 d-none">

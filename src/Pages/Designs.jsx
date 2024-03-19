@@ -733,7 +733,8 @@ const Designs = (props) => {
                                                 :
                                                 <>
                                                     <div className='btn-book-bar'>
-                                                        <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                                        {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
+                                                        <a href={`/designer/${singleDesign.id}/appointment/schedule/0`}>
                                                             <button className='btn btn-book-consultation'>Book a Consultation</button>
                                                         </a>
                                                     </div>
@@ -849,11 +850,12 @@ const Designs = (props) => {
                                     :
                                     <>
                                         <div className='text-center mb-4' >
-                                            <a href={`/appointment/schedule/${singleDesign.id}`}>
+                                            {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
+                                            <a href={`/designer/${singleDesign.id}/appointment/schedule/0`}>
                                                 <div className="action-button-designs bg-white">
                                                     <PiNotepadFill className="text-black mt-2" size={30} />
                                                 </div>
-                                            </a>
+                                            </a>F
                                             <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                         </div>
 
@@ -866,9 +868,7 @@ const Designs = (props) => {
                                     </>
                                 }
 
-                                <div className='text-center mb-4'
-                                    onClick={toggleShareModal}
-                                >
+                                <div className='text-center mb-4' onClick={toggleShareModal}>
                                     <div className="action-button-designs bg-white">
                                         <IoShareSocial className="text-black mt-2" size={30} />
                                     </div>

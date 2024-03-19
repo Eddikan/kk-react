@@ -136,7 +136,7 @@ const Orders = (props) => {
     }
 
     const getOrders = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?status='+orderStatus);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?status=' + orderStatus);
     };
 
     const chatBoxModal = (first_name, last_name, image) => {
@@ -292,12 +292,12 @@ const Orders = (props) => {
                                                         const created_at = (new Date(order.created_at)).toLocaleDateString('en-ES', options);
 
                                                         // Use map() to extract quantities from each item
-                                                        var quantities = order_items.map(function(item) {
+                                                        var quantities = order_items.map(function (item) {
                                                             return parseInt(item.quantity);
                                                         });
 
                                                         // Use reduce() to calculate the sum of quantities
-                                                        var number_of_items = quantities.reduce(function(total, quantity) {
+                                                        var number_of_items = quantities.reduce(function (total, quantity) {
                                                             return total + quantity;
                                                         }, 0);
 

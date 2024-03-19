@@ -279,11 +279,11 @@ const HeaderSeller = () => {
                                                                 </Link>
                                                             }
 
-                                                            {userRole !== 'Admin' &&
+                                                            {/* {userRole !== 'Admin' &&
                                                                 <Link to={`/admin/users`} className="mb-3 text-decoration-none d-block"><RxDashboard className='me-2 mb-1' color='#000000' />
                                                                     <span className='text-black'>Dashboard</span>
                                                                 </Link>
-                                                            }
+                                                            } */}
 
                                                             <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' color='#000000' />
                                                                 <span className='text-black'>Appointments</span>

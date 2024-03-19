@@ -6,7 +6,7 @@ import { GoAlertFill } from 'react-icons/go';
 import { IoMdVideocam, IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
-import { RiLiveLine } from "react-icons/ri";
+import { PiPlus } from "react-icons/pi";
 import 'Assets/styles/LiveStream/style.css';
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 import GoBack from '../../Components/Shared/GoBack';
@@ -137,24 +137,24 @@ const LiveStreamPage = (props) => {
                             <div>
                                 <Row>
                                     <Col lg={12}>
-                                        <Row className="pb-4">
-                                            <Col lg={10} className='d-flex justify-content-left align-items-center'>
+                                        <Row>
+                                            <Col lg={11}>
                                             </Col>
 
-                                            <Col lg={2} className='text-right'>
+                                            <Col lg={1} className='text-right'>
                                                 <GoBack fallBack="/" />
                                             </Col>
                                         </Row>
 
                                         <Row className="mb-4">
-                                            <Col lg='8'>
+                                            <Col lg={8} className='d-flex justify-content-left align-items-center'>
                                                 <h3 className="fs-30 fw-600 text-black mb-0">Live Stream</h3>
                                             </Col>
 
-                                            <Col lg='4' className='text-right'>
+                                            <Col lg={4} className='text-right'>
                                                 <div>
                                                     <button className='btn btn-primary' onClick={toggleCreateStream}>
-                                                        <RiLiveLine className='me-2 mb-1' />
+                                                        <PiPlus className='me-2 mb-1' />
                                                         <span>Create Live Stream</span>
                                                     </button>
                                                 </div>

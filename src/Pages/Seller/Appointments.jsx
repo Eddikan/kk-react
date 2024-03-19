@@ -202,17 +202,20 @@ const Appointments = (props) => {
                             <Sidebar />
                         </Col>
 
-                        <Col lg={10} className='mx-auto top-bottom max-width-column'>
+                        <Col lg={10} className='mx-auto py-5 padding-right-admin max-width-column'>
                             <div>
                                 <Row>
                                     <Col lg={12}>
                                         <Row className="pb-4">
-                                            <Col lg={10} className='d-flex justify-content-left align-items-center'>
-                                                <h3 className="fs-30 fw-600 text-black mb-0">Appointments</h3>
+                                            <Col lg={9}>
                                             </Col>
 
-                                            <Col lg={2} className='text-right'>
+                                            <Col lg={3} className='text-right'>
                                                 <GoBack fallBack="/" />
+                                            </Col>
+
+                                            <Col lg={12} className='d-flex justify-content-left align-items-center'>
+                                                <h3 className="fs-30 fw-600 text-black mb-0">Appointments</h3>
                                             </Col>
                                         </Row>
 

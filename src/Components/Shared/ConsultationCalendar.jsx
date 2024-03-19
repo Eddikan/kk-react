@@ -69,6 +69,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const currentUserDetails = cookies.userDetails;
     const userDetails = cookies.userDetails;
     const { designerId } = useParams();
+    const { appointmentscheduleId } = useParams();
 
     const [events, setEvents] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -88,21 +89,22 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const [youAreScheduleShow, setYouAreScheduleShow] = useState(false);
     const [modalHeading, setModalHeading] = useState();
     const [scheduleLoading, setScheduleLoading] = useState(false);
-    const [appointmentId, setAppointmentId] = useState('');
+
+    const [isScheduled, setIsScheduled] = useState(false);
+
+    console.log("appointmentscheduleId", appointmentscheduleId);
 
     const postSetAppointment = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment?user_id=' + currentUser, data);
     };
 
     const putSetAppointment = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentId + '?user_id=' + currentUser, data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentscheduleId + '?user_id=' + currentUser, data);
     };
 
     const getSetAppointment = async (e) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability?date=' + e);
     };
-
-    console.log("appointmentId", appointmentId);
 
     const convertToDateOnly = (selectedDate) => {
         const resultDate = new Date(selectedDate);
@@ -181,6 +183,16 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         }),
         []
     )
+
+    function toggleUnderConstruction(message) {
+        setUnderConstructionShow(!underConstructionShow);
+        setModalHeading(message);
+    }
+
+    function toggleSchedule(message) {
+        setYouAreScheduleShow(!youAreScheduleShow);
+        setModalHeading(message);
+    }
 
     const handleCalendarTimeslotClick = ({ start, end }) => {
         setScheduleLoading(true);
@@ -281,10 +293,13 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                 if (status === "Success") {
                     setFormStatus('standby');
                     setReloadCount(reloadCount + 1);
-                    setYouAreScheduleShow(!youAreScheduleShow);
+                    // setYouAreScheduleShow(!youAreScheduleShow);
                     setAppointmentFormData(initialAppointments);
                     toast.success('Consultation added successfully!');
-                    navigate('/appointments/' + currentUser)
+                    setTimeout(() => {
+                        setReloadCount(prevReloadCount => prevReloadCount + 1);
+                        navigate('/appointments/' + currentUser);
+                    }, 1000);
                 } else {
                     setFormStatus('standby');
                     toast.error('Designer is not available at this time');
@@ -296,17 +311,19 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
     const putAppointmentSubmit = (e) => {
         setFormStatus('loading');
-        setAppointmentId();
         putSetAppointment({ ...consultationFormData })
             .then(response => {
                 const status = response.data.status;
                 if (status === "Success") {
                     setFormStatus('standby');
                     setReloadCount(reloadCount + 1);
-                    setYouAreScheduleShow(!youAreScheduleShow);
+                    // setYouAreScheduleShow(!youAreScheduleShow);
                     setAppointmentFormData(initialAppointments);
-                    toast.success('Consultation added successfully!');
-                    navigate('/appointments/' + currentUser)
+                    toast.success('Consultation updated successfully!');
+                    setTimeout(() => {
+                        setReloadCount(prevReloadCount => prevReloadCount + 1);
+                        navigate('/appointments/' + currentUser);
+                    }, 1000);
                 } else {
                     setFormStatus('standby');
                     toast.error('Designer is not available at this time');
@@ -327,19 +344,9 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
     useEffect(() => {
         if (calendarRef.current) {
-            applyPastDateClass(); // Apply the past date class when the component mounts or updates
+            applyPastDateClass();
         }
     }, [calendarRef.current]);
-
-    function toggleUnderConstruction(message) {
-        setUnderConstructionShow(!underConstructionShow);
-        setModalHeading(message);
-    }
-
-    function toggleSchedule(message) {
-        setYouAreScheduleShow(!youAreScheduleShow);
-        setModalHeading(message);
-    }
 
     return (
         <>
@@ -459,24 +466,33 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                         {/* temporary, should be inside the form */}
                         <div className="send-btn-container">
                             <button className="btn btn-primary bg-transparent text-black" onClick={() => { setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate(''); setSelectedHoursArray([]); }}>Cancel</button>
-                            {formStatus != "loading" ?
-                                <button className="btn btn-primary" onClick={() => putAppointmentSubmit("You are Scheduled!")}>Schedule Now</button>
+                            {/* {formStatus != "loading" ?
+                                <button className="btn btn-primary" onClick={() => addAppointmentSubmit("You are Scheduled!")}>Schedule Now</button>
 
                                 :
                                 <button className="btn btn-primary" onClick={handleDefault}>Loading...</button>
-                            }
+                            } */}
 
-                            {/* <button className="btn btn-primary" onClick={() => {
-                                if (selectedDate) {
-                                    addAppointmentSubmit()
-                                } else {
-                                    putAppointmentSubmit()
-                                }
+                            {/* {isScheduled ? (
+                                <button className="btn btn-primary" onClick={() => addAppointmentSubmit("You are Scheduled!")}>
+                                    Schedule Now
+                                </button>
+                            ) : (
+                                <button className="btn btn-primary" onClick={() => putAppointmentSubmit("You are Updated!")}>
+                                    Update Now
+                                </button>
+                            )} */}
 
-                            }}
-                            >
-                                Schedule Now
-                            </button> */}
+                            {appointmentscheduleId == 0 || appointmentscheduleId == "0" ? (
+                                <button className="btn btn-primary" onClick={() => addAppointmentSubmit("You are Scheduled!")}>
+                                    Schedule Now
+                                </button>
+                            ) : (
+                                <button className="btn btn-primary" onClick={() => putAppointmentSubmit("You are Updated!")}>
+                                    Update Now
+                                </button>
+
+                            )}
                         </div>
                     </div>
                 }

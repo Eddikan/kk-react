@@ -69,9 +69,9 @@ const LiveStreams = (props) => {
                     <Container>
                         <Row>
                             <Row>
-                                <Col lg={6}>
+                                <Col lg={11}>
                                 </Col>
-                                <Col lg={6} className="text-right px-0">
+                                <Col lg={1} className="text-right px-0">
                                     <GoBack fallBack="/#" />
                                 </Col>
                             </Row>
@@ -126,8 +126,8 @@ const LiveStreams = (props) => {
                                         <Row>
                                             <Col lg="12">
                                                 <iframe
-                                                    src={live.url}
-                                                    // src="https://kouture-konect.web.app/admin/users"
+                                                    // src={live.url}
+                                                    src="https://kouture-konect.web.app/wishlist"
                                                     height="385" width="817"
                                                 >
                                                 </iframe>
@@ -160,7 +160,6 @@ const LiveStreams = (props) => {
                                             :
                                             null
                                         }
-
                                     </Card.Body>
                                 </Card>
                             </Col>

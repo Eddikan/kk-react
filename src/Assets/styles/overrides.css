@@ -1626,13 +1626,13 @@ img.user-placeholder-header {
     border-radius: 5px;
 }
 
-.width-chat-card{
-    width: 447px;
+.width-chat-card {
+    width: 410px;
     border-color: #DFDFDF;
     position: fixed;
     bottom: 0;
-    margin-bottom: 27px;
-    right: 27px;
+    margin-bottom: 19px;
+    right: 100px;
 }
 
 span.name-of-portfolio {

@@ -158,16 +158,20 @@ const MeasurementGuide = (props) => {
                                     <Sidebar />
                                 </Col>
 
-
-                                <Col lg={10} className='my-5 mx-auto max-width-column'>
+                                <Col lg={10} className='py-5 mx-auto padding-right-admin max-width-column'>
                                     <div>
-                                        <Row className="mb-3">
-                                            <Col lg={12} className='text-right mb-2'>
+                                        <Row className="mb-4">
+                                            <Col lg={11}>
+                                            </Col>
+
+                                            <Col lg={1} className='text-right'>
                                                 <GoBack fallBack="/" />
                                             </Col>
-                                            <Col lg={8}>
-                                                <h2 className='fs-30 fw-600 mb-4'>Measurement Guide</h2>
+
+                                            <Col lg={8} className='d-flex justify-content-left align-items-center'>
+                                                <h2 className='fs-30 fw-600'>Measurement Guide</h2>
                                             </Col>
+
                                             <Col lg={4} className="text-right">
                                                 {elements && elements.length > 0 && (
                                                     <Button className='btn-primary bg-transparent border-black text-black bg-black-hover border-black-hover text-white-hover me-3' type="button" onClick={() => { toggleGuideModal(); handleActionType("edit"); }}><GoPencil size="20px" className='me-2' /> Edit</Button>

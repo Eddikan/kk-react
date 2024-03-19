@@ -47,7 +47,7 @@ const initialAppointments = {
 
 const Appointments = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const { rescheduleId } = useParams();
+    const { appointmentscheduleId } = useParams();
 
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
@@ -77,6 +77,8 @@ const Appointments = (props) => {
     const [pageSize, setPageSize] = useState(1);
 
     let PageSize = 10;
+
+    console.log("appointmentscheduleId", appointmentscheduleId);
 
     const getAppointments = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment');
@@ -257,10 +259,10 @@ const Appointments = (props) => {
                             <Row>
                                 <Col lg={12}>
                                     <Row className="pb-4">
-                                        <Col md={6} className='d-flex justify-content-left align-items-center'>
+                                        <Col md={11} className='d-flex justify-content-left align-items-center'>
                                             <h3 className="fs-30 fw-600 text-black mb-0">Appointments</h3>
                                         </Col>
-                                        <Col md={6} className="text-right">
+                                        <Col md={1} className="text-right">
                                             <GoBack fallBack="/#" />
                                         </Col>
                                     </Row>
@@ -300,6 +302,7 @@ const Appointments = (props) => {
                                                             month: 'long',
                                                             day: 'numeric',
                                                         };
+
                                                         const today = (new Date(appointment.created_at)).toLocaleDateString('en-ES', options);
                                                         const formattedDate = (new Date(appointment.consultation_date)).toLocaleString('en-US', {
                                                             year: 'numeric',

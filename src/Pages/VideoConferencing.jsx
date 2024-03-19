@@ -279,7 +279,7 @@ const VideoConferencing = (props) => {
                                                                 consultationFormData.host_url +
                                                                 `& background=off & audio=off & topToolbar=off & video=on & bottomToolbar=off & skipMediaPermissionPrompt=off & precallReview=off & displayName=` + userDetails?.first_name + " " + userDetails?.last_name
                                                             }
-                                                            style={{ height: '500px' }}
+                                                            style={{ height: '620px' }}
                                                         />
                                                     </>
                                                     :
@@ -289,7 +289,7 @@ const VideoConferencing = (props) => {
                                                             room={consultationFormData.participant_url +
                                                                 "?background=off&audio=off&settingsButton=off&moreButton=off&topToolbar=off&video=on&bottomToolbar=off&skipMediaPermissionPrompt=off&precallReview=off&displayName=" + userDetails?.first_name + " " + userDetails?.last_name
                                                             }
-                                                            style={{ height: '500px' }}
+                                                            style={{ height: '620px' }}
                                                         />
                                                     </>
                                                 }
