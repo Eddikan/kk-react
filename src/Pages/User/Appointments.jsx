@@ -78,8 +78,6 @@ const Appointments = (props) => {
 
     let PageSize = 10;
 
-    console.log("appointmentscheduleId", appointmentscheduleId);
-
     const getAppointments = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/appointment');
     };

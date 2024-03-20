@@ -1,0 +1,118 @@
+.user-content-photo {
+    width: 100%;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.bordered-top-primary-survey {
+    border-top: 7px solid #cea835;
+    border-bottom: 1px solid #d9dbe4;
+    border-left: 1px solid #d9dbe4;
+    border-right: 1px solid #d9dbe4;
+}
+
+.radio-size {
+    min-width: 19px;
+    min-height: 19px;
+}
+
+.checkbox-size {
+    min-width: 19px;
+    min-height: 19px;
+}
+
+.indicate-question,.asteris {
+    color: #d93025;
+}
+
+.question-concerns {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #d9dbe4 !important;
+    border-radius: 0px !important;
+}
+
+button.clear-form {
+    border: none;
+    background: none;
+    color: #cea835;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.btn-submit{
+    font-size: 15px;
+    padding: 10px 20px;
+    min-width: 120px;
+    border-radius: 5px;
+    border-width: 1px;
+    color: #ffffff !important;
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+.btn-submit:hover {
+    color: #ffffff !important;
+    background-color: #000000 !important;
+    border-color: #000000 !important;
+}
+
+.switch-account {
+    color: #cea835;
+}
+
+.card-border-color {
+    border: 1px solid #d9dbe4;
+}
+
+.not-shared,.email-survey {
+    color: #5f6368;
+}
+
+input[type='radio'] {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    outline: none;
+    border: 2px solid gray;
+}
+
+input[type='radio']:before {
+    content: '';
+    display: block;
+    width: 50%;
+    height: 55%;
+    margin: 26% auto;
+    border-radius: 50%;
+}
+
+input[type="radio"]:checked:before {
+    background: #cea835;
+    
+}
+
+input[type="radio"]:checked {
+  border-color:#cea835;
+}
+
+input[type='checkbox']:checked {
+    background-color: #cea835;
+  }
+  input[type='checkbox']:checked:after {
+    content: '\2713';
+    color:white;
+    font-size: 13px !important;
+  }
+  input[type='checkbox'] {
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+    width: 20px !important;
+    height: 19px !important;
+    appearance: none;
+    border-radius: 10%;
+    border: 2px solid gray;
+    box-shadow: none;
+    font-size: 4px;
+}

@@ -41,12 +41,21 @@ const VideoConferencing = lazy(() => import("./Pages/VideoConferencing"));
 
 const LiveStream = lazy(() => import("./Pages/Designer/LiveStreams"));
 
+// Survey
 const CustomerSatisfaction = lazy(() =>
   import("./Pages/Survey/CustomerSatisfaction")
 );
 
 const PostPurchaseSurvey = lazy(() =>
   import("./Pages/Survey/PostPurchaseSurvey")
+);
+
+const WebsiteFeedBackSurvey = lazy(() =>
+  import("./Pages/Survey/GeneralFeedBackSurvey")
+);
+
+const VendorFeedBackSurvey = lazy(() =>
+  import("./Pages/Survey/VendorFeedBackSurvey")
 );
 
 // Admin
@@ -98,7 +107,7 @@ const Designers = lazy(() => import("./Pages/Designers"));
 // Under Construction
 const UnderConstruction = lazy(() => import("./Pages/UnderConstruction"));
 
-//Body Gram 
+//Body Gram
 const BodyGram = lazy(() => import("./Pages/BodyGram"));
 
 //Measurement
@@ -286,11 +295,27 @@ const App = () => {
 
           {/* Survey */}
           <Route
-            path="/customer-satisfaction"
+            path="/customer-satisfaction-survey"
             exact
             element={<CustomerSatisfaction />}
           />
-          <Route path="/post-purchase" exact element={<PostPurchaseSurvey />} />
+          <Route
+            path="/post-purchase-survey"
+            exact
+            element={<PostPurchaseSurvey />}
+          />
+
+          <Route
+            path="/vendor-feedback-survey"
+            exact
+            element={<VendorFeedBackSurvey />}
+          />
+
+          <Route
+            path="/general-feedback-survey"
+            exact
+            element={<WebsiteFeedBackSurvey />}
+          />
 
           <Route path="/appointments/:c" exact element={<Appointments />} />
           <Route path="/user/center/orders" exact element={<UserOrders />} />
@@ -340,16 +365,8 @@ const App = () => {
             exact
             element={<ScheduleConsultation />}
           />
-          <Route
-            path="/body-gram"
-            exact
-            element={<BodyGram />}
-          />
-          <Route
-            path="/measurement"
-            exact
-            element={<Measurement />}
-          />
+          <Route path="/body-gram" exact element={<BodyGram />} />
+          <Route path="/measurement" exact element={<Measurement />} />
         </Routes>
       </Suspense>
     </Router>
