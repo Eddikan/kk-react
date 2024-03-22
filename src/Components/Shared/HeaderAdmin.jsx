@@ -34,6 +34,8 @@ const HeaderAdmin = () => {
     const [user, setUser] = useState('');
     const [reloadCount, setReloadCount] = useState(0);
     const [designerId, setDesignerId] = useState('');
+    const [notifications, setNotifications] = useState([]);
+    const [notificationsLoading, setNotificationsLoading] = useState(true);
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole']);
     const [userType, setUserType] = useState('user');
@@ -53,6 +55,10 @@ const HeaderAdmin = () => {
 
     const getUser = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+    };
+
+    const getNotifications = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'notification?user_id=' + currentUser);
     };
 
     // removeCookies
@@ -175,6 +181,21 @@ const HeaderAdmin = () => {
                 });
         }
 
+        getNotifications()
+            .then((response) => {
+                const selectednotifications = response.data.data;
+                if (selectednotifications) {
+                    setNotifications(selectednotifications);
+                    setNotificationsLoading(false);
+                } else {
+                    toast.error('There has been an error getting the notifications, please try again!');
+                    setNotificationsLoading(false);
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the notifications, please try again!');
+                setNotificationsLoading(false);
+            });
 
     }, [reloadCount]);
 
@@ -201,27 +222,49 @@ const HeaderAdmin = () => {
                                                     </div>
                                                     {userBellOpen && (
 
-                                                        <div className="action-box-bell user-menu-bell">
-                                                            {/* <div className='d-flex'>
-                                                                <img src={NewOrder} className='new-order-image' />
-                                                                <div className='ms-3 fs-14 body-text-bell'>You have a new order and instructions from Mike. Get Started
-                                                                    sed diam nonumy eirmod tempor invidunt ut labore et dolore
-                                                                    magna.
-                                                                    <div className='hours-bell mt-1'>1hr ago - 9:00 AM</div>
-                                                                </div>
-                                                            </div>
-                                                            <hr /> */}
+                                                        <div className="action-box-bell scroll-bar user-menu-bell" id="style-2">
+                                                            {notifications.length > 0 ?
+                                                                <>
+                                                                    {notifications.map((notification, index) => {
+                                                                        const options = {
+                                                                            year: 'numeric',
+                                                                            month: 'long',
+                                                                            day: 'numeric',
+                                                                            hour: 'numeric',
+                                                                            minute: 'numeric'
+                                                                        };
 
-                                                            <div className='d-flex'>
-                                                                <img src={NewAppointment} className='new-appointment-image' />
-                                                                <div className='ms-3 fs-14 body-text-bell'>Congratulations! You can now start using Kouture Konect
-                                                                    <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
-                                                                </div>
-                                                            </div>
-                                                            <hr />
-                                                            <div className='text-right text-gold fs-14 cursor-pointer'
-                                                                onClick={() => toggleUnderConstruction("Notifications")}>View All
-                                                            </div>
+                                                                        const today = (new Date(notification.created_at)).toLocaleDateString('en-ES', options);
+                                                                        return (
+                                                                            <>
+                                                                                <Row className='mb-2'>
+                                                                                    <Col lg={2}>
+                                                                                        <img src={NewAppointment} className='new-appointment-image' alt='New Appointment' />
+                                                                                    </Col>
+
+                                                                                    <Col lg={10}>
+                                                                                        <div className='body-text-bell'>
+                                                                                            <div className="fs-16 fw-600 text-black">{notification.subject}</div>
+                                                                                            <span className='fs-14 text-black'>{notification.message}</span>
+                                                                                            <div className='hours-bell fs-14 mt-1'>{today}</div>
+                                                                                        </div>
+                                                                                    </Col>
+                                                                                </Row>
+                                                                                <hr className='mt-0 mb-3' />
+                                                                            </>
+                                                                        );
+                                                                    })}
+                                                                    {/* <div className='text-right text-gold fs-14 cursor-pointer' onClick={() => toggleUnderConstruction("Notifications")}>View All</div> */}
+                                                                </>
+                                                                :
+                                                                <>
+                                                                    <Card>
+                                                                        <Card.Body className='text-center'>
+                                                                            No notifications were found.
+                                                                        </Card.Body>
+                                                                    </Card>
+                                                                </>
+                                                            }
                                                         </div>
                                                     )}
                                                 </div>
@@ -242,21 +285,11 @@ const HeaderAdmin = () => {
                                                                 </div>
                                                             </div>
                                                             <hr />
-                                                            {/*
-                                                            <div className='d-flex'>
-                                                                <div><img src={User} className='user-placeholder-header' /></div>
-                                                                <div className='ms-3 fs-14 body-text-bell'>Marie Salazar
-                                                                    <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div>
-                                                                    <div className='hours-bell mt-1'>1 day ago - 3:25 PM</div>
-                                                                </div>
-                                                            </div>
-                                                            <hr /> */}
 
                                                             <div className='text-right text-gold fs-14 cursor-pointer'
                                                                 onClick={() => toggleUnderConstruction("Messages")}>View All
                                                             </div>
                                                         </div>
-
                                                     )}
                                                 </div>
 
@@ -273,6 +306,7 @@ const HeaderAdmin = () => {
                                                         :
                                                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                                     }
+
                                                     {userMenuOpen && (
                                                         <div className="action-box user-menu-seller">
                                                             {userRole !== 'Admin' &&
@@ -316,7 +350,8 @@ const HeaderAdmin = () => {
                         </Col>
                     </Row>
                 </Container>
-            </Navbar >
+            </Navbar>
+
             <Modal
                 show={underConstructionShow}
                 className='modal-preview'
@@ -336,7 +371,6 @@ const HeaderAdmin = () => {
                         <Card.Body className="text-center py-5">
                             <GoAlertFill size="60px" className="mb-2 text-gold" />
                             <p className="fs-20 text-black">Under Construction</p>
-                            {/* <DateTimePicker onTimeChange={handleTimeChange} onDone={handleDoneTimeChange} availability={currentAvailability} /> */}
                         </Card.Body>
                     </Card>
                 </Modal.Body>

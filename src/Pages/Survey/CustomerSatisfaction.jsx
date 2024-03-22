@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import { IoCloseOutline } from "react-icons/io5";
@@ -14,14 +13,14 @@ import axios from "axios";
 const initialCustomerSurvey = Object.freeze({
     likelihood_to_recommend: '',
     satisfaction: '',
-    product_fit_for_needs: '',
-    product_quality_rating: '',
-    value_for_money_rating: '',
-    responsiveness_rating: '',
+    product_fit_rate: '',
+    product_quality_rate: '',
+    product_value_rate: '',
+    responsiveness_rate: '',
     customer_tenure: '',
-    likelihood_to_reuse: '',
-    concern: '',
-    qualities: [],
+    service_reuse: '',
+    comment: '',
+    service_qualities: [],
 });
 
 const initialDescribeServiceSurvey = Object.freeze({
@@ -36,9 +35,9 @@ const initialDescribeServiceSurvey = Object.freeze({
     unreliable: '',
 });
 
-
 const CustomerSatisfaction = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const [clearFormModal, setClearFormModal] = useState(false);
     const [customerFormData, setCustomerForData] = useState(initialCustomerSurvey);
@@ -50,7 +49,7 @@ const CustomerSatisfaction = (props) => {
 
 
     const postCustomerSurvey = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey', data);
     };
 
     function toggleUnderConstruction(message) {
@@ -93,27 +92,40 @@ const CustomerSatisfaction = (props) => {
     }
 
     const customerSurveySubmit = (e) => {
-        setFormStatus('loading');
-        postCustomerSurvey({ ...customerFormData, qualities: describeServiceFormData }).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setFormStatus('standby');
-                setReloadCount(reloadCount + 1);
-                setCustomerForData(initialCustomerSurvey);
-                toast.success('Customer Survey sent successfully!');
-            } else {
-                setFormStatus('standby');
+        if (customerFormData.likelihood_to_recommend == '' ||
+            customerFormData.satisfaction == '' ||
+            customerFormData.product_fit_rate == '' ||
+            customerFormData.product_quality_rate == '' ||
+            customerFormData.product_value_rate == '' ||
+            customerFormData.responsiveness_rate == '' ||
+            customerFormData.customer_tenure == '' ||
+            customerFormData.service_reuse == '' ||
+            customerFormData.comment == '' ||
+            customerFormData.like_recommend_website == ''
+        ) {
+            toast.error('Please answer all the question!');
+        } else {
+            setFormStatus('loading');
+            postCustomerSurvey({ ...customerFormData, qualities: describeServiceFormData, user_id: currentUser }).then(response => {
+                const status = response.data.status;
+                if (status === "Success") {
+                    setFormStatus('standby');
+                    setReloadCount(reloadCount + 1);
+                    setCustomerForData(initialCustomerSurvey);
+                    toast.success('Customer Survey sent successfully!');
+                } else {
+                    setFormStatus('standby');
+                    toast.error('There has been an error saving the survey, please try again!');
+                }
+            }).catch(() => {
                 toast.error('There has been an error saving the survey, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the survey, please try again!');
-        });
+            });
+        }
     }
 
     return (
         <Layout>
             <section className='bg-light'>
-
                 <Container className='py-5'>
                     <Row>
                         <Col lg={11}>
@@ -481,9 +493,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="product_fit_for_needs"
+                                            name="product_fit_rate"
                                             value="Extremely well"
-                                            checked={customerFormData.product_fit_for_needs === "Extremely well"}
+                                            checked={customerFormData.product_fit_rate === "Extremely well"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Extremely well</label>
@@ -493,9 +505,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="product_fit_for_needs"
+                                            name="product_fit_rate"
                                             value="Very well"
-                                            checked={customerFormData.product_fit_for_needs === "Very well"}
+                                            checked={customerFormData.product_fit_rate === "Very well"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Very well</label>
@@ -505,9 +517,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="product_fit_for_needs"
+                                            name="product_fit_rate"
                                             value="Somewhat well"
-                                            checked={customerFormData.product_fit_for_needs === "Somewhat well"}
+                                            checked={customerFormData.product_fit_rate === "Somewhat well"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Somewhat well</label>
@@ -517,9 +529,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="product_fit_for_needs"
+                                            name="product_fit_rate"
                                             value="Not so well"
-                                            checked={customerFormData.product_fit_for_needs === "Not so well"}
+                                            checked={customerFormData.product_fit_rate === "Not so well"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Not so well</label>
@@ -529,9 +541,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="product_fit_for_needs"
+                                            name="product_fit_rate"
                                             value="Not at all well"
-                                            checked={customerFormData.product_fit_for_needs === "Not at all well"}
+                                            checked={customerFormData.product_fit_rate === "Not at all well"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Not at all well</label>
@@ -548,9 +560,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="product_quality_rating"
+                                            name="product_quality_rate"
                                             value="Very high quality"
-                                            checked={customerFormData.product_quality_rating === "Very high quality"}
+                                            checked={customerFormData.product_quality_rate === "Very high quality"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Very high quality</label>
@@ -560,9 +572,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="product_quality_rating"
+                                            name="product_quality_rate"
                                             value="High quality"
-                                            checked={customerFormData.product_quality_rating === "High quality"}
+                                            checked={customerFormData.product_quality_rate === "High quality"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>High quality</label>
@@ -572,9 +584,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="product_quality_rating"
+                                            name="product_quality_rate"
                                             value="Neither high nor low quality"
-                                            checked={customerFormData.product_quality_rating === "Neither high nor low quality"}
+                                            checked={customerFormData.product_quality_rate === "Neither high nor low quality"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Neither high nor low quality</label>
@@ -584,9 +596,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="product_quality_rating"
+                                            name="product_quality_rate"
                                             value="Low quality"
-                                            checked={customerFormData.product_quality_rating === "Low quality"}
+                                            checked={customerFormData.product_quality_rate === "Low quality"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Low quality</label>
@@ -595,9 +607,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="product_quality_rating"
+                                            name="product_quality_rate"
                                             value="Very low quality"
-                                            checked={customerFormData.product_quality_rating === "Very low quality"}
+                                            checked={customerFormData.product_quality_rate === "Very low quality"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Very low quality</label>
@@ -614,9 +626,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="value_for_money_rating"
+                                            name="product_value_rate"
                                             value="Excellent"
-                                            checked={customerFormData.value_for_money_rating === "Excellent"}
+                                            checked={customerFormData.product_value_rate === "Excellent"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Excellent</label>
@@ -626,9 +638,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="value_for_money_rating"
+                                            name="product_value_rate"
                                             value="Above average"
-                                            checked={customerFormData.value_for_money_rating === "Above average"}
+                                            checked={customerFormData.product_value_rate === "Above average"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Above average</label>
@@ -638,9 +650,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="value_for_money_rating"
+                                            name="product_value_rate"
                                             value="Average"
-                                            checked={customerFormData.value_for_money_rating === "Average"}
+                                            checked={customerFormData.product_value_rate === "Average"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Average</label>
@@ -650,9 +662,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="value_for_money_rating"
+                                            name="product_value_rate"
                                             value="Below average"
-                                            checked={customerFormData.value_for_money_rating === "Below average"}
+                                            checked={customerFormData.product_value_rate === "Below average"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Below average</label>
@@ -662,9 +674,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="value_for_money_rating"
+                                            name="product_value_rate"
                                             value="Poor"
-                                            checked={customerFormData.value_for_money_rating === "Poor"}
+                                            checked={customerFormData.product_value_rate === "Poor"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Poor</label>
@@ -681,9 +693,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="responsiveness_rating"
+                                            name="responsiveness_rate"
                                             value="Extremely responsive"
-                                            checked={customerFormData.responsiveness_rating === "Extremely responsive"}
+                                            checked={customerFormData.responsiveness_rate === "Extremely responsive"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Extremely responsive</label>
@@ -693,9 +705,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="responsiveness_rating"
+                                            name="responsiveness_rate"
                                             value="Very responsive"
-                                            checked={customerFormData.responsiveness_rating === "Very responsive"}
+                                            checked={customerFormData.responsiveness_rate === "Very responsive"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Very responsive</label>
@@ -705,9 +717,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="responsiveness_rating"
+                                            name="responsiveness_rate"
                                             value="Somewhat responsive"
-                                            checked={customerFormData.responsiveness_rating === "Somewhat responsive"}
+                                            checked={customerFormData.responsiveness_rate === "Somewhat responsive"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Somewhat responsive</label>
@@ -717,9 +729,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="responsiveness_rating"
+                                            name="responsiveness_rate"
                                             value="Not so responsive"
-                                            checked={customerFormData.responsiveness_rating === "Not so responsive"}
+                                            checked={customerFormData.responsiveness_rate === "Not so responsive"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Not so responsive</label>
@@ -729,9 +741,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="responsiveness_rating"
+                                            name="responsiveness_rate"
                                             value="Not at all responsive"
-                                            checked={customerFormData.responsiveness_rating === "Not at all responsive"}
+                                            checked={customerFormData.responsiveness_rate === "Not at all responsive"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Not at all responsive</label>
@@ -741,9 +753,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="responsiveness_rating"
+                                            name="responsiveness_rate"
                                             value="Not applicable"
-                                            checked={customerFormData.responsiveness_rating === "Not applicable"}
+                                            checked={customerFormData.responsiveness_rate === "Not applicable"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Not applicable</label>
@@ -839,9 +851,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="likelihood_to_reuse"
+                                            name="service_reuse"
                                             value="Extremely likely"
-                                            checked={customerFormData.likelihood_to_reuse === "Extremely likely"}
+                                            checked={customerFormData.service_reuse === "Extremely likely"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Extremely likely</label>
@@ -851,9 +863,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="likelihood_to_reuse"
+                                            name="service_reuse"
                                             value="Very likely"
-                                            checked={customerFormData.likelihood_to_reuse === "Very likely"}
+                                            checked={customerFormData.service_reuse === "Very likely"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Very likely</label>
@@ -863,9 +875,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="likelihood_to_reuse"
+                                            name="service_reuse"
                                             value="Somewhat likely"
-                                            checked={customerFormData.likelihood_to_reuse === "Somewhat likely"}
+                                            checked={customerFormData.service_reuse === "Somewhat likely"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Somewhat likely</label>
@@ -875,9 +887,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="likelihood_to_reuse"
+                                            name="service_reuse"
                                             value="Not so likely"
-                                            checked={customerFormData.likelihood_to_reuse === "Not so likely"}
+                                            checked={customerFormData.service_reuse === "Not so likely"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Not so likely</label>
@@ -887,9 +899,9 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="likelihood_to_reuse"
+                                            name="service_reuse"
                                             value="Not at all likely"
-                                            checked={customerFormData.likelihood_to_reuse === "Not at all likely"}
+                                            checked={customerFormData.service_reuse === "Not at all likely"}
                                             onChange={handleChangeCustomer}
                                         />
                                         <label className='ms-1 fs-15'>Not at all likely</label>
@@ -906,8 +918,8 @@ const CustomerSatisfaction = (props) => {
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
-                                            name="concern"
-                                            value={customerFormData.concern}
+                                            name="comment"
+                                            value={customerFormData.comment}
                                             onChange={handleChangeCustomer}
                                             placeholder='Your answer'
                                             required />
@@ -927,8 +939,8 @@ const CustomerSatisfaction = (props) => {
 
                                     <button
                                         className='btn btn-primary btn-style'
-                                        onClick={() => toggleUnderConstruction('Submit')}
-                                    // onClick={customerSurveySubmit}
+                                        type="submit"
+                                        onClick={customerSurveySubmit}
                                     >
                                         Submit
                                     </button>

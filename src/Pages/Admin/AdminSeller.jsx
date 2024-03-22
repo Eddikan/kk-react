@@ -4,6 +4,7 @@ import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { BiSolidPencil } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
+import { MdOutlineEmail } from "react-icons/md";
 import { IoCloseOutline, IoEye } from 'react-icons/io5';
 import Pagination from 'Components/Pagination/Pagination';
 import AdminSidebar from 'Components/Shared/AdminSidebar';
@@ -200,7 +201,10 @@ const AdminSeller = (props) => {
                                                                                                     <div className='mt-0 mb-1 fs-18 text-black fw-500'>
                                                                                                         {seller.user.first_name}&nbsp;{seller.user.last_name}
                                                                                                     </div>
-                                                                                                    <div className='fs-16 text-black'>{seller.user.email}</div>
+                                                                                                    <div className='fs-14 text-black'>
+                                                                                                        <MdOutlineEmail className="me-2 text-gold" size={18} />
+                                                                                                        {seller.user.email}
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </Link>
                                                                                         </div>

@@ -4,6 +4,7 @@ import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { BiSolidPencil } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
+import { MdOutlineEmail } from "react-icons/md";
 import { IoCloseOutline, IoEye } from 'react-icons/io5';
 import Pagination from 'Components/Pagination/Pagination';
 import AdminSidebar from 'Components/Shared/AdminSidebar';
@@ -202,7 +203,10 @@ const AdminDesigners = (props) => {
                                                                                                 <div className='mt-0 mb-1 fs-18 text-black fw-500 admin-ellipsis-designer'>
                                                                                                     {designer.user.first_name}&nbsp;{designer.user.last_name}
                                                                                                 </div>
-                                                                                                <div className='fs-16 text-black admin-ellipsis-designer'>{designer.user.email}</div>
+                                                                                                <div className='fs-14 text-black admin-ellipsis-designer'>
+                                                                                                    <MdOutlineEmail className="me-2 text-gold" size={18} />
+                                                                                                    {designer.user.email}
+                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </Col>

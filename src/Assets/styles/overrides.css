@@ -1601,18 +1601,22 @@ img.user-placeholder-header {
     -moz-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     z-index: 10;
 }
+
 .ellipsis {
     white-space: nowrap; 
     width: 70%; 
     overflow: hidden;
     text-overflow: ellipsis; 
   }
+
 .hours-bell {
     color: #919191;
 }
+
 .body-text-bell {
     color: #39393A;
 }
+
 .text-decoration-none {
     text-decoration: none !important;
 }
@@ -1654,25 +1658,32 @@ a.schedule-consultation {
     color: #ffffff;
     text-decoration: none;
 }
+
 .name-chat {
     font-size: 14px;
     font-weight: bold;
 }
+
 .send-btn {
     font-weight: bold;
 }
+
 .active-now {
+   
     color: #AAAAAA;
 }
 .time-chat-box {
     color: #AAAAAA;
 }
+
 .you-chat-box {
     color: #39393A;
 }
+
 .time-chat {
     color: #AAAAAA;
 }
+
 .header-chat {
     padding: 15px 21px 15px 21px;
 }
@@ -1684,6 +1695,7 @@ a.schedule-consultation {
     align-items: center;
     flex-direction: column;
 }
+
 .btn-explore-now {
     font-size: 15px;
     padding: 10px 20px;
@@ -1699,9 +1711,11 @@ a.schedule-consultation {
     background-color: var(--gold) !important;
     border-color: var(--gold) !important;
 }
+
 .explore-now {
     margin-top: 35px;
 }
+
 .accordion-button {
     display: contents;
 }
@@ -1859,8 +1873,8 @@ a.schedule-consultation {
 }
 
 .scroll-chat {
-    overflow: scroll;
-    height: 100px;
+    overflow: auto;
+    max-height: 100px;
     overflow-x: hidden;
 }
 

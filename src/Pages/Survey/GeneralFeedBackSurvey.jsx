@@ -12,21 +12,22 @@ import toast from 'react-hot-toast';
 import axios from "axios";
 
 const initialGeneralSurvey = Object.freeze({
-    like_most: '',
-    like_least: '',
+    most_like: '',
+    least_like: '',
     reason: '',
-    website_suitability_rating: '',
-    easy_website_rating: '',
+    website_suitability_rate: '',
+    easy_of_use: '',
     time_expectation: '',
-    visual_appeal_rating: '',
-    information_understanding_rating: '',
-    information_trust_rating: '',
-    like_recommend_website: '',
-    comments: '',
+    visual_appeal_rate: '',
+    information_clarity_rate: '',
+    information_trust_level: '',
+    recommendation_score: '',
+    comment: '',
 });
 
 const WebsiteFeedBackSurvey = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const [clearFormModal, setClearFormModal] = useState(false);
     const [generalFeedBackFormData, setGeneralFeedBackFormData] = useState(initialGeneralSurvey);
@@ -37,7 +38,7 @@ const WebsiteFeedBackSurvey = (props) => {
 
 
     const postWebsiteSurvey = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'general-feedback-survey', data);
     };
 
     function toggleUnderConstruction(message) {
@@ -62,21 +63,35 @@ const WebsiteFeedBackSurvey = (props) => {
     }
 
     const websiteSurveySubmit = (e) => {
-        setFormStatus('loading');
-        postWebsiteSurvey({ ...generalFeedBackFormData }).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setFormStatus('standby');
-                setReloadCount(reloadCount + 1);
-                setGeneralFeedBackFormData(initialGeneralSurvey);
-                toast.success('Website Survey sent successfully!');
-            } else {
-                setFormStatus('standby');
+        if (generalFeedBackFormData.most_like == '' ||
+            generalFeedBackFormData.least_like == '' ||
+            generalFeedBackFormData.reason == '' ||
+            generalFeedBackFormData.website_suitability_rate == '' ||
+            generalFeedBackFormData.easy_of_use == '' ||
+            generalFeedBackFormData.time_expectation == '' ||
+            generalFeedBackFormData.visual_appeal_rate == '' ||
+            generalFeedBackFormData.information_clarity_rate == '' ||
+            generalFeedBackFormData.information_trust_level == '' ||
+            generalFeedBackFormData.recommendation_score == '' ||
+            generalFeedBackFormData.comment == ''
+        ) {
+            toast.error('Please answer all the question!');
+        } else {
+            setFormStatus('loading');
+            postWebsiteSurvey({ ...generalFeedBackFormData, user_id: currentUser }).then(response => {
+                const status = response.data.status;
+                if (status === "Success") {
+                    setFormStatus('standby');
+                    setGeneralFeedBackFormData(initialGeneralSurvey);
+                    toast.success('General Survey sent successfully!');
+                } else {
+                    setFormStatus('standby');
+                    toast.error('There has been an error saving the survey, please try again!');
+                }
+            }).catch(() => {
                 toast.error('There has been an error saving the survey, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the survey, please try again!');
-        });
+            });
+        }
     }
 
     return (
@@ -115,13 +130,15 @@ const WebsiteFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Click on the image to indicate what section of  the page you like the most? (Feature picture of KK homepage with clickable image/text)</div>
+                                    <div>Click on the image to indicate what section of  the page you like the most? (Feature picture of KK homepage with clickable image/text)
+                                        <span className='asteris ms-1'>*</span>
+                                    </div>
                                     <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
-                                            name="like_most"
-                                            value={generalFeedBackFormData.like_most}
+                                            name="most_like"
+                                            value={generalFeedBackFormData.most_like}
                                             onChange={handleChangeGeneralFeeback}
                                             placeholder='Your answer'
                                         />
@@ -131,13 +148,15 @@ const WebsiteFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Click on the image to indicate what section of  the page you like the least? (Feature picture of KK homepage with clickable image/text)</div>
+                                    <div>Click on the image to indicate what section of  the page you like the least? (Feature picture of KK homepage with clickable image/text)
+                                        <span className='asteris ms-1'>*</span>
+                                    </div>
                                     <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
-                                            name="like_least"
-                                            value={generalFeedBackFormData.like_least}
+                                            name="least_like"
+                                            value={generalFeedBackFormData.least_like}
                                             onChange={handleChangeGeneralFeeback}
                                             placeholder='Your answer'
                                         />
@@ -147,7 +166,9 @@ const WebsiteFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Please state your reason for the selection above</div>
+                                    <div>Please state your reason for the selection above
+                                        <span className='asteris ms-1'>*</span>
+                                    </div>
                                     <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="text"
@@ -163,14 +184,16 @@ const WebsiteFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Overall, how well does our website/app meet your needs?</div>
+                                    <div>Overall, how well does our website/app meet your needs?
+                                        <span className='asteris ms-1'>*</span>
+                                    </div>
                                     <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="website_suitability_rating"
+                                            name="website_suitability_rate"
                                             value="Excellent well"
-                                            checked={generalFeedBackFormData.website_suitability_rating === "Excellent well"}
+                                            checked={generalFeedBackFormData.website_suitability_rate === "Excellent well"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Extremely well</label>
@@ -180,9 +203,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="website_suitability_rating"
+                                            name="website_suitability_rate"
                                             value="Very well"
-                                            checked={generalFeedBackFormData.website_suitability_rating === "Very well"}
+                                            checked={generalFeedBackFormData.website_suitability_rate === "Very well"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Very well</label>
@@ -192,9 +215,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="website_suitability_rating"
+                                            name="website_suitability_rate"
                                             value="Somewhat well"
-                                            checked={generalFeedBackFormData.website_suitability_rating === "Somewhat well"}
+                                            checked={generalFeedBackFormData.website_suitability_rate === "Somewhat well"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Somewhat well</label>
@@ -204,9 +227,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="website_suitability_rating"
+                                            name="website_suitability_rate"
                                             value="Not do well"
-                                            checked={generalFeedBackFormData.website_suitability_rating === "Not do well"}
+                                            checked={generalFeedBackFormData.website_suitability_rate === "Not do well"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Not do well</label>
@@ -216,9 +239,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="website_suitability_rating"
+                                            name="website_suitability_rate"
                                             value="Not at all well"
-                                            checked={generalFeedBackFormData.website_suitability_rating === "Not at all well"}
+                                            checked={generalFeedBackFormData.website_suitability_rate === "Not at all well"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Not at all well</label>
@@ -228,14 +251,16 @@ const WebsiteFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How easy was it to find what you were looking for on our website/app?</div>
+                                    <div>How easy was it to find what you were looking for on our website/app?
+                                        <span className='asteris ms-1'>*</span>
+                                    </div>
                                     <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="easy_website_rating"
+                                            name="easy_of_use"
                                             value="Extremely well"
-                                            checked={generalFeedBackFormData.easy_website_rating === "Extremely well"}
+                                            checked={generalFeedBackFormData.easy_of_use === "Extremely well"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Extremely well</label>
@@ -245,9 +270,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="easy_website_rating"
+                                            name="easy_of_use"
                                             value="Very well"
-                                            checked={generalFeedBackFormData.easy_website_rating === "Very well"}
+                                            checked={generalFeedBackFormData.easy_of_use === "Very well"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Very well</label>
@@ -257,9 +282,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="easy_website_rating"
+                                            name="easy_of_use"
                                             value="Somewhat well"
-                                            checked={generalFeedBackFormData.easy_website_rating === "Somewhat well"}
+                                            checked={generalFeedBackFormData.easy_of_use === "Somewhat well"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Somewhat well</label>
@@ -269,9 +294,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="easy_website_rating"
+                                            name="easy_of_use"
                                             value="Not do well"
-                                            checked={generalFeedBackFormData.easy_website_rating === "Not do well"}
+                                            checked={generalFeedBackFormData.easy_of_use === "Not do well"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Not do well</label>
@@ -281,9 +306,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="easy_website_rating"
+                                            name="easy_of_use"
                                             value="Not at all well"
-                                            checked={generalFeedBackFormData.easy_website_rating === "Not at all well"}
+                                            checked={generalFeedBackFormData.easy_of_use === "Not at all well"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Not at all well</label>
@@ -293,7 +318,9 @@ const WebsiteFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Did it take you more or less time than you expected to find what you were looking for on our website.</div>
+                                    <div>Did it take you more or less time than you expected to find what you were looking for on our website.
+                                        <span className='asteris ms-1'>*</span>
+                                    </div>
                                     <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
@@ -358,14 +385,16 @@ const WebsiteFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How visually appealing is our website/app?</div>
+                                    <div>How visually appealing is our website/app?
+                                        <span className='asteris ms-1'>*</span>
+                                    </div>
                                     <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="visual_appeal_rating"
+                                            name="visual_appeal_rate"
                                             value="Extremely appealing"
-                                            checked={generalFeedBackFormData.visual_appeal_rating === "Extremely appealing"}
+                                            checked={generalFeedBackFormData.visual_appeal_rate === "Extremely appealing"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Extremely appealing</label>
@@ -375,9 +404,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="visual_appeal_rating"
+                                            name="visual_appeal_rate"
                                             value="Very appealing"
-                                            checked={generalFeedBackFormData.visual_appeal_rating === "Very appealing"}
+                                            checked={generalFeedBackFormData.visual_appeal_rate === "Very appealing"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Very appealing</label>
@@ -387,9 +416,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="visual_appeal_rating"
+                                            name="visual_appeal_rate"
                                             value="Somewhat appealing"
-                                            checked={generalFeedBackFormData.visual_appeal_rating === "Somewhat appealing"}
+                                            checked={generalFeedBackFormData.visual_appeal_rate === "Somewhat appealing"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Somewhat appealing</label>
@@ -399,9 +428,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="visual_appeal_rating"
+                                            name="visual_appeal_rate"
                                             value="Not so appealing"
-                                            checked={generalFeedBackFormData.visual_appeal_rating === "Not so appealing"}
+                                            checked={generalFeedBackFormData.visual_appeal_rate === "Not so appealing"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Not so appealing</label>
@@ -411,9 +440,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="visual_appeal_rating"
+                                            name="visual_appeal_rate"
                                             value="Not at all appealing"
-                                            checked={generalFeedBackFormData.visual_appeal_rating === "Not at all appealing"}
+                                            checked={generalFeedBackFormData.visual_appeal_rate === "Not at all appealing"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Not at all appealing</label>
@@ -423,14 +452,16 @@ const WebsiteFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How easy is it to understand the information on our website/app?</div>
+                                    <div>How easy is it to understand the information on our website/app?
+                                        <span className='asteris ms-1'>*</span>
+                                    </div>
                                     <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_understanding_rating"
+                                            name="information_clarity_rate"
                                             value="Extremely easy"
-                                            checked={generalFeedBackFormData.information_understanding_rating === "Extremely easy"}
+                                            checked={generalFeedBackFormData.information_clarity_rate === "Extremely easy"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Extremely easy</label>
@@ -440,9 +471,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_understanding_rating"
+                                            name="information_clarity_rate"
                                             value="Very easy"
-                                            checked={generalFeedBackFormData.information_understanding_rating === "Very easy"}
+                                            checked={generalFeedBackFormData.information_clarity_rate === "Very easy"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Very easy</label>
@@ -452,9 +483,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_understanding_rating"
+                                            name="information_clarity_rate"
                                             value="Somewhat easy"
-                                            checked={generalFeedBackFormData.information_understanding_rating === "Somewhat easy"}
+                                            checked={generalFeedBackFormData.information_clarity_rate === "Somewhat easy"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Somewhat easy</label>
@@ -464,9 +495,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_understanding_rating"
+                                            name="information_clarity_rate"
                                             value="Not so easy"
-                                            checked={generalFeedBackFormData.information_understanding_rating === "Not so easy"}
+                                            checked={generalFeedBackFormData.information_clarity_rate === "Not so easy"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Not so easy</label>
@@ -476,9 +507,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_understanding_rating"
+                                            name="information_clarity_rate"
                                             value="Not at all easy"
-                                            checked={generalFeedBackFormData.information_understanding_rating === "Not at all easy"}
+                                            checked={generalFeedBackFormData.information_clarity_rate === "Not at all easy"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Not at all easy</label>
@@ -488,14 +519,16 @@ const WebsiteFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How much do you trust the information on our website/app?</div>
+                                    <div>How much do you trust the information on our website/app?
+                                        <span className='asteris ms-1'>*</span>
+                                    </div>
                                     <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_trust_rating"
+                                            name="information_trust_level"
                                             value="Extremely easy"
-                                            checked={generalFeedBackFormData.information_trust_rating === "Extremely easy"}
+                                            checked={generalFeedBackFormData.information_trust_level === "Extremely easy"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>A great deal</label>
@@ -505,9 +538,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_trust_rating"
+                                            name="information_trust_level"
                                             value="A lot"
-                                            checked={generalFeedBackFormData.information_trust_rating === "A lot"}
+                                            checked={generalFeedBackFormData.information_trust_level === "A lot"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>A lot</label>
@@ -517,9 +550,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_trust_rating"
+                                            name="information_trust_level"
                                             value="A moderate amount"
-                                            checked={generalFeedBackFormData.information_trust_rating === "A moderate amount"}
+                                            checked={generalFeedBackFormData.information_trust_level === "A moderate amount"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>A moderate amount</label>
@@ -529,9 +562,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_trust_rating"
+                                            name="information_trust_level"
                                             value="A little"
-                                            checked={generalFeedBackFormData.information_trust_rating === "A little"}
+                                            checked={generalFeedBackFormData.information_trust_level === "A little"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>A little</label>
@@ -541,9 +574,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_trust_rating"
+                                            name="information_trust_level"
                                             value="Not at all"
-                                            checked={generalFeedBackFormData.information_trust_rating === "Not at all"}
+                                            checked={generalFeedBackFormData.information_trust_level === "Not at all"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>Not at all</label>
@@ -553,7 +586,9 @@ const WebsiteFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How likely is it that  you would recommend our website to a friend, family or colleague?</div>
+                                    <div>How likely is it that  you would recommend our website to a friend, family or colleague?
+                                        <span className='asteris ms-1'>*</span>
+                                    </div>
                                     <div className='d-flex mt-4'>
                                         <div className='d-flex justify-content-center align-items-end me-3'>
                                             Not at all Likely
@@ -564,9 +599,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="like_recommend_website"
+                                                name="recommendation_score"
                                                 value="1"
-                                                checked={generalFeedBackFormData.like_recommend_website === "1"}
+                                                checked={generalFeedBackFormData.recommendation_score === "1"}
                                                 onChange={handleChangeGeneralFeeback}
                                             />
                                         </div>
@@ -577,9 +612,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="like_recommend_website"
+                                                name="recommendation_score"
                                                 value="2"
-                                                checked={generalFeedBackFormData.like_recommend_website === "2"}
+                                                checked={generalFeedBackFormData.recommendation_score === "2"}
                                                 onChange={handleChangeGeneralFeeback}
                                             />
                                         </div>
@@ -590,9 +625,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="like_recommend_website"
+                                                name="recommendation_score"
                                                 value="3"
-                                                checked={generalFeedBackFormData.like_recommend_website === "3"}
+                                                checked={generalFeedBackFormData.recommendation_score === "3"}
                                                 onChange={handleChangeGeneralFeeback}
                                             />
                                         </div>
@@ -603,9 +638,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="like_recommend_website"
+                                                name="recommendation_score"
                                                 value="4"
-                                                checked={generalFeedBackFormData.like_recommend_website === "4"}
+                                                checked={generalFeedBackFormData.recommendation_score === "4"}
                                                 onChange={handleChangeGeneralFeeback}
                                             />
                                         </div>
@@ -616,9 +651,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="like_recommend_website"
+                                                name="recommendation_score"
                                                 value="5"
-                                                checked={generalFeedBackFormData.like_recommend_website === "5"}
+                                                checked={generalFeedBackFormData.recommendation_score === "5"}
                                                 onChange={handleChangeGeneralFeeback}
                                             />
                                         </div>
@@ -629,9 +664,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="like_recommend_website"
+                                                name="recommendation_score"
                                                 value="6"
-                                                checked={generalFeedBackFormData.like_recommend_website === "6"}
+                                                checked={generalFeedBackFormData.recommendation_score === "6"}
                                                 onChange={handleChangeGeneralFeeback}
                                             />
                                         </div>
@@ -642,9 +677,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="like_recommend_website"
+                                                name="recommendation_score"
                                                 value="7"
-                                                checked={generalFeedBackFormData.like_recommend_website === "7"}
+                                                checked={generalFeedBackFormData.recommendation_score === "7"}
                                                 onChange={handleChangeGeneralFeeback}
                                             />
                                         </div>
@@ -655,9 +690,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="like_recommend_website"
+                                                name="recommendation_score"
                                                 value="8"
-                                                checked={generalFeedBackFormData.like_recommend_website === "8"}
+                                                checked={generalFeedBackFormData.recommendation_score === "8"}
                                                 onChange={handleChangeGeneralFeeback}
                                             />
                                         </div>
@@ -668,9 +703,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="like_recommend_website"
+                                                name="recommendation_score"
                                                 value="9"
-                                                checked={generalFeedBackFormData.like_recommend_website === "9"}
+                                                checked={generalFeedBackFormData.recommendation_score === "9"}
                                                 onChange={handleChangeGeneralFeeback}
                                             />
                                         </div>
@@ -681,9 +716,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="like_recommend_website"
+                                                name="recommendation_score"
                                                 value="10"
-                                                checked={generalFeedBackFormData.like_recommend_website === "10"}
+                                                checked={generalFeedBackFormData.recommendation_score === "10"}
                                                 onChange={handleChangeGeneralFeeback}
                                             />
                                         </div>
@@ -697,13 +732,15 @@ const WebsiteFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Do you have any other comments about how we can improve our website/app to improve your experience?</div>
+                                    <div>Do you have any other comments about how we can improve our website/app to improve your experience?
+                                        <span className='asteris ms-1'>*</span>
+                                    </div>
                                     <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
-                                            name="comments"
-                                            value={generalFeedBackFormData.comments}
+                                            name="comment"
+                                            value={generalFeedBackFormData.comment}
                                             onChange={handleChangeGeneralFeeback}
                                             placeholder='Your answer' />
                                     </div>
@@ -722,8 +759,8 @@ const WebsiteFeedBackSurvey = (props) => {
 
                                     <button
                                         className='btn btn-primary btn-style'
-                                        onClick={() => toggleUnderConstruction('Submit')}
-                                    // onClick={websiteSurveySubmit}
+                                        type="submit"
+                                        onClick={websiteSurveySubmit}
                                     >
                                         Submit
                                     </button>

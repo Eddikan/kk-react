@@ -11,12 +11,9 @@ import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { IoCalendarClearOutline, IoCartOutline, IoCloseOutline } from "react-icons/io5";
 import { GoBell, GoHeart, GoAlertFill } from "react-icons/go";
 import { BsEnvelope, BsShopWindow } from "react-icons/bs";
-import { RxDashboard } from "react-icons/rx";
 import { useCookies } from 'react-cookie';
 import { LiaUserTieSolid } from "react-icons/lia";
 import { Link } from 'react-router-dom';
-import NewOrder from 'Assets/images/new-order-icon.png';
-import { MdOutlineAdminPanelSettings } from "react-icons/md";
 import NewAppointment from 'Assets/images/new-appointment-icon.png';
 import User from 'Assets/images/user.png';
 import PlaceholderSquare from 'Assets/images/square-placeholder.jpg';
@@ -269,31 +266,49 @@ const Header = () => {
                       </div>
                       {userBellOpen && (
 
-                        <div className="action-box-bell user-menu-bell">
-                          {notifications.map((notification, index) => {
-                            const options = {
-                              year: 'numeric',
-                              month: 'long',
-                              day: 'numeric',
-                              hour: 'numeric',
-                              minute: 'numeric'
-                            };
+                        <div className="action-box-bell scroll-bar user-menu-bell" id="style-2">
+                          {notifications.length > 0 ?
+                            <>
+                              {notifications.map((notification, index) => {
+                                const options = {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric',
+                                  hour: 'numeric',
+                                  minute: 'numeric'
+                                };
 
-                            const today = (new Date(notification.created_at)).toLocaleDateString('en-ES', options);
-                            return (
-                              <>
-                                <div className='d-flex'>
-                                  <img src={NewAppointment} className='new-appointment-image' />
-                                  <div className='ms-3 fs-14 body-text-bell'>{notification.message}
-                                    <div className='hours-bell mt-1'>{today}</div>
-                                  </div>
-                                </div >
-                                <hr className='mt-2 ' />
-                              </>
+                                const today = (new Date(notification.created_at)).toLocaleDateString('en-ES', options);
+                                return (
+                                  <>
+                                    <Row className='mb-2'>
+                                      <Col lg={2}>
+                                        <img src={NewAppointment} className='new-appointment-image' alt='New Appointment' />
+                                      </Col>
 
-                            )
-                          })}
-                          <div className='text-right text-gold fs-14 cursor-pointer' onClick={() => toggleUnderConstruction("Notifications")}>View All</div>
+                                      <Col lg={10} className='pb-2'>
+                                        <div className='body-text-bell'>
+                                          <div className="fs-16 fw-600 text-black">{notification.subject}</div>
+                                          <span className='fs-14 text-black'>{notification.message}</span>
+                                          <div className='hours-bell fs-14 mt-1'>{today}</div>
+                                        </div>
+                                      </Col>
+                                    </Row>
+                                    <hr className='mt-0 mb-3' />
+                                  </>
+                                );
+                              })}
+                            </>
+                            :
+                            <>
+                              <Card>
+                                <Card.Body className='text-center'>
+                                  No notifications were found.
+                                </Card.Body>
+                              </Card>
+                            </>
+                          }
+
                         </div>
                       )}
                     </div>
@@ -306,23 +321,6 @@ const Header = () => {
                       {userEnvelopOpen && (
                         <>
                           <div className="action-box-envelop user-menu-envelop">
-                            {/* <div className='d-flex'>
-                              <div><img src={User} className='user-placeholder-header' /></div>
-                              <div className='fs-14 body-text-bell'>Jeans Lorem Pants
-                                <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et...</div>
-                                <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
-                              </div>
-                            </div>
-                            <hr />
-
-                            <div className='d-flex'>
-                              <div><img src={User} className='user-placeholder-header' /></div>
-                              <div className='ms-3 fs-14 body-text-bell'>Marie Salazar
-                                <div className='mt-1'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</div>
-                                <div className='hours-bell mt-1'>1 day ago - 3:25 PM</div>
-                              </div>
-                            </div>
-                            <hr /> */}
                             <div className='d-flex'>
                               <div style={{ maxWidth: 100 }}><img src={User} className='user-placeholder-header' /></div>
                               <div className='fs-14 body-text-bell'>Admin
@@ -440,8 +438,6 @@ const Header = () => {
                       </div>
                     }
 
-                    {/* <Nav.Link href="/orders" className='fs-16'>Orders</Nav.Link> */}
-
                     <div className="user-dropdown nav-link" ref={userRef}>
                       {userImage ?
                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
@@ -461,13 +457,6 @@ const Header = () => {
                               <span className='text-black'>Wishlist</span>
                             </Link>
                           }
-
-                          {/* {userRole !== 'Admin' &&
-                            <Link to={`/admin/users`} className="mb-3 text-decoration-none d-block"><RxDashboard className='me-2' color='#000000' />
-                              <span className='text-black'>Dashboard</span>
-                            </Link>
-                          } */}
-
 
                           {userRole !== 'Admin' &&
                             <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' color='#000000' />

@@ -360,7 +360,7 @@ const Profile = () => {
                             <Col lg="6" className='mb-5'>
                                 <Row className="justify-content-end">
 
-                                    <Col md="2" className="text-right pe-0 me-4">
+                                    <Col lg="2" className="text-right pe-0 me-5">
                                         <button href="/user/profile/edit" type='button' id="btn-edit-profile" className='w-100'>
                                             <GoPencil />
                                             <span className='ms-1'>Edit Profile</span>
@@ -376,7 +376,7 @@ const Profile = () => {
                                         </Col>
                                     )} */}
 
-                                    <Col md="2" className="text-right">
+                                    <Col lg="2" className="text-right">
                                         <GoBack fallBack="/" />
                                     </Col>
                                 </Row>

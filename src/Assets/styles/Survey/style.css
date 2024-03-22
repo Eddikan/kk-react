@@ -32,7 +32,7 @@
 
 .question-concerns {
     width: 100%;
-    border: none;
+    border: none !important;
     border-bottom: 1px solid #d9dbe4 !important;
     border-radius: 0px !important;
 }
@@ -103,13 +103,15 @@ input[type="radio"]:checked {
 
 input[type='checkbox']:checked {
     background-color: #cea835;
-  }
-  input[type='checkbox']:checked:after {
+}
+
+input[type='checkbox']:checked:after {
     content: '\2713';
     color:white;
     font-size: 13px !important;
-  }
-  input[type='checkbox'] {
+}
+
+input[type='checkbox'] {
     text-align: center;
     display: table-cell;
     vertical-align: middle;

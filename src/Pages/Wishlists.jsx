@@ -120,7 +120,7 @@ const Wishlists = (props) => {
                 <LoadingPage />
                 :
                 <>
-                    <section className='py-5 px-2'>
+                    <section className='py-5 px-2 bg-white'>
                         <Container>
                             <Row className='mb-3'>
                                 <Col lg="8" className=''>

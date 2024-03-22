@@ -15,22 +15,25 @@ const initialVendorSurvey = Object.freeze({
     most_like: '',
     most_least: '',
     reason: '',
-    overall_satisfaction: '',
-    ease_of_finding: '',
+    website_suitability_rate: '',
+    easy_of_use: '',
     time_to_find: '',
-    visual_appeal: '',
-    information_understanding: '',
-    information_trust: '',
-    listing_ease: '',
+    visual_appeal_rate: '',
+    information_clarity_rate: '',
+    information_trust_level: '',
+
+    listed_ease: '',
     communication_ease: '',
     information_gathering_ease: '',
-    likelihood_of_recommendation: '',
-    comments: '',
+
+    recommendation_score: '',
+    comment: '',
 
 });
 
 const VendorFeedBackSurvey = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const [clearFormModal, setClearFormModal] = useState(false);
     const [vendorFormData, setVendorFormData] = useState(initialVendorSurvey);
@@ -40,7 +43,7 @@ const VendorFeedBackSurvey = (props) => {
     const [modalHeading, setModalHeading] = useState('');
 
     const postVendorSurvey = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'vendor-feedback-survey', data);
     };
 
     function toggleUnderConstruction(message) {
@@ -66,7 +69,7 @@ const VendorFeedBackSurvey = (props) => {
 
     const vendorSurveySubmit = (e) => {
         setFormStatus('loading');
-        postVendorSurvey({ ...vendorFormData }).then(response => {
+        postVendorSurvey({ ...vendorFormData, user_id: currentUser }).then(response => {
             const status = response.data.status;
             if (status === "Success") {
                 setFormStatus('standby');
@@ -102,7 +105,6 @@ const VendorFeedBackSurvey = (props) => {
                                 <Card.Body>
                                     <div className='d-flex'>
                                         <div className='fs-15 fw-600 me-2 email-survey'>{userDetails.email}</div>
-                                        {/* <div className='fs-15 switch-account'>Switch account</div> */}
                                     </div>
                                     <div className='mt-2'><TbMessageX className='me-2' size={20} color='#5f6368' />
                                         <span className='not-shared fs-14'>Not shared</span>
@@ -180,10 +182,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="overall_satisfaction"
+                                            name="website_suitability_rate"
                                             value="Extremely well"
-                                            checked={vendorFormData.overall_satisfaction === "Extremely well"}
+                                            checked={vendorFormData.website_suitability_rate === "Extremely well"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Extremely well</label>
                                     </div>
@@ -192,10 +195,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="overall_satisfaction"
+                                            name="website_suitability_rate"
                                             value="Very well"
-                                            checked={vendorFormData.overall_satisfaction === "Very well"}
+                                            checked={vendorFormData.website_suitability_rate === "Very well"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Very well</label>
                                     </div>
@@ -204,10 +208,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="overall_satisfaction"
+                                            name="website_suitability_rate"
                                             value="Somewhat well"
-                                            checked={vendorFormData.overall_satisfaction === "Somewhat well"}
+                                            checked={vendorFormData.website_suitability_rate === "Somewhat well"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Somewhat well</label>
                                     </div>
@@ -216,10 +221,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="overall_satisfaction"
+                                            name="website_suitability_rate"
                                             value="Not do well"
-                                            checked={vendorFormData.overall_satisfaction === "Not do well"}
+                                            checked={vendorFormData.website_suitability_rate === "Not do well"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not do well</label>
                                     </div>
@@ -228,10 +234,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="overall_satisfaction"
+                                            name="website_suitability_rate"
                                             value="Not at all well"
-                                            checked={vendorFormData.overall_satisfaction === "Not at all well"}
+                                            checked={vendorFormData.website_suitability_rate === "Not at all well"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not at all well</label>
                                     </div>
@@ -247,10 +254,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="ease_of_finding"
+                                            name="easy_of_use"
                                             value="Extremely well"
-                                            checked={vendorFormData.ease_of_finding === "Extremely well"}
+                                            checked={vendorFormData.easy_of_use === "Extremely well"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Extremely well</label>
                                     </div>
@@ -259,10 +267,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="ease_of_finding"
+                                            name="easy_of_use"
                                             value="Very well"
-                                            checked={vendorFormData.ease_of_finding === "Very well"}
+                                            checked={vendorFormData.easy_of_use === "Very well"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Very well</label>
                                     </div>
@@ -271,10 +280,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="ease_of_finding"
+                                            name="easy_of_use"
                                             value="Somewhat well"
-                                            checked={vendorFormData.ease_of_finding === "Somewhat well"}
+                                            checked={vendorFormData.easy_of_use === "Somewhat well"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Somewhat well</label>
                                     </div>
@@ -283,10 +293,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="ease_of_finding"
+                                            name="easy_of_use"
                                             value="Not do well"
-                                            checked={vendorFormData.ease_of_finding === "Not do well"}
+                                            checked={vendorFormData.easy_of_use === "Not do well"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not do well</label>
                                     </div>
@@ -295,10 +306,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="ease_of_finding"
+                                            name="easy_of_use"
                                             value="Not at all well"
-                                            checked={vendorFormData.ease_of_finding === "Not at all well"}
+                                            checked={vendorFormData.easy_of_use === "Not at all well"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not at all well</label>
                                     </div>
@@ -318,6 +330,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="A lot less time"
                                             checked={vendorFormData.time_to_find === "A lot less time"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>A lot less time</label>
                                     </div>
@@ -330,6 +343,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="A little less time"
                                             checked={vendorFormData.time_to_find === "A little less time"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>A little less time</label>
                                     </div>
@@ -342,6 +356,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="About what I expected"
                                             checked={vendorFormData.time_to_find === "About what I expected"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>About what I expected</label>
                                     </div>
@@ -354,6 +369,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="A little more time"
                                             checked={vendorFormData.time_to_find === "A little more time"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>A little more time</label>
                                     </div>
@@ -366,6 +382,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="A lot more time"
                                             checked={vendorFormData.time_to_find === "A lot more time"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>A lot more time</label>
                                     </div>
@@ -381,10 +398,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="visual_appeal"
+                                            name="visual_appeal_rate"
                                             value="Extremely appealing"
-                                            checked={vendorFormData.visual_appeal === "Extremely appealing"}
+                                            checked={vendorFormData.visual_appeal_rate === "Extremely appealing"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Extremely appealing</label>
                                     </div>
@@ -393,10 +411,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="visual_appeal"
+                                            name="visual_appeal_rate"
                                             value="Very appealing"
-                                            checked={vendorFormData.visual_appeal === "Very appealing"}
+                                            checked={vendorFormData.visual_appeal_rate === "Very appealing"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Very appealing</label>
                                     </div>
@@ -405,10 +424,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="visual_appeal"
+                                            name="visual_appeal_rate"
                                             value="Somewhat appealing"
-                                            checked={vendorFormData.visual_appeal === "Somewhat appealing"}
+                                            checked={vendorFormData.visual_appeal_rate === "Somewhat appealing"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Somewhat appealing</label>
                                     </div>
@@ -417,10 +437,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="visual_appeal"
+                                            name="visual_appeal_rate"
                                             value="Not so appealing"
-                                            checked={vendorFormData.visual_appeal === "Not so appealing"}
+                                            checked={vendorFormData.visual_appeal_rate === "Not so appealing"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not so appealing</label>
                                     </div>
@@ -429,10 +450,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="visual_appeal"
+                                            name="visual_appeal_rate"
                                             value="Not at all appealing"
-                                            checked={vendorFormData.visual_appeal === "Not at all appealing"}
+                                            checked={vendorFormData.visual_appeal_rate === "Not at all appealing"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not at all appealing</label>
                                     </div>
@@ -448,10 +470,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_understanding"
+                                            name="information_clarity_rate"
                                             value="Extremely easy"
-                                            checked={vendorFormData.information_understanding === "Extremely easy"}
+                                            checked={vendorFormData.information_clarity_rate === "Extremely easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Extremely easy</label>
                                     </div>
@@ -460,10 +483,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_understanding"
+                                            name="information_clarity_rate"
                                             value="Very easy"
-                                            checked={vendorFormData.information_understanding === "Very easy"}
+                                            checked={vendorFormData.information_clarity_rate === "Very easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Very easy</label>
                                     </div>
@@ -472,10 +496,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_understanding"
+                                            name="information_clarity_rate"
                                             value="Somewhat easy"
-                                            checked={vendorFormData.information_understanding === "Somewhat easy"}
+                                            checked={vendorFormData.information_clarity_rate === "Somewhat easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Somewhat easy</label>
                                     </div>
@@ -484,10 +509,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_understanding"
+                                            name="information_clarity_rate"
                                             value="Not so easy"
-                                            checked={vendorFormData.information_understanding === "Not so easy"}
+                                            checked={vendorFormData.information_clarity_rate === "Not so easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not so easy</label>
                                     </div>
@@ -496,10 +522,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_understanding"
+                                            name="information_clarity_rate"
                                             value="Not at all easy"
-                                            checked={vendorFormData.information_understanding === "Not at all easy"}
+                                            checked={vendorFormData.information_clarity_rate === "Not at all easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not at all easy</label>
                                     </div>
@@ -515,10 +542,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_trust"
+                                            name="information_trust_level"
                                             value="A great deal"
-                                            checked={vendorFormData.information_trust === "A great deal"}
+                                            checked={vendorFormData.information_trust_level === "A great deal"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>A great deal</label>
                                     </div>
@@ -527,10 +555,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_trust"
+                                            name="information_trust_level"
                                             value="A lot"
-                                            checked={vendorFormData.information_trust === "A lot"}
+                                            checked={vendorFormData.information_trust_level === "A lot"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>A lot</label>
                                     </div>
@@ -539,10 +568,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_trust"
+                                            name="information_trust_level"
                                             value="A moderate amount"
-                                            checked={vendorFormData.information_trust === "A moderate amount"}
+                                            checked={vendorFormData.information_trust_level === "A moderate amount"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>A moderate amount</label>
                                     </div>
@@ -551,10 +581,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_trust"
+                                            name="information_trust_level"
                                             value="A little"
-                                            checked={vendorFormData.information_trust === "A little"}
+                                            checked={vendorFormData.information_trust_level === "A little"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>A little</label>
                                     </div>
@@ -563,10 +594,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="information_trust"
+                                            name="information_trust_level"
                                             value="Not at all"
-                                            checked={vendorFormData.information_trust === "Not at all"}
+                                            checked={vendorFormData.information_trust_level === "Not at all"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not at all</label>
                                     </div>
@@ -582,10 +614,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="listing_ease"
+                                            name="listed_ease"
                                             value="Extremely easy"
-                                            checked={vendorFormData.listing_ease === "Extremely easy"}
+                                            checked={vendorFormData.listed_ease === "Extremely easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Extremely easy</label>
                                     </div>
@@ -594,10 +627,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="listing_ease"
+                                            name="listed_ease"
                                             value="Very easy"
-                                            checked={vendorFormData.listing_ease === "Very easy"}
+                                            checked={vendorFormData.listed_ease === "Very easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Very easy</label>
                                     </div>
@@ -606,10 +640,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="listing_ease"
+                                            name="listed_ease"
                                             value="Somewhat easy"
-                                            checked={vendorFormData.listing_ease === "Somewhat easy"}
+                                            checked={vendorFormData.listed_ease === "Somewhat easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Somewhat easy</label>
                                     </div>
@@ -618,10 +653,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="listing_ease"
+                                            name="listed_ease"
                                             value="Not so easy"
-                                            checked={vendorFormData.listing_ease === "Not so easy"}
+                                            checked={vendorFormData.listed_ease === "Not so easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not so easy</label>
                                     </div>
@@ -630,10 +666,11 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
-                                            name="listing_ease"
+                                            name="listed_ease"
                                             value="Not at all easy"
-                                            checked={vendorFormData.listing_ease === "Not at all easy"}
+                                            checked={vendorFormData.listed_ease === "Not at all easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not at all easy</label>
                                     </div>
@@ -653,6 +690,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="Extremely easy"
                                             checked={vendorFormData.communication_ease === "Extremely easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Extremely easy</label>
                                     </div>
@@ -665,6 +703,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="Very easy"
                                             checked={vendorFormData.communication_ease === "Very easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Very easy</label>
                                     </div>
@@ -677,6 +716,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="Somewhat easy"
                                             checked={vendorFormData.communication_ease === "Somewhat easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Somewhat easy</label>
                                     </div>
@@ -689,6 +729,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="Not so easy"
                                             checked={vendorFormData.communication_ease === "Not so easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not so easy</label>
                                     </div>
@@ -701,6 +742,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="Not at all easy"
                                             checked={vendorFormData.communication_ease === "Not at all easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not at all easy</label>
                                     </div>
@@ -720,6 +762,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="Extremely easy"
                                             checked={vendorFormData.information_gathering_ease === "Extremely easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Extremely easy</label>
                                     </div>
@@ -732,6 +775,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="Very easy"
                                             checked={vendorFormData.information_gathering_ease === "Very easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Very easy</label>
                                     </div>
@@ -744,6 +788,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="Somewhat easy"
                                             checked={vendorFormData.information_gathering_ease === "Somewhat easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Somewhat easy</label>
                                     </div>
@@ -756,6 +801,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="Not so easy"
                                             checked={vendorFormData.information_gathering_ease === "Not so easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not so easy</label>
                                     </div>
@@ -768,6 +814,7 @@ const VendorFeedBackSurvey = (props) => {
                                             value="Not at all easy"
                                             checked={vendorFormData.information_gathering_ease === "Not at all easy"}
                                             onChange={handleChangeVendor}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Not at all easy</label>
                                     </div>
@@ -789,10 +836,11 @@ const VendorFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="likelihood_of_recommendation"
+                                                name="recommendation_score"
                                                 value="1"
-                                                checked={vendorFormData.likelihood_of_recommendation === "1"}
+                                                checked={vendorFormData.recommendation_score === "1"}
                                                 onChange={handleChangeVendor}
+                                                required
                                             />
                                         </div>
 
@@ -802,10 +850,11 @@ const VendorFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="likelihood_of_recommendation"
+                                                name="recommendation_score"
                                                 value="2"
-                                                checked={vendorFormData.likelihood_of_recommendation === "2"}
+                                                checked={vendorFormData.recommendation_score === "2"}
                                                 onChange={handleChangeVendor}
+                                                required
                                             />
                                         </div>
 
@@ -815,10 +864,11 @@ const VendorFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="likelihood_of_recommendation"
+                                                name="recommendation_score"
                                                 value="3"
-                                                checked={vendorFormData.likelihood_of_recommendation === "3"}
+                                                checked={vendorFormData.recommendation_score === "3"}
                                                 onChange={handleChangeVendor}
+                                                required
                                             />
                                         </div>
 
@@ -828,10 +878,11 @@ const VendorFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="likelihood_of_recommendation"
+                                                name="recommendation_score"
                                                 value="4"
-                                                checked={vendorFormData.likelihood_of_recommendation === "4"}
+                                                checked={vendorFormData.recommendation_score === "4"}
                                                 onChange={handleChangeVendor}
+                                                required
                                             />
                                         </div>
 
@@ -841,10 +892,11 @@ const VendorFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="likelihood_of_recommendation"
+                                                name="recommendation_score"
                                                 value="5"
-                                                checked={vendorFormData.likelihood_of_recommendation === "5"}
+                                                checked={vendorFormData.recommendation_score === "5"}
                                                 onChange={handleChangeVendor}
+                                                required
                                             />
                                         </div>
 
@@ -854,10 +906,11 @@ const VendorFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="likelihood_of_recommendation"
+                                                name="recommendation_score"
                                                 value="6"
-                                                checked={vendorFormData.likelihood_of_recommendation === "6"}
+                                                checked={vendorFormData.recommendation_score === "6"}
                                                 onChange={handleChangeVendor}
+                                                required
                                             />
                                         </div>
 
@@ -867,10 +920,11 @@ const VendorFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="likelihood_of_recommendation"
+                                                name="recommendation_score"
                                                 value="7"
-                                                checked={vendorFormData.likelihood_of_recommendation === "7"}
+                                                checked={vendorFormData.recommendation_score === "7"}
                                                 onChange={handleChangeVendor}
+                                                required
                                             />
                                         </div>
 
@@ -880,10 +934,11 @@ const VendorFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="likelihood_of_recommendation"
+                                                name="recommendation_score"
                                                 value="8"
-                                                checked={vendorFormData.likelihood_of_recommendation === "8"}
+                                                checked={vendorFormData.recommendation_score === "8"}
                                                 onChange={handleChangeVendor}
+                                                required
                                             />
                                         </div>
 
@@ -893,10 +948,11 @@ const VendorFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="likelihood_of_recommendation"
+                                                name="recommendation_score"
                                                 value="9"
-                                                checked={vendorFormData.likelihood_of_recommendation === "9"}
+                                                checked={vendorFormData.recommendation_score === "9"}
                                                 onChange={handleChangeVendor}
+                                                required
                                             />
                                         </div>
 
@@ -906,10 +962,11 @@ const VendorFeedBackSurvey = (props) => {
                                             <input
                                                 type="radio"
                                                 className='me-2 mt-3 radio-size'
-                                                name="likelihood_of_recommendation"
+                                                name="recommendation_score"
                                                 value="10"
-                                                checked={vendorFormData.likelihood_of_recommendation === "10"}
+                                                checked={vendorFormData.recommendation_score === "10"}
                                                 onChange={handleChangeVendor}
+                                                required
                                             />
                                         </div>
 
@@ -929,8 +986,8 @@ const VendorFeedBackSurvey = (props) => {
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
-                                            name="comments"
-                                            value={vendorFormData.comments}
+                                            name="comment"
+                                            value={vendorFormData.comment}
                                             onChange={handleChangeVendor}
                                             placeholder='Your answer'
                                             required
@@ -951,8 +1008,8 @@ const VendorFeedBackSurvey = (props) => {
 
                                     <button
                                         className='btn btn-primary btn-style'
-                                        onClick={() => toggleUnderConstruction('Submit')}
-                                    // onClick={vendorSurveySubmit}
+                                        type="submit"
+                                        onClick={vendorSurveySubmit}
                                     >
                                         Submit
                                     </button>
@@ -1038,7 +1095,7 @@ const VendorFeedBackSurvey = (props) => {
                     </Modal.Body>
                 </Modal>
             </section>
-        </Layout>
+        </Layout >
     );
 };
 

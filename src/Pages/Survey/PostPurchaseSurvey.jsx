@@ -24,6 +24,7 @@ const initialPurchaseSurvey = Object.freeze({
 
 const PostPurchaseSurvey = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const [clearFormModal, setClearFormModal] = useState(false);
     const [postPurchaseFormData, setPostPurchaseFormData] = useState(initialPurchaseSurvey);
@@ -31,10 +32,11 @@ const PostPurchaseSurvey = (props) => {
     const [formStatus, setFormStatus] = useState('standby');
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState(false);
+    const [submitLoading, setSubmitLoading] = useState(true);
 
 
     const postPurchaseSurvey = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'post-purchase-survey', data);
     };
 
     function toggleUnderConstruction(message) {
@@ -58,28 +60,40 @@ const PostPurchaseSurvey = (props) => {
         setClearFormModal(true);
     }
 
-    const purchaseSurveySubmit = (e) => {
-        setFormStatus('loading');
-        postPurchaseSurvey({ ...postPurchaseFormData }).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setFormStatus('standby');
-                setReloadCount(reloadCount + 1);
-                setPostPurchaseFormData(initialPurchaseSurvey);
-                toast.success('Purchase Survey sent successfully!');
-            } else {
-                setFormStatus('standby');
+    const purchaseSurveySubmit = () => {
+        if (postPurchaseFormData.purchase_experience_rating == '' ||
+            postPurchaseFormData.price_fairness_agreement == '' ||
+            postPurchaseFormData.informed_decision_agreement == '' ||
+            postPurchaseFormData.payment_method_agreement == '' ||
+            postPurchaseFormData.total_cost_agreement == '' ||
+            postPurchaseFormData.purchase_agreement == '' ||
+            postPurchaseFormData.purchase_process == ''
+        ) {
+            toast.error('Please answer all the question!');
+        } else {
+            setSubmitLoading(true);
+            postPurchaseSurvey({ ...postPurchaseFormData, user_id: currentUser }).then(response => {
+                const status = response.data.status;
+                if (status === "Success") {
+                    setPostPurchaseFormData(initialPurchaseSurvey);
+                    toast.success('Purchase Survey sent successfully!');
+                    setSubmitLoading(false);
+                } else {
+                    toast.error('There has been an error saving the survey, please try again!');
+                    setSubmitLoading(false);
+                }
+            }).catch(() => {
                 toast.error('There has been an error saving the survey, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the survey, please try again!');
-        });
+                setSubmitLoading(false);
+            });
+        }
     }
 
     return (
         <Layout>
             <section className='bg-light'>
                 <Container className='py-5'>
+                    {/* <Form onSubmit={purchaseSurveySubmit}> */}
                     <Row>
                         <Col lg={11}>
                         </Col>
@@ -98,7 +112,6 @@ const PostPurchaseSurvey = (props) => {
                                 <Card.Body>
                                     <div className='d-flex'>
                                         <div className='fs-15 fw-600 me-2 email-survey'>{userDetails.email}</div>
-                                        {/* <div className='fs-15 switch-account'>Switch account</div> */}
                                     </div>
                                     <div className='mt-2'><TbMessageX className='me-2' size={20} color='#5f6368' />
                                         <span className='not-shared fs-14'>Not shared</span>
@@ -123,6 +136,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Excellent"
                                             checked={postPurchaseFormData.purchase_experience_rating === "Excellent"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Excellent</label>
                                     </div>
@@ -135,6 +149,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Great"
                                             checked={postPurchaseFormData.purchase_experience_rating === "Great"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Great</label>
                                     </div>
@@ -147,6 +162,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Good"
                                             checked={postPurchaseFormData.purchase_experience_rating === "Good"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Good</label>
                                     </div>
@@ -159,6 +175,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Fair"
                                             checked={postPurchaseFormData.purchase_experience_rating === "Fair"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Fair</label>
                                     </div>
@@ -171,6 +188,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Poor"
                                             checked={postPurchaseFormData.purchase_experience_rating === "Poor"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Poor</label>
                                     </div>
@@ -190,6 +208,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Strongly disagree"
                                             checked={postPurchaseFormData.price_fairness_agreement === "Strongly disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Strongly disagree</label>
                                     </div>
@@ -202,6 +221,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Disagree"
                                             checked={postPurchaseFormData.price_fairness_agreement === "Disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Disagree</label>
                                     </div>
@@ -214,6 +234,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Neither agree nor disagree"
                                             checked={postPurchaseFormData.price_fairness_agreement === "Neither agree nor disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Neither agree nor disagree</label>
                                     </div>
@@ -226,6 +247,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Agree"
                                             checked={postPurchaseFormData.price_fairness_agreement === "Agree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Agree</label>
                                     </div>
@@ -238,6 +260,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Strongly agree"
                                             checked={postPurchaseFormData.price_fairness_agreement === "Strongly agree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Strongly agree</label>
                                     </div>
@@ -257,6 +280,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Strongly disagree"
                                             checked={postPurchaseFormData.informed_decision_agreement === "Strongly disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Strongly disagree</label>
                                     </div>
@@ -269,6 +293,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Disagree"
                                             checked={postPurchaseFormData.informed_decision_agreement === "Disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Disagree</label>
                                     </div>
@@ -281,6 +306,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Neither agree nor disagree"
                                             checked={postPurchaseFormData.informed_decision_agreement === "Neither agree nor disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Neither agree nor disagree</label>
                                     </div>
@@ -293,6 +319,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Agree"
                                             checked={postPurchaseFormData.informed_decision_agreement === "Agree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Agree</label>
                                     </div>
@@ -305,6 +332,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Strongly agree"
                                             checked={postPurchaseFormData.informed_decision_agreement === "Strongly agree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Strongly agree</label>
                                     </div>
@@ -324,6 +352,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Strongly disagree"
                                             checked={postPurchaseFormData.payment_method_agreement === "Strongly disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Strongly disagree</label>
                                     </div>
@@ -336,6 +365,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Disagree"
                                             checked={postPurchaseFormData.payment_method_agreement === "Disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Disagree</label>
                                     </div>
@@ -348,6 +378,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Neither agree nor disagree"
                                             checked={postPurchaseFormData.payment_method_agreement === "Neither agree nor disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Neither agree nor disagree</label>
                                     </div>
@@ -360,6 +391,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Agree"
                                             checked={postPurchaseFormData.payment_method_agreement === "Agree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Agree</label>
                                     </div>
@@ -372,6 +404,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Strongly agree"
                                             checked={postPurchaseFormData.payment_method_agreement === "Strongly agree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Strongly agree</label>
                                     </div>
@@ -391,6 +424,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Strongly disagree"
                                             checked={postPurchaseFormData.total_cost_agreement === "Strongly disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Strongly disagree</label>
                                     </div>
@@ -403,6 +437,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Disagree"
                                             checked={postPurchaseFormData.total_cost_agreement === "Disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Disagree</label>
                                     </div>
@@ -415,6 +450,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Neither agree nor disagree"
                                             checked={postPurchaseFormData.total_cost_agreement === "Neither agree nor disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Neither agree nor disagree</label>
                                     </div>
@@ -427,6 +463,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Agree"
                                             checked={postPurchaseFormData.total_cost_agreement === "Agree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Agree</label>
                                     </div>
@@ -439,6 +476,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Strongly agree"
                                             checked={postPurchaseFormData.total_cost_agreement === "Strongly agree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Strongly agree</label>
                                     </div>
@@ -458,6 +496,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Strongly disagree"
                                             checked={postPurchaseFormData.purchase_agreement === "Strongly disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Strongly disagree</label>
                                     </div>
@@ -470,6 +509,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Disagree"
                                             checked={postPurchaseFormData.purchase_agreement === "Disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Disagree</label>
                                     </div>
@@ -482,6 +522,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Neither agree nor disagree"
                                             checked={postPurchaseFormData.purchase_agreement === "Neither agree nor disagree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Neither agree nor disagree</label>
                                     </div>
@@ -494,6 +535,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Agree"
                                             checked={postPurchaseFormData.purchase_agreement === "Agree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Agree</label>
                                     </div>
@@ -506,6 +548,7 @@ const PostPurchaseSurvey = (props) => {
                                             value="Strongly agree"
                                             checked={postPurchaseFormData.purchase_agreement === "Strongly agree"}
                                             onChange={handleChangePostPurchase}
+                                            required
                                         />
                                         <label className='ms-1 fs-15'>Strongly agree</label>
                                     </div>
@@ -524,7 +567,9 @@ const PostPurchaseSurvey = (props) => {
                                             name="purchase_process"
                                             value={postPurchaseFormData.purchase_process}
                                             onChange={handleChangePostPurchase}
-                                            placeholder='Your answer' />
+                                            placeholder='Your answer'
+                                            required
+                                        />
                                     </div>
                                 </Card.Body>
                             </Card>
@@ -541,8 +586,8 @@ const PostPurchaseSurvey = (props) => {
 
                                     <button
                                         className='btn btn-primary btn-style'
-                                        onClick={() => toggleUnderConstruction('Submit')}
-                                    // onClick={purchaseSurveySubmit}
+                                        type='submit'
+                                        onClick={purchaseSurveySubmit}
                                     >
                                         Submit
                                     </button>
@@ -550,6 +595,7 @@ const PostPurchaseSurvey = (props) => {
                             </Row>
                         </Col>
                     </Row>
+                    {/* </Form> */}
                 </Container>
 
                 <Modal
@@ -627,7 +673,7 @@ const PostPurchaseSurvey = (props) => {
                     </Modal.Body>
                 </Modal>
             </section >
-        </Layout>
+        </Layout >
     );
 };
 

@@ -93,7 +93,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
     return (
         <div>
             <section className="msger mt-1" ref={chatContainerRef}>
-                <div className="msger-chat scroll-chat p-2" ref={scrollableDivRef}>
+                <div className="msger-chat scroll-chat p-2 d-flex justify-content-center align-items-center" ref={scrollableDivRef}>
                     {chatLoading ?
                         <>
                             <Loading className="bg-white" />
