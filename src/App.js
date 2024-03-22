@@ -76,7 +76,7 @@ const AdminUsers = lazy(() => import("./Pages/Admin/AdminUsers"));
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
 const EditUserProfile = lazy(() => import("./Pages/User/EditProfile"));
-const LiveStreams = lazy(() => import("./Pages/User/LiveStreams"));
+const LiveStreams = lazy(() => import("./Pages/LiveStreams"));
 const UserCalendar = lazy(() => import("./Pages/User/Calendar"));
 const Appointments = lazy(() => import("./Pages/User/Appointments"));
 const UserMeasurementGuide = lazy(() =>

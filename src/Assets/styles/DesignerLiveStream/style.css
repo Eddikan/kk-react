@@ -1,5 +1,6 @@
-.live-stream-height {
-    height: 415px;
+.live-stream-height video {
+    /* height: 415px; */
+    width: 100%;
 }
 .stream-top-bottom {
     padding-top: 50px;

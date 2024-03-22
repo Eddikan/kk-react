@@ -9,12 +9,13 @@ import { AiFillMessage } from "react-icons/ai";
 import { PiPlus } from "react-icons/pi";
 import 'Assets/styles/LiveStream/style.css';
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
-import GoBack from '../../Components/Shared/GoBack';
+import GoBack from '../Components/Shared/GoBack';
 import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
 import LiveStreamChat from 'Components/Chat/LiveStreamChat';
 import toast from 'react-hot-toast';
 import axios from "axios";
+import { StreamCall, StreamVideo, StreamVideoClient, User } from '@stream-io/video-react-sdk';
 
 const initialStreamFormData = Object.freeze({
     title: '',
@@ -23,6 +24,10 @@ const initialStreamFormData = Object.freeze({
 });
 
 const LiveStreams = (props) => {
+    const apiKey = process.env.REACT_APP_STREAM_API_KEY;
+    const secrectKey = process.env.REACT_APP_STREAM_API_SECRET_KEY;
+    const token = process.env.REACT_APP_STREAM_API_TOKEN; 
+
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const [livestreamId, setLiveStreamId] = useState('');
     const currentUser = cookies.currentUser;
@@ -37,7 +42,6 @@ const LiveStreams = (props) => {
     const [formStatus, setFormStatus] = useState('standby');
     const [streamFormData, setStreamFormData] = useState(initialStreamFormData);
     const [designer, setDesigner] = useState('');
-
 
     function toggleCreateStream() {
         setCreateStreamShow(true);
@@ -85,6 +89,31 @@ const LiveStreams = (props) => {
                 setStreamFormData(initialStreamFormData);
                 setCreateStreamShow(false);
                 toast.success('Stream added successfully!');
+
+                const livestream_id = response.data.id;
+
+                const user = {
+                    id: '1_1',
+                    type: 'regular',
+                };
+
+                const callType = 'livestream';
+                const callId = livestream_id;
+
+                const client = new StreamVideoClient({ apiKey, token, user });
+                const call = client.call(callType, callId);
+
+                if (call) {
+                    call.getOrCreate({
+                        data: {
+                            members: [
+                                // please note the `role` property
+                                { user_id: '1_1', role: 'host' },
+                            ],
+                        },
+                    });
+                }
+
             } else {
                 setFormStatus('standby');
                 toast.error('An error occured. Please try again or contact the administrator.');

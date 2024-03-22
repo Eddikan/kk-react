@@ -479,15 +479,16 @@ function PixelComponent() {
     };
 
     useEffect(() => {
+        
         setup();
     }, [model]);
 
     return (
         <div>
             {/* HTML elements go here if needed */}
-            <video autoPlay="" id="video" muted="" playsInline="" width="480" height="680"></video>
-            <canvas width="480" height="480" id="output"></canvas>
-            <canvas width="480" height="480" id="buffer"></canvas>
+            <video autoPlay="" id="video" muted="" playsInline="" width="640" height="480"></video>
+            <canvas width="640" height="480" id="output"></canvas>
+            <canvas width="640" height="480" id="buffer"></canvas>
         </div>
     );
 }

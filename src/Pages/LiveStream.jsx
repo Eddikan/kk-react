@@ -11,7 +11,9 @@ import { IoCloseOutline, IoCalendarOutline } from "react-icons/io5";
 import 'Assets/styles/DesignerLiveStream/style.css';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-import LiveStream from 'Components/Chat/LiveStreamChat';
+import LiveStreamChat from 'Components/Chat/LiveStreamChat';
+import HostLivestream from 'Components/Livestream/HostView';
+import GuestLivestream from 'Components/Livestream/GuestView'
 
 const LiveStreams = (props) => {
     const navigate = useNavigate();
@@ -19,8 +21,8 @@ const LiveStreams = (props) => {
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const { livestreamId } = useParams();
-    const [live, setLive] = useState([]);
-    const [liveLoading, setLiveLoading] = useState(true);
+    const [livestream, setLivestream] = useState([]);
+    const [livestreamLoading, setLivestreamLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
     const [chatShow, setChatShow] = useState(true);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
@@ -46,18 +48,18 @@ const LiveStreams = (props) => {
     useEffect(() => {
         getLiveStream()
             .then((response) => {
-                setLiveLoading(false);
+                setLivestreamLoading(false);
                 const selectedLiveStream = response.data.data;
                 if (selectedLiveStream) {
-                    setLive(selectedLiveStream);
+                    setLivestream(selectedLiveStream);
                 } else {
                     toast.error('There has been an error getting the stream, please try again!');
-                    setLiveLoading(false);
+                    setLivestreamLoading(false);
                 }
             })
             .catch((error) => {
                 toast.error('There has been an error getting the stream, please try again!');
-                setLiveLoading(false);
+                setLivestreamLoading(false);
             });
     },
         [reloadCount]);
@@ -90,7 +92,7 @@ const LiveStreams = (props) => {
                                                         <LuSubtitles className='text-gold me-2 mb-1' size="20" />
                                                         Title:
                                                     </span>
-                                                    <span className='mt-1'>{live.title}</span>
+                                                    <span className='mt-1'>{livestream.title}</span>
                                                 </div>
                                             </Col>
 
@@ -100,7 +102,7 @@ const LiveStreams = (props) => {
                                                         <IoCalendarOutline className='text-gold me-2 mb-1' size="20" />
                                                         Date:
                                                     </span>
-                                                    <span className='mt-1'>{returnFormattedDate(live.date ?? '-')}</span>
+                                                    <span className='mt-1'>{returnFormattedDate(livestream.date ?? '-')}</span>
                                                 </div>
                                             </Col>
 
@@ -112,7 +114,7 @@ const LiveStreams = (props) => {
                                                                 <BiDetail size="20" className='text-gold me-2 mb-1' />
                                                                 Description:
                                                             </span>
-                                                            <div className='mt-3'>{live?.description}</div>
+                                                            <div className='mt-3'>{livestream?.description}</div>
                                                         </div>
                                                     </Card.Body>
                                                 </Card>
@@ -125,12 +127,27 @@ const LiveStreams = (props) => {
                                     <Card.Body className='live-stream-height'>
                                         <Row>
                                             <Col lg="12">
-                                                <iframe
-                                                    // src={live.url}
+                                                {livestream ? 
+                                                    <>
+                                                        {livestream.user?.id == currentUser ?
+                                                            <>
+                                                                <HostLivestream />
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <GuestLivestream />
+                                                            </>
+                                                        }
+                                                    </>
+                                                    :
+                                                    null
+                                                }
+                                                {/* <iframe
+                                                    // src={livestream.url}
                                                     src="https://kouture-konect.web.app/wishlist"
                                                     height="385" width="817"
                                                 >
-                                                </iframe>
+                                                </iframe> */}
                                             </Col>
                                         </Row>
                                     </Card.Body>
@@ -149,7 +166,7 @@ const LiveStreams = (props) => {
                                                     </Col>
 
                                                     <Col lg="12">
-                                                        <LiveStream
+                                                        <LiveStreamChat
                                                             currentUser={currentUser}
                                                             livestreamId={livestreamId}
                                                             user={userDetails}
