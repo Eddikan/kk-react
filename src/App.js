@@ -22,15 +22,11 @@ const Buttons = lazy(() => import("./Pages/Elements/Buttons"));
 const Forms = lazy(() => import("./Pages/Forms"));
 // const Stripe = lazy(() => import("./Pages/Stripe"));
 const CustomerPage = lazy(() => import("./Pages/CustomerPage"));
-const UserCalendar = lazy(() => import("./Pages/User/Calendar"));
-const Users = lazy(() => import("./Pages/Admin/AdminUsers"));
 const Cart = lazy(() => import("./Pages/Cart"));
 const ViewDesign = lazy(() => import("./Pages/ViewDesign"));
 const EcoFriendlyFabrics = lazy(() => import("./Pages/EcoFriendlyFabrics"));
 const DesignerProfile = lazy(() => import("./Pages/DesignerProfile"));
 const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
-const Appointments = lazy(() => import("./Pages/User/Appointments"));
-const UserAppointments = lazy(() => import("./Pages/Seller/Appointments"));
 const UserOrders = lazy(() => import("./Pages/Seller/Orders"));
 const Orders = lazy(() => import("./Pages/Orders"));
 const Messages = lazy(() => import("./Pages/Messages"));
@@ -38,8 +34,8 @@ const RateReview = lazy(() => import("./Pages/RateReview"));
 const OrderTrackingDetails = lazy(() => import("./Pages/OrderTrackingDetails"));
 const OrderDetails = lazy(() => import("./Pages/OrderDetails"));
 const VideoConferencing = lazy(() => import("./Pages/VideoConferencing"));
-
-const LiveStream = lazy(() => import("./Pages/Designer/LiveStreams"));
+const LiveStream = lazy(() => import("./Pages/LiveStream"));
+const UserAppointments = lazy(() => import("./Pages/Seller/Appointments"));
 
 // Survey
 const CustomerSatisfaction = lazy(() =>
@@ -67,15 +63,22 @@ const AdminAppointments = lazy(() => import("./Pages/Admin/AdminAppointments"));
 const AdminEditUser = lazy(() => import("./Pages/Admin/AdminEditUser"));
 const AdminEditDesigner = lazy(() => import("./Pages/Admin/AdminEditDesigner"));
 const AdminEditSeller = lazy(() => import("./Pages/Admin/AdminEditSeller"));
-const ViewSellerProfile = lazy(() => import("./Pages/Admin/ViewSellerProfile"));
-const ViewUserProfile = lazy(() => import("./Pages/Admin/ViewUserProfile"));
+const AdminViewSellerProfile = lazy(() =>
+  import("./Pages/Admin/AdminViewSellerProfile")
+);
+const AdminViewUserProfile = lazy(() =>
+  import("./Pages/Admin/AdminViewUserProfile")
+);
 const AdminEditDesign = lazy(() => import("./Pages/Admin/AdminEditDesign"));
 const AdminEditProduct = lazy(() => import("./Pages/Admin/AdminEditProduct"));
+const AdminUsers = lazy(() => import("./Pages/Admin/AdminUsers"));
 
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
 const EditUserProfile = lazy(() => import("./Pages/User/EditProfile"));
-const LiveStreamPage = lazy(() => import("./Pages/User/LiveStreamPage"));
+const LiveStreams = lazy(() => import("./Pages/User/LiveStreams"));
+const UserCalendar = lazy(() => import("./Pages/User/Calendar"));
+const Appointments = lazy(() => import("./Pages/User/Appointments"));
 const UserMeasurementGuide = lazy(() =>
   import("./Pages/User/MeasurementGuide")
 );
@@ -229,7 +232,7 @@ const App = () => {
             element={<UserProducts />}
           />
           {/* Admin */}
-          <Route path="/admin/users" exact element={<Users />} />
+          <Route path="/admin/users" exact element={<AdminUsers />} />
           <Route path="/admin/designers" exact element={<AdminDesigners />} />
           <Route path="/admin/sellers" exact element={<AdminSellers />} />
           <Route path="/admin/fabrics" exact element={<AdminFabrics />} />
@@ -242,12 +245,12 @@ const App = () => {
           <Route
             path="/admin/profile/user/:userId"
             exact
-            element={<ViewUserProfile />}
+            element={<AdminViewUserProfile />}
           />
           <Route
             path="/admin/profile/seller/:sellerId"
             exact
-            element={<ViewSellerProfile />}
+            element={<AdminViewSellerProfile />}
           />
           {/* Designs */}
           <Route path="/find-designs" exact element={<Designs />} />
@@ -353,7 +356,7 @@ const App = () => {
           <Route
             path="/user/center/live/stream"
             exact
-            element={<LiveStreamPage />}
+            element={<LiveStreams />}
           />
           {/* <Route
             path="/appointment/schedule/:designerId"

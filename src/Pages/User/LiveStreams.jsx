@@ -22,7 +22,7 @@ const initialStreamFormData = Object.freeze({
     description: ''
 });
 
-const LiveStreamPage = (props) => {
+const LiveStreams = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const [livestreamId, setLiveStreamId] = useState('');
     const currentUser = cookies.currentUser;
@@ -406,4 +406,4 @@ const LiveStreamPage = (props) => {
     );
 };
 
-export default LiveStreamPage;
+export default LiveStreams;

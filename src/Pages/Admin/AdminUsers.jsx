@@ -5,6 +5,8 @@ import { useCookies } from 'react-cookie';
 import { BiSolidPencil } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
 import { GoAlertFill } from 'react-icons/go';
+import { TbNeedleThread, TbUserDollar } from "react-icons/tb";
+import { MdOutlineEmail } from "react-icons/md";
 import { IoCloseOutline, IoEye } from 'react-icons/io5';
 import Pagination from 'Components/Pagination/Pagination';
 import AdminSidebar from 'Components/Shared/AdminSidebar';
@@ -204,20 +206,20 @@ const Users = (props) => {
 
                                                                                         <div className='ms-3'>
                                                                                             <Link to={`/admin/profile/user/${user.id}`} className='text-decoration-none'>
-                                                                                                <div className='mb-1'>
+                                                                                                <div className='mb-2'>
                                                                                                     <span className='mt-0 mb-1 fs-18 text-black admin-ellipsis-user fw-500'>
                                                                                                         {user.first_name}&nbsp;{user.last_name}
                                                                                                     </span>
                                                                                                 </div>
 
-                                                                                                <div className='mb-1'>
-                                                                                                    <span className='fs-16 text-black admin-ellipsis-user'>{user.email}</span>
+                                                                                                <div className='mb-2'>
+                                                                                                    <span className='fs-14 text-black admin-ellipsis-user'><MdOutlineEmail className="me-2 text-gold" size={18} />{user.email}</span>
                                                                                                 </div>
 
-                                                                                                <div className='mb-1'>
+                                                                                                <div className='mb-2'>
                                                                                                     {user.is_designer == 1 &&
                                                                                                         <>
-                                                                                                            <span className='fs-14 text-black'>Designer</span>
+                                                                                                            <span className='fs-14 text-black'><TbNeedleThread className="me-2 text-gold" size={18} />Designer</span>
                                                                                                         </>
                                                                                                     }
                                                                                                 </div>
@@ -225,7 +227,7 @@ const Users = (props) => {
                                                                                                 <div>
                                                                                                     {user.is_seller == 1 &&
                                                                                                         <>
-                                                                                                            <span className='fs-14 text-black'>Seller</span>
+                                                                                                            <span className='fs-14 text-black'><TbUserDollar className="me-2 text-gold" size={18} />Seller</span>
                                                                                                         </>
                                                                                                     }
                                                                                                 </div>

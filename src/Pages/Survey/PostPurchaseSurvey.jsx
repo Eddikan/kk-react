@@ -5,6 +5,9 @@ import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap'
 import UserContent from 'Assets/images/usercontent.jpg';
 import { TbMessageX } from "react-icons/tb";
 import { IoCloseOutline } from "react-icons/io5";
+import { useCookies } from 'react-cookie';
+import { GoAlertFill } from "react-icons/go";
+import GoBack from 'Components/Shared/GoBack';
 import 'Assets/styles/Survey/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
@@ -20,15 +23,24 @@ const initialPurchaseSurvey = Object.freeze({
 });
 
 const PostPurchaseSurvey = (props) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const userDetails = cookies.userDetails;
     const [clearFormModal, setClearFormModal] = useState(false);
     const [postPurchaseFormData, setPostPurchaseFormData] = useState(initialPurchaseSurvey);
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
+    const [underConstructionShow, setUnderConstructionShow] = useState(false);
+    const [modalHeading, setModalHeading] = useState(false);
 
 
     const postPurchaseSurvey = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/#', data);
     };
+
+    function toggleUnderConstruction(message) {
+        setUnderConstructionShow(true);
+        setModalHeading(message);
+    }
 
     const toggleEmptyField = () => {
         setPostPurchaseFormData(initialPurchaseSurvey);
@@ -69,17 +81,24 @@ const PostPurchaseSurvey = (props) => {
             <section className='bg-light'>
                 <Container className='py-5'>
                     <Row>
+                        <Col lg={11}>
+                        </Col>
+
+                        <Col md={1} className="text-right">
+                            <GoBack fallBack="/#" />
+                        </Col>
+
                         <Col>
                             <Card className='mt-3 mb-3 bordered-top-primary-survey'>
                                 <Card.Body>
-                                    <div className='fs-30 mb-4'>Post Purchase/Delivery Survey</div>
+                                    <div className='fs-30 mb-4 rufina-family'>Post Purchase/Delivery Survey</div>
                                     <div className='fs-15'>We would love to hear your thoughts or feedback on how we can improve your experience!</div>
                                 </Card.Body>
                                 <hr className='mb-0 mt-0' />
                                 <Card.Body>
                                     <div className='d-flex'>
-                                        <div className='fs-15 fw-600 me-2 email-survey'>vb.jmagnaye@gmail.com</div>
-                                        <div className='fs-15 switch-account'>Switch account</div>
+                                        <div className='fs-15 fw-600 me-2 email-survey'>{userDetails.email}</div>
+                                        {/* <div className='fs-15 switch-account'>Switch account</div> */}
                                     </div>
                                     <div className='mt-2'><TbMessageX className='me-2' size={20} color='#5f6368' />
                                         <span className='not-shared fs-14'>Not shared</span>
@@ -522,7 +541,8 @@ const PostPurchaseSurvey = (props) => {
 
                                     <button
                                         className='btn btn-primary btn-style'
-                                        // onClick={purchaseSurveySubmit}
+                                        onClick={() => toggleUnderConstruction('Submit')}
+                                    // onClick={purchaseSurveySubmit}
                                     >
                                         Submit
                                     </button>
@@ -578,6 +598,34 @@ const PostPurchaseSurvey = (props) => {
                     </Modal.Body>
                 </Modal>
 
+                <Modal
+                    show={underConstructionShow}
+                    className='modal-preview'
+                    fade={false}
+                    centered
+                    size="sm"
+                    id="under-construction"
+                >
+                    <Modal.Header className="py-0">
+                        <h5 className='modal-title text-uppercase text-left fs-22 mt-2'>{modalHeading}</h5>
+                        <button
+                            type='button'
+                            className='close react-modal-close'
+                            onClick={() => setUnderConstructionShow(false)}
+                        >
+                            <IoCloseOutline color="#7e7e7e" size={25} />
+                        </button>
+                    </Modal.Header>
+
+                    <Modal.Body className='pt-2'>
+                        <Card>
+                            <Card.Body className="text-center py-5">
+                                <GoAlertFill size="60px" className="mb-2 text-gold" />
+                                <p className="fs-20 text-black">Under Construction</p>
+                            </Card.Body>
+                        </Card>
+                    </Modal.Body>
+                </Modal>
             </section >
         </Layout>
     );
