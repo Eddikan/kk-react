@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import { IoCloseOutline } from "react-icons/io5";
 import { TbMessageX } from "react-icons/tb";
@@ -35,7 +36,8 @@ const initialDescribeServiceSurvey = Object.freeze({
     unreliable: '',
 });
 
-const CustomerSatisfaction = (props) => {
+const AdminViewCustomerSurvey = (props) => {
+    const { surveyId } = useParams();
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
@@ -47,20 +49,16 @@ const CustomerSatisfaction = (props) => {
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
 
+    const [customerSurvey, setCustomerSurvey] = useState([]);
+    const [customerSurveyLoading, setCustomerSurveyLoading] = useState(true);
+    const [surveyUser, setSurveyUser] = useState('');
 
-    const postCustomerSurvey = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey', data);
+
+    const getCustomerSurvey = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey/' + surveyId);
     };
 
-    function toggleUnderConstruction(message) {
-        setUnderConstructionShow(true);
-        setModalHeading(message);
-    }
 
-    const toggleEmptyField = () => {
-        setCustomerForData(initialCustomerSurvey);
-        setDescribeServiceFormData(initialDescribeServiceSurvey);
-    }
 
     const handleChangeCustomer = (e) => {
         const { name, value } = e.target;
@@ -69,15 +67,6 @@ const CustomerSatisfaction = (props) => {
             [name]: value,
         });
     };
-
-    // const handleChangeDescribeService = (e) => {
-    //     const { name, value } = e.target;
-    //     setDescribeServiceFormData({
-    //         ...describeServiceFormData,
-    //         [name]: value,
-    //     });
-    // };
-
     const handleChangeDescribeService = (e) => {
         const { name, checked } = e.target;
         setDescribeServiceFormData(prevState => ({
@@ -86,41 +75,32 @@ const CustomerSatisfaction = (props) => {
         }));
     };
 
-    function toggleClearFormModal() {
-        setClearFormModal(true);
-    }
 
-    const customerSurveySubmit = (e) => {
-        if (customerFormData.likelihood_to_recommend == '' ||
-            customerFormData.satisfaction == '' ||
-            customerFormData.product_fit_rate == '' ||
-            customerFormData.product_quality_rate == '' ||
-            customerFormData.product_value_rate == '' ||
-            customerFormData.responsiveness_rate == '' ||
-            customerFormData.customer_tenure == '' ||
-            customerFormData.service_reuse == '' ||
-            customerFormData.comment == '' ||
-            customerFormData.like_recommend_website == ''
-        ) {
-            toast.error('Please answer all the question!');
-        } else {
-            setFormStatus('loading');
-            postCustomerSurvey({ ...customerFormData, qualities: describeServiceFormData, user_id: currentUser }).then(response => {
-                const status = response.data.status;
-                if (status === "Success") {
-                    setFormStatus('standby');
-                    setReloadCount(reloadCount + 1);
-                    setCustomerForData(initialCustomerSurvey);
-                    toast.success('Customer Survey sent successfully!');
-                } else {
-                    setFormStatus('standby');
-                    toast.error('There has been an error saving the survey, please try again!');
-                }
-            }).catch(() => {
-                toast.error('There has been an error saving the survey, please try again!');
-            });
+    useEffect(() => {
+        if (currentUser) {
+            getCustomerSurvey()
+                .then((response) => {
+                    setCustomerSurveyLoading(false);
+                    const selectedCustomerSurvey = response.data.data;
+                    if (selectedCustomerSurvey) {
+                        setCustomerSurvey(selectedCustomerSurvey);
+                        setCustomerForData(selectedCustomerSurvey);
+                        setDescribeServiceFormData(selectedCustomerSurvey);
+                        if (selectedCustomerSurvey.user) {
+                            setSurveyUser(selectedCustomerSurvey.user);
+                        }
+                    } else {
+                        toast.error('There has been an error getting the surveys, please try again!');
+                        setCustomerSurveyLoading(false);
+                    }
+                })
+                .catch((error) => {
+                    toast.error('There has been an error getting the surveys, please try again!');
+                    setCustomerSurveyLoading(false);
+                });
         }
-    }
+    },
+        [reloadCount]);
 
     return (
         <Layout>
@@ -174,6 +154,7 @@ const CustomerSatisfaction = (props) => {
                                                 value="1"
                                                 checked={customerFormData.likelihood_to_recommend === "1"}
                                                 onChange={handleChangeCustomer}
+                                                disabled
                                             />
                                         </div>
 
@@ -187,6 +168,7 @@ const CustomerSatisfaction = (props) => {
                                                 value="2"
                                                 checked={customerFormData.likelihood_to_recommend === "2"}
                                                 onChange={handleChangeCustomer}
+                                                disabled
                                             />
                                         </div>
 
@@ -200,6 +182,7 @@ const CustomerSatisfaction = (props) => {
                                                 value="3"
                                                 checked={customerFormData.likelihood_to_recommend === "3"}
                                                 onChange={handleChangeCustomer}
+                                                disabled
                                             />
                                         </div>
 
@@ -213,6 +196,7 @@ const CustomerSatisfaction = (props) => {
                                                 value="4"
                                                 checked={customerFormData.likelihood_to_recommend === "4"}
                                                 onChange={handleChangeCustomer}
+                                                disabled
                                             />
                                         </div>
 
@@ -226,6 +210,7 @@ const CustomerSatisfaction = (props) => {
                                                 value="5"
                                                 checked={customerFormData.likelihood_to_recommend === "5"}
                                                 onChange={handleChangeCustomer}
+                                                disabled
                                             />
                                         </div>
 
@@ -239,6 +224,7 @@ const CustomerSatisfaction = (props) => {
                                                 value="6"
                                                 checked={customerFormData.likelihood_to_recommend === "6"}
                                                 onChange={handleChangeCustomer}
+                                                disabled
                                             />
                                         </div>
 
@@ -252,6 +238,7 @@ const CustomerSatisfaction = (props) => {
                                                 value="7"
                                                 checked={customerFormData.likelihood_to_recommend === "7"}
                                                 onChange={handleChangeCustomer}
+                                                disabled
                                             />
                                         </div>
 
@@ -265,6 +252,7 @@ const CustomerSatisfaction = (props) => {
                                                 value="8"
                                                 checked={customerFormData.likelihood_to_recommend === "8"}
                                                 onChange={handleChangeCustomer}
+                                                disabled
                                             />
                                         </div>
 
@@ -278,6 +266,7 @@ const CustomerSatisfaction = (props) => {
                                                 value="9"
                                                 checked={customerFormData.likelihood_to_recommend === "9"}
                                                 onChange={handleChangeCustomer}
+                                                disabled
                                             />
                                         </div>
 
@@ -291,6 +280,7 @@ const CustomerSatisfaction = (props) => {
                                                 value="10"
                                                 checked={customerFormData.likelihood_to_recommend === "10"}
                                                 onChange={handleChangeCustomer}
+                                                disabled
                                             />
                                         </div>
 
@@ -314,6 +304,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Very satisfied"
                                             checked={customerFormData.satisfaction === "Very satisfied"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15' htmlFor="Very satisfied">Very satisfied</label>
                                     </div>
@@ -326,6 +317,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Somewhat satisfied"
                                             checked={customerFormData.satisfaction === "Somewhat satisfied"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15' for="Somewhat satisfied"> Somewhat satisfied</label>
                                     </div>
@@ -338,6 +330,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Neither satisfied nor dissatisfied"
                                             checked={customerFormData.satisfaction === "Neither satisfied nor dissatisfied"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Neither satisfied nor dissatisfied</label>
                                     </div>
@@ -350,6 +343,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Somewhat dissatisfied"
                                             checked={customerFormData.satisfaction === "Somewhat dissatisfied"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Somewhat dissatisfied</label>
                                     </div>
@@ -362,6 +356,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Very dissatisfied"
                                             checked={customerFormData.satisfaction === "Very dissatisfied"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Very dissatisfied</label>
                                     </div>
@@ -381,6 +376,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Reliable"
                                             checked={describeServiceFormData.reliable}
                                             onChange={handleChangeDescribeService}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Reliable</label>
                                     </div>
@@ -393,6 +389,7 @@ const CustomerSatisfaction = (props) => {
                                             value="High quality"
                                             checked={describeServiceFormData.high_quality}
                                             onChange={handleChangeDescribeService}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>High quality</label>
                                     </div>
@@ -405,6 +402,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Useful"
                                             checked={describeServiceFormData.useful}
                                             onChange={handleChangeDescribeService}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Useful</label>
                                     </div>
@@ -417,6 +415,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Unique"
                                             checked={describeServiceFormData.unique}
                                             onChange={handleChangeDescribeService}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Unique</label>
                                     </div>
@@ -429,6 +428,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Good value for money"
                                             checked={describeServiceFormData.good_value_for_money}
                                             onChange={handleChangeDescribeService}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Good value for money</label>
                                     </div>
@@ -441,6 +441,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Impractical"
                                             checked={describeServiceFormData.impractical}
                                             onChange={handleChangeDescribeService}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Impractical</label>
                                     </div>
@@ -453,6 +454,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Ineffective"
                                             checked={describeServiceFormData.ineffective}
                                             onChange={handleChangeDescribeService}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Ineffective</label>
                                     </div>
@@ -465,6 +467,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Poor quality"
                                             checked={describeServiceFormData.poor_quality}
                                             onChange={handleChangeDescribeService}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Poor quality</label>
                                     </div>
@@ -477,6 +480,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Unreliable"
                                             checked={describeServiceFormData.unreliable}
                                             onChange={handleChangeDescribeService}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Unreliable</label>
                                     </div>
@@ -496,6 +500,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Extremely well"
                                             checked={customerFormData.product_fit_rate === "Extremely well"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Extremely well</label>
                                     </div>
@@ -508,6 +513,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Very well"
                                             checked={customerFormData.product_fit_rate === "Very well"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Very well</label>
                                     </div>
@@ -520,6 +526,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Somewhat well"
                                             checked={customerFormData.product_fit_rate === "Somewhat well"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Somewhat well</label>
                                     </div>
@@ -532,6 +539,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Not so well"
                                             checked={customerFormData.product_fit_rate === "Not so well"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not so well</label>
                                     </div>
@@ -544,6 +552,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Not at all well"
                                             checked={customerFormData.product_fit_rate === "Not at all well"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not at all well</label>
                                     </div>
@@ -563,6 +572,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Very high quality"
                                             checked={customerFormData.product_quality_rate === "Very high quality"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Very high quality</label>
                                     </div>
@@ -575,6 +585,7 @@ const CustomerSatisfaction = (props) => {
                                             value="High quality"
                                             checked={customerFormData.product_quality_rate === "High quality"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>High quality</label>
                                     </div>
@@ -587,6 +598,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Neither high nor low quality"
                                             checked={customerFormData.product_quality_rate === "Neither high nor low quality"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Neither high nor low quality</label>
                                     </div>
@@ -599,6 +611,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Low quality"
                                             checked={customerFormData.product_quality_rate === "Low quality"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Low quality</label>
                                     </div>
@@ -610,6 +623,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Very low quality"
                                             checked={customerFormData.product_quality_rate === "Very low quality"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Very low quality</label>
                                     </div>
@@ -629,6 +643,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Excellent"
                                             checked={customerFormData.product_value_rate === "Excellent"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Excellent</label>
                                     </div>
@@ -641,6 +656,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Above average"
                                             checked={customerFormData.product_value_rate === "Above average"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Above average</label>
                                     </div>
@@ -653,6 +669,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Average"
                                             checked={customerFormData.product_value_rate === "Average"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Average</label>
                                     </div>
@@ -665,6 +682,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Below average"
                                             checked={customerFormData.product_value_rate === "Below average"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Below average</label>
                                     </div>
@@ -677,6 +695,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Poor"
                                             checked={customerFormData.product_value_rate === "Poor"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Poor</label>
                                     </div>
@@ -696,6 +715,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Extremely responsive"
                                             checked={customerFormData.responsiveness_rate === "Extremely responsive"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Extremely responsive</label>
                                     </div>
@@ -708,6 +728,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Very responsive"
                                             checked={customerFormData.responsiveness_rate === "Very responsive"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Very responsive</label>
                                     </div>
@@ -720,6 +741,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Somewhat responsive"
                                             checked={customerFormData.responsiveness_rate === "Somewhat responsive"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Somewhat responsive</label>
                                     </div>
@@ -732,6 +754,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Not so responsive"
                                             checked={customerFormData.responsiveness_rate === "Not so responsive"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not so responsive</label>
                                     </div>
@@ -744,6 +767,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Not at all responsive"
                                             checked={customerFormData.responsiveness_rate === "Not at all responsive"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not at all responsive</label>
                                     </div>
@@ -756,6 +780,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Not applicable"
                                             checked={customerFormData.responsiveness_rate === "Not applicable"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not applicable</label>
                                     </div>
@@ -775,6 +800,7 @@ const CustomerSatisfaction = (props) => {
                                             value="This is my first purchase"
                                             checked={customerFormData.customer_tenure === "This is my first purchase"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>This is my first purchase</label>
                                     </div>
@@ -787,6 +813,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Less than six months"
                                             checked={customerFormData.customer_tenure === "Less than six months"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Less than six months</label>
                                     </div>
@@ -799,6 +826,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Six months to a year"
                                             checked={customerFormData.customer_tenure === "Six months to a year"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Six months to a year</label>
                                     </div>
@@ -811,6 +839,7 @@ const CustomerSatisfaction = (props) => {
                                             value="1-2 years"
                                             checked={customerFormData.customer_tenure === "1-2 years"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>1-2 years</label>
                                     </div>
@@ -823,6 +852,7 @@ const CustomerSatisfaction = (props) => {
                                             value="3 or more years"
                                             checked={customerFormData.customer_tenure === "3 or more years"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>3 or more years</label>
                                     </div>
@@ -835,6 +865,7 @@ const CustomerSatisfaction = (props) => {
                                             value="I haven't made a purchase yet"
                                             checked={customerFormData.customer_tenure === "I haven't made a purchase yet"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>I haven't made a purchase yet</label>
                                     </div>
@@ -854,6 +885,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Extremely likely"
                                             checked={customerFormData.service_reuse === "Extremely likely"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Extremely likely</label>
                                     </div>
@@ -866,6 +898,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Very likely"
                                             checked={customerFormData.service_reuse === "Very likely"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Very likely</label>
                                     </div>
@@ -878,6 +911,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Somewhat likely"
                                             checked={customerFormData.service_reuse === "Somewhat likely"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Somewhat likely</label>
                                     </div>
@@ -890,6 +924,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Not so likely"
                                             checked={customerFormData.service_reuse === "Not so likely"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not so likely</label>
                                     </div>
@@ -902,6 +937,7 @@ const CustomerSatisfaction = (props) => {
                                             value="Not at all likely"
                                             checked={customerFormData.service_reuse === "Not at all likely"}
                                             onChange={handleChangeCustomer}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not at all likely</label>
                                     </div>
@@ -921,79 +957,14 @@ const CustomerSatisfaction = (props) => {
                                             value={customerFormData.comment}
                                             onChange={handleChangeCustomer}
                                             placeholder='Your answer'
-                                            required />
+                                            disabled
+                                        />
                                     </div>
                                 </Card.Body>
                             </Card>
-
-                            <Row>
-                                <Col lg="12" className='text-right mt-3'>
-                                    <button
-                                        className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
-                                        onClick={toggleClearFormModal}
-                                        type="button"
-                                    >
-                                        Clear form
-                                    </button>
-
-                                    <button
-                                        className='btn btn-primary btn-style'
-                                        type="submit"
-                                        onClick={customerSurveySubmit}
-                                    >
-                                        Submit
-                                    </button>
-                                </Col>
-                            </Row>
                         </Col>
                     </Row>
                 </Container>
-
-                <Modal
-                    show={clearFormModal}
-                    className='modal-preview'
-                    fade={false}
-                    centered
-                >
-                    <Modal.Header className="pb-0">
-                        <Modal.Title className='rufina-family fs-22 text-black'>Clear form?</Modal.Title>
-                        <button
-                            type='button'
-                            className='close react-modal-close'
-                            onClick={function () { setClearFormModal(false); }}
-                        >
-                            <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
-                        </button>
-                    </Modal.Header>
-
-                    <Modal.Body>
-                        <Card>
-                            <Card.Body>
-                                <p className="mb-0">This will remove your answers from all questions, and cannot be undone.</p>
-                            </Card.Body>
-                        </Card>
-                        <Card.Footer className="text-right mt-3">
-                            <button
-                                className="btn border-black bg-white text-black me-3 btn-style"
-                                onClick={() => setClearFormModal(false)}
-                                type="button"
-                            >
-                                Cancel
-                            </button>
-
-                            <button
-                                className="btn btn-primary btn-style"
-                                type="button"
-                                onClick={() => {
-                                    toggleEmptyField();
-                                    setClearFormModal(false);
-                                }}
-                            >
-                                Clear form
-                            </button>
-                        </Card.Footer>
-                    </Modal.Body>
-                </Modal>
 
                 <Modal
                     show={underConstructionShow}
@@ -1029,4 +1000,4 @@ const CustomerSatisfaction = (props) => {
     );
 };
 
-export default CustomerSatisfaction;
+export default AdminViewCustomerSurvey;

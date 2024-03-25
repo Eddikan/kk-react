@@ -11,7 +11,7 @@ import 'Assets/styles/Sidebar/style.css'
 import { HiOutlineScissors } from "react-icons/hi2";
 import { useNavigate } from 'react-router-dom';
 import { Row, Col, Button, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
-import { PiShoppingCartSimple, PiSuitcaseSimple, PiBriefcase } from "react-icons/pi";
+import { PiShoppingCartSimple, PiScissorsLight, PiPantsLight, PiBriefcase } from "react-icons/pi";
 import { RxRulerHorizontal } from "react-icons/rx";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { IoIosArrowDown } from "react-icons/io";
@@ -53,7 +53,6 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                         </a>
 
                         <div className='mt-3 d-flex justify-content-between'>
-                            {/* <span><PiShoppingCartSimple size="22" className="me-2 mb-1" color='#000000' /></span> */}
                             <div className='yellow-hover'>
                                 <span
                                     className='cursor-pointer users-title '
@@ -118,8 +117,8 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                             <p className={currentTab == 'Review' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('Review')}>Review and Feedback</p>
                         </AccordionBody> */}
 
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/portfolio')}><PiBriefcase size="22" className="me-2 mb-1" />Portfolio</div>
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/products')}><HiOutlineScissors size="22" className="me-2 mb-1" />Fabrics</div>
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/portfolio')}><PiPantsLight size="22" className="me-2 mb-1" />Portfolio</div>
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/products')}><PiScissorsLight size="22" className="me-2 mb-1" />Fabrics</div>
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/guide')}><RxRulerHorizontal size="22" className="me-2 mb-1" />Measurement Guide</div>
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/live/stream')}><RiLiveLine size="22" className="me-2 mb-1" />Live Stream</div>
                     </AccordionItem>

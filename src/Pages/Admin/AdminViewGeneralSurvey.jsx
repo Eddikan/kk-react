@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import { TbMessageX } from "react-icons/tb";
 import { IoCloseOutline } from "react-icons/io5";
 import { useCookies } from 'react-cookie';
 import { GoAlertFill } from "react-icons/go";
-import AdminSidebar from 'Components/Shared/AdminSidebar';
 import LayoutAdmin from 'Components/Layout/LayoutAdmin';
 import GoBack from 'Components/Shared/GoBack';
-import Layout from 'Components/Layout/Layout';
 import 'Assets/styles/Survey/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
@@ -27,30 +25,24 @@ const initialGeneralSurvey = Object.freeze({
     comment: '',
 });
 
-const WebsiteFeedBackSurvey = (props) => {
+const AdminViewGeneralSurvey = (props) => {
+    const { surveyId } = useParams();
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const userRole = cookies.userRole;
     const currentUser = cookies.currentUser;
-    const userDetails = cookies.userDetails;
-    const [clearFormModal, setClearFormModal] = useState(false);
     const [generalFeedBackFormData, setGeneralFeedBackFormData] = useState(initialGeneralSurvey);
     const [reloadCount, setReloadCount] = useState(0);
-    const [formStatus, setFormStatus] = useState('standby');
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState(false);
 
+    const [generalFeedback, setGeneralFeedback] = useState([]);
+    const [generalFeedbackLoading, setGeneralFeedbackLoading] = useState(true);
+    const [surveyUser, setSurveyUser] = useState('');
+    const navigate = useNavigate();
 
-    const postWebsiteSurvey = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'general-feedback-survey', data);
+    const getGeneralFeedBack = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'general-feedback-survey/' + surveyId);
     };
-
-    function toggleUnderConstruction(message) {
-        setUnderConstructionShow(true);
-        setModalHeading(message);
-    }
-
-    const toggleEmptyField = () => {
-        setGeneralFeedBackFormData(initialGeneralSurvey);
-    }
 
     const handleChangeGeneralFeeback = (e) => {
         const { name, value } = e.target;
@@ -60,41 +52,33 @@ const WebsiteFeedBackSurvey = (props) => {
         });
     };
 
-    function toggleClearFormModal() {
-        setClearFormModal(true);
-    }
-
-    const websiteSurveySubmit = (e) => {
-        if (generalFeedBackFormData.most_like == '' ||
-            generalFeedBackFormData.least_like == '' ||
-            generalFeedBackFormData.reason == '' ||
-            generalFeedBackFormData.website_suitability_rate == '' ||
-            generalFeedBackFormData.ease_of_use == '' ||
-            generalFeedBackFormData.time_expectation == '' ||
-            generalFeedBackFormData.visual_appeal_rate == '' ||
-            generalFeedBackFormData.information_clarity_rate == '' ||
-            generalFeedBackFormData.information_trust_level == '' ||
-            generalFeedBackFormData.recommendation_score == '' ||
-            generalFeedBackFormData.comment == ''
-        ) {
-            toast.error('Please answer all the question!');
-        } else {
-            setFormStatus('loading');
-            postWebsiteSurvey({ ...generalFeedBackFormData, user_id: currentUser }).then(response => {
-                const status = response.data.status;
-                if (status === "Success") {
-                    setFormStatus('standby');
-                    setGeneralFeedBackFormData(initialGeneralSurvey);
-                    toast.success('General Survey sent successfully!');
-                } else {
-                    setFormStatus('standby');
-                    toast.error('There has been an error saving the survey, please try again!');
-                }
-            }).catch(() => {
-                toast.error('There has been an error saving the survey, please try again!');
-            });
+    useEffect(() => {
+        if (userRole !== 'Admin') {
+            navigate('/')
         }
-    }
+        if (currentUser) {
+            getGeneralFeedBack()
+                .then((response) => {
+                    setGeneralFeedbackLoading(false);
+                    const selectedGeneralSurvey = response.data.data;
+                    if (selectedGeneralSurvey) {
+                        setGeneralFeedback(selectedGeneralSurvey);
+                        setGeneralFeedBackFormData(selectedGeneralSurvey);
+                        if (selectedGeneralSurvey.user) {
+                            setSurveyUser(selectedGeneralSurvey.user);
+                        }
+                    } else {
+                        toast.error('There has been an error getting the surveys, please try again!');
+                        setGeneralFeedbackLoading(false);
+                    }
+                })
+                .catch((error) => {
+                    toast.error('There has been an error getting the surveys, please try again!');
+                    setGeneralFeedbackLoading(false);
+                });
+        }
+    },
+        [reloadCount]);
 
     return (
         <LayoutAdmin>
@@ -117,7 +101,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                 <hr className='mb-0 mt-0' />
                                 <Card.Body>
                                     <div className='d-flex'>
-                                        <div className='fs-15 fw-600 me-2 email-survey'>{userDetails.email}</div>
+                                        <div className='fs-15 fw-600 me-2 email-survey'>{surveyUser.email}</div>
                                     </div>
                                     <div className='mt-2'><TbMessageX className='me-2' size={20} color='#5f6368' />
                                         <span className='not-shared fs-14'>Not shared</span>
@@ -134,7 +118,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div>Click on the image to indicate what section of  the page you like the most? (Feature picture of KK homepage with clickable image/text)
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -142,6 +126,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value={generalFeedBackFormData.most_like}
                                             onChange={handleChangeGeneralFeeback}
                                             placeholder='Your answer'
+                                            disabled
                                         />
                                     </div>
                                 </Card.Body>
@@ -152,7 +137,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div>Click on the image to indicate what section of  the page you like the least? (Feature picture of KK homepage with clickable image/text)
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -160,6 +145,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value={generalFeedBackFormData.least_like}
                                             onChange={handleChangeGeneralFeeback}
                                             placeholder='Your answer'
+                                            disabled
                                         />
                                     </div>
                                 </Card.Body>
@@ -170,7 +156,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div>Please state your reason for the selection above
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -178,6 +164,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value={generalFeedBackFormData.reason}
                                             onChange={handleChangeGeneralFeeback}
                                             placeholder='Your answer'
+                                            disabled
                                         />
                                     </div>
                                 </Card.Body>
@@ -188,7 +175,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div>Overall, how well does our website/app meet your needs?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+
+
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -196,11 +185,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Excellent well"
                                             checked={generalFeedBackFormData.website_suitability_rate === "Excellent well"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Extremely well</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -208,11 +198,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Very well"
                                             checked={generalFeedBackFormData.website_suitability_rate === "Very well"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Very well</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -220,11 +211,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Somewhat well"
                                             checked={generalFeedBackFormData.website_suitability_rate === "Somewhat well"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Somewhat well</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -232,11 +224,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Not do well"
                                             checked={generalFeedBackFormData.website_suitability_rate === "Not do well"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not do well</label>
                                     </div>
 
-                                    <div className='d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -244,9 +237,11 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Not at all well"
                                             checked={generalFeedBackFormData.website_suitability_rate === "Not at all well"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not at all well</label>
                                     </div>
+
                                 </Card.Body>
                             </Card>
 
@@ -255,7 +250,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div>How easy was it to find what you were looking for on our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+
+
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -263,11 +260,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Extremely well"
                                             checked={generalFeedBackFormData.ease_of_use === "Extremely well"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Extremely well</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -275,11 +273,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Very well"
                                             checked={generalFeedBackFormData.ease_of_use === "Very well"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Very well</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -287,11 +286,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Somewhat well"
                                             checked={generalFeedBackFormData.ease_of_use === "Somewhat well"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Somewhat well</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -299,11 +299,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Not do well"
                                             checked={generalFeedBackFormData.ease_of_use === "Not do well"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not do well</label>
                                     </div>
 
-                                    <div className='d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -311,9 +312,11 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Not at all well"
                                             checked={generalFeedBackFormData.ease_of_use === "Not at all well"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not at all well</label>
                                     </div>
+
                                 </Card.Body>
                             </Card>
 
@@ -322,7 +325,8 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div>Did it take you more or less time than you expected to find what you were looking for on our website.
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -330,11 +334,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="A lot less time"
                                             checked={generalFeedBackFormData.time_expectation === "A lot less time"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>A lot less time</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -342,11 +347,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="A little less time"
                                             checked={generalFeedBackFormData.time_expectation === "A little less time"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>A little less time</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -354,11 +360,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="About what I expected"
                                             checked={generalFeedBackFormData.time_expectation === "About what I expected"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>About what I expected</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -366,11 +373,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="A little more time"
                                             checked={generalFeedBackFormData.time_expectation === "A little more time"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>A little more time</label>
                                     </div>
 
-                                    <div className='d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -378,9 +386,11 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="A lot more time"
                                             checked={generalFeedBackFormData.time_expectation === "A lot more time"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>A lot more time</label>
                                     </div>
+
                                 </Card.Body>
                             </Card>
 
@@ -389,7 +399,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div>How visually appealing is our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+
+
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -397,11 +409,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Extremely appealing"
                                             checked={generalFeedBackFormData.visual_appeal_rate === "Extremely appealing"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Extremely appealing</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -409,11 +422,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Very appealing"
                                             checked={generalFeedBackFormData.visual_appeal_rate === "Very appealing"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Very appealing</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -421,11 +435,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Somewhat appealing"
                                             checked={generalFeedBackFormData.visual_appeal_rate === "Somewhat appealing"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Somewhat appealing</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -433,11 +448,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Not so appealing"
                                             checked={generalFeedBackFormData.visual_appeal_rate === "Not so appealing"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not so appealing</label>
                                     </div>
 
-                                    <div className='d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -445,9 +461,11 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Not at all appealing"
                                             checked={generalFeedBackFormData.visual_appeal_rate === "Not at all appealing"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not at all appealing</label>
                                     </div>
+
                                 </Card.Body>
                             </Card>
 
@@ -456,7 +474,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div>How easy is it to understand the information on our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+
+
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -464,11 +484,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Extremely easy"
                                             checked={generalFeedBackFormData.information_clarity_rate === "Extremely easy"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Extremely easy</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -476,11 +497,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Very easy"
                                             checked={generalFeedBackFormData.information_clarity_rate === "Very easy"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Very easy</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -488,11 +510,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Somewhat easy"
                                             checked={generalFeedBackFormData.information_clarity_rate === "Somewhat easy"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Somewhat easy</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -500,11 +523,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Not so easy"
                                             checked={generalFeedBackFormData.information_clarity_rate === "Not so easy"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not so easy</label>
                                     </div>
 
-                                    <div className='d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -512,9 +536,11 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Not at all easy"
                                             checked={generalFeedBackFormData.information_clarity_rate === "Not at all easy"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not at all easy</label>
                                     </div>
+
                                 </Card.Body>
                             </Card>
 
@@ -523,19 +549,21 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div>How much do you trust the information on our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
                                             name="information_trust_level"
-                                            value="Extremely easy"
-                                            checked={generalFeedBackFormData.information_trust_level === "Extremely easy"}
+                                            value="A great deal"
+                                            checked={generalFeedBackFormData.information_trust_level === "A great deal"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>A great deal</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -543,11 +571,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="A lot"
                                             checked={generalFeedBackFormData.information_trust_level === "A lot"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>A lot</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -555,11 +584,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="A moderate amount"
                                             checked={generalFeedBackFormData.information_trust_level === "A moderate amount"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>A moderate amount</label>
                                     </div>
 
-                                    <div className='mb-3 d-flex'>
+                                    <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -567,11 +597,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="A little"
                                             checked={generalFeedBackFormData.information_trust_level === "A little"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>A little</label>
                                     </div>
 
-                                    <div className='d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -579,9 +610,11 @@ const WebsiteFeedBackSurvey = (props) => {
                                             value="Not at all"
                                             checked={generalFeedBackFormData.information_trust_level === "Not at all"}
                                             onChange={handleChangeGeneralFeeback}
+                                            disabled
                                         />
                                         <label className='ms-1 fs-15'>Not at all</label>
                                     </div>
+
                                 </Card.Body>
                             </Card>
 
@@ -590,10 +623,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div>How likely is it that  you would recommend our website to a friend, family or colleague?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='d-flex mt-4'>
+                                    <div className='d-flex mt-2'>
                                         <div className='d-flex justify-content-center align-items-end me-3'>
                                             Not at all Likely
                                         </div>
+
+
                                         <div>
                                             <span className='ms-1'>1</span>
                                             <br />
@@ -604,6 +639,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                                 value="1"
                                                 checked={generalFeedBackFormData.recommendation_score === "1"}
                                                 onChange={handleChangeGeneralFeeback}
+                                                disabled
                                             />
                                         </div>
 
@@ -617,6 +653,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                                 value="2"
                                                 checked={generalFeedBackFormData.recommendation_score === "2"}
                                                 onChange={handleChangeGeneralFeeback}
+                                                disabled
                                             />
                                         </div>
 
@@ -630,6 +667,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                                 value="3"
                                                 checked={generalFeedBackFormData.recommendation_score === "3"}
                                                 onChange={handleChangeGeneralFeeback}
+                                                disabled
                                             />
                                         </div>
 
@@ -643,6 +681,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                                 value="4"
                                                 checked={generalFeedBackFormData.recommendation_score === "4"}
                                                 onChange={handleChangeGeneralFeeback}
+                                                disabled
                                             />
                                         </div>
 
@@ -656,6 +695,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                                 value="5"
                                                 checked={generalFeedBackFormData.recommendation_score === "5"}
                                                 onChange={handleChangeGeneralFeeback}
+                                                disabled
                                             />
                                         </div>
 
@@ -669,6 +709,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                                 value="6"
                                                 checked={generalFeedBackFormData.recommendation_score === "6"}
                                                 onChange={handleChangeGeneralFeeback}
+                                                disabled
                                             />
                                         </div>
 
@@ -682,6 +723,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                                 value="7"
                                                 checked={generalFeedBackFormData.recommendation_score === "7"}
                                                 onChange={handleChangeGeneralFeeback}
+                                                disabled
                                             />
                                         </div>
 
@@ -695,6 +737,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                                 value="8"
                                                 checked={generalFeedBackFormData.recommendation_score === "8"}
                                                 onChange={handleChangeGeneralFeeback}
+                                                disabled
                                             />
                                         </div>
 
@@ -708,6 +751,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                                 value="9"
                                                 checked={generalFeedBackFormData.recommendation_score === "9"}
                                                 onChange={handleChangeGeneralFeeback}
+                                                disabled
                                             />
                                         </div>
 
@@ -721,9 +765,9 @@ const WebsiteFeedBackSurvey = (props) => {
                                                 value="10"
                                                 checked={generalFeedBackFormData.recommendation_score === "10"}
                                                 onChange={handleChangeGeneralFeeback}
+                                                disabled
                                             />
                                         </div>
-
                                         <div className='d-flex justify-content-center align-items-end ms-2'>
                                             Extremely Likely
                                         </div>
@@ -743,75 +787,15 @@ const WebsiteFeedBackSurvey = (props) => {
                                             name="comment"
                                             value={generalFeedBackFormData.comment}
                                             onChange={handleChangeGeneralFeeback}
-                                            placeholder='Your answer' />
+                                            placeholder='Your answer'
+                                            disabled
+                                        />
                                     </div>
                                 </Card.Body>
                             </Card>
-
-                            <Row>
-                                <Col lg="12" className='text-right mt-3'>
-                                    <button
-                                        className="btn border-black bg-white text-black me-3 btn-style"
-                                        onClick={toggleClearFormModal}
-                                        type="button"
-                                    >
-                                        Clear form
-                                    </button>
-
-                                    <button
-                                        className='btn btn-primary btn-style'
-                                        type="submit"
-                                        onClick={websiteSurveySubmit}
-                                    >
-                                        Submit
-                                    </button>
-                                </Col>
-                            </Row>
                         </Col>
                     </Row>
                 </Container>
-
-                <Modal
-                    show={clearFormModal}
-                    className='modal-preview'
-                    fade={false}
-                    centered
-                >
-                    <Modal.Header className="pb-0">
-                        <Modal.Title className='rufina-family fs-22 text-black'>Clear form?</Modal.Title>
-                        <button type='button' className='close react-modal-close' onClick={function () { setClearFormModal(false); }} >
-                            <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
-                        </button>
-                    </Modal.Header>
-
-                    <Modal.Body>
-                        <Card>
-                            <Card.Body>
-                                <p className="mb-0">This will remove your answers from all questions, and cannot be undone.</p>
-                            </Card.Body>
-                        </Card>
-                        <Card.Footer className="text-right mt-3">
-                            <button
-                                className="btn border-black bg-white text-black me-3 btn-style"
-                                onClick={() => setClearFormModal(false)}
-                                type="button"
-                            >
-                                Cancel
-                            </button>
-
-                            <button
-                                className="btn btn-primary btn-style"
-                                type="button"
-                                onClick={() => {
-                                    toggleEmptyField();
-                                    setClearFormModal(false);
-                                }}
-                            >
-                                Clear form
-                            </button>
-                        </Card.Footer>
-                    </Modal.Body>
-                </Modal>
 
                 <Modal
                     show={underConstructionShow}
@@ -846,4 +830,4 @@ const WebsiteFeedBackSurvey = (props) => {
     );
 };
 
-export default WebsiteFeedBackSurvey;
+export default AdminViewGeneralSurvey;

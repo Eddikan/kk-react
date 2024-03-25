@@ -3,7 +3,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { AccordionItem, UncontrolledAccordion, AccordionBody, AccordionHeader } from 'reactstrap';
 import { PiDressLight, PiPantsLight, PiCalendarThin } from "react-icons/pi";
 import { PiUsersLight } from "react-icons/pi";
+import { HiOutlineScissors } from "react-icons/hi2";
 import { IoIosArrowDown } from "react-icons/io";
+import { PiNotepadLight, PiScissorsLight } from "react-icons/pi";
 import { Row, Col, Button, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import 'Assets/styles/Sidebar/style.css';
@@ -79,7 +81,7 @@ const Sidebar = ({ }) => {
                             className="hover-sidebar cursor-pointer yellow-hover mt-3"
                             onClick={() => navigate('/admin/fabrics')}
                         >
-                            <PiDressLight size="22" className="me-2 mb-1" color='#000000' />Fabrics
+                            <PiScissorsLight size="22" className="me-2 mb-1" color='#000000' />Fabrics
                         </div>
 
                         <div
@@ -87,10 +89,59 @@ const Sidebar = ({ }) => {
                             onClick={() => navigate('/admin/designs')}>
                             <PiPantsLight size="22" className="me-2 mb-1" color='#000000' />Portfolio
                         </div>
+
                         <div
                             className="hover-sidebar cursor-pointer yellow-hover mt-3"
                             onClick={() => navigate('/admin/appointments')}>
                             <PiCalendarThin size="22" className="me-2 mb-1" color='#000000' />Appointments
+                        </div>
+
+                        <div className='d-flex justify-content-between mt-3'>
+                            <span
+                                className='cursor-pointer users-title yellow-hover'
+                                onClick={() => navigate('/admin/customer-satisfaction-survey')}
+                            >
+                                <PiNotepadLight size="22" className="me-2 mb-1" color='#000000' />
+                                Surveys
+                            </span>
+
+                            <span className="survey-table">
+                                <span>
+                                    <IoIosArrowDown className='me-4 mt-1' color='#000000' />
+                                </span>
+
+                                <Card className="table_content file-action">
+                                    <Card.Body className="action_container font-weight">
+                                        <div
+                                            className="users_container cursor-pointer p-2"
+                                            onClick={() => navigate('/admin/customer-satisfaction-survey')}
+                                        >
+                                            <span className='yellow-hover'>Customer Satisfaction Survey</span>
+                                        </div>
+
+                                        <div
+                                            className="users_container cursor-pointer p-2"
+                                            onClick={() => navigate('/admin/post-purchase-survey')}
+                                        >
+                                            <span className='yellow-hover'>Post Purchase Survey</span>
+                                        </div>
+
+                                        <div
+                                            className="users_container cursor-pointer p-2"
+                                            onClick={() => navigate('/admin/general-feedback-survey')}
+                                        >
+                                            <span className='yellow-hover'>General Feedback Survey</span>
+                                        </div>
+
+                                        <div
+                                            className="users_container cursor-pointer p-2"
+                                            onClick={() => navigate('/admin/vendor-feedback-survey')}
+                                        >
+                                            <span className='yellow-hover'>Vendor Feedback Survey</span>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                            </span>
                         </div>
                     </AccordionItem>
                 </UncontrolledAccordion>

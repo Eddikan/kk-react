@@ -72,6 +72,31 @@ const AdminViewUserProfile = lazy(() =>
 const AdminEditDesign = lazy(() => import("./Pages/Admin/AdminEditDesign"));
 const AdminEditProduct = lazy(() => import("./Pages/Admin/AdminEditProduct"));
 const AdminUsers = lazy(() => import("./Pages/Admin/AdminUsers"));
+const AdminPostPurchase = lazy(() => import("./Pages/Admin/AdminPostPurchase"));
+const AdminViewPostPurchase = lazy(() =>
+  import("./Pages/Admin/AdminViewPostPurchase")
+);
+
+const AdminGeneralSurvey = lazy(() =>
+  import("./Pages/Admin/AdminGeneralSurvey")
+);
+
+const AdminViewGeneralSurvey = lazy(() =>
+  import("./Pages/Admin/AdminViewGeneralSurvey")
+);
+
+const AdminViewVendorSurvey = lazy(() =>
+  import("./Pages/Admin/AdminViewVendorSurvey")
+);
+
+const AdminVendorSurvey = lazy(() => import("./Pages/Admin/AdminVendorSurvey"));
+const AdminCustomerSatisfaction = lazy(() =>
+  import("./Pages/Admin/AdminCustomerSatisfaction")
+);
+
+const AdminViewCustomerSurvey = lazy(() =>
+  import("./Pages/Admin/AdminViewCustomerSurvey")
+);
 
 // User
 const UserProfile = lazy(() => import("./Pages/User/Profile"));
@@ -252,6 +277,52 @@ const App = () => {
             exact
             element={<AdminViewSellerProfile />}
           />
+          <Route
+            path="/admin/post-purchase-survey"
+            exact
+            element={<AdminPostPurchase />}
+          />
+          <Route
+            path="/admin/general-feedback-survey"
+            exact
+            element={<AdminGeneralSurvey />}
+          />
+
+          <Route
+            path="/admin/vendor-feedback-survey"
+            exact
+            element={<AdminVendorSurvey />}
+          />
+
+          <Route
+            path="/admin/customer-satisfaction-survey"
+            exact
+            element={<AdminCustomerSatisfaction />}
+          />
+
+          <Route
+            path="/admin/view/customer-satisfaction-survey/:surveyId"
+            exact
+            element={<AdminViewCustomerSurvey />}
+          />
+
+          <Route
+            path="/admin/view/post-purchase-survey/:surveyId"
+            exact
+            element={<AdminViewPostPurchase />}
+          />
+
+          <Route
+            path="/admin/view/vendor-feedback-survey/:surveyId"
+            exact
+            element={<AdminViewVendorSurvey />}
+          />
+
+          <Route
+            path="/admin/view/general-feedback-survey/:surveyId"
+            exact
+            element={<AdminViewGeneralSurvey />}
+          />
           {/* Designs */}
           <Route path="/find-designs" exact element={<Designs />} />
           <Route path="/designs" exact element={<Designs />} />
@@ -295,7 +366,6 @@ const App = () => {
             element={<UserCalendar />}
           />
           <Route path="/designer-profile" exact element={<DesignerProfile />} />
-
           {/* Survey */}
           <Route
             path="/customer-satisfaction-survey"
@@ -307,19 +377,16 @@ const App = () => {
             exact
             element={<PostPurchaseSurvey />}
           />
-
           <Route
             path="/vendor-feedback-survey"
             exact
             element={<VendorFeedBackSurvey />}
           />
-
           <Route
             path="/general-feedback-survey"
             exact
             element={<WebsiteFeedBackSurvey />}
           />
-
           <Route path="/appointments/:c" exact element={<Appointments />} />
           <Route path="/user/center/orders" exact element={<UserOrders />} />
           <Route path="/messages" exact element={<Messages />} />

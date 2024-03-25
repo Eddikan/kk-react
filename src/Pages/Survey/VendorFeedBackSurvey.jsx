@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Layout from 'Components/Layout/Layout';
+import AdminSidebar from 'Components/Shared/AdminSidebar';
+import LayoutAdmin from 'Components/Layout/LayoutAdmin';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import { TbMessageX } from "react-icons/tb";
 import { IoCloseOutline } from "react-icons/io5";
@@ -13,15 +14,14 @@ import axios from "axios";
 
 const initialVendorSurvey = Object.freeze({
     most_like: '',
-    most_least: '',
+    least_like: '',
     reason: '',
     website_suitability_rate: '',
-    easy_of_use: '',
-    time_to_find: '',
+    ease_of_use: '',
+    time_expectation: '',
     visual_appeal_rate: '',
     information_clarity_rate: '',
     information_trust_level: '',
-
     listed_ease: '',
     communication_ease: '',
     information_gathering_ease: '',
@@ -68,951 +68,984 @@ const VendorFeedBackSurvey = (props) => {
     }
 
     const vendorSurveySubmit = (e) => {
-        setFormStatus('loading');
-        postVendorSurvey({ ...vendorFormData, user_id: currentUser }).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setFormStatus('standby');
-                setReloadCount(reloadCount + 1);
-                setVendorFormData(initialVendorSurvey);
-                toast.success('Vendor Survey sent successfully!');
-            } else {
-                setFormStatus('standby');
+        if (vendorFormData.most_like == '' ||
+            vendorFormData.least_like == '' ||
+            vendorFormData.reason == '' ||
+            vendorFormData.website_suitability_rate == '' ||
+            vendorFormData.ease_of_use == '' ||
+            vendorFormData.time_expectation == '' ||
+            vendorFormData.visual_appeal_rate == '' ||
+            vendorFormData.information_clarity_rate == '' ||
+            vendorFormData.information_trust_level == '' ||
+            vendorFormData.listed_ease == '' ||
+            vendorFormData.communication_ease == '' ||
+            vendorFormData.information_gathering_ease == '' ||
+            vendorFormData.recommendation_score == '' ||
+            vendorFormData.comment == ''
+        ) {
+            toast.error('Please answer all the question!');
+        } else {
+            setFormStatus('loading');
+            postVendorSurvey({ ...vendorFormData, user_id: currentUser }).then(response => {
+                const status = response.data.status;
+                if (status === "Success") {
+                    setFormStatus('standby');
+                    setReloadCount(reloadCount + 1);
+                    setVendorFormData(initialVendorSurvey);
+                    toast.success('Vendor Survey sent successfully!');
+                } else {
+                    setFormStatus('standby');
+                    toast.error('There has been an error saving the survey, please try again!');
+                }
+            }).catch(() => {
                 toast.error('There has been an error saving the survey, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the survey, please try again!');
-        });
+            });
+        }
+
+
+
     }
     return (
-        <Layout>
+        <LayoutAdmin>
             <section className='bg-light'>
-                <Container className='py-5'>
+                <Container fluid>
                     <Row>
-                        <Col lg={11}>
+                        <Col lg={2} className='p-0'>
+                            <AdminSidebar />
                         </Col>
 
-                        <Col lg={1} className='text-right'>
-                            <GoBack fallBack="/#" />
-                        </Col>
-                        <Col>
-                            <Card className='mt-3 mb-3 bordered-top-primary-survey'>
-                                <Card.Body>
-                                    <div className='fs-30 mb-4 rufina-family'>Website Feedback Survey (Vendor)</div>
-                                    <div className='fs-15'>We would love to hear your thoughts or feedback on how we can improve your experience!</div>
-                                </Card.Body>
-                                <hr className='mb-0 mt-0' />
-                                <Card.Body>
-                                    <div className='d-flex'>
-                                        <div className='fs-15 fw-600 me-2 email-survey'>{userDetails.email}</div>
-                                    </div>
-                                    <div className='mt-2'><TbMessageX className='me-2' size={20} color='#5f6368' />
-                                        <span className='not-shared fs-14'>Not shared</span>
-                                    </div>
-                                </Card.Body>
-                                <hr className='mb-0 mt-0' />
-                                <Card.Body>
-                                    <div className='indicate-question '>* Indicates required question</div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>Click on the image to indicate what section of  the page you like the most? (Feature picture of KK vendor profile with clickable image/text)
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="text"
-                                            className='me-2 question-concerns form-control'
-                                            name='most_like'
-                                            value={vendorFormData.most_like}
-                                            onChange={handleChangeVendor}
-                                            placeholder='Your answer'
-                                            required
-                                        />
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>Click on the image to indicate what section of  the page you like the least? (Feature picture of KK homepage with clickable image/text)
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="text"
-                                            className='me-2 question-concerns form-control'
-                                            name='most_least'
-                                            value={vendorFormData.most_least}
-                                            onChange={handleChangeVendor}
-                                            placeholder='Your answer'
-                                            required
-                                        />
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>Please state your reason for the selection above
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="text"
-                                            className='me-2 question-concerns form-control'
-                                            name='reason'
-                                            value={vendorFormData.reason}
-                                            onChange={handleChangeVendor}
-                                            placeholder='Your answer'
-                                            required
-                                        />
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>Overall, how well does our website/app meet your needs?
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="website_suitability_rate"
-                                            value="Extremely well"
-                                            checked={vendorFormData.website_suitability_rate === "Extremely well"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Extremely well</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="website_suitability_rate"
-                                            value="Very well"
-                                            checked={vendorFormData.website_suitability_rate === "Very well"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Very well</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="website_suitability_rate"
-                                            value="Somewhat well"
-                                            checked={vendorFormData.website_suitability_rate === "Somewhat well"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Somewhat well</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="website_suitability_rate"
-                                            value="Not do well"
-                                            checked={vendorFormData.website_suitability_rate === "Not do well"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not do well</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="website_suitability_rate"
-                                            value="Not at all well"
-                                            checked={vendorFormData.website_suitability_rate === "Not at all well"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not at all well</label>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>How easy was it to find what you were looking for on our website/app?
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="easy_of_use"
-                                            value="Extremely well"
-                                            checked={vendorFormData.easy_of_use === "Extremely well"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Extremely well</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="easy_of_use"
-                                            value="Very well"
-                                            checked={vendorFormData.easy_of_use === "Very well"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Very well</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="easy_of_use"
-                                            value="Somewhat well"
-                                            checked={vendorFormData.easy_of_use === "Somewhat well"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Somewhat well</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="easy_of_use"
-                                            value="Not do well"
-                                            checked={vendorFormData.easy_of_use === "Not do well"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not do well</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="easy_of_use"
-                                            value="Not at all well"
-                                            checked={vendorFormData.easy_of_use === "Not at all well"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not at all well</label>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>Did it take you more or less time than you expected to find what you were looking for on our website.
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="time_to_find"
-                                            value="A lot less time"
-                                            checked={vendorFormData.time_to_find === "A lot less time"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>A lot less time</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="time_to_find"
-                                            value="A little less time"
-                                            checked={vendorFormData.time_to_find === "A little less time"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>A little less time</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="time_to_find"
-                                            value="About what I expected"
-                                            checked={vendorFormData.time_to_find === "About what I expected"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>About what I expected</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="time_to_find"
-                                            value="A little more time"
-                                            checked={vendorFormData.time_to_find === "A little more time"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>A little more time</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="time_to_find"
-                                            value="A lot more time"
-                                            checked={vendorFormData.time_to_find === "A lot more time"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>A lot more time</label>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>How visually appealing is our website/app?
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="visual_appeal_rate"
-                                            value="Extremely appealing"
-                                            checked={vendorFormData.visual_appeal_rate === "Extremely appealing"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Extremely appealing</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="visual_appeal_rate"
-                                            value="Very appealing"
-                                            checked={vendorFormData.visual_appeal_rate === "Very appealing"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Very appealing</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="visual_appeal_rate"
-                                            value="Somewhat appealing"
-                                            checked={vendorFormData.visual_appeal_rate === "Somewhat appealing"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Somewhat appealing</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="visual_appeal_rate"
-                                            value="Not so appealing"
-                                            checked={vendorFormData.visual_appeal_rate === "Not so appealing"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not so appealing</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="visual_appeal_rate"
-                                            value="Not at all appealing"
-                                            checked={vendorFormData.visual_appeal_rate === "Not at all appealing"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not at all appealing</label>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>How easy is it to understand the information on our website/app?
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_clarity_rate"
-                                            value="Extremely easy"
-                                            checked={vendorFormData.information_clarity_rate === "Extremely easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Extremely easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_clarity_rate"
-                                            value="Very easy"
-                                            checked={vendorFormData.information_clarity_rate === "Very easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Very easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_clarity_rate"
-                                            value="Somewhat easy"
-                                            checked={vendorFormData.information_clarity_rate === "Somewhat easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Somewhat easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_clarity_rate"
-                                            value="Not so easy"
-                                            checked={vendorFormData.information_clarity_rate === "Not so easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not so easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_clarity_rate"
-                                            value="Not at all easy"
-                                            checked={vendorFormData.information_clarity_rate === "Not at all easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not at all easy</label>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>How much do you trust the information on our website/app?
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_trust_level"
-                                            value="A great deal"
-                                            checked={vendorFormData.information_trust_level === "A great deal"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>A great deal</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_trust_level"
-                                            value="A lot"
-                                            checked={vendorFormData.information_trust_level === "A lot"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>A lot</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_trust_level"
-                                            value="A moderate amount"
-                                            checked={vendorFormData.information_trust_level === "A moderate amount"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>A moderate amount</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_trust_level"
-                                            value="A little"
-                                            checked={vendorFormData.information_trust_level === "A little"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>A little</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_trust_level"
-                                            value="Not at all"
-                                            checked={vendorFormData.information_trust_level === "Not at all"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not at all</label>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>How easy was it to enter list your product/service on our website/app?
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="listed_ease"
-                                            value="Extremely easy"
-                                            checked={vendorFormData.listed_ease === "Extremely easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Extremely easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="listed_ease"
-                                            value="Very easy"
-                                            checked={vendorFormData.listed_ease === "Very easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Very easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="listed_ease"
-                                            value="Somewhat easy"
-                                            checked={vendorFormData.listed_ease === "Somewhat easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Somewhat easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="listed_ease"
-                                            value="Not so easy"
-                                            checked={vendorFormData.listed_ease === "Not so easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not so easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="listed_ease"
-                                            value="Not at all easy"
-                                            checked={vendorFormData.listed_ease === "Not at all easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not at all easy</label>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>How easy was it to communicate with the customer?
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="communication_ease"
-                                            value="Extremely easy"
-                                            checked={vendorFormData.communication_ease === "Extremely easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Extremely easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="communication_ease"
-                                            value="Very easy"
-                                            checked={vendorFormData.communication_ease === "Very easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Very easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="communication_ease"
-                                            value="Somewhat easy"
-                                            checked={vendorFormData.communication_ease === "Somewhat easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Somewhat easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="communication_ease"
-                                            value="Not so easy"
-                                            checked={vendorFormData.communication_ease === "Not so easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not so easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="communication_ease"
-                                            value="Not at all easy"
-                                            checked={vendorFormData.communication_ease === "Not at all easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not at all easy</label>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>How easy was it to get the information you needed from the customer?
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_gathering_ease"
-                                            value="Extremely easy"
-                                            checked={vendorFormData.information_gathering_ease === "Extremely easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Extremely easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_gathering_ease"
-                                            value="Very easy"
-                                            checked={vendorFormData.information_gathering_ease === "Very easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Very easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_gathering_ease"
-                                            value="Somewhat easy"
-                                            checked={vendorFormData.information_gathering_ease === "Somewhat easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Somewhat easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_gathering_ease"
-                                            value="Not so easy"
-                                            checked={vendorFormData.information_gathering_ease === "Not so easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not so easy</label>
-                                    </div>
-
-                                    <div className='mb-3 d-flex'>
-                                        <input
-                                            type="radio"
-                                            className='me-2 radio-size'
-                                            name="information_gathering_ease"
-                                            value="Not at all easy"
-                                            checked={vendorFormData.information_gathering_ease === "Not at all easy"}
-                                            onChange={handleChangeVendor}
-                                            required
-                                        />
-                                        <label className='ms-1 fs-15'>Not at all easy</label>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>How likely is it that  you would recommend our website to a friend, family or colleague?
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='d-flex mt-4'>
-                                        <div className='d-flex justify-content-center align-items-end me-3'>
-                                            Not at all Likely
-                                        </div>
-                                        <div>
-                                            <span className='ms-1'>1</span>
-                                            <br />
-                                            <input
-                                                type="radio"
-                                                className='me-2 mt-3 radio-size'
-                                                name="recommendation_score"
-                                                value="1"
-                                                checked={vendorFormData.recommendation_score === "1"}
-                                                onChange={handleChangeVendor}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <span className='ms-1'>2</span>
-                                            <br />
-                                            <input
-                                                type="radio"
-                                                className='me-2 mt-3 radio-size'
-                                                name="recommendation_score"
-                                                value="2"
-                                                checked={vendorFormData.recommendation_score === "2"}
-                                                onChange={handleChangeVendor}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <span className='ms-1'>3</span>
-                                            <br />
-                                            <input
-                                                type="radio"
-                                                className='me-2 mt-3 radio-size'
-                                                name="recommendation_score"
-                                                value="3"
-                                                checked={vendorFormData.recommendation_score === "3"}
-                                                onChange={handleChangeVendor}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <span className='ms-1'>4</span>
-                                            <br />
-                                            <input
-                                                type="radio"
-                                                className='me-2 mt-3 radio-size'
-                                                name="recommendation_score"
-                                                value="4"
-                                                checked={vendorFormData.recommendation_score === "4"}
-                                                onChange={handleChangeVendor}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <span className='ms-1'>5</span>
-                                            <br />
-                                            <input
-                                                type="radio"
-                                                className='me-2 mt-3 radio-size'
-                                                name="recommendation_score"
-                                                value="5"
-                                                checked={vendorFormData.recommendation_score === "5"}
-                                                onChange={handleChangeVendor}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <span className='ms-1'>6</span>
-                                            <br />
-                                            <input
-                                                type="radio"
-                                                className='me-2 mt-3 radio-size'
-                                                name="recommendation_score"
-                                                value="6"
-                                                checked={vendorFormData.recommendation_score === "6"}
-                                                onChange={handleChangeVendor}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <span className='ms-1'>7</span>
-                                            <br />
-                                            <input
-                                                type="radio"
-                                                className='me-2 mt-3 radio-size'
-                                                name="recommendation_score"
-                                                value="7"
-                                                checked={vendorFormData.recommendation_score === "7"}
-                                                onChange={handleChangeVendor}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <span className='ms-1'>8</span>
-                                            <br />
-                                            <input
-                                                type="radio"
-                                                className='me-2 mt-3 radio-size'
-                                                name="recommendation_score"
-                                                value="8"
-                                                checked={vendorFormData.recommendation_score === "8"}
-                                                onChange={handleChangeVendor}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <span className='ms-1'>9</span>
-                                            <br />
-                                            <input
-                                                type="radio"
-                                                className='me-2 mt-3 radio-size'
-                                                name="recommendation_score"
-                                                value="9"
-                                                checked={vendorFormData.recommendation_score === "9"}
-                                                onChange={handleChangeVendor}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <span className='ms-1'>10</span>
-                                            <br />
-                                            <input
-                                                type="radio"
-                                                className='me-2 mt-3 radio-size'
-                                                name="recommendation_score"
-                                                value="10"
-                                                checked={vendorFormData.recommendation_score === "10"}
-                                                onChange={handleChangeVendor}
-                                                required
-                                            />
-                                        </div>
-
-                                        <div className='d-flex justify-content-center align-items-end ms-2'>
-                                            Extremely Likely
-                                        </div>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
-                            <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
-                                    <div>Do you have any other comments about how we can improve our website/app to improve your experience?
-                                        <span className='asteris ms-1'>*</span>
-                                    </div>
-                                    <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="text"
-                                            className='me-2 question-concerns form-control'
-                                            name="comment"
-                                            value={vendorFormData.comment}
-                                            onChange={handleChangeVendor}
-                                            placeholder='Your answer'
-                                            required
-                                        />
-                                    </div>
-                                </Card.Body>
-                            </Card>
-
+                        <Col lg={10} className='py-5 mx-auto max-width-column padding-right-admin'>
                             <Row>
-                                <Col lg="12" className='text-right mt-3'>
-                                    <button
-                                        className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
-                                        onClick={toggleClearFormModal}
-                                        type="button"
-                                    >
-                                        Clear form
-                                    </button>
+                                <Col lg={12}>
+                                    <Row>
+                                        <Col md={10}>
+                                        </Col>
+                                        <Col md={2} className="text-right">
+                                            <GoBack fallBack="/#" />
+                                        </Col>
+                                    </Row>
+                                </Col>
 
-                                    <button
-                                        className='btn btn-primary btn-style'
-                                        type="submit"
-                                        onClick={vendorSurveySubmit}
-                                    >
-                                        Submit
-                                    </button>
+                                <Col>
+                                    <Card className='mt-3 mb-3 bordered-top-primary-survey'>
+                                        <Card.Body>
+                                            <div className='fs-30 mb-4 rufina-family'>Website Feedback Survey (Vendor)</div>
+                                            <div className='fs-15'>We would love to hear your thoughts or feedback on how we can improve your experience!</div>
+                                        </Card.Body>
+                                        <hr className='mb-0 mt-0' />
+                                        <Card.Body>
+                                            <div className='d-flex'>
+                                                <div className='fs-15 fw-600 me-2 email-survey'>{userDetails.email}</div>
+                                            </div>
+                                            <div className='mt-2'><TbMessageX className='me-2' size={20} color='#5f6368' />
+                                                <span className='not-shared fs-14'>Not shared</span>
+                                            </div>
+                                        </Card.Body>
+                                        <hr className='mb-0 mt-0' />
+                                        <Card.Body>
+                                            <div className='indicate-question '>* Indicates required question</div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>Click on the image to indicate what section of  the page you like the most? (Feature picture of KK vendor profile with clickable image/text)
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="text"
+                                                    className='me-2 question-concerns form-control'
+                                                    name='most_like'
+                                                    value={vendorFormData.most_like}
+                                                    onChange={handleChangeVendor}
+                                                    placeholder='Your answer'
+                                                    required
+                                                />
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>Click on the image to indicate what section of  the page you like the least? (Feature picture of KK homepage with clickable image/text)
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="text"
+                                                    className='me-2 question-concerns form-control'
+                                                    name='least_like'
+                                                    value={vendorFormData.least_like}
+                                                    onChange={handleChangeVendor}
+                                                    placeholder='Your answer'
+                                                    required
+                                                />
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>Please state your reason for the selection above
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="text"
+                                                    className='me-2 question-concerns form-control'
+                                                    name='reason'
+                                                    value={vendorFormData.reason}
+                                                    onChange={handleChangeVendor}
+                                                    placeholder='Your answer'
+                                                    required
+                                                />
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>Overall, how well does our website/app meet your needs?
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="website_suitability_rate"
+                                                    value="Extremely well"
+                                                    checked={vendorFormData.website_suitability_rate === "Extremely well"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Extremely well</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="website_suitability_rate"
+                                                    value="Very well"
+                                                    checked={vendorFormData.website_suitability_rate === "Very well"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Very well</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="website_suitability_rate"
+                                                    value="Somewhat well"
+                                                    checked={vendorFormData.website_suitability_rate === "Somewhat well"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Somewhat well</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="website_suitability_rate"
+                                                    value="Not do well"
+                                                    checked={vendorFormData.website_suitability_rate === "Not do well"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not do well</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="website_suitability_rate"
+                                                    value="Not at all well"
+                                                    checked={vendorFormData.website_suitability_rate === "Not at all well"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not at all well</label>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>How easy was it to find what you were looking for on our website/app?
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="ease_of_use"
+                                                    value="Extremely well"
+                                                    checked={vendorFormData.ease_of_use === "Extremely well"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Extremely well</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="ease_of_use"
+                                                    value="Very well"
+                                                    checked={vendorFormData.ease_of_use === "Very well"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Very well</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="ease_of_use"
+                                                    value="Somewhat well"
+                                                    checked={vendorFormData.ease_of_use === "Somewhat well"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Somewhat well</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="ease_of_use"
+                                                    value="Not do well"
+                                                    checked={vendorFormData.ease_of_use === "Not do well"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not do well</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="ease_of_use"
+                                                    value="Not at all well"
+                                                    checked={vendorFormData.ease_of_use === "Not at all well"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not at all well</label>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>Did it take you more or less time than you expected to find what you were looking for on our website.
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="time_expectation"
+                                                    value="A lot less time"
+                                                    checked={vendorFormData.time_expectation === "A lot less time"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>A lot less time</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="time_expectation"
+                                                    value="A little less time"
+                                                    checked={vendorFormData.time_expectation === "A little less time"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>A little less time</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="time_expectation"
+                                                    value="About what I expected"
+                                                    checked={vendorFormData.time_expectation === "About what I expected"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>About what I expected</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="time_expectation"
+                                                    value="A little more time"
+                                                    checked={vendorFormData.time_expectation === "A little more time"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>A little more time</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="time_expectation"
+                                                    value="A lot more time"
+                                                    checked={vendorFormData.time_expectation === "A lot more time"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>A lot more time</label>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>How visually appealing is our website/app?
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="visual_appeal_rate"
+                                                    value="Extremely appealing"
+                                                    checked={vendorFormData.visual_appeal_rate === "Extremely appealing"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Extremely appealing</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="visual_appeal_rate"
+                                                    value="Very appealing"
+                                                    checked={vendorFormData.visual_appeal_rate === "Very appealing"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Very appealing</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="visual_appeal_rate"
+                                                    value="Somewhat appealing"
+                                                    checked={vendorFormData.visual_appeal_rate === "Somewhat appealing"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Somewhat appealing</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="visual_appeal_rate"
+                                                    value="Not so appealing"
+                                                    checked={vendorFormData.visual_appeal_rate === "Not so appealing"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not so appealing</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="visual_appeal_rate"
+                                                    value="Not at all appealing"
+                                                    checked={vendorFormData.visual_appeal_rate === "Not at all appealing"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not at all appealing</label>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>How easy is it to understand the information on our website/app?
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_clarity_rate"
+                                                    value="Extremely easy"
+                                                    checked={vendorFormData.information_clarity_rate === "Extremely easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Extremely easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_clarity_rate"
+                                                    value="Very easy"
+                                                    checked={vendorFormData.information_clarity_rate === "Very easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Very easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_clarity_rate"
+                                                    value="Somewhat easy"
+                                                    checked={vendorFormData.information_clarity_rate === "Somewhat easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Somewhat easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_clarity_rate"
+                                                    value="Not so easy"
+                                                    checked={vendorFormData.information_clarity_rate === "Not so easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not so easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_clarity_rate"
+                                                    value="Not at all easy"
+                                                    checked={vendorFormData.information_clarity_rate === "Not at all easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not at all easy</label>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>How much do you trust the information on our website/app?
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_trust_level"
+                                                    value="A great deal"
+                                                    checked={vendorFormData.information_trust_level === "A great deal"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>A great deal</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_trust_level"
+                                                    value="A lot"
+                                                    checked={vendorFormData.information_trust_level === "A lot"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>A lot</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_trust_level"
+                                                    value="A moderate amount"
+                                                    checked={vendorFormData.information_trust_level === "A moderate amount"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>A moderate amount</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_trust_level"
+                                                    value="A little"
+                                                    checked={vendorFormData.information_trust_level === "A little"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>A little</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_trust_level"
+                                                    value="Not at all"
+                                                    checked={vendorFormData.information_trust_level === "Not at all"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not at all</label>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>How easy was it to enter list your product/service on our website/app?
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="listed_ease"
+                                                    value="Extremely easy"
+                                                    checked={vendorFormData.listed_ease === "Extremely easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Extremely easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="listed_ease"
+                                                    value="Very easy"
+                                                    checked={vendorFormData.listed_ease === "Very easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Very easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="listed_ease"
+                                                    value="Somewhat easy"
+                                                    checked={vendorFormData.listed_ease === "Somewhat easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Somewhat easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="listed_ease"
+                                                    value="Not so easy"
+                                                    checked={vendorFormData.listed_ease === "Not so easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not so easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="listed_ease"
+                                                    value="Not at all easy"
+                                                    checked={vendorFormData.listed_ease === "Not at all easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not at all easy</label>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>How easy was it to communicate with the customer?
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="communication_ease"
+                                                    value="Extremely easy"
+                                                    checked={vendorFormData.communication_ease === "Extremely easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Extremely easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="communication_ease"
+                                                    value="Very easy"
+                                                    checked={vendorFormData.communication_ease === "Very easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Very easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="communication_ease"
+                                                    value="Somewhat easy"
+                                                    checked={vendorFormData.communication_ease === "Somewhat easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Somewhat easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="communication_ease"
+                                                    value="Not so easy"
+                                                    checked={vendorFormData.communication_ease === "Not so easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not so easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="communication_ease"
+                                                    value="Not at all easy"
+                                                    checked={vendorFormData.communication_ease === "Not at all easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not at all easy</label>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>How easy was it to get the information you needed from the customer?
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_gathering_ease"
+                                                    value="Extremely easy"
+                                                    checked={vendorFormData.information_gathering_ease === "Extremely easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Extremely easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_gathering_ease"
+                                                    value="Very easy"
+                                                    checked={vendorFormData.information_gathering_ease === "Very easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Very easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_gathering_ease"
+                                                    value="Somewhat easy"
+                                                    checked={vendorFormData.information_gathering_ease === "Somewhat easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Somewhat easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_gathering_ease"
+                                                    value="Not so easy"
+                                                    checked={vendorFormData.information_gathering_ease === "Not so easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not so easy</label>
+                                            </div>
+
+                                            <div className='mb-3 d-flex'>
+                                                <input
+                                                    type="radio"
+                                                    className='me-2 radio-size'
+                                                    name="information_gathering_ease"
+                                                    value="Not at all easy"
+                                                    checked={vendorFormData.information_gathering_ease === "Not at all easy"}
+                                                    onChange={handleChangeVendor}
+                                                    required
+                                                />
+                                                <label className='ms-1 fs-15'>Not at all easy</label>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>How likely is it that  you would recommend our website to a friend, family or colleague?
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='d-flex mt-4'>
+                                                <div className='d-flex justify-content-center align-items-end me-3'>
+                                                    Not at all Likely
+                                                </div>
+                                                <div>
+                                                    <span className='ms-1'>1</span>
+                                                    <br />
+                                                    <input
+                                                        type="radio"
+                                                        className='me-2 mt-3 radio-size'
+                                                        name="recommendation_score"
+                                                        value="1"
+                                                        checked={vendorFormData.recommendation_score === "1"}
+                                                        onChange={handleChangeVendor}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <span className='ms-1'>2</span>
+                                                    <br />
+                                                    <input
+                                                        type="radio"
+                                                        className='me-2 mt-3 radio-size'
+                                                        name="recommendation_score"
+                                                        value="2"
+                                                        checked={vendorFormData.recommendation_score === "2"}
+                                                        onChange={handleChangeVendor}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <span className='ms-1'>3</span>
+                                                    <br />
+                                                    <input
+                                                        type="radio"
+                                                        className='me-2 mt-3 radio-size'
+                                                        name="recommendation_score"
+                                                        value="3"
+                                                        checked={vendorFormData.recommendation_score === "3"}
+                                                        onChange={handleChangeVendor}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <span className='ms-1'>4</span>
+                                                    <br />
+                                                    <input
+                                                        type="radio"
+                                                        className='me-2 mt-3 radio-size'
+                                                        name="recommendation_score"
+                                                        value="4"
+                                                        checked={vendorFormData.recommendation_score === "4"}
+                                                        onChange={handleChangeVendor}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <span className='ms-1'>5</span>
+                                                    <br />
+                                                    <input
+                                                        type="radio"
+                                                        className='me-2 mt-3 radio-size'
+                                                        name="recommendation_score"
+                                                        value="5"
+                                                        checked={vendorFormData.recommendation_score === "5"}
+                                                        onChange={handleChangeVendor}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <span className='ms-1'>6</span>
+                                                    <br />
+                                                    <input
+                                                        type="radio"
+                                                        className='me-2 mt-3 radio-size'
+                                                        name="recommendation_score"
+                                                        value="6"
+                                                        checked={vendorFormData.recommendation_score === "6"}
+                                                        onChange={handleChangeVendor}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <span className='ms-1'>7</span>
+                                                    <br />
+                                                    <input
+                                                        type="radio"
+                                                        className='me-2 mt-3 radio-size'
+                                                        name="recommendation_score"
+                                                        value="7"
+                                                        checked={vendorFormData.recommendation_score === "7"}
+                                                        onChange={handleChangeVendor}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <span className='ms-1'>8</span>
+                                                    <br />
+                                                    <input
+                                                        type="radio"
+                                                        className='me-2 mt-3 radio-size'
+                                                        name="recommendation_score"
+                                                        value="8"
+                                                        checked={vendorFormData.recommendation_score === "8"}
+                                                        onChange={handleChangeVendor}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <span className='ms-1'>9</span>
+                                                    <br />
+                                                    <input
+                                                        type="radio"
+                                                        className='me-2 mt-3 radio-size'
+                                                        name="recommendation_score"
+                                                        value="9"
+                                                        checked={vendorFormData.recommendation_score === "9"}
+                                                        onChange={handleChangeVendor}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <span className='ms-1'>10</span>
+                                                    <br />
+                                                    <input
+                                                        type="radio"
+                                                        className='me-2 mt-3 radio-size'
+                                                        name="recommendation_score"
+                                                        value="10"
+                                                        checked={vendorFormData.recommendation_score === "10"}
+                                                        onChange={handleChangeVendor}
+                                                        required
+                                                    />
+                                                </div>
+
+                                                <div className='d-flex justify-content-center align-items-end ms-2'>
+                                                    Extremely Likely
+                                                </div>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Card className='mb-3 card-border-color'>
+                                        <Card.Body className='p-4'>
+                                            <div>Do you have any other comments about how we can improve our website/app to improve your experience?
+                                                <span className='asteris ms-1'>*</span>
+                                            </div>
+                                            <div className='mb-3 mt-4 d-flex'>
+                                                <input
+                                                    type="text"
+                                                    className='me-2 question-concerns form-control'
+                                                    name="comment"
+                                                    value={vendorFormData.comment}
+                                                    onChange={handleChangeVendor}
+                                                    placeholder='Your answer'
+                                                    required
+                                                />
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <Row>
+                                        <Col lg="12" className='text-right mt-3'>
+                                            <button
+                                                className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                                                onClick={toggleClearFormModal}
+                                                type="button"
+                                            >
+                                                Clear form
+                                            </button>
+
+                                            <button
+                                                className='btn btn-primary btn-style'
+                                                type="submit"
+                                                onClick={vendorSurveySubmit}
+                                            >
+                                                Submit
+                                            </button>
+                                        </Col>
+                                    </Row>
                                 </Col>
                             </Row>
                         </Col>
@@ -1095,7 +1128,7 @@ const VendorFeedBackSurvey = (props) => {
                     </Modal.Body>
                 </Modal>
             </section>
-        </Layout >
+        </LayoutAdmin >
     );
 };
 

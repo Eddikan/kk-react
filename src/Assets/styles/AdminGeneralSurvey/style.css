@@ -1,0 +1,45 @@
+.survey-user-image .user-photo-survey {
+    min-width: 45px;
+    min-height: 45px;
+    max-width: 45px;
+    max-height: 45px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}
+
+.survey-tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.survey-tooltip .icon-tooltiptext {
+    visibility: hidden;
+    width: 155px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 6px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 29px;
+    left: 10%;
+    margin-left: -74px;
+}
+
+.survey-tooltip .icon-tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 7px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent;
+}
+
+.survey-tooltip:hover .icon-tooltiptext {
+    visibility: visible;
+}

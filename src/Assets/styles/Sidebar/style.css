@@ -95,3 +95,17 @@ span.hover-sidebar {
     padding: 5px 0;
     text-align: left !important;
 }
+
+.survey-table:hover .table_content {
+    visibility: visible !important;
+}
+
+.survey-table .table_content {
+    visibility: hidden;
+    width: 262px !important;
+    padding: 4;
+    left: 23px !important;
+    top: 343px !important;
+    position: absolute;
+    z-index: 1;
+}
