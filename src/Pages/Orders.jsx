@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import 'Assets/styles/DesignerCalendar/style.css'
@@ -18,6 +17,7 @@ import InputEmoji from 'react-input-emoji'
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
 import axios from "axios";
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 
 const initialCheckOut = {
@@ -229,7 +229,7 @@ const Orders = (props) => {
                                     <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${processShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("processing"); }}>Processing</p>
                                     <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${shippedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("shipped"); }}>Shipped</p>
                                     <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${deliveredShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("delivered"); }}>Delivered</p>
-                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${reviewShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("review"); }}>Review and Feedback</p>
+                                    <Link to={'/vendor-feedback-survey'} className='text-decoration-none'>  <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${reviewShow ? 'fw-600 text-gold' : 'text-black'}`}>Review and Feedback</p></Link>
                                     <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${completedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("completed"); }}>Completed</p>
                                 </Card.Body>
                             </Card>
@@ -260,6 +260,7 @@ const Orders = (props) => {
                                     </Card>
                                 </Col>
                             </Row>
+
                             {ordersLoading ?
                                 <>
                                     <Card className="mt-3">
@@ -303,7 +304,6 @@ const Orders = (props) => {
 
 
                                                         return (
-
                                                             <Row className='mb-2'>
                                                                 <Col lg={12}>
                                                                     <Card className='mt-2 border-card'>
@@ -347,11 +347,13 @@ const Orders = (props) => {
                                                 </>
                                                 :
                                                 <>
+
                                                     <Card className='mt-3'>
                                                         <Card.Body>
                                                             <p className="mb-0 text-center">No records found.</p>
                                                         </Card.Body>
                                                     </Card>
+
                                                 </>
                                             }
                                         </>
@@ -362,8 +364,24 @@ const Orders = (props) => {
                                                     <p className="mb-0 text-center">No records found.</p>
                                                 </Card.Body>
                                             </Card>
+
                                         </>
                                     }
+
+                                    {/* {reviewShow ?
+                                        <>
+                                            <div className='fs-30'>
+                                                Press the indicated button.
+                                            </div>
+
+                                            <div className='text-center'>
+                                                <a href='/vendor-feedback-survey' class='btn btn-primary text-decoration-none'>Vendor FeedBack Survey</a>
+                                            </div>
+                                        </>
+                                        :
+                                        null
+                                    } */}
+
                                 </>
                             }
                         </Col>

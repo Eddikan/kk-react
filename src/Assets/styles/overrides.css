@@ -366,7 +366,7 @@ a {
     width: 160px;
     padding: 12px;
     border-radius: 5px;
-    right: 10px;
+    right: 26px;
     top: 55px;
     box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     -webkit-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
@@ -1934,16 +1934,10 @@ a.schedule-consultation {
     border-radius: 50%;
 }
 
-
-
-
-
 .image {
-    opacity: 0.8;
     width: 184px;
     height: 144px;
     background-position: center center;
-    /* background-color: gray; */
     display: inline-block;
 }
   .image:hover {
