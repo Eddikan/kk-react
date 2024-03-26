@@ -112,9 +112,6 @@ const PostPurchaseSurvey = (props) => {
                                     <div className='d-flex'>
                                         <div className='fs-15 fw-600 me-2 email-survey'>{userDetails.email}</div>
                                     </div>
-                                    <div className='mt-2'><TbMessageX className='me-2' size={20} color='#5f6368' />
-                                        <span className='not-shared fs-14'>Not shared</span>
-                                    </div>
                                 </Card.Body>
                                 <hr className='mb-0 mt-0' />
                                 <Card.Body>

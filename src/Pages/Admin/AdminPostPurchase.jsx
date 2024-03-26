@@ -3,14 +3,13 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Container, Row, Col, Modal, Card, ModalFooter, ModalHeader } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { GoAlertFill } from 'react-icons/go';
-import { BiSolidPencil } from 'react-icons/bi';
 import { MdOutlineEmail } from "react-icons/md";
 import { IoCloseOutline, IoEye } from 'react-icons/io5';
+import Pagination from 'Components/Pagination/Pagination';
 import AdminSidebar from 'Components/Shared/AdminSidebar';
 import LayoutAdmin from 'Components/Layout/LayoutAdmin';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import UserPlaceholder from 'Assets/images/user.png';
-import 'Assets/styles/AdminPostPurchase/style.css';
 import GoBack from 'Components/Shared/GoBack';
 import toast from 'react-hot-toast';
 import axios from "axios";
@@ -19,12 +18,17 @@ import axios from "axios";
 const AdminSurveyAnswers = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
-    const userDetails = cookies.userDetails;
     const [reloadCount, setReloadCount] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [postPurchases, setPostPurchases] = useState([]);
     const [postPurchasesLoading, setPostPurchasesLoading] = useState(true);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
+
+    let PageSize = 10;
 
     const getPostPurchase = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'post-purchase-survey');
@@ -35,6 +39,28 @@ const AdminSurveyAnswers = (props) => {
         setModalHeading(message);
     };
 
+    const handleChangePage = (pageNumber) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'post-purchase-survey?page=' + pageNumber + '&user_id=' + currentUser)
+            .then((response) => {
+                const data = response.data;
+                setCurrentPage(pageNumber);
+                const selectedPostPurchase = response.data.data;
+                if (selectedPostPurchase) {
+                    setPostPurchases(selectedPostPurchase);
+                    setCurrentPage(() => data.meta.current_page);
+                    setPageCount(() => data.meta.total);
+                    setPageSize(() => data.meta.per_page);
+                    setPostPurchasesLoading(false);
+                } else {
+                    setPostPurchasesLoading(false);
+                    toast.error('There has been an error getting the surveys, please try again!');
+                }
+            }).catch(error => {
+                setPostPurchasesLoading(false);
+                toast.error('There has been an error getting the surveys, please try again!');
+            });
+    };
+
     useEffect(() => {
         if (currentUser) {
             getPostPurchase()
@@ -43,6 +69,7 @@ const AdminSurveyAnswers = (props) => {
                     const selectedPostPurchase = response.data.data;
                     if (selectedPostPurchase) {
                         setPostPurchases(selectedPostPurchase);
+                        setPageCount(() => response.data.meta.total);
                     } else {
                         toast.error('There has been an error getting the surveys, please try again!');
                         setPostPurchasesLoading(false);
@@ -55,7 +82,6 @@ const AdminSurveyAnswers = (props) => {
         }
     },
         [reloadCount]);
-
 
     return (
         <LayoutAdmin>
@@ -106,6 +132,7 @@ const AdminSurveyAnswers = (props) => {
                                                 </Card.Body>
                                             </Card>
                                         </Col>
+
                                         <>
                                             {postPurchases ?
                                                 <>
@@ -126,31 +153,34 @@ const AdminSurveyAnswers = (props) => {
                                                                             <Card.Body >
                                                                                 <Row className="align-items-center">
                                                                                     <Col lg={4}>
-                                                                                        <div className='d-flex survey-user-image'>
-                                                                                            {postPurchase.user?.image != '' && postPurchase.user?.image != null ? (
-                                                                                                <div
-                                                                                                    className='user-photo-survey'
-                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${postPurchase.user?.image})` }}
-                                                                                                >
-                                                                                                </div>
-                                                                                            ) : (
-                                                                                                <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
-                                                                                            )}
+                                                                                        <Link to={`/admin/profile/user/${postPurchase.user.id}`} className='text-decoration-none'>
+                                                                                            <div className='d-flex survey-user-image'>
+                                                                                                {postPurchase.user?.image != '' && postPurchase.user?.image != null ? (
+                                                                                                    <div
+                                                                                                        className='user-photo-survey'
+                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${postPurchase.user?.image})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                ) : (
+                                                                                                    <img src={UserPlaceholder} className='placeholder-img-survey' alt="User Placeholder" />
+                                                                                                )}
 
-                                                                                            <div>
-                                                                                                <span className='ms-3 mt-0 mb-1 fs-18 text-black fw-500'>
-                                                                                                    {postPurchase.user?.first_name}
-                                                                                                    &nbsp;
-                                                                                                    {postPurchase.user?.last_name}
-                                                                                                </span>
-                                                                                                <div className='ms-3 mt-1 fs-16 text-black'>
-                                                                                                    <span className='me-1'>
-                                                                                                        <MdOutlineEmail className="me-2 text-gold" size={18} />
-                                                                                                        {postPurchase.user?.email}
+                                                                                                <div>
+                                                                                                    <span className='ms-3 mt-0 mb-1 fs-18 text-black fw-500'>
+                                                                                                        {postPurchase.user?.first_name}
+                                                                                                        &nbsp;
+                                                                                                        {postPurchase.user?.last_name}
                                                                                                     </span>
+
+                                                                                                    <div className='ms-3 mt-1 fs-16 text-black'>
+                                                                                                        <span className='me-1'>
+                                                                                                            <MdOutlineEmail className="me-2 text-gold" size={18} />
+                                                                                                            {postPurchase.user?.email}
+                                                                                                        </span>
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                        </div>
+                                                                                        </Link>
                                                                                     </Col>
 
                                                                                     <Col lg={4}>
@@ -201,6 +231,14 @@ const AdminSurveyAnswers = (props) => {
                                             }
                                         </>
                                     </Row>
+
+                                    <Pagination
+                                        className="mt-4 mb-0"
+                                        currentPage={currentPage}
+                                        totalCount={pageCount}
+                                        pageSize={PageSize}
+                                        onPageChange={page => handleChangePage(page)}
+                                    />
 
                                 </Col>
                             </Row>

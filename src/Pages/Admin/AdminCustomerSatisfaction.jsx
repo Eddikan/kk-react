@@ -1,30 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Container, Row, Col, Modal, Card, ModalFooter, ModalHeader } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { GoAlertFill } from 'react-icons/go';
-import { BiSolidPencil } from 'react-icons/bi';
 import { MdOutlineEmail } from "react-icons/md";
 import { IoCloseOutline, IoEye } from 'react-icons/io5';
+import Pagination from 'Components/Pagination/Pagination';
 import AdminSidebar from 'Components/Shared/AdminSidebar';
 import LayoutAdmin from 'Components/Layout/LayoutAdmin';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import UserPlaceholder from 'Assets/images/user.png';
-import 'Assets/styles/AdminGeneralSurvey/style.css';
 import GoBack from 'Components/Shared/GoBack';
 import toast from 'react-hot-toast';
 import axios from "axios";
 
-
 const AdminCustomerSatisfaction = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
-    const userDetails = cookies.userDetails;
     const [reloadCount, setReloadCount] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [customerSurveys, setCustomerSurveys] = useState([]);
     const [customerSurveysLoading, setCustomerSurveysLoading] = useState(true);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
+
+    let PageSize = 10;
 
     const getCustomerSurvey = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey');
@@ -35,6 +38,28 @@ const AdminCustomerSatisfaction = (props) => {
         setModalHeading(message);
     };
 
+    const handleChangePage = (pageNumber) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey?page=' + pageNumber + '&user_id=' + currentUser)
+            .then((response) => {
+                const data = response.data;
+                setCurrentPage(pageNumber);
+                const selectedCustomerSurvey = response.data.data;
+                if (selectedCustomerSurvey) {
+                    setCustomerSurveys(selectedCustomerSurvey);
+                    setCurrentPage(() => data.meta.current_page);
+                    setPageCount(() => data.meta.total);
+                    setPageSize(() => data.meta.per_page);
+                    setCustomerSurveysLoading(false);
+                } else {
+                    setCustomerSurveysLoading(false);
+                    toast.error('There has been an error getting the surveys, please try again!');
+                }
+            }).catch(error => {
+                setCustomerSurveysLoading(false);
+                toast.error('There has been an error getting the surveys, please try again!');
+            });
+    };
+
     useEffect(() => {
         if (currentUser) {
             getCustomerSurvey()
@@ -43,6 +68,7 @@ const AdminCustomerSatisfaction = (props) => {
                     const selectedCustomerSurvey = response.data.data;
                     if (selectedCustomerSurvey) {
                         setCustomerSurveys(selectedCustomerSurvey);
+                        setPageCount(() => response.data.meta.total);
                     } else {
                         toast.error('There has been an error getting the surveys, please try again!');
                         setCustomerSurveysLoading(false);
@@ -55,7 +81,6 @@ const AdminCustomerSatisfaction = (props) => {
         }
     },
         [reloadCount]);
-
 
     return (
         <LayoutAdmin>
@@ -123,34 +148,40 @@ const AdminCustomerSatisfaction = (props) => {
                                                                 return (
                                                                     <Col lg={12}>
                                                                         <Card className='mt-3'>
-                                                                            <Card.Body >
+                                                                            <Card.Body>
                                                                                 <Row className="align-items-center">
                                                                                     <Col lg={4}>
-                                                                                        <div className='d-flex survey-user-image'>
-                                                                                            {customerSurvey.user?.image != '' && customerSurvey.user?.image != null ? (
-                                                                                                <div
-                                                                                                    className='user-photo-survey'
-                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${customerSurvey.user?.image})` }}
-                                                                                                >
-                                                                                                </div>
-                                                                                            ) : (
-                                                                                                <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
-                                                                                            )}
+                                                                                        <Link
+                                                                                            to={`/admin/profile/user/${customerSurvey.user.id}`}
+                                                                                            className='text-decoration-none'
+                                                                                        >
 
-                                                                                            <div>
-                                                                                                <span className='ms-3 mt-0 mb-1 fs-18 text-black fw-500'>
-                                                                                                    {customerSurvey.user?.first_name}
-                                                                                                    &nbsp;
-                                                                                                    {customerSurvey.user?.last_name}
-                                                                                                </span>
-                                                                                                <div className='ms-3 mt-1 fs-16 text-black'>
-                                                                                                    <span className='me-1'>
-                                                                                                        <MdOutlineEmail className="me-2 text-gold" size={18} />
-                                                                                                        {customerSurvey.user?.email}
+                                                                                            <div className='d-flex survey-user-image'>
+                                                                                                {customerSurvey.user?.image != '' && customerSurvey.user?.image != null ? (
+                                                                                                    <div
+                                                                                                        className='user-photo-survey'
+                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${customerSurvey.user?.image})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                ) : (
+                                                                                                    <img src={UserPlaceholder} className='placeholder-img-survey' alt="User Placeholder" />
+                                                                                                )}
+
+                                                                                                <div>
+                                                                                                    <span className='ms-3 mt-0 mb-1 fs-18 text-black fw-500'>
+                                                                                                        {customerSurvey.user?.first_name}
+                                                                                                        &nbsp;
+                                                                                                        {customerSurvey.user?.last_name}
                                                                                                     </span>
+                                                                                                    <div className='ms-3 mt-1 fs-16 text-black'>
+                                                                                                        <span className='me-1'>
+                                                                                                            <MdOutlineEmail className="me-2 text-gold" size={18} />
+                                                                                                            {customerSurvey.user?.email}
+                                                                                                        </span>
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                        </div>
+                                                                                        </Link>
                                                                                     </Col>
 
                                                                                     <Col lg={4}>
@@ -162,7 +193,10 @@ const AdminCustomerSatisfaction = (props) => {
                                                                                     </Col>
 
                                                                                     <Col lg={2} className='d-flex justify-content-end'>
-                                                                                        <Link to={`/admin/view/customer-satisfaction-survey/${customerSurvey.id}`} className="text-decoration-none">
+                                                                                        <Link
+                                                                                            to={`/admin/view/customer-satisfaction-survey/${customerSurvey.id}`}
+                                                                                            className="text-decoration-none"
+                                                                                        >
                                                                                             <div className="survey-tooltip cursor-pointer">
                                                                                                 <span className="icon-tooltiptext fs-14">View</span>
                                                                                                 <IoEye className='me-3' color='#000000' size={20} />
@@ -201,6 +235,14 @@ const AdminCustomerSatisfaction = (props) => {
                                             }
                                         </>
                                     </Row>
+
+                                    <Pagination
+                                        className="mt-4 mb-0"
+                                        currentPage={currentPage}
+                                        totalCount={pageCount}
+                                        pageSize={PageSize}
+                                        onPageChange={page => handleChangePage(page)}
+                                    />
                                 </Col>
                             </Row>
                         </Container>
@@ -235,7 +277,7 @@ const AdminCustomerSatisfaction = (props) => {
                     </Card>
                 </Modal.Body>
             </Modal>
-        </LayoutAdmin >
+        </LayoutAdmin>
     );
 };
 

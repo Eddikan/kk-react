@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import AdminSidebar from 'Components/Shared/AdminSidebar';
+import { useNavigate, useParams } from 'react-router-dom';
 import LayoutAdmin from 'Components/Layout/LayoutAdmin';
-import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
-import { TbMessageX } from "react-icons/tb";
-import { IoCloseOutline } from "react-icons/io5";
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
-import { GoAlertFill } from "react-icons/go";
 import GoBack from 'Components/Shared/GoBack';
 import 'Assets/styles/Survey/style.css';
 import toast from 'react-hot-toast';
@@ -27,7 +23,6 @@ const initialVendorSurvey = Object.freeze({
     information_gathering_ease: '',
     recommendation_score: '',
     comment: '',
-
 });
 
 const AdminViewVendorSurvey = (props) => {
@@ -35,8 +30,6 @@ const AdminViewVendorSurvey = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const userRole = cookies.userRole;
     const currentUser = cookies.currentUser;
-    const userDetails = cookies.userDetails;
-    const [clearFormModal, setClearFormModal] = useState(false);
     const [vendorFormData, setVendorFormData] = useState(initialVendorSurvey);
     const [reloadCount, setReloadCount] = useState(0);
 
@@ -100,30 +93,37 @@ const AdminViewVendorSurvey = (props) => {
                         <Col>
                             <Card className='mt-3 mb-3 bordered-top-primary-survey'>
                                 <Card.Body>
-                                    <div className='fs-30 mb-4 rufina-family'>Website Feedback Survey (Vendor)</div>
-                                    <div className='fs-15'>We would love to hear your thoughts or feedback on how we can improve your experience!</div>
+                                    <div className='fs-30 mb-4 rufina-family'>
+                                        Website Feedback Survey (Vendor)
+                                    </div>
+
+                                    <div className='fs-15'>
+                                        We would love to hear your thoughts or feedback on how we can improve your experience!
+                                    </div>
+
                                 </Card.Body>
                                 <hr className='mb-0 mt-0' />
+
                                 <Card.Body>
-                                    <div className='d-flex'>
-                                        <div className='fs-15 fw-600 me-2 email-survey'>{surveyUser.email}</div>
-                                    </div>
-                                    <div className='mt-2'><TbMessageX className='me-2' size={20} color='#5f6368' />
-                                        <span className='not-shared fs-14'>Not shared</span>
+                                    <div className='fs-14 fw-600 me-2 email-survey'>
+                                        {surveyUser.email}
                                     </div>
                                 </Card.Body>
                                 <hr className='mb-0 mt-0' />
+
                                 <Card.Body>
-                                    <div className='indicate-question '>* Indicates require question</div>
+                                    <div className='indicate-question'>
+                                        * Indicates require question
+                                    </div>
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Click on the image to indicate what section of  the page you like the most? (Feature picture of KK vendor profile with clickable image/text)
+                                    <div>Click on the image to indicate what section of the page you like the most? (Feature picture of KK vendor profile with clickable image/text)
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -139,10 +139,10 @@ const AdminViewVendorSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Click on the image to indicate what section of  the page you like the least? (Feature picture of KK homepage with clickable image/text)
+                                    <div>Click on the image to indicate what section of the page you like the least? (Feature picture of KK homepage with clickable image/text)
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -158,10 +158,11 @@ const AdminViewVendorSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Please state your reason for the selection above
+                                    <div>
+                                        Please state your reason for the selection above
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -177,11 +178,12 @@ const AdminViewVendorSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Overall, how well does our website/app meet your needs?
+                                    <div>
+                                        Overall, how well does our website/app meet your needs?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -193,8 +195,6 @@ const AdminViewVendorSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Extremely well</label>
                                     </div>
-
-
 
                                     <div className='mb-3 mt-2 d-flex'>
                                         <input
@@ -235,7 +235,7 @@ const AdminViewVendorSurvey = (props) => {
                                         <label className='ms-1 fs-15'>Not do well</label>
                                     </div>
 
-                                    <div className='mb-3  mt-2d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -247,18 +247,17 @@ const AdminViewVendorSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Not at all well</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How easy was it to find what you were looking for on our website/app?
+                                    <div>
+                                        How easy was it to find what you were looking for on our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -310,7 +309,7 @@ const AdminViewVendorSurvey = (props) => {
                                         <label className='ms-1 fs-15'>Not do well</label>
                                     </div>
 
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -322,18 +321,17 @@ const AdminViewVendorSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Not at all well</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Did it take you more or less time than you expected to find what you were looking for on our website.
+                                    <div>
+                                        Did it take you more or less time than you expected to find what you were looking for on our website.
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -358,8 +356,6 @@ const AdminViewVendorSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>A little less time</label>
                                     </div>
-
-
 
                                     <div className='mb-3 mt-2 d-flex'>
                                         <input
@@ -387,7 +383,7 @@ const AdminViewVendorSurvey = (props) => {
                                         <label className='ms-1 fs-15'>A little more time</label>
                                     </div>
 
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -399,18 +395,17 @@ const AdminViewVendorSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>A lot more time</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How visually appealing is our website/app?
+                                    <div>
+                                        How visually appealing is our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -462,7 +457,7 @@ const AdminViewVendorSurvey = (props) => {
                                         <label className='ms-1 fs-15'>Not so appealing</label>
                                     </div>
 
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -474,18 +469,17 @@ const AdminViewVendorSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Not at all appealing</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How easy is it to understand the information on our website/app?
+                                    <div>
+                                        How easy is it to understand the information on our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -524,7 +518,6 @@ const AdminViewVendorSurvey = (props) => {
                                         <label className='ms-1 fs-15'>Somewhat easy</label>
                                     </div>
 
-
                                     <div className='mb-3 mt-2 d-flex'>
                                         <input
                                             type="radio"
@@ -538,7 +531,7 @@ const AdminViewVendorSurvey = (props) => {
                                         <label className='ms-1 fs-15'>Not so easy</label>
                                     </div>
 
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -550,18 +543,17 @@ const AdminViewVendorSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Not at all easy</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How much do you trust the information on our website/app?
+                                    <div>
+                                        How much do you trust the information on our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2  d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -613,7 +605,7 @@ const AdminViewVendorSurvey = (props) => {
                                         <label className='ms-1 fs-15'>A little</label>
                                     </div>
 
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -625,18 +617,17 @@ const AdminViewVendorSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Not at all</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How easy was it to enter list your product/service on our website/app?
+                                    <div>
+                                        How easy was it to enter list your product/service on our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2  d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -688,7 +679,7 @@ const AdminViewVendorSurvey = (props) => {
                                         <label className='ms-1 fs-15'>Not so easy</label>
                                     </div>
 
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -700,18 +691,17 @@ const AdminViewVendorSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Not at all easy</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How easy was it to communicate with the customer?
+                                    <div>
+                                        How easy was it to communicate with the customer?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -763,7 +753,7 @@ const AdminViewVendorSurvey = (props) => {
                                         <label className='ms-1 fs-15'>Not so easy</label>
                                     </div>
 
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -775,18 +765,17 @@ const AdminViewVendorSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Not at all easy</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How easy was it to get the information you needed from the customer?
+                                    <div>
+                                        How easy was it to get the information you needed from the customer?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -838,7 +827,7 @@ const AdminViewVendorSurvey = (props) => {
                                         <label className='ms-1 fs-15'>Not so easy</label>
                                     </div>
 
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-2 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -855,7 +844,8 @@ const AdminViewVendorSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How likely is it that  you would recommend our website to a friend, family or colleague?
+                                    <div>
+                                        How likely is it that  you would recommend our website to a friend, family or colleague?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
@@ -863,7 +853,6 @@ const AdminViewVendorSurvey = (props) => {
                                         <div className='d-flex justify-content-center align-items-end me-3'>
                                             Not at all Likely
                                         </div>
-
 
                                         <div>
                                             <span className='ms-1'>1</span>
@@ -1013,12 +1002,13 @@ const AdminViewVendorSurvey = (props) => {
                                 </Card.Body>
                             </Card>
 
-                            <Card className='mb-3 card-border-color'>
+                            <Card className='card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Do you have any other comments about how we can improve our website/app to improve your experience?
+                                    <div>
+                                        Do you have any other comments about how we can improve our website/app to improve your experience?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+                                    <div className='mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'

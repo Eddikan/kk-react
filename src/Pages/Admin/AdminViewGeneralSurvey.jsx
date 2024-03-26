@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
-import { TbMessageX } from "react-icons/tb";
-import { IoCloseOutline } from "react-icons/io5";
+import { useNavigate, useParams } from 'react-router-dom';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
-import { GoAlertFill } from "react-icons/go";
 import LayoutAdmin from 'Components/Layout/LayoutAdmin';
 import GoBack from 'Components/Shared/GoBack';
 import 'Assets/styles/Survey/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
+import GetFabricsData from 'Utils/GetFabricsData';
 
 const initialGeneralSurvey = Object.freeze({
     most_like: '',
@@ -32,8 +30,6 @@ const AdminViewGeneralSurvey = (props) => {
     const currentUser = cookies.currentUser;
     const [generalFeedBackFormData, setGeneralFeedBackFormData] = useState(initialGeneralSurvey);
     const [reloadCount, setReloadCount] = useState(0);
-    const [underConstructionShow, setUnderConstructionShow] = useState(false);
-    const [modalHeading, setModalHeading] = useState(false);
 
     const [generalFeedback, setGeneralFeedback] = useState([]);
     const [generalFeedbackLoading, setGeneralFeedbackLoading] = useState(true);
@@ -80,6 +76,30 @@ const AdminViewGeneralSurvey = (props) => {
     },
         [reloadCount]);
 
+
+    const fetchDatas = async (e) => {
+        try {
+            const fabricsData = await GetFabricsData(e);
+            if (fabricsData) {
+                setFabrics(fabricsData);
+                setFabricsLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setFabricsLoading(false);
+            }
+        } catch (error) {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setFabricsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchDatas(currentUser);
+    }, [reloadCount]);
+
+    const [fabrics, setFabrics] = useState([]);
+    const [fabricsLoading, setFabricsLoading] = useState(true);
+
     return (
         <LayoutAdmin>
             <section className='bg-light'>
@@ -99,15 +119,12 @@ const AdminViewGeneralSurvey = (props) => {
                                     <div className='fs-15'>We would love to hear your thoughts or feedback on how we can improve your experience!</div>
                                 </Card.Body>
                                 <hr className='mb-0 mt-0' />
+
                                 <Card.Body>
-                                    <div className='d-flex'>
-                                        <div className='fs-15 fw-600 me-2 email-survey'>{surveyUser.email}</div>
-                                    </div>
-                                    <div className='mt-2'><TbMessageX className='me-2' size={20} color='#5f6368' />
-                                        <span className='not-shared fs-14'>Not shared</span>
-                                    </div>
+                                    <div className='fs-14 fw-600 me-2 email-survey'>{surveyUser.email}</div>
                                 </Card.Body>
                                 <hr className='mb-0 mt-0' />
+
                                 <Card.Body>
                                     <div className='fs-14 indicate-question '>* Indicates required question</div>
                                 </Card.Body>
@@ -115,10 +132,27 @@ const AdminViewGeneralSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Click on the image to indicate what section of  the page you like the most? (Feature picture of KK homepage with clickable image/text)
+                                    <div>
+                                        Click on the image to indicate what section of  the page you like the most? (Feature picture of KK homepage with clickable image/text)
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <img src={generalFeedBackFormData.most_like} className='mt-3 image-survey' />
+
+                                    {/* <div>{fabrics.id} {fabrics.name}</div> */}
+
+
+                                    {/* <div className="portfolio-link image">
+                                        <div className="designs-grid-div-survey w-100 cursor-pointer"
+                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '140px' }}>
+                                        </div>
+                                    </div>
+                                    <div className='d-flex align-items-center justify-content-between'>
+                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis mt-2 pb-1">{fabric.name ?? '-'}</h4>
+                                    </div> */}
+
+
+
+                                    {/* <div className='mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -128,16 +162,19 @@ const AdminViewGeneralSurvey = (props) => {
                                             placeholder='Your answer'
                                             disabled
                                         />
-                                    </div>
+                                    </div> */}
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Click on the image to indicate what section of  the page you like the least? (Feature picture of KK homepage with clickable image/text)
+                                    <div>
+                                        Click on the image to indicate what section of  the page you like the least? (Feature picture of KK homepage with clickable image/text)
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-2 d-flex'>
+
+                                    <img src={generalFeedBackFormData.least_like} className='mt-3 image-survey' />
+                                    {/* <div className='mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -147,16 +184,17 @@ const AdminViewGeneralSurvey = (props) => {
                                             placeholder='Your answer'
                                             disabled
                                         />
-                                    </div>
+                                    </div> */}
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Please state your reason for the selection above
+                                    <div>
+                                        Please state your reason for the selection above
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -172,12 +210,12 @@ const AdminViewGeneralSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Overall, how well does our website/app meet your needs?
+                                    <div>
+                                        Overall, how well does our website/app meet your needs?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -241,18 +279,17 @@ const AdminViewGeneralSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Not at all well</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How easy was it to find what you were looking for on our website/app?
+                                    <div>
+                                        How easy was it to find what you were looking for on our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -316,17 +353,17 @@ const AdminViewGeneralSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Not at all well</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Did it take you more or less time than you expected to find what you were looking for on our website.
+                                    <div>
+                                        Did it take you more or less time than you expected to find what you were looking for on our website.
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -390,18 +427,17 @@ const AdminViewGeneralSurvey = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>A lot more time</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How visually appealing is our website/app?
+                                    <div>
+                                        How visually appealing is our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -471,12 +507,12 @@ const AdminViewGeneralSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How easy is it to understand the information on our website/app?
+                                    <div>
+                                        How easy is it to understand the information on our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -546,11 +582,12 @@ const AdminViewGeneralSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How much do you trust the information on our website/app?
+                                    <div>
+                                        How much do you trust the information on our website/app?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -620,14 +657,14 @@ const AdminViewGeneralSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How likely is it that  you would recommend our website to a friend, family or colleague?
+                                    <div>
+                                        How likely is it that  you would recommend our website to a friend, family or colleague?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='d-flex mt-2'>
+                                    <div className='d-flex mt-4'>
                                         <div className='d-flex justify-content-center align-items-end me-3'>
                                             Not at all Likely
                                         </div>
-
 
                                         <div>
                                             <span className='ms-1'>1</span>
@@ -775,12 +812,13 @@ const AdminViewGeneralSurvey = (props) => {
                                 </Card.Body>
                             </Card>
 
-                            <Card className='mb-3 card-border-color'>
+                            <Card className='card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Do you have any other comments about how we can improve our website/app to improve your experience?
+                                    <div>
+                                        Do you have any other comments about how we can improve our website/app to improve your experience?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+                                    <div className='mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -796,35 +834,6 @@ const AdminViewGeneralSurvey = (props) => {
                         </Col>
                     </Row>
                 </Container>
-
-                <Modal
-                    show={underConstructionShow}
-                    className='modal-preview'
-                    fade={false}
-                    centered
-                    size="sm"
-                    id="under-construction"
-                >
-                    <Modal.Header className="py-0">
-                        <h5 className='modal-title text-uppercase text-left fs-22 mt-2'>{modalHeading}</h5>
-                        <button
-                            type='button'
-                            className='close react-modal-close'
-                            onClick={() => setUnderConstructionShow(false)}
-                        >
-                            <IoCloseOutline color="#7e7e7e" size={25} />
-                        </button>
-                    </Modal.Header>
-
-                    <Modal.Body className='pt-2'>
-                        <Card>
-                            <Card.Body className="text-center py-5">
-                                <GoAlertFill size="60px" className="mb-2 text-gold" />
-                                <p className="fs-20 text-black">Under Construction</p>
-                            </Card.Body>
-                        </Card>
-                    </Modal.Body>
-                </Modal>
             </section>
         </LayoutAdmin>
     );

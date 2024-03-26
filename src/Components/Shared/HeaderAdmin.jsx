@@ -222,7 +222,7 @@ const HeaderAdmin = () => {
                                                     </div>
                                                     {userBellOpen && (
 
-                                                        <div className="action-box-bell scroll-bar user-menu-bell" id="style-2">
+                                                        <div className="action-box-bell scroll-bar admin-menu-bell" id="style-2">
                                                             {notifications.length > 0 ?
                                                                 <>
                                                                     {notifications.map((notification, index) => {
@@ -276,7 +276,7 @@ const HeaderAdmin = () => {
                                                     </div>
                                                     {userEnvelopOpen && (
 
-                                                        <div className="action-box-envelop user-menu-envelop">
+                                                        <div className="action-box-envelop admin-menu-envelop">
                                                             <div className='d-flex'>
                                                                 <div style={{ maxWidth: 100 }}><img src={User} className='user-placeholder-header' /></div>
                                                                 <div className='fs-14 body-text-bell'>Admin
@@ -308,7 +308,7 @@ const HeaderAdmin = () => {
                                                     }
 
                                                     {userMenuOpen && (
-                                                        <div className="action-box user-menu-seller">
+                                                        <div className="action-box user-menu-admin">
                                                             {userRole !== 'Admin' &&
                                                                 <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-2' color='#000000' />
                                                                     <span className='text-black'>Profile</span>
@@ -327,10 +327,6 @@ const HeaderAdmin = () => {
                                                                 </Link>
                                                             }
 
-                                                            {/* <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' color='#000000' />
-                                                                <span className='text-black'>Appointments</span>
-                                                            </Link> */}
-                                                            {/* <Link to="/user/center/portfolio" className="mb-3 text-decoration-none d-block"><IoIosImages /> Portfolio</Link> */}
                                                             <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower className='me-2' color='#000000' />
                                                                 <span className='text-black'>Logout</span>
                                                             </p>

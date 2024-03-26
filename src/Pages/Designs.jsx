@@ -125,6 +125,7 @@ const Designs = (props) => {
 
     function toggleCopyEmbedLinkModal() {
         setCopyEmbedLink(true);
+        setShareShowModal(false);
     }
 
     function toggleProfileCardShow() {

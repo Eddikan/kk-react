@@ -1928,3 +1928,59 @@ a.schedule-consultation {
     visibility: visible;
 }
 
+.placeholder-img-survey {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
+
+
+
+
+
+.image {
+    opacity: 0.8;
+    width: 184px;
+    height: 144px;
+    background-position: center center;
+    /* background-color: gray; */
+    display: inline-block;
+}
+  .image:hover {
+    opacity: 1;
+  }
+  
+  .radio-img > input {
+    display: none;
+  }
+  .radio-img > .image {
+    cursor: pointer;
+    border: 2px solid black;
+  }
+  .radio-img > input:checked + .image {
+    border: 2px solid orange;
+  }
+
+  .portfolio-grid-survey {
+    min-height: 140px !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    overflow: hidden;
+    width: 100% !important;
+}
+
+.designs-grid-div-survey {
+    min-height: 140px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.image-survey {
+    width: 200px;
+    height: 200px;
+    border-radius: 5px;
+}

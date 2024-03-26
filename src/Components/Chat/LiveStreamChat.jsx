@@ -94,7 +94,7 @@ const MeetingChat = ({ livestreamId, user, currentUser, loading }) => {
         <div>
             <section className="msger mt-1" ref={chatContainerRef}>
                 <div className="msger-chat scroll-chat p-2" ref={scrollableDivRef}>
-                    {chatLoading ?
+                    {!chatLoading ?
                         <>
                             <Loading className="bg-white" />
                         </>

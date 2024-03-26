@@ -184,9 +184,6 @@ const PortfolioGrid = (props) => {
                                             var portfolioImage = PlaceholderImage;
                                         }
 
-                                        // var portfolio_items = portfolio.portfolio_items;
-                                        // const userWishlist = portfolio_items.includes(user_id);
-
                                         return (
                                             <Col className={`mb-0`} lg="4">
                                                 {/* <div className={`portfolio-grid-featured w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + portfolioImage + ")" }}> */}
@@ -206,10 +203,6 @@ const PortfolioGrid = (props) => {
                                                             }
                                                         </div>
                                                     </div>
-
-                                                    {/* <Link to={`/portfolio/${object.id}`} className="text-decoration-none">
-                                                        <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
-                                                    </Link> */}
                                                 </div>
                                             </Col>
                                         )

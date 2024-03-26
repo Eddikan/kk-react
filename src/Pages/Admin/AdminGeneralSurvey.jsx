@@ -7,10 +7,10 @@ import { BiSolidPencil } from 'react-icons/bi';
 import { MdOutlineEmail } from "react-icons/md";
 import { IoCloseOutline, IoEye } from 'react-icons/io5';
 import AdminSidebar from 'Components/Shared/AdminSidebar';
+import Pagination from 'Components/Pagination/Pagination';
 import LayoutAdmin from 'Components/Layout/LayoutAdmin';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import UserPlaceholder from 'Assets/images/user.png';
-import 'Assets/styles/AdminGeneralSurvey/style.css';
 import GoBack from 'Components/Shared/GoBack';
 import toast from 'react-hot-toast';
 import axios from "axios";
@@ -26,6 +26,12 @@ const AdminGeneralSurvey = (props) => {
     const [generalFeedBacks, setGeneralFeedBacks] = useState([]);
     const [generalFeedBacksLoading, setGeneralFeedBacksLoading] = useState(true);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
+
+    let PageSize = 10;
+
     const getGeneralSurvey = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'general-feedback-survey');
     };
@@ -33,6 +39,28 @@ const AdminGeneralSurvey = (props) => {
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
+    };
+
+    const handleChangePage = (pageNumber) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'general-feedback-survey?page=' + pageNumber + '&user_id=' + currentUser)
+            .then((response) => {
+                const data = response.data;
+                setCurrentPage(pageNumber);
+                const selectedGeneralSurvey = response.data.data;
+                if (selectedGeneralSurvey) {
+                    setGeneralFeedBacks(selectedGeneralSurvey);
+                    setCurrentPage(() => data.meta.current_page);
+                    setPageCount(() => data.meta.total);
+                    setPageSize(() => data.meta.per_page);
+                    setGeneralFeedBacksLoading(false);
+                } else {
+                    setGeneralFeedBacksLoading(false);
+                    toast.error('There has been an error getting the surveys, please try again!');
+                }
+            }).catch(error => {
+                setGeneralFeedBacksLoading(false);
+                toast.error('There has been an error getting the surveys, please try again!');
+            });
     };
 
     useEffect(() => {
@@ -43,6 +71,7 @@ const AdminGeneralSurvey = (props) => {
                     const selectedGeneralSurvey = response.data.data;
                     if (selectedGeneralSurvey) {
                         setGeneralFeedBacks(selectedGeneralSurvey);
+                        setPageCount(() => response.data.meta.total);
                     } else {
                         toast.error('There has been an error getting the surveys, please try again!');
                         setGeneralFeedBacksLoading(false);
@@ -55,7 +84,6 @@ const AdminGeneralSurvey = (props) => {
         }
     },
         [reloadCount]);
-
 
     return (
         <LayoutAdmin>
@@ -126,31 +154,33 @@ const AdminGeneralSurvey = (props) => {
                                                                             <Card.Body >
                                                                                 <Row className="align-items-center">
                                                                                     <Col lg={4}>
-                                                                                        <div className='d-flex survey-user-image'>
-                                                                                            {generalFeedBack.user?.image != '' && generalFeedBack.user?.image != null ? (
-                                                                                                <div
-                                                                                                    className='user-photo-survey'
-                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${generalFeedBack.user?.image})` }}
-                                                                                                >
-                                                                                                </div>
-                                                                                            ) : (
-                                                                                                <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
-                                                                                            )}
+                                                                                        <Link to={`/admin/profile/user/${generalFeedBack.user.id}`} className='text-decoration-none'>
+                                                                                            <div className='d-flex survey-user-image'>
+                                                                                                {generalFeedBack.user?.image != '' && generalFeedBack.user?.image != null ? (
+                                                                                                    <div
+                                                                                                        className='user-photo-survey'
+                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${generalFeedBack.user?.image})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                ) : (
+                                                                                                    <img src={UserPlaceholder} className='placeholder-img-survey' alt="User Placeholder" />
+                                                                                                )}
 
-                                                                                            <div>
-                                                                                                <span className='ms-3 mt-0 mb-1 fs-18 text-black fw-500'>
-                                                                                                    {generalFeedBack.user?.first_name}
-                                                                                                    &nbsp;
-                                                                                                    {generalFeedBack.user?.last_name}
-                                                                                                </span>
-                                                                                                <div className='ms-3 mt-1 fs-16 text-black'>
-                                                                                                    <span className='me-1'>
-                                                                                                        <MdOutlineEmail className="me-2 text-gold" size={18} />
-                                                                                                        {generalFeedBack.user?.email}
+                                                                                                <div>
+                                                                                                    <span className='ms-3 mt-0 mb-1 fs-18 text-black fw-500'>
+                                                                                                        {generalFeedBack.user?.first_name}
+                                                                                                        &nbsp;
+                                                                                                        {generalFeedBack.user?.last_name}
                                                                                                     </span>
+                                                                                                    <div className='ms-3 mt-1 fs-16 text-black'>
+                                                                                                        <span className='me-1'>
+                                                                                                            <MdOutlineEmail className="me-2 text-gold" size={18} />
+                                                                                                            {generalFeedBack.user?.email}
+                                                                                                        </span>
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                        </div>
+                                                                                        </Link>
                                                                                     </Col>
 
                                                                                     <Col lg={4}>
@@ -201,6 +231,15 @@ const AdminGeneralSurvey = (props) => {
                                             }
                                         </>
                                     </Row>
+
+                                    <Pagination
+                                        className="mt-4 mb-0"
+                                        currentPage={currentPage}
+                                        totalCount={pageCount}
+                                        pageSize={PageSize}
+                                        onPageChange={page => handleChangePage(page)}
+                                    />
+
                                 </Col>
                             </Row>
                         </Container>

@@ -10,6 +10,7 @@ import { PiPlus } from "react-icons/pi";
 import 'Assets/styles/LiveStream/style.css';
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 import GoBack from '../Components/Shared/GoBack';
+import Pagination from 'Components/Pagination/Pagination';
 import Container from 'react-bootstrap/Container';
 import Sidebar from 'Components/Shared/Sidebar';
 import LiveStreamChat from 'Components/Chat/LiveStreamChat';
@@ -26,7 +27,7 @@ const initialStreamFormData = Object.freeze({
 const LiveStreams = (props) => {
     const apiKey = process.env.REACT_APP_STREAM_API_KEY;
     const secrectKey = process.env.REACT_APP_STREAM_API_SECRET_KEY;
-    const token = process.env.REACT_APP_STREAM_API_TOKEN; 
+    const token = process.env.REACT_APP_STREAM_API_TOKEN;
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const [livestreamId, setLiveStreamId] = useState('');
@@ -42,6 +43,11 @@ const LiveStreams = (props) => {
     const [formStatus, setFormStatus] = useState('standby');
     const [streamFormData, setStreamFormData] = useState(initialStreamFormData);
     const [designer, setDesigner] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
+
+    let PageSize = 10;
 
     function toggleCreateStream() {
         setCreateStreamShow(true);
@@ -49,6 +55,18 @@ const LiveStreams = (props) => {
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
+        setModalHeading(message);
+    }
+
+    function toggleChatbox(id, first_name, last_name, image, message) {
+        setChatBox(true);
+        setLiveStreamId(id.toString());
+        setDesigner({
+            id: id ?? 0,
+            first_name: first_name ?? '-',
+            last_name: last_name ?? '-',
+            image: image ?? '-'
+        });
         setModalHeading(message);
     }
 
@@ -68,6 +86,28 @@ const LiveStreams = (props) => {
             date: new Date(),
         });
     }
+
+    const handleChangePage = (pageNumber) => {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'livestream?page=' + pageNumber + '&user_id=' + currentUser)
+            .then((response) => {
+                const data = response.data;
+                setCurrentPage(pageNumber);
+                const selectedStream = response.data.data;
+                if (selectedStream) {
+                    setStreams(selectedStream);
+                    setCurrentPage(() => data.meta.current_page);
+                    setPageCount(() => data.meta.total);
+                    setPageSize(() => data.meta.per_page);
+                    setStreamLoading(false);
+                } else {
+                    setStreamLoading(false);
+                    toast.error('There has been an error getting the livestreams, please try again!');
+                }
+            }).catch(error => {
+                setStreamLoading(false);
+                toast.error('There has been an error getting the livestreams, please try again!');
+            });
+    };
 
     function returnFormattedDate(date) {
         const targetDate = new Date(date);
@@ -131,27 +171,18 @@ const LiveStreams = (props) => {
                 const selectedStream = response.data.data;
                 if (selectedStream) {
                     setStreams(selectedStream);
+                    setStreamLoading(false);
+                    setPageCount(() => response.data.meta.total);
                 } else {
                     toast.error('There has been an error getting the appointment, please try again!');
+                    setStreamLoading(false);
                 }
             })
             .catch((error) => {
                 toast.error('There has been an error getting the appointment, please try again!');
+                setStreamLoading(false);
             });
-
     }, [reloadCount]);
-
-    function toggleChatbox(id, first_name, last_name, image, message) {
-        setChatBox(true);
-        setLiveStreamId(id.toString());
-        setDesigner({
-            id: id ?? 0,
-            first_name: first_name ?? '-',
-            last_name: last_name ?? '-',
-            image: image ?? '-'
-        });
-        setModalHeading(message);
-    }
 
     return (
         <LayoutSellerCenter>
@@ -312,6 +343,15 @@ const LiveStreams = (props) => {
                                     </>
                                 </Row>
                             </div>
+
+                            <Pagination
+                                className="mt-4 mb-0"
+                                currentPage={currentPage}
+                                totalCount={pageCount}
+                                pageSize={PageSize}
+                                onPageChange={page => handleChangePage(page)}
+                            />
+
                         </Col>
 
                         {chatBox ?

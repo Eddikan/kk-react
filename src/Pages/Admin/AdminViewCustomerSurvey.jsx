@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Layout from 'Components/Layout/Layout';
-import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
+import LayoutAdmin from 'Components/Layout/LayoutAdmin';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import { IoCloseOutline } from "react-icons/io5";
-import { TbMessageX } from "react-icons/tb";
 import { GoAlertFill } from "react-icons/go";
 import GoBack from 'Components/Shared/GoBack';
 import 'Assets/styles/Survey/style.css';
@@ -40,25 +39,16 @@ const AdminViewCustomerSurvey = (props) => {
     const { surveyId } = useParams();
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
-    const userDetails = cookies.userDetails;
-    const [clearFormModal, setClearFormModal] = useState(false);
     const [customerFormData, setCustomerForData] = useState(initialCustomerSurvey);
     const [describeServiceFormData, setDescribeServiceFormData] = useState(initialDescribeServiceSurvey);
     const [reloadCount, setReloadCount] = useState(0);
-    const [formStatus, setFormStatus] = useState('standby');
-    const [underConstructionShow, setUnderConstructionShow] = useState(false);
-    const [modalHeading, setModalHeading] = useState('');
-
     const [customerSurvey, setCustomerSurvey] = useState([]);
     const [customerSurveyLoading, setCustomerSurveyLoading] = useState(true);
     const [surveyUser, setSurveyUser] = useState('');
 
-
     const getCustomerSurvey = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'customer-satisfaction-survey/' + surveyId);
     };
-
-
 
     const handleChangeCustomer = (e) => {
         const { name, value } = e.target;
@@ -75,7 +65,6 @@ const AdminViewCustomerSurvey = (props) => {
         }));
     };
 
-
     useEffect(() => {
         if (currentUser) {
             getCustomerSurvey()
@@ -85,7 +74,7 @@ const AdminViewCustomerSurvey = (props) => {
                     if (selectedCustomerSurvey) {
                         setCustomerSurvey(selectedCustomerSurvey);
                         setCustomerForData(selectedCustomerSurvey);
-                        setDescribeServiceFormData(selectedCustomerSurvey);
+                        setDescribeServiceFormData(selectedCustomerSurvey.qualities);
                         if (selectedCustomerSurvey.user) {
                             setSurveyUser(selectedCustomerSurvey.user);
                         }
@@ -102,8 +91,9 @@ const AdminViewCustomerSurvey = (props) => {
     },
         [reloadCount]);
 
+
     return (
-        <Layout>
+        <LayoutAdmin>
             <section className='bg-light'>
                 <Container className='py-5'>
                     <Row>
@@ -117,27 +107,34 @@ const AdminViewCustomerSurvey = (props) => {
                         <Col>
                             <Card className='mt-3 mb-3 bordered-top-primary-survey'>
                                 <Card.Body>
-                                    <div className='fs-30 mb-4 rufina-family'>Customer Satisfaction Feedback</div>
-                                    <div className='fs-15'>We would love to hear your thoughts or feedback on how we can improve your experience!</div>
-                                </Card.Body>
-                                <hr className='mb-0 mt-0' />
-                                <Card.Body>
-                                    <div className='d-flex'>
-                                        <div className='fs-15 fw-600 me-2 email-survey'>{userDetails.email}</div>
+                                    <div className='fs-30 mb-4 rufina-family'>
+                                        Customer Satisfaction Feedback
                                     </div>
-                                    <div className='mt-2'><TbMessageX className='me-2' size={20} color='#5f6368' />
-                                        <span className='not-shared fs-14'>Not shared</span>
+
+                                    <div className='fs-15'>
+                                        We would love to hear your thoughts or feedback on how we can improve your experience!
                                     </div>
                                 </Card.Body>
                                 <hr className='mb-0 mt-0' />
+
                                 <Card.Body>
-                                    <div className='indicate-question '>* Indicates required question</div>
+                                    <div className='fs-14 fw-600 me-2 email-survey'>
+                                        {surveyUser.email}
+                                    </div>
+                                </Card.Body>
+                                <hr className='mb-0 mt-0' />
+
+                                <Card.Body>
+                                    <div className='indicate-question '>
+                                        * Indicates required question
+                                    </div>
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How likely is it that you would recommend Kouture Konect to a friend, family or colleague?
+                                    <div>
+                                        How likely is it that you would recommend Kouture Konect to a friend, family or colleague?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
                                     <div className='d-flex mt-4'>
@@ -293,7 +290,8 @@ const AdminViewCustomerSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Overall, how satisfied or dissatisfied are you with our company?
+                                    <div>
+                                        Overall, how satisfied or dissatisfied are you with our company?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
                                     <div className='mb-3 mt-4 d-flex'>
@@ -365,7 +363,8 @@ const AdminViewCustomerSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Which of the following words would you use to describe our service? Select all that apply?
+                                    <div>
+                                        Which of the following words would you use to describe our service? Select all that apply?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
                                     <div className='mb-3 mt-4 d-flex'>
@@ -489,7 +488,8 @@ const AdminViewCustomerSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How well did your product meet your needs?
+                                    <div>
+                                        How well did your product meet your needs?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
                                     <div className='mb-3 mt-4 d-flex'>
@@ -561,7 +561,8 @@ const AdminViewCustomerSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How would you rate the quality of the product?
+                                    <div>
+                                        How would you rate the quality of the product?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
                                     <div className='mb-3 mt-4 d-flex'>
@@ -632,7 +633,8 @@ const AdminViewCustomerSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How would you rate the value for money of the product?
+                                    <div>
+                                        How would you rate the value for money of the product?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
                                     <div className='mb-3 mt-4 d-flex'>
@@ -704,9 +706,11 @@ const AdminViewCustomerSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How would you rate our responsiveness to your questions/concerns?
+                                    <div>
+                                        How would you rate our responsiveness to your questions/concerns?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
+
                                     <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
@@ -789,7 +793,8 @@ const AdminViewCustomerSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How long have you been a Kouture Konect customer?
+                                    <div>
+                                        How long have you been a Kouture Konect customer?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
                                     <div className='mb-3 mt-4 d-flex'>
@@ -874,7 +879,8 @@ const AdminViewCustomerSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How likely are you to use our service again?
+                                    <div>
+                                        How likely are you to use our service again?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
                                     <div className='mb-3 mt-4 d-flex'>
@@ -944,12 +950,13 @@ const AdminViewCustomerSurvey = (props) => {
                                 </Card.Body>
                             </Card>
 
-                            <Card className='mb-3 card-border-color'>
+                            <Card className='card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Do you have any other comments,  questions, or concerns?
+                                    <div>
+                                        Do you have any other comments, questions, or concerns?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+                                    <div className='mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -965,38 +972,8 @@ const AdminViewCustomerSurvey = (props) => {
                         </Col>
                     </Row>
                 </Container>
-
-                <Modal
-                    show={underConstructionShow}
-                    className='modal-preview'
-                    fade={false}
-                    centered
-                    size="sm"
-                    id="under-construction"
-                >
-                    <Modal.Header className="py-0">
-                        <h5 className='modal-title text-uppercase text-left fs-22 mt-2'>{modalHeading}</h5>
-                        <button
-                            type='button'
-                            className='close react-modal-close'
-                            onClick={() => setUnderConstructionShow(false)}
-                        >
-                            <IoCloseOutline color="#7e7e7e" size={25} />
-                        </button>
-                    </Modal.Header>
-
-                    <Modal.Body className='pt-2'>
-                        <Card>
-                            <Card.Body className="text-center py-5">
-                                <GoAlertFill size="60px" className="mb-2 text-gold" />
-                                <p className="fs-20 text-black">Under Construction</p>
-                            </Card.Body>
-                        </Card>
-                    </Modal.Body>
-                </Modal>
             </section >
-        </Layout >
-
+        </LayoutAdmin>
     );
 };
 

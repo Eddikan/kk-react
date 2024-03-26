@@ -11,7 +11,7 @@ import { PiNotepadFill } from "react-icons/pi";
 import { AiFillDelete, AiFillMessage } from "react-icons/ai";
 import { GoAlertFill } from 'react-icons/go';
 import { ImEmbed2 } from "react-icons/im";
-import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoHeartOutline, IoEyeOutline, IoEye } from "react-icons/io5";
+import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoEye } from "react-icons/io5";
 import CopyTo from 'Utils/CopyLink';
 import AdminSidebar from 'Components/Shared/AdminSidebar';
 import 'Assets/styles/AdminDesigns/style.css';
@@ -245,6 +245,7 @@ const AdminDesigns = (props) => {
                                                 </Card.Body>
                                             </Card>
                                         </Col>
+
                                         <>
                                             {designs ?
                                                 <>
@@ -263,7 +264,8 @@ const AdminDesigns = (props) => {
                                                                             <Card.Body >
                                                                                 <Row>
                                                                                     <Col lg={3} className='d-flex justify-content-left align-items-center'>
-                                                                                        <div className="cursor-pointer  image-design-admin"
+                                                                                        <div
+                                                                                            className="cursor-pointer image-design-admin"
                                                                                             onClick={function () {
                                                                                                 togglePortfolioImage(
                                                                                                     design.id,
@@ -285,7 +287,7 @@ const AdminDesigns = (props) => {
 
                                                                                         <div className='ms-3'>
                                                                                             <div
-                                                                                                className='d-flex mt-0 mb-1 fs-18 text-black cursor-pointer'
+                                                                                                className='d-flex mt-0 mb-2 fs-18 text-black cursor-pointer'
                                                                                                 onClick={function () {
                                                                                                     togglePortfolioImage(
                                                                                                         design.id,
@@ -307,7 +309,9 @@ const AdminDesigns = (props) => {
 
                                                                                             <Link
                                                                                                 to={`/designer-profile?user_id=${design.user.id}`}
-                                                                                                className="text-decoration-none text-black">
+                                                                                                className="text-decoration-none text-black"
+                                                                                            >
+
                                                                                                 <div className='d-flex align-items-center user-image-chat'>
                                                                                                     {design.user.image ?
                                                                                                         <div
@@ -322,6 +326,7 @@ const AdminDesigns = (props) => {
                                                                                                         >
                                                                                                         </div>
                                                                                                     }
+
                                                                                                     <span className='name-user ms-2 fs-16 admin-ellipsis-design'>
                                                                                                         {design.user.first_name}
                                                                                                         &nbsp;
@@ -355,7 +360,6 @@ const AdminDesigns = (props) => {
                                                                                     </Col>
 
                                                                                     <Col lg={3} className='d-flex justify-content-left align-items-center'>
-
                                                                                         <div>
                                                                                             {design.tags ?
                                                                                                 <>

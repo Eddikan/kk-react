@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import Layout from 'Components/Layout/Layout';
-import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
-import UserContent from 'Assets/images/usercontent.jpg';
-import { TbMessageX } from "react-icons/tb";
-import { IoCloseOutline } from "react-icons/io5";
-import { useCookies } from 'react-cookie';
-import { GoAlertFill } from "react-icons/go";
+import LayoutAdmin from 'Components/Layout/LayoutAdmin';
+import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import 'Assets/styles/Survey/style.css';
 import toast from 'react-hot-toast';
@@ -38,7 +34,6 @@ const AdminViewPostPurchase = (props) => {
     const getPostPurchase = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'post-purchase-survey/' + surveyId);
     };
-
 
 
     const handleChangePostPurchase = (e) => {
@@ -78,7 +73,7 @@ const AdminViewPostPurchase = (props) => {
         [reloadCount]);
 
     return (
-        <Layout>
+        <LayoutAdmin>
             <section className='bg-light'>
                 <Container className='py-5'>
                     <Row>
@@ -92,32 +87,38 @@ const AdminViewPostPurchase = (props) => {
                         <Col>
                             <Card className='mt-3 mb-3 mt-3 bordered-top-primary-survey'>
                                 <Card.Body>
-                                    <div className='fs-30 mb-4 rufina-family'>Post Purchase/Delivery Survey</div>
-                                    <div className='fs-15'>We would love to hear your thoughts or feedback on how we can improve your experience!</div>
-                                </Card.Body>
-                                <hr className='mb-0 mt-0' />
-                                <Card.Body>
-                                    <div className='d-flex'>
-                                        <div className='fs-15 fw-600 me-2 email-survey'>{surveyUser.email}</div>
+                                    <div className='fs-30 mb-4 rufina-family'>
+                                        Post Purchase/Delivery Survey
                                     </div>
-                                    <div className='mt-2'><TbMessageX className='me-2' size={20} color='#5f6368' />
-                                        <span className='not-shared fs-14'>Not shared</span>
+
+                                    <div className='fs-15'>
+                                        We would love to hear your thoughts or feedback on how we can improve your experience!
                                     </div>
                                 </Card.Body>
                                 <hr className='mb-0 mt-0' />
+
                                 <Card.Body>
-                                    <div className='fs-14 indicate-question '>* Indicates required question</div>
+                                    <div className='fs-14 fw-600 me-2 email-survey'>
+                                        {surveyUser.email}
+                                    </div>
+                                </Card.Body>
+                                <hr className='mb-0 mt-0' />
+
+                                <Card.Body>
+                                    <div className='fs-14 indicate-question '>
+                                        * Indicates required question
+                                    </div>
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 mt-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Overall, how would you rate your purchase experience?
+                                    <div>
+                                        Overall, how would you rate your purchase experience?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -187,12 +188,12 @@ const AdminViewPostPurchase = (props) => {
 
                             <Card className='mb-3 mt-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How much do you agree or disagree with this statement: the price was fair.
+                                    <div>
+                                        How much do you agree or disagree with this statement: the price was fair.
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -256,17 +257,17 @@ const AdminViewPostPurchase = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Strongly agree</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 mt-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How much do you agree or disagree with this statement: the information provided helped me make an informed decision.
+                                    <div>
+                                        How much do you agree or disagree with this statement: the information provided helped me make an informed decision.
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-                                    <div className='mb-3 mt-3 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -330,18 +331,17 @@ const AdminViewPostPurchase = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Strongly agree</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 mt-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How much do you agree or disagree with this statement: I was able to use my preferred payment method.
+                                    <div>
+                                        How much do you agree or disagree with this statement: I was able to use my preferred payment method.
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-3 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -405,18 +405,17 @@ const AdminViewPostPurchase = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Strongly agree</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 mt-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How much do you agree or disagree with this statement: It was easy to understand the total cost.
+                                    <div>
+                                        How much do you agree or disagree with this statement: It was easy to understand the total cost.
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-3 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -455,8 +454,6 @@ const AdminViewPostPurchase = (props) => {
                                         <label className='ms-1 fs-15'>Neither agree nor disagree</label>
                                     </div>
 
-
-
                                     <div className='mb-3 mt-3 d-flex'>
                                         <input
                                             type="radio"
@@ -470,8 +467,6 @@ const AdminViewPostPurchase = (props) => {
                                         <label className='ms-1 fs-15'>Agree</label>
                                     </div>
 
-
-
                                     <div className=' d-flex'>
                                         <input
                                             type="radio"
@@ -484,18 +479,17 @@ const AdminViewPostPurchase = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Strongly agree</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 mt-2 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>How much do you agree or disagree with this statement: the terms of my purchase were clear.
+                                    <div>
+                                        How much do you agree or disagree with this statement: the terms of my purchase were clear.
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-
-                                    <div className='mb-3 mt-3 d-flex'>
+                                    <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="radio"
                                             className='me-2 radio-size'
@@ -507,7 +501,6 @@ const AdminViewPostPurchase = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Strongly disagree</label>
                                     </div>
-
 
                                     <div className='mb-3  d-flex'>
                                         <input
@@ -535,8 +528,6 @@ const AdminViewPostPurchase = (props) => {
                                         <label className='ms-1 fs-15'>Neither agree nor disagree</label>
                                     </div>
 
-
-
                                     <div className='mb-3  d-flex'>
                                         <input
                                             type="radio"
@@ -550,8 +541,6 @@ const AdminViewPostPurchase = (props) => {
                                         <label className='ms-1 fs-15'>Agree</label>
                                     </div>
 
-
-
                                     <div className=' d-flex'>
                                         <input
                                             type="radio"
@@ -564,16 +553,16 @@ const AdminViewPostPurchase = (props) => {
                                         />
                                         <label className='ms-1 fs-15'>Strongly agree</label>
                                     </div>
-
                                 </Card.Body>
                             </Card>
 
-                            <Card className='mb-3 mt-2 card-border-color'>
+                            <Card className='mt-2 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>What could we do to make the purchase process better for you?
+                                    <div>
+                                        What could we do to make the purchase process better for you?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-2 d-flex'>
+                                    <div className='mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -589,8 +578,8 @@ const AdminViewPostPurchase = (props) => {
                         </Col>
                     </Row>
                 </Container>
-            </section >
-        </Layout >
+            </section>
+        </LayoutAdmin>
     );
 };
 

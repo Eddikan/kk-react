@@ -12,6 +12,7 @@ import Layout from 'Components/Layout/Layout';
 import 'Assets/styles/Survey/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
+import GetFabricsData from 'Utils/GetFabricsData';
 
 const initialGeneralSurvey = Object.freeze({
     most_like: '',
@@ -96,6 +97,30 @@ const WebsiteFeedBackSurvey = (props) => {
         }
     }
 
+
+    const fetchDatas = async (e) => {
+        try {
+            const fabricsData = await GetFabricsData(e);
+            if (fabricsData) {
+                setFabrics(fabricsData);
+                setFabricsLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setFabricsLoading(false);
+            }
+        } catch (error) {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setFabricsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchDatas(currentUser);
+    }, [reloadCount]);
+
+    const [fabrics, setFabrics] = useState([]);
+    const [fabricsLoading, setFabricsLoading] = useState(true);
+
     return (
         <LayoutAdmin>
             <section className='bg-light'>
@@ -119,9 +144,6 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div className='d-flex'>
                                         <div className='fs-15 fw-600 me-2 email-survey'>{userDetails.email}</div>
                                     </div>
-                                    <div className='mt-2'><TbMessageX className='me-2' size={20} color='#5f6368' />
-                                        <span className='not-shared fs-14'>Not shared</span>
-                                    </div>
                                 </Card.Body>
                                 <hr className='mb-0 mt-0' />
                                 <Card.Body>
@@ -134,7 +156,49 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div>Click on the image to indicate what section of  the page you like the most? (Feature picture of KK homepage with clickable image/text)
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+
+                                    {fabrics && fabrics.length > 0 ?
+                                        <>
+                                            <Row className="designs-row mt-3">
+                                                {fabrics.map((fabric, index) => {
+                                                    if (fabric.image_urls?.[0]?.image_url) {
+                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
+                                                    } else {
+                                                        // var fabricImage = PlaceholderImage;
+                                                    }
+
+                                                    return (
+                                                        <>
+                                                            <Col className="designs-grid mb-3" xs="12" md="3">
+
+                                                                <label class="radio-img">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="most_like"
+                                                                        // value={fabric.id}
+                                                                        value={fabricImage}
+                                                                        onChange={handleChangeGeneralFeeback}
+                                                                    />
+                                                                    <div className="portfolio-link image">
+                                                                        <div className="designs-grid-div-survey w-100 cursor-pointer"
+                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '140px' }}>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className='d-flex align-items-center justify-content-between'>
+                                                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis mt-2 pb-1">{fabric.name ?? '-'}</h4>
+                                                                    </div>
+                                                                </label>
+                                                            </Col >
+
+                                                        </>
+                                                    )
+                                                })}
+                                            </Row>
+                                        </>
+                                        :
+                                        <p className="text-center mb-3 mt-3">No records found.</p>
+                                    }
+                                    {/* <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -143,7 +207,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                             onChange={handleChangeGeneralFeeback}
                                             placeholder='Your answer'
                                         />
-                                    </div>
+                                    </div> */}
                                 </Card.Body>
                             </Card>
 
@@ -152,7 +216,48 @@ const WebsiteFeedBackSurvey = (props) => {
                                     <div>Click on the image to indicate what section of  the page you like the least? (Feature picture of KK homepage with clickable image/text)
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mb-3 mt-4 d-flex'>
+
+                                    {fabrics && fabrics.length > 0 ?
+                                        <>
+                                            <Row className="designs-row mt-3">
+                                                {fabrics.map((fabric, index) => {
+                                                    if (fabric.image_urls?.[0]?.image_url) {
+                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
+                                                    } else {
+                                                        // var fabricImage = PlaceholderImage;
+                                                    }
+
+                                                    return (
+                                                        <>
+                                                            <Col className="designs-grid mb-3" xs="12" md="3">
+                                                                <label class="radio-img">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="least_like"
+                                                                        // value={fabric.id}
+                                                                        value={fabricImage}
+                                                                        onChange={handleChangeGeneralFeeback}
+                                                                    />
+                                                                    <div className="portfolio-link image">
+                                                                        <div className="designs-grid-div-survey w-100 cursor-pointer"
+                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '140px' }}>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className='d-flex align-items-center justify-content-between'>
+                                                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis mt-2 pb-1">{fabric.name}</h4>
+                                                                    </div>
+                                                                </label>
+                                                            </Col >
+
+                                                        </>
+                                                    )
+                                                })}
+                                            </Row>
+                                        </>
+                                        :
+                                        <p className="text-center mb-3 mt-3">No records found.</p>
+                                    }
+                                    {/* <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -161,7 +266,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                             onChange={handleChangeGeneralFeeback}
                                             placeholder='Your answer'
                                         />
-                                    </div>
+                                    </div> */}
                                 </Card.Body>
                             </Card>
 
@@ -528,8 +633,8 @@ const WebsiteFeedBackSurvey = (props) => {
                                             type="radio"
                                             className='me-2 radio-size'
                                             name="information_trust_level"
-                                            value="Extremely easy"
-                                            checked={generalFeedBackFormData.information_trust_level === "Extremely easy"}
+                                            value="A great deal"
+                                            checked={generalFeedBackFormData.information_trust_level === "A great deal"}
                                             onChange={handleChangeGeneralFeeback}
                                         />
                                         <label className='ms-1 fs-15'>A great deal</label>

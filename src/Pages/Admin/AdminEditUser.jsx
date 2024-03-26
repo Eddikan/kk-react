@@ -170,7 +170,6 @@ const EditUser = () => {
             setUserFormLoading(false);
             toast.error('Please insert your specialization and experties!');
         }
-
     }
 
     const fetchData = async (e) => {
@@ -281,6 +280,7 @@ const EditUser = () => {
                                                             </Form.Group>
                                                         </Col>
                                                     </Row>
+
                                                     <Row>
                                                         <Col lg="6">
                                                             <Form.Group className='mb-3'>
@@ -315,8 +315,8 @@ const EditUser = () => {
                                                                 </Form.Group>
                                                             </Row>
                                                         </Col>
-
                                                     </Row>
+
                                                     <Row>
                                                         <Col lg="12">
                                                             <Form.Group className='mb-4'>
@@ -331,7 +331,7 @@ const EditUser = () => {
                                                                 <Form.Label>Long Bio <span className='text-gray'>(profile overview)</span></Form.Label>
                                                                 <FormControl as="textarea"
                                                                     name="long_bio"
-                                                                    rows={5} // You can adjust the number of rows as needed
+                                                                    rows={5}
                                                                     value={userFormData.long_bio}
                                                                     placeholder=''
                                                                     onChange={handleChange} />
@@ -349,6 +349,7 @@ const EditUser = () => {
                                                 :
                                                 null
                                             }
+
                                             {addressShow ?
                                                 <div className='edit-address mt-3'>
                                                     <Col lg="12">
@@ -368,22 +369,24 @@ const EditUser = () => {
                                                                 <FormControl type='text' name='city' value={userFormData.city} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                                             </Form.Group>
                                                         </Col>
+
                                                         <Col lg="6">
                                                             <Form.Group className='mb-4'>
                                                                 <Form.Label>State/Region</Form.Label>
                                                                 <FormControl type='text' name='province' value={userFormData.province} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                                             </Form.Group>
                                                         </Col>
+
                                                         <Col lg="6">
                                                             <Form.Group className='mb-4'>
                                                                 <Form.Label>Postal Code</Form.Label>
                                                                 <FormControl type='number' name='postal_code' value={userFormData.postal_code} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                                             </Form.Group>
                                                         </Col>
+
                                                         <Col lg="6">
                                                             <Form.Group className='mb-4'>
                                                                 <Form.Label>Country</Form.Label>
-                                                                {/* <FormControl type='text' name='country' value={profileFormData.country} className='mr-sm-2' onChange={handleChange} required placeholder='' /> */}
                                                                 <Form.Control as='select' name='country' value={userFormData.country} className='mr-sm-2' onChange={handleChange} required>
                                                                     <option value=''>Select Country</option>
                                                                     {Countries.map((country, index) => (
@@ -406,6 +409,7 @@ const EditUser = () => {
                                                 :
                                                 null
                                             }
+
                                             {contactShow ?
                                                 <div className="edit-contact mt-3">
                                                     <Col lg="12">
@@ -421,6 +425,7 @@ const EditUser = () => {
                                                                 <FormControl type='number' name='phone_number' value={userFormData.phone_number} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                             </Form.Group>
                                                         </Col>
+
                                                         <Col lg="6">
                                                             <Form.Group className='mb-4'>
                                                                 <Form.Label>Secondary Email</Form.Label>
@@ -447,30 +452,37 @@ const EditUser = () => {
                                                             <Form.Label>Facebook</Form.Label>
                                                             <FormControl type='text' name='facebook' value={userFormData.facebook} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                         </Form.Group>
+
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Twitter</Form.Label>
                                                             <FormControl type='text' name='twitter' value={userFormData.twitter} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                         </Form.Group>
+
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Instagram</Form.Label>
                                                             <FormControl type='text' name='instagram' value={userFormData.instagram} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                         </Form.Group>
+
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>LinkedIn</Form.Label>
                                                             <FormControl type='text' name='linkedin' value={userFormData.linkedin} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                         </Form.Group>
+
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Pinterest</Form.Label>
                                                             <FormControl type='text' name='pinterest' value={userFormData.pinterest} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                         </Form.Group>
+
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Behance</Form.Label>
                                                             <FormControl type='text' name='behance' value={userFormData.behance} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                         </Form.Group>
+
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>YouTube</Form.Label>
                                                             <FormControl type='text' name='youtube' value={userFormData.youtube} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                         </Form.Group>
+
                                                         <div className="text-right mt-4 mb-2">
                                                             {userFormLoading ?
                                                                 <Button type='button' className="btn-save">Saving...</Button>
@@ -483,6 +495,7 @@ const EditUser = () => {
                                                 :
                                                 null
                                             }
+
                                             {skillShow ?
                                                 <div className="edit-skills mt-3">
                                                     <Form.Label className='mb-1 fs-18'>

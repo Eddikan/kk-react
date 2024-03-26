@@ -16,7 +16,6 @@ import GetUserData from 'Utils/GetUserData';
 import GoBack from '../../Components/Shared/GoBack';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
-import { GoArrowUpRight } from "react-icons/go";
 import AdminPortfolio from 'Components/Shared/Admin/AdminPortfolio';
 import AdminFabrics from 'Components/Shared/Admin/AdminFabrics';
 import LoadingPage from 'Components/Shared/LoadingPage';
@@ -364,13 +363,6 @@ const ViewSellerProfile = () => {
                             <Col lg="6" className='mb-5'>
                                 <Row className="justify-content-end">
 
-                                    {/* <Col md="2" className="text-right pe-0 me-4">
-                                        <button href="/user/profile/edit" type='button' id="btn-edit-profile" className='w-100'>
-                                            <GoPencil />
-                                            <span className='ms-1'>Edit Profile</span>
-                                        </button>
-                                    </Col> */}
-
                                     <Col md="2" className="text-right">
                                         <GoBack fallBack="/" />
                                     </Col>
@@ -555,12 +547,9 @@ const ViewSellerProfile = () => {
                             :
                             null
                         }
-
                     </Container>
                 </section >
             }
-
-
         </Layout >
     );
 };

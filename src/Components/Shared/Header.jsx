@@ -5,7 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
-import { Container, Button, Dropdown, Col, Row } from 'react-bootstrap';
+import { Container, Button, Col, Row } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { IoCalendarClearOutline, IoCartOutline, IoCloseOutline } from "react-icons/io5";
@@ -22,7 +22,9 @@ import Logo from 'Assets/images/kouture-konect-logo.png';
 import 'Assets/styles/Headers/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
-
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import { PiNotepadLight, PiScissorsLight } from "react-icons/pi";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,6 +42,9 @@ const Header = () => {
   const [notifications, setNotifications] = useState([]);
   const [notificationsLoading, setNotificationsLoading] = useState(true);
   const [userOrdersLoading, setUserOrdersLoading] = useState(true);
+
+  const [surveys, setSurveys] = useState('');
+  const [userSurveyOpen, setUserSurveyOpen] = useState(false);
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole']);
   const [userType, setUserType] = useState('user');
@@ -100,6 +105,10 @@ const Header = () => {
       setUserOrdersOpen(false);
     }
 
+  };
+
+  const toggleSurveyMenu = () => {
+    setUserSurveyOpen(!userSurveyOpen);
   };
 
   const toggleUserMenu = () => {
@@ -464,9 +473,20 @@ const Header = () => {
                             </Link>
                           }
 
-                          <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower className='me-2' color='#000000' />
-                            <span className='text-black'>Logout</span>
-                          </p>
+
+                          <div>
+                            <DropdownButton className="yellow-hover" id="dropdown-survey-button" title={<span><PiNotepadLight className='note-icon ' size={17} />Surveys</span>}>
+                              <Dropdown.Item href="/customer-satisfaction-survey" className='yellow-hover'>Customer Satisfaction</Dropdown.Item>
+                              <Dropdown.Item href="/general-feedback-survey" className='yellow-hover'>General FeedBack</Dropdown.Item>
+                            </DropdownButton>
+                          </div>
+
+                          <div>
+                            <p className="mb-0 mt-2 cursor-pointer left-margin" onClick={logOut}><IoIosPower className='me-2' color='#000000' />
+                              <span className='text-black'>Logout</span>
+                            </p>
+                          </div>
+
                         </div>
                       )}
                     </div>

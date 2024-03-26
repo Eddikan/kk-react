@@ -4,13 +4,13 @@
 .col-left {
     padding-left: 41px;
 }
-.user-menu-seller.action-box {
+.user-menu-admin.action-box {
     background: #fff;
     position: absolute;
     width: 160px;
     padding: 12px;
     border-radius: 5px;
-    right: 75px;
+    right: 57px;
     top: 61px;
     box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     -webkit-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
@@ -18,7 +18,7 @@
     z-index: 10;
     text-align: left;
 }
-.user-menu-envelop.action-box-envelop {
+.admin-menu-envelop.action-box-envelop {
     background: #fff;
     position: absolute;
     width: 560px;
@@ -32,7 +32,7 @@
     z-index: 10;
     text-align: left;
 }
-.user-menu-bell.action-box-bell {
+.admin-menu-bell.action-box-bell {
     background: #fff;
     position: absolute;
     width: 560px;
