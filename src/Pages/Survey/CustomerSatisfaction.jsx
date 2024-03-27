@@ -148,13 +148,7 @@ const CustomerSatisfaction = (props) => {
                                         We would love to hear your thoughts or feedback on how we can improve your experience!
                                     </div>
                                 </Card.Body>
-                                <hr className='mb-0 mt-0' />
-                                <Card.Body>
-                                    <div className='d-flex'>
-                                        <div className='fs-15 fw-600 me-2 email-survey'>{userDetails.email}</div>
-                                    </div>
 
-                                </Card.Body>
                                 <hr className='mb-0 mt-0' />
                                 <Card.Body>
                                     <div className='indicate-question '>* Indicates required question</div>

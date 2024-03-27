@@ -118,13 +118,6 @@ const AdminViewCustomerSurvey = (props) => {
                                 <hr className='mb-0 mt-0' />
 
                                 <Card.Body>
-                                    <div className='fs-14 fw-600 me-2 email-survey'>
-                                        {surveyUser.email}
-                                    </div>
-                                </Card.Body>
-                                <hr className='mb-0 mt-0' />
-
-                                <Card.Body>
                                     <div className='indicate-question '>
                                         * Indicates required question
                                     </div>

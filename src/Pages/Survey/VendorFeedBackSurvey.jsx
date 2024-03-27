@@ -13,6 +13,10 @@ import toast from 'react-hot-toast';
 import axios from "axios";
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import GetFabricsData from 'Utils/GetFabricsData';
+import AboutImage from 'Assets/images/about.png';
+import PortfolioImage from 'Assets/images/porfolio-profile.png';
+import FabricsImage from 'Assets/images/fabrics-profile.png';
+import CalendarImage from 'Assets/images/profile-calendar.png';
 
 const initialVendorSurvey = Object.freeze({
     most_like: '',
@@ -32,6 +36,14 @@ const initialVendorSurvey = Object.freeze({
     comment: '',
 
 });
+
+const profileImages =
+    [
+        { "id": 1, "name": "About", "image": AboutImage },
+        { "id": 2, "name": "Portfolio", "image": PortfolioImage },
+        { "id": 3, "name": "Fabrics", "image": FabricsImage },
+        { "id": 4, "name": "Calendar", "image": CalendarImage }
+    ]
 
 const VendorFeedBackSurvey = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
@@ -105,65 +117,6 @@ const VendorFeedBackSurvey = (props) => {
         }
     }
 
-
-
-    const fetchData = async (e) => {
-        setPortfolioLoading(true);
-        try {
-            const portfolioData = await GetUserPortfolioData(e);
-            if (portfolioData) {
-                setPortfolio(portfolioData);
-                setPortfolioLoading(false);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setPortfolioLoading(false);
-            }
-        } catch (error) {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setPortfolioLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchData(user_id);
-    }, [reloadCount]);
-
-    const [portfolio, setPortfolio] = useState([]);
-    const [portfolioLoading, setPortfolioLoading] = useState(true);
-
-
-    const useQuery = () => {
-        return new URLSearchParams(useLocation().search);
-    }
-    let query = useQuery();
-    const user_id = query.get('user_id');
-
-
-
-
-    const fetchDatas = async (e) => {
-        try {
-            const fabricsData = await GetFabricsData(e);
-            if (fabricsData) {
-                setFabrics(fabricsData);
-                setFabricsLoading(false);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setFabricsLoading(false);
-            }
-        } catch (error) {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setFabricsLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchDatas(currentUser);
-    }, [reloadCount]);
-
-    const [fabrics, setFabrics] = useState([]);
-    const [fabricsLoading, setFabricsLoading] = useState(true);
-
     return (
         <Layout>
             <section className='bg-light'>
@@ -182,64 +135,43 @@ const VendorFeedBackSurvey = (props) => {
                                     <div className='fs-15'>We would love to hear your thoughts or feedback on how we can improve your experience!</div>
                                 </Card.Body>
                                 <hr className='mb-0 mt-0' />
-                                <Card.Body>
-                                    <div className='d-flex'>
-                                        <div className='fs-15 fw-600 me-2 email-survey'>{userDetails.email}</div>
-                                    </div>
-                                </Card.Body>
-                                <hr className='mb-0 mt-0' />
+
                                 <Card.Body>
                                     <div className='indicate-question '>* Indicates required question</div>
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
+                                <Card.Body className='p-4 pb-0'>
                                     <div>Click on the image to indicate what section of  the page you like the most? (Feature picture of KK vendor profile with clickable image/text)
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    {portfolio && portfolio.length > 0 ?
-                                        <>
-                                            <div className="portfolio-row mt-3 d-flex">
-                                                {portfolio.map((object, index) => {
-                                                    if (object.image_urls?.[0]?.image_url) {
-                                                        var portfolioImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url;
-                                                    } else {
-                                                        // var portfolioImage = PlaceholderImage;
-                                                    }
 
-                                                    return (
-                                                        <div>
-                                                            <label class="radio-img">
-                                                                <input
-                                                                    type="radio"
-                                                                    name="layout"
-                                                                />
-
-                                                                <div className='portfolio-link cursor-pointer image'>
-                                                                    <div
-                                                                        className="portfolio-grid-survey w-100"
-                                                                        style={{
-                                                                            backgroundImage: "url(" + portfolioImage + ")",
-                                                                            minHeight: '130px'
-                                                                        }}
-                                                                    >
-                                                                    </div>
+                                    <Row className="designs-row mt-4">
+                                        {profileImages.map((image, index) => {
+                                            return (
+                                                <>
+                                                    <Col className="designs-grid text-center" lg={6}>
+                                                        <label class="radio-img">
+                                                            <input
+                                                                type="radio"
+                                                                name="most_like"
+                                                                value={image.id}
+                                                                onChange={handleChangeVendor}
+                                                            />
+                                                            <div className="portfolio-link image">
+                                                                <div className="designs-grid-div-survey w-100 cursor-pointer">
+                                                                    <img src={image.image} className='home-page-images' />
                                                                 </div>
-                                                                <div className='mt-2 '>{object.name}</div>
-                                                            </label>
-                                                        </div>
-                                                    )
-                                                })}
-                                            </div>
-                                        </>
-                                        :
-                                        <>
-                                            <div className="text-center">
-                                                <p className="text-center mt-3">No records found.</p>
-                                            </div>
-                                        </>
-                                    }
+                                                            </div>
+                                                            <div className='mt-2 fs-18 text-center mb-4 cursor-pointer'>{image.name}</div>
+                                                        </label>
+                                                    </Col >
+
+                                                </>
+                                            )
+                                        })}
+                                    </Row>
                                     {/* <div className='mb-3 mt-4 d-flex'>
                                         <input
                                             type="text"
@@ -255,57 +187,38 @@ const VendorFeedBackSurvey = (props) => {
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
+                                <Card.Body className='p-4 pb-0'>
                                     <div>Click on the image to indicate what section of  the page you like the least? (Feature picture of KK vendor profile with clickable image/text)
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-                                    {fabrics && fabrics.length > 0 ?
-                                        <>
-                                            <Row className="designs-row">
-                                                {fabrics.slice(0, 8).map((fabric, index) => {
-                                                    if (fabric.image_urls?.[0]?.image_url) {
-                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + fabric.image_urls[0].image_url;
-                                                    } else {
-                                                        // var fabricImage = PlaceholderImage;
-                                                    }
-                                                    var wishlist_user_ids = fabric.wishlist_user_ids;
-                                                    const userWishlist = wishlist_user_ids.includes(currentUser);
-
-                                                    return (
-                                                        <>
-
-                                                            <Col className="designs-grid mb-3" xs="12" md="3">
-                                                                {currentUser ?
-                                                                    <>
-                                                                        <div className="portfolio-link">
-                                                                            <div className="designs-grid-div w-100 cursor-pointer"
-                                                                                style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}>
-                                                                            </div>
-                                                                        </div>
-                                                                    </>
-                                                                    :
-                                                                    <>
-                                                                        <div className="designs-grid-div  cursor-pointer w-100" style={{ backgroundImage: "url(" + fabricImage + ")" }} >
-
-                                                                        </div>
-                                                                    </>
-                                                                }
-                                                                <div className="design-details">
-                                                                    <div className='d-flex align-items-center justify-content-between'>
-                                                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis mt-2 pb-1">{fabric.name ?? '-'}</h4>
-                                                                    </div>
+                                    <Row className="designs-row mt-4">
+                                        {profileImages.map((image, index) => {
+                                            return (
+                                                <>
+                                                    <Col className="designs-grid text-center" lg={6}>
+                                                        <label class="radio-img">
+                                                            <input
+                                                                type="radio"
+                                                                name="least_like"
+                                                                value={image.id}
+                                                                onChange={handleChangeVendor}
+                                                            />
+                                                            <div className="portfolio-link image">
+                                                                <div className="designs-grid-div-survey w-100 cursor-pointer">
+                                                                    <img src={image.image} className='home-page-images' />
                                                                 </div>
-                                                            </Col >
+                                                            </div>
+                                                            <div className='mt-2 fs-18 text-center mb-4 cursor-pointer'>{image.name}</div>
+                                                        </label>
+                                                    </Col >
 
-                                                        </>
-                                                    )
-                                                })}
-                                            </Row>
-                                        </>
-                                        :
-                                        <p className="text-center mb-3 mt-3">No records found.</p>
-                                    }
+                                                </>
+                                            )
+                                        })}
+                                    </Row>
+
+
 
                                     {/* <div className='mb-3 mt-4 d-flex'>
                                         <input

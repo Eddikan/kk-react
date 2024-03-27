@@ -471,11 +471,11 @@ const Header = () => {
                             <div className='mb-2'>
                               <DropdownButton id="dropdown-survey-button" title={<span><PiNotepadLight className='note-icon ' size={17} />Surveys</span>}>
                                 <Dropdown.Item href="/customer-satisfaction-survey" className='yellow-hover'>Customer Satisfaction</Dropdown.Item>
-                                <Dropdown.Item href="/general-feedback-survey" className='yellow-hover'>General FeedBack</Dropdown.Item>
+                                <Dropdown.Item href="/general-feedback-survey" className='yellow-hover'>General Feedback</Dropdown.Item>
 
                                 {user.is_designer == 1 &&
                                   <>
-                                    <Dropdown.Item href="/vendor-feedback-survey" className='yellow-hover'>Vendor FeedBack</Dropdown.Item>
+                                    <Dropdown.Item href="/vendor-feedback-survey" className='yellow-hover'>Vendor Feedback</Dropdown.Item>
                                   </>
                                 }
                               </DropdownButton>
@@ -502,7 +502,8 @@ const Header = () => {
             </Nav>
           </Navbar.Collapse>
         </Container>
-      </Navbar >
+      </Navbar>
+
       <Modal
         show={underConstructionShow}
         className='modal-preview'

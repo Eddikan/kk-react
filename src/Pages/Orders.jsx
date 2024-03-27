@@ -229,7 +229,7 @@ const Orders = (props) => {
                                     <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${processShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("processing"); }}>Processing</p>
                                     <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${shippedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("shipped"); }}>Shipped</p>
                                     <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${deliveredShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("delivered"); }}>Delivered</p>
-                                    <Link to={'/vendor-feedback-survey'} className='text-decoration-none'>  <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${reviewShow ? 'fw-600 text-gold' : 'text-black'}`}>Review and Feedback</p></Link>
+                                    <Link to={'/post-purchase-survey'} className='text-decoration-none'>  <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${reviewShow ? 'fw-600 text-gold' : 'text-black'}`}>Review and Feedback</p></Link>
                                     <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${completedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("completed"); }}>Completed</p>
                                 </Card.Body>
                             </Card>

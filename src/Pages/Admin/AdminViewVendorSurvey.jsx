@@ -8,6 +8,11 @@ import 'Assets/styles/Survey/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
 
+import AboutImage from 'Assets/images/about.png';
+import PortfolioImage from 'Assets/images/porfolio-profile.png';
+import FabricsImage from 'Assets/images/fabrics-profile.png';
+import CalendarImage from 'Assets/images/profile-calendar.png';
+
 const initialVendorSurvey = Object.freeze({
     most_like: '',
     least_like: '',
@@ -24,6 +29,14 @@ const initialVendorSurvey = Object.freeze({
     recommendation_score: '',
     comment: '',
 });
+
+const profileImages =
+    [
+        { "id": 1, "name": "About", "image": AboutImage },
+        { "id": 2, "name": "Portfolio", "image": PortfolioImage },
+        { "id": 3, "name": "Fabrics", "image": FabricsImage },
+        { "id": 4, "name": "Calendar", "image": CalendarImage }
+    ]
 
 const AdminViewVendorSurvey = (props) => {
     const { surveyId } = useParams();
@@ -105,13 +118,6 @@ const AdminViewVendorSurvey = (props) => {
                                 <hr className='mb-0 mt-0' />
 
                                 <Card.Body>
-                                    <div className='fs-14 fw-600 me-2 email-survey'>
-                                        {surveyUser.email}
-                                    </div>
-                                </Card.Body>
-                                <hr className='mb-0 mt-0' />
-
-                                <Card.Body>
                                     <div className='indicate-question'>
                                         * Indicates require question
                                     </div>
@@ -120,10 +126,39 @@ const AdminViewVendorSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Click on the image to indicate what section of the page you like the most? (Feature picture of KK vendor profile with clickable image/text)
+                                    <div>Click on the image to indicate what section of the page you like the most?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mt-4 d-flex'>
+
+                                    <Row className="designs-row mt-4">
+                                        {profileImages.map((image, index) => {
+                                            return (
+                                                <>
+                                                    {image.id == vendorFormData.most_like &&
+                                                        <>
+                                                            <Col className="designs-grid" lg={6}>
+                                                                <label class="radio-img">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="most_like"
+                                                                    />
+                                                                    <div className="portfolio-link border-survey">
+                                                                        <div className="designs-grid-div-survey w-100">
+                                                                            <img src={image.image} className='home-page-images' />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className='mt-2 fs-18 text-center'>{image.name}</div>
+                                                                </label>
+                                                            </Col >
+                                                        </>
+                                                    }
+
+
+                                                </>
+                                            )
+                                        })}
+                                    </Row>
+                                    {/* <div className='mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -133,16 +168,49 @@ const AdminViewVendorSurvey = (props) => {
                                             placeholder='Your answer'
                                             disabled
                                         />
-                                    </div>
+                                    </div> */}
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
-                                    <div>Click on the image to indicate what section of the page you like the least? (Feature picture of KK homepage with clickable image/text)
+                                    <div>Click on the image to indicate what section of the page you like the least?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <div className='mt-4 d-flex'>
+
+                                    <Row className="designs-row mt-4">
+
+
+                                        {profileImages.map((image, index) => {
+
+                                            return (
+                                                <>
+                                                    {image.id == vendorFormData.least_like &&
+                                                        <>
+                                                            <Col className="designs-grid" lg={6}>
+                                                                <label class="radio-img">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="least_like"
+                                                                    />
+                                                                    <div className="portfolio-link border-survey">
+                                                                        <div className="designs-grid-div-survey w-100">
+                                                                            <img src={image.image} className='home-page-images' />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className='mt-2 fs-18 text-center'>{image.name}</div>
+                                                                </label>
+                                                            </Col >
+                                                        </>
+                                                    }
+
+
+                                                </>
+                                            )
+                                        })}
+                                    </Row>
+
+                                    {/* <div className='mt-4 d-flex'>
                                         <input
                                             type="text"
                                             className='me-2 question-concerns form-control'
@@ -152,7 +220,7 @@ const AdminViewVendorSurvey = (props) => {
                                             placeholder='Your answer'
                                             disabled
                                         />
-                                    </div>
+                                    </div> */}
                                 </Card.Body>
                             </Card>
 

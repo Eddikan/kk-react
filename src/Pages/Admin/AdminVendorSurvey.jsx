@@ -14,6 +14,13 @@ import GoBack from 'Components/Shared/GoBack';
 import toast from 'react-hot-toast';
 import axios from "axios";
 
+import AboutImage from 'Assets/images/about.png';
+import PortfolioImage from 'Assets/images/porfolio-profile.png';
+import FabricsImage from 'Assets/images/fabrics-profile.png';
+import CalendarImage from 'Assets/images/calendar-profile.png';
+
+
+
 
 const AdminVendorSurvey = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
@@ -96,7 +103,7 @@ const AdminVendorSurvey = (props) => {
                                         <Col lg={12}>
                                             <Row className="pb-4">
                                                 <Col md={6} className='d-flex justify-content-left align-items-center'>
-                                                    <h3 className="fs-30 fw-600 text-black mb-0">Vendor FeedBack Survey</h3>
+                                                    <h3 className="fs-30 fw-600 text-black mb-0">Vendor Feedback Survey</h3>
                                                 </Col>
                                                 <Col md={6} className="text-right">
                                                     <GoBack fallBack="/#" />

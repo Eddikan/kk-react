@@ -7,7 +7,10 @@ import GoBack from 'Components/Shared/GoBack';
 import 'Assets/styles/Survey/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
-import GetFabricsData from 'Utils/GetFabricsData';
+import Section1 from 'Assets/images/image-section-1.png';
+import Section2 from 'Assets/images/image-section-22.png';
+import Section3 from 'Assets/images/image-section-3.png';
+import Section4 from 'Assets/images/image-section-4.png';
 
 const initialGeneralSurvey = Object.freeze({
     most_like: '',
@@ -22,6 +25,14 @@ const initialGeneralSurvey = Object.freeze({
     recommendation_score: '',
     comment: '',
 });
+
+const homePageImages =
+    [
+        { "id": 1, "name": "Categories", "image": Section1 },
+        { "id": 2, "name": "Fabrics", "image": Section2 },
+        { "id": 3, "name": "Eco-friendly", "image": Section3 },
+        { "id": 4, "name": "Designs", "image": Section4 }
+    ]
 
 const AdminViewGeneralSurvey = (props) => {
     const { surveyId } = useParams();
@@ -76,30 +87,6 @@ const AdminViewGeneralSurvey = (props) => {
     },
         [reloadCount]);
 
-
-    const fetchDatas = async (e) => {
-        try {
-            const fabricsData = await GetFabricsData(e);
-            if (fabricsData) {
-                setFabrics(fabricsData);
-                setFabricsLoading(false);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setFabricsLoading(false);
-            }
-        } catch (error) {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setFabricsLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchDatas(currentUser);
-    }, [reloadCount]);
-
-    const [fabrics, setFabrics] = useState([]);
-    const [fabricsLoading, setFabricsLoading] = useState(true);
-
     return (
         <LayoutAdmin>
             <section className='bg-light'>
@@ -121,11 +108,6 @@ const AdminViewGeneralSurvey = (props) => {
                                 <hr className='mb-0 mt-0' />
 
                                 <Card.Body>
-                                    <div className='fs-14 fw-600 me-2 email-survey'>{surveyUser.email}</div>
-                                </Card.Body>
-                                <hr className='mb-0 mt-0' />
-
-                                <Card.Body>
                                     <div className='fs-14 indicate-question '>* Indicates required question</div>
                                 </Card.Body>
                             </Card>
@@ -133,58 +115,72 @@ const AdminViewGeneralSurvey = (props) => {
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
                                     <div>
-                                        Click on the image to indicate what section of  the page you like the most? (Feature picture of KK homepage with clickable image/text)
+                                        Click on the image to indicate what section of  the page you like the most?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-                                    <img src={generalFeedBackFormData.most_like} className='mt-3 image-survey' />
 
-                                    {/* <div>{fabrics.id} {fabrics.name}</div> */}
-
-
-                                    {/* <div className="portfolio-link image">
-                                        <div className="designs-grid-div-survey w-100 cursor-pointer"
-                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '140px' }}>
-                                        </div>
-                                    </div>
-                                    <div className='d-flex align-items-center justify-content-between'>
-                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis mt-2 pb-1">{fabric.name ?? '-'}</h4>
-                                    </div> */}
-
-
-
-                                    {/* <div className='mt-4 d-flex'>
-                                        <input
-                                            type="text"
-                                            className='me-2 question-concerns form-control'
-                                            name="most_like"
-                                            value={generalFeedBackFormData.most_like}
-                                            onChange={handleChangeGeneralFeeback}
-                                            placeholder='Your answer'
-                                            disabled
-                                        />
-                                    </div> */}
+                                    <Row className="designs-row mt-3">
+                                        {homePageImages.map((image, index) => {
+                                            return (
+                                                <>
+                                                    {image.id == generalFeedBackFormData.most_like &&
+                                                        <>
+                                                            <Col className="designs-grid" lg={6}>
+                                                                <label class="radio-img">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="most_like"
+                                                                    />
+                                                                    <div className="portfolio-link border-survey">
+                                                                        <div className="designs-grid-div-survey w-100">
+                                                                            <img src={image.image} className='home-page-images' />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className='mt-2 fs-18 text-center'>{image.name}</div>
+                                                                </label>
+                                                            </Col >
+                                                        </>
+                                                    }
+                                                </>
+                                            )
+                                        })}
+                                    </Row>
                                 </Card.Body>
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4'>
                                     <div>
-                                        Click on the image to indicate what section of  the page you like the least? (Feature picture of KK homepage with clickable image/text)
+                                        Click on the image to indicate what section of  the page you like the least?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
-                                    <img src={generalFeedBackFormData.least_like} className='mt-3 image-survey' />
-                                    {/* <div className='mt-4 d-flex'>
-                                        <input
-                                            type="text"
-                                            className='me-2 question-concerns form-control'
-                                            name="least_like"
-                                            value={generalFeedBackFormData.least_like}
-                                            onChange={handleChangeGeneralFeeback}
-                                            placeholder='Your answer'
-                                            disabled
-                                        />
-                                    </div> */}
+                                    <Row className="designs-row mt-3">
+                                        {homePageImages.map((image, index) => {
+                                            return (
+                                                <>
+                                                    {image.id == generalFeedBackFormData.least_like &&
+                                                        <>
+                                                            <Col className="designs-grid" lg={6}>
+                                                                <label class="radio-img">
+                                                                    <input
+                                                                        type="radio"
+                                                                        name="least_like"
+                                                                    />
+                                                                    <div className="portfolio-link border-survey">
+                                                                        <div className="designs-grid-div-survey w-100">
+                                                                            <img src={image.image} className='home-page-images' />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className='mt-2 fs-18 text-center'>{image.name}</div>
+                                                                </label>
+                                                            </Col >
+                                                        </>
+                                                    }
+                                                </>
+                                            )
+                                        })}
+                                    </Row>
                                 </Card.Body>
                             </Card>
 
