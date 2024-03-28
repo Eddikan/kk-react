@@ -120,7 +120,7 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/portfolio')}><PiPantsLight size="22" className="me-2 mb-1" />Portfolio</div>
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/products')}><PiScissorsLight size="22" className="me-2 mb-1" />Fabrics</div>
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/guide')}><RxRulerHorizontal size="22" className="me-2 mb-1" />Measurement Guide</div>
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/live/stream')}><RiLiveLine size="22" className="me-2 mb-1" />Live Stream</div>
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/live/stream')}><RiLiveLine size="22" className="me-2 mb-1" />Live Streams</div>
                     </AccordionItem>
                 </UncontrolledAccordion>
             </div >

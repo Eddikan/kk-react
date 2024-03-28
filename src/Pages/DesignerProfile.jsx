@@ -27,6 +27,7 @@ import { VscSend } from "react-icons/vsc";
 import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
 import MeetingChat from 'Components/Chat/MeetingChat';
+import { BsBroadcast } from 'react-icons/bs';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -338,6 +339,17 @@ const DesignerProfile = () => {
                                                 </p>
                                                 :
                                                 <p className='fs-16 color-light-blue'>-</p>
+                                            }
+                                        </div>
+                                        <div>
+                                            {user.livestream ?
+                                                <>
+                                                    <a href={`/designer/live/stream/${user.livestream?.id}`} target="_blank">
+                                                        <button className="btn btn-danger designer-live default fw-600"> <BsBroadcast size="22px" /> Live</button>
+                                                    </a>
+                                                </>
+                                                :
+                                                null
                                             }
                                         </div>
                                     </div>

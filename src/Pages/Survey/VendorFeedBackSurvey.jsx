@@ -143,7 +143,7 @@ const VendorFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4 pb-0'>
-                                    <div>Click on the image to indicate what section of  the page you like the most? (Feature picture of KK vendor profile with clickable image/text)
+                                    <div>Click on the image to indicate what section of  the page you like the most?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 
@@ -188,7 +188,7 @@ const VendorFeedBackSurvey = (props) => {
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4 pb-0'>
-                                    <div>Click on the image to indicate what section of  the page you like the least? (Feature picture of KK vendor profile with clickable image/text)
+                                    <div>Click on the image to indicate what section of  the page you like the least?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
 

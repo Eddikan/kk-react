@@ -8,7 +8,7 @@ import User from 'Assets/images/user.png';
 import { useCookies } from 'react-cookie';
 import { AiFillMessage } from "react-icons/ai";
 import { IoEyeOutline } from "react-icons/io5";
-import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { MdOutlineKeyboardArrowDown, MdOutlineFeedback } from "react-icons/md";
 import { GoAlertFill } from 'react-icons/go';
 import { IoCloseOutline } from "react-icons/io5";
 import { IoMdStarOutline, IoIosAttach } from "react-icons/io";
@@ -229,7 +229,7 @@ const Orders = (props) => {
                                     <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${processShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("processing"); }}>Processing</p>
                                     <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${shippedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("shipped"); }}>Shipped</p>
                                     <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${deliveredShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("delivered"); }}>Delivered</p>
-                                    <Link to={'/post-purchase-survey'} className='text-decoration-none'>  <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${reviewShow ? 'fw-600 text-gold' : 'text-black'}`}>Review and Feedback</p></Link>
+                                    {/* <Link to={'/post-purchase-survey'} className='text-decoration-none'>  <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${reviewShow ? 'fw-600 text-gold' : 'text-black'}`}>Review and Feedback</p></Link> */}
                                     <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${completedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("completed"); }}>Completed</p>
                                 </Card.Body>
                             </Card>
@@ -244,7 +244,7 @@ const Orders = (props) => {
                                                     <span className='fw-500 text-black'>Date</span>
                                                 </Col>
 
-                                                <Col lg={3} className="text-right">
+                                                <Col lg={2} className="text-right">
                                                     <span className='fw-500 text-black'># of Items</span>
                                                 </Col>
 
@@ -252,7 +252,7 @@ const Orders = (props) => {
                                                     <span className='fw-500 text-black'>Total Amount</span>
                                                 </Col>
 
-                                                <Col lg={3} className="text-right">
+                                                <Col lg={4} className="text-right">
                                                     <span className='fw-500 text-black'></span>
                                                 </Col>
                                             </Row>
@@ -318,7 +318,7 @@ const Orders = (props) => {
                                                                                     <span className='text-black'>{created_at}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={3} className="text-right">
+                                                                                <Col lg={2} className="text-right">
                                                                                     <span className='text-black'>{number_of_items}</span>
                                                                                 </Col>
 
@@ -326,10 +326,17 @@ const Orders = (props) => {
                                                                                     <span className='text-black'>${order.total_amount}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={3} className='text-right'>
-                                                                                    <a href={`/order/${order.id}/details`} className="cursor-pointer check-datails-decoration" >
+                                                                                <Col lg={4} className='text-right'>
+                                                                                    <a href={`/order/${order.id}/details`} className="cursor-pointer check-datails-decoration me-2" >
                                                                                         <span className='text-gold'><IoEyeOutline className='me-2' size={20} />View Details</span>
                                                                                     </a>
+                                                                                    {order.status == "Delivered" ?
+                                                                                        <a href={'/post-purchase-survey'} className="cursor-pointer check-datails-decoration" >
+                                                                                            <span className='text-gold'><MdOutlineFeedback className='me-2' size={20} />Review</span>
+                                                                                        </a>
+                                                                                        :
+                                                                                        null
+                                                                                    }
                                                                                     {/* {reorderLoading ?
                                                                                         <button type="button" className='btn btn-primary'>Loading...</button>
                                                                                         :

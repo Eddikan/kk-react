@@ -26,11 +26,10 @@ const initialStreamFormData = Object.freeze({
 
 const LiveStreams = (props) => {
     const apiKey = process.env.REACT_APP_STREAM_API_KEY;
-    const secrectKey = process.env.REACT_APP_STREAM_API_SECRET_KEY;
-    const token = process.env.REACT_APP_STREAM_API_TOKEN;
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const [livestreamId, setLiveStreamId] = useState('');
+    const [livestreamStatus, setLivestreamStatus] = useState('');
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
@@ -58,9 +57,10 @@ const LiveStreams = (props) => {
         setModalHeading(message);
     }
 
-    function toggleChatbox(id, first_name, last_name, image, message) {
+    function toggleChatbox(id, first_name, last_name, image, message, status) {
         setChatBox(true);
         setLiveStreamId(id.toString());
+        setLivestreamStatus(status);
         setDesigner({
             id: id ?? 0,
             first_name: first_name ?? '-',
@@ -129,11 +129,12 @@ const LiveStreams = (props) => {
                 setStreamFormData(initialStreamFormData);
                 setCreateStreamShow(false);
                 toast.success('Stream added successfully!');
-
-                const livestream_id = response.data.id;
+                const data = response.data.data;
+                const livestream_id = data.id;
+                const token = data.token;
 
                 const user = {
-                    id: '1_1',
+                    id: userDetails.first_name+'_'+livestream_id,
                     type: 'regular',
                 };
 
@@ -148,10 +149,15 @@ const LiveStreams = (props) => {
                         data: {
                             members: [
                                 // please note the `role` property
-                                { user_id: '1_1', role: 'host' },
+                                { user_id: userDetails.first_name+'_'+livestream_id, role: 'host' },
+                                { user_id: 'guest', role: 'call_member' },
                             ],
                         },
                     });
+
+                    setTimeout(function(){
+                        window.location.href="/designer/live/stream/"+livestream_id
+                    }, 1500)
                 }
 
             } else {
@@ -208,14 +214,14 @@ const LiveStreams = (props) => {
 
                                         <Row className="mb-4">
                                             <Col lg={8} className='d-flex justify-content-left align-items-center'>
-                                                <h3 className="fs-30 fw-600 text-black mb-0">Live Stream</h3>
+                                                <h3 className="fs-30 fw-600 text-black mb-0">Live Streams</h3>
                                             </Col>
 
                                             <Col lg={4} className='text-right'>
                                                 <div>
                                                     <button className='btn btn-primary' onClick={toggleCreateStream}>
                                                         <PiPlus className='me-2 mb-1' />
-                                                        <span>Create Live Stream</span>
+                                                        <span>New Live Stream</span>
                                                     </button>
                                                 </div>
                                             </Col>
@@ -226,21 +232,21 @@ const LiveStreams = (props) => {
                                         <Card>
                                             <Card.Body className='bg-light'>
                                                 <Row>
-                                                    <Col lg={3}>
+                                                    <Col lg={6}>
                                                         <span className='fw-500'>Title</span>
                                                     </Col>
 
-                                                    <Col lg={3}>
+                                                    <Col lg={5}>
                                                         <span className='fw-500'>Date</span>
                                                     </Col>
 
-                                                    <Col lg={3}>
+                                                    {/* <Col lg={3}>
                                                         <span className='fw-500'>URL</span>
                                                     </Col>
 
                                                     <Col lg={2}>
                                                         <span className='fw-500'>Status</span>
-                                                    </Col>
+                                                    </Col> */}
 
                                                     <Col lg={1} className='text-right'>
                                                         <span className='fw-500'>Action</span>
@@ -269,27 +275,27 @@ const LiveStreams = (props) => {
                                                                     <Card className='mt-3'>
                                                                         <Card.Body>
                                                                             <Row className="align-items-center">
-                                                                                <Col lg={3}>
+                                                                                <Col lg={6}>
                                                                                     <span className='text-black'>{stream.title}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={3}>
+                                                                                <Col lg={5}>
                                                                                     <span className='text-black'>{returnFormattedDate(stream.date ?? '-')}</span>
                                                                                 </Col>
 
-                                                                                <Col lg={3}>
+                                                                                {/* <Col lg={3}>
                                                                                     <span className='text-black'>{stream.url}</span>
                                                                                 </Col>
 
                                                                                 <Col lg={2}>
                                                                                     <span className='text-black'>{stream.status}</span>
-                                                                                </Col>
+                                                                                </Col> */}
 
                                                                                 <Col lg={1} className='d-flex justify-content-end'>
                                                                                     <Link to={`/designer/live/stream/${stream.id}`} className="text-decoration-none">
                                                                                         <div className="cursor-pointer live-tooltip">
                                                                                             <span className="icon-tooltiptext fs-14">
-                                                                                                Live Stream
+                                                                                                Live Streams
                                                                                             </span>
                                                                                             <IoMdVideocam className='video-cam me-3' size={20} color="#000000" />
                                                                                         </div>
@@ -302,7 +308,8 @@ const LiveStreams = (props) => {
                                                                                                 stream.user?.first_name,
                                                                                                 stream.user?.last_name,
                                                                                                 stream.user?.image,
-                                                                                                "Under Construction");
+                                                                                                "Under Construction", 
+                                                                                                stream.status);
                                                                                         }}
                                                                                     >
                                                                                         <span className="icon-tooltiptext fs-14">Message</span>
@@ -373,6 +380,8 @@ const LiveStreams = (props) => {
                                             currentUser={currentUser}
                                             livestreamId={livestreamId}
                                             user={userDetails}
+                                            loading={streamLoading}
+                                            status={livestreamStatus}
                                         />
                                     </Card.Body>
                                 </Card>
@@ -411,7 +420,6 @@ const LiveStreams = (props) => {
                     </Card>
                 </Modal.Body>
             </Modal>
-
 
             <Modal
                 show={createStreamShow}

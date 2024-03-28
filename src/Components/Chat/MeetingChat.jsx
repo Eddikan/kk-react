@@ -11,7 +11,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
     const [chatMessages, setChatMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [formStatus, setFormStatus] = useState("standby");
-    const [chatLoading, setChatLoading] = useState(loading ?? true);
+    const [chatLoading, setChatLoading] = useState(loading != "" ? loading : true);
     const userImage = user?.image;
     const chatContainerRef = useRef(null);
     const scrollableDivRef = useRef(null);
@@ -19,7 +19,7 @@ const MeetingChat = ({ appointmentId, user, currentUser, loading }) => {
     useEffect(() => {
         // Fetch chat messages of the given meeting from Firestore
         if (appointmentId) {
-            setChatLoading(loading ?? true);
+            setChatLoading(loading != "" ? loading : true);
             const unsubscribe = firestore
                 .collection("meetings")
                 .doc(appointmentId)

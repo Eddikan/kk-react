@@ -127,18 +127,25 @@ const LiveStreams = (props) => {
                                     <Card.Body className='live-stream-height'>
                                         <Row>
                                             <Col lg="12">
-                                                {livestream ? 
+                                                {livestream ?
                                                     <>
-                                                        {livestream.user?.id == currentUser ?
+                                                        {livestream.status != "Ended" ?
                                                             <>
-                                                                <HostLivestream />
+                                                                {livestream.user?.id == currentUser ?
+                                                                    <>
+                                                                        <HostLivestream livestream={livestream} userDetails={userDetails} />
+                                                                    </>
+                                                                    :
+                                                                    <>
+                                                                        <GuestLivestream livestream={livestream} userDetails={userDetails} />
+                                                                    </>
+                                                                }
                                                             </>
                                                             :
-                                                            <>
-                                                                <GuestLivestream />
-                                                            </>
+                                                            <p className="text-center">The live stream has ended!</p>
                                                         }
                                                     </>
+                                                    
                                                     :
                                                     null
                                                 }
@@ -170,6 +177,8 @@ const LiveStreams = (props) => {
                                                             currentUser={currentUser}
                                                             livestreamId={livestreamId}
                                                             user={userDetails}
+                                                            loading={livestreamLoading}
+                                                            status={livestream?.status}
                                                         />
                                                     </Col>
                                                 </Row>

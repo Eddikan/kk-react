@@ -1,11 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { StreamCall, useCallStateHooks, ParticipantView, StreamVideo, StreamVideoClient, useCall, User } from '@stream-io/video-react-sdk';
 
 // add styles for the video UI
 import '@stream-io/video-react-sdk/dist/css/styles.css';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
-const MyLivestreamUI = () => {
+const MyLivestreamUI = ({ livestreamId }) => {
+    const [liveStatus, setLiveStatus] = useState('standby');
+
     const call = useCall();
     const {
         useIsCallLive,
@@ -16,6 +20,47 @@ const MyLivestreamUI = () => {
     const totalParticipants = useParticipantCount();
     const localParticipant = useLocalParticipant();
     const isCallLive = useIsCallLive();
+
+    const putStream = async (data) => {
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'livestream/'+livestreamId, data);
+    };
+
+    const stopLive = (e) => {
+        setLiveStatus('loading');
+        putStream({ status:'Ended' }).then(response => {
+            const success = response.data.status;
+            if (success === "Success") {
+                call?.stopLive();
+                window.location.href="/user/center/live/stream";
+                setLiveStatus('standby');
+            } else {
+                setLiveStatus('standby');
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setLiveStatus('standby');
+        });
+    }
+
+    const startLive = (e) => {
+        setLiveStatus('loading');
+        putStream({ status:'Live' }).then(response => {
+            const success = response.data.status;
+            if (success === "Success") {
+                call?.goLive();
+                setLiveStatus('standby');
+                toast.success('You are now live!');
+            } else {
+                setLiveStatus('standby');
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setLiveStatus('standby');
+        });
+    }
+
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
             <div style={{ flex: 1 }}>
@@ -30,38 +75,54 @@ const MyLivestreamUI = () => {
             </div>
             <div style={{ alignSelf: 'center' }}>
                 {isCallLive ? (
-                    <button className='btn btn-primary mt-3' onClick={() => call?.stopLive()}>Stop Livestream</button>
+                    <>
+                        {liveStatus != "standby" ?
+                            <button className='btn btn-primary mt-3'>Stopping Live Stream...</button>
+                            :
+                            <button className='btn btn-primary mt-3' onClick={() => stopLive() }>Stop Live!</button>
+                        }
+                    </>
                 ) : (
-                    <button className='btn btn-primary mt-3' onClick={() => call?.goLive()}>Start Livestream</button>
+                    <>
+                        {liveStatus != "standby" ?
+                            <button className='btn btn-danger mt-3'>Starting Live Stream...</button>
+                            :
+                            <button className='btn btn-danger mt-3' onClick={() => startLive() }>Start Live!</button>
+                        }
+                    </>
                 )}
             </div>
         </div>
     );
 };
 
-const apiKey = 'at2bxsgqeh8d';
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMV8xIn0.QkmHZgRU1NPoUjj5j2pmcs0K86CnylCz9OinVWtAiWU';
-const callId = '1_1'; // the call id can be found in the "Credentials" section
+const HostView = ({livestream, userDetails}) => {
 
-// set up the user object
-const user = {
-    id: '1_1',
-    name: 'Oliver',
-    image: 'https://getstream.io/random_svg/?id=oliver&name=Oliver',
-};
+    const apiKey = process.env.REACT_APP_STREAM_API_KEY;
+    const token = livestream.token;
+    const callId = livestream.id; // the call id can be found in the "Credentials" section
 
-const client = new StreamVideoClient({ apiKey, user, token });
-const call = client.call('livestream', callId);
-call.camera.enable();
-call.microphone.enable();
+    // set up the user object
+    const user = {
+        id: userDetails.first_name+'_'+livestream.id,
+        name: userDetails.first_name,
+        image: process.env.REACT_APP_STORAGE_URL+'user/'+userDetails.image,
+    };
 
-call.join({ create: true });
+    const client = new StreamVideoClient({ apiKey, user, token });
+    const call = client.call('livestream', callId);
 
-const HostView = () => {
+    if (call) {
+        call.join({ create: true });
+    }
+
+    call.camera.enable();
+    call.microphone.enable();
+
     return (
         <StreamVideo client={client}>
             <StreamCall call={call}>
-                <MyLivestreamUI />
+                <MyLivestreamUI livestreamId={livestream.id} />
             </StreamCall>
         </StreamVideo>
     );

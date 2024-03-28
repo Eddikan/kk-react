@@ -6,6 +6,7 @@ import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import toast from 'react-hot-toast';
 import Pagination from 'Components/Pagination/Pagination';
+import { BsBroadcast } from "react-icons/bs";
 import 'react-multi-carousel/lib/styles.css';
 import axios from "axios";
 
@@ -88,11 +89,19 @@ const Designers = (props) => {
                                     {designers.map((designer, index) => (
                                         <Col
                                             lg={3}
-                                            onClick={() => toggleGetUser(designer.user.id)}
                                         >
-                                            <div key={index} className="mb-4">
+                                            <div key={index} className="mb-4 position-relative">
+                                                {designer.livestream ?
+                                                    <>
+                                                        <a href={`/designer/live/stream/${designer.livestream?.id}`} target="_blank">
+                                                            <button className="btn btn-danger designer-live fw-600"> <BsBroadcast size="22px" /> Live</button>
+                                                        </a>
+                                                    </>
+                                                    :
+                                                    null
+                                                }
                                                 {designer.user.image ? (
-                                                    <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})` }}>
+                                                    <div onClick={() => toggleGetUser(designer.user.id)} className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})` }}>
                                                         <div className='bg-black-faded cursor-pointer'>
                                                             <div className="designer-details">
                                                                 <h3 className="designer-name text-white fs-25 mb-1 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
@@ -102,7 +111,7 @@ const Designers = (props) => {
                                                     </div>
                                                 ) : (
                                                     <>
-                                                        <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${designer.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}>
+                                                        <div onClick={() => toggleGetUser(designer.user.id)} className="designers-grid-div w-100" style={{ backgroundImage: `url(${designer.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}>
                                                             <div className='bg-black-faded cursor-pointer'>
                                                                 <div className="designer-details">
                                                                     <h3 className="designer-name text-white fs-25 mb-1 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>

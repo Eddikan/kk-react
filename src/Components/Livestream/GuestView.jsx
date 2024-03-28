@@ -1,17 +1,18 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StreamCall, StreamTheme, useCallStateHooks, LivestreamLayout, StreamVideo, StreamVideoClient, useCall, User } from '@stream-io/video-react-sdk';
 
 // add styles for the video UI
 import '@stream-io/video-react-sdk/dist/css/styles.css';
 let callActive = false;
 
-const MyLivestreamUI = () => {
+const MyLivestreamUI = ({ livestream }) => {
     const call = useCall();
     const {
         useIsCallLive,
         // ... more hooks
     } = useCallStateHooks();
+
     const isCallLive = useIsCallLive();
     
     return (
@@ -31,43 +32,45 @@ const MyLivestreamUI = () => {
                     </div>
                 </>
                 :
-                <p className="text-center">Waiting for livestream to go live!</p>
+                <>
+                    {livestream.status != 'Ended' ?
+                        <p className="text-center">Waiting for livestream to go live!</p>
+                        :
+                        <p className="text-center">The live stream has ended!</p>
+                    }
+                    
+                </>
             }
         </>
 
     );
 };
 
-const apiKey = 'at2bxsgqeh8d';
-const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMl8yIn0.AyIXCxf5n_WptkX4t-2vEy6N7f5w79NcPfopY23QDqg';
-const callId = '1_1'; // the call id can be found in the "Credentials" section
+const GuestView = ({livestream, userDetails}) => {
+    
+    const apiKey = 'at2bxsgqeh8d';
+    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZ3Vlc3QifQ.ZfL1j6zoaTpB2-jB255a2q_SQPfMCN5uuw-us9LINec';
+    const callId = livestream.id; // the call id can be found in the "Credentials" section
 
-// set up the user object
-const user = {
-    id: '2_2',
-    name: 'James',
-    image: 'https://getstream.io/random_svg/?id=oliver&name=Oliver',
-};
+    // set up the user object
+    const user = {
+        id: 'guest',
+        image: process.env.REACT_APP_STORAGE_URL+'user/'+userDetails.image,
+    };
 
-const client = new StreamVideoClient({ apiKey, user, token });
-const call = client.call('livestream', callId);
-call.microphone.disable();
+    const client = new StreamVideoClient({ apiKey, user, token });
+    const call = client.call('livestream', callId);
 
-const GuestView = () => {
-    const {
-        useIsCallLive,
-        // ... more hooks
-    } = useCallStateHooks();
-    const isCallLive = useIsCallLive();
-
-    if (isCallLive) {
+    if (call) {
         call.join({ create: false });
+        call.camera.disable();
+        call.microphone.disable();
     }
     
     return (
         <StreamVideo client={client}>
             <StreamCall call={call}>
-                <MyLivestreamUI />
+                <MyLivestreamUI livestream={livestream} />
             </StreamCall>
         </StreamVideo>
     );

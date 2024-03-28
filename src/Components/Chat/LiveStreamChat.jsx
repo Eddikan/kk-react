@@ -7,11 +7,11 @@ import LoadingIcon from "../Icons/Loading";
 import Loading from "Components/Shared/Loading";
 import UserPlaceholder from 'Assets/images/user.png';
 
-const MeetingChat = ({ livestreamId, user, currentUser, loading }) => {
+const LiveStreamChat = ({ livestreamId, user, currentUser, loading, status }) => {
     const [chatMessages, setChatMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [formStatus, setFormStatus] = useState("standby");
-    const [chatLoading, setChatLoading] = useState(loading ?? true);
+    const [chatLoading, setChatLoading] = useState(loading != "" ? loading : true);
     const userImage = user?.image;
     const chatContainerRef = useRef(null);
     const scrollableDivRef = useRef(null);
@@ -19,7 +19,7 @@ const MeetingChat = ({ livestreamId, user, currentUser, loading }) => {
     useEffect(() => {
         // Fetch chat messages of the given meeting from Firestore
         if (livestreamId) {
-            setChatLoading(loading ?? true);
+            setChatLoading(loading != "" ? loading : true);
             const unsubscribe = firestore
                 .collection("livestreams")
                 .doc(livestreamId)
@@ -47,7 +47,7 @@ const MeetingChat = ({ livestreamId, user, currentUser, loading }) => {
                 });
         }
 
-    }, [livestreamId]);
+    }, [livestreamId, chatLoading]);
 
     useEffect(() => {
         // Scroll to the bottom of the div when component mounts or updates
@@ -94,7 +94,7 @@ const MeetingChat = ({ livestreamId, user, currentUser, loading }) => {
         <div>
             <section className="msger mt-1" ref={chatContainerRef}>
                 <div className="msger-chat scroll-chat p-2" ref={scrollableDivRef}>
-                    {!chatLoading ?
+                    {chatLoading ?
                         <>
                             <Loading className="bg-white" />
                         </>
@@ -155,27 +155,31 @@ const MeetingChat = ({ livestreamId, user, currentUser, loading }) => {
 
                 </div>
             </section>
-            <form className="msger-inputarea mb-3 mt-4" onSubmit={handleSendMessage}>
-                <input
-                    type="text"
-                    className="form-control form-control-bg text-left msger-input"
-                    placeholder="Type your message..."
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    required
-                />
-                {formStatus != "standby" ?
-                    <button type="button" className="msger-send-btn">
-                        <LoadingIcon size="30px" />
-                    </button>
-                    :
-                    <button type="submit" className="msger-send-btn">
-                        <AiOutlineSend size="30px" color="#393c41" />
-                    </button>
-                }
-            </form>
+            {status != "Ended" ?
+                <form className="msger-inputarea mb-3 mt-4" onSubmit={handleSendMessage}>
+                    <input
+                        type="text"
+                        className="form-control form-control-bg text-left msger-input"
+                        placeholder="Type your message..."
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        required
+                    />
+                    {formStatus != "standby" ?
+                        <button type="button" className="msger-send-btn">
+                            <LoadingIcon size="30px" />
+                        </button>
+                        :
+                        <button type="submit" className="msger-send-btn">
+                            <AiOutlineSend size="30px" color="#393c41" />
+                        </button>
+                    }
+                </form>
+                :
+                null
+            }
         </div>
     );
 };
 
-export default MeetingChat;
+export default LiveStreamChat;

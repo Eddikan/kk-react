@@ -203,7 +203,7 @@ const Orders = (props) => {
                                         <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "Processing" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("Processing"); }}>Processing</span>
                                         <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "Shipped" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("Shipped"); }}>Shipped</span>
                                         <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "Delivered" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("Delivered"); }}>Delivered</span>
-                                        <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "Review" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("Review"); }}>Review and Feedback</span>
+                                        {/* <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${currentTab == "Review" ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { setCurrentTab("Review"); }}>Review and Feedback</span> */}
                                         <hr />
                                     </Col>
                                 </Row>
