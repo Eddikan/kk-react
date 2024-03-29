@@ -96,7 +96,7 @@ p {
     color: var(--gray-600) !important;
 }
 
-.bg-white-hover:hover {
+.btn.bg-white-hover:hover {
     background-color: var(--white) !important;
 }
 

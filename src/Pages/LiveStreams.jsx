@@ -295,7 +295,7 @@ const LiveStreams = (props) => {
                                                                                     <Link to={`/designer/live/stream/${stream.id}`} className="text-decoration-none">
                                                                                         <div className="cursor-pointer live-tooltip">
                                                                                             <span className="icon-tooltiptext fs-14">
-                                                                                                Live Streams
+                                                                                                Enter Live Stream
                                                                                             </span>
                                                                                             <IoMdVideocam className='video-cam me-3' size={20} color="#000000" />
                                                                                         </div>
@@ -312,7 +312,7 @@ const LiveStreams = (props) => {
                                                                                                 stream.status);
                                                                                         }}
                                                                                     >
-                                                                                        <span className="icon-tooltiptext fs-14">Message</span>
+                                                                                        <span className="icon-tooltiptext fs-14">Messages</span>
                                                                                         <span><AiFillMessage className='video-cam' size={20} color="#000000" /></span>
                                                                                     </div>
                                                                                 </Col>

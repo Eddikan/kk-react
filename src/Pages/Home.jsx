@@ -135,6 +135,18 @@ const Home = (props) => {
           </Row>
         </Container>
       </section>
+      <section id="recent-designs" className="py-5 mb-5">
+        <Container>
+          <Row>
+            <Col lg="12">
+              <div>
+                <p className="fs-20 text-center text-dark mb-2 proximanova-family"> Want to see the latest live streams of your favorite designers?</p >
+                <h2 className="fs-35 fw-500 text-center text-black discover-design">Recent Live Streams</h2>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </section>
       {/* User Box */}
       <Modal show={userModalShow} fullscreen={true} onHide={() => setUserModalShow(false)}>
         <Modal.Header closeButton>
