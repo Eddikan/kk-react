@@ -57,7 +57,7 @@ const Orders = (props) => {
     const [dateFrom, setDateFrom] = useState('');
 
     const getOrders = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?status=' + currentTab);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/seller/order?status=' + currentTab);
     };
 
     const getFabrics = async () => {
@@ -112,6 +112,7 @@ const Orders = (props) => {
         getOrders()
             .then((response) => {
                 const selectedOrders = response.data.data;
+                console.log(response.data.data);
                 if (selectedOrders) {
                     setOrders(selectedOrders);
                     setOrdersLoading(false);
@@ -320,7 +321,7 @@ const Orders = (props) => {
                                                                                             </Col>
 
                                                                                             <Col className='text-right'>
-                                                                                                <a href={`/order/${order.id}/details`} className="cursor-pointer check-datails-decoration" >
+                                                                                                <a href={`/user/center/order/${order.id}/details`} className="cursor-pointer check-datails-decoration" >
                                                                                                     <span className='text-gold'><IoEyeOutline className='me-2' size={20} />View Details</span>
                                                                                                 </a>
                                                                                                 {/* {reorderLoading ?

@@ -28,6 +28,7 @@ const EcoFriendlyFabrics = lazy(() => import("./Pages/EcoFriendlyFabrics"));
 const DesignerProfile = lazy(() => import("./Pages/DesignerProfile"));
 const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
 const UserOrders = lazy(() => import("./Pages/Seller/Orders"));
+
 const Orders = lazy(() => import("./Pages/Orders"));
 const Messages = lazy(() => import("./Pages/Messages"));
 const RateReview = lazy(() => import("./Pages/RateReview"));
@@ -36,6 +37,7 @@ const OrderDetails = lazy(() => import("./Pages/OrderDetails"));
 const VideoConferencing = lazy(() => import("./Pages/VideoConferencing"));
 const LiveStream = lazy(() => import("./Pages/LiveStream"));
 const UserAppointments = lazy(() => import("./Pages/Seller/Appointments"));
+const UserOrderDetails = lazy(() => import("./Pages/Seller/OrderDetails"));
 
 // Survey
 const CustomerSatisfaction = lazy(() =>
@@ -389,6 +391,7 @@ const App = () => {
           />
           <Route path="/appointments/:c" exact element={<Appointments />} />
           <Route path="/user/center/orders" exact element={<UserOrders />} />
+          <Route path="/user/center/order/:orderId/details" exact element={<UserOrderDetails />} />
           <Route path="/messages" exact element={<Messages />} />
           <Route
             path="/rate-review/:productId"
@@ -401,7 +404,7 @@ const App = () => {
             element={<OrderDetails />}
           />
           <Route
-            path="/order/:orderId/track"
+            path="/order/:orderItemId/track"
             exact
             element={<OrderTrackingDetails />}
           />

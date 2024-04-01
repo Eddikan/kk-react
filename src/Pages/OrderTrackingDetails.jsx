@@ -23,14 +23,15 @@ import toast from 'react-hot-toast';
 
 const OrderDetails = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const { orderId } = useParams();
+    const { orderItemId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
     const [chatBox, setChatBox] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
+    const [orderPlaced, setOrderPlaced] = useState('');
 
     const [text, setText] = useState('');
-    const [orders, setOrders] = useState('');
+    const [orderItem, setOrderItem] = useState('');
     const [order, setOrder] = useState('');
     const [user, setUser] = useState('');
     const [orderLoading, setOrderLoading] = useState(true);
@@ -52,8 +53,8 @@ const OrderDetails = (props) => {
     //     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + designerId);
     // };
 
-    const getOrder = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId);
+    const getOrderItem = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order_item/' + orderItemId);
     };
 
     function handleOnEnter(text) {
@@ -65,14 +66,23 @@ const OrderDetails = (props) => {
     }, []);
 
     useEffect(() => {
-        getOrder()
+        getOrderItem()
             .then((response) => {
-                const selectedOrder = response.data;
-                if (selectedOrder) {
-                    setOrders(selectedOrder);
-                    setOrder(selectedOrder[0].order);
-                    setUser(selectedOrder[0].user);
+                const selectedOrderItem = response.data.data;
+                if (selectedOrderItem) {
+                    setOrderItem(selectedOrderItem.order_item);
+                    setOrder(selectedOrderItem.order);
+                    setUser(selectedOrderItem.order.user);
                     setOrderLoading(false);
+
+                    const options = {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                    };
+                    const created_at = (new Date(selectedOrderItem.order.created_at)).toLocaleDateString('en-ES', options);
+                    setOrderPlaced(created_at);
+
                 } else {
                     toast.error('There has been an error getting the user, please try again!');
                 }
@@ -106,7 +116,7 @@ const OrderDetails = (props) => {
                                 <PiNotepadLight className='order-placed-icon tracking-icon active' size={25} />
                                 <div className="timeline-circle timeline-circle--data timeline-circle--active">
                                     <div className="order fw-600">Order Placed</div>
-                                    <div className="date-details fs-14">December 13, 2023</div>
+                                    <div className="date-details fs-14">{orderPlaced}</div>
                                 </div>
 
                                 <PiCircleDashedLight className='processing-icon tracking-icon' size={25} />
@@ -162,7 +172,7 @@ const OrderDetails = (props) => {
                                     </div> */}
 
                                     <div className='d-flex align-items-center'>
-                                        <strong>Order #{orderId}</strong>
+                                        <strong>Order #{orderItemId}</strong>
                                     </div>
                                 </Card.Header>
                                 <Card.Body className='bg-white radius-border'>
@@ -214,7 +224,7 @@ const OrderDetails = (props) => {
                                                 <>
                                                     <div className='mt-2'>
                                                         <TfiLocationPin className='text-gold me-3' size="20" />
-                                                        {user?.address_line_1} {user.city}, {user.province} {user.country} {order.delivery_postal_code}
+                                                        {user?.address_line_1} {user?.city}, {user?.province} {user?.country} {order.delivery_postal_code}
                                                     </div>
                                                 </>
                                             }
