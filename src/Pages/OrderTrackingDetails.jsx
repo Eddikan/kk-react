@@ -54,7 +54,7 @@ const OrderDetails = (props) => {
     // };
 
     const getOrderItem = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order_item/' + orderItemId);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/item/' + orderItemId);
     };
 
     function handleOnEnter(text) {
