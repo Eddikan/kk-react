@@ -330,13 +330,14 @@ const Orders = (props) => {
                                                                                     <a href={`/order/${order.id}/details`} className="cursor-pointer check-datails-decoration me-2" >
                                                                                         <span className='text-gold'><IoEyeOutline className='me-2' size={20} />View Details</span>
                                                                                     </a>
-                                                                                    {order.status == "Delivered" ?
-                                                                                        <a href={'/post-purchase-survey'} className="cursor-pointer check-datails-decoration" >
+
+                                                                                    {/* {order.status == "Delivered" ?
+                                                                                        <a href={`/post-purchase-survey?order_id=${order.id}`} className="cursor-pointer check-datails-decoration" >
                                                                                             <span className='text-gold'><MdOutlineFeedback className='me-2' size={20} />Review</span>
                                                                                         </a>
                                                                                         :
                                                                                         null
-                                                                                    }
+                                                                                    } */}
                                                                                     {/* {reorderLoading ?
                                                                                         <button type="button" className='btn btn-primary'>Loading...</button>
                                                                                         :

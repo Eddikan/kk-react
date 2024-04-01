@@ -176,7 +176,8 @@ const AdminSeller = (props) => {
                                                                             <Card.Body >
                                                                                 <Row>
                                                                                     <Col lg={3} className='d-flex justify-content-left align-items-center'>
-                                                                                        <Link to={`/admin/profile/seller/${seller.user.id}`} className="text-decoration-none">
+                                                                                        {/* <Link to={`/admin/profile/seller/${seller.user.id}`} className="text-decoration-none"> */}
+                                                                                        <Link to={`/admin/profile/user/${seller.user.id}`} className='text-decoration-none'>
                                                                                             <div className='d-flex align-items-center seller-image-admin'>
                                                                                                 {seller?.user?.image ?
                                                                                                     <div
@@ -195,7 +196,7 @@ const AdminSeller = (props) => {
                                                                                         </Link>
 
                                                                                         <div className='ms-3'>
-                                                                                            <Link to={`/admin/profile/seller/${seller.user.id}`} className="text-decoration-none">
+                                                                                            <Link to={`/admin/profile/user/${seller.user.id}`} className='text-decoration-none'>
                                                                                                 <div
                                                                                                     className='cursor-pointer'>
                                                                                                     <div className='mt-0 mb-1 fs-18 text-black fw-500'>
@@ -229,7 +230,7 @@ const AdminSeller = (props) => {
                                                                                     <Col lg={2} className='d-flex justify-content-end align-items-center'>
                                                                                         <div className='d-flex'>
 
-                                                                                            <Link to={`/admin/profile/seller/${seller.user.id}`} className="text-decoration-none">
+                                                                                            <Link to={`/admin/profile/user/${seller.user.id}`} className='text-decoration-none'>
                                                                                                 <div className="seller-tooltip cursor-pointer">
                                                                                                     <span className="icon-tooltiptext fs-14">View</span>
                                                                                                     <IoEye className='me-3' color='#000000' size={20} />

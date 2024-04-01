@@ -9,7 +9,7 @@ import LayoutAdmin from 'Components/Layout/LayoutAdmin';
 import GoBack from 'Components/Shared/GoBack';
 import Layout from 'Components/Layout/Layout';
 import Section1 from 'Assets/images/image-section-1.png';
-import Section2 from 'Assets/images/image-section-22.png';
+import Section2 from 'Assets/images/image-section-2.png';
 import Section3 from 'Assets/images/image-section-3.png';
 import Section4 from 'Assets/images/image-section-4.png';
 import 'Assets/styles/Survey/style.css';
@@ -133,7 +133,7 @@ const WebsiteFeedBackSurvey = (props) => {
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
+                                <Card.Body className='p-4 pb-0'>
                                     <div>Click on the image to indicate what section of  the page you like the most?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
@@ -150,12 +150,12 @@ const WebsiteFeedBackSurvey = (props) => {
                                                                 value={image.id}
                                                                 onChange={handleChangeGeneralFeeback}
                                                             />
-                                                            <div className="portfolio-link image">
+                                                            <div className="portfolio-link image mb-5">
                                                                 <div className="designs-grid-div-survey w-100 cursor-pointer">
                                                                     <img src={image.image} className='home-page-images' />
                                                                 </div>
+                                                                <div className='mt-2 fs-16 text-center w-100 cursor-pointer position-absolute'>{image.name}</div>
                                                             </div>
-                                                            <div className='mt-2 fs-18 text-center mb-4'>{image.name}</div>
                                                         </label>
                                                     </Col >
 
@@ -167,7 +167,7 @@ const WebsiteFeedBackSurvey = (props) => {
                             </Card>
 
                             <Card className='mb-3 card-border-color'>
-                                <Card.Body className='p-4'>
+                                <Card.Body className='p-4 pb-0'>
                                     <div>Click on the image to indicate what section of  the page you like the least?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
@@ -185,14 +185,13 @@ const WebsiteFeedBackSurvey = (props) => {
                                                                 value={image.id}
                                                                 onChange={handleChangeGeneralFeeback}
                                                             />
-                                                            <div className="portfolio-link image">
+                                                            <div className="portfolio-link image mb-5">
                                                                 <div className="designs-grid-div-survey w-100 cursor-pointer">
                                                                     <img src={image.image} className='home-page-images' />
                                                                 </div>
+                                                                <div className='mt-2 fs-16 text-center w-100 cursor-pointer position-absolute'>{image.name}</div>
                                                             </div>
-                                                            <div className='mt-2 fs-18 text-center mb-4'>
-                                                                {image.name}
-                                                            </div>
+
                                                         </label>
                                                     </Col >
                                                 </>

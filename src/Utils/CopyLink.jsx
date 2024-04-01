@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { LuLink } from "react-icons/lu";
 
 
-const CopyTo = ({ text, classes, standbyTitle, loadingTitle, icon, onCopy }) => {
+const CopyTo = ({ text, classes, standbyTitle, loadingTitle, icon, onCopy, closeModal }) => {
     const [isCopied, setIsCopied] = useState(false);
 
     const copyToClipboard = async () => {
@@ -12,6 +12,7 @@ const CopyTo = ({ text, classes, standbyTitle, loadingTitle, icon, onCopy }) => 
             await navigator.clipboard.writeText(text);
             setIsCopied(true);
             setTimeout(() => setIsCopied(false), 1000);
+            setTimeout(() => closeModal(), 1000);
         } catch (error) {
         }
     };

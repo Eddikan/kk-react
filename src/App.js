@@ -23,6 +23,7 @@ const Forms = lazy(() => import("./Pages/Forms"));
 // const Stripe = lazy(() => import("./Pages/Stripe"));
 const CustomerPage = lazy(() => import("./Pages/CustomerPage"));
 const Cart = lazy(() => import("./Pages/Cart"));
+const ThankYouPage = lazy(() => import("./Pages/ThankYouPage"));
 const ViewDesign = lazy(() => import("./Pages/ViewDesign"));
 const EcoFriendlyFabrics = lazy(() => import("./Pages/EcoFriendlyFabrics"));
 const DesignerProfile = lazy(() => import("./Pages/DesignerProfile"));
@@ -391,7 +392,11 @@ const App = () => {
           />
           <Route path="/appointments/:c" exact element={<Appointments />} />
           <Route path="/user/center/orders" exact element={<UserOrders />} />
-          <Route path="/user/center/order/:orderId/details" exact element={<UserOrderDetails />} />
+          <Route
+            path="/user/center/order/:orderId/details"
+            exact
+            element={<UserOrderDetails />}
+          />
           <Route path="/messages" exact element={<Messages />} />
           <Route
             path="/rate-review/:productId"
@@ -440,6 +445,7 @@ const App = () => {
           />
           <Route path="/body-gram" exact element={<BodyGram />} />
           <Route path="/measurement" exact element={<Measurement />} />
+          <Route path="/thank-you" exact element={<ThankYouPage />} />
         </Routes>
       </Suspense>
     </Router>

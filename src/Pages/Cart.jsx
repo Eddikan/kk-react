@@ -91,9 +91,14 @@ const Cart = (props) => {
         const uniqueSelectedCartItems = [...new Set(selectedCartItems)];
         postCheckOut({ user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems }).then(response => {
             const success = response.data.status;
+            const data = response.data.data;
             if (success == success) {
                 toast.success('Order added successfully!');
-                navigate('/orders');
+                console.log("data", data);
+                setTimeout(() => {
+                    setReloadCount(prevReloadCount => prevReloadCount + 1);
+                    navigate(`/thank-you?order_id=${data.order.id}`);
+                }, 1000);
             } else {
                 toast.error('There has been an error adding the order, please try again!');
             }

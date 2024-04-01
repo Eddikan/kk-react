@@ -8,6 +8,7 @@ import { GoHeart, GoAlertFill } from "react-icons/go";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import { IoShareSocial, IoInformationOutline, IoVideocam } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
+import { useCookies } from 'react-cookie';
 import { PiNotepadFill } from "react-icons/pi";
 import 'Assets/styles/FabricsHomePage/style.css';
 import axios from 'axios';
@@ -15,6 +16,8 @@ import Modal from 'react-bootstrap/Modal';
 import { Rating } from 'react-simple-star-rating';
 
 const Fabrics = (props) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole']);
+    const userRole = cookies.userRole;
     const navigate = useNavigate();
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
@@ -176,23 +179,28 @@ const Fabrics = (props) => {
                                                                             style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}>
                                                                         </div>
                                                                     </Link>
-                                                                    {currentUser ?
-                                                                        <div className='save-link'>
-                                                                            {/* <div className="action-button bg-white me-2">
+
+                                                                    {userRole !== 'Admin' &&
+                                                                        <>
+                                                                            {currentUser ?
+                                                                                <div className='save-link'>
+                                                                                    {/* <div className="action-button bg-white me-2">
                                                                                         <GoBookmark className="text-black" />
                                                                                     </div> */}
-                                                                            {userWishlist ?
-                                                                                <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
-                                                                                    <GoHeart className="text-white" />
+                                                                                    {userWishlist ?
+                                                                                        <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                            <GoHeart className="text-white" />
+                                                                                        </div>
+                                                                                        :
+                                                                                        <div className="action-button bg-white" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                            <GoHeart className="text-black" />
+                                                                                        </div>
+                                                                                    }
                                                                                 </div>
                                                                                 :
-                                                                                <div className="action-button bg-white" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
-                                                                                    <GoHeart className="text-black" />
-                                                                                </div>
+                                                                                null
                                                                             }
-                                                                        </div>
-                                                                        :
-                                                                        null
+                                                                        </>
                                                                     }
                                                                 </div>
                                                             </>

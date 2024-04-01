@@ -30,7 +30,7 @@ const initialReviewData = Object.freeze({
 });
 
 const ViewProduct = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole']);
     const { productId } = useParams();
     const [product, setProduct] = useState('');
     const [productPrice, setProductPrice] = useState(0.00);
@@ -63,6 +63,7 @@ const ViewProduct = () => {
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
+    const userRole = cookies.userRole;
     const userDetails = cookies.userDetails;
     const navigate = useNavigate();
 
@@ -446,77 +447,81 @@ const ViewProduct = () => {
                                                         </div>
                                                     </div>
 
-                                                    {isProductCurrentUser ?
+                                                    {userRole !== 'Admin' &&
                                                         <>
-                                                            <div>
-                                                                <Link to={`/user/center/product/${product.id}/edit`} className="text-decoration-none">
-                                                                    <div class="kouture-tooltip">
-                                                                        <div className="action-button bg-smgray me-2">
-                                                                            <span class="kouture-tooltiptext fs-14">Edit</span>
-                                                                            <GoPencil className="text-black" />
+                                                            {isProductCurrentUser ?
+                                                                <>
+                                                                    <div>
+                                                                        <Link to={`/user/center/product/${product.id}/edit`} className="text-decoration-none">
+                                                                            <div class="kouture-tooltip">
+                                                                                <div className="action-button bg-smgray me-2">
+                                                                                    <span class="kouture-tooltiptext fs-14">Edit</span>
+                                                                                    <GoPencil className="text-black" />
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </Link>
+
+                                                                        <div class="kouture-tooltip" onClick={toggleShareModal}>
+                                                                            <div className="action-button bg-smgray me-2">
+                                                                                <span class="kouture-tooltiptext fs-14">
+                                                                                    Share
+                                                                                </span>
+                                                                                <GoShareAndroid className="text-black" />
+                                                                            </div>
+
                                                                         </div>
 
+                                                                        {userWishlist ?
+                                                                            <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                                <div className="action-button bg-gold me-2" >
+                                                                                    <span class="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
+                                                                                    <GoHeart className="text-white" />
+                                                                                </div>
+                                                                            </div>
+                                                                            :
+                                                                            <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                                <div className="action-button bg-smgray me-2">
+                                                                                    <span class="wishlist-tooltiptext fs-14">Add to Wishlist</span>
+                                                                                    <GoHeart className="text-black" />
+                                                                                </div>
+
+                                                                            </div>
+                                                                        }
                                                                     </div>
-                                                                </Link>
 
-                                                                <div class="kouture-tooltip" onClick={toggleShareModal}>
-                                                                    <div className="action-button bg-smgray me-2">
-                                                                        <span class="kouture-tooltiptext fs-14">
-                                                                            Share
-                                                                        </span>
-                                                                        <GoShareAndroid className="text-black" />
-                                                                    </div>
+                                                                </>
+                                                                :
+                                                                <>
+                                                                    <div>
 
-                                                                </div>
-
-                                                                {userWishlist ?
-                                                                    <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
-                                                                        <div className="action-button bg-gold me-2" >
-                                                                            <span class="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
-                                                                            <GoHeart className="text-white" />
-                                                                        </div>
-                                                                    </div>
-                                                                    :
-                                                                    <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
-                                                                        <div className="action-button bg-smgray me-2">
-                                                                            <span class="wishlist-tooltiptext fs-14">Add to Wishlist</span>
-                                                                            <GoHeart className="text-black" />
-                                                                        </div>
-
-                                                                    </div>
-                                                                }
-                                                            </div>
-
-                                                        </>
-                                                        :
-                                                        <>
-                                                            <div>
-
-                                                                <div class="kouture-tooltip" onClick={toggleShareModal}>
-                                                                    <div className="action-button bg-smgray me-2">
-                                                                        <span class="kouture-tooltiptext fs-14">  Share</span>
-                                                                        <GoShareAndroid className="text-black" />
-                                                                    </div>
-                                                                </div>
-
-                                                                {userWishlist ?
-                                                                    <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
-                                                                        <div className="action-button bg-gold me-2" >
-                                                                            <span class="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
-                                                                            <GoHeart className="text-white" />
-                                                                        </div>
-                                                                    </div>
-                                                                    :
-                                                                    <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
-                                                                        <div className="action-button bg-smgray me-2" >
-                                                                            <span class="wishlist-tooltiptext fs-14">Add to Wishlist</span>
-                                                                            <GoHeart className="text-black" />
+                                                                        <div class="kouture-tooltip" onClick={toggleShareModal}>
+                                                                            <div className="action-button bg-smgray me-2">
+                                                                                <span class="kouture-tooltiptext fs-14">  Share</span>
+                                                                                <GoShareAndroid className="text-black" />
+                                                                            </div>
                                                                         </div>
 
-                                                                    </div>
-                                                                }
-                                                            </div>
+                                                                        {userWishlist ?
+                                                                            <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                                <div className="action-button bg-gold me-2" >
+                                                                                    <span class="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
+                                                                                    <GoHeart className="text-white" />
+                                                                                </div>
+                                                                            </div>
+                                                                            :
+                                                                            <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                                <div className="action-button bg-smgray me-2" >
+                                                                                    <span class="wishlist-tooltiptext fs-14">Add to Wishlist</span>
+                                                                                    <GoHeart className="text-black" />
+                                                                                </div>
 
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+
+                                                                </>
+                                                            }
                                                         </>
                                                     }
                                                 </Col>
@@ -687,42 +692,46 @@ const ViewProduct = () => {
                                                             </Col>
 
                                                             <Col lg="12">
-                                                                {!isProductCurrentUser ?
+                                                                {userRole !== 'Admin' &&
                                                                     <>
-                                                                        {addToCartLoading ?
-                                                                            <Button
-                                                                                className="w-auto me-3 btn-primary fs-16"
-                                                                                type="button"
-                                                                            >
-                                                                                Adding to Cart...
-                                                                            </Button>
-                                                                            :
-                                                                            <Button
-                                                                                className="w-auto me-3 btn-primary fs-16"
-                                                                                onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: unitMeasurement })}
-                                                                            >
-                                                                                Add to Cart
-                                                                            </Button>
-                                                                        }
-                                                                        {buyNowLoading ?
-                                                                            <Button
-                                                                                className="w-auto me-3 btn-secondary fs-16"
-                                                                                type="button"
-                                                                            >
-                                                                                Adding to Cart...
-                                                                            </Button>
-                                                                            :
-                                                                            <Button
-                                                                                className="bg-gold border-gold text-white w-auto me-3 btn-secondary fs-16"
-                                                                                onClick={() => buyNow({ user_id: currentUser, product_id: product.id, quantity: unitMeasurement })}
-                                                                            >
-                                                                                Buy Now
-                                                                            </Button>
-                                                                        }
+                                                                        {!isProductCurrentUser ?
+                                                                            <>
+                                                                                {addToCartLoading ?
+                                                                                    <Button
+                                                                                        className="w-auto me-3 btn-primary fs-16"
+                                                                                        type="button"
+                                                                                    >
+                                                                                        Adding to Cart...
+                                                                                    </Button>
+                                                                                    :
+                                                                                    <Button
+                                                                                        className="w-auto me-3 btn-primary fs-16"
+                                                                                        onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: unitMeasurement })}
+                                                                                    >
+                                                                                        Add to Cart
+                                                                                    </Button>
+                                                                                }
+                                                                                {buyNowLoading ?
+                                                                                    <Button
+                                                                                        className="w-auto me-3 btn-secondary fs-16"
+                                                                                        type="button"
+                                                                                    >
+                                                                                        Adding to Cart...
+                                                                                    </Button>
+                                                                                    :
+                                                                                    <Button
+                                                                                        className="bg-gold border-gold text-white w-auto me-3 btn-secondary fs-16"
+                                                                                        onClick={() => buyNow({ user_id: currentUser, product_id: product.id, quantity: unitMeasurement })}
+                                                                                    >
+                                                                                        Buy Now
+                                                                                    </Button>
+                                                                                }
 
+                                                                            </>
+                                                                            :
+                                                                            null
+                                                                        }
                                                                     </>
-                                                                    :
-                                                                    null
                                                                 }
                                                                 {/* <span className="fw-600 fs-24">${(unitMeasurement * productPrice).toFixed(2)} 
                                                             <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span> */}
@@ -776,17 +785,21 @@ const ViewProduct = () => {
                                     >
                                         Customer Reviews
 
-                                        {!isProductCurrentUser ?
+                                        {userRole !== 'Admin' &&
                                             <>
-                                                <span className="cursor-pointer reviews-tooltip" onClick={() => toggleAddToReview(product.image_urls)}>
-                                                    <div className='tooltip-content'>
-                                                        <span className="reviews-tooltiptext fs-14">Write Review</span>
-                                                    </div>
-                                                    <BsArrowUpRightSquare className='ms-2' color="#caa533" />
-                                                </span>
+                                                {!isProductCurrentUser ?
+                                                    <>
+                                                        <span className="cursor-pointer reviews-tooltip" onClick={() => toggleAddToReview(product.image_urls)}>
+                                                            <div className='tooltip-content'>
+                                                                <span className="reviews-tooltiptext fs-14">Write Review</span>
+                                                            </div>
+                                                            <BsArrowUpRightSquare className='ms-2' color="#caa533" />
+                                                        </span>
+                                                    </>
+                                                    :
+                                                    null
+                                                }
                                             </>
-                                            :
-                                            null
                                         }
                                     </span>
 

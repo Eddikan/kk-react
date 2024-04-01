@@ -16,6 +16,9 @@ import NewAppointment from 'Assets/images/new-appointment-icon.png';
 import { Link } from 'react-router-dom';
 import { RxDashboard } from "react-icons/rx";
 import toast from 'react-hot-toast';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
+import { PiNotepadLight, PiScissorsLight } from "react-icons/pi";
 import User from 'Assets/images/user.png';
 import { GoAlertFill } from 'react-icons/go';
 import 'Assets/styles/HeaderSeller/style.css'
@@ -309,7 +312,7 @@ const HeaderSeller = () => {
                                                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                                     }
                                                     {userMenuOpen && (
-                                                        <div className="action-box user-menu-seller">
+                                                        <div className="action-box user-menu-seller-survey">
                                                             {userRole !== 'Admin' &&
                                                                 <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-2' color='#000000' />
                                                                     <span className='text-black'>Profile</span>
@@ -331,7 +334,23 @@ const HeaderSeller = () => {
                                                             <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' color='#000000' />
                                                                 <span className='text-black'>Appointments</span>
                                                             </Link>
-                                                            {/* <Link to="/user/center/portfolio" className="mb-3 text-decoration-none d-block"><IoIosImages /> Portfolio</Link> */}
+
+
+                                                            {userRole !== 'Admin' &&
+                                                                <div className='mb-2'>
+                                                                    <DropdownButton id="dropdown-survey-button" className='dropdown-survey' title={<span><PiNotepadLight className='note-icon ' size={17} />Surveys</span>}>
+                                                                        <Dropdown.Item href="/customer-satisfaction-survey" className='yellow-hover'>Customer Satisfaction</Dropdown.Item>
+                                                                        <Dropdown.Item href="/general-feedback-survey" className='yellow-hover'>General Feedback</Dropdown.Item>
+
+                                                                        {user.is_designer == 1 &&
+                                                                            <>
+                                                                                <Dropdown.Item href="/vendor-feedback-survey" className='yellow-hover'>Vendor Feedback</Dropdown.Item>
+                                                                            </>
+                                                                        }
+                                                                    </DropdownButton>
+                                                                </div>
+                                                            }
+
                                                             <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower className='me-2' color='#000000' />
                                                                 <span className='text-black'>Logout</span>
                                                             </p>

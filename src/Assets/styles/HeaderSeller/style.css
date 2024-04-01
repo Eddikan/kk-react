@@ -4,13 +4,13 @@
 .col-left {
     padding-left: 41px;
 }
-.user-menu-seller.action-box {
+.user-menu-seller-survey.action-box {
     background: #fff;
     position: absolute;
     width: 160px;
     padding: 12px;
     border-radius: 5px;
-    right: 52px;
+    right: 64px;
     top: 61px;
     box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     -webkit-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
@@ -45,4 +45,10 @@
     -moz-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     z-index: 10;
     text-align: left;
+}
+
+.dropdown-menu.show {
+    left: 18px;
+    top: 22px;
+    width: 188px;
 }

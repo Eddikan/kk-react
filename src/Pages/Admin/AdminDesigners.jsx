@@ -180,34 +180,37 @@ const AdminDesigners = (props) => {
                                                                             <Card.Body >
                                                                                 <Row>
                                                                                     <Col lg={3} className='d-flex justify-content-left align-items-center'>
-                                                                                        <div className='d-flex align-items-center designers-image-admin'>
-                                                                                            {designer?.user?.image ?
-                                                                                                <div
-                                                                                                    onClick={() => toggleGetUser(designer.user.id)}
-                                                                                                    className='designer-photo-admin cursor-pointer'
-                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer?.user?.image})` }}
-                                                                                                >
-                                                                                                </div>
-                                                                                                :
-                                                                                                <div
-                                                                                                    onClick={() => toggleGetUser(designer.user.id)}
-                                                                                                    className='designer-photo-admin cursor-pointer'
-                                                                                                    style={{ backgroundImage: `url(${UserPlaceholder})` }}
-                                                                                                >
-                                                                                                </div>
-                                                                                            }
-                                                                                        </div>
+                                                                                        <Link to={`/admin/profile/user/${designer.user.id}`} className='text-decoration-none'>
+                                                                                            <div className='d-flex align-items-center designers-image-admin'>
+                                                                                                {designer?.user?.image ?
+                                                                                                    <div
+                                                                                                        className='designer-photo-admin cursor-pointer'
+                                                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer?.user?.image})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                    :
+                                                                                                    <div
+                                                                                                        onClick={() => toggleGetUser(designer.user.id)}
+                                                                                                        className='designer-photo-admin cursor-pointer'
+                                                                                                        style={{ backgroundImage: `url(${UserPlaceholder})` }}
+                                                                                                    >
+                                                                                                    </div>
+                                                                                                }
+                                                                                            </div>
+                                                                                        </Link>
 
                                                                                         <div className='ms-3'>
-                                                                                            <div onClick={() => toggleGetUser(designer.user.id)} className='cursor-pointer'>
-                                                                                                <div className='mt-0 mb-1 fs-18 text-black fw-500 admin-ellipsis-designer'>
-                                                                                                    {designer.user.first_name}&nbsp;{designer.user.last_name}
+                                                                                            <Link to={`/admin/profile/user/${designer.user.id}`} className='text-decoration-none'>
+                                                                                                <div className='cursor-pointer'>
+                                                                                                    <div className='mt-0 mb-1 fs-18 text-black fw-500 admin-ellipsis-designer'>
+                                                                                                        {designer.user.first_name}&nbsp;{designer.user.last_name}
+                                                                                                    </div>
+                                                                                                    <div className='fs-14 text-black admin-ellipsis-designer'>
+                                                                                                        <MdOutlineEmail className="me-2 text-gold" size={18} />
+                                                                                                        {designer.user.email}
+                                                                                                    </div>
                                                                                                 </div>
-                                                                                                <div className='fs-14 text-black admin-ellipsis-designer'>
-                                                                                                    <MdOutlineEmail className="me-2 text-gold" size={18} />
-                                                                                                    {designer.user.email}
-                                                                                                </div>
-                                                                                            </div>
+                                                                                            </Link>
                                                                                         </div>
                                                                                     </Col>
 
@@ -231,13 +234,13 @@ const AdminDesigners = (props) => {
 
                                                                                     <Col lg={2} className='d-flex justify-content-end align-items-center'>
                                                                                         <div className='d-flex'>
-
-                                                                                            <div className="designers-tooltip cursor-pointer"
-                                                                                                onClick={() => toggleGetUser(designer.user.id)}
-                                                                                            >
-                                                                                                <span className="icon-tooltiptext fs-14">View</span>
-                                                                                                <IoEye className='me-3' color='#000000' size={20} />
-                                                                                            </div>
+                                                                                            <Link to={`/admin/profile/user/${designer.user.id}`} className='text-decoration-none'>
+                                                                                                <div className="designers-tooltip cursor-pointer"
+                                                                                                >
+                                                                                                    <span className="icon-tooltiptext fs-14">View</span>
+                                                                                                    <IoEye className='me-3' color='#000000' size={20} />
+                                                                                                </div>
+                                                                                            </Link>
 
                                                                                             <Link to={`/admin/edit/designer/${designer.user.id}`}>
                                                                                                 <div

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import UserContent from 'Assets/images/usercontent.jpg';
@@ -26,6 +26,8 @@ const PostPurchaseSurvey = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
+    const { orderId } = useParams();
+
     const [clearFormModal, setClearFormModal] = useState(false);
     const [postPurchaseFormData, setPostPurchaseFormData] = useState(initialPurchaseSurvey);
     const [reloadCount, setReloadCount] = useState(0);
@@ -38,6 +40,13 @@ const PostPurchaseSurvey = (props) => {
     const postPurchaseSurvey = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'post-purchase-survey', data);
     };
+
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    }
+    let query = useQuery();
+    const order_id = query.get('order_id');
+
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
@@ -72,7 +81,7 @@ const PostPurchaseSurvey = (props) => {
             toast.error('Please answer all the question!');
         } else {
             setSubmitLoading(true);
-            postPurchaseSurvey({ ...postPurchaseFormData, user_id: currentUser }).then(response => {
+            postPurchaseSurvey({ ...postPurchaseFormData, user_id: currentUser, order_id: order_id }).then(response => {
                 const status = response.data.status;
                 if (status === "Success") {
                     setPostPurchaseFormData(initialPurchaseSurvey);

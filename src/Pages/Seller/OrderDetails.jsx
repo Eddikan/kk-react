@@ -14,7 +14,7 @@ import { GoAlertFill } from 'react-icons/go';
 import { IoCloseOutline } from "react-icons/io5";
 import { IoMdStarOutline, IoIosAttach } from "react-icons/io";
 import { CgTrack } from "react-icons/cg";
-
+import { GrStatusInfo } from "react-icons/gr";
 import { VscSend } from "react-icons/vsc";
 import InputEmoji from 'react-input-emoji'
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
@@ -26,6 +26,10 @@ const initialCheckOut = {
     card_name: '',
     card_number: '',
     date: ''
+};
+
+const initialStatus = {
+    status: ''
 };
 
 const OrderDetails = (props) => {
@@ -42,12 +46,37 @@ const OrderDetails = (props) => {
     const [fabrics, setFabrics] = useState('');
     const [orders, setOrders] = useState('');
     const [order, setOrder] = useState('');
+    const [formStatus, setFormStatus] = useState('standby');
+    const [orderItems, setOrderItems] = useState('');
+    const [orderItemsFormData, setOrderItemsFormData] = useState(initialStatus);
     const [user, setUser] = useState('');
     const [orderLoading, setOrderLoading] = useState(true);
     const [designerName, setDesignerName] = useState('');
     const [text, setText] = useState('');
     const [reorderLoading, setReorderLoading] = useState(false);
+
+    const [updateStatusShow, setUpdateStatusShow] = useState(false);
     const [orderStatus, setOrderStatus] = useState('All');
+
+    function toggleUpdateStatus() {
+        setUpdateStatusShow(true);
+
+        getOrderItemLog()
+            .then((response) => {
+                setOrderLoading(false);
+                const selectedOrderItemLog = response.data.data;
+                if (selectedOrderItemLog) {
+                    setOrderItems(selectedOrderItemLog);
+                } else {
+                    toast.error('There has been an error getting the order item log, please try again!');
+                    setOrderLoading(false);
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the order item log, please try again!');
+                setOrderLoading(false);
+            });
+    }
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
@@ -60,6 +89,14 @@ const OrderDetails = (props) => {
 
     const getOrder = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId);
+    };
+
+    const getOrderItemLog = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/item/log/' + orderId);
+    };
+
+    const postOrderItemLog = async (data) => {
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order/item/log', data);
     };
 
     const chatBoxModal = (first_name, last_name, image) => {
@@ -120,6 +157,31 @@ const OrderDetails = (props) => {
             });
     }, [reloadCount]);
 
+    const statusSubmit = (e) => {
+        setOrderLoading(true);
+        postOrderItemLog({ ...orderItemsFormData, order_id: orderItems.id, user_id: currentUser, order_item_id: orderItems.order_item_log.order_item_id }).then(response => {
+            const status = response.data.status;
+            if (status === "Success") {
+                setOrderLoading(false);
+                setOrderItemsFormData(initialStatus);
+                toast.success('Status sent successfully!');
+            } else {
+                setOrderLoading(false);
+                toast.error('There has been an error saving the status, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error saving the status, please try again!');
+        });
+    }
+
+    const handleChangeStatus = (e) => {
+        const { name, value } = e.target;
+        setOrderItemsFormData({
+            ...orderItemsFormData,
+            [name]: value,
+        });
+    };
+
     return (
         <LayoutNoFooter className='bg-white'>
             <section className='bg-white'>
@@ -164,6 +226,7 @@ const OrderDetails = (props) => {
                                     </Card>
                                 </Col>
                             </Row>
+
                             {orderLoading ?
                                 <>
                                     <Card className="mt-2">
@@ -256,6 +319,10 @@ const OrderDetails = (props) => {
                                                                                                         <a href={`/order/${order_item.id}/track`} className="cursor-pointer check-datails-decoration">
                                                                                                             <p className='text-black mb-0'><CgTrack className='me-2' size={20} />Track</p>
                                                                                                         </a>
+
+                                                                                                        <div className="cursor-pointer" onClick={toggleUpdateStatus}>
+                                                                                                            <p className='text-black mb-0'><GrStatusInfo className='me-2' size={18} />Update Status</p>
+                                                                                                        </div>
                                                                                                         {/* {reorderLoading ?
                                                                                                             <button type="button" className='btn btn-primary'>Loading...</button>
                                                                                                             :
@@ -281,7 +348,6 @@ const OrderDetails = (props) => {
                                                             </Row>
                                                         );
                                                     })}
-
                                                 </>
                                                 :
                                                 <>
@@ -305,6 +371,7 @@ const OrderDetails = (props) => {
                                 </>
                             }
                         </Col>
+
                         <Col lg={4}>
                             <Row>
                                 <Col lg={12}>
@@ -492,6 +559,68 @@ const OrderDetails = (props) => {
                             <p className="fs-20 text-black">Under Construction</p>
                         </Card.Body>
                     </Card>
+                </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={updateStatusShow}
+                className='modal-preview'
+                fade={false}
+                centered
+            >
+                <Modal.Header className="pb-0">
+                    <Modal.Title className='rufina-family fs-22 text-black'>Update Status</Modal.Title>
+                    <button type='button' className='close react-modal-close' onClick={function () { setUpdateStatusShow(false); }} >
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Card>
+                        <Card.Body>
+                            <div>
+                                <label htmlFor="orderStatus" className='mb-2'>Status:</label>
+                                <select
+                                    id="orderStatus"
+                                    name='status'
+                                    className='form-control mb-1'
+                                    value={orderItems.status}
+                                    onChange={handleChangeStatus}
+                                >
+                                    <option value="Processing">Processing</option>
+                                    <option value="Order Shipped">Order Shipped</option>
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                    <Card.Footer className="text-right mt-3">
+                        <button
+                            className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                            onClick={() => setUpdateStatusShow(false)}
+                            type="button"
+                        >
+                            Cancel
+                        </button>
+
+                        {orderLoading ?
+                            <button
+                                className="btn btn-primary btn-style"
+                                type="button"
+                            >
+                                Saving...
+                            </button>
+                            :
+                            <button
+                                className="btn btn-primary btn-style"
+                                type="button"
+                                onClick={statusSubmit}
+                            >
+                                Save
+                            </button>
+                        }
+                    </Card.Footer>
                 </Modal.Body>
             </Modal>
 

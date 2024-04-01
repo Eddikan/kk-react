@@ -17,6 +17,7 @@ import AboutImage from 'Assets/images/about.png';
 import PortfolioImage from 'Assets/images/porfolio-profile.png';
 import FabricsImage from 'Assets/images/fabrics-profile.png';
 import CalendarImage from 'Assets/images/profile-calendar.png';
+import Loading from "Components/Shared/Loading";
 
 const initialVendorSurvey = Object.freeze({
     most_like: '',
@@ -141,12 +142,12 @@ const VendorFeedBackSurvey = (props) => {
                                 </Card.Body>
                             </Card>
 
+
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4 pb-0'>
                                     <div>Click on the image to indicate what section of  the page you like the most?
                                         <span className='asteris ms-1'>*</span>
                                     </div>
-
                                     <Row className="designs-row mt-4">
                                         {profileImages.map((image, index) => {
                                             return (
@@ -159,32 +160,22 @@ const VendorFeedBackSurvey = (props) => {
                                                                 value={image.id}
                                                                 onChange={handleChangeVendor}
                                                             />
-                                                            <div className="portfolio-link image">
+                                                            <div className="portfolio-link image mb-5">
                                                                 <div className="designs-grid-div-survey w-100 cursor-pointer">
                                                                     <img src={image.image} className='home-page-images' />
                                                                 </div>
+                                                                <div className='mt-2 fs-16 text-center w-100 cursor-pointer position-absolute'>{image.name}</div>
                                                             </div>
-                                                            <div className='mt-2 fs-18 text-center mb-4 cursor-pointer'>{image.name}</div>
                                                         </label>
                                                     </Col >
-
                                                 </>
                                             )
                                         })}
                                     </Row>
-                                    {/* <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="text"
-                                            className='me-2 question-concerns form-control'
-                                            name='most_like'
-                                            value={vendorFormData.most_like}
-                                            onChange={handleChangeVendor}
-                                            placeholder='Your answer'
-                                            required
-                                        />
-                                    </div> */}
                                 </Card.Body>
                             </Card>
+
+
 
                             <Card className='mb-3 card-border-color'>
                                 <Card.Body className='p-4 pb-0'>
@@ -204,33 +195,18 @@ const VendorFeedBackSurvey = (props) => {
                                                                 value={image.id}
                                                                 onChange={handleChangeVendor}
                                                             />
-                                                            <div className="portfolio-link image">
+                                                            <div className="portfolio-link image mb-5">
                                                                 <div className="designs-grid-div-survey w-100 cursor-pointer">
                                                                     <img src={image.image} className='home-page-images' />
                                                                 </div>
+                                                                <div className='mt-2 fs-16 text-center w-100 cursor-pointer position-absolute'>{image.name}</div>
                                                             </div>
-                                                            <div className='mt-2 fs-18 text-center mb-4 cursor-pointer'>{image.name}</div>
                                                         </label>
                                                     </Col >
-
                                                 </>
                                             )
                                         })}
                                     </Row>
-
-
-
-                                    {/* <div className='mb-3 mt-4 d-flex'>
-                                        <input
-                                            type="text"
-                                            className='me-2 question-concerns form-control'
-                                            name='least_like'
-                                            value={vendorFormData.least_like}
-                                            onChange={handleChangeVendor}
-                                            placeholder='Your answer'
-                                            required
-                                        />
-                                    </div> */}
                                 </Card.Body>
                             </Card>
 

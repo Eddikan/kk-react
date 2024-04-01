@@ -742,7 +742,6 @@ const PortfolioGrid = (props) => {
                                     </>
                                     :
                                     <>
-
                                     </>
                                 }
 
@@ -752,12 +751,16 @@ const PortfolioGrid = (props) => {
                                         classes="btn btn-copy-link border-black bg-white text-black mt-2 w-100"
                                         standbyTitle="Copy Link"
                                         icon={true}
+                                        closeModal={() => setShareShowModal(false)}
                                     />
 
                                     <button
                                         className="btn btn-copy-link border-black bg-white text-black mt-2 w-100"
                                         type="button"
-                                        onClick={toggleCopyEmbedLinkModal}
+                                        onClick={() => {
+                                            toggleCopyEmbedLinkModal();
+                                            setShareShowModal(false);
+                                        }}
                                     >
                                         <ImEmbed2 className='me-2' size={17} />
                                         Copy Embed Code
@@ -812,6 +815,7 @@ const PortfolioGrid = (props) => {
                         icon={false}
                         onCopy={() => setCopy(true)}
                         loadingTitle="Embed Copied"
+                        closeModal={() => setCopyEmbedLink(false)}
                     />
                 </Modal.Footer>
             </Modal >

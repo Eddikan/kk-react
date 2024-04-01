@@ -8,7 +8,7 @@ import 'Assets/styles/Survey/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
 import Section1 from 'Assets/images/image-section-1.png';
-import Section2 from 'Assets/images/image-section-22.png';
+import Section2 from 'Assets/images/image-section-2.png';
 import Section3 from 'Assets/images/image-section-3.png';
 import Section4 from 'Assets/images/image-section-4.png';
 
