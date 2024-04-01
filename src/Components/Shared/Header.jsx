@@ -8,6 +8,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import { Container, Button, Col, Row } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
+import { BsCartCheck } from "react-icons/bs";
 import { IoCalendarClearOutline, IoCartOutline, IoCloseOutline } from "react-icons/io5";
 import { GoBell, GoHeart, GoAlertFill } from "react-icons/go";
 import { BsEnvelope, BsShopWindow } from "react-icons/bs";
@@ -368,7 +369,7 @@ const Header = () => {
                       </a>
                     }
 
-                    {userRole !== 'Admin' &&
+                    {/* {userRole !== 'Admin' &&
                       <div className="user-dropdown nav-link" ref={orderRef}>
                         <a href="/orders" className="text-decoration-none">
                           <div className="cursor-pointer nav-link" >Orders</div>
@@ -410,18 +411,7 @@ const Header = () => {
                                         <hr />
                                       </Row>
 
-                                      {/* <div className='d-flex cursor-pointer' key={order.id}>
-                                      <img src={productImageArray ? imageURL : PlaceholderSquare} className='item-placeholder-header' alt="User" />
-                                      <div className='fs-14 body-text-bell'>
-                                        {order.order_items[0].product.name}
-                                        <div className='mt-1'>
-                                          {truncateDescription(order.order_items[0].product.description, 10)}
-                                        </div>
-                                        <div className='mt-1'>
-                                          <span className='price-color-orders'>${order.total_amount}</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>{order.status}</span>
-                                        </div>
-                                      </div>
-                                    </div> */}
+                                      
                                     </>
                                   );
                                 })}
@@ -439,7 +429,7 @@ const Header = () => {
                         )}
 
                       </div>
-                    }
+                    } */}
 
                     <div className="user-dropdown nav-link" ref={userRef}>
                       {userImage ?
@@ -462,12 +452,18 @@ const Header = () => {
                           }
 
                           {userRole !== 'Admin' &&
+                            <Link to={`/orders`} className="mb-3 text-decoration-none d-block"><BsCartCheck className='me-2' color='#000000' />
+                              <span className='text-black'>Orders</span>
+                            </Link>
+                          }
+
+                          {userRole !== 'Admin' &&
                             <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' color='#000000' />
                               <span className='text-black'>Appointments</span>
                             </Link>
                           }
 
-                          {userRole !== 'Admin' &&
+                          {/* {userRole !== 'Admin' &&
                             <div className='mb-2'>
                               <DropdownButton id="dropdown-survey-button" title={<span><PiNotepadLight className='note-icon ' size={17} />Surveys</span>}>
                                 <Dropdown.Item href="/customer-satisfaction-survey" className='yellow-hover'>Customer Satisfaction</Dropdown.Item>
@@ -480,7 +476,7 @@ const Header = () => {
                                 }
                               </DropdownButton>
                             </div>
-                          }
+                          } */}
 
                           <div>
                             <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower className='me-2' color='#000000' />

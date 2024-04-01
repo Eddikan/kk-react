@@ -108,7 +108,7 @@ const AdminViewCustomerSurvey = (props) => {
                             <Card className='mt-3 mb-3 bordered-top-primary-survey'>
                                 <Card.Body>
                                     <div className='fs-30 mb-4 rufina-family'>
-                                        Customer Satisfaction Feedback
+                                        Customer Satisfaction Survey
                                     </div>
 
                                     <div className='fs-15'>

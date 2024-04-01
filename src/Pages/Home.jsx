@@ -7,6 +7,7 @@ import '../Assets/styles/Home/style.css'
 import Designs from 'Components/Shared/Designs';
 import Fabrics from 'Components/Shared/Fabrics';
 import EcoFriendly from 'Components/Shared/EcoFriendly';
+import CustomerSatisfactionCta from 'Components/Shared/Home/CustomerSatisfactionCta';
 import HomeVideo from 'Assets/videos/kouture-homepage-video.mp4'
 import ShopByCategory from 'Components/Shared/ShopByCategory';
 import { useCookies } from 'react-cookie';
@@ -119,14 +120,10 @@ const Home = (props) => {
       </section>
 
       <section id="eco" className="py-5 mb-0">
-        <Row>
-          <Col lg="12">
-            <EcoFriendly currentUser={currentUser} onSignup={showSignupModal} />
-          </Col>
-        </Row>
+        <EcoFriendly currentUser={currentUser} onSignup={showSignupModal} />
       </section>
 
-      <section id="designs" className="py-5 mb-5">
+      <section id="designs" className="py-5">
         <Container>
           <Row>
             <Col lg="12">
@@ -135,6 +132,11 @@ const Home = (props) => {
           </Row>
         </Container>
       </section>
+
+      <section id="customer-satisfaction-cta" className="py-5 mb-0">
+        <CustomerSatisfactionCta />
+      </section>
+
       <section id="recent-designs" className="py-5 mb-5">
         <Container>
           <Row>
@@ -147,6 +149,8 @@ const Home = (props) => {
           </Row>
         </Container>
       </section>
+
+      
       {/* User Box */}
       <Modal show={userModalShow} fullscreen={true} onHide={() => setUserModalShow(false)}>
         <Modal.Header closeButton>

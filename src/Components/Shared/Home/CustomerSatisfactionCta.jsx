@@ -7,7 +7,7 @@ import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import UnknownPlaceholder from 'Assets/images/placeholders/unknown-placeholder-1.png';
 import toast from 'react-hot-toast';
-import Ecofriendly from 'Assets/images/echo-friendly-bg.png'
+import CustomerSatisfactionCtaBg from 'Assets/images/customer-satisfaction-cta-bg.png'
 import GetDesignersData from 'Utils/GetDesignersData';
 import { Modal } from 'react-bootstrap';
 import { BsThreeDots } from "react-icons/bs";
@@ -18,7 +18,7 @@ import { IoDocumentOutline } from "react-icons/io5";
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 
-const EcoFriendly = (props) => {
+const CustomerSatisfactionCta = (props) => {
     const navigate = useNavigate();
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
@@ -42,17 +42,16 @@ const EcoFriendly = (props) => {
 
     return (
         <>
-            <div style={{ backgroundImage: `url(${Ecofriendly})`, height: `350px` }}>
+            <div style={{ backgroundImage: `url(${CustomerSatisfactionCtaBg})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} className="py-5 text-center">
                 <Container>
                     <Row>
-                        <Col className='eco-col'>
-                            <div className='text-center text-white mb-3 fs-40 rufina-family'>Embrace Eco-Friendly Fabrics!</div>
+                        <Col lg="12" className="text-center">
+                            <div className='text-center text-white mb-3 fs-40 rufina-family'>Help Us Improve – Share Your Experience!</div>
 
-                            <div className='text-center text-white'>Elevate your fashion with fabrics that care for both you and the Earth. Embrace eco-friendly fashion today!</div>
-                            <Link to="/eco-friendly">
-                                <Button className="btn-explore-now fs-15 explore-now" variant="primary">Explore Now</Button>
+                            <p className='text-center text-white'>Your experience means the world to us, and we're always looking to improve. Take a few moments to share your thoughts in our Customer Satisfaction Survey. Your insights not only help us serve you better but also shape the future of our offerings. Click below to make your voice heard. Thank you for helping us enhance your experience!</p>
+                            <Link to="/customer-satisfaction-survey">
+                                <Button className="btn-explore-now fs-15 explore-now mt-2" variant="primary">Start Survey</Button>
                             </Link>
-                            {/* <a className='btn-explore-now fs-15 explore-now' onClick={() => toggleUnderConstruction("Eco-Friendly Fabrics!")}>Explore Now</a> */}
                         </Col>
                     </Row>
                 </Container>
@@ -86,4 +85,4 @@ const EcoFriendly = (props) => {
     );
 };
 
-export default EcoFriendly;
+export default CustomerSatisfactionCta;

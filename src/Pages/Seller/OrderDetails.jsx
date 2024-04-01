@@ -54,26 +54,28 @@ const OrderDetails = (props) => {
     const [designerName, setDesignerName] = useState('');
     const [text, setText] = useState('');
     const [reorderLoading, setReorderLoading] = useState(false);
+    const [orderItemId, setOrderItemId] = useState('');
 
     const [updateStatusShow, setUpdateStatusShow] = useState(false);
     const [orderStatus, setOrderStatus] = useState('All');
 
-    function toggleUpdateStatus() {
+    function toggleUpdateStatus(order_item_id) {
         setUpdateStatusShow(true);
+        setOrderItemId(order_item_id)
 
-        getOrderItemLog()
+        getOrderItemLog(order_item_id)
             .then((response) => {
                 setOrderLoading(false);
                 const selectedOrderItemLog = response.data.data;
                 if (selectedOrderItemLog) {
                     setOrderItems(selectedOrderItemLog);
                 } else {
-                    toast.error('There has been an error getting the order item log, please try again!');
+                    // toast.error('There has been an error getting the order item log, please try again!');
                     setOrderLoading(false);
                 }
             })
             .catch((error) => {
-                toast.error('There has been an error getting the order item log, please try again!');
+                // toast.error('There has been an error getting the order item log, please try again!');
                 setOrderLoading(false);
             });
     }
@@ -91,8 +93,8 @@ const OrderDetails = (props) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId);
     };
 
-    const getOrderItemLog = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/item/log/' + orderId);
+    const getOrderItemLog = async (order_item_id) => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/item/log/' + order_item_id);
     };
 
     const postOrderItemLog = async (data) => {
@@ -159,13 +161,15 @@ const OrderDetails = (props) => {
 
     const statusSubmit = (e) => {
         setOrderLoading(true);
-        postOrderItemLog({ ...orderItemsFormData, order_id: orderItems.id, user_id: currentUser, order_item_id: orderItems.order_item_log.order_item_id }).then(response => {
+        postOrderItemLog({ ...orderItemsFormData, order_id: orderItems.id, user_id: currentUser, order_item_id: orderItemId }).then(response => {
             const status = response.data.status;
             if (status === "Success") {
                 setOrderLoading(false);
                 setOrderItemsFormData(initialStatus);
-                toast.success('Status sent successfully!');
+                toast.success('Status updated successfully!');
+                setUpdateStatusShow(false);
             } else {
+                setUpdateStatusShow(false);
                 setOrderLoading(false);
                 toast.error('There has been an error saving the status, please try again!');
             }
@@ -320,7 +324,7 @@ const OrderDetails = (props) => {
                                                                                                             <p className='text-black mb-0'><CgTrack className='me-2' size={20} />Track</p>
                                                                                                         </a>
 
-                                                                                                        <div className="cursor-pointer" onClick={toggleUpdateStatus}>
+                                                                                                        <div className="cursor-pointer" onClick={() => toggleUpdateStatus(order_item.id)}>
                                                                                                             <p className='text-black mb-0'><GrStatusInfo className='me-2' size={18} />Update Status</p>
                                                                                                         </div>
                                                                                                         {/* {reorderLoading ?
@@ -442,8 +446,8 @@ const OrderDetails = (props) => {
                                                 :
                                                 <>
                                                     <p className="mb-0">{user?.address_line_1}</p>
-                                                    <p className="mb-0">{user.city}, {user.province} {user.postal_code}</p>
-                                                    <p className="mb-0">{user.country}</p>
+                                                    <p className="mb-0">{user?.city}, {user?.province} {user?.postal_code}</p>
+                                                    <p className="mb-0">{user?.country}</p>
                                                 </>
                                             }
 
@@ -587,8 +591,9 @@ const OrderDetails = (props) => {
                                     value={orderItems.status}
                                     onChange={handleChangeStatus}
                                 >
+                                    <option value="Pending">Pending</option>
                                     <option value="Processing">Processing</option>
-                                    <option value="Order Shipped">Order Shipped</option>
+                                    <option value="Shipped">Order Shipped</option>
                                     <option value="Delivered">Delivered</option>
                                     <option value="Completed">Completed</option>
                                 </select>

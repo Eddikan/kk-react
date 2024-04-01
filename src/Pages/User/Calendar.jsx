@@ -59,7 +59,7 @@ const Calendar = (props) => {
     const [times, setTimes] = useState([]);
     const [availability, setAvailability] = useState([]);
     const [currentTimezone, setCurrentTimezone] = useState(null);
-
+    const [noAvailableHours, setNoAvailableHors] = useState(false);
 
     const [reloadCount, setReloadCount] = useState(0);
     const [scheduleReloadCount, setScheduleReloadCount] = useState(0);
@@ -381,7 +381,7 @@ const Calendar = (props) => {
         if (!isSundayChecked) {
             setSundayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setSundayHoursFormData([sundayHoursCopyFormData]);
         }
     };
@@ -392,7 +392,7 @@ const Calendar = (props) => {
         if (!isMondayChecked) {
             setMondayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setMondayHoursFormData([mondayHoursCopyFormData]);
         }
     };
@@ -403,7 +403,7 @@ const Calendar = (props) => {
         if (!isTuesdayChecked) {
             setTuesdayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setTuesdayHoursFormData([tuesdayHoursCopyFormData]);
         }
     };
@@ -414,7 +414,7 @@ const Calendar = (props) => {
         if (!isWednesdayChecked) {
             setWednesdayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setWednesdayHoursFormData([wednesdayHoursCopyFormData]);
         }
     };
@@ -425,7 +425,7 @@ const Calendar = (props) => {
         if (!isThursdayChecked) {
             setThursdayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setThursdayHoursFormData([thursdayHoursCopyFormData]);
         }
     };
@@ -436,7 +436,7 @@ const Calendar = (props) => {
         if (!isFridayChecked) {
             setFridayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setFridayHoursFormData([fridayHoursCopyFormData]);
         }
     };
@@ -447,7 +447,7 @@ const Calendar = (props) => {
         if (!isSaturdayChecked) {
             setSaturdayHoursFormData([]);
         } else {
-            setScheduleReloadCount(scheduleReloadCount + 1);
+            // setScheduleReloadCount(scheduleReloadCount + 1);
             setSaturdayHoursFormData([saturdayHoursCopyFormData]);
         }
     };
@@ -631,7 +631,8 @@ const Calendar = (props) => {
                 const selectedTime = response.data.data;
                 const status = response.data.status;
                 if (status == "Fail") {
-                    toast.error('There are no available hours found!');
+                    // toast.error('There are no available hours found!');
+                    setNoAvailableHors(true);
                 }
                 else {
                     if (selectedTime) {
@@ -797,9 +798,18 @@ const Calendar = (props) => {
                                         </Col>
 
                                         <Col md={6} className="text-right">
-                                            <button className="btn-primary btn" onClick={handleShowDesignerBusinessHoursModal}>Settings</button>
+                                            <button className="btn-primary btn" onClick={handleShowDesignerBusinessHoursModal}>Availability</button>
                                         </Col>
                                     </Row>
+                                    {noAvailableHours ?
+                                        <Row>
+                                            <Col lg="12">
+                                                <div role="alert" className="fade alert alert-warning show">You haven't set your schedule yet. To enable appointments, please update your availability settings now!</div>
+                                            </Col>
+                                        </Row>
+                                        :
+                                        null
+                                    }
                                     <div className="calendar-container">
                                         <MyCalendar
                                             calendarAppointment={calendarAppointment} designerId={designerId}

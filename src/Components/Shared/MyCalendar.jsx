@@ -417,20 +417,20 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                                 />
                                             </Col>
 
-                                            <Col lg="8" className='px-0'>
+                                            <Col lg="12" className='px-0'>
                                                 <Row className={`align-items-center mt-3 ${startTime != "" || endTime != "" ? "mb-3" : ""}`}>
                                                     {times.map((time, index) => {
                                                         return (
                                                             <>
                                                                 {times.length > 0 && (
                                                                     <>
-                                                                        <Col md="5" className="pe-0">
+                                                                        <Col md="6" className="pe-0">
                                                                             <p className="hours-header mb-2 text-left">Starts at</p>
                                                                             <div className='mb-3'>
                                                                                 <input
                                                                                     type='time'
                                                                                     name='consultation_hour_start'
-                                                                                    className='mr-sm-2 form-control-hours'
+                                                                                    className='mr-sm-2 form-control-hours w-100'
                                                                                     value={consultationFormData?.consultation_hour_start}
                                                                                     onChange={e => handleChangeConsultation(e, index)}
                                                                                     required
@@ -438,14 +438,14 @@ const MyCalendar = ({ toggleEvent, calendarAppointment, designerId }) => {
                                                                             </div>
                                                                         </Col>
 
-                                                                        <Col md="5" className="pe-0 position-relative">
+                                                                        <Col md="6" className="pe-0 position-relative">
                                                                             <p className="hours-header mb-2 text-left">Ends at</p>
 
                                                                             <div className='mb-3'>
                                                                                 <input
                                                                                     type='time'
                                                                                     name='consultation_hour_end'
-                                                                                    className='mr-sm-2 form-control-hours'
+                                                                                    className='mr-sm-2 form-control-hours w-100'
                                                                                     value={consultationFormData?.consultation_hour_end}
                                                                                     onChange={e => handleChangeConsultation(e, index)}
                                                                                     required

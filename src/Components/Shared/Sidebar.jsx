@@ -9,7 +9,7 @@ import {
 import { useCookies } from 'react-cookie';
 import 'Assets/styles/Sidebar/style.css'
 import { HiOutlineScissors } from "react-icons/hi2";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Row, Col, Button, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
 import { PiShoppingCartSimple, PiScissorsLight, PiPantsLight, PiBriefcase } from "react-icons/pi";
 import { RxRulerHorizontal } from "react-icons/rx";
@@ -31,7 +31,7 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
 
     return (
         <>
-            <div id="sidebar">
+            <div id="sidebar" className="pe-3">
                 <UncontrolledAccordion>
                     <AccordionItem className='padding-sidebar pt-4'>
                         <p className="fs-20 text-black"><strong>Shop Manager</strong></p>
@@ -121,7 +121,18 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/products')}><PiScissorsLight size="22" className="me-2 mb-1" />Fabrics</div>
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/guide')}><RxRulerHorizontal size="22" className="me-2 mb-1" />Measurement Guide</div>
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/live/stream')}><RiLiveLine size="22" className="me-2 mb-1" />Live Streams</div>
+                        <Card className="mt-3 text-center">
+                            <Card.Body>
+                                <p className="text-center fw-600">Help Us Improve <br /> <p className="mb-0 fw-400">Share Your Experience</p></p>
+                                <Link to="/vendor-feedback-survey">
+                                    <button className="btn btn-primary w-100">
+                                        Start Survey
+                                    </button>
+                                </Link>
+                            </Card.Body>
+                        </Card>
                     </AccordionItem>
+                
                 </UncontrolledAccordion>
             </div >
         </>

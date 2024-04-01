@@ -144,25 +144,25 @@ img.placeholder-chat {
 .processing {
     position: absolute;
     bottom: -2em;
-    left: -22px;
+    left: -30px;
 }
 
 .order-shipped {
     position: absolute;
     bottom: -2em;
-    left: -32px;
+    left: -30px;
 }
 
 .delivered {
     position: absolute;
     bottom: -2em;
-    left: -16px;
+    left: -30px;
 }
 
 .review {
     position: absolute;
     bottom: -2em;
-    left: -22px;
+    left: -30px;
     text-wrap: nowrap;
 }
 
@@ -253,7 +253,7 @@ img.placeholder-chat {
 .date-details {
     position: absolute;
     top: 73px;
-    left: -41px;
+    left: -30px;
     color: #8F8F8F;
     text-wrap: nowrap;
 }
@@ -288,7 +288,7 @@ img.placeholder-chat {
 
     &:before {
         content: '';
-        border-left: 2px solid #8F8F8F;
+        border-left: 2px solid #CEA835;
         position: absolute;
         left: -38px;
         top: 5px;
@@ -352,12 +352,12 @@ section#details-order {
 .order-received {
     position: absolute;
     bottom: -2em;
-    left: -19px;
+    left: -30px;
 }
 
 .order-complete {
     position: absolute;
     bottom: -2em;
-    left: -23px;
+    left: -30px;
     text-wrap: nowrap;
 }

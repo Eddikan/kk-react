@@ -102,7 +102,7 @@ const AdminViewGeneralSurvey = (props) => {
                         <Col>
                             <Card className='mt-3 mb-3 bordered-top-primary-survey'>
                                 <Card.Body>
-                                    <div className='fs-30 mb-4 rufina-family'>Website Feedback Survey (General)</div>
+                                    <div className='fs-30 mb-4 rufina-family'>Website Feedback Survey</div>
                                     <div className='fs-15'>We would love to hear your thoughts or feedback on how we can improve your experience!</div>
                                 </Card.Body>
                                 <hr className='mb-0 mt-0' />

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
-import '../Assets/styles/DesignerCalendar/style.css'
+import 'Assets/styles/DesignerCalendar/style.css'
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import { useNavigate, useParams, Link } from 'react-router-dom';
@@ -17,11 +17,12 @@ import { IoIosAttach } from "react-icons/io";
 import { VscSend } from "react-icons/vsc";
 import { IoCloseOutline } from "react-icons/io5";
 import '../Assets/styles/OrderDetails/style.css';
+import 'Assets/styles/OrderTracking/style.css';
 import InputEmoji from 'react-input-emoji';
 import axios from "axios";
 import toast from 'react-hot-toast';
 
-const OrderDetails = (props) => {
+const OrderTracking = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const { orderItemId } = useParams();
     const [reloadCount, setReloadCount] = useState(0);
@@ -29,6 +30,17 @@ const OrderDetails = (props) => {
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [orderPlaced, setOrderPlaced] = useState('');
+    const [orderItemLogs, setOrderItemLogs] = useState([]);
+
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [isShipped, setIsShipped] = useState(false);
+    const [isDelivered, setIsDelivered] = useState(false);
+    const [isCompleted, setIsCompleted] = useState(false);
+
+    const [isProcessingDate, setIsProcessingDate] = useState('');
+    const [isShippedDate, setIsShippedDate] = useState('');
+    const [isDeliveredDate, setIsDeliveredDate] = useState('');
+    const [isCompletedDate, setIsCompletedDate] = useState('');
 
     const [text, setText] = useState('');
     const [orderItem, setOrderItem] = useState('');
@@ -61,6 +73,17 @@ const OrderDetails = (props) => {
         console.log('enter', text)
     }
 
+    function convertDateTime(datetTme) {
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        };
+        const convertedDateTime = (new Date(datetTme)).toLocaleDateString('en-ES', options);
+
+        return convertedDateTime;
+    }
+
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
     }, []);
@@ -82,6 +105,41 @@ const OrderDetails = (props) => {
                     };
                     const created_at = (new Date(selectedOrderItem.order.created_at)).toLocaleDateString('en-ES', options);
                     setOrderPlaced(created_at);
+
+                    if (selectedOrderItem.order_item.logs) {
+                        setOrderItemLogs(selectedOrderItem.order_item.logs);
+                        const logs = selectedOrderItem.order_item.logs;
+                        const processingLog = logs.find(log => log.status === 'Processing');
+                        const shippedLog = logs.find(log => log.status === 'Shipped');
+                        const deliveredLog = logs.find(log => log.status === 'Delivered');
+                        const completedLog = logs.find(log => log.status === 'Completed');
+
+                        const processingDate = processingLog ? processingLog.created_at : null;
+                        const shippedDate = shippedLog ? shippedLog.created_at : null;
+                        const deliveredDate = deliveredLog ? deliveredLog.created_at : null;
+                        const completedDate = completedLog ? completedLog.created_at : null;
+
+                        if (processingDate) {
+                            setIsProcessingDate(convertDateTime(processingDate));
+                        }
+
+                        if (shippedDate) {
+                            setIsShippedDate(convertDateTime(shippedDate));
+                        }
+
+                        if (deliveredDate) {
+                            setIsDeliveredDate(convertDateTime(deliveredDate));
+                        }
+
+                        if (completedDate) {
+                            setIsCompletedDate(convertDateTime(completedDate));
+                        }
+
+                        setIsProcessing(!!processingLog);
+                        setIsShipped(!!shippedLog);
+                        setIsDelivered(!!deliveredLog);
+                        setIsCompleted(!!completedLog);
+                    }
 
                 } else {
                     toast.error('There has been an error getting the user, please try again!');
@@ -115,39 +173,94 @@ const OrderDetails = (props) => {
 
                                 <PiNotepadLight className='order-placed-icon tracking-icon active' size={25} />
                                 <div className="timeline-circle timeline-circle--data timeline-circle--active">
-                                    <div className="order fw-600">Order Placed</div>
-                                    <div className="date-details fs-14">{orderPlaced}</div>
+                                    <div className="order fw-600 tracking-status text-center">Order Placed</div>
+                                    <div className="date-details fs-14 text-center tracking-status">{orderPlaced}</div>
                                 </div>
 
-                                <PiCircleDashedLight className='processing-icon tracking-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data">
-                                    <div className="processing fw-600">Processing</div>
-                                    {/* <div className="date-details fs-14">December 13, 2023</div> */}
-                                </div>
+                                {isProcessing ?
+                                    <>
+                                        <PiCircleDashedLight className='processing-icon tracking-icon active' size={25} />
+                                        <div className="timeline-circle timeline-circle--data timeline-circle--active">
+                                            <div className="processing fw-600 tracking-status text-center">Processing</div>
+                                            <div className="date-details fs-14 text-center tracking-status">{isProcessingDate}</div>
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                        <PiCircleDashedLight className='processing-icon tracking-icon' size={25} />
+                                        <div className="timeline-circle timeline-circle--data">
+                                            <div className="processing fw-600 tracking-status text-center">Processing</div>
+                                            {/* <div className="date-details fs-14">December 13, 2023</div> */}
+                                        </div>
+                                    </>
+                                }
 
-                                <PiTruckThin className='truck-icon tracking-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data">
-                                    <div className="order-shipped fw-600">Order Shipped</div>
-                                    {/* <div className="date-details fs-14">December 25, 2023</div> */}
-                                </div>
+                                {isShipped ?
+                                    <>
+                                         <PiTruckThin className='truck-icon tracking-icon active' size={25} />
+                                        <div className="timeline-circle timeline-circle--data timeline-circle--active">
+                                            <div className="order-shipped fw-600 tracking-status text-center">Order Shipped</div>
+                                            <div className="date-details fs-14 tracking-status">{isShippedDate}</div>
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                         <PiTruckThin className='truck-icon tracking-icon' size={25} />
+                                        <div className="timeline-circle timeline-circle--data">
+                                            <div className="order-shipped fw-600 tracking-status text-center">Order Shipped</div>
+                                            {/* <div className="date-details fs-14">December 25, 2023</div> */}
+                                        </div>
+                                    </>
+                                }
 
-                                <CiSaveDown2 className='delivered-icon tracking-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data">
-                                    <div className="order-received fw-600">Delivered</div>
-                                    {/* <div className="date-details fs-14">December 25, 2023</div> */}
-                                </div>
+                                {isDelivered ?
+                                    <>
+                                        <CiSaveDown2 className='delivered-icon tracking-icon active' size={25} />
+                                        <div className="timeline-circle timeline-circle--data timeline-circle--active">
+                                            <div className="order-received fw-600 tracking-status text-center">Delivered</div>
+                                            <div className="date-details fs-14 tracking-status">{isDeliveredDate}</div>
+                                        </div>
 
-                                <PiStarLight className='for-review-icon tracking-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data">
-                                    <div className="order-complete fw-600">For Review</div>
-                                    {/* <div className="date-details fs-14">December 25, 2023</div> */}
-                                </div>
+                                        <PiStarLight className='for-review-icon tracking-icon active' size={25} />
+                                        <div className="timeline-circle timeline-circle--data timeline-circle--active">
+                                            <div className="order-complete fw-600 tracking-status text-center">For Review</div>
+                                            <div className="date-details fs-14">{isDeliveredDate}</div>
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                        <CiSaveDown2 className='delivered-icon tracking-icon' size={25} />
+                                        <div className="timeline-circle timeline-circle--data">
+                                            <div className="order-received fw-600 tracking-status text-center">Delivered</div>
+                                            {/* <div className="date-details fs-14">December 25, 2023</div> */}
+                                        </div>
+                                        <PiStarLight className='for-review-icon tracking-icon' size={25} />
+                                        <div className="timeline-circle timeline-circle--data">
+                                            <div className="order-complete fw-600 tracking-status text-center">For Review</div>
+                                            {/* <div className="date-details fs-14">December 25, 2023</div> */}
+                                        </div>
+                                    </>
+                                }
 
-                                <PiCheckBold className='for-review-icon tracking-icon' size={25} />
-                                <div className="timeline-circle timeline-circle--data">
-                                    <div className="processing fw-600">Completed</div>
-                                    {/* <div className="date-details fs-14">December 26, 2023</div> */}
-                                </div>
+                                {isCompleted ?
+                                    <>
+                                        <PiCheckBold className='for-review-icon tracking-icon active' size={25} />
+                                        <div className="timeline-circle timeline-circle--data timeline-circle--active ">
+                                            <div className="processing fw-600 tracking-status text-center">Completed</div>
+                                            <div className="date-details fs-14">{isCompletedDate}</div>
+                                        </div>
+                                    </>
+                                    :
+                                    <>
+                                        <PiCheckBold className='for-review-icon tracking-icon' size={25} />
+                                        <div className="timeline-circle timeline-circle--data ">
+                                            <div className="processing fw-600 tracking-status text-center">Completed</div>
+                                            {/* <div className="date-details fs-14">December 26, 2023</div> */}
+                                        </div>
+                                    </>
+                                }
+
+                                
                             </div>
                         </Col>
                     </Row>
@@ -287,13 +400,69 @@ const OrderDetails = (props) => {
 
                                                     <li>
                                                         <div className='d-flex'>
-                                                            <div className="me-3 completed">December 13, 2023</div>
+                                                            <div className="me-3 completed">{orderPlaced}</div>
                                                             <div className='color-order text-black fs-16'><span className="fw-600">Order Placed</span>
                                                                 <br />
                                                                 <span className='fs-14'>Order Placed.</span>
                                                             </div>
                                                         </div>
                                                     </li>
+
+                                                    {isProcessing ?
+                                                        <li>
+                                                            <div className='d-flex'>
+                                                                <div className="me-3 completed">{isProcessingDate}</div>
+                                                                <div className='color-order text-black fs-16'><span className="fw-600">Processing</span>
+                                                                    <br />
+                                                                    <span className='fs-14'>The order is being processed.</span>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        :
+                                                        null
+                                                    }
+
+                                                    {isShipped ?
+                                                        <li>
+                                                            <div className='d-flex'>
+                                                                <div className="me-3 completed">{isShippedDate}</div>
+                                                                <div className='color-order text-black fs-16'><span className="fw-600">Order Shipped</span>
+                                                                    <br />
+                                                                    <span className='fs-14'>The order is out for delivery.</span>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        :
+                                                        null
+                                                    }
+
+                                                    {isDelivered ?
+                                                         <li>
+                                                            <div className='d-flex'>
+                                                                <div className="me-3 completed">{isDeliveredDate}</div>
+                                                                <div className='color-order text-black fs-16'><span className="fw-600">Delivered</span>
+                                                                    <br />
+                                                                    {/* <span className='fs-14'>The order has been delivered.<span className='text-gold'> View Proof of Delivery</span></span> */}
+                                                                    <span className='fs-14'>The item has been delivered.</span>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        :
+                                                        null
+                                                    }
+
+                                                    {isCompleted ?
+                                                         <li>
+                                                            <div className='d-flex'>
+                                                                <div className="me-3 completed">{isCompletedDate}</div>
+                                                                <div className='color-order text-black fs-16'><span className="fw-600">Completed</span>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        :
+                                                        null
+                                                    }
+
                                                 </ul>
                                             </div>
                                         </Col>
@@ -417,4 +586,4 @@ const OrderDetails = (props) => {
     );
 };
 
-export default OrderDetails;
+export default OrderTracking;
