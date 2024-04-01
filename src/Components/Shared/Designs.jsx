@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import GetDesignsData from 'Utils/GetDesignsData';
 import { GoAlertFill } from "react-icons/go";
 import PinIcon from 'Assets/images/pin.png';
+import { useCookies } from 'react-cookie';
 import Modal from 'react-bootstrap/Modal';
 import User from 'Assets/images/user.png';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
@@ -21,9 +22,11 @@ import MeetingChat from 'Components/Chat/MeetingChat';
 import axios from 'axios';
 
 const Designs = (props) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const navigate = useNavigate();
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
+    const userRole = cookies.userRole;
     const limit = props.limit ?? 16;
     const [designs, setDesigns] = useState([]);
     const [designsLoading, setDesignsLoading] = useState(true);
@@ -226,23 +229,38 @@ const Designs = (props) => {
                                                     <Col className="designs-grid mb-3" xs="12" md="3">
                                                         {currentUser ?
                                                             <>
-                                                                <div className='portfolio-link cursor-pointer' onClick={function () { togglePortfolioImage(design.id, design.designer.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description, design.user.id); }}>
-                                                                    <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}>
-                                                                        {/* {currentUser ?
-                                                                            <div className='save-link'>
-                                                                                <div className="action-button bg-white me-2">
-                                                                                    <GoBookmark className="text-black" />
-                                                                                </div>
-                                                                                <div className="action-button bg-white">
-                                                                                    <GoHeart className="text-black" />
-                                                                                </div>
-                                                                            </div>
-                                                                            :
-                                                                            null 
-                                                                            
-                                                                        } */}
+
+                                                                {userRole !== 'Admin' ?
+                                                                    <>
+                                                                        <div
+                                                                            className='portfolio-link cursor-pointer'
+                                                                            onClick={function () {
+                                                                                togglePortfolioImage(
+                                                                                    design.id,
+                                                                                    design.designer.id,
+                                                                                    design.user.first_name,
+                                                                                    design.user.last_name,
+                                                                                    design.image_urls,
+                                                                                    design.user.image,
+                                                                                    design.user.address_line_1,
+                                                                                    design.user.province,
+                                                                                    design.tags,
+                                                                                    design.description,
+                                                                                    design.user.id);
+                                                                            }}
+                                                                        >
+                                                                            <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}></div>
+                                                                        </div>
+                                                                    </>
+                                                                    :
+                                                                    <div
+                                                                        className='portfolio-link cursor-pointer'
+                                                                        onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }}
+                                                                    >
+                                                                        <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}></div>
                                                                     </div>
-                                                                </div>
+
+                                                                }
                                                             </>
                                                             :
                                                             <>

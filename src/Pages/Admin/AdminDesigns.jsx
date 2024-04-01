@@ -192,6 +192,20 @@ const AdminDesigns = (props) => {
     },
         [reloadCount]);
 
+    async function toggleAddViewCount(id) {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                // toast.success('Design saved as draft successfully!');
+                // setReloadCount((prevReloadCount) => prevReloadCount + 1);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+        });
+    }
+
     return (
         <LayoutAdmin>
             {designsLoading ?
@@ -266,21 +280,7 @@ const AdminDesigns = (props) => {
                                                                                     <Col lg={3} className='d-flex justify-content-left align-items-center'>
                                                                                         <div
                                                                                             className="cursor-pointer image-design-admin"
-                                                                                            onClick={function () {
-                                                                                                togglePortfolioImage(
-                                                                                                    design.id,
-                                                                                                    design.designer.id,
-                                                                                                    design.user.first_name,
-                                                                                                    design.user.last_name,
-                                                                                                    design.image_urls,
-                                                                                                    design.user.image,
-                                                                                                    design.user.address_line_1,
-                                                                                                    design.user.province,
-                                                                                                    design.tags,
-                                                                                                    design.description,
-                                                                                                    design.user.id
-                                                                                                );
-                                                                                            }}
+                                                                                            onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }}
                                                                                             style={{ backgroundImage: "url(" + designImage + ")" }}
                                                                                         >
                                                                                         </div>
@@ -288,21 +288,7 @@ const AdminDesigns = (props) => {
                                                                                         <div className='ms-3'>
                                                                                             <div
                                                                                                 className='d-flex mt-0 mb-2 fs-18 text-black cursor-pointer'
-                                                                                                onClick={function () {
-                                                                                                    togglePortfolioImage(
-                                                                                                        design.id,
-                                                                                                        design.designer.id,
-                                                                                                        design.user.first_name,
-                                                                                                        design.user.last_name,
-                                                                                                        design.image_urls,
-                                                                                                        design.user.image,
-                                                                                                        design.user.address_line_1,
-                                                                                                        design.user.province,
-                                                                                                        design.tags,
-                                                                                                        design.description,
-                                                                                                        design.user.id
-                                                                                                    );
-                                                                                                }}
+                                                                                                onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }}
                                                                                             >
                                                                                                 <span className="admin-ellipsis-design fw-500">{design.name}</span>
                                                                                             </div>
@@ -390,21 +376,7 @@ const AdminDesigns = (props) => {
 
                                                                                             <div
                                                                                                 className="design-tooltip cursor-pointer"
-                                                                                                onClick={function () {
-                                                                                                    togglePortfolioImage(
-                                                                                                        design.id,
-                                                                                                        design.designer.id,
-                                                                                                        design.user.first_name,
-                                                                                                        design.user.last_name,
-                                                                                                        design.image_urls,
-                                                                                                        design.user.image,
-                                                                                                        design.user.address_line_1,
-                                                                                                        design.user.province,
-                                                                                                        design.tags,
-                                                                                                        design.description,
-                                                                                                        design.user.id
-                                                                                                    );
-                                                                                                }}
+                                                                                                onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }}
                                                                                             >
                                                                                                 <span className="icon-tooltiptext fs-14">View</span>
                                                                                                 <IoEye className='me-3' color='#000000' size={20} />

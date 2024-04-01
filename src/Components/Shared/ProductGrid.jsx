@@ -19,8 +19,9 @@ const ProductGrid = (props) => {
     const [fabrics, setFabrics] = useState([]);
     const [isProductCurrentUser, setIsProductCurrentUser] = useState(false);
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole']);
     const currentUser = cookies.currentUser;
+    const userRole = cookies.userRole;
     const token = cookies.token;
 
     const useQuery = () => {
@@ -101,27 +102,31 @@ const ProductGrid = (props) => {
                                                         </div>
                                                     </Link>
 
-                                                    {isProductCurrentUser ?
-                                                        null
-                                                        :
+                                                    {userRole !== 'Admin' &&
                                                         <>
-                                                            <div className='save-link'>
-                                                                {userWishlist ?
-                                                                    <div
-                                                                        className="action-button bg-gold"
-                                                                        onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
-                                                                    >
-                                                                        <GoHeart className="text-white" />
+                                                            {isProductCurrentUser ?
+                                                                null
+                                                                :
+                                                                <>
+                                                                    <div className='save-link'>
+                                                                        {userWishlist ?
+                                                                            <div
+                                                                                className="action-button bg-gold"
+                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
+                                                                            >
+                                                                                <GoHeart className="text-white" />
+                                                                            </div>
+                                                                            :
+                                                                            <div
+                                                                                className="action-button bg-white"
+                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
+                                                                            >
+                                                                                <GoHeart className="text-black" />
+                                                                            </div>
+                                                                        }
                                                                     </div>
-                                                                    :
-                                                                    <div
-                                                                        className="action-button bg-white"
-                                                                        onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
-                                                                    >
-                                                                        <GoHeart className="text-black" />
-                                                                    </div>
-                                                                }
-                                                            </div>
+                                                                </>
+                                                            }
                                                         </>
                                                     }
                                                 </div>

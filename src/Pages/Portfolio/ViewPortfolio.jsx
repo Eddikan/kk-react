@@ -27,7 +27,7 @@ import { PiNotepadFill } from "react-icons/pi";
 import User from '../../Assets/images/user.png';
 
 const ViewPortFolio = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userRole']);
     const { portfolioId } = useParams();
     const [images, setImages] = useState([]);
     const [reloadCount, setReloadCount] = useState(0);
@@ -49,6 +49,7 @@ const ViewPortFolio = () => {
     const [isPortfolioCurrentUser, setIsPortfolioCurrentUser] = useState(false);
 
     const currentUser = cookies.currentUser;
+    const userRole = cookies.userRole;
     const navigate = useNavigate();
 
     const handleActiveImageChange = (image) => {
@@ -204,22 +205,24 @@ const ViewPortFolio = () => {
 
                                                     </div>
 
-                                                    {!isPortfolioCurrentUser ?
+                                                    {userRole !== 'Admin' &&
                                                         <>
+                                                            {!isPortfolioCurrentUser ?
+                                                                <>
 
-                                                            <div className="action-button kouture-tooltip bg-smgray" onClick={() => toggleUnderConstruction("Share Portfolio")}>
-                                                                <span class="kouture-tooltiptext fs-14">
-                                                                    Share
-                                                                </span>
-                                                                <GoShareAndroid className="text-black" />
-                                                            </div>
+                                                                    <div className="action-button kouture-tooltip bg-smgray" onClick={() => toggleUnderConstruction("Share Portfolio")}>
+                                                                        <span class="kouture-tooltiptext fs-14">
+                                                                            Share
+                                                                        </span>
+                                                                        <GoShareAndroid className="text-black" />
+                                                                    </div>
 
+                                                                </>
+                                                                :
+                                                                null
+                                                            }
                                                         </>
-                                                        :
-                                                        null
                                                     }
-
-
                                                 </Col>
 
                                                 <Col lg="12">
@@ -277,43 +280,47 @@ const ViewPortFolio = () => {
                                                         </div>
                                                     </div>
 
-                                                    {!isPortfolioCurrentUser ?
+                                                    {userRole !== 'Admin' &&
                                                         <>
-                                                            <div>
-                                                                <div className="cursor-pointer" onClick={() => chatBoxModal("Message")}>
-                                                                    <AiFillMessage className='me-2 mb-1' color='#caa533' />Message
+                                                            {!isPortfolioCurrentUser ?
+                                                                <>
+                                                                    <div>
+                                                                        <div className="cursor-pointer" onClick={() => chatBoxModal("Message")}>
+                                                                            <AiFillMessage className='me-2 mb-1' color='#caa533' />Message
 
-                                                                </div>
-                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </>
+                                                                :
+                                                                null
+                                                            }
                                                         </>
-                                                        :
-                                                        null
                                                     }
                                                 </div>
 
-
-                                                {!isPortfolioCurrentUser ?
+                                                {userRole !== 'Admin' &&
                                                     <>
-                                                        <span>
-                                                            <p className='btn request-quote-btn mt-4 mb-0 fs-16 fw-400 bg-transparent text-black request-a-quote'
-                                                                onClick={() => toggleRequestAQuote(true)}
-                                                            >
-                                                                <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
-                                                                Request a Quote
-                                                            </p>
-                                                        </span>
+                                                        {!isPortfolioCurrentUser ?
+                                                            <>
+                                                                <span>
+                                                                    <p className='btn request-quote-btn mt-4 mb-0 fs-16 fw-400 bg-transparent text-black request-a-quote'
+                                                                        onClick={() => toggleRequestAQuote(true)}
+                                                                    >
+                                                                        <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
+                                                                        Request a Quote
+                                                                    </p>
+                                                                </span>
 
-                                                        <span className='w-100'>
-                                                            <a href={`/appointment/schedule/${portfolio.designer.id}`} className='btn mt-4 ms-3 btn-primary fs-16 fw-400 consultation-btn'>
-                                                                <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule a Consultation</a>
-                                                        </span>
+                                                                <span className='w-100'>
+                                                                    <a href={`/appointment/schedule/${portfolio.designer.id}`} className='btn mt-4 ms-3 btn-primary fs-16 fw-400 consultation-btn'>
+                                                                        <IoVideocam color="#ffffff" className='me-2' size="20" />Schedule a Consultation</a>
+                                                                </span>
+                                                            </>
+                                                            :
+                                                            null
+                                                        }
                                                     </>
-                                                    :
-                                                    null
                                                 }
-
-
-
                                             </Card.Body>
                                         </Card>
                                     </Col>
@@ -331,16 +338,20 @@ const ViewPortFolio = () => {
                                     {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
                                     <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews
 
-                                        {!isPortfolioCurrentUser && (
-                                            <span className="cursor-pointer reviews-tooltip"
-                                                onClick={() => toggleAddToReview(portfolio.image_urls)}
-                                            >
-                                                <div className='tooltip-content'>
-                                                    <span className="reviews-tooltiptext fs-14">Write Review</span>
-                                                </div>
-                                                <BsArrowUpRightSquare className='ms-2' color="#caa533" />
-                                            </span>
-                                        )}
+                                        {userRole !== 'Admin' &&
+                                            <>
+                                                {!isPortfolioCurrentUser && (
+                                                    <span className="cursor-pointer reviews-tooltip"
+                                                        onClick={() => toggleAddToReview(portfolio.image_urls)}
+                                                    >
+                                                        <div className='tooltip-content'>
+                                                            <span className="reviews-tooltiptext fs-14">Write Review</span>
+                                                        </div>
+                                                        <BsArrowUpRightSquare className='ms-2' color="#caa533" />
+                                                    </span>
+                                                )}
+                                            </>
+                                        }
 
                                     </span>
                                     <hr className='mt-2' />

@@ -81,6 +81,7 @@ const Designs = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const token = cookies.token;
+    const userRole = cookies.userRole;
     let iframeLink = `<iframe src="https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
     let PageSize = 10;
 
@@ -315,6 +316,20 @@ const Designs = (props) => {
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
             setDesignsLoading(false);
+        });
+    }
+
+    async function toggleAddViewCount(id) {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                // toast.success('Design saved as draft successfully!');
+                // setReloadCount((prevReloadCount) => prevReloadCount + 1);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
         });
     }
 
@@ -567,22 +582,32 @@ const Designs = (props) => {
                                                                         <div className="portfolio-link">
                                                                             <div
                                                                                 className="designs-grid-div w-100 cursor-pointer"
-                                                                                onClick={function () {
-                                                                                    togglePortfolioImage(
-                                                                                        design.id,
-                                                                                        design.designer.id,
-                                                                                        design.user.first_name,
-                                                                                        design.user.last_name,
-                                                                                        design.image_urls,
-                                                                                        design.user.image,
-                                                                                        design.user.address_line_1,
-                                                                                        design.user.province,
-                                                                                        design.tags,
-                                                                                        design.description,
-                                                                                        design.user.id);
-                                                                                }}
+                                                                                onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }}
                                                                                 style={{ backgroundImage: "url(" + designImage + ")" }}>
                                                                             </div>
+
+                                                                            {userRole !== 'Admin' &&
+                                                                                <>
+                                                                                    <div
+                                                                                        className="designs-grid-div w-100 cursor-pointer"
+                                                                                        onClick={function () {
+                                                                                            togglePortfolioImage(
+                                                                                                design.id,
+                                                                                                design.designer.id,
+                                                                                                design.user.first_name,
+                                                                                                design.user.last_name,
+                                                                                                design.image_urls,
+                                                                                                design.user.image,
+                                                                                                design.user.address_line_1,
+                                                                                                design.user.province,
+                                                                                                design.tags,
+                                                                                                design.description,
+                                                                                                design.user.id);
+                                                                                        }}
+                                                                                        style={{ backgroundImage: "url(" + designImage + ")" }}>
+                                                                                    </div>
+                                                                                </>
+                                                                            }
 
                                                                         </div>
                                                                         <div className="design-details">

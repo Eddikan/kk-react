@@ -16,8 +16,9 @@ const ProductGrid = (props) => {
     const [productsLoading, setProductsLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
     const [isClicked, setIsClicked] = useState(false);
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole']);
     const currentUser = cookies.currentUser;
+    const userRole = cookies.userRole;
 
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
@@ -97,23 +98,31 @@ const ProductGrid = (props) => {
                                                             <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
                                                         </Link>
                                                         {/* <div className="portfolio-overlay"> */}
+
+
                                                         <div className='save-link'>
-                                                            {userWishlist ?
-                                                                <div
-                                                                    className="action-button bg-gold"
-                                                                    onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
-                                                                >
-                                                                    <GoHeart className="text-white" />
-                                                                </div>
-                                                                :
-                                                                <div
-                                                                    className="action-button bg-white"
-                                                                    onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
-                                                                >
-                                                                    <GoHeart className="text-black" />
-                                                                </div>
+                                                            {userRole !== 'Admin' &&
+                                                                <>
+                                                                    {userWishlist ?
+                                                                        <div
+                                                                            className="action-button bg-gold"
+                                                                            onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
+                                                                        >
+                                                                            <GoHeart className="text-white" />
+                                                                        </div>
+                                                                        :
+                                                                        <div
+                                                                            className="action-button bg-white"
+                                                                            onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}
+                                                                        >
+                                                                            <GoHeart className="text-black" />
+                                                                        </div>
+                                                                    }
+                                                                </>
                                                             }
                                                         </div>
+
+
                                                         <div className="portfolio-details">
                                                             {product.status == "Draft" ?
                                                                 <span className="text-warning small fw-600">Draft</span>
