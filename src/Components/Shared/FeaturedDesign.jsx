@@ -47,6 +47,7 @@ const PortfolioGrid = (props) => {
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
+    const userRole = cookies.userRole;
     const token = cookies.token;
 
     let iframeLink = `<iframe src="https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
@@ -145,6 +146,20 @@ const PortfolioGrid = (props) => {
         }
     };
 
+    async function toggleAddViewCount(id) {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                // toast.success('Design saved as draft successfully!');
+                // setReloadCount((prevReloadCount) => prevReloadCount + 1);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+        });
+    }
+
     useEffect(() => {
         fetchData(user_id);
     }, [reloadCount]);
@@ -188,22 +203,45 @@ const PortfolioGrid = (props) => {
                                             <Col className={`mb-0`} lg="4">
                                                 {/* <div className={`portfolio-grid-featured w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + portfolioImage + ")" }}> */}
 
-                                                <div
-                                                    className='portfolio-link cursor-pointer'
-                                                    onClick={function () { togglePortfolioImage(object.id, object.designer.id, object.user.first_name, object.user.last_name, object.image_urls, object.user.image, object.user.address_line_1, object.user.province, object.tags, object.description, object.user.id); }}
+                                                {userRole !== 'Admin' ?
+                                                    <>
+                                                        <div
+                                                            className='portfolio-link cursor-pointer'
+                                                            onClick={function () { togglePortfolioImage(object.id, object.designer.id, object.user.first_name, object.user.last_name, object.image_urls, object.user.image, object.user.address_line_1, object.user.province, object.tags, object.description, object.user.id); }}
 
-                                                >
-                                                    <div className="portfolio-grid-featured w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '130px' }}> </div>
-                                                    <div className="portfolio-overlay">
-                                                        <div className="portfolio-details">
-                                                            {object.status == "Draft" ?
-                                                                <span className="text-warning small fw-600">Draft</span>
-                                                                :
-                                                                null
-                                                            }
+                                                        >
+                                                            <div className="portfolio-grid-featured w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '130px' }}> </div>
+                                                            <div className="portfolio-overlay">
+                                                                <div className="portfolio-details">
+                                                                    {object.status == "Draft" ?
+                                                                        <span className="text-warning small fw-600">Draft</span>
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </div>
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <div
+                                                            className='portfolio-link cursor-pointer'
+                                                            onClick={function () { toggleAddViewCount(object.id); navigate('/portfolio/' + object.id); }}
+
+                                                        >
+                                                            <div className="portfolio-grid-featured w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '130px' }}> </div>
+                                                            <div className="portfolio-overlay">
+                                                                <div className="portfolio-details">
+                                                                    {object.status == "Draft" ?
+                                                                        <span className="text-warning small fw-600">Draft</span>
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                }
                                             </Col>
                                         )
                                     })}

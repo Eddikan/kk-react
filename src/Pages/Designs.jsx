@@ -580,13 +580,13 @@ const Designs = (props) => {
                                                                 <>
                                                                     <Col className="designs-grid mb-4" xs="12" md="4">
                                                                         <div className="portfolio-link">
-                                                                            <div
+                                                                            {/* <div
                                                                                 className="designs-grid-div w-100 cursor-pointer"
                                                                                 onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }}
                                                                                 style={{ backgroundImage: "url(" + designImage + ")" }}>
-                                                                            </div>
+                                                                            </div> */}
 
-                                                                            {userRole !== 'Admin' &&
+                                                                            {userRole !== 'Admin' ?
                                                                                 <>
                                                                                     <div
                                                                                         className="designs-grid-div w-100 cursor-pointer"
@@ -604,6 +604,14 @@ const Designs = (props) => {
                                                                                                 design.description,
                                                                                                 design.user.id);
                                                                                         }}
+                                                                                        style={{ backgroundImage: "url(" + designImage + ")" }}>
+                                                                                    </div>
+                                                                                </>
+                                                                                :
+                                                                                <>
+                                                                                    <div
+                                                                                        className="designs-grid-div w-100 cursor-pointer"
+                                                                                        onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }}
                                                                                         style={{ backgroundImage: "url(" + designImage + ")" }}>
                                                                                     </div>
                                                                                 </>

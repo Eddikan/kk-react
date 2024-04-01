@@ -73,7 +73,7 @@ const DesignerProfile = () => {
     const [fabricShow, setFabricShow] = useState(false);
     const [calendarShow, setCalendarShow] = useState(false);
     const [processShow, setProcessShow] = useState(false);
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole']);
     const [areasOfSpecialization, setAreaOfSpecialization] = useState([]);
     const [portfolioItems, setPortfolioItems] = useState([]);
     const [seller, setSeller] = useState([]);
@@ -92,6 +92,7 @@ const DesignerProfile = () => {
 
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
+    const userRole = cookies.userRole;
     const token = cookies.token;
     const activeProfileTab = cookies.activeProfileTab;
 
@@ -359,37 +360,69 @@ const DesignerProfile = () => {
                             <Col lg="6" className='text-right'>
                                 <Row>
                                     <Col lg={10}>
-                                        {isDesignerCurrentUser ?
-                                            null
+                                        {userRole !== 'Admin' ?
+                                            <>
+                                                {isDesignerCurrentUser ?
+                                                    null
+                                                    :
+                                                    <>
+                                                        <span>
+                                                            <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 btn-style'
+                                                                onClick={() => toggleRequestAQuote(true)}
+                                                            >
+                                                                <PiNotepadFill className='me-2' size="20" />
+                                                                Request a Quote
+                                                            </p>
+                                                        </span>
+                                                        {designerAvailable ?
+                                                            <span className='w-100'>
+                                                                <a
+                                                                    className='btn ms-3 btn-consultation fs-16 fw-400 btn-style'
+                                                                    href={`/designer/${designer.id}/appointment/schedule/0`}
+                                                                >
+                                                                    <IoVideocam className='me-2' size="20" />Schedule a Consultation</a>
+                                                            </span>
+                                                            :
+                                                            <span className='w-100'>
+                                                                <button className='btn ms-3 btn-consultation fs-16 fw-400 btn-style' disabled>
+                                                                    <IoVideocam className='me-2' size="20" />Unavailable for Consultation
+                                                                </button>
+                                                            </span>
+                                                        }
+                                                    </>
+                                                }
+                                            </>
                                             :
                                             <>
-                                                <span>
-                                                    <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 btn-style'
-                                                        onClick={() => toggleRequestAQuote(true)}
-                                                    >
-                                                        <PiNotepadFill className='me-2' size="20" />
-                                                        Request a Quote
-                                                    </p>
-                                                </span>
-                                                {designerAvailable ?
-                                                    <span className='w-100'>
-                                                        {/* <a
-                                                            href={`/appointment/schedule/${designer.id}`}
-                                                            className='btn ms-3 btn-consultation fs-16 fw-400 btn-style'
-                                                        > */}
-                                                        <a
-                                                            className='btn ms-3 btn-consultation fs-16 fw-400 btn-style'
-                                                            href={`/designer/${designer.id}/appointment/schedule/0`}
-                                                        >
-                                                            <IoVideocam className='me-2' size="20" />Schedule a Consultation</a>
-                                                    </span>
+                                                {/* {isDesignerCurrentUser ?
+                                                    null
                                                     :
-                                                    <span className='w-100'>
-                                                        <button className='btn ms-3 btn-consultation fs-16 fw-400 btn-style' disabled>
-                                                            <IoVideocam className='me-2' size="20" />Unavailable for Consultation
-                                                        </button>
-                                                    </span>
-                                                }
+                                                    <>
+                                                        <span>
+                                                            <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 btn-style'
+                                                                onClick={() => toggleRequestAQuote(true)}
+                                                            >
+                                                                <PiNotepadFill className='me-2' size="20" />
+                                                                Request a Quote
+                                                            </p>
+                                                        </span>
+                                                        {designerAvailable ?
+                                                            <span className='w-100'>
+                                                                <a
+                                                                    className='btn ms-3 btn-consultation fs-16 fw-400 btn-style'
+                                                                    href={`/designer/${designer.id}/appointment/schedule/0`}
+                                                                >
+                                                                    <IoVideocam className='me-2' size="20" />Schedule a Consultation</a>
+                                                            </span>
+                                                            :
+                                                            <span className='w-100'>
+                                                                <button className='btn ms-3 btn-consultation fs-16 fw-400 btn-style' disabled>
+                                                                    <IoVideocam className='me-2' size="20" />Unavailable for Consultation
+                                                                </button>
+                                                            </span>
+                                                        }
+                                                    </>
+                                                } */}
                                             </>
                                         }
                                     </Col>

@@ -46,6 +46,7 @@ const Fabrics = (props) => {
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
+    const userRole = cookies.userRole;
     const token = cookies.token;
     let PageSize = 10;
 
@@ -541,23 +542,31 @@ const Fabrics = (props) => {
                                                                                     >
                                                                                     </div>
 
-                                                                                    <div className='save-link'>
-                                                                                        {userWishlist ?
-                                                                                            <div
-                                                                                                className="action-button bg-gold"
-                                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
-                                                                                            >
-                                                                                                <GoHeart className="text-white" />
+                                                                                    {userRole !== 'Admin' ?
+                                                                                        <>
+                                                                                            <div className='save-link'>
+                                                                                                {userWishlist ?
+                                                                                                    <div
+                                                                                                        className="action-button bg-gold"
+                                                                                                        onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
+                                                                                                    >
+                                                                                                        <GoHeart className="text-white" />
+                                                                                                    </div>
+                                                                                                    :
+                                                                                                    <div
+                                                                                                        className="action-button bg-white"
+                                                                                                        onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
+                                                                                                    >
+                                                                                                        <GoHeart className="text-black" />
+                                                                                                    </div>
+                                                                                                }
                                                                                             </div>
-                                                                                            :
-                                                                                            <div
-                                                                                                className="action-button bg-white"
-                                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
-                                                                                            >
-                                                                                                <GoHeart className="text-black" />
-                                                                                            </div>
-                                                                                        }
-                                                                                    </div>
+                                                                                        </>
+                                                                                        :
+                                                                                        <>
+
+                                                                                        </>
+                                                                                    }
                                                                                 </div>
                                                                                 <div className="design-details">
                                                                                     <div className='d-flex'>
@@ -626,23 +635,31 @@ const Fabrics = (props) => {
                                                                                     >
                                                                                     </div>
 
-                                                                                    <div className='save-link'>
-                                                                                        {userWishlist ?
-                                                                                            <div
-                                                                                                className="action-button bg-gold"
-                                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
-                                                                                            >
-                                                                                                <GoHeart className="text-white" />
+                                                                                    {userRole !== 'Admin' ?
+                                                                                        <>
+                                                                                            <div className='save-link'>
+
+                                                                                                {userWishlist ?
+                                                                                                    <div
+                                                                                                        className="action-button bg-gold"
+                                                                                                        onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
+                                                                                                    >
+                                                                                                        <GoHeart className="text-white" />
+                                                                                                    </div>
+                                                                                                    :
+                                                                                                    <div
+                                                                                                        className="action-button bg-white"
+                                                                                                        onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
+                                                                                                    >
+                                                                                                        <GoHeart className="text-black" />
+                                                                                                    </div>
+                                                                                                }
                                                                                             </div>
-                                                                                            :
-                                                                                            <div
-                                                                                                className="action-button bg-white"
-                                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
-                                                                                            >
-                                                                                                <GoHeart className="text-black" />
-                                                                                            </div>
-                                                                                        }
-                                                                                    </div>
+                                                                                        </>
+                                                                                        :
+                                                                                        <>
+                                                                                        </>
+                                                                                    }
                                                                                 </div>
                                                                                 <div className="design-details">
                                                                                     <div className='d-flex'>

@@ -20,12 +20,14 @@ import Loading from './Loading';
 import { useCookies } from 'react-cookie';
 import 'Assets/styles/Design/style.css';
 import Carousel from 'react-multi-carousel';
+import axios from 'axios';
 
 const PortfolioGrid = (props) => {
     // const currentUser = props.currentUser;
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
+    const userRole = cookies.userRole;
     const navigate = useNavigate();
     const [portfolio, setPortfolio] = useState([]);
     const [portfolioLoading, setPortfolioLoading] = useState(true);
@@ -121,6 +123,20 @@ const PortfolioGrid = (props) => {
         }
     }
 
+    async function toggleAddViewCount(id) {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                // toast.success('Design saved as draft successfully!');
+                // setReloadCount((prevReloadCount) => prevReloadCount + 1);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+        });
+    }
+
     const fetchData = async (e) => {
         setPortfolioLoading(true);
         try {
@@ -166,37 +182,57 @@ const PortfolioGrid = (props) => {
                                         return (
                                             <Col className={`portfolio-grid mb-3`} xs="4" md="2">
                                                 {/* <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + portfolioImage + ")" }}> */}
-                                                <div
-                                                    className='portfolio-link cursor-pointer'
-                                                    onClick={function () {
-                                                        togglePortfolioImage(
-                                                            object.id,
-                                                            object.designer.id,
-                                                            object.user.first_name,
-                                                            object.user.last_name,
-                                                            object.image_urls,
-                                                            object.user.image,
-                                                            object.user.address_line_1,
-                                                            object.user.province,
-                                                            object.tags,
-                                                            object.description,
-                                                            object.user.id);
-                                                    }}
-                                                >
-                                                    <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '200px' }}></div>
-                                                    <div className="portfolio-overlay">
-                                                        <div className="portfolio-details">
-                                                            {object.status == "Draft" ?
-                                                                <span className="text-warning small fw-600">Draft</span>
-                                                                :
-                                                                null
-                                                            }
+
+                                                {userRole !== 'Admin' ?
+                                                    <>
+                                                        <div
+                                                            className='portfolio-link cursor-pointer'
+                                                            onClick={function () {
+                                                                togglePortfolioImage(
+                                                                    object.id,
+                                                                    object.designer.id,
+                                                                    object.user.first_name,
+                                                                    object.user.last_name,
+                                                                    object.image_urls,
+                                                                    object.user.image,
+                                                                    object.user.address_line_1,
+                                                                    object.user.province,
+                                                                    object.tags,
+                                                                    object.description,
+                                                                    object.user.id);
+                                                            }}
+                                                        >
+                                                            <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '200px' }}></div>
+                                                            <div className="portfolio-overlay">
+                                                                <div className="portfolio-details">
+                                                                    {object.status == "Draft" ?
+                                                                        <span className="text-warning small fw-600">Draft</span>
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    {/* <Link to={`/portfolio/${object.id}`} className="text-decoration-none">
-                                                        <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
-                                                    </Link> */}
-                                                </div>
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <div
+                                                            className='portfolio-link cursor-pointer'
+                                                            onClick={function () { toggleAddViewCount(object.id); navigate('/portfolio/' + object.id); }}
+                                                        >
+                                                            <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '200px' }}></div>
+                                                            <div className="portfolio-overlay">
+                                                                <div className="portfolio-details">
+                                                                    {object.status == "Draft" ?
+                                                                        <span className="text-warning small fw-600">Draft</span>
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                }
 
                                                 <div className='margin-img ellipsis-portfolio'>
                                                     <span className="text-black text-decoration-none portfolio-name-img">{object.name ?? "-"}</span>
