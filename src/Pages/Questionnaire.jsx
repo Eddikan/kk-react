@@ -32,7 +32,7 @@ const Questionnaire = () => {
   const [formStatus, setFormStatus] = useState('standby');
 
   // Questionnaires
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
   const [questionnaire1Show, setQuestionnaire1Show] = useState(false);
   const [questionnaire2Show, setQuestionnaire2Show] = useState(false);
   const [questionnaire3Show, setQuestionnaire3Show] = useState(false);

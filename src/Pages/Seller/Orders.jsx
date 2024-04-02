@@ -17,6 +17,7 @@ import { AiFillMessage } from "react-icons/ai";
 import { CiSearch } from 'react-icons/ci';
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
+import Pagination from 'Components/Pagination/Pagination';
 import toast from 'react-hot-toast';
 import axios from "axios";
 import { useNavigate, useParams, Link } from 'react-router-dom';
@@ -52,12 +53,15 @@ const Orders = (props) => {
     const [text, setText] = useState('');
     const [query, setQuery] = useState('');
     const [underConstruction, setUnderConstruction] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageCount, setPageCount] = useState(1);
+    const [pageSize, setPageSize] = useState(1);
 
     const [dateTo, setDateTo] = useState('');
     const [dateFrom, setDateFrom] = useState('');
 
     const getOrders = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/seller/order?status=' + currentTab);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/seller/order?page='+currentPage+'&status=' + currentTab);
     };
 
     const getFabrics = async () => {
@@ -107,14 +111,40 @@ const Orders = (props) => {
         }
     };
 
+    const handleChangePage = (pageNumber) => {
+        setOrdersLoading(true);
+        setCurrentPage(pageNumber);
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/seller/order?status=' + currentTab+'&user_id=' + currentUser +'&page='+pageNumber)
+            .then((response) => {
+                const data = response.data;
+                const selectedOrders = response.data.data;
+                if (selectedOrders) {
+                    setOrders(selectedOrders);
+                    setCurrentPage(() => data.pagination.current_page);
+                    setPageCount(() => data.pagination.total);
+                    setPageSize(() => data.pagination.per_page);
+                    setOrdersLoading(false);
+                } else {
+                    setOrdersLoading(false);
+                    toast.error('There has been an error getting the orders, please try again!');
+                }
+            }).catch(error => {
+                setOrdersLoading(false);
+                toast.error('There has been an error getting the orders, please try again!');
+            });
+    };
+
     useEffect(() => {
         setOrdersLoading(true);
         getOrders()
             .then((response) => {
                 const selectedOrders = response.data.data;
-                console.log(response.data.data);
+                const data = response.data;
                 if (selectedOrders) {
                     setOrders(selectedOrders);
+                    setCurrentPage(() => data.pagination.current_page);
+                    setPageCount(() => data.pagination.total);
+                    setPageSize(() => data.pagination.per_page);
                     setOrdersLoading(false);
                 } else {
                     toast.error('There has been an error getting the orders');
@@ -230,6 +260,10 @@ const Orders = (props) => {
                                                         <span className='fw-500 text-black'>Payment Status</span>
                                                     </Col>
 
+                                                    <Col className="text-left">
+                                                        <span className='fw-500 text-black'>Order Status</span>
+                                                    </Col>
+
                                                     <Col className="text-right">
                                                         <span className='fw-500 text-black'></span>
                                                     </Col>
@@ -299,7 +333,9 @@ const Orders = (props) => {
                                                                                 <Card className='mt-2 border-card'>
                                                                                     <Card.Header className='order-chat d-flex justify-content-between'>
                                                                                         <div>
-                                                                                            <strong>Order #{order.id}</strong>
+                                                                                            <a href={`/user/center/order/${order.id}/details`} className="cursor-pointer text-decoration-none" >
+                                                                                                <strong>Order #{order.id}</strong>
+                                                                                            </a>
                                                                                         </div>
                                                                                     </Card.Header>
                                                                                     <Card.Body className='bg-white card-body-border'>
@@ -320,6 +356,10 @@ const Orders = (props) => {
                                                                                                 <span className='text-black'>{order.payment_status ?? "Pending"}</span>
                                                                                             </Col>
 
+                                                                                            <Col className="text-left">
+                                                                                                <span className='text-black'>{order.status ?? "Pending"}</span>
+                                                                                            </Col>
+
                                                                                             <Col className='text-right'>
                                                                                                 <a href={`/user/center/order/${order.id}/details`} className="cursor-pointer check-datails-decoration" >
                                                                                                     <span className='text-gold'><IoEyeOutline className='me-2' size={20} />View Details</span>
@@ -337,7 +377,13 @@ const Orders = (props) => {
                                                                         </Row>
                                                                     );
                                                                 })}
-
+                                                                <Pagination
+                                                                    className="mt-4 mb-0"
+                                                                    currentPage={currentPage}
+                                                                    totalCount={pageCount}
+                                                                    pageSize={pageSize}
+                                                                    onPageChange={page => handleChangePage(page)}
+                                                                />
                                                             </>
                                                             :
                                                             <>

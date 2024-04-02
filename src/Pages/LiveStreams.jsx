@@ -71,7 +71,7 @@ const LiveStreams = (props) => {
     }
 
     const getLiveStream = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'livestream');
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/livestream');
     };
 
     const postStream = async (data) => {
@@ -88,7 +88,7 @@ const LiveStreams = (props) => {
     }
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'livestream?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/livestream?page=' + pageNumber + '&user_id=' + currentUser)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
