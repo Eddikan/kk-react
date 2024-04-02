@@ -5,7 +5,7 @@ import { PiDressLight, PiPantsLight, PiCalendarThin } from "react-icons/pi";
 import { PiUsersLight } from "react-icons/pi";
 import { HiOutlineScissors } from "react-icons/hi2";
 import { IoIosArrowDown } from "react-icons/io";
-import { PiNotepadLight, PiScissorsLight } from "react-icons/pi";
+import { PiNotepadLight, PiScissorsLight, PiShoppingCartSimple } from "react-icons/pi";
 import { Row, Col, Button, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import 'Assets/styles/Sidebar/style.css';
@@ -76,6 +76,12 @@ const Sidebar = ({ }) => {
                                 Sellers
                             </div>
                         </AccordionBody> */}
+                        <div
+                            className="hover-sidebar cursor-pointer yellow-hover mt-3"
+                            onClick={() => navigate('/admin/orders')}
+                        >
+                            <PiShoppingCartSimple size="22" className="me-2 mb-1" />Orders
+                        </div>
 
                         <div
                             className="hover-sidebar cursor-pointer yellow-hover mt-3"
