@@ -591,11 +591,34 @@ const OrderDetails = (props) => {
                                     value={orderItems.status}
                                     onChange={handleChangeStatus}
                                 >
-                                    <option value="Pending">Pending</option>
+                                    {/* <option value="Pending">Pending</option>
                                     <option value="Processing">Processing</option>
                                     <option value="Shipped">Order Shipped</option>
                                     <option value="Delivered">Delivered</option>
-                                    <option value="Completed">Completed</option>
+                                    <option value="Completed">Completed</option> */}
+
+                                    {orderItems.status === 'Pending' ?
+                                        <>
+                                            <option value="Pending">Pending</option>
+                                            <option value="Processing">Processing</option>
+                                        </>
+                                    : orderItems.status === 'Processing' ?
+                                        <>
+                                            <option value="Processing">Processing</option>
+                                            <option value="Shipped">Shipped</option>
+                                        </>
+                                    : orderItems.status === 'Shipped' ?
+                                        <>
+                                            <option value="Shipped">Shipped</option>
+                                            <option value="Delivered">Delivered</option>
+                                        </>
+                                    : orderItems.status === 'Delivered' ?
+                                        <>
+                                            <option value="Delivered">Delivered</option>
+                                            <option value="Completed">Completed</option>
+                                        </>
+                                    : null
+                                    }
                                 </select>
                             </div>
                         </Card.Body>

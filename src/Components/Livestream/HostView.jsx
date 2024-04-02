@@ -1,7 +1,10 @@
 
 import React, { useState } from 'react';
+import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
 import { StreamCall, useCallStateHooks, ParticipantView, StreamVideo, StreamVideoClient, useCall, User } from '@stream-io/video-react-sdk';
 import { Row, Col, Button, Card, Modal, ModalHeader } from 'react-bootstrap';
+import LiveStreamCopy from 'Utils/LiveStreamCopyLink';
+import { ImEmbed2 } from "react-icons/im";
 import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 // add styles for the video UI
 import '@stream-io/video-react-sdk/dist/css/styles.css';
@@ -11,9 +14,18 @@ import toast from 'react-hot-toast';
 const MyLivestreamUI = ({ livestreamId }) => {
     const [liveStatus, setLiveStatus] = useState('standby');
     const [shareModalShow, setShareModalShow] = useState(false);
+    const [copyEmbedLink, setCopyEmbedLink] = useState(false);
+    const [copy, setCopy] = useState(false)
+
+    let iframeLink = `<iframe src="https://kouture-konect.web.app/designer/live/stream/${livestreamId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+
 
     function toggleShareModal() {
         setShareModalShow(!shareModalShow);
+    }
+
+    function toggleCopyEmbedLinkModal() {
+        setCopyEmbedLink(true);
     }
 
     const call = useCall();
@@ -88,6 +100,7 @@ const MyLivestreamUI = ({ livestreamId }) => {
                             :
                             <button className='btn btn-primary mt-3' onClick={() => stopLive() }>Stop Live!</button>
                         }
+                        <button className='btn btn-primary mt-3 ms-3' onClick={toggleShareModal}>Share</button>
                     </>
                 ) : (
                     <>
@@ -96,9 +109,10 @@ const MyLivestreamUI = ({ livestreamId }) => {
                             :
                             <button className='btn btn-danger mt-3' onClick={() => startLive() }>Start Live!</button>
                         }
+                        <button className='btn btn-primary mt-3 ms-3' onClick={toggleShareModal}>Share</button>
                     </>
                 )}
-                 <button className='btn btn-primary mt-3 ms-3' onClick={toggleShareModal}>Share</button>
+                 {/* <button className='btn btn-primary mt-3 ms-3' onClick={toggleShareModal}>Share</button> */}
             </div>
         </div>
 
@@ -118,20 +132,79 @@ const MyLivestreamUI = ({ livestreamId }) => {
 
                 <Modal.Body>
                     <Card>
-                        <Card.Body>
-                            <p className="mb-0">Are you sure you want to delete this design?</p>
+                        <Card.Body className="p-4">
+                        <div lg='12' className='text-center'>
+                                    <LiveStreamCopy
+                                        text={`https://kouture-konect.web.app/designer/live/stream/${livestreamId}`}
+                                        classes="btn btn-primary border-black bg-white text-black w-100"
+                                        standbyTitle="Copy Link"
+                                        icon={true}
+                                        closeModal={() => setShareModalShow(false)}
+                                    />
+
+                                    <button
+                                        className="btn btn-primary border-black bg-white text-black mt-2 w-100"
+                                        type="button"
+                                        onClick={() => {
+                                            toggleCopyEmbedLinkModal();
+                                            setShareModalShow(false);
+                                        }}
+                                    >
+                                        <ImEmbed2 className='me-2' size={17} />
+                                        Copy Embed Code
+                                    </button>
+                                </div >
                         </Card.Body>
                     </Card>
-                    <Card.Footer className="text-right mt-3">
-                        <button className="btn btn-secondary border-black bg-white text-black me-3 btn-style" onClick={() => setShareModalShow(false)} type="button">Cancel</button>
-                        {/* {portfolioDeleteLoading ?
-                            <button className="btn btn-primary btn-style" type="button" >Deleting...</button>
-                            :
-                            <button className="btn btn-primary btn-style" type="button" onClick={PortfolioDeleteSubmit} >Delete</button>
-                        } */}
-                    </Card.Footer>
                 </Modal.Body>
             </Modal>
+
+            <Modal
+                show={copyEmbedLink}
+                id='modal-preview-embed'
+                fade={false}
+                centered
+                className='embed-modal-view'
+
+            >
+                <Modal.Header className="p-3 pb-0">
+                    <h5 className='mb-0 rufina-family fs-22 text-black'>Embed Design</h5>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setCopyEmbedLink(false)}
+                    >
+                        <IoCloseOutline color="#7e7e7e" size={25} />
+                    </button>
+                </Modal.Header>
+                <Modal.Body className='pb-0 pt-4'>
+                    <Row>
+                        <Col lg='12' className='px-3'>
+                            <textarea className='text-area-embed'>
+                                {iframeLink}
+                            </textarea>
+                        </Col>
+                    </Row>
+                </Modal.Body>
+                <Modal.Footer className="text-right border-none">
+                    <button
+                        className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                        onClick={() => setCopyEmbedLink(false)}
+                        type="button" >
+                        Cancel
+                    </button>
+
+                    <LiveStreamCopy
+                        text={iframeLink}
+                        classes="btn btn-primary btn-style"
+                        standbyTitle="Copy"
+                        icon={false}
+                        onCopy={() => setCopy(true)}
+                        loadingTitle="Embed Copied"
+                        closeModal={() => setCopyEmbedLink(false)}
+                    />
+                </Modal.Footer>
+            </Modal >
             </>
     );
 };
