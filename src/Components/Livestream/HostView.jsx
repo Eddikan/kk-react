@@ -200,7 +200,7 @@ const MyLivestreamUI = ({ livestreamId }) => {
                         standbyTitle="Copy"
                         icon={false}
                         onCopy={() => setCopy(true)}
-                        loadingTitle="Embed Copied"
+                        loadingTitle="Copied"
                         closeModal={() => setCopyEmbedLink(false)}
                     />
                 </Modal.Footer>

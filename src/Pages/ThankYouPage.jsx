@@ -22,7 +22,7 @@ const ThankYouPage = (props) => {
                 <Container className='py-5 thank-you-height'>
                     <Row>
                         <Col lg={12} className='text-center'>
-                            <div className='text-gold mt-5'>
+                            <div className='text-gold mt-1'>
                                 <IoIosCheckmarkCircle size={70} />
                             </div>
                         </Col>

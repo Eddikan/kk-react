@@ -32,6 +32,10 @@ const initialStatus = {
     status: ''
 };
 
+const initialOrderStatus = {
+    status: ''
+};
+
 const OrderDetails = (props) => {
     const navigate = useNavigate();
     const { orderId } = useParams();
@@ -57,6 +61,8 @@ const OrderDetails = (props) => {
     const [orderItemId, setOrderItemId] = useState('');
 
     const [updateStatusShow, setUpdateStatusShow] = useState(false);
+    const [updateOrderStatusShow, setUpdateOrderStatusShow] = useState(false);
+    const [orderStatusFormData, setOrderStatusFormData] = useState(initialOrderStatus);
     const [orderStatus, setOrderStatus] = useState('All');
 
     function toggleUpdateStatus(order_item_id) {
@@ -85,9 +91,48 @@ const OrderDetails = (props) => {
         setModalHeading(message);
     }
 
+    function toggleUpdateOrderStatus() {
+        setUpdateOrderStatusShow(true);
+
+        getOrder()
+            .then((response) => {
+                const selectedOrder = response.data;
+                if (selectedOrder) {
+                    setOrders(selectedOrder);
+                    setOrderStatus(selectedOrder);
+                    setOrder(selectedOrder[0].order);
+                    setUser(selectedOrder[0].customer);
+                    setOrderLoading(false);
+                } else {
+                    toast.error('There has been an error getting the orders');
+                    setOrderLoading(false);
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the orders');
+                setOrderLoading(false);
+            });
+    }
+
     function handleOnEnter(text) {
         console.log('enter', text)
     }
+
+    const handleChangeOrderStatus = (e) => {
+        const { name, value } = e.target;
+        setOrderStatusFormData({
+            ...orderStatusFormData,
+            [name]: value,
+        });
+    };
+
+    const handleChangeStatus = (e) => {
+        const { name, value } = e.target;
+        setOrderItemsFormData({
+            ...orderItemsFormData,
+            [name]: value,
+        });
+    };
 
     const getOrder = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId);
@@ -99,6 +144,10 @@ const OrderDetails = (props) => {
 
     const postOrderItemLog = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order/item/log', data);
+    };
+
+    const putOrder = async (data) => {
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId, data);
     };
 
     const chatBoxModal = (first_name, last_name, image) => {
@@ -131,7 +180,46 @@ const OrderDetails = (props) => {
             // setReorderLoading(false);
             toast.error('Something went wrong, please contact the administrator!');
         });
+    }
 
+    const statusSubmit = (e) => {
+        setOrderLoading(true);
+        postOrderItemLog({ ...orderItemsFormData, order_id: orderItems.id, user_id: currentUser, order_item_id: orderItemId }).then(response => {
+            const status = response.data.status;
+            if (status === "Success") {
+                setOrderLoading(false);
+                setOrderItemsFormData(initialStatus);
+                toast.success('Status updated successfully!');
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                setUpdateStatusShow(false);
+            } else {
+                setUpdateStatusShow(false);
+                setOrderLoading(false);
+                toast.error('There has been an error saving the status, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error saving the status, please try again!');
+        });
+    }
+
+    const statusOrderSubmit = (e) => {
+        setOrderLoading(true);
+        putOrder({ ...orderStatusFormData, order_id: order.id}).then(response => {
+            const status = response.data.status;
+            if (status === "Success") {
+                setOrderLoading(false);
+                setOrderStatusFormData(initialOrderStatus);
+                toast.success('Order Status updated successfully!');
+                setUpdateOrderStatusShow(false);
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+            } else {
+                setUpdateStatusShow(false);
+                setOrderLoading(false);
+                toast.error('There has been an error saving the status, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error saving the status, please try again!');
+        });
     }
 
     useEffect(() => {
@@ -159,40 +247,13 @@ const OrderDetails = (props) => {
             });
     }, [reloadCount]);
 
-    const statusSubmit = (e) => {
-        setOrderLoading(true);
-        postOrderItemLog({ ...orderItemsFormData, order_id: orderItems.id, user_id: currentUser, order_item_id: orderItemId }).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setOrderLoading(false);
-                setOrderItemsFormData(initialStatus);
-                toast.success('Status updated successfully!');
-                setUpdateStatusShow(false);
-            } else {
-                setUpdateStatusShow(false);
-                setOrderLoading(false);
-                toast.error('There has been an error saving the status, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the status, please try again!');
-        });
-    }
-
-    const handleChangeStatus = (e) => {
-        const { name, value } = e.target;
-        setOrderItemsFormData({
-            ...orderItemsFormData,
-            [name]: value,
-        });
-    };
-
     return (
         <LayoutNoFooter className='bg-white'>
             <section className='bg-white'>
                 <Container className='container-order position-relative'>
                     <Row>
                         <Col lg={12}>
-                            <Row className="pb-4">
+                            <Row className="pb-2">
                                 <Col md={6} className='d-flex justify-content-left align-items-center'>
                                     <h3 className="fs-30 fw-600 text-black mb-0">Order Details</h3>
                                 </Col>
@@ -200,7 +261,19 @@ const OrderDetails = (props) => {
                                     <GoBack fallBack="/#" />
                                 </Col>
                             </Row>
-                            <h4 className="fs-20 mb-3"><strong>Order #{orderId}</strong></h4>
+                            <Row>
+                                <Col md={6} className='d-flex align-items-center'>
+                                    <h4 className="fs-20 mb-3"><strong>Order #{orderId}</strong></h4>
+                                </Col>
+                                <Col md={6} className='text-right'>
+                                    <button 
+                                    className='btn btn-primary mb-3' 
+                                    onClick={() => toggleUpdateOrderStatus(order.id)}
+                                    >
+                                        Order Status
+                                    </button>
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                     <Row>
@@ -276,7 +349,7 @@ const OrderDetails = (props) => {
                                                                                         >
                                                                                         </div>
                                                                                     )}
-                                                                                    <div className=''><strong> {order.user.first_name}  {order.user.last_name} </strong></div>
+                                                                                    <div className=''><strong> {order.order_items[0].product.user.first_name}  {order.order_items[0].product.user.last_name} </strong></div>
                                                                                     {/* <AiFillMessage className='ms-2 text-gold cursor-pointer'
                                                                                 onClick={function () { chatBoxModal(order.user.first_name, order.user.last_name, order.user.image) }}
                                                                             /> */}
@@ -321,11 +394,11 @@ const OrderDetails = (props) => {
                                                                                                             <p className='text-gold mb-1'><IoEyeOutline className='me-2' size={20} />View Product</p>
                                                                                                         </a>
                                                                                                         <a href={`/order/${order_item.id}/track`} className="cursor-pointer check-datails-decoration">
-                                                                                                            <p className='text-black mb-0'><CgTrack className='me-2' size={20} />Track</p>
+                                                                                                            <p className='text-black mb-1'><CgTrack className='me-2' size={20} />Track</p>
                                                                                                         </a>
 
                                                                                                         <div className="cursor-pointer" onClick={() => toggleUpdateStatus(order_item.id)}>
-                                                                                                            <p className='text-black mb-0'><GrStatusInfo className='me-2' size={18} />Update Status</p>
+                                                                                                            <p className='text-black mb-0'><GrStatusInfo className='gr-status-icon' size={15} />Update Status</p>
                                                                                                         </div>
                                                                                                         {/* {reorderLoading ?
                                                                                                             <button type="button" className='btn btn-primary'>Loading...</button>
@@ -621,6 +694,69 @@ const OrderDetails = (props) => {
                                 className="btn btn-primary btn-style"
                                 type="button"
                                 onClick={statusSubmit}
+                            >
+                                Save
+                            </button>
+                        }
+                    </Card.Footer>
+                </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={updateOrderStatusShow}
+                className='modal-preview'
+                fade={false}
+                centered
+            >
+                <Modal.Header className="pb-0">
+                    <Modal.Title className='rufina-family fs-22 text-black'>Update Order Status</Modal.Title>
+                    <button type='button' className='close react-modal-close' onClick={function () { setUpdateOrderStatusShow(false); }} >
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Card>
+                        <Card.Body>
+                            <div>
+                                <label htmlFor="orderStatus" className='mb-2'>Status:</label>
+                                    <select
+                                        id="orderStatus"
+                                        name='status'
+                                        className='form-control mb-1'
+                                        value={orderStatus.status}
+                                        onChange={handleChangeOrderStatus}
+                                    >
+                                        <option value="Pending">Pending</option>
+                                        <option value="Processing">Processing</option>
+                                        <option value="Shipped">Order Shipped</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                    <Card.Footer className="text-right mt-3">
+                        <button
+                            className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                            onClick={() => setUpdateOrderStatusShow(false)}
+                            type="button"
+                        >
+                            Cancel
+                        </button>
+
+                        {orderLoading ?
+                            <button
+                                className="btn btn-primary btn-style"
+                                type="button"
+                            >
+                                Saving...
+                            </button>
+                            :
+                            <button
+                                className="btn btn-primary btn-style"
+                                type="button"
+                                onClick={statusOrderSubmit}
                             >
                                 Save
                             </button>

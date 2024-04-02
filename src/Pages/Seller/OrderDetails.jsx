@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams,Link,useLocation } from 'react-router-dom';
 import LayoutNoFooter from 'Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import 'Assets/styles/DesignerCalendar/style.css'
@@ -32,9 +32,14 @@ const initialStatus = {
     status: ''
 };
 
+const initialOrderStatus = {
+    status: ''
+};
+
 const OrderDetails = (props) => {
     const navigate = useNavigate();
     const { orderId } = useParams();
+    const { surveyId } = useParams();
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'token', 'userRole']);
     const token = cookies.token;
     const currentUser = cookies.currentUser;
@@ -49,19 +54,29 @@ const OrderDetails = (props) => {
     const [formStatus, setFormStatus] = useState('standby');
     const [orderItems, setOrderItems] = useState('');
     const [orderItemsFormData, setOrderItemsFormData] = useState(initialStatus);
+    const [orderStatusFormData, setOrderStatusFormData] = useState(initialOrderStatus);
     const [user, setUser] = useState('');
     const [orderLoading, setOrderLoading] = useState(true);
     const [designerName, setDesignerName] = useState('');
+    const [orderStatus, setOrderStatus] = useState('');
     const [text, setText] = useState('');
     const [reorderLoading, setReorderLoading] = useState(false);
     const [orderItemId, setOrderItemId] = useState('');
 
     const [updateStatusShow, setUpdateStatusShow] = useState(false);
-    const [orderStatus, setOrderStatus] = useState('All');
+    const [updateOrderStatusShow, setUpdateOrderStatusShow] = useState(false);
+    
+    // const [orderStatus, setOrderStatus] = useState('All');
+
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    }
+    let query = useQuery();
+    const order_id = query.get('order_id');
 
     function toggleUpdateStatus(order_item_id) {
         setUpdateStatusShow(true);
-        setOrderItemId(order_item_id)
+        setOrderItemId(order_item_id);
 
         getOrderItemLog(order_item_id)
             .then((response) => {
@@ -73,12 +88,52 @@ const OrderDetails = (props) => {
                     // toast.error('There has been an error getting the order item log, please try again!');
                     setOrderLoading(false);
                 }
+                console.log("response",selectedOrderItemLog);
             })
             .catch((error) => {
                 // toast.error('There has been an error getting the order item log, please try again!');
                 setOrderLoading(false);
             });
     }
+
+    function toggleUpdateOrderStatus() {
+        setUpdateOrderStatusShow(true);
+
+        getOrder()
+            .then((response) => {
+                const selectedOrder = response.data;
+                if (selectedOrder) {
+                    setOrders(selectedOrder);
+                    setOrderStatus(selectedOrder);
+                    setOrder(selectedOrder[0].order);
+                    setUser(selectedOrder[0].user);
+                    setOrderLoading(false);
+                } else {
+                    toast.error('There has been an error getting the orders');
+                    setOrderLoading(false);
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the orders');
+                setOrderLoading(false);
+            });
+    }
+
+    const handleChangeStatus = (e) => {
+        const { name, value } = e.target;
+        setOrderItemsFormData({
+            ...orderItemsFormData,
+            [name]: value,
+        });
+    };
+
+    const handleChangeOrderStatus = (e) => {
+        const { name, value } = e.target;
+        setOrderStatusFormData({
+            ...orderStatusFormData,
+            [name]: value,
+        });
+    };
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
@@ -99,6 +154,10 @@ const OrderDetails = (props) => {
 
     const postOrderItemLog = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order/item/log', data);
+    };
+
+    const putOrder = async (data) => {
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId,data);
     };
 
     const chatBoxModal = (first_name, last_name, image) => {
@@ -131,7 +190,45 @@ const OrderDetails = (props) => {
             // setReorderLoading(false);
             toast.error('Something went wrong, please contact the administrator!');
         });
+    }
 
+    const statusSubmit = (e) => {
+        setOrderLoading(true);
+        postOrderItemLog({ ...orderItemsFormData, order_id: orderItems.id, user_id: currentUser, order_item_id: orderItemId }).then(response => {
+            const status = response.data.status;
+            if (status === "Success") {
+                setOrderLoading(false);
+                setOrderItemsFormData(initialStatus);
+                toast.success('Status updated successfully!');
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                setUpdateStatusShow(false);
+            } else {
+                setUpdateStatusShow(false);
+                setOrderLoading(false);
+                toast.error('There has been an error saving the status, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error saving the status, please try again!');
+        });
+    }
+
+    const statusOrderSubmit = (e) => {
+        setOrderLoading(true);
+        putOrder({ ...orderStatusFormData, order_id: order.id}).then(response => {
+            const status = response.data.status;
+            if (status === "Success") {
+                setOrderLoading(false);
+                setOrderStatusFormData(initialOrderStatus);
+                toast.success('Order Status updated successfully!');
+                setUpdateOrderStatusShow(false);
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+            } else {
+                setOrderLoading(false);
+                toast.error('There has been an error saving the status, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error saving the status, please try again!');
+        });
     }
 
     useEffect(() => {
@@ -159,40 +256,13 @@ const OrderDetails = (props) => {
             });
     }, [reloadCount]);
 
-    const statusSubmit = (e) => {
-        setOrderLoading(true);
-        postOrderItemLog({ ...orderItemsFormData, order_id: orderItems.id, user_id: currentUser, order_item_id: orderItemId }).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setOrderLoading(false);
-                setOrderItemsFormData(initialStatus);
-                toast.success('Status updated successfully!');
-                setUpdateStatusShow(false);
-            } else {
-                setUpdateStatusShow(false);
-                setOrderLoading(false);
-                toast.error('There has been an error saving the status, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the status, please try again!');
-        });
-    }
-
-    const handleChangeStatus = (e) => {
-        const { name, value } = e.target;
-        setOrderItemsFormData({
-            ...orderItemsFormData,
-            [name]: value,
-        });
-    };
-
     return (
         <LayoutNoFooter className='bg-white'>
             <section className='bg-white'>
                 <Container className='container-order position-relative'>
                     <Row>
                         <Col lg={12}>
-                            <Row className="pb-4">
+                            <Row className="pb-2">
                                 <Col md={6} className='d-flex justify-content-left align-items-center'>
                                     <h3 className="fs-30 fw-600 text-black mb-0">Order Details</h3>
                                 </Col>
@@ -200,7 +270,27 @@ const OrderDetails = (props) => {
                                     <GoBack fallBack="/#" />
                                 </Col>
                             </Row>
-                            <h4 className="fs-20 mb-3"><strong>Order #{orderId}</strong></h4>
+                            <Row>
+                                <Col md={6} className='d-flex align-items-center'>
+                                    <h4 className="fs-20 mb-3"><strong>Order #{orderId}</strong></h4>
+                                </Col>
+                                <Col md={6} className='text-right'>
+                                <Link to={`/post-purchase-survey/${order_id}`} className="text-decoration-none">
+                                    <button 
+                                    className='btn btn-primary mb-3 me-3' 
+                                    >
+                                        Survey
+                                    </button>
+                                    </Link>
+
+                                    <button 
+                                    className='btn btn-primary mb-3' 
+                                    onClick={() => toggleUpdateOrderStatus(order.id)}
+                                    >
+                                        Order Status
+                                    </button>
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                     <Row>
@@ -254,6 +344,8 @@ const OrderDetails = (props) => {
                                                         } else {
                                                             var cartItemImage = PlaceholderImage;
                                                         }
+
+                                                        console.log(order);
 
                                                         const options = {
                                                             year: 'numeric',
@@ -321,11 +413,11 @@ const OrderDetails = (props) => {
                                                                                                             <p className='text-gold mb-1'><IoEyeOutline className='me-2' size={20} />View Product</p>
                                                                                                         </a>
                                                                                                         <a href={`/order/${order_item.id}/track`} className="cursor-pointer check-datails-decoration">
-                                                                                                            <p className='text-black mb-0'><CgTrack className='me-2' size={20} />Track</p>
+                                                                                                            <p className='text-black mb-1'><CgTrack className='me-2' size={20} />Track</p>
                                                                                                         </a>
 
                                                                                                         <div className="cursor-pointer" onClick={() => toggleUpdateStatus(order_item.id)}>
-                                                                                                            <p className='text-black mb-0'><GrStatusInfo className='me-2' size={18} />Update Status</p>
+                                                                                                            <p className='text-black mb-0'><GrStatusInfo className='gr-status-icon' size={15} />Update Status</p>
                                                                                                         </div>
                                                                                                         {/* {reorderLoading ?
                                                                                                             <button type="button" className='btn btn-primary'>Loading...</button>
@@ -584,42 +676,19 @@ const OrderDetails = (props) => {
                         <Card.Body>
                             <div>
                                 <label htmlFor="orderStatus" className='mb-2'>Status:</label>
-                                <select
-                                    id="orderStatus"
-                                    name='status'
-                                    className='form-control mb-1'
-                                    value={orderItems.status}
-                                    onChange={handleChangeStatus}
-                                >
-                                    {/* <option value="Pending">Pending</option>
-                                    <option value="Processing">Processing</option>
-                                    <option value="Shipped">Order Shipped</option>
-                                    <option value="Delivered">Delivered</option>
-                                    <option value="Completed">Completed</option> */}
-
-                                    {orderItems.status === 'Pending' ?
-                                        <>
-                                            <option value="Pending">Pending</option>
-                                            <option value="Processing">Processing</option>
-                                        </>
-                                    : orderItems.status === 'Processing' ?
-                                        <>
-                                            <option value="Processing">Processing</option>
-                                            <option value="Shipped">Shipped</option>
-                                        </>
-                                    : orderItems.status === 'Shipped' ?
-                                        <>
-                                            <option value="Shipped">Shipped</option>
-                                            <option value="Delivered">Delivered</option>
-                                        </>
-                                    : orderItems.status === 'Delivered' ?
-                                        <>
-                                            <option value="Delivered">Delivered</option>
-                                            <option value="Completed">Completed</option>
-                                        </>
-                                    : null
-                                    }
-                                </select>
+                                    <select
+                                        id="orderStatus"
+                                        name='status'
+                                        className='form-control mb-1'
+                                        value={orderItems.status}
+                                        onChange={handleChangeStatus}
+                                    >
+                                        <option value="Pending">Pending</option>
+                                        <option value="Processing">Processing</option>
+                                        <option value="Shipped">Order Shipped</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
                             </div>
                         </Card.Body>
                     </Card>
@@ -652,6 +721,69 @@ const OrderDetails = (props) => {
                 </Modal.Body>
             </Modal>
 
+
+            <Modal
+                show={updateOrderStatusShow}
+                className='modal-preview'
+                fade={false}
+                centered
+            >
+                <Modal.Header className="pb-0">
+                    <Modal.Title className='rufina-family fs-22 text-black'>Update Order Status</Modal.Title>
+                    <button type='button' className='close react-modal-close' onClick={function () { setUpdateOrderStatusShow(false); }} >
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Card>
+                        <Card.Body>
+                            <div>
+                                <label htmlFor="orderStatus" className='mb-2'>Status:</label>
+                                    <select
+                                        id="orderStatus"
+                                        name='status'
+                                        className='form-control mb-1'
+                                        value={orderStatus.status}
+                                        onChange={handleChangeOrderStatus}
+                                    >
+                                        <option value="Pending">Pending</option>
+                                        <option value="Processing">Processing</option>
+                                        <option value="Shipped">Order Shipped</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                    <Card.Footer className="text-right mt-3">
+                        <button
+                            className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                            onClick={() => setUpdateOrderStatusShow(false)}
+                            type="button"
+                        >
+                            Cancel
+                        </button>
+
+                        {orderLoading ?
+                            <button
+                                className="btn btn-primary btn-style"
+                                type="button"
+                            >
+                                Saving...
+                            </button>
+                            :
+                            <button
+                                className="btn btn-primary btn-style"
+                                type="button"
+                                onClick={statusOrderSubmit}
+                            >
+                                Save
+                            </button>
+                        }
+                    </Card.Footer>
+                </Modal.Body>
+            </Modal>
         </LayoutNoFooter >
     );
 };

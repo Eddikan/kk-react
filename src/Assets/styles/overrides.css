@@ -2022,6 +2022,11 @@ a.schedule-consultation {
     position: relative;
 }
 
+svg.gr-status-icon {
+    margin-left: 3px;
+    margin-right: 11px;
+}
+
 .image-survey {
     width: 200px;
     height: 200px;

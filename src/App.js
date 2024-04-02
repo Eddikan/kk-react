@@ -42,6 +42,7 @@ const OrderDetails = lazy(() => import("./Pages/OrderDetails"));
 const VideoConferencing = lazy(() => import("./Pages/VideoConferencing"));
 const LiveStream = lazy(() => import("./Pages/LiveStream"));
 const UserAppointments = lazy(() => import("./Pages/Seller/Appointments"));
+const ViewSurvey = lazy(() => import("./Pages/Seller/ViewSurvey"));
 
 // Survey
 const CustomerSatisfaction = lazy(() =>
@@ -471,6 +472,8 @@ const App = () => {
           <Route path="/body-gram" exact element={<BodyGram />} />
           <Route path="/measurement" exact element={<Measurement />} />
           <Route path="/thank-you" exact element={<ThankYouPage />} />
+
+          <Route path="/post-purchase-survey/order/:surveyId" exact element={<ViewSurvey />} />
         </Routes>
       </Suspense>
     </Router>
