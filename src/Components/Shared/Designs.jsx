@@ -255,7 +255,7 @@ const Designs = (props) => {
                                                                     :
                                                                     <div
                                                                         className='portfolio-link cursor-pointer'
-                                                                        onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }}
+                                                                        onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}
                                                                     >
                                                                         <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}></div>
                                                                     </div>

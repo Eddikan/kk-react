@@ -29,7 +29,7 @@ const initialReviewData = Object.freeze({
     content: '',
 });
 
-const ViewProduct = () => {
+const AdminViewFabrics = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole']);
     const { productId } = useParams();
     const [product, setProduct] = useState('');
@@ -664,6 +664,8 @@ const ViewProduct = () => {
                                                     <div>
                                                         <Row>
                                                             <Col lg="12">
+                                                            {userRole !== 'Admin' &&
+                                                                    <>
                                                                 {!isProductCurrentUser ?
                                                                     <>
                                                                         <p className="mb-2 fs-16 fw-600">Measurement</p>
@@ -687,7 +689,8 @@ const ViewProduct = () => {
                                                                     :
                                                                     null
                                                                 }
-                                                                
+                                                                </>
+                                                            }
                                                             </Col>
 
                                                             <Col lg="12">
@@ -1041,4 +1044,4 @@ const ViewProduct = () => {
     );
 };
 
-export default ViewProduct;
+export default AdminViewFabrics;

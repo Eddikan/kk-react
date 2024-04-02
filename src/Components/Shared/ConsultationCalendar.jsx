@@ -67,6 +67,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const currentUserDetails = cookies.userDetails;
+    const userRole = cookies.userRole;
     const userDetails = cookies.userDetails;
     const { designerId } = useParams();
     const { appointmentscheduleId } = useParams();
@@ -296,10 +297,25 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                     // setYouAreScheduleShow(!youAreScheduleShow);
                     setAppointmentFormData(initialAppointments);
                     toast.success('Consultation added successfully!');
+
+                    {userRole !== 'Admin' ?
                     setTimeout(() => {
                         setReloadCount(prevReloadCount => prevReloadCount + 1);
                         navigate('/appointments/' + currentUser);
-                    }, 1000);
+                    }, 1000)
+                    :
+                    setTimeout(() => {
+                        setReloadCount(prevReloadCount => prevReloadCount + 1);
+                        navigate('/admin/appointments');
+                    }, 1000)
+                }
+                  
+                    // setTimeout(() => {
+                    //     setReloadCount(prevReloadCount => prevReloadCount + 1);
+                    //     navigate('/appointments/' + currentUser);
+                    // }, 1000);
+                   
+
                 } else {
                     setFormStatus('standby');
                     toast.error('Designer is not available at this time');
@@ -320,10 +336,20 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                     // setYouAreScheduleShow(!youAreScheduleShow);
                     setAppointmentFormData(initialAppointments);
                     toast.success('Consultation updated successfully!');
+                   
+                     {userRole !== 'Admin' ?
                     setTimeout(() => {
                         setReloadCount(prevReloadCount => prevReloadCount + 1);
                         navigate('/appointments/' + currentUser);
-                    }, 1000);
+                    }, 1000)
+                    :
+                    setTimeout(() => {
+                        setReloadCount(prevReloadCount => prevReloadCount + 1);
+                        navigate('/admin/appointments');
+                    }, 1000)
+                }
+
+            
                 } else {
                     setFormStatus('standby');
                     toast.error('Designer is not available at this time');

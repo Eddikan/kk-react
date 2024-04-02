@@ -96,11 +96,21 @@ const ProductGrid = (props) => {
                                         return (
                                             <Col className={`portfolio-grid mb-3`} xs="4" md="2">
                                                 <div className="portfolio-link">
-
+                                                {userRole !== 'Admin' ?
+                                                        <>
                                                     <Link to={`/product/${product.id}`} className="text-decoration-none">
                                                         <div className={`portfolio-grid-div w-100 ${product.collection_type == "Limited" ? "limited" : " "} ${product.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + productImage + ")" }}>
                                                         </div>
                                                     </Link>
+                                                    </>
+                                                    :
+                                                    <>
+                                                     <Link to={`/admin/fabric/${product.id}`} className="text-decoration-none">
+                                                        <div className={`portfolio-grid-div w-100 ${product.collection_type == "Limited" ? "limited" : " "} ${product.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + productImage + ")" }}>
+                                                        </div>
+                                                    </Link>
+                                                    </>
+                                                }
 
                                                     {userRole !== 'Admin' &&
                                                         <>

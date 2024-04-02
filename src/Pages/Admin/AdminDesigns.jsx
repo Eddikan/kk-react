@@ -280,7 +280,7 @@ const AdminDesigns = (props) => {
                                                                                     <Col lg={3} className='d-flex justify-content-left align-items-center'>
                                                                                         <div
                                                                                             className="cursor-pointer image-design-admin"
-                                                                                            onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }}
+                                                                                            onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}
                                                                                             style={{ backgroundImage: "url(" + designImage + ")" }}
                                                                                         >
                                                                                         </div>
@@ -288,13 +288,13 @@ const AdminDesigns = (props) => {
                                                                                         <div className='ms-3'>
                                                                                             <div
                                                                                                 className='d-flex mt-0 mb-2 fs-18 text-black cursor-pointer'
-                                                                                                onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }}
+                                                                                                onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}
                                                                                             >
                                                                                                 <span className="admin-ellipsis-design fw-500">{design.name}</span>
                                                                                             </div>
 
                                                                                             <Link
-                                                                                                to={`/designer-profile?user_id=${design.user.id}`}
+                                                                                                to={`/admin/profile/user/${design.user.id}`}
                                                                                                 className="text-decoration-none text-black"
                                                                                             >
 
@@ -376,7 +376,7 @@ const AdminDesigns = (props) => {
 
                                                                                             <div
                                                                                                 className="design-tooltip cursor-pointer"
-                                                                                                onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }}
+                                                                                                onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}
                                                                                             >
                                                                                                 <span className="icon-tooltiptext fs-14">View</span>
                                                                                                 <IoEye className='me-3' color='#000000' size={20} />

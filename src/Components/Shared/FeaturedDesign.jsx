@@ -226,7 +226,7 @@ const PortfolioGrid = (props) => {
                                                     <>
                                                         <div
                                                             className='portfolio-link cursor-pointer'
-                                                            onClick={function () { toggleAddViewCount(object.id); navigate('/portfolio/' + object.id); }}
+                                                            onClick={function () { toggleAddViewCount(object.id); navigate('/admin/portfolio/' + object.id); }}
 
                                                         >
                                                             <div className="portfolio-grid-featured w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '130px' }}> </div>

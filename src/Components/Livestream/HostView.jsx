@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
 import { StreamCall, useCallStateHooks, ParticipantView, StreamVideo, StreamVideoClient, useCall, User } from '@stream-io/video-react-sdk';
-
+import { Row, Col, Button, Card, Modal, ModalHeader } from 'react-bootstrap';
+import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoDocumentOutline, IoEyeOutline } from "react-icons/io5";
 // add styles for the video UI
 import '@stream-io/video-react-sdk/dist/css/styles.css';
 import axios from 'axios';
@@ -9,6 +10,11 @@ import toast from 'react-hot-toast';
 
 const MyLivestreamUI = ({ livestreamId }) => {
     const [liveStatus, setLiveStatus] = useState('standby');
+    const [shareModalShow, setShareModalShow] = useState(false);
+
+    function toggleShareModal() {
+        setShareModalShow(!shareModalShow);
+    }
 
     const call = useCall();
     const {
@@ -62,6 +68,7 @@ const MyLivestreamUI = ({ livestreamId }) => {
     }
 
     return (
+        <>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
             <div style={{ flex: 1 }}>
                 {localParticipant && (
@@ -91,8 +98,41 @@ const MyLivestreamUI = ({ livestreamId }) => {
                         }
                     </>
                 )}
+                 <button className='btn btn-primary mt-3 ms-3' onClick={toggleShareModal}>Share</button>
             </div>
         </div>
+
+
+         <Modal
+                show={shareModalShow}
+                className='modal-preview'
+                fade={false}
+                centered
+            >
+                <Modal.Header className="pb-0">
+                    <Modal.Title className='rufina-family fs-22 text-black'>Share</Modal.Title>
+                    <button type='button' className='close react-modal-close' onClick={function () { setShareModalShow(false); }} >
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Card>
+                        <Card.Body>
+                            <p className="mb-0">Are you sure you want to delete this design?</p>
+                        </Card.Body>
+                    </Card>
+                    <Card.Footer className="text-right mt-3">
+                        <button className="btn btn-secondary border-black bg-white text-black me-3 btn-style" onClick={() => setShareModalShow(false)} type="button">Cancel</button>
+                        {/* {portfolioDeleteLoading ?
+                            <button className="btn btn-primary btn-style" type="button" >Deleting...</button>
+                            :
+                            <button className="btn btn-primary btn-style" type="button" onClick={PortfolioDeleteSubmit} >Delete</button>
+                        } */}
+                    </Card.Footer>
+                </Modal.Body>
+            </Modal>
+            </>
     );
 };
 
@@ -127,5 +167,6 @@ const HostView = ({livestream, userDetails}) => {
         </StreamVideo>
     );
 };
+
 
 export default HostView;

@@ -90,16 +90,22 @@ const ProductGrid = (props) => {
                                         return (
                                             <Col className={`mb-0`} lg="4">
                                                 <div className="portfolio-link">
-
                                                     <div className={`portfolio-grid-selling w-100 ${product.collection_type == "Limited" ? "limited" : " "} ${product.status == "Draft" ? "draft" : ""}`}
                                                         style={{ backgroundImage: "url(" + productImage + ")" }}
                                                     >
+                                                {userRole !== 'Admin' ?
+                                                            <>
                                                         <Link to={`/product/${product.id}`} className="text-decoration-none">
                                                             <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
                                                         </Link>
-                                                        {/* <div className="portfolio-overlay"> */}
-
-
+                                                        </>
+                                                        :
+                                                        <>
+                                                        <Link to={`/admin/fabric/${product.id}`} className="text-decoration-none">
+                                                            <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
+                                                        </Link>
+                                                        </>
+                                                }
                                                         <div className='save-link'>
                                                             {userRole !== 'Admin' &&
                                                                 <>

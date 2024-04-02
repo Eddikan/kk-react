@@ -535,12 +535,25 @@ const Fabrics = (props) => {
                                                                         <>
                                                                             <Col className="designs-grid mb-3" xs="12" md="3">
                                                                                 <div className="portfolio-link">
+                                                                                {userRole !== 'Admin' ?
+                                                                                        <>
                                                                                     <div
                                                                                         className="designs-grid-div w-100 cursor-pointer"
                                                                                         onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }}
                                                                                         style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}
                                                                                     >
                                                                                     </div>
+                                                                                    </>
+                                                                                    :
+                                                                                    <>
+                                                                                    <div
+                                                                                        className="designs-grid-div w-100 cursor-pointer"
+                                                                                        onClick={function () { toggleAddViewCount(fabric.id); navigate('/admin/fabric/' + fabric.id); }}
+                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}
+                                                                                    >
+                                                                                    </div>
+                                                                                    </>
+                                                                                }
 
                                                                                     {userRole !== 'Admin' ?
                                                                                         <>
@@ -628,12 +641,25 @@ const Fabrics = (props) => {
                                                                         <>
                                                                             <Col className="designs-grid mb-3" xs="12" md="3">
                                                                                 <div className="portfolio-link">
+                                                                                {userRole !== 'Admin' ?
+                                                                                        <>
                                                                                     <div
                                                                                         className="designs-grid-div w-100 cursor-pointer"
                                                                                         onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }}
                                                                                         style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}
                                                                                     >
                                                                                     </div>
+                                                                                    </>
+                                                                                    :
+                                                                                    <>
+                                                                                    <div
+                                                                                        className="designs-grid-div w-100 cursor-pointer"
+                                                                                        onClick={function () { toggleAddViewCount(fabric.id); navigate('/admin/fabric/' + fabric.id); }}
+                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}
+                                                                                    >
+                                                                                    </div>
+                                                                                    </>
+                                                                                }   
 
                                                                                     {userRole !== 'Admin' ?
                                                                                         <>

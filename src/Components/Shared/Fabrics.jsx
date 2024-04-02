@@ -173,12 +173,25 @@ const Fabrics = (props) => {
                                                         {currentUser ?
                                                             <>
                                                                 <div className="portfolio-link">
+                                                                {userRole !== 'Admin' ?
+                                                                        <>
                                                                     <Link to={`/product/${fabric.id}`}>
                                                                         <div className="designs-grid-div w-100 cursor-pointer"
                                                                             onClick={function () { toggleAddViewCount(fabric.id); }}
                                                                             style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}>
                                                                         </div>
                                                                     </Link>
+                                                                    </>
+                                                                    :
+                                                                    <>
+                                                                    <Link to={`/admin/fabric/${fabric.id}`}>
+                                                                        <div className="designs-grid-div w-100 cursor-pointer"
+                                                                            onClick={function () { toggleAddViewCount(fabric.id); }}
+                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}>
+                                                                        </div>
+                                                                    </Link>
+                                                                    </>
+                                                                }
 
                                                                     {userRole !== 'Admin' &&
                                                                         <>

@@ -611,7 +611,7 @@ const Designs = (props) => {
                                                                                 <>
                                                                                     <div
                                                                                         className="designs-grid-div w-100 cursor-pointer"
-                                                                                        onClick={function () { toggleAddViewCount(design.id); navigate('/portfolio/' + design.id); }}
+                                                                                        onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}
                                                                                         style={{ backgroundImage: "url(" + designImage + ")" }}>
                                                                                     </div>
                                                                                 </>

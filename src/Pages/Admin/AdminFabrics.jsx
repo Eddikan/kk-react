@@ -188,7 +188,7 @@ const AdminFabrics = (props) => {
                                                                             <Card.Body >
                                                                                 <Row>
                                                                                     <Col lg={3} className='d-flex justify-content-left align-items-center'>
-                                                                                        <Link to={`/product/${fabric.id}`} className='d-flex justify-content-left align-items-center text-decoration-none'>
+                                                                                        <Link to={`/admin/fabric/${fabric.id}`} className='d-flex justify-content-left align-items-center text-decoration-none'>
                                                                                             <div
                                                                                                 className=" image-fabrics-admin "
                                                                                                 style={{ backgroundImage: "url(" + fabricImage + ")" }}
@@ -197,7 +197,7 @@ const AdminFabrics = (props) => {
                                                                                         </Link>
 
                                                                                         <div className='ms-3'>
-                                                                                            <Link to={`/product/${fabric.id}`} className='d-flex justify-content-left align-items-center text-decoration-none mb-1'>
+                                                                                            <Link to={`/admin/fabric/${fabric.id}`} className='d-flex justify-content-left align-items-center text-decoration-none mb-1'>
                                                                                                 <div className='mb-1 d-flex'>
                                                                                                     <span className='fs-18 text-black admin-ellipsis-fabrics fw-500'>{fabric.name}</span>
 
@@ -213,7 +213,8 @@ const AdminFabrics = (props) => {
                                                                                             </Link>
 
                                                                                             <Link
-                                                                                                to={`/admin/profile/seller/${fabric.user.id}`}
+                                                                                                // to={`/admin/profile/seller/${fabric.user.id}`}
+                                                                                                to={`/admin/profile/user/${fabric.user.id}`}
                                                                                                 className="text-decoration-none text-black"
                                                                                             >
 
@@ -260,7 +261,7 @@ const AdminFabrics = (props) => {
                                                                                     <Col lg={2} className='d-flex justify-content-end align-items-center'>
                                                                                         <div className='d-flex'>
 
-                                                                                            <Link to={`/product/${fabric.id}`} className="text-decoration-none">
+                                                                                            <Link to={`/admin/fabric/${fabric.id}`} className="text-decoration-none">
                                                                                                 <div className="fabrics-tooltip cursor-pointer">
                                                                                                     <span className="icon-tooltiptext fs-14">View</span>
                                                                                                     <IoEye className='me-3' color='#000000' size={20} />

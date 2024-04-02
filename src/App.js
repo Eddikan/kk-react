@@ -76,6 +76,10 @@ const AdminEditDesign = lazy(() => import("./Pages/Admin/AdminEditDesign"));
 const AdminEditProduct = lazy(() => import("./Pages/Admin/AdminEditProduct"));
 const AdminUsers = lazy(() => import("./Pages/Admin/AdminUsers"));
 const AdminPostPurchase = lazy(() => import("./Pages/Admin/AdminPostPurchase"));
+const AdminViewFabric = lazy(() => import("./Pages/Admin/AdminViewFabric"));
+const AdminViewPortFolio = lazy(() => import("./Pages/Admin/AdminViewPortFolio"));
+
+
 const AdminViewPostPurchase = lazy(() =>
   import("./Pages/Admin/AdminViewPostPurchase")
 );
@@ -222,6 +226,13 @@ const App = () => {
             exact
             element={<ViewPortfolio />}
           />
+
+          <Route
+            path="/admin/portfolio/:portfolioId"
+            exact
+            element={<AdminViewPortFolio />}
+          />
+
           <Route
             path="/user/center/design/:portfolioId/edit"
             exact
@@ -244,6 +255,8 @@ const App = () => {
             element={<AddNewProduct />}
           />
           <Route path="/product/:productId" exact element={<ViewProduct />} />
+          <Route path="/admin/fabric/:productId" exact element={<AdminViewFabric />} />
+          
           <Route
             path="/user/center/product/:productId/edit"
             exact
