@@ -213,7 +213,6 @@ const AdminFabrics = (props) => {
                                                                                             </Link>
 
                                                                                             <Link
-                                                                                                // to={`/admin/profile/seller/${fabric.user.id}`}
                                                                                                 to={`/admin/profile/user/${fabric.user.id}`}
                                                                                                 className="text-decoration-none text-black"
                                                                                             >
@@ -305,11 +304,11 @@ const AdminFabrics = (props) => {
                                                 :
                                                 <>
                                                     <Col lg={12}>
-                                                        <Card className='mt-3'>
-                                                            <Card.Body>
-                                                                <p className="text-center mb-0">No records found.</p>
-                                                            </Card.Body>
-                                                        </Card>
+                                                                <Card className='mt-3'>
+                                                                    <Card.Body>
+                                                                        <p className="text-center mb-0">No records found.</p>
+                                                                    </Card.Body>
+                                                                </Card>
                                                     </Col>
                                                 </>
                                             }

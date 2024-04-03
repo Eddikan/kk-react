@@ -31,9 +31,6 @@ const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
 const UserOrders = lazy(() => import("./Pages/Seller/Orders"));
 const UserOrderDetails = lazy(() => import("./Pages/Seller/OrderDetails"));
 
-const AdminOrders = lazy(() => import("./Pages//Admin/Orders"));
-const AdminOrderDetails = lazy(() => import("./Pages/Admin/OrderDetails"));
-
 const Orders = lazy(() => import("./Pages/Orders"));
 const Messages = lazy(() => import("./Pages/Messages"));
 const RateReview = lazy(() => import("./Pages/RateReview"));
@@ -62,6 +59,9 @@ const VendorFeedBackSurvey = lazy(() =>
 );
 
 // Admin
+const AdminOrders = lazy(() => import("./Pages//Admin/Orders"));
+const AdminOrderDetails = lazy(() => import("./Pages/Admin/OrderDetails"));
+const AdminViewSurvey = lazy(() => import("./Pages/Admin/AdminViewSurvey"));
 const AdminFabrics = lazy(() => import("./Pages/Admin/AdminFabrics"));
 const AdminDesigns = lazy(() => import("./Pages/Admin/AdminDesigns"));
 const AdminDesigners = lazy(() => import("./Pages/Admin/AdminDesigners"));
@@ -70,19 +70,23 @@ const AdminAppointments = lazy(() => import("./Pages/Admin/AdminAppointments"));
 const AdminEditUser = lazy(() => import("./Pages/Admin/AdminEditUser"));
 const AdminEditDesigner = lazy(() => import("./Pages/Admin/AdminEditDesigner"));
 const AdminEditSeller = lazy(() => import("./Pages/Admin/AdminEditSeller"));
-const AdminViewSellerProfile = lazy(() =>
-  import("./Pages/Admin/AdminViewSellerProfile")
-);
-const AdminViewUserProfile = lazy(() =>
-  import("./Pages/Admin/AdminViewUserProfile")
-);
 const AdminEditDesign = lazy(() => import("./Pages/Admin/AdminEditDesign"));
 const AdminEditProduct = lazy(() => import("./Pages/Admin/AdminEditProduct"));
 const AdminUsers = lazy(() => import("./Pages/Admin/AdminUsers"));
 const AdminPostPurchase = lazy(() => import("./Pages/Admin/AdminPostPurchase"));
 const AdminViewFabric = lazy(() => import("./Pages/Admin/AdminViewFabric"));
 const AdminViewPortFolio = lazy(() => import("./Pages/Admin/AdminViewPortFolio"));
+const AdminVendorSurvey = lazy(() => import("./Pages/Admin/AdminVendorSurvey"));
+const AdminEcoFriendly = lazy(() => import("./Pages/Admin/AdminEcoFriendly"));
 
+
+const AdminViewSellerProfile = lazy(() =>
+  import("./Pages/Admin/AdminViewSellerProfile")
+);
+
+const AdminViewUserProfile = lazy(() =>
+  import("./Pages/Admin/AdminViewUserProfile")
+);
 
 const AdminViewPostPurchase = lazy(() =>
   import("./Pages/Admin/AdminViewPostPurchase")
@@ -100,7 +104,6 @@ const AdminViewVendorSurvey = lazy(() =>
   import("./Pages/Admin/AdminViewVendorSurvey")
 );
 
-const AdminVendorSurvey = lazy(() => import("./Pages/Admin/AdminVendorSurvey"));
 const AdminCustomerSatisfaction = lazy(() =>
   import("./Pages/Admin/AdminCustomerSatisfaction")
 );
@@ -199,32 +202,38 @@ const App = () => {
             exact
             element={<EditUserProfile />}
           />
+
           <Route
             path="/admin/edit/user/:userId"
             exact
             element={<AdminEditUser />}
           />
+
           <Route
             path="/admin/edit/designer/:designerId"
             exact
             element={<AdminEditDesigner />}
           />
+
           <Route
             path="/admin/edit/seller/:sellerId"
             exact
             element={<AdminEditSeller />}
           />
+
           <Route
             path="/user/center/guide"
             exact
             element={<UserMeasurementGuide />}
           />
+
           {/* Portfolio */}
           <Route
             path="/user/center/design/add"
             exact
             element={<AddNewPortfolio />}
           />
+
           <Route
             path="/portfolio/:portfolioId"
             exact
@@ -242,66 +251,77 @@ const App = () => {
             exact
             element={<EditPortfolio />}
           />
+
           <Route
             path="/admin/portfolio/:portfolioId/edit"
             exact
             element={<AdminEditDesign />}
           />
+
           <Route
             path="/user/center/portfolio"
             exact
             element={<UserPortfolio />}
           />
+
           {/* Product */}
+          <Route path="/product/:productId" exact element={<ViewProduct />} />
+          <Route path="/admin/fabric/:productId" exact element={<AdminViewFabric />} />
           <Route
             path="/user/center/product/add"
             exact
             element={<AddNewProduct />}
           />
-          <Route path="/product/:productId" exact element={<ViewProduct />} />
-          <Route path="/admin/fabric/:productId" exact element={<AdminViewFabric />} />
           
           <Route
             path="/user/center/product/:productId/edit"
             exact
             element={<EditProduct />}
           />
+
           <Route
             path="/admin/product/:productId/edit"
             exact
             element={<AdminEditProduct />}
           />
+
           <Route
             path="/user/center/products"
             exact
             element={<UserProducts />}
           />
+
           {/* Admin */}
           <Route path="/admin/users" exact element={<AdminUsers />} />
           <Route path="/admin/designers" exact element={<AdminDesigners />} />
           <Route path="/admin/sellers" exact element={<AdminSellers />} />
           <Route path="/admin/fabrics" exact element={<AdminFabrics />} />
           <Route path="/admin/designs" exact element={<AdminDesigns />} />
+          <Route path="/admin/eco-friendly" exact element={<AdminEcoFriendly />} />
           <Route
             path="/admin/appointments"
             exact
             element={<AdminAppointments />}
           />
+
           <Route
             path="/admin/profile/user/:userId"
             exact
             element={<AdminViewUserProfile />}
           />
+
           <Route
             path="/admin/profile/seller/:sellerId"
             exact
             element={<AdminViewSellerProfile />}
           />
+
           <Route
             path="/admin/post-purchase-survey"
             exact
             element={<AdminPostPurchase />}
           />
+
           <Route
             path="/admin/general-feedback-survey"
             exact
@@ -343,6 +363,7 @@ const App = () => {
             exact
             element={<AdminViewGeneralSurvey />}
           />
+
           {/* Designs */}
           <Route path="/find-designs" exact element={<Designs />} />
           <Route path="/designs" exact element={<Designs />} />
@@ -357,12 +378,13 @@ const App = () => {
           <Route path="/wishlist" exact element={<Wishlists />} />
           <Route path="/orders" exact element={<Orders />} />
           <Route path="/category/tops" exact element={<UnderConstruction />} />
+          <Route path="/category/pants" exact element={<UnderConstruction />} />
           <Route
             path="/category/dresses"
             exact
             element={<UnderConstruction />}
           />
-          <Route path="/category/pants" exact element={<UnderConstruction />} />
+    
           <Route
             path="/category/skirts"
             exact
@@ -473,7 +495,8 @@ const App = () => {
           <Route path="/measurement" exact element={<Measurement />} />
           <Route path="/thank-you" exact element={<ThankYouPage />} />
 
-          <Route path="/post-purchase-survey/order/:surveyId" exact element={<ViewSurvey />} />
+          <Route path="/view/order/:orderId/survey/:surveyId" exact element={<ViewSurvey />} />
+          <Route path="/admin/view/order/:orderId/survey/:surveyId" exact element={<AdminViewSurvey />} />
         </Routes>
       </Suspense>
     </Router>

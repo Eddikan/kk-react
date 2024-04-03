@@ -6,36 +6,22 @@ import User from 'Assets/images/user.png';
 import InputEmoji from 'react-input-emoji';
 import 'Assets/styles/Order/style.css';
 import AdminSidebar from 'Components/Shared/AdminSidebar';
-import { GoAlertFill, GoShareAndroid } from 'react-icons/go';
-import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
+import { GoAlertFill } from 'react-icons/go';
+import { Row, Col, Modal, Card } from 'react-bootstrap';
 import { useCookies } from 'react-cookie';
 import { VscSend } from "react-icons/vsc";
 import GoBack from '../../Components/Shared/GoBack';
 import { IoIosAttach } from "react-icons/io";
 import { IoCloseOutline } from "react-icons/io5";
-import { AiFillMessage } from "react-icons/ai";
 import { CiSearch } from 'react-icons/ci';
-import { MdKeyboardArrowDown } from "react-icons/md";
 import { IoEyeOutline } from "react-icons/io5";
 import Pagination from 'Components/Pagination/Pagination';
 import toast from 'react-hot-toast';
 import axios from "axios";
 import { useNavigate, useParams, Link } from 'react-router-dom';
 
-const ToastCss = {
-    position: "top-right",
-    autoClose: 1500,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-};
-
 const Orders = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole']);
-    const { designerId } = useParams();
-    const siteCookies = cookies[0];
     const currentUser = cookies.currentUser;
     const token = cookies.token;
     const [reloadCount, setReloadCount] = useState(0);
@@ -62,20 +48,6 @@ const Orders = (props) => {
 
     const getOrders = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order?page='+currentPage+'&status=' + currentTab);
-    };
-
-    const getFabrics = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + token);
-    };
-
-    const chatBoxModal = (first_name, last_name, image) => {
-        setChatBox(true);
-
-        setDesignerData({
-            first_name: first_name || '-',
-            last_name: last_name || '-',
-            image: image || '-'
-        })
     };
 
     function toggleUnderConstruction(message) {
@@ -377,6 +349,7 @@ const Orders = (props) => {
                                                                         </Row>
                                                                     );
                                                                 })}
+                                                                
                                                                 <Pagination
                                                                     className="mt-4 mb-0"
                                                                     currentPage={currentPage}
@@ -407,89 +380,6 @@ const Orders = (props) => {
                                             </>
                                         }
                                     </>
-                                }
-
-
-
-
-                                {chatBox ?
-                                    <>
-                                        <Card className='width-chat-card px-0'>
-                                            <Card.Header className='order-chat bg-white pt-3 pb-3'>
-                                                <div className='d-flex justify-content-between'>
-                                                    <div>
-                                                        <span className="fs-14 fw-500 mb-0 name-of-user-chat">
-                                                            <span className='fw-500'>{designerData.first_name} {designerData.last_name}</span>
-                                                        </span>
-                                                        {/* <span className='ms-3 active-now fs-14 fw-400'>Active Now</span> */}
-                                                    </div>
-                                                    <div className="cursor-pointer" onClick={() => setChatBox(false)}>
-                                                        <IoCloseOutline color="#39393A" />
-                                                    </div>
-                                                </div>
-                                            </Card.Header>
-
-                                            <Card.Body >
-                                                <div>
-                                                    <span className='d-flex user-image'>
-                                                        {designerData.image && (
-                                                            <div
-                                                                className='user-photo'
-                                                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designerData.image})` }}
-                                                            >
-                                                            </div>
-                                                        )}
-
-                                                        <div className="designer-info mx-2">
-
-                                                            <div>
-                                                                <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-2">
-                                                                    <span className=''>{designerData.first_name}{designerData.last_name}</span>
-                                                                    <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
-                                                                </p>
-                                                            </div>
-
-                                                            <div className='fs-14 ms-2 mt-2 name-of-user-chat'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</div>
-                                                        </div>
-                                                    </span>
-                                                </div>
-
-                                                <div className='mt-5 mb-4 text-right d-flex'>
-                                                    <div>
-                                                        <div className='time-chat-box fs-14 fw-400'>3:30 PM
-                                                            <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
-                                                        <div className='mt-2 welcome-chat'>
-                                                            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
-                                                        </div>
-                                                    </div>
-                                                    <img src={User} className='placeholder-chat ms-3' />
-                                                </div>
-
-                                                <div>
-                                                    <InputEmoji
-                                                        value={text}
-                                                        onChange={setText}
-                                                        cleanOnEnter
-                                                        onEnter={handleOnEnter}
-                                                        placeholder="Type a message"
-                                                        className="emoji-picker"
-                                                    />
-                                                    <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
-                                                    <div>
-                                                        <div
-                                                            className="cursor-pointer fw-500 position-absolute send-button"
-                                                            onClick={() => toggleUnderConstruction("Send Message")}
-                                                        >
-                                                            Send
-                                                            <VscSend className='ms-1' />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Card.Body>
-                                        </Card>
-                                    </>
-                                    :
-                                    null
                                 }
                             </div>
                         </Col>

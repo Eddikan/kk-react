@@ -249,7 +249,45 @@ const Products = (props) => {
                                 </>
                                 :
                                 <>
-                                    <Row>
+                                 <Row className='bg-portfolio'>
+                                        <Col lg={2}>
+                                            <Sidebar />
+                                        </Col>
+
+                                        <Col lg={10} className='py-5 mx-auto padding-right-admin max-width-column'>
+                                                <div>
+                                                <Row>
+                                                    <Col lg={12}>
+                                                        <Row className="pb-4">
+
+                                                            <Col lg={11} className='d-flex justify-content-left align-items-center'>
+                                                                <h3 className="fs-30 fw-600 text-black mb-0">Fabrics</h3>
+                                                            </Col>
+
+                                                            <Col lg={1} className='text-right'>
+                                                                <GoBack fallBack="/" />
+                                                            </Col>
+
+                                                            <Col lg={12} className="mt-4">
+                                                                <Card className='border-none'>
+                                                                    <Card.Body className="image-drop-container pt-5 pb-5">
+                                                                    <div className="text-center">
+                                                                    <p className="text-center mb-2 fs-20">No fabric found.</p>
+                                                                                <p className="text-center mb-3">Showcase your best works, enrich your fabric, and join a flourishing community.</p>
+                                                                <Link to="/user/center/product/add">
+                                                                    <Button className="btn btn-primary">Upload Fabric</Button>
+                                                                </Link>
+                                                                </div>
+                                                                    </Card.Body>
+                                                                </Card>
+                                                            </Col> 
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                                </div>
+                                        </Col>
+                                    </Row>
+                                    {/* <Row>
                                         <Col lg={2}>
                                             <Sidebar />
                                         </Col>
@@ -262,7 +300,7 @@ const Products = (props) => {
                                                 </Link>
                                             </div>
                                         </Col>
-                                    </Row>
+                                    </Row> */}
 
                                 </>
                             }

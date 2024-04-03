@@ -28,14 +28,7 @@ const ViewSurvey = (props) => {
     const [reloadCount, setReloadCount] = useState(0);
     const [postPurchase, setPostPurchase] = useState([]);
     const [postPurchasesLoading, setPostPurchasesLoading] = useState(true);
-    const [surveyUser, setSurveyUser] = useState('');
     const navigate = useNavigate();
-
-    const useQuery = () => {
-        return new URLSearchParams(useLocation().search);
-    }
-    let query = useQuery();
-    const order_id = query.get('order_id');
 
     const getPostPurchase = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'post-purchase-survey/' + surveyId);
@@ -51,7 +44,6 @@ const ViewSurvey = (props) => {
     };
 
     useEffect(() => {
-        if (currentUser) {
             getPostPurchase()
                 .then((response) => {
                     setPostPurchasesLoading(false);
@@ -59,9 +51,6 @@ const ViewSurvey = (props) => {
                     if (selectedPostPurchase) {
                         setPostPurchase(selectedPostPurchase);
                         setPostPurchaseFormData(selectedPostPurchase);
-                        if (selectedPostPurchase.user) {
-                            setSurveyUser(selectedPostPurchase.user);
-                        }
                     } else {
                         toast.error('There has been an error getting the surveys, please try again!');
                         setPostPurchasesLoading(false);
@@ -71,8 +60,7 @@ const ViewSurvey = (props) => {
                     toast.error('There has been an error getting the surveys, please try again!');
                     setPostPurchasesLoading(false);
                 });
-        }
-    },
+            },
         [reloadCount]);
 
     return (

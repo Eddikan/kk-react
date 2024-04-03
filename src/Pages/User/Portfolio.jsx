@@ -364,18 +364,41 @@ const Portfolio = (props) => {
                                 </>
                                 :
                                 <>
-                                    <Row>
+                                    <Row className='bg-portfolio'>
                                         <Col lg={2}>
                                             <Sidebar />
                                         </Col>
 
-                                        <Col lg={10} className='bg-color-portfolio d-flex justify-content-center align-items-center'>
-                                            <div className="text-center">
-                                                <p className="text-center mb-3">No records found.</p>
-                                                <Link to="/user/center/design/add">
-                                                    <Button className="btn btn-primary">Add Portfolio</Button>
-                                                </Link>
-                                            </div>
+                                        <Col lg={10} className='py-5 mx-auto padding-right-admin max-width-column'>
+                                                <div>
+                                                <Row>
+                                                    <Col lg={12}>
+                                                        <Row className="pb-4">
+                                                            <Col lg={11} className='d-flex justify-content-left align-items-center'>
+                                                                <h3 className="fs-30 fw-600 text-black mb-0">Portfolio</h3>
+                                                            </Col>
+
+                                                            <Col lg={1} className='text-right'>
+                                                                <GoBack fallBack="/" />
+                                                            </Col>
+
+                                                            <Col lg={12} className="mt-4">
+                                                                <Card className='border-none'>
+                                                                        <Card.Body className="image-drop-container pt-5 pb-5">
+                                                                                <div className="text-center">
+                                                                                <p className="text-center mb-2 fs-20">No portfolio found.</p>
+                                                                                <p className="text-center mb-3">Showcase your best works, enrich your portfolio, and join a flourishing community.</p>
+                                                                            <Link to="/user/center/design/add">
+                                                                                <Button className="btn btn-primary">Upload Portfolio</Button>
+                                                                            </Link>
+                                                                                </div>
+                                                                        </Card.Body>
+                                                                </Card>
+                                                            </Col> 
+                                                        </Row>
+                                                    </Col>
+                                                </Row>
+                                                </div>
                                         </Col>
                                     </Row>
                                 </>

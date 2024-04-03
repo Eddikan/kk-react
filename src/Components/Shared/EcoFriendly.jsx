@@ -2,26 +2,18 @@ import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
 import { useNavigate, Link } from 'react-router-dom';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
-import DesignerPlaceholder from 'Assets/images/designer-placeholder.jpg';
-import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
-import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
-import UnknownPlaceholder from 'Assets/images/placeholders/unknown-placeholder-1.png';
 import toast from 'react-hot-toast';
+import { useCookies } from 'react-cookie';
 import Ecofriendly from 'Assets/images/echo-friendly-bg.png'
-import GetDesignersData from 'Utils/GetDesignersData';
 import { Modal } from 'react-bootstrap';
-import { BsThreeDots } from "react-icons/bs";
 import { GoAlertFill } from 'react-icons/go';
-import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
-import { IoDocumentOutline } from "react-icons/io5";
-
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
 
 const EcoFriendly = (props) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const currentUser = cookies.currentUser;
+    const userRole = cookies.userRole;
     const navigate = useNavigate();
     const reloadCount = props.reloadCount;
-    const currentUser = props.currentUser;
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [designers, setDesigners] = useState([]);
     const [designersLoading, setDesignersLoading] = useState(true);
@@ -40,7 +32,7 @@ const EcoFriendly = (props) => {
         props.onSignup(e);
     }
 
-    return (
+    return ( 
         <>
             <div style={{ backgroundImage: `url(${Ecofriendly})`, height: `350px` }}>
                 <Container>
@@ -49,9 +41,19 @@ const EcoFriendly = (props) => {
                             <div className='text-center text-white mb-3 fs-40 rufina-family'>Embrace Eco-Friendly Fabrics!</div>
 
                             <div className='text-center text-white'>Elevate your fashion with fabrics that care for both you and the Earth. Embrace eco-friendly fashion today!</div>
-                            <Link to="/eco-friendly">
-                                <Button className="btn-explore-now fs-15 explore-now" variant="primary">Explore Now</Button>
-                            </Link>
+                            {userRole !== 'Admin' ?
+                                <>
+                                  <Link to="/eco-friendly">
+                                    <Button className="btn-explore-now fs-15 explore-now" variant="primary">Explore Now</Button>
+                                </Link>
+                                </>
+                                :
+                                <>
+                                 <Link to="/admin/eco-friendly">
+                                    <Button className="btn-explore-now fs-15 explore-now" variant="primary">Explore Now</Button>
+                                </Link>
+                                </>
+                            }       
                             {/* <a className='btn-explore-now fs-15 explore-now' onClick={() => toggleUnderConstruction("Eco-Friendly Fabrics!")}>Explore Now</a> */}
                         </Col>
                     </Row>

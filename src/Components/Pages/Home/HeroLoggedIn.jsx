@@ -35,7 +35,6 @@ const HeroLoggedIn = () => {
                         </Col>
 
                         <Col lg="6">
-
                             <Row className='mb-4'>
                                 <Col lg='12' className="hero-cards-column cursor-pointer" onClick={() => navigate('/designs')}>
                                     <div className="hero-card-design position-relative h-100">

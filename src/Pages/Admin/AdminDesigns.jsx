@@ -420,11 +420,11 @@ const AdminDesigns = (props) => {
                                                 :
                                                 <>
                                                     <Col lg={12}>
-                                                        <Card className='mt-3'>
-                                                            <Card.Body>
-                                                                <p className="text-center mb-0">No records found.</p>
-                                                            </Card.Body>
-                                                        </Card>
+                                                            <Card className='mt-3'>
+                                                                <Card.Body>
+                                                                    <p className="text-center mb-0">No records found.</p>
+                                                                </Card.Body>
+                                                            </Card>
                                                     </Col>
                                                 </>
                                             }

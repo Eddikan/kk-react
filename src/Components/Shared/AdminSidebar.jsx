@@ -25,7 +25,7 @@ const Sidebar = ({ }) => {
                                 className='cursor-pointer users-title yellow-hover'
                                 onClick={() => navigate('/admin/users')}
                             >
-                                <PiUsersLight size="22" className="me-2 mb-1" color='#000000' />
+                                <PiUsersLight size="22" className="me-2 mb-1" />
                                 Users
                             </span>
 
@@ -52,30 +52,6 @@ const Sidebar = ({ }) => {
                             </span>
                         </div>
 
-                        {/* <AccordionHeader
-                            targetId="2"
-                            className='mt-2 hover-sidebar'
-                            onClick={() => navigate('/admin/users')}
-                        >
-                            <span><PiUsersLight size="22" className="me-2 mb-1" color='#000000' /></span>
-                            <span className="cursor-pointer order-font yellow-hover">
-                                Users
-                                <IoIosArrowDown className='ms-5' color='#000000' /></span>
-                        </AccordionHeader>
-
-                        <AccordionBody accordionId="2">
-                            <div
-                                className="hover-sidebar cursor-pointer ms-3 yellow-hover"
-                                onClick={() => navigate('/admin/designers')}>
-                                Designers
-                            </div>
-
-                            <div
-                                className="hover-sidebar cursor-pointer ms-3 yellow-hover mt-3"
-                                onClick={() => navigate('/admin/sellers')}>
-                                Sellers
-                            </div>
-                        </AccordionBody> */}
                         <div
                             className="hover-sidebar cursor-pointer yellow-hover mt-3"
                             onClick={() => navigate('/admin/orders')}
