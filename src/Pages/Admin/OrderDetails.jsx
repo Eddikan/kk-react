@@ -18,12 +18,15 @@ import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
 import axios from "axios";
 
-
 const initialStatus = {
     status: ''
 };
 
 const initialOrderStatus = {
+    status: ''
+};
+
+const initialLogStatus = {
     status: ''
 };
 
@@ -42,10 +45,11 @@ const OrderDetails = (props) => {
     const [order, setOrder] = useState('');
     const [orderStatus, setOrderStatus] = useState('All');
     const [orderItemId, setOrderItemId] = useState('');
-    const [orderItems, setOrderItems] = useState('');
+    const [orderItemLog, setOrderItemLog] = useState(initialLogStatus);
+    const [orderItemLogFormData, setOrderItemLogFormData] = useState(initialLogStatus);
     const [orderLoading, setOrderLoading] = useState(true);
     const [orderItemsFormData, setOrderItemsFormData] = useState(initialStatus);
-    const [orderStatusFormData, setOrderStatusFormData] = useState(initialOrderStatus);
+    const [orderFormData, setOrderFormData] = useState(initialOrderStatus);
     const [updateStatusShow, setUpdateStatusShow] = useState(false);
     const [updateOrderStatusShow, setUpdateOrderStatusShow] = useState(false);
 
@@ -62,7 +66,8 @@ const OrderDetails = (props) => {
                 setOrderLoading(false);
                 const selectedOrderItemLog = response.data.data;
                 if (selectedOrderItemLog) {
-                    setOrderItems(selectedOrderItemLog);
+                    setOrderItemLog(selectedOrderItemLog.order_item_log ?? initialLogStatus);
+                    setOrderItemLogFormData(selectedOrderItemLog.order_item_log ?? initialLogStatus);
                 } else {
                     // toast.error('There has been an error getting the order item log, please try again!');
                     setOrderLoading(false);
@@ -103,8 +108,8 @@ const OrderDetails = (props) => {
 
     const handleChangeOrderStatus = (e) => {
         const { name, value } = e.target;
-        setOrderStatusFormData({
-            ...orderStatusFormData,
+        setOrderFormData({
+            ...orderFormData,
             [name]: value,
         });
     };
@@ -122,7 +127,7 @@ const OrderDetails = (props) => {
     };
 
     const getOrderItemLog = async (order_item_id) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/item/log/' + order_item_id);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/item/'+order_item_id+'/log');
     };
 
     const postOrderItemLog = async (data) => {
@@ -157,7 +162,7 @@ const OrderDetails = (props) => {
 
     const statusSubmit = (e) => {
         setOrderLoading(true);
-        postOrderItemLog({ ...orderItemsFormData, order_id: orderItems.id, user_id: currentUser, order_item_id: orderItemId }).then(response => {
+        postOrderItemLog({ ...orderItemsFormData, order_id: orderId, user_id: currentUser, order_item_id: orderItemId }).then(response => {
             const status = response.data.status;
             if (status === "Success") {
                 setOrderLoading(false);
@@ -177,11 +182,11 @@ const OrderDetails = (props) => {
 
     const statusOrderSubmit = (e) => {
         setOrderLoading(true);
-        putOrder({ ...orderStatusFormData, order_id: order.id}).then(response => {
+        putOrder({ ...orderFormData, id: orderFormData.id}).then(response => {
             const status = response.data.status;
             if (status === "Success") {
                 setOrderLoading(false);
-                setOrderStatusFormData(initialOrderStatus);
+                setOrderFormData(initialOrderStatus);
                 toast.success('Order Status updated successfully!');
                 setUpdateOrderStatusShow(false);
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
@@ -208,6 +213,7 @@ const OrderDetails = (props) => {
                     setOrders(selectedOrder);
                     setSurvey(selectedOrder[0].survey);
                     setOrder(selectedOrder[0].order);
+                    setOrderFormData({status: selectedOrder[0].order.status});
                     setUser(selectedOrder[0].user);
                     setOrderLoading(false);
                 } else {
@@ -548,14 +554,32 @@ const OrderDetails = (props) => {
                                     id="orderStatus"
                                     name='status'
                                     className='form-control mb-1'
-                                    value={orderItems.status}
+                                    value={orderItemLogFormData.status}
                                     onChange={handleChangeStatus}
                                 >
-                                    <option value="Pending">Pending</option>
-                                    <option value="Processing">Processing</option>
-                                    <option value="Shipped">Order Shipped</option>
-                                    <option value="Delivered">Delivered</option>
-                                    <option value="Completed">Completed</option>
+                                    {orderItemLog.status == "Pending" ?
+                                        <>
+                                            <option value="Pending">Pending</option>
+                                            <option value="Processing">Processing</option>
+                                        </>
+                                        : orderItemLog.status == "Processing" ?
+                                        <>
+                                            <option value="Processing">Processing</option>
+                                            <option value="Shipped">Order Shipped</option>
+                                        </>
+                                        : orderItemLog.status == "Shipped" ?
+                                        <>
+                                            <option value="Shipped">Order Shipped</option>
+                                            <option value="Delivered">Delivered</option>
+                                        </>
+                                        : orderItemLog.status == "Processing" ?
+                                        <>
+                                            <option value="Delivered">Delivered</option>
+                                            <option value="Completed">Completed</option>
+                                        </>
+                                        :
+                                        null
+                                    }
                                 </select>
                             </div>
                         </Card.Body>
@@ -611,14 +635,32 @@ const OrderDetails = (props) => {
                                         id="orderStatus"
                                         name='status'
                                         className='form-control mb-1'
-                                        value={orderStatus.status}
+                                        value={orderFormData.status}
                                         onChange={handleChangeOrderStatus}
                                     >
-                                        <option value="Pending">Pending</option>
-                                        <option value="Processing">Processing</option>
-                                        <option value="Shipped">Order Shipped</option>
-                                        <option value="Delivered">Delivered</option>
-                                        <option value="Completed">Completed</option>
+                                        {order.status == "Pending" ?
+                                            <>
+                                                <option value="Pending">Pending</option>
+                                                <option value="Processing">Processing</option>
+                                            </>
+                                            : order.status == "Processing" ?
+                                            <>
+                                                <option value="Processing">Processing</option>
+                                                <option value="Shipped">Order Shipped</option>
+                                            </>
+                                            : order.status == "Shipped" ?
+                                            <>
+                                                <option value="Shipped">Order Shipped</option>
+                                                <option value="Delivered">Delivered</option>
+                                            </>
+                                            : order.status == "Processing" ?
+                                            <>
+                                                <option value="Delivered">Delivered</option>
+                                                <option value="Completed">Completed</option>
+                                            </>
+                                            :
+                                            null
+                                        }
                                     </select>
                             </div>
                         </Card.Body>
