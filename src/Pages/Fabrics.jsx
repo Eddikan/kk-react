@@ -743,7 +743,6 @@ const Fabrics = (props) => {
                                                                         </>
                                                                     )}
                                                                 </>
-
                                                             )
                                                         })}
                                                     </Row>

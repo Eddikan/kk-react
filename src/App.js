@@ -488,11 +488,6 @@ const App = () => {
             exact
             element={<LiveStreams />}
           />
-          {/* <Route
-            path="/appointment/schedule/:designerId"
-            exact
-            element={<ScheduleConsultation />}
-          /> */}
           <Route
             path="/designer/:designerId/appointment/schedule/:appointmentscheduleId"
             exact
@@ -501,16 +496,14 @@ const App = () => {
           <Route path="/body-gram" exact element={<BodyGram />} />
           <Route path="/measurement" exact element={<Measurement />} />
           <Route path="/thank-you" exact element={<ThankYouPage />} />
-          <Route path="/why-work-with-kk" exact element={<WhyWorkWithKK />} />
+          {/* <Route path="/why-work-with-kk" exact element={<WhyWorkWithKK />} /> */}
+
+          <Route path="/why-work-with-kk" exact element={<UnderConstruction />} />
 
           
 
           <Route path="/view/order/:orderId/survey/:surveyId" exact element={<ViewSurvey />} />
           <Route path="/admin/view/order/:orderId/survey/:surveyId" exact element={<AdminViewSurvey />} />
-
-          {/* <Route path="/admin/view/:userId" exact element={<AdminViewProfile />} /> */}
-
-          {/* <Route path="/admin/profile/users" exact element={<AdminProfileUser />} /> */}
         </Routes>
       </Suspense>
     </Router>

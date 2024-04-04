@@ -452,13 +452,13 @@ const Header = () => {
                           }
 
                           {userRole !== 'Admin' &&
-                            <Link to={`/orders`} className="mb-3 text-decoration-none d-block"><BsCartCheck className='me-2' color='#000000' />
+                            <Link to={`/orders`} className="mb-3 text-decoration-none d-block"><BsCartCheck className='me-2 mb-1' color='#000000' />
                               <span className='text-black'>Orders</span>
                             </Link>
                           }
 
                           {userRole !== 'Admin' &&
-                            <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' color='#000000' />
+                            <Link to={`/appointments/${currentUser}`} className="mb-2 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' color='#000000' />
                               <span className='text-black'>Appointments</span>
                             </Link>
                           }

@@ -559,7 +559,7 @@ const Designs = (props) => {
                                     </Form.Group> */}
                                 </div>
                             </Col>
-                            <Col lg="9" className='d-flex justify-content-center'>
+                            <Col lg="9" >
                                 <div id="profile-designs">
                                     {designsLoading ?
                                         <>
@@ -656,7 +656,17 @@ const Designs = (props) => {
                                                     </Row>
                                                 </>
                                                 :
-                                                <p className="text-center mb-3 mt-3">No records found.</p>
+                                                <>
+                                                <Card>
+                                                <Card.Body className=" pt-5 pb-5">
+                                                        <div className="text-center">
+                                                        <GoAlertFill size="40px" className="mb-2 text-gold" />
+                                                        <p className="text-center mb-3">There are currently no designs available for viewing.</p>
+                                                        </div>
+                                                </Card.Body>
+                                                </Card>
+                                                </>
+                                                // <p className="text-center mb-3 mt-3">There are currently no portfolio available for viewing.</p>
                                             }
                                         </>
                                     }

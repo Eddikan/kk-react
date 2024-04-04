@@ -16,6 +16,7 @@ import CopyTo from 'Utils/CopyLink';
 import { ImEmbed2 } from "react-icons/im";
 import toast from 'react-hot-toast';
 import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 import UserPlaceholder from 'Assets/images/user.png';
 import PinIcon from 'Assets/images/pin.png';
 import LoadingPage from 'Components/Shared/LoadingPage';
@@ -256,7 +257,7 @@ const Portfolio = (props) => {
                                                                         {selectedItemIndex === index && (
                                                                             <div className="action-box">
                                                                                 <Link className="text-decoration-none" to={`/user/center/design/${object.id}/edit`}>
-                                                                                    <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
+                                                                                    <p className="mb-3 text-decoration-none"><GoPencil className='mb-1'/> Edit</p>
                                                                                 </Link>
 
                                                                                 <p className="mb-3 text-decoration-none cursor-pointer"
@@ -275,14 +276,14 @@ const Portfolio = (props) => {
                                                                                             object.user.id);
                                                                                     }}
                                                                                 >
-                                                                                    <IoEyeOutline className='me-1' />
+                                                                                    <IoEyeOutline className='me-1 mb-1' />
                                                                                     Preview
                                                                                 </p>
 
                                                                                 <p className="mb-3 cursor-pointer"
                                                                                     onClick={function () { deleteConfirm(object.id); }}
                                                                                 >
-                                                                                    <GoTrash /> Delete</p>
+                                                                                    <GoTrash className='mb-1'/> Delete</p>
                                                                                 {object.status != "Draft" ?
                                                                                     <p className="mb-0 cursor-pointer" onClick={function () { PortfolioDraftSubmit(object.id); }}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
                                                                                     :

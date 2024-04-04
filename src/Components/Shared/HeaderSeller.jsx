@@ -8,6 +8,7 @@ import Logo from 'Assets/images/kouture-konect-logo.png';
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { GoBell, GoHeart } from "react-icons/go";
 import { BsEnvelope } from "react-icons/bs";
+import { BsCartCheck } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import { IoCloseOutline, IoCalendarClearOutline } from "react-icons/io5";
 import UserPlaceholder from 'Assets/images/user.png';
@@ -331,12 +332,18 @@ const HeaderSeller = () => {
                                                                 </Link>
                                                             } */}
 
-                                                            <Link to={`/appointments/${currentUser}`} className="mb-3 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' color='#000000' />
+                                                            {userRole !== 'Admin' &&
+                                                                <Link to={`/orders`} className="mb-3 text-decoration-none d-block"><BsCartCheck className='me-2 mb-1' color='#000000' />
+                                                                <span className='text-black'>Orders</span>
+                                                                </Link>
+                                                            }
+
+                                                            <Link to={`/appointments/${currentUser}`} className="mb-2 text-decoration-none d-block"><IoCalendarClearOutline className='me-2 mb-1' color='#000000' />
                                                                 <span className='text-black'>Appointments</span>
                                                             </Link>
 
 
-                                                            {userRole !== 'Admin' &&
+                                                            {/* {userRole !== 'Admin' &&
                                                                 <div className='mb-2'>
                                                                     <DropdownButton id="dropdown-survey-button" className='dropdown-survey' title={<span><PiNotepadLight className='note-icon ' size={17} />Surveys</span>}>
                                                                         <Dropdown.Item href="/customer-satisfaction-survey" className='yellow-hover'>Customer Satisfaction</Dropdown.Item>
@@ -349,7 +356,7 @@ const HeaderSeller = () => {
                                                                         }
                                                                     </DropdownButton>
                                                                 </div>
-                                                            }
+                                                            } */}
 
                                                             <p className="mb-0 cursor-pointer" onClick={logOut}><IoIosPower className='me-2' color='#000000' />
                                                                 <span className='text-black'>Logout</span>
