@@ -31,6 +31,8 @@ const ScheduleConsultation = lazy(() => import("./Pages/ScheduleConsultation"));
 const UserOrders = lazy(() => import("./Pages/Seller/Orders"));
 const UserOrderDetails = lazy(() => import("./Pages/Seller/OrderDetails"));
 
+// const AdminProfileUser = lazy(() => import("./Pages/Admin/AdminProfileUser"));
+
 const Orders = lazy(() => import("./Pages/Orders"));
 const Messages = lazy(() => import("./Pages/Messages"));
 const RateReview = lazy(() => import("./Pages/RateReview"));
@@ -79,6 +81,8 @@ const AdminPostPurchase = lazy(() => import("./Pages/Admin/AdminPostPurchase"));
 const AdminViewFabric = lazy(() => import("./Pages/Admin/AdminViewFabric"));
 const AdminViewPortFolio = lazy(() => import("./Pages/Admin/AdminViewPortFolio"));
 const AdminVendorSurvey = lazy(() => import("./Pages/Admin/AdminVendorSurvey"));
+// const AdminViewProfile = lazy(() => import("./Pages/Admin/AdminViewProfile"));
+
 
 
 const AdminViewSellerProfile = lazy(() =>
@@ -311,6 +315,8 @@ const App = () => {
             element={<AdminViewUserProfile />}
           />
 
+
+
           <Route
             path="/admin/profile/seller/:sellerId"
             exact
@@ -501,6 +507,10 @@ const App = () => {
 
           <Route path="/view/order/:orderId/survey/:surveyId" exact element={<ViewSurvey />} />
           <Route path="/admin/view/order/:orderId/survey/:surveyId" exact element={<AdminViewSurvey />} />
+
+          {/* <Route path="/admin/view/:userId" exact element={<AdminViewProfile />} /> */}
+
+          {/* <Route path="/admin/profile/users" exact element={<AdminProfileUser />} /> */}
         </Routes>
       </Suspense>
     </Router>

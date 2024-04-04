@@ -27,6 +27,7 @@ import MultiRangeSlider from 'Components/Forms/MultiRangeSlider';
 import 'Assets/styles/Design/style.css';
 import User from 'Assets/images/user.png';
 import Carousel from 'react-multi-carousel';
+import 'react-multi-carousel/lib/styles.css';
 import { debounce } from 'lodash';
 import Pagination from 'Components/Pagination/Pagination';
 import axios from 'axios';
@@ -721,15 +722,15 @@ const Designs = (props) => {
                                             {designImages.map((image, index) => {
                                                 return (
                                                     <>
-                                                        <div key={index} className="single-image-slider-fabrics"
+                                                        <div
+                                                            key={index}
+                                                            className="single-image-slider-fabrics"
                                                             style={{
                                                                 backgroundImage:
                                                                     `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
                                                             }}
-
                                                         >
                                                         </div>
-
                                                     </>
                                                 )
                                             })}
@@ -838,9 +839,13 @@ const Designs = (props) => {
                                                             <>
                                                                 <hr />
                                                                 <div className='text-center'>
-                                                                    <a className='book-consultation btn-book btn w-100'
+                                                                    {/* <a className='book-consultation btn-book btn w-100'
                                                                         href={`/appointment/schedule/${singleDesign.id}`}
-                                                                    >
+                                                                    > */}
+                                                                    <a
+                                                                        href={`/designer/${singleDesign.id}/appointment/schedule/0`}
+                                                                        className='book-consultation btn-book btn w-100'>
+
                                                                         <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
                                                                 </div>
 
@@ -853,7 +858,6 @@ const Designs = (props) => {
                                                                 </div>
                                                             </>
                                                         }
-
                                                     </Col>
                                                 </Row>
                                             </Card.Body>
@@ -889,7 +893,7 @@ const Designs = (props) => {
                                                 <div className="action-button-designs bg-white">
                                                     <PiNotepadFill className="text-black mt-2" size={30} />
                                                 </div>
-                                            </a>F
+                                            </a>
                                             <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                         </div>
 
@@ -902,7 +906,9 @@ const Designs = (props) => {
                                     </>
                                 }
 
-                                <div className='text-center mb-4' onClick={toggleShareModal}>
+                                <div className='text-center mb-4'
+                                    onClick={toggleShareModal}
+                                >
                                     <div className="action-button-designs bg-white">
                                         <IoShareSocial className="text-black mt-2" size={30} />
                                     </div>

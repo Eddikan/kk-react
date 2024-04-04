@@ -1,55 +1,55 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Row, Col, Button, Modal, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
+import { useNavigate, Link,useParams } from 'react-router-dom';
+import { Row, Col, Button, Card, Modal, ModalHeader, ModalFooter } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
-import { GoHeart } from "react-icons/go";
-import PlaceholderImage from 'Assets/images/placeholders/image.png';
-import { useLocation } from 'react-router-dom'
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
-import 'Assets/styles/Design/style.css';
-import Loading from './Loading';
+import { BsThreeDots } from "react-icons/bs";
+import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus, GoAlertFill } from "react-icons/go";
+import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoDocumentOutline } from "react-icons/io5";
 import { AiFillMessage } from "react-icons/ai";
-import CopyTo from 'Utils/CopyLink';
 import { PiNotepadFill } from "react-icons/pi";
-import { GoAlertFill } from "react-icons/go";
-import DressPlaceholder from 'Assets/images/placeholder-dress.jpeg';
+import PlaceholderImage from 'Assets/images/placeholders/image.png';
+import Loading from '../Loading';
 import { IoIosCheckmarkCircle } from "react-icons/io";
-import UserPlaceholder from 'Assets/images/user.png';
-import User from 'Assets/images/user.png';
 import { ImEmbed2 } from "react-icons/im";
-import PinIcon from 'Assets/images/pin.png';
-import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoHeartOutline, IoEyeOutline } from "react-icons/io5";
+import CopyTo from 'Utils/CopyLink';
+import '../../../Assets/styles/Portfolio/ViewPortFolio/style.css';
 import axios from 'axios';
+import Carousel from 'react-multi-carousel';
+import PinIcon from '../../../Assets/images/pin.png';
+import UserPlaceholder from 'Assets/images/user.png';
 import { useCookies } from 'react-cookie';
 
 const PortfolioGrid = (props) => {
     const navigate = useNavigate();
+    const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [portfolio, setPortfolio] = useState([]);
     const [portfolioLoading, setPortfolioLoading] = useState(true);
+    const [portfolioDraftLoading, setPortfolioDraftLoading] = useState(false);
+    const [portfolioPublishLoading, setPortfolioPublishLoading] = useState(false);
+    const [portfolioDeleteLoading, setPortfolioDeleteLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
-    const [isClicked, setIsClicked] = useState(false);
+    const [deleteConfirmShow, setDeleteConfirmShow] = useState(false);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token']);
+    const [portfolioId, setPortfolioId] = useState('');
 
-    const [singleDesign, setSingleDesign] = useState('');
-    const [descriptionShow, setDescriptionShow] = useState(false);
-    const [profileViewShow, setProfileViewShow] = useState(false);
-    const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
-    const [activeImage, setActiveImage] = useState('');
-    const [messageShow, setMessageShow] = useState(false);
-    const [portfoliosImage, setPortfolioImage] = useState(false);
+    const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
+    const [profileViewShow, setProfileViewShow] = useState(false);
+    const [singleDesign, setSingleDesign] = useState('');
+    const [descriptionShow, setDescriptionShow] = useState(false);
     const [designImages, setDesignImages] = useState([]);
+    const [activeImage, setActiveImage] = useState('');
+    const [portfoliosImage, setPortfolioImage] = useState(false);
+    const [messageShow, setMessageShow] = useState(false);
 
     const [shareShowModal, setShareShowModal] = useState(false);
     const [copyEmbedLink, setCopyEmbedLink] = useState(false);
     const [copy, setCopy] = useState(false);
 
-
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
-    const userRole = cookies.userRole;
+    const { userId } = useParams();
     const token = cookies.token;
 
     let iframeLink = `<iframe src="https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
@@ -72,25 +72,66 @@ const PortfolioGrid = (props) => {
         }
     };
 
-    const useQuery = () => {
-        return new URLSearchParams(useLocation().search);
-    }
-    let query = useQuery();
-    const user_id = query.get('user_id');
+    // const useQuery = () => {
+    //     return new URLSearchParams(useLocation().search);
+    // }
+    // let query = useQuery();
+    // const user_id = query.get('user_id');
 
+
+    const fetchData = async (e) => {
+        setPortfolioLoading(true);
+        try {
+            const portfolioData = await GetUserPortfolioData(e);
+            if (portfolioData) {
+                setPortfolio(portfolioData);
+                setPortfolioLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setPortfolioLoading(false);
+            }
+            // Update state or perform other logic with userData
+        } catch (error) {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setPortfolioLoading(false);
+            // Handle the error, if needed
+        }
+    };
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
     }
 
-    function toggleShareModal() {
-        setShareShowModal(true);
+    function toggleMessage() {
+        setMessageShow(true);
     }
 
     function toggleCopyEmbedLinkModal() {
         setCopyEmbedLink(true);
     }
+
+    function toggleShareModal() {
+        setShareShowModal(true);
+    }
+
+    function toggleDescription() {
+        setDescriptionShow(true);
+    }
+
+    const handleActionClick = (index) => {
+        // Toggle the selected item index
+        setSelectedItemIndex((prevIndex) => (prevIndex === index ? null : index));
+    };
+
+    const addNewPortfolio = () => {
+        navigate('/user/center/design/add')
+    };
+
+    const deleteConfirm = (e) => {
+        setDeleteConfirmShow(true);
+        setPortfolioId(e);
+    };
 
     function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId) {
         setPortfolioImage(true);
@@ -121,63 +162,64 @@ const PortfolioGrid = (props) => {
         }
     }
 
-    function toggleDescription() {
-        setDescriptionShow(true);
-    }
-
-    const handleClick = () => {
-        setIsClicked(!isClicked);
-    };
-
-    const fetchData = async (e) => {
-        setPortfolioLoading(true);
-        try {
-            const portfolioData = await GetUserPortfolioData(e);
-            if (portfolioData) {
-                setPortfolio(portfolioData);
-                setPortfolioLoading(false);
-
-                console.log(portfolioData);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setPortfolioLoading(false);
-            }
-        } catch (error) {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setPortfolioLoading(false);
-        }
-    };
-
-    async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
+    async function PortfolioDeleteSubmit(e) {
+        setPortfolioDeleteLoading(true);
+        axios.delete(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + portfolioId + '?user_id=' + userId + '&token=' + token).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
-                // toast.success('Design saved as draft successfully!');
-                // setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                toast.success('Design deleted successfully!');
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                setPortfolioDeleteLoading(false);
+                setDeleteConfirmShow(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
+                setPortfolioDeleteLoading(false);
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
+            setPortfolioDraftLoading(false);
         });
-    }
+    };
 
-    useEffect(() => {
-        fetchData(user_id);
-    }, [reloadCount]);
-
-    async function wishlistUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'wishlist/update', e).then((response) => {
+    async function PortfolioDraftSubmit(e) {
+        setPortfolioDraftLoading(true);
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?user_id=' + userId + '&token=' + token, { status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
-                fetchData(user_id);
+                toast.success('Design saved as draft successfully!');
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                setPortfolioDraftLoading(false);
             } else {
-                toast.error('Something went wrong, please contact the administrator!');
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setPortfolioDraftLoading(false);
             }
-        }).catch((error) => {
-            toast.error('Something went wrong, please contact the administrator!');
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setPortfolioDraftLoading(false);
         });
-    }
+    };
+
+    async function PortfolioPublishSubmit(e) {
+        setPortfolioPublishLoading(true);
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item/' + e + '?user_id=' + userId + '&token=' + token, { status: 'Active' }).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                toast.success('Design published successfully!');
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                setPortfolioPublishLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setPortfolioPublishLoading(false);
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setPortfolioPublishLoading(false);
+        });
+    };
+
+    useEffect(() => {
+        fetchData(userId);
+    }, [reloadCount]);
 
     return (
         <>
@@ -185,7 +227,7 @@ const PortfolioGrid = (props) => {
                 {portfolioLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>
-                            <Loading className="bg-white loading-featured-design" />
+                            <Loading className="bg-white loading-height" />
                         </p>
                     </>
                     :
@@ -193,73 +235,121 @@ const PortfolioGrid = (props) => {
                         {portfolio && portfolio.length > 0 ?
                             <>
                                 <Row className="portfolio-row">
-
-                                    {portfolio.slice(0, 3).map((object, index) => {
+                                    {portfolio.map((object, index) => {
                                         if (object.image_urls?.[0]?.image_url) {
                                             var portfolioImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url;
                                         } else {
                                             var portfolioImage = PlaceholderImage;
                                         }
-
                                         return (
-                                            <Col className={`mb-0`} lg="4">
-                                                {/* <div className={`portfolio-grid-featured w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + portfolioImage + ")" }}> */}
-
-                                                {userRole !== 'Admin' ?
-                                                    <>
-                                                        <div
-                                                            className='portfolio-link cursor-pointer'
-                                                            onClick={function () { togglePortfolioImage(object.id, object.designer.id, object.user.first_name, object.user.last_name, object.image_urls, object.user.image, object.user.address_line_1, object.user.province, object.tags, object.description, object.user.id); }}
-
-                                                        >
-                                                            <div className="portfolio-grid-featured w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '130px' }}> </div>
-                                                            <div className="portfolio-overlay">
-                                                                <div className="portfolio-details">
-                                                                    {object.status == "Draft" ?
-                                                                        <span className="text-warning small fw-600">Draft</span>
+                                            <Col className={`portfolio-grid mb-3`} xs="4" md="2">
+                                                <div
+                                                    className={`portfolio-grid-div cursor-pointer w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`}
+                                                    style={{ backgroundImage: "url(" + portfolioImage + ")" }}
+                                                >
+                                                    <div className="portfolio-overlay">
+                                                        <div className="portfolio-actions" >
+                                                            <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
+                                                            {selectedItemIndex === index && (
+                                                                <div className="action-box">
+                                                                    <Link className="text-decoration-none" to={`/user/center/design/${object.id}/edit`}>
+                                                                        <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
+                                                                    </Link>
+                                                                    <p className="mb-3 cursor-pointer" onClick={function () { deleteConfirm(object.id); }}><GoTrash /> Delete</p>
+                                                                    {object.status != "Draft" ?
+                                                                        <p className="mb-0 cursor-pointer" onClick={function () { PortfolioDraftSubmit(object.id); }}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>
                                                                         :
-                                                                        null
+                                                                        <p className="mb-0 cursor-pointer" onClick={function () { PortfolioPublishSubmit(object.id); }}><IoDocumentOutline /> {portfolioPublishLoading ? "Publishing..." : "Publish"}</p>
                                                                     }
                                                                 </div>
-                                                            </div>
+                                                            )}
                                                         </div>
-                                                    </>
-                                                    :
-                                                    <>
-                                                        <div
-                                                            className='portfolio-link cursor-pointer'
-                                                            onClick={function () { toggleAddViewCount(object.id); navigate('/admin/portfolio/' + object.id); }}
 
-                                                        >
-                                                            <div className="portfolio-grid-featured w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '130px' }}> </div>
-                                                            <div className="portfolio-overlay">
-                                                                <div className="portfolio-details">
-                                                                    {object.status == "Draft" ?
-                                                                        <span className="text-warning small fw-600">Draft</span>
-                                                                        :
-                                                                        null
-                                                                    }
-                                                                </div>
+                                                        <div
+                                                            className="portfolio-overlay portfolio-toggle"
+                                                            onClick={function () { togglePortfolioImage(object.id, object.designer.id, object.user.first_name, object.user.last_name, object.image_urls, object.user.image, object.user.address_line_1, object.user.province, object.tags, object.description, object.user.id); }}>
+
+                                                            <div className="portfolio-details">
+                                                                {object.status == "Draft" ?
+                                                                    <span className="text-warning small fw-600">Draft</span>
+                                                                    :
+                                                                    null
+                                                                }
                                                             </div>
                                                         </div>
-                                                    </>
-                                                }
+                                                    </div>
+                                                </div>
+
+                                                <div className='margin-img ellipsis-portfolio'>
+                                                    <span className="text-black text-decoration-none portfolio-name-img">{object.name ?? "-"}</span>
+                                                </div>
                                             </Col>
                                         )
                                     })}
-
+                                    <Col className="portfolio-grid mb-3" xs="4" md="2">
+                                        <div onClick={addNewPortfolio} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
+                                            <GoPlus color="#a4a4a4" size="150px" className="mt-3" />
+                                            <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
+                                        </div>
+                                    </Col>
                                 </Row>
                             </>
                             :
                             <>
-                                <div className="text-center">
-                                    <p className="text-center mt-3">No records found.</p>
-                                </div>
+
+                                {/* <Card className='border-none'>
+                                    <Card.Body className="image-drop-container pt-5 pb-5">
+                                        <div className="text-center">
+                                            <p className="text-center mb-3">The user doesn't have a portfolio to showcase their work and experience.</p>
+                                        </div>
+                                    </Card.Body>
+                                </Card> */}
+
+                                <Card className='border-none'>
+                                    <Card.Body className="image-drop-container pt-5 pb-5">
+                                        <div className="text-center">
+                                            <p className="text-center mb-2 fs-20">No portfolio found.</p>
+                                            <p className="text-center mb-3">Showcase your best works, enrich your portfolio, and join a flourishing community.</p>
+                                            <Link to="/user/center/design/add">
+                                                <Button className="btn btn-primary">Upload Portfolio</Button>
+                                            </Link>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
                             </>
                         }
                     </>
                 }
             </div>
+            {/* Confirm Delete */}
+            <Modal
+                show={deleteConfirmShow}
+                className='modal-preview'
+                fade={false}
+                centered
+            >
+                <Modal.Header className="pb-0">
+                    <h5 className='modal-title text-left fs-22 text-black'>Confirm Delete</h5>
+                    <button type='button' className='close react-modal-close' onClick={function () { setDeleteConfirmShow(false); }} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card>
+                        <Card.Body>
+                            <p className="mb-0">Are you sure you want to delete this design?</p>
+                        </Card.Body>
+                    </Card>
+                    <Card.Footer className="text-right mt-3">
+                        <button className="btn btn-secondary border-black bg-white text-black me-3" onClick={() => setDeleteConfirmShow(false)} type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Cancel</button>
+                        {portfolioDeleteLoading ?
+                            <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Deleting...</button>
+                            :
+                            <button className="btn btn-primary" type="button" onClick={PortfolioDeleteSubmit} style={{ minWidth: '100px', padding: '9px 20px' }}>Delete</button>
+                        }
+                    </Card.Footer>
+                </Modal.Body>
+            </Modal>
 
             <Modal
                 show={portfoliosImage}
@@ -269,7 +359,7 @@ const PortfolioGrid = (props) => {
             >
                 <ModalHeader className='pt-2 pb-3 bg-transparent-card d-flex align-items-start'>
                     <a href={`/designer-profile?user_id=${singleDesign.userId}`} className='text-decoration-none'>
-                        <div className='d-flex justify-content-center align-items-center user-image'>
+                        <div className='d-flex user-image'>
 
                             {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                 <div
@@ -278,7 +368,7 @@ const PortfolioGrid = (props) => {
                                 >
                                 </div>
                             ) : (
-                                <img src={User} className='placeholder-img ' />
+                                <img src={UserPlaceholder} className='placeholder-img' alt="User Placeholder" />
                             )}
 
                             <div className='ms-3'>
@@ -287,7 +377,6 @@ const PortfolioGrid = (props) => {
                             </div>
                         </div>
                     </a>
-
                     <button type='button' className='close modal-close close-button-image bg-black' aria-label='Close' onClick={() => setPortfolioImage(false)}>
                         <span aria-hidden='true'>&times;</span>
                     </button>
@@ -303,10 +392,11 @@ const PortfolioGrid = (props) => {
                                             swipeable={false}
                                             draggable={false}
                                             responsive={responsive}
-                                            ssr={true} 
+                                            ssr={true}
                                             autoPlaySpeed={1000}
                                         >
                                             {designImages.map((image, index) => {
+
                                                 return (
                                                     <>
                                                         <div key={index} className="single-image-slider-fabrics"
@@ -314,10 +404,8 @@ const PortfolioGrid = (props) => {
                                                                 backgroundImage:
                                                                     `url(${process.env.REACT_APP_STORAGE_URL}portfolio/${image.image_url})`
                                                             }}
-
                                                         >
                                                         </div>
-
                                                     </>
                                                 )
                                             })}
@@ -325,7 +413,7 @@ const PortfolioGrid = (props) => {
                                     </>
                                     :
                                     <>
-                                        <img src={DressPlaceholder} className='w-100 img-placeholder-height' />
+
                                     </>
                                 }
 
@@ -334,6 +422,7 @@ const PortfolioGrid = (props) => {
                                         <p className='request d-flex justify-content-between mb-5'>
                                             <a href={`/designer-profile?user_id=${singleDesign.userId}`} className='text-decoration-none'>
                                                 <div className='d-flex justify-content-center align-items-center user-image'>
+
                                                     {singleDesign.image !== '' && singleDesign.image !== '-' ? (
                                                         <div
                                                             className='user-photo'
@@ -341,12 +430,14 @@ const PortfolioGrid = (props) => {
                                                         >
                                                         </div>
                                                     ) : (
-                                                        <img src={User} className='placeholder-img ' />
+                                                        <img src={UserPlaceholder} className='placeholder-img' />
                                                     )}
+
                                                     <div className='ms-3'>
                                                         <div className='modal-title text-left fs-20 fw-600 text-white'>{singleDesign.first_name} {singleDesign.last_name}</div>
                                                         <div className='fashion-designer fs-16'>Fashion Designer</div>
                                                     </div>
+
                                                 </div>
                                             </a>
 
@@ -355,8 +446,7 @@ const PortfolioGrid = (props) => {
                                                 :
                                                 <>
                                                     <div className='btn-book-bar'>
-                                                        {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
-                                                        <a href={`/designer/${singleDesign.id}/appointment/schedule/0`}>
+                                                        <a href={`/appointment/schedule/${singleDesign.id}`}>
                                                             <button className='btn btn-book-consultation'>Book a Consultation</button>
                                                         </a>
                                                     </div>
@@ -374,11 +464,7 @@ const PortfolioGrid = (props) => {
                                     <div>
                                         <Card className="table_content file-action mt-3 me-0 card-profile-designer">
                                             <Card.Header className='card-hr bg-white'>
-                                                <button
-                                                    type='button'
-                                                    className='close react-modal-close'
-                                                    onClick={() => setProfileViewShow(false)}
-                                                >
+                                                <button type='button' className='close react-modal-close' onClick={() => setProfileViewShow(false)} data-dismiss='modal' aria-label='Close'>
                                                     <IoCloseOutline color="#7e7e7e" size={25} />
                                                 </button>
                                             </Card.Header>
@@ -393,20 +479,21 @@ const PortfolioGrid = (props) => {
                                                                 >
                                                                 </div>
                                                             ) : (
-                                                                <img src={User} className='placeholder-img-side mb-2' />
+                                                                <img src={UserPlaceholder} className='placeholder-img-side mb-3' />
                                                             )}
                                                         </div>
+
                                                         <div className='modal-title text-center fs-18 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
                                                         <div className='fs-14 text-center mt-2'>
                                                             <img src={PinIcon} alt="location pin" className='me-2' />
                                                             {singleDesign.address_line_1}{singleDesign.province}</div>
-                                                        <div className="mb-2 text-center">
+                                                        <div className="mb-3 text-center">
                                                             {singleDesign.tags ?
                                                                 <>
                                                                     {singleDesign.tags.length > 0 ?
                                                                         <>
                                                                             {singleDesign.tags.map((tag, index) => (
-                                                                                <span className="design-tags bg-light fs-14 categories-color mt-2">
+                                                                                <span className="design-tags bg-light fs-14 categories-color">
                                                                                     {tag}
                                                                                 </span>
                                                                             ))}
@@ -426,12 +513,8 @@ const PortfolioGrid = (props) => {
                                                             <>
                                                                 <hr />
                                                                 <div className='text-center'>
-                                                                    {/* <a className='book-consultation btn-book btn w-100'
+                                                                    <a className='book-consultation btn-book btn w-100'
                                                                         href={`/appointment/schedule/${singleDesign.id}`}
-                                                                    > */}
-                                                                    <a
-                                                                        className='book-consultation btn-book btn w-100'
-                                                                        href={`/designer/${singleDesign.id}/appointment/schedule/0`}
                                                                     >
                                                                         <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
                                                                 </div>
@@ -445,7 +528,6 @@ const PortfolioGrid = (props) => {
                                                                 </div>
                                                             </>
                                                         }
-
                                                     </Col>
                                                 </Row>
                                             </Card.Body>
@@ -464,7 +546,7 @@ const PortfolioGrid = (props) => {
                                             >
                                             </div>
                                         ) : (
-                                            <img src={User} className='placeholder-img-side mb-4' />
+                                            <img src={UserPlaceholder} className='placeholder-img-side mb-4' />
                                         )}
 
 
@@ -476,8 +558,7 @@ const PortfolioGrid = (props) => {
                                     :
                                     <>
                                         <div className='text-center mb-4' >
-                                            {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
-                                            <a href={`/designer/${singleDesign.id}/appointment/schedule/0`}>
+                                            <a href={`/appointment/schedule/${singleDesign.id}`}>
                                                 <div className="action-button-designs bg-white">
                                                     <PiNotepadFill className="text-black mt-2" size={30} />
                                                 </div>
@@ -485,7 +566,9 @@ const PortfolioGrid = (props) => {
                                             <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                         </div>
 
-                                        <div className='text-center mb-4' onClick={() => toggleUnderConstruction("Message")}>
+                                        <div className='text-center mb-4'
+                                            onClick={() => toggleUnderConstruction("Message")}
+                                        >
                                             <div className="action-button-designs bg-white">
                                                 <AiFillMessage className="text-black mt-2" size={30} />
                                             </div>
@@ -494,9 +577,7 @@ const PortfolioGrid = (props) => {
                                     </>
                                 }
 
-                                <div className='text-center mb-4'
-                                    onClick={toggleShareModal}
-                                >
+                                <div className='text-center mb-4' onClick={toggleShareModal}>
                                     <div className="action-button-designs bg-white">
                                         <IoShareSocial className="text-black mt-2" size={30} />
                                     </div>
@@ -513,28 +594,65 @@ const PortfolioGrid = (props) => {
                         </Col>
                     </Row>
                 </Modal.Body>
-            </Modal >
+            </Modal>
+
+            <Modal
+                show={descriptionShow}
+                fade={false}
+                centered
+                id="description-card"
+            >
+                <Modal.Header className="py-0">
+                    <button type='button' className='close react-modal-close description-close' onClick={() => setDescriptionShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} />
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body className='card-description d-flex align-items-center'>
+                    <p className='text-white fw-400 p-3 fs-14 mb-0'>{singleDesign.description}</p>
+                </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={underConstructionShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="sm"
+                id="under-construction"
+            >
+                <Modal.Header className="py-0">
+                    <h5 className='modal-title text-left fs-22 mt-2'>{modalHeading}</h5>
+                    <button type='button' className='close react-modal-close' onClick={() => setUnderConstructionShow(false)} data-dismiss='modal' aria-label='Close'>
+                        <IoCloseOutline color="#7e7e7e" size={25} />
+                    </button>
+                </Modal.Header>
+
+                <Modal.Body className='pt-2'>
+                    <Card>
+                        <Card.Body className="text-center py-5">
+                            <GoAlertFill size="60px" className="mb-2 text-gold" />
+                            <p className="fs-20 text-black">Under Construction</p>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+            </Modal>
 
             <Modal
                 show={messageShow}
                 className='modal-preview'
                 fade={false}
                 size="sm"
-                id="under-construction"
             >
                 <Modal.Header className="py-0">
-                    <button
-                        type='button'
-                        className='close react-modal-close'
-                        onClick={() => setMessageShow(false)}
-                    >
+                    <button type='button' className='close react-modal-close' onClick={() => setMessageShow(false)} data-dismiss='modal' aria-label='Close'>
                         <IoCloseOutline color="#7e7e7e" size={25} />
                     </button>
                 </Modal.Header>
 
                 <Modal.Body>
                     <Card className='border-none'>
-                        <Card.Body className="text-center py-5 pt-2 pb-2">
+                        <Card.Body className="text-center px-0 pt-2 pb-2">
                             <div className='user-image-message thumbnail-table'>
                                 {singleDesign.image && (
                                     <div
@@ -552,128 +670,11 @@ const PortfolioGrid = (props) => {
 
                 <ModalFooter>
                     <div className='text-right'>
-                        {/* <Button className="btn-cancel-message btn me-2" onClick={() => { setMessageShow(false); }}>Cancel</Button>
-                        <Button className="btn-primary btn" onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}>Send Message</Button> */}
-
-                        <button
-                            className="btn btn-secondary border-black btn-style bg-white text-black me-3"
-                            onClick={() => { setMessageShow(false); }}
-                            type="button"
-                        >
-                            Cancel
-                        </button>
-                        {/* {portfolioSendLoading ?
-                            <button className="btn btn-primary" type="button" style={{ minWidth: '100px', padding: '9px 20px' }}>Sending...</button>
-                            : */}
-                        <button
-                            className="btn btn-primary btn-style"
-                            type="button"
-                            onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}
-                        >
-                            Send Message
-                        </button>
-                        {/* } */}
+                        <Button className="btn-cancel-message btn me-2" onClick={() => { setMessageShow(false); }}>Cancel</Button>
+                        <Button className="btn-primary btn" onClick={() => { toggleUnderConstruction(); setMessageShow(false); }}>Send Message</Button>
                     </div>
                 </ModalFooter>
             </Modal>
-
-            <Modal
-                show={underConstructionShow}
-                className='modal-preview'
-                fade={false}
-                centered
-                size="sm"
-                id="under-construction"
-            >
-                <Modal.Header className="py-0">
-                    <h5 className='modal-title text-uppercase text-left fs-22 mt-2'>{modalHeading}</h5>
-                    <button
-                        type='button'
-                        className='close react-modal-close'
-                        onClick={() => setUnderConstructionShow(false)}
-                    >
-                        <IoCloseOutline color="#7e7e7e" size={25} />
-                    </button>
-                </Modal.Header>
-
-                <Modal.Body className='pt-2'>
-                    <Card>
-                        <Card.Body className="text-center py-5">
-                            <GoAlertFill size="60px" className="mb-2 text-gold" />
-                            <p className="fs-20 text-black">Under Construction</p>
-                        </Card.Body>
-                    </Card>
-                </Modal.Body>
-            </Modal>
-
-            <Modal
-                show={descriptionShow}
-                fade={false}
-                centered
-                id="description-card"
-            >
-                <Modal.Header className="py-0">
-                    <button
-                        type='button'
-                        className='close react-modal-close description-close'
-                        onClick={() => setDescriptionShow(false)}
-                    >
-                        <IoCloseOutline color="#7e7e7e" size={25} />
-                    </button>
-                </Modal.Header>
-
-                <Modal.Body className='card-description d-flex align-items-center'>
-                    <p className='text-white fw-400 p-3 fs-14 mb-0'>{singleDesign.description}</p>
-                </Modal.Body>
-            </Modal>
-
-            <Modal
-                show={copyEmbedLink}
-                id='modal-preview-embed'
-                fade={false}
-                centered
-                className='embed-modal-view'
-
-            >
-                <Modal.Header className="p-3 pb-0">
-                    <h5 className='mb-0 rufina-family fs-22 text-black'>Embed Design</h5>
-                    <button
-                        type='button'
-                        className='close react-modal-close'
-                        onClick={() => setCopyEmbedLink(false)}
-                    >
-                        <IoCloseOutline color="#7e7e7e" size={25} />
-                    </button>
-                </Modal.Header>
-                <Modal.Body className='pb-0 pt-4'>
-                    <Row>
-                        <Col lg='12' className='px-3'>
-                            <textarea className='text-area-embed'>
-                                {iframeLink}
-
-                            </textarea>
-                        </Col>
-                    </Row>
-                </Modal.Body>
-                <Modal.Footer className="text-right border-none">
-                    <button
-                        className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
-                        onClick={() => setCopyEmbedLink(false)}
-                        type="button" >
-                        Cancel
-                    </button>
-
-                    <CopyTo
-                        text={iframeLink}
-                        classes="btn btn-primary btn-style"
-                        standbyTitle="Copy"
-                        icon={false}
-                        onCopy={() => setCopy(true)}
-                        loadingTitle="Embed Copied"
-                        closeModal={() => setCopyEmbedLink(false)}
-                    />
-                </Modal.Footer>
-            </Modal >
 
             <Modal
                 show={shareShowModal}
@@ -684,11 +685,7 @@ const PortfolioGrid = (props) => {
             >
                 <Modal.Header className="pb-0">
                     <Modal.Title className='rufina-family fs-22 text-black'>Share Design</Modal.Title>
-                    <button
-                        type='button'
-                        className='close react-modal-close'
-                        onClick={function () { setShareShowModal(false); }}
-                    >
+                    <button type='button' className='close react-modal-close' onClick={function () { setShareShowModal(false); }} >
                         <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
                     </button>
                 </Modal.Header>
@@ -760,7 +757,6 @@ const PortfolioGrid = (props) => {
                                     </>
                                     :
                                     <>
-
                                     </>
                                 }
 
@@ -790,6 +786,54 @@ const PortfolioGrid = (props) => {
                     </Card>
                 </Modal.Body>
             </Modal>
+
+            <Modal
+                show={copyEmbedLink}
+                id='modal-preview-embed'
+                fade={false}
+                centered
+                className='embed-modal-view'
+
+            >
+                <Modal.Header className="p-3 pb-0">
+                    <h5 className='mb-0 rufina-family fs-22 text-black'>Embed Design</h5>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setCopyEmbedLink(false)}
+                    >
+                        <IoCloseOutline color="#7e7e7e" size={25} />
+                    </button>
+                </Modal.Header>
+                <Modal.Body className='pb-0 pt-4'>
+                    <Row>
+                        <Col lg='12' className='px-3'>
+                            <textarea className='text-area-embed'>
+                                {iframeLink}
+                            </textarea>
+                        </Col>
+                    </Row>
+                </Modal.Body>
+                <Modal.Footer className="text-right border-none">
+                    <button
+                        className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                        onClick={() => setCopyEmbedLink(false)}
+                        type="button"
+                    >
+                        Cancel
+                    </button>
+
+                    <CopyTo
+                        text={iframeLink}
+                        classes="btn btn-primary btn-style"
+                        standbyTitle="Copy"
+                        icon={false}
+                        onCopy={() => setCopy(true)}
+                        loadingTitle="Embed Copied"
+                        closeModal={() => setCopyEmbedLink(false)}
+                    />
+                </Modal.Footer>
+            </Modal >
         </>
     );
 };

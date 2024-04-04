@@ -115,6 +115,10 @@ const Users = (props) => {
     },
         [reloadCount]);
 
+        const toggleGetUser = (e) => {
+            window.location.href = "/admin/profile/users?user_id=" + e;
+        }
+
     return (
         <LayoutAdmin>
             {usersLoading ?
@@ -257,6 +261,7 @@ const Users = (props) => {
                                                                                         <div className='d-flex'>
 
                                                                                             <Link to={`/admin/profile/user/${user.id}`} className="text-decoration-none">
+
                                                                                                 <div className="users-tooltip cursor-pointer">
                                                                                                     <span className="icon-tooltiptext fs-14">View</span>
                                                                                                     <IoEye className='me-3' color='#000000' size={20} />
