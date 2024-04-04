@@ -244,12 +244,23 @@ const PortfolioGrid = (props) => {
                             </>
                             :
                             <>
-                                <div className="text-center">
+                                <Card className='border-none'>
+                                    <Card.Body className="image-drop-container pt-5 pb-5">
+                                        <div className="text-center">
+                                            <p className="text-center mb-2 fs-20">No portfolio found.</p>
+                                            <p className="text-center mb-3">Showcase your best works, enrich your portfolio, and join a flourishing community.</p>
+                                            <Link to="/user/center/design/add">
+                                                <Button className="btn btn-primary">Upload Portfolio</Button>
+                                            </Link>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+                                {/* <div className="text-center">
                                     <p className="text-center mb-3 mt-3">No records found.</p>
                                     <Link to="/user/center/design/add">
                                         <Button className="btn btn-primary">Add Portfolio</Button>
                                     </Link>
-                                </div>
+                                </div> */}
                             </>
                         }
                     </>

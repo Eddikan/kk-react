@@ -41,19 +41,10 @@ const EcoFriendly = (props) => {
                             <div className='text-center text-white mb-3 fs-40 rufina-family'>Embrace Eco-Friendly Fabrics!</div>
 
                             <div className='text-center text-white'>Elevate your fashion with fabrics that care for both you and the Earth. Embrace eco-friendly fashion today!</div>
-                            {userRole !== 'Admin' ?
-                                <>
+                          
                                   <Link to="/eco-friendly">
                                     <Button className="btn-explore-now fs-15 explore-now" variant="primary">Explore Now</Button>
                                 </Link>
-                                </>
-                                :
-                                <>
-                                 <Link to="/admin/eco-friendly">
-                                    <Button className="btn-explore-now fs-15 explore-now" variant="primary">Explore Now</Button>
-                                </Link>
-                                </>
-                            }       
                             {/* <a className='btn-explore-now fs-15 explore-now' onClick={() => toggleUnderConstruction("Eco-Friendly Fabrics!")}>Explore Now</a> */}
                         </Col>
                     </Row>

@@ -500,6 +500,7 @@ const EcoFriendlyFabrics = (props) => {
                                                                         <>
                                                                             <Col className="designs-grid mb-3" xs="12" md="3">
                                                                                 <div className="portfolio-link">
+
                                                                                         {userRole !== 'Admin' ?
                                                                                         <>
                                                                                         <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }} style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '150px' }}>
@@ -512,9 +513,10 @@ const EcoFriendlyFabrics = (props) => {
                                                                                             </>
                                                                                         }
 
-                                                                                    {userRole !== 'Admin' ?
+
+                                                                                        {userRole !== 'Admin' ?
                                                                                         <>
-                                                                                            <div className='save-link'>
+                                                                                        <div className='save-link'>
                                                                                                 {userWishlist ?
                                                                                                     <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
                                                                                                         <GoHeart className="text-white" />
@@ -529,7 +531,7 @@ const EcoFriendlyFabrics = (props) => {
                                                                                         :
                                                                                         <>
                                                                                         </>
-                                                                                    }
+                                                                                        }                                                                   
 
                                                                                 </div>
                                                                                 <div className="design-details">

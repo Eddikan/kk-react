@@ -40,6 +40,8 @@ const VideoConferencing = lazy(() => import("./Pages/VideoConferencing"));
 const LiveStream = lazy(() => import("./Pages/LiveStream"));
 const UserAppointments = lazy(() => import("./Pages/Seller/Appointments"));
 const ViewSurvey = lazy(() => import("./Pages/Seller/ViewSurvey"));
+const WhyWorkWithKK = lazy(() => import("./Pages/WhyWorkWithKK"));
+
 
 // Survey
 const CustomerSatisfaction = lazy(() =>
@@ -77,7 +79,6 @@ const AdminPostPurchase = lazy(() => import("./Pages/Admin/AdminPostPurchase"));
 const AdminViewFabric = lazy(() => import("./Pages/Admin/AdminViewFabric"));
 const AdminViewPortFolio = lazy(() => import("./Pages/Admin/AdminViewPortFolio"));
 const AdminVendorSurvey = lazy(() => import("./Pages/Admin/AdminVendorSurvey"));
-const AdminEcoFriendly = lazy(() => import("./Pages/Admin/AdminEcoFriendly"));
 
 
 const AdminViewSellerProfile = lazy(() =>
@@ -87,6 +88,7 @@ const AdminViewSellerProfile = lazy(() =>
 const AdminViewUserProfile = lazy(() =>
   import("./Pages/Admin/AdminViewUserProfile")
 );
+
 
 const AdminViewPostPurchase = lazy(() =>
   import("./Pages/Admin/AdminViewPostPurchase")
@@ -297,7 +299,6 @@ const App = () => {
           <Route path="/admin/sellers" exact element={<AdminSellers />} />
           <Route path="/admin/fabrics" exact element={<AdminFabrics />} />
           <Route path="/admin/designs" exact element={<AdminDesigns />} />
-          <Route path="/admin/eco-friendly" exact element={<AdminEcoFriendly />} />
           <Route
             path="/admin/appointments"
             exact
@@ -494,6 +495,9 @@ const App = () => {
           <Route path="/body-gram" exact element={<BodyGram />} />
           <Route path="/measurement" exact element={<Measurement />} />
           <Route path="/thank-you" exact element={<ThankYouPage />} />
+          <Route path="/why-work-with-kk" exact element={<WhyWorkWithKK />} />
+
+          
 
           <Route path="/view/order/:orderId/survey/:surveyId" exact element={<ViewSurvey />} />
           <Route path="/admin/view/order/:orderId/survey/:surveyId" exact element={<AdminViewSurvey />} />

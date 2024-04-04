@@ -12,6 +12,7 @@ import GetUserData from 'Utils/GetUserData';
 import toast from 'react-hot-toast';
 import PortfolioGrid from 'Components/Shared/PortfolioGrid';
 import FeaturedDesign from 'Components/Shared/FeaturedDesign'
+import FeaturedDesigns from 'Components/Grids/FeaturedDesigns';
 import TopSellingFabrics from 'Components/Shared/TopSellingFabrics';
 import ProductGrid from 'Components/Shared/ProductGrid';
 import LoadingPage from 'Components/Shared/LoadingPage';
@@ -393,37 +394,7 @@ const DesignerProfile = () => {
                                                 }
                                             </>
                                             :
-                                            <>
-                                                {/* {isDesignerCurrentUser ?
-                                                    null
-                                                    :
-                                                    <>
-                                                        <span>
-                                                            <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 btn-style'
-                                                                onClick={() => toggleRequestAQuote(true)}
-                                                            >
-                                                                <PiNotepadFill className='me-2' size="20" />
-                                                                Request a Quote
-                                                            </p>
-                                                        </span>
-                                                        {designerAvailable ?
-                                                            <span className='w-100'>
-                                                                <a
-                                                                    className='btn ms-3 btn-consultation fs-16 fw-400 btn-style'
-                                                                    href={`/designer/${designer.id}/appointment/schedule/0`}
-                                                                >
-                                                                    <IoVideocam className='me-2' size="20" />Schedule a Consultation</a>
-                                                            </span>
-                                                            :
-                                                            <span className='w-100'>
-                                                                <button className='btn ms-3 btn-consultation fs-16 fw-400 btn-style' disabled>
-                                                                    <IoVideocam className='me-2' size="20" />Unavailable for Consultation
-                                                                </button>
-                                                            </span>
-                                                        }
-                                                    </>
-                                                } */}
-                                            </>
+                                            null
                                         }
                                     </Col>
 

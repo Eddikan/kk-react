@@ -19,6 +19,10 @@ import toast from 'react-hot-toast';
 import { GoArrowUpRight } from "react-icons/go";
 import AdminPortfolio from 'Components/Shared/Admin/AdminPortfolio';
 import AdminFabrics from 'Components/Shared/Admin/AdminFabrics';
+
+import PortfolioGrid from 'Components/Shared/PortfolioGrid';
+import FeaturedDesign from 'Components/Shared/FeaturedDesign';
+
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { GoPencil } from "react-icons/go";
 import axios from 'axios';
@@ -63,7 +67,7 @@ const initialDesignerData = Object.freeze({
     pricing_structure: '',
 });
 
-const ViewUserProfile = () => {
+const AdminViewUserProfile = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'activeProfileTab', 'userRole']);
     const userRole = cookies.userRole;
     const [user, setUser] = useState(initialUserData);
@@ -83,6 +87,7 @@ const ViewUserProfile = () => {
     const token = cookies.token;
     const { userId } = useParams();
     const activeProfileTab = cookies.activeProfileTab;
+    
 
     // User Image
     const [userImage, setUserImage] = useState();
@@ -565,4 +570,4 @@ const ViewUserProfile = () => {
     );
 };
 
-export default ViewUserProfile;
+export default AdminViewUserProfile;

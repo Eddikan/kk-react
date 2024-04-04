@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button,Card } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 import GetUserProductsData from 'Utils/GetUserProductsData';
@@ -173,12 +173,25 @@ const ProductGrid = (props) => {
                             </>
                             :
                             <>
-                                <div className="text-center">
+
+                                <Card className='border-none'>
+                                    <Card.Body className="image-drop-container pt-5 pb-5">
+                                        <div className="text-center">
+                                            <p className="text-center mb-2 fs-20">No fabric found.</p>
+                                            <p className="text-center mb-3">Showcase your best works, enrich your fabric, and join a flourishing community.</p>
+                                            <Link to="/user/center/product/add">
+                                                <Button className="btn btn-primary">Upload Fabric</Button>
+                                            </Link>
+                                        </div>
+                                    </Card.Body>
+                                </Card>
+
+                                {/* <div className="text-center">
                                     <p className="text-center mb-3 mt-3">No records found.</p>
                                     <Link to="/user/center/design/add">
                                         <Button className="btn btn-primary">Add Fabric</Button>
                                     </Link>
-                                </div>
+                                </div> */}
                             </>
                         }
                     </>
