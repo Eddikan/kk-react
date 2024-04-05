@@ -14,7 +14,7 @@ import '../../../Assets/styles/Product/ViewProduct/style.css';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
-const ProductGrid = (props) => {
+const AdminProductGrid = (props) => {
     const navigate = useNavigate();
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [products, setProducts] = useState([]);
@@ -29,6 +29,7 @@ const ProductGrid = (props) => {
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
+    const userId = props.currentUser;
 
     const fetchData = async (e) => {
         // setProductsLoading(true);
@@ -133,7 +134,7 @@ const ProductGrid = (props) => {
     };
 
     useEffect(() => {
-        fetchData(currentUser);
+        fetchData(userId);
     }, [reloadCount]);
 
     return (
@@ -226,12 +227,12 @@ const ProductGrid = (props) => {
                                             </Col>
                                         )
                                     })}
-                                    <Col className="portfolio-grid mb-3" xs="4" md="2">
+                                    {/* <Col className="portfolio-grid mb-3" xs="4" md="2">
                                         <div onClick={addNewProduct} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
                                             <GoPlus color="#a4a4a4" size="150px" className="mt-3" />
                                             <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
                                         </div>
-                                    </Col>
+                                    </Col> */}
                                 </Row>
                             </>
                             :
@@ -249,9 +250,9 @@ const ProductGrid = (props) => {
                                     <div className="text-center">
                                         <p className="text-center mb-2 fs-20">No fabric found.</p>
                                         <p className="text-center mb-3">Showcase your best works, enrich your fabric, and join a flourishing community.</p>
-                                        <Link to="/user/center/product/add">
+                                        {/* <Link to="/user/center/product/add">
                                             <Button className="btn btn-primary">Upload Fabric</Button>
-                                        </Link>
+                                        </Link> */}
                                     </div>
                                 </Card.Body>
                             </Card>
@@ -294,4 +295,4 @@ const ProductGrid = (props) => {
     );
 };
 
-export default ProductGrid;
+export default AdminProductGrid;

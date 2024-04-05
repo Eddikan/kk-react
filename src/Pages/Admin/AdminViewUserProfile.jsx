@@ -17,8 +17,8 @@ import GoBack from '../../Components/Shared/GoBack';
 import { useCookies } from 'react-cookie';
 import toast from 'react-hot-toast';
 import { GoArrowUpRight } from "react-icons/go";
-import AdminPortfolio from 'Components/Shared/Admin/AdminPortfolio';
-import AdminFabrics from 'Components/Shared/Admin/AdminFabrics';
+import AdminPortfolio from 'Components/Shared/Admin/AdminPortfolioGrid';
+import AdminFabrics from 'Components/Shared/Admin/AdminFabricsGrid';
 
 import PortfolioGrid from 'Components/Shared/PortfolioGrid';
 import FeaturedDesign from 'Components/Shared/FeaturedDesign';
@@ -528,12 +528,12 @@ const AdminViewUserProfile = () => {
                             null
                         }
                         {portfolioShow ?
-                            <AdminPortfolio currentUser={currentUser} reloadCount={reloadCount} />
+                            <AdminPortfolio currentUser={userId} reloadCount={reloadCount} />
                             :
                             null
                         }
                         {fabricShow ?
-                            <AdminFabrics currentUser={currentUser} reloadCount={reloadCount} />
+                            <AdminFabrics currentUser={userId} reloadCount={reloadCount} />
                             :
                             null
                         }
