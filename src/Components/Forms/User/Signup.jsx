@@ -25,6 +25,7 @@ const SignUp = (props) => {
     const [registerFormData, setRegisterFormData] = useState(initialRegisterData);
     const [registerFormLoading, setRegisterFormLoading] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    console.log(props.type);
 
     const handleChange = (e) => {
         setRegisterFormData({
@@ -51,7 +52,16 @@ const SignUp = (props) => {
                 setCookie('isLoggedIn', true, { path: '/' });
                 setCookie('token', data.token, { path: '/' });
                 setTimeout(function () {
-                    navigate("/email-confirmation");
+                    // navigate("/email-confirmation");
+                    if (signupType == "user_designer") {
+                        navigate("/designers");
+                    } else if (signupType == "user_fabric") {
+                        navigate("/fabrics");
+                    } else if (signupType == "user_design") {
+                        navigate("/designs");
+                    } else {
+                        navigate("/questionnaire");
+                    }
                 }, 500);
             } else {
                 const errors = response.data.errors;

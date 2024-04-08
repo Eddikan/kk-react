@@ -150,11 +150,11 @@ const Header = () => {
       if (userDetails.image != "") {
         setUserImage(userDetails.image);
       }
-      if (userDetails.email_verified_at == "" || userDetails.email_verified_at == null) {
-        if (!currentUrl.includes('email-confirmation') && !currentUrl.includes('login') && !currentUrl.includes('sign-up') && !currentUrl.includes('email-confirmed') && location.pathname !== '/') {
-          navigate("/email-confirmation");
-        }
-      }
+      // if (userDetails.email_verified_at == "" || userDetails.email_verified_at == null) {
+      //   if (!currentUrl.includes('email-confirmation') && !currentUrl.includes('login') && !currentUrl.includes('sign-up') && !currentUrl.includes('email-confirmed') && location.pathname !== '/') {
+      //     navigate("/email-confirmation");
+      //   }
+      // }
 
       if (reminded == 0) {
         if (currentUrl.includes('user')) {

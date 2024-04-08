@@ -43,6 +43,37 @@ const SignUp = () => {
       ...registerFormData,
       [e.target.name]: e.target.value,
     })
+  };
+
+  const getUser = async (e) => {
+    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + e);
+  };
+
+  const getUserDetails = (e) => {
+    getUser(e).then(response => {
+      const selectedUser = response.data.data;
+      if (selectedUser) {
+        const user_details = {currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at}
+        setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+        setCookie('signup_type', selectedUser.signup_type, { path: '/' });
+        if (selectedUser.signup_type == "user_designer") {
+          navigate("/designers");
+        } else if (selectedUser.signup_type == "user_fabric") {
+          navigate("/fabrics");
+        } else if (selectedUser.signup_type == "user_design") {
+          navigate("/designs");
+        } else {
+          navigate("/questionnaire");
+        }
+        
+      } else {
+        const message = 'There has been an error getting the user, please try again!';
+        toast.error(message);
+      }
+    }).catch((error) => {
+      const message = 'There has been an error getting the user, please try again!';
+      toast.error(message);
+    });
   }
 
   async function registerSubmit(e) {
@@ -73,7 +104,7 @@ const SignUp = () => {
         setCookie('isLoggedIn', true, { path: '/' });
         setCookie('token', data.token, { path: '/' });
         setTimeout(function(){
-          navigate("/email-confirmation");
+          getUserDetails(user.id);
         }, 500);
       } else {
         const errors = response.data.errors;
