@@ -135,8 +135,8 @@ const Questionnaire2 = (props) => {
             if (success == 'Success') {
                 hideAll(3);
                 setQuestionnaire2Loading(false);
-                navigate('/');
-                setReloadCount(reloadCount + 1);
+                // navigate('/');
+                // setReloadCount(reloadCount + 1);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
                 setQuestionnaire2Loading(false);

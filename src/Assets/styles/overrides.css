@@ -64,6 +64,10 @@ p {
     line-height: 1.7;
 }
 
+.rti--container {
+    border: 2px solid var(--gray) !important;
+}
+
 .text-white-hover:hover {
     color: var(--white) !important;
 }
