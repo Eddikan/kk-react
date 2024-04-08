@@ -359,12 +359,11 @@ const Profile = () => {
                             </Col>
                             <Col lg="6" className='mb-5'>
                                 <Row className="justify-content-end">
-
                                     <Col lg="2" className="text-right pe-0 me-5">
-                                        <button href="/user/profile/edit" type='button' id="btn-edit-profile" className='w-100'>
+                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className='w-100'>
                                             <GoPencil />
                                             <span className='ms-1'>Edit Profile</span>
-                                        </button>
+                                        </Button>
                                     </Col>
 
                                     {/* {user.is_designer == 1 && (
