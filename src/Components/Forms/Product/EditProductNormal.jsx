@@ -791,7 +791,7 @@ const EditProductNormal = (props) => {
                                         <Col lg="12">
                                             <Form.Group className='my-1'>
                                                 <Form.Label>Video Demonstration</Form.Label>
-                                                <Form.Control as='select' name='video_demo_type' value={productData.video_demo_type} className='mr-sm-2' onChange={handleChangeVideoType} required>
+                                                <Form.Control as='select' name='video_demo_type' value={productData.video_demo_type} className='mr-sm-2' onChange={handleChangeVideoType}>
                                                     <option value=''>Select Type</option>
                                                     <option value='Youtube'>Youtube</option>
                                                     <option value='Vimeo'>Vimeo</option>
@@ -799,7 +799,7 @@ const EditProductNormal = (props) => {
                                                 </Form.Control>
                                                 {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Vimeo" ?
                                                     <>
-                                                        <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} required placeholder={`Insert ${productData.video_demo_type} embed link`} />
+                                                        <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />
                                                         {productData.video_demo_url && productData.video_demo_url != "" ?
                                                             <div className="mt-3">
                                                                 <ResponsiveEmbedVideo src={productData.video_demo_url} title={productData.name} />
