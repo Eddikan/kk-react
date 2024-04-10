@@ -2065,3 +2065,20 @@ svg.gr-status-icon {
     background-color: #cea835;
 }
 
+.cta-card-color {
+    /* background-color: #002e4ca1 !important; */
+    border: 2px solid #002e4c !important;
+    color: #000000 !important;
+}
+
+.cta-card-color-gold {
+    border: 2px solid #cea835 !important;
+    /* background-color: #cea835a1 !important; */
+    color: #000000 !important;
+}
+
+.cta-button, .cta-button:hover, .cta-button:focus {
+    background-color: transparent !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+}
