@@ -510,6 +510,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                             )} */}
 
                             {appointmentscheduleId == 0 || appointmentscheduleId == "0" ? (
+                                
                                 <button className="btn btn-primary" onClick={() => addAppointmentSubmit("You are Scheduled!")}>
                                     Schedule Now
                                 </button>
@@ -519,6 +520,8 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                 </button>
 
                             )}
+
+
                         </div>
                     </div>
                 }

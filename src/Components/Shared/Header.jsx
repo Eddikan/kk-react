@@ -5,6 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
+import { BsArrowLeft } from "react-icons/bs";
 import { Container, Button, Col, Row } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
@@ -44,6 +45,7 @@ const Header = () => {
   const [notifications, setNotifications] = useState([]);
   const [notificationsLoading, setNotificationsLoading] = useState(true);
   const [userOrdersLoading, setUserOrdersLoading] = useState(true);
+  const [cartItemCounts, setCartItemCounts] = useState([]);
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole']);
   const [userType, setUserType] = useState('user');
@@ -75,6 +77,10 @@ const Header = () => {
   const getNotifications = async () => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'notification?user_id=' + currentUser);
   };
+
+  const getUserCartItems = async () => {
+    return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart');
+};
 
   // removeCookies
   const removeCookies = () => {
@@ -240,6 +246,21 @@ const Header = () => {
     }
   }, [reloadCount]);
 
+  useEffect(() => {
+    getUserCartItems()
+    .then((response) => {
+      const selectedCartItem = response.data.data;
+      if (selectedCartItem) {
+        setCartItemCounts(selectedCartItem.length);
+      } else {
+        toast.error('There has been an error getting the notifications, please try again!');
+      }
+    })
+    .catch((error) => {
+      toast.error('There has been an error getting the notifications, please try again!');
+    });
+}, [reloadCount]);
+
   return (
     <>
       <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
@@ -351,20 +372,40 @@ const Header = () => {
                       </a>
                     }
 
-                    {userRole !== 'Admin' &&
-                      <a href={`/user/center/calendar`}>
-                        <div className="nav-link header-tooltip cursor-pointer">
-                          <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                          <BsShopWindow size={23} />
-                        </div>
-                      </a>
-                    }
+
+                   
+                          {userRole !== 'Admin' &&
+                          <>
+
+                             {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
+                              <>
+                                <a href={`/user/center/calendar`}>
+                                  <div className="nav-link header-tooltip cursor-pointer">
+                                    <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                                    <BsShopWindow size={23} />
+                                  </div>
+                                </a>
+                              </>
+                             }
+
+                            </>
+                          }
+                      
+                   
 
                     {userRole !== 'Admin' &&
                       <a href={`/cart/`}>
                         <div className="nav-link header-tooltip">
                           <span className="icon-tooltiptext fs-14">Cart</span>
                           <IoCartOutline size={26} />
+
+                          {cartItemCounts !== 0 && (
+                            <div>
+                              <div className='cart-added position-absolute badge-primary text-white'>
+                                <span className='cart-count'>{cartItemCounts}</span>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </a>
                     }
@@ -439,10 +480,29 @@ const Header = () => {
                       }
                       {userMenuOpen && (
                         <div className="action-box user-menu">
-                          {userRole !== 'Admin' &&
+                          {/* {userRole !== 'Admin' &&
                             <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-2' color='#000000' />
                               <span className='text-black'>Profile</span>
                             </Link>
+                          } */}
+
+                          {userRole !== 'Admin' &&
+                           <Row className='mb-3'>
+                            <Col lg="3">
+                              <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
+                                  {userImage ?
+                                    <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                    :
+                                    <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
+                                  }
+                              </Link>
+                            </Col>
+
+                            <Col lg="9">
+                              <div className='fw-600'>Hi,&nbsp;{user.first_name}!</div>
+                              <div><BsArrowLeft className="me-1" size={10}/><span className='fs-12'>See your profile</span></div>
+                            </Col>
+                           </Row>
                           }
 
                           {userRole !== 'Admin' &&

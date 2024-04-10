@@ -44,6 +44,8 @@ const PortfolioGrid = (props) => {
     const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
     const [messageShow, setMessageShow] = useState(false);
 
+    const [user, setUser] = useState('');
+
     const [shareShowModal, setShareShowModal] = useState(false);
     const [copyEmbedLink, setCopyEmbedLink] = useState(false);
     const [copy, setCopy] = useState(false);
@@ -143,6 +145,7 @@ const PortfolioGrid = (props) => {
             const portfolioData = await GetUserPortfolioData(e);
             if (portfolioData) {
                 setPortfolio(portfolioData);
+                setUser(portfolioData.user);
                 setPortfolioLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -248,10 +251,15 @@ const PortfolioGrid = (props) => {
                                     <Card.Body className="image-drop-container pt-5 pb-5">
                                         <div className="text-center">
                                             <p className="text-center mb-2 fs-20">No portfolio found.</p>
-                                            <p className="text-center mb-3">Showcase your best works, enrich your portfolio, and join a flourishing community.</p>
-                                            <Link to="/user/center/design/add">
-                                                <Button className="btn btn-primary">Upload Portfolio</Button>
-                                            </Link>
+                                            
+                                            {currentUser == user_id && 
+                                                <>
+                                                    <p className="text-center mb-3">Showcase your best works, enrich your portfolio, and join a flourishing community.</p>
+                                                    <Link to="/user/center/design/add">
+                                                        <Button className="btn btn-primary">Upload Portfolio</Button>
+                                                    </Link>
+                                                </>
+                                            }
                                         </div>
                                     </Card.Body>
                                 </Card>

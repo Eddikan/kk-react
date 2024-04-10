@@ -38,6 +38,7 @@ const ViewProduct = () => {
     const [images, setImages] = useState([]);
     const [activeImage, setActiveImage] = useState('');
     const [commentsTabShow, setCommentsTabShow] = useState(false);
+    const [reloadCount, setReloadCount] = useState(0);
     const [reviewsTabShow, setReviewsTabShow] = useState(true);
     const [userWishlist, setUserWishlist] = useState(false);
     const [addedToCartShow, setAddedToCartShow] = useState(false);
@@ -268,7 +269,6 @@ const ViewProduct = () => {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
-                // navigate("/cart");
                 toast.success("Fabric added to cart successfully!");
             } else {
                 toast.error('Something went wrong, please contact the administrator!');

@@ -384,8 +384,8 @@ a {
 
 /* Header */
 .header-user-photo {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -397,7 +397,7 @@ a {
 .user-menu.action-box {
     background: #fff;
     position: absolute;
-    width: 160px;
+    width: 200px;
     padding: 12px;
     border-radius: 5px;
     right: 26px;
@@ -2047,3 +2047,21 @@ svg.gr-status-icon {
     border: 2px solid #cea835;
     border-radius: 5px;
 }
+
+.cart-added {
+    bottom: -3px;
+    right: -1px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid rgb(255, 255, 255);
+    top: 0px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.badge-primary {
+    background-color: #cea835;
+}
+

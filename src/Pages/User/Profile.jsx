@@ -169,14 +169,13 @@ const Profile = () => {
     }
 
     const showTab = (tab) => {
-        if (tab == "about") {
+        if (tab === "about") {
             setAboutShow(true);
             setPortfolioShow(false);
             setFabricShow(false);
             setProcessShow(false);
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
-            setCookie('activeProfileTab', 'about', { path: '/' });
 
         } else if (tab === "portfolio") {
             setPortfolioShow(true);
@@ -185,7 +184,6 @@ const Profile = () => {
             setProcessShow(false);
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
-            setCookie('activeProfileTab', 'portfolio', { path: '/' });
 
         } else if (tab === "fabric") {
             setFabricShow(true);
@@ -194,7 +192,6 @@ const Profile = () => {
             setProcessShow(false);
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
-            setCookie('activeProfileTab', 'fabric', { path: '/' });
 
         } else if (tab === "process") {
             setProcessShow(true);
@@ -203,7 +200,6 @@ const Profile = () => {
             setFabricShow(false);
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
-            setCookie('activeProfileTab', 'process', { path: '/' });
 
         } else if (tab === "calendar") {
             setLimitedDesignShow(true);
@@ -212,7 +208,6 @@ const Profile = () => {
             setAboutShow(false);
             setFabricShow(false);
             setMyCalendarShow(false);
-            setCookie('activeProfileTab', 'calendar', { path: '/' });
 
         } else if (tab == "my_calendar") {
             setLimitedDesignShow(false);
@@ -221,7 +216,6 @@ const Profile = () => {
             setAboutShow(false);
             setFabricShow(false);
             setMyCalendarShow(true);
-            setCookie('activeProfileTab', 'my_calendar', { path: '/' });
         }
     }
 
@@ -252,7 +246,7 @@ const Profile = () => {
         fetchData({ token: token, currentUser: currentUser });
 
         if (activeProfileTab && activeProfileTab != '') {
-            if (activeProfileTab == "about") {
+            if (activeProfileTab === "about") {
                 setAboutShow(true);
                 setPortfolioShow(false);
                 setFabricShow(false);
@@ -382,6 +376,7 @@ const Profile = () => {
                             </Col>
                             <Col lg="12" className='mt-4'>
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${aboutShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("about"); }}>About</span>
+                                
                                 {user.is_designer == 1 && (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${portfolioShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("portfolio"); }}>Portfolio</span>
                                 )}
@@ -396,6 +391,7 @@ const Profile = () => {
                                 <hr className='mt-2' />
                             </Col>
                         </Row>
+
                         {aboutShow ?
                             <div id="about-portfolio">
                                 <Row>
@@ -438,7 +434,7 @@ const Profile = () => {
                                             <div className='icons-d-flex'>
                                                 <img src={PinIcon} alt="location pin" className='profile-icon' />
                                                 {user.city || user.province || user.country ?
-                                                    <p className='information-font'>{user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country + "," : ""}</p>
+                                                    <p className='information-font'>{user.city ? user.city + ',' : "-"} {user.province ? user.province + "," : "-"} {user.country ? user.country + "," : "-"}</p>
                                                     :
                                                     <p>-</p>
                                                 }
@@ -530,11 +526,15 @@ const Profile = () => {
                             :
                             null
                         }
+
+                    {user.is_seller == 1 && user.is_designer == 1 && 
+                        <>
                         {portfolioShow ?
                             <AdminPortfolio currentUser={currentUser} reloadCount={reloadCount} />
                             :
                             null
                         }
+                      
                         {fabricShow ?
                             <AdminFabrics currentUser={currentUser} reloadCount={reloadCount} />
                             :
@@ -563,6 +563,8 @@ const Profile = () => {
                             :
                             null
                         }
+                        </>
+                    }
 
                     </Container>
                 </section >

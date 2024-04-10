@@ -173,15 +173,19 @@ const ProductGrid = (props) => {
                             </>
                             :
                             <>
-
                                 <Card className='border-none'>
                                     <Card.Body className="image-drop-container pt-5 pb-5">
                                         <div className="text-center">
-                                            <p className="text-center mb-2 fs-20">No fabric found.</p>
-                                            <p className="text-center mb-3">Showcase your best works, enrich your fabric, and join a flourishing community.</p>
-                                            <Link to="/user/center/product/add">
-                                                <Button className="btn btn-primary">Upload Fabric</Button>
-                                            </Link>
+                                            <p className="text-center mb-0 fs-20">No fabric found.</p>
+                                            {currentUser == user_id &&
+                                                <>
+                                                    <p className="text-center mb-3">Showcase your best works, enrich your fabric, and join a flourishing community.</p>
+                                            
+                                                    <Link to="/user/center/product/add">
+                                                        <Button className="btn btn-primary">Upload Fabric</Button>
+                                                    </Link>
+                                                </>
+                                            }
                                         </div>
                                     </Card.Body>
                                 </Card>

@@ -135,34 +135,30 @@ const DesignerProfile = () => {
 
 
     const showTab = (tab) => {
-        if (tab == "about") {
+        if (tab === "about") {
             setAboutShow(true);
             setPortfolioShow(false);
             setFabricShow(false);
             setProcessShow(false);
             setCalendarShow(false);
-            setCookie('activeProfileTab', 'about', { path: '/' });
-        } else if (tab === "portfolio") {
+        } else if (tab == "portfolio") {
             setPortfolioShow(true);
             setAboutShow(false);
             setFabricShow(false);
             setProcessShow(false);
             setCalendarShow(false);
-            setCookie('activeProfileTab', 'portfolio', { path: '/' });
-        } else if (tab === "fabric") {
+        } else if (tab == "fabric") {
             setFabricShow(true);
             setPortfolioShow(false);
             setAboutShow(false);
             setProcessShow(false);
             setCalendarShow(false);
-            setCookie('activeProfileTab', 'fabric', { path: '/' });
-        } else if (tab === "calendar") {
+        } else if (tab == "calendar") {
             setProcessShow(false);
             setPortfolioShow(false);
             setAboutShow(false);
             setFabricShow(false);
             setCalendarShow(true);
-            setCookie('activeProfileTab', 'calendar', { path: '/' });
         }
     };
 
@@ -173,7 +169,6 @@ const DesignerProfile = () => {
                 setUser(userData);
                 setUserImage(userData.image);
                 setImages(userData.image_urls);
-                setCookie('userDetails', JSON.stringify(userData), { path: '/' });
                 if (userData.measurement_guide) {
                     const measurementGuide = JSON.parse(userData.measurement_guide);
                     setElements(measurementGuide);
@@ -258,25 +253,25 @@ const DesignerProfile = () => {
         }
 
         if (activeProfileTab && activeProfileTab != '') {
-            if (activeProfileTab == "about") {
+            if (activeProfileTab === "about") {
                 setAboutShow(true);
                 setPortfolioShow(false);
                 setFabricShow(false);
                 setProcessShow(false);
                 setCalendarShow(false);
-            } else if (activeProfileTab === "portfolio") {
+            } else if (activeProfileTab == "portfolio") {
                 setPortfolioShow(true);
                 setAboutShow(false);
                 setFabricShow(false);
                 setProcessShow(false);
                 setCalendarShow(false);
-            } else if (activeProfileTab === "fabric") {
+            } else if (activeProfileTab == "fabric") {
                 setFabricShow(true);
                 setPortfolioShow(false);
                 setAboutShow(false);
                 setProcessShow(false);
                 setCalendarShow(false);
-            } else if (activeProfileTab === "calendar") {
+            } else if (activeProfileTab == "calendar") {
                 setProcessShow(false);
                 setPortfolioShow(false);
                 setAboutShow(false);
@@ -406,6 +401,8 @@ const DesignerProfile = () => {
 
                             <Col lg="12" className='mt-4'>
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${aboutShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("about"); }}>About</span>
+
+                              
                                 {user.is_designer == 1 && (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${portfolioShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("portfolio"); }}>Portfolio</span>
                                 )}
@@ -421,6 +418,7 @@ const DesignerProfile = () => {
                                     :
                                     null
                                 }
+                               
                                 <hr className='mt-2' />
                             </Col>
                         </Row>
@@ -484,6 +482,9 @@ const DesignerProfile = () => {
                             :
                             null
                         }
+
+                    {user.is_designer == 1 && 
+                        <>
                         {portfolioShow ?
                             <div>
                                 <PortfolioGrid currentUser={user_id} reloadCount={reloadCount} />
@@ -491,6 +492,10 @@ const DesignerProfile = () => {
                             :
                             null
                         }
+                        </>
+                    }
+                    {user.is_seller == 1 &&
+                    <>
                         {fabricShow ?
                             <div>
                                 <ProductGrid currentUser={user_id} reloadCount={reloadCount} />
@@ -498,41 +503,8 @@ const DesignerProfile = () => {
                             :
                             null
                         }
-
-                        {/* {calendarShow && !isDesignerCurrentUser ?
-                            <div className='mt-3'>
-                                <DesignerCalendar events={designerSchedule} designerId={designer ? designer.id : ""} />
-                            </div>
-                            :
-                            null
-                        } */}
-
-                        {chatBox ?
-                            <>
-                                <Card className='width-chat-card px-0'>
-                                    <Card.Header className='header-chat bg-white'>
-                                        <div className='d-flex justify-content-between'>
-                                            <div className='d-flex align-items-center'>
-                                                <span className='fw-500'>{customer.first_name} {customer.last_name}</span>
-                                                {/* <span className='ms-2 active-now fs-14 fw-400'>Active Now</span> */}
-                                            </div>
-                                            <div className="cursor-pointer" onClick={() => setChatBox(false)}>
-                                                <IoCloseOutline color="#7e7e7e" size={25} />
-                                            </div>
-                                        </div>
-                                    </Card.Header>
-                                    <Card.Body >
-                                        <MeetingChat
-                                            currentUser={currentUser}
-                                            appointmentId={appointmentId}
-                                            user={userDetails}
-                                        />
-                                    </Card.Body>
-                                </Card>
-                            </>
-                            :
-                            null
-                        }
+                        </>
+                    }
 
                     </Container>
                 </section>
