@@ -255,19 +255,16 @@ const Questionnaire = () => {
                   <Col lg='12'>
                     <h2 className='form-title pb-2'>Welcome to Kouture Konect</h2>
                     <p className="mb-3">
-                      Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
-                      diam nonumy eirmod tempor invidunt ut aliquyam erat voluptua.
+                    Please make sure to complete your profile to start enjoying the full Kouture Konect experience.
                     </p>
-                    <div className='d-flex align-items-center mb-3'>
-                      <div className='circle-number'>1</div>
-                      &nbsp;
-                      <span>Verify your email address! You won't be able to share your work then</span>
+                    <div className='d-flex align-items-center'>
+                      <p >If you have any questions or need assistance, our support team is always here to help. Welcome to the community, and here's to your journey with us being as fruitful and enjoyable as possible!</p>
                     </div>
-                    <div className='d-flex align-items-center mb-4'>
+                    {/* <div className='d-flex align-items-center mb-4'>
                       <div className='circle-number'>2</div>
                       &nbsp;
                       <span>Upload your work, fill out your profile, and set your work experience</span>
-                    </div>
+                    </div> */}
                     {formStatus != "standby" ?
                       <Button className='btn-primary mt-2' type="button">
                         Saving your details...

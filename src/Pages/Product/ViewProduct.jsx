@@ -270,6 +270,10 @@ const ViewProduct = () => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success("Fabric added to cart successfully!");
+
+                setTimeout(() => {
+                    window.location.reload(); 
+                }, 500);
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }

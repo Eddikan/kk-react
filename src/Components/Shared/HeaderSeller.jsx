@@ -305,7 +305,7 @@ const HeaderSeller = () => {
 
                                                     )}
                                                 </div>
-
+ 
                                                 <div className="user-dropdown nav-link" ref={userRef}>
                                                     {userImage ?
                                                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>

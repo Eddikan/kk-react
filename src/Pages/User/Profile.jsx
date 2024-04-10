@@ -23,7 +23,9 @@ import LoadingPage from 'Components/Shared/LoadingPage';
 import { GoPencil } from "react-icons/go";
 import axios from 'axios';
 import MyCalendar from 'Components/Shared/MyCalendar';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams,Link } from 'react-router-dom';
+import BecomeSeller from 'Components/CallToActions/Seller';
+import BecomeDesigner from 'Components/CallToActions/Designer';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -75,12 +77,13 @@ const Profile = () => {
     const [limitedDesignShow, setLimitedDesignShow] = useState(false);
     const [myCalendarShow, setMyCalendarShow] = useState(false);
     const [formStatus, setFormStatus] = useState('standby');
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'activeProfileTab']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'activeProfileTab','userDetails']);
     const [areasOfSpecialization, setAreaOfSpecialization] = useState([])
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
     const activeProfileTab = cookies.activeProfileTab;
+    const userDetails = cookies.userDetails;
 
     // User Image
     const [userImage, setUserImage] = useState();
@@ -341,16 +344,31 @@ const Profile = () => {
                                         <div className='icons-d-flex'>
                                             <img src={PinIcon} alt="location pin" className='profile-icon' />
                                             {user.city || user.province || user.country ?
-                                                <p className='fs-16 color-light-blue'>
+                                                <p className='fs-16 color-light-blue mb-2'>
                                                     {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""}
                                                 </p>
                                                 :
-                                                <p className='fs-16 color-light-blue'>-</p>
+                                                <p className='fs-16 color-light-blue mb-2'>-</p>
                                             }
+                                        </div>
+
+                                        <div>
+                                            <div className="position-relative">
+                                                <label className="progress-bar-value" htmlFor="progress-bar"></label>
+                                                <progress id="progress-bar" value="20" max="100"></progress>
+                                                <div className='fs-12 mb-3'>Your profile completion is at 20%</div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <Button href="/user/profile/edit" type='button' className='btn btn-primary'>
+                                                <span>Complete your profile</span> 
+                                            </Button>
                                         </div>
                                     </div>
                                 </div>
                             </Col>
+
                             <Col lg="6" className='mb-5'>
                                 <Row className="justify-content-end">
                                     <Col lg="2" className="text-right pe-0 me-5">
@@ -374,6 +392,19 @@ const Profile = () => {
                                     </Col>
                                 </Row>
                             </Col>
+
+                            {user.is_seller == 0 && (
+                                <Col lg="12" className='mb-2'>
+                                    <BecomeSeller />
+                                </Col>
+                            )}
+                            {user.is_designer == 0 && (
+                                <Col lg="12">
+                                    <BecomeDesigner />
+                                </Col>
+                            )}
+
+
                             <Col lg="12" className='mt-4'>
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${aboutShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("about"); }}>About</span>
                                 

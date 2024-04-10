@@ -500,7 +500,9 @@ const Header = () => {
 
                             <Col lg="9">
                               <div className='fw-600'>Hi,&nbsp;{user.first_name}!</div>
+                              <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
                               <div><BsArrowLeft className="me-1" size={10}/><span className='fs-12'>See your profile</span></div>
+                              </Link>
                             </Col>
                            </Row>
                           }
