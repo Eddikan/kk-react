@@ -2125,6 +2125,10 @@ svg.gr-status-icon {
     border-color: var(--black) !important;
 }
 
+.bg-color-page {
+    background-color: #FAFAFA !important;
+}
+
 .btn-set-up {
     font-size: 15px;
     padding: 10px 20px;

@@ -129,7 +129,8 @@ const UserMeasurementGuide = lazy(() =>
 );
 
 const ThankYou = lazy(() => import("./Pages/User/ThankYou"));
-const SetAvailability = lazy(() => import("./Pages/User/SetAvailability"));
+const ShopAvailability = lazy(() => import("./Pages/User/ShopAvailability"));
+
 
 const ProfileCompleteness = lazy(() => import("./Pages/User/ProfileCompleteness"));
 
@@ -210,7 +211,8 @@ const App = () => {
           <Route path="/:user/profile" exact element={<UserProfile />} />
           <Route path="/user/complete-profile" exact element={<ProfileCompleteness />} />
           <Route path="/thankyou" exact element={<ThankYou />} />
-          <Route path="/set-availability" exact element={<SetAvailability />} />
+          <Route path="/shop-manager-completion" exact element={<ShopAvailability />} />
+          
 
           <Route
             path="/:user/profile/edit"

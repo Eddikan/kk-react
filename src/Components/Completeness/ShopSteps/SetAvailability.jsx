@@ -3,18 +3,19 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import FormControl from 'react-bootstrap/FormControl';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import { RxCross2 } from "react-icons/rx";
+import { useCookies } from 'react-cookie';
 import { GoPlus } from "react-icons/go";
-import { useParams } from 'react-router-dom';
-import { IoIosCheckmarkCircle } from "react-icons/io";
-import Layout from 'Components/Layout/Layout';
-
+import axios from "axios";
+import toast from 'react-hot-toast';
 
 const initialBusinessHours = {
     start: '',
     end: ''
 };
-const SetAvailability = (props) => {
 
+const SetAvailability = ({ user, currentUser, reload, token, onStepPlusOne }) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const designerId = cookies.currentUserDesigner;
     const [isSundayChecked, setIsSundayChecked] = useState(false);
     const [isMondayChecked, setIsMondayChecked] = useState(false);
     const [isTuesdayChecked, setIsTuesdayChecked] = useState(false);
@@ -37,6 +38,18 @@ const SetAvailability = (props) => {
     const [thursdayHoursCopyFormData, setThursdayHoursCopyFormData] = useState([]);
     const [fridayHoursCopyFormData, setFridayHoursCopyFormData] = useState([]);
     const [saturdayHoursCopyFormData, setSaturdayHoursCopyFormData] = useState([]);
+
+    const [businessHoursFormData, setBusinessHoursFormData] = useState([initialBusinessHours]);
+
+    const [formStatus, setFormStatus] = useState(false);
+    const [currentTimezone, setCurrentTimezone] = useState(null);
+    const [reloadCount, setReloadCount] = useState(0);
+
+   
+
+    const postBusinessHours = async (data) => {
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/availability?user_id=' + currentUser, data);
+    };
 
 
   //* This will close the fields when you click the checkbox *//
@@ -324,12 +337,63 @@ const handleRemoveSaturdayHours = (index) => {
             initialBusinessHours
         ]);
     }
-    return (
-        <section>
-            <Container className='py-5'>
-                            <Row className="h-100">
-                                <Col lg="12">
 
+
+    const BusinessHoursSubmitPost = (e) => {
+        setFormStatus(true);
+        const content = [
+            {
+                day: 'sunday',
+                availabilities: sundayHoursFormData
+            },
+            {
+                day: 'monday',
+                availabilities: mondayHoursFormData
+            },
+            {
+                day: 'tuesday',
+                availabilities: tuesdayHoursFormData
+            },
+            {
+                day: 'wednesday',
+                availabilities: wednesdayHoursFormData
+            },
+            {
+                day: 'thursday',
+                availabilities: thursdayHoursFormData
+            },
+            {
+                day: 'friday',
+                availabilities: fridayHoursFormData
+            },
+            {
+                day: 'saturday',
+                availabilities: saturdayHoursFormData
+            },
+        ];
+        postBusinessHours({ content, designer_id: designerId, timezone: currentTimezone }).then(response => {
+            const status = response.data.status;
+            if (status === "Success") {
+                setFormStatus(false);
+                setReloadCount(reloadCount + 1);
+                setBusinessHoursFormData(initialBusinessHours);
+                toast.success('Availability added successfully!');
+                onStepPlusOne();
+            } else {
+                setFormStatus(false);
+                toast.error('There has been an error saving the availability hours, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error saving the availability hours, please try again!');
+        });
+    }
+
+
+    return (
+        <>
+            <Row className="h-100">
+                                <Col lg="12">
+                                <div className='fs-25 rufina-family mb-4'>Set your availability</div>
                                     <Row>
                                         <Col lg="2">
                                             <h4 className="day-header">Sunday</h4>
@@ -840,11 +904,18 @@ const handleRemoveSaturdayHours = (index) => {
                                             </Row>
                                         </Col>
                                     </Row>
+
+                                    <div className="text-right mt-4 mb-2">
+                                        {formStatus ?
+                                            <Button type='button' className="btn-save">Saving...</Button>
+                                        :
+                                            <Button type='button' onClick={BusinessHoursSubmitPost} className="btn-save">Next</Button>
+                                        }
+                                    </div>
                                 </Col>
                             </Row>
-            </Container>
-        </section>
-    );
-};
+        </>
+    )
+}
 
 export default SetAvailability;
