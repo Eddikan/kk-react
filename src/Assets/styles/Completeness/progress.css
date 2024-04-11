@@ -1,0 +1,15 @@
+.progress-circle-inactive {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #8F8F8F;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8F8F8F;
+    background-color: #ffffff;
+}
+
+.inactive span {
+    color: #8F8F8F !important;
+}

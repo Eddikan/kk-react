@@ -266,7 +266,7 @@ const Header = () => {
   return (
     <>
 
-      {/* <div className='banner-completion text-center'>
+      <div className='banner-completion text-center'>
           <span className='text-white'>Your profile completion is at 20%. 
           <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span></span>
       </div>
@@ -276,7 +276,7 @@ const Header = () => {
             <HiOutlineBuildingStorefront size={20} className='me-2' color="#CEA835"/> 
             Set up your shop 
           </span>
-      </div> */}
+      </div>
 
       <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
         <Container className="position-relative">

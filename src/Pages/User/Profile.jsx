@@ -354,7 +354,7 @@ const Profile = () => {
                                             }
                                         </div>
 
-                                        <div className='mb-2 d-flex justify-content-center align-items-center'>
+                                        {/* <div className='mb-2 d-flex justify-content-center align-items-center'>
                                             <div>
                                             <Button href="/user/profile/edit" type='button' className='btn btn-primary btn-complete-profile'>
                                                 <span>Complete your profile</span> 
@@ -368,7 +368,7 @@ const Profile = () => {
                                             </span>
                                         </div>
 
-                                        </div>
+                                        </div> */}
 
                                         <div>
                                             <div className="position-relative">
