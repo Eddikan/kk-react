@@ -13,6 +13,7 @@ import YoutubeIcon from 'Assets/images/youtube.png';
 import UserPlaceholder from 'Assets/images/user.png';
 import Loading from 'Assets/images/loading.gif'
 import GetUserData from 'Utils/GetUserData';
+import { FaArrowRightLong } from "react-icons/fa6";
 import GoBack from 'Components/Shared/GoBack';
 import { useCookies } from 'react-cookie';
 import { HiOutlineBuildingStorefront } from "react-icons/hi2";
@@ -353,21 +354,27 @@ const Profile = () => {
                                             }
                                         </div>
 
-                                        <div className='mb-3'>
-                                            <Button href="/user/profile/edit" type='button' className='btn btn-primary'>
+                                        <div className='mb-2 d-flex justify-content-center align-items-center'>
+                                            <div>
+                                            <Button href="/user/profile/edit" type='button' className='btn btn-primary btn-complete-profile'>
                                                 <span>Complete your profile</span> 
                                             </Button>
+                                            </div>
 
-                                            <span><HiOutlineBuildingStorefront size={30} className='me-2'/> 
-                                                <span className='fw-500'>Set up your shop</span>
+                                        <div>
+                                            <span><HiOutlineBuildingStorefront size={30} className='text-gold me-2 ms-4'/> 
+                                                <span className='fw-500 cursor-pointer'>
+                                                Set up your shop<FaArrowRightLong className='ms-2'/></span>
                                             </span>
+                                        </div>
+
                                         </div>
 
                                         <div>
                                             <div className="position-relative">
                                                 <label className="progress-bar-value" htmlFor="progress-bar"></label>
                                                 <progress id="progress-bar" value="20" max="100"></progress>
-                                                <div className='fs-12 mb-3'>Your profile completion is at 20%</div>
+                                                <div className='fs-12'>Your profile completion is at 20%</div>
                                             </div>
                                         </div>
                                     </div>

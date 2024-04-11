@@ -1,36 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
-import Form from 'react-bootstrap/Form';
+import { useNavigate, useLocation } from 'react-router-dom';
 import FormControl from 'react-bootstrap/FormControl';
-import 'Assets/styles/DesignerCalendar/style.css'
-import { useCookies } from 'react-cookie';
+import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import { RxCross2 } from "react-icons/rx";
-import Container from 'react-bootstrap/Container';
-import Sidebar from 'Components/Shared/Sidebar';
 import { GoPlus } from "react-icons/go";
-import MyCalendar from 'Components/Shared/MyCalendar';
-import GoBack from 'Components/Shared/GoBack';
-import axios from "axios";
-import toast from 'react-hot-toast';
-import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
 import { useParams } from 'react-router-dom';
+import { IoIosCheckmarkCircle } from "react-icons/io";
+import Layout from 'Components/Layout/Layout';
 
 
 const initialBusinessHours = {
     start: '',
     end: ''
 };
+const SetAvailability = (props) => {
 
-const initialAppointments = {
-    title: '',
-};
-
-
-const Calendar = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
-    const currentUser = cookies.currentUser;
-    const designerId = cookies.currentUserDesigner;
-    const [designerBusinessHoursModalShow, setDesignerBusinessHoursModalShow] = useState(false);
     const [isSundayChecked, setIsSundayChecked] = useState(false);
     const [isMondayChecked, setIsMondayChecked] = useState(false);
     const [isTuesdayChecked, setIsTuesdayChecked] = useState(false);
@@ -53,41 +37,150 @@ const Calendar = (props) => {
     const [thursdayHoursCopyFormData, setThursdayHoursCopyFormData] = useState([]);
     const [fridayHoursCopyFormData, setFridayHoursCopyFormData] = useState([]);
     const [saturdayHoursCopyFormData, setSaturdayHoursCopyFormData] = useState([]);
-    const [appointmentFormData, setAppointmentFormData] = useState(initialAppointments);
-    const [businessHoursFormData, setBusinessHoursFormData] = useState([initialBusinessHours]);
-    const [calendarAppointment, setCalendarAppointment] = useState([]);
-    const [times, setTimes] = useState([]);
-    const [availability, setAvailability] = useState([]);
-    const [currentTimezone, setCurrentTimezone] = useState(null);
-    const [noAvailableHours, setNoAvailableHors] = useState(false);
 
-    const [reloadCount, setReloadCount] = useState(0);
-    const [scheduleReloadCount, setScheduleReloadCount] = useState(0);
-    const [formStatus, setFormStatus] = useState('standby');
 
-    // const postSetAppointment = async (data) => {
-    //     return await axios.post(process.env.REACT_APP_API_ENDPOINT + '/calendar/availability', data);
-    // };
-
-    const postBusinessHours = async (data) => {
-        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/availability?user_id=' + currentUser, data);
-    };
-
-    const putBusinessHourss = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId, data);
-    };
-
-    const getBusinessHours = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId);
-    };
-
-    const handleChangeAppointment = (e) => {
-        const { name, value } = e.target;
-        setAppointmentFormData({
-            ...appointmentFormData,
-            [name]: value,
-        });
+  //* This will close the fields when you click the checkbox *//
+  const handleSundayCheckboxChangeClose = () => {
+    setIsSundayChecked(!isSundayChecked);
+    if (!isSundayChecked) {
+        setSundayHoursFormData([]);
+    } else {
+        // setScheduleReloadCount(scheduleReloadCount + 1);
+        setSundayHoursFormData([sundayHoursCopyFormData]);
     }
+};
+
+const handleMondayCheckboxChangeClose = () => {
+    setIsMondayChecked(!isMondayChecked);
+
+    if (!isMondayChecked) {
+        setMondayHoursFormData([]);
+    } else {
+        // setScheduleReloadCount(scheduleReloadCount + 1);
+        setMondayHoursFormData([mondayHoursCopyFormData]);
+    }
+};
+
+const handleTuesdayCheckboxChangeClose = () => {
+    setIsTuesdayChecked(!isTuesdayChecked);
+
+    if (!isTuesdayChecked) {
+        setTuesdayHoursFormData([]);
+    } else {
+        // setScheduleReloadCount(scheduleReloadCount + 1);
+        setTuesdayHoursFormData([tuesdayHoursCopyFormData]);
+    }
+};
+
+const handleWednesdayCheckboxChangeClose = () => {
+    setIsWednesdayChecked(!isWednesdayChecked);
+
+    if (!isWednesdayChecked) {
+        setWednesdayHoursFormData([]);
+    } else {
+        // setScheduleReloadCount(scheduleReloadCount + 1);
+        setWednesdayHoursFormData([wednesdayHoursCopyFormData]);
+    }
+};
+
+const handleThursdayCheckboxChangeClose = () => {
+    setIsThursdayChecked(!isThursdayChecked);
+
+    if (!isThursdayChecked) {
+        setThursdayHoursFormData([]);
+    } else {
+        // setScheduleReloadCount(scheduleReloadCount + 1);
+        setThursdayHoursFormData([thursdayHoursCopyFormData]);
+    }
+};
+
+const handleFridayCheckboxChangeClose = () => {
+    setIsFridayChecked(!isFridayChecked);
+
+    if (!isFridayChecked) {
+        setFridayHoursFormData([]);
+    } else {
+        // setScheduleReloadCount(scheduleReloadCount + 1);
+        setFridayHoursFormData([fridayHoursCopyFormData]);
+    }
+};
+
+const handleSaturdayCheckboxChangeClose = () => {
+    setIsSaturdayChecked(!isSaturdayChecked);
+
+    if (!isSaturdayChecked) {
+        setSaturdayHoursFormData([]);
+    } else {
+        // setScheduleReloadCount(scheduleReloadCount + 1);
+        setSaturdayHoursFormData([saturdayHoursCopyFormData]);
+    }
+};
+
+
+//*This will remove the fields added*//
+const handleRemoveSundayHours = (index) => {
+    setSundayHoursFormData((prevSundayHoursFormData) => {
+        const updatedSundayHoursFormData = [...prevSundayHoursFormData];
+        updatedSundayHoursFormData.splice(index, 1);
+
+        return updatedSundayHoursFormData;
+    });
+}
+
+const handleRemoveMondayHours = (index) => {
+    setMondayHoursFormData((prevMondayHoursFormData) => {
+        const updatedMondayHoursFormData = [...prevMondayHoursFormData];
+        updatedMondayHoursFormData.splice(index, 1);
+
+        return updatedMondayHoursFormData;
+    });
+}
+
+const handleRemoveTuesdayHours = (index) => {
+    setTuesdayHoursFormData((prevTuesdayHoursFormData) => {
+        const updatedTuesdayHoursFormData = [...prevTuesdayHoursFormData];
+        updatedTuesdayHoursFormData.splice(index, 1);
+
+        return updatedTuesdayHoursFormData;
+    });
+}
+
+const handleRemoveWednesdayHours = (index) => {
+    setWednesdayHoursFormData((prevWednesdaydayHoursFormData) => {
+        const updatedWednesdayHoursFormData = [...prevWednesdaydayHoursFormData];
+        updatedWednesdayHoursFormData.splice(index, 1);
+
+        return updatedWednesdayHoursFormData;
+    });
+}
+
+const handleRemoveThursdayHours = (index) => {
+    setThursdayHoursFormData((prevThursdayHoursFormData) => {
+        const updatedThursdayHoursFormData = [...prevThursdayHoursFormData];
+        updatedThursdayHoursFormData.splice(index, 1);
+
+        return updatedThursdayHoursFormData;
+    });
+}
+
+const handleRemoveFridayHours = (index) => {
+    setFridayHoursFormData((prevFridayHoursFormData) => {
+        const updatedFridayHoursFormData = [...prevFridayHoursFormData];
+        updatedFridayHoursFormData.splice(index, 1);
+
+        return updatedFridayHoursFormData;
+    });
+}
+
+const handleRemoveSaturdayHours = (index) => {
+    setSaturdayHoursFormData((prevSaturdayHoursFormData) => {
+        const updatedSaturdayHoursFormData = [...prevSaturdayHoursFormData];
+        updatedSaturdayHoursFormData.splice(index, 1);
+
+        return updatedSaturdayHoursFormData;
+    });
+}
+
 
     const handleChangeTimeSunday = (e, index) => {
         const { name, value } = e.target;
@@ -181,149 +274,6 @@ const Calendar = (props) => {
         });
     };
 
-    const handleShowDesignerBusinessHoursModal = () => {
-        setDesignerBusinessHoursModalShow(true);
-
-        getBusinessHours()
-            .then((response) => {
-                const selectedTime = response.data.data;
-                const status = response.data.status;
-                if (status == "Fail") {
-                    // toast.error('No availabilty found!');
-                }
-                else {
-                    if (selectedTime) {
-                        // console.log(selectedTime.content)
-                        setTimes(selectedTime.content);
-                        if (selectedTime && selectedTime.content && selectedTime.content.length > 0) {
-
-                            const sundayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'sunday');
-                            const mondayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'monday');
-                            const tuesdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'tuesday');
-                            const wednesdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'wednesday');
-                            const thursdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'thursday');
-                            const fridayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'friday');
-                            const saturdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'saturday');
-
-                            if (sundayEntry && mondayEntry && tuesdayEntry) {
-                                const sundayAvailabilities = sundayEntry.availabilities || [];
-
-                                const mappedSundayBusinessHours = sundayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                const mondayAvailabilities = mondayEntry.availabilities || [];
-
-                                const mappedMondayBusinessHours = mondayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                const tuesdayAvailabilities = tuesdayEntry.availabilities || [];
-
-                                const mappedTuesdayBusinessHours = tuesdayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                const wednesdayAvailabilities = wednesdayEntry.availabilities || [];
-
-                                const mappedWednesdayBusinessHours = wednesdayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                const thursdayAvailabilities = thursdayEntry.availabilities || [];
-
-                                const mappedThursdayBusinessHours = thursdayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                const fridayAvailabilities = fridayEntry.availabilities || [];
-
-                                const mappedFridayBusinessHours = fridayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                const saturdayAvailabilities = saturdayEntry.availabilities || [];
-
-                                const mappedSaturdayBusinessHours = saturdayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                setMondayHoursFormData(mappedMondayBusinessHours);
-                                setSundayHoursCopyFormData(mappedMondayBusinessHours);
-                                setTuesdayHoursFormData(mappedTuesdayBusinessHours);
-                                setTuesdayHoursCopyFormData(mappedTuesdayBusinessHours);
-                                setWednesdayHoursFormData(mappedWednesdayBusinessHours);
-                                setWednesdayHoursCopyFormData(mappedWednesdayBusinessHours);
-                                setThursdayHoursFormData(mappedThursdayBusinessHours);
-                                setThursdayHoursCopyFormData(mappedThursdayBusinessHours);
-                                setFridayHoursFormData(mappedFridayBusinessHours);
-                                setFridayHoursCopyFormData(mappedFridayBusinessHours);
-                                setSaturdayHoursFormData(mappedSaturdayBusinessHours);
-                                setSaturdayHoursCopyFormData(mappedSaturdayBusinessHours);
-                                setSundayHoursFormData(mappedSundayBusinessHours);
-                                setSundayHoursCopyFormData(mappedSundayBusinessHours);
-                                if (mappedFridayBusinessHours.length <= 0) {
-                                    //means that the day is unavailable
-                                    setIsFridayChecked(true);
-                                } else if (mappedSundayBusinessHours.length <= 0) {
-                                    setIsSundayChecked(true);
-                                } else if (mappedMondayBusinessHours.length <= 0) {
-                                    setIsMondayChecked(true);
-                                } else if (mappedTuesdayBusinessHours.length <= 0) {
-                                    setIsTuesdayChecked(true);
-                                } else if (mappedWednesdayBusinessHours.length <= 0) {
-                                    setIsWednesdayChecked(true);
-                                } else if (mappedThursdayBusinessHours.length <= 0) {
-                                    setIsThursdayChecked(true);
-                                } else if (mappedSaturdayBusinessHours.length <= 0) {
-                                    setIsSaturdayChecked(true);
-                                }
-                            } else {
-                                setSundayHoursFormData([initialBusinessHours]);
-                            }
-
-                        }
-                        setBusinessHoursFormData([initialBusinessHours]);
-                    } else {
-                        toast.error('There has been an error getting the schedules, please try again!');
-                    }
-                }
-            })
-            .catch((error) => {
-                toast.error('There has been an error getting the schedules, please try again!');
-            });
-
-    }
-
-    const handleAppointments = () => {
-        setTimes(prevtimes => [
-            ...prevtimes,
-            initialAppointments
-        ]);
-    }
-
-    const handleRemoveAppointment = (index) => {
-        setTimes((prevtimes) => {
-            const updatedTimes = [...prevtimes];
-            updatedTimes.splice(index, 1);
-
-            return updatedTimes;
-        });
-    }
 
     //* This will add the fields opens at and closes at *//
     const handleAddSundayHours = () => {
@@ -374,467 +324,11 @@ const Calendar = (props) => {
             initialBusinessHours
         ]);
     }
-
-    //* This will close the fields when you click the checkbox *//
-    const handleSundayCheckboxChangeClose = () => {
-        setIsSundayChecked(!isSundayChecked);
-        if (!isSundayChecked) {
-            setSundayHoursFormData([]);
-        } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
-            setSundayHoursFormData([sundayHoursCopyFormData]);
-        }
-    };
-
-    const handleMondayCheckboxChangeClose = () => {
-        setIsMondayChecked(!isMondayChecked);
-
-        if (!isMondayChecked) {
-            setMondayHoursFormData([]);
-        } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
-            setMondayHoursFormData([mondayHoursCopyFormData]);
-        }
-    };
-
-    const handleTuesdayCheckboxChangeClose = () => {
-        setIsTuesdayChecked(!isTuesdayChecked);
-
-        if (!isTuesdayChecked) {
-            setTuesdayHoursFormData([]);
-        } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
-            setTuesdayHoursFormData([tuesdayHoursCopyFormData]);
-        }
-    };
-
-    const handleWednesdayCheckboxChangeClose = () => {
-        setIsWednesdayChecked(!isWednesdayChecked);
-
-        if (!isWednesdayChecked) {
-            setWednesdayHoursFormData([]);
-        } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
-            setWednesdayHoursFormData([wednesdayHoursCopyFormData]);
-        }
-    };
-
-    const handleThursdayCheckboxChangeClose = () => {
-        setIsThursdayChecked(!isThursdayChecked);
-
-        if (!isThursdayChecked) {
-            setThursdayHoursFormData([]);
-        } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
-            setThursdayHoursFormData([thursdayHoursCopyFormData]);
-        }
-    };
-
-    const handleFridayCheckboxChangeClose = () => {
-        setIsFridayChecked(!isFridayChecked);
-
-        if (!isFridayChecked) {
-            setFridayHoursFormData([]);
-        } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
-            setFridayHoursFormData([fridayHoursCopyFormData]);
-        }
-    };
-
-    const handleSaturdayCheckboxChangeClose = () => {
-        setIsSaturdayChecked(!isSaturdayChecked);
-
-        if (!isSaturdayChecked) {
-            setSaturdayHoursFormData([]);
-        } else {
-            // setScheduleReloadCount(scheduleReloadCount + 1);
-            setSaturdayHoursFormData([saturdayHoursCopyFormData]);
-        }
-    };
-
-    //*This will remove the fields added*//
-    const handleRemoveSundayHours = (index) => {
-        setSundayHoursFormData((prevSundayHoursFormData) => {
-            const updatedSundayHoursFormData = [...prevSundayHoursFormData];
-            updatedSundayHoursFormData.splice(index, 1);
-
-            return updatedSundayHoursFormData;
-        });
-    }
-
-    const handleRemoveMondayHours = (index) => {
-        setMondayHoursFormData((prevMondayHoursFormData) => {
-            const updatedMondayHoursFormData = [...prevMondayHoursFormData];
-            updatedMondayHoursFormData.splice(index, 1);
-
-            return updatedMondayHoursFormData;
-        });
-    }
-
-    const handleRemoveTuesdayHours = (index) => {
-        setTuesdayHoursFormData((prevTuesdayHoursFormData) => {
-            const updatedTuesdayHoursFormData = [...prevTuesdayHoursFormData];
-            updatedTuesdayHoursFormData.splice(index, 1);
-
-            return updatedTuesdayHoursFormData;
-        });
-    }
-
-    const handleRemoveWednesdayHours = (index) => {
-        setWednesdayHoursFormData((prevWednesdaydayHoursFormData) => {
-            const updatedWednesdayHoursFormData = [...prevWednesdaydayHoursFormData];
-            updatedWednesdayHoursFormData.splice(index, 1);
-
-            return updatedWednesdayHoursFormData;
-        });
-    }
-
-    const handleRemoveThursdayHours = (index) => {
-        setThursdayHoursFormData((prevThursdayHoursFormData) => {
-            const updatedThursdayHoursFormData = [...prevThursdayHoursFormData];
-            updatedThursdayHoursFormData.splice(index, 1);
-
-            return updatedThursdayHoursFormData;
-        });
-    }
-
-    const handleRemoveFridayHours = (index) => {
-        setFridayHoursFormData((prevFridayHoursFormData) => {
-            const updatedFridayHoursFormData = [...prevFridayHoursFormData];
-            updatedFridayHoursFormData.splice(index, 1);
-
-            return updatedFridayHoursFormData;
-        });
-    }
-
-    const handleRemoveSaturdayHours = (index) => {
-        setSaturdayHoursFormData((prevSaturdayHoursFormData) => {
-            const updatedSaturdayHoursFormData = [...prevSaturdayHoursFormData];
-            updatedSaturdayHoursFormData.splice(index, 1);
-
-            return updatedSaturdayHoursFormData;
-        });
-    }
-
-    const BusinessHoursSubmitPost = (e) => {
-        setFormStatus('loading');
-        const content = [
-            {
-                day: 'sunday',
-                availabilities: sundayHoursFormData
-            },
-            {
-                day: 'monday',
-                availabilities: mondayHoursFormData
-            },
-            {
-                day: 'tuesday',
-                availabilities: tuesdayHoursFormData
-            },
-            {
-                day: 'wednesday',
-                availabilities: wednesdayHoursFormData
-            },
-            {
-                day: 'thursday',
-                availabilities: thursdayHoursFormData
-            },
-            {
-                day: 'friday',
-                availabilities: fridayHoursFormData
-            },
-            {
-                day: 'saturday',
-                availabilities: saturdayHoursFormData
-            },
-        ];
-        postBusinessHours({ content, designer_id: designerId, timezone: currentTimezone }).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setFormStatus('standby');
-                setReloadCount(reloadCount + 1);
-                setDesignerBusinessHoursModalShow(false);
-                setBusinessHoursFormData(initialBusinessHours);
-                toast.success('Availability added successfully!');
-            } else {
-                setFormStatus('standby');
-                toast.error('There has been an error saving the availability hours, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the availability hours, please try again!');
-        });
-    }
-
-    const BusinessHoursSubmitPut = (e) => {
-        setFormStatus('loading');
-        const content = [
-            {
-                day: 'sunday',
-                availabilities: sundayHoursFormData
-            },
-            {
-                day: 'monday',
-                availabilities: mondayHoursFormData
-            },
-            {
-                day: 'tuesday',
-                availabilities: tuesdayHoursFormData
-            },
-            {
-                day: 'wednesday',
-                availabilities: wednesdayHoursFormData
-            },
-            {
-                day: 'thursday',
-                availabilities: thursdayHoursFormData
-            },
-            {
-                day: 'friday',
-                availabilities: fridayHoursFormData
-            },
-            {
-                day: 'saturday',
-                availabilities: saturdayHoursFormData
-            },
-        ];
-        putBusinessHourss({ content, designer_id: designerId, timezone: currentTimezone }).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setFormStatus('standby');
-                setReloadCount(reloadCount + 1);
-                setDesignerBusinessHoursModalShow(false);
-                setBusinessHoursFormData(initialBusinessHours);
-                toast.success('Availability added successfully!');
-            } else {
-                setFormStatus('standby');
-                toast.error('There has been an error saving the availability hours, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the availability hours, please try again!');
-        });
-    }
-
-    useEffect(() => {
-        document.body.classList.add('designer-calendar-body');
-        const getTimezone = () => {
-            const timezone = new Intl.DateTimeFormat().resolvedOptions().timeZone;
-            setCurrentTimezone(timezone);
-        };
-
-        getTimezone();
-    }, []);
-
-
-    useEffect(() => {
-        getBusinessHours()
-            .then((response) => {
-                const selectedTime = response.data.data;
-                const status = response.data.status;
-                if (status == "Fail") {
-                    // toast.error('There are no available hours found!');
-                    setNoAvailableHors(true);
-                }
-                else {
-                    if (selectedTime) {
-                        setTimes(selectedTime.content);
-                        if (selectedTime && selectedTime.content && selectedTime.content.length > 0) {
-
-                            const sundayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'sunday');
-                            const mondayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'monday');
-                            const tuesdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'tuesday');
-                            const wednesdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'wednesday');
-                            const thursdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'thursday');
-                            const fridayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'friday');
-                            const saturdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'saturday');
-
-                            if (sundayEntry && mondayEntry && tuesdayEntry) {
-                                const sundayAvailabilities = sundayEntry.availabilities || [];
-
-                                const mappedSundayBusinessHours = sundayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                const mondayAvailabilities = mondayEntry.availabilities || [];
-
-                                const mappedMondayBusinessHours = mondayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                const tuesdayAvailabilities = tuesdayEntry.availabilities || [];
-
-                                const mappedTuesdayBusinessHours = tuesdayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                const wednesdayAvailabilities = wednesdayEntry.availabilities || [];
-
-                                const mappedWednesdayBusinessHours = wednesdayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                const thursdayAvailabilities = thursdayEntry.availabilities || [];
-
-                                const mappedThursdayBusinessHours = thursdayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                const fridayAvailabilities = fridayEntry.availabilities || [];
-
-                                const mappedFridayBusinessHours = fridayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                const saturdayAvailabilities = saturdayEntry.availabilities || [];
-
-                                const mappedSaturdayBusinessHours = saturdayAvailabilities.map(availability => ({
-                                    start: availability.start || '',
-                                    end: availability.end || '',
-
-                                }));
-
-                                if (mappedFridayBusinessHours.length <= 0) {
-                                    //means that the day is unavailable
-                                    setIsFridayChecked(true);
-                                } else if (mappedSundayBusinessHours.length <= 0) {
-                                    setIsSundayChecked(true);
-                                } else if (mappedMondayBusinessHours.length <= 0) {
-                                    setIsMondayChecked(true);
-                                } else if (mappedTuesdayBusinessHours.length <= 0) {
-                                    setIsTuesdayChecked(true);
-                                } else if (mappedWednesdayBusinessHours.length <= 0) {
-                                    setIsWednesdayChecked(true);
-                                } else if (mappedThursdayBusinessHours.length <= 0) {
-                                    setIsThursdayChecked(true);
-                                } else if (mappedSaturdayBusinessHours.length <= 0) {
-                                    setIsSaturdayChecked(true);
-                                }
-
-                                if (!isSundayChecked) {
-                                    setSundayHoursFormData(mappedSundayBusinessHours);
-                                    setSundayHoursCopyFormData(mappedSundayBusinessHours);
-                                }
-
-                                if (!isMondayChecked) {
-                                    setMondayHoursFormData(mappedMondayBusinessHours);
-                                    setMondayHoursCopyFormData(mappedMondayBusinessHours);
-                                }
-
-                                if (!isTuesdayChecked) {
-                                    setTuesdayHoursFormData(mappedTuesdayBusinessHours);
-                                    setTuesdayHoursCopyFormData(mappedTuesdayBusinessHours);
-                                }
-
-                                if (!isWednesdayChecked) {
-                                    setWednesdayHoursFormData(mappedWednesdayBusinessHours);
-                                    setWednesdayHoursCopyFormData(mappedWednesdayBusinessHours);
-                                }
-
-                                if (!isThursdayChecked) {
-                                    setThursdayHoursFormData(mappedThursdayBusinessHours);
-                                    setThursdayHoursCopyFormData(mappedThursdayBusinessHours);
-                                }
-
-                                if (!isFridayChecked) {
-                                    setFridayHoursFormData(mappedFridayBusinessHours);
-                                    setFridayHoursCopyFormData(mappedFridayBusinessHours);
-                                }
-
-                                if (!isSaturdayChecked) {
-                                    setSaturdayHoursFormData(mappedSaturdayBusinessHours);
-                                    setSaturdayHoursCopyFormData(mappedSaturdayBusinessHours);
-                                }
-
-                            } else {
-                                setSundayHoursFormData([initialBusinessHours]);
-                            }
-
-                        }
-                        setBusinessHoursFormData([initialBusinessHours]);
-                    } else {
-                        toast.error('There has been an error getting the appointment, please try again!');
-                    }
-                }
-            })
-            .catch((error) => {
-                toast.error('There has been an error getting the appointment, please try again!');
-            });
-
-    }, [scheduleReloadCount]);
-
     return (
-        <LayoutSellerCenter>
-            <section>
-                <Container fluid>
-                    <Row>
-                        <Col lg={2} className='p-0'>
-                            <Sidebar />
-                        </Col>
-
-                        <Col lg={10} className='mx-auto py-5 padding-right-admin max-width-column'>
-                            <Row>
-                                <Col lg={12}>
-                                    <Row className="pb-4">
-                                        <Col lg={11}>
-                                        </Col>
-
-                                        <Col lg={1} className='text-right'>
-                                            <GoBack fallBack="/" />
-                                        </Col>
-
-                                        <Col md={6} className='d-flex justify-content-left align-items-center'>
-                                            <h3 className="fs-30 fw-600 text-black mb-0">Calendar</h3>
-                                        </Col>
-
-                                        <Col md={6} className="text-right">
-                                            <button className="btn-primary btn" onClick={handleShowDesignerBusinessHoursModal}>Availability</button>
-                                        </Col>
-                                    </Row>
-                                    {noAvailableHours ?
-                                        <Row>
-                                            <Col lg="12">
-                                                <div role="alert" className="fade alert alert-warning show">You haven't set your schedule yet. To enable appointments, please update your availability settings now!</div>
-                                            </Col>
-                                        </Row>
-                                        :
-                                        null
-                                    }
-                                    <div className="calendar-container">
-                                        <MyCalendar
-                                            calendarAppointment={calendarAppointment} designerId={designerId}
-                                        />
-                                    </div>
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
-                </Container>
-            </section>
-
-            <Modal
-                show={designerBusinessHoursModalShow}
-                onHide={() => setDesignerBusinessHoursModalShow(false)}
-                id="business-hours-modal"
-            >
-                <Modal.Header closeButton className='pb-0'>
-                    <Modal.Title className='rufina-family fs-22'>Business Hours</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Card>
-                        <Card.Body>
+        <section>
+            <Container className='py-5'>
                             <Row className="h-100">
-                                <Col lg="12" className="">
+                                <Col lg="12">
 
                                     <Row>
                                         <Col lg="2">
@@ -1348,36 +842,9 @@ const Calendar = (props) => {
                                     </Row>
                                 </Col>
                             </Row>
-                        </Card.Body>
-                    </Card>
-                </Modal.Body>
-                <Modal.Footer className='border-none pt-0'>
-                    <button
-                        className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
-                        type="button"
-                        onClick={() => setDesignerBusinessHoursModalShow(false)}
-                    >
-                        Cancel
-                    </button>
-
-                    <button
-                        className="btn btn-primary btn-style"
-                        variant="primary"
-                        onClick={() => {
-                            if (!times.length) {
-                                BusinessHoursSubmitPost()
-                            } else {
-                                BusinessHoursSubmitPut()
-                            }
-
-                        }}
-                    >
-                        Save
-                    </button>
-                </Modal.Footer>
-            </Modal>
-        </LayoutSellerCenter >
+            </Container>
+        </section>
     );
 };
 
-export default Calendar;
+export default SetAvailability;

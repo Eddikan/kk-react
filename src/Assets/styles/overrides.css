@@ -2066,7 +2066,6 @@ svg.gr-status-icon {
 }
 
 .cta-card-color {
-    /* background-color: #002e4ca1 !important; */
     border: 2px solid #002e4c !important;
     color: #000000 !important;
 }
@@ -2083,6 +2082,62 @@ svg.gr-status-icon {
     border: 1px solid #000000 !important;
 }
 
-.highlighted-date {
-    background-color: #912121; /* Change this to the highlight color you prefer */
+.thank-you-profile {
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner-completion {
+    background: #551755;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.banner-set-up {
+    background: #cea835;
+    height: 34px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.click-to-continue {
+    color: #551755;
+}
+
+.btn-view-profile {
+    font-size: 15px;
+    padding: 10px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 1px;
+    color: var(--black) !important;
+    background-color: var(--white) !important;
+    border-color: var(--black) !important;
+}
+
+.btn-view-profile:hover {
+    color: var(--white) !important;
+    background-color: var(--black) !important;
+    border-color: var(--black) !important;
+}
+
+.btn-set-up {
+    font-size: 15px;
+    padding: 10px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 1px;
+    color: var(--white) !important;
+    background-color: var(--black) !important;
+    border-color: var(--black) !important;
+}
+
+.btn-set-up:hover {
+    color: var(--black) !important;
+    background-color: var(--white) !important;
+    border-color: var(--black) !important;
 }
