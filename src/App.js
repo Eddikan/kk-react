@@ -128,6 +128,11 @@ const UserMeasurementGuide = lazy(() =>
   import("./Pages/User/MeasurementGuide")
 );
 
+const ThankYou = lazy(() => import("./Pages/User/ThankYou"));
+const SetAvailability = lazy(() => import("./Pages/User/SetAvailability"));
+
+const ProfileCompleteness = lazy(() => import("./Pages/User/ProfileCompleteness"));
+
 // Wishlist
 const Wishlists = lazy(() => import("./Pages/Wishlists"));
 
@@ -203,6 +208,10 @@ const App = () => {
           <Route path="/forms" exact element={<Forms />} />
           <Route path="/customer" exact element={<CustomerPage />} />
           <Route path="/:user/profile" exact element={<UserProfile />} />
+          <Route path="/user/complete-profile" exact element={<ProfileCompleteness />} />
+          <Route path="/thankyou" exact element={<ThankYou />} />
+          <Route path="/set-availability" exact element={<SetAvailability />} />
+
           <Route
             path="/:user/profile/edit"
             exact
