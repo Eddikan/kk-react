@@ -162,3 +162,7 @@ button.rbc-button-link {
     padding-left: 12px;
     padding-right: 12px;
 }
+
+.highlighted-date {
+    background-color: #912121; /* Change this to the highlight color you prefer */
+}

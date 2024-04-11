@@ -484,7 +484,7 @@ const Header = () => {
                             <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-2' color='#000000' />
                               <span className='text-black'>Profile</span>
                             </Link>
-                          } */}
+                          } */} 
 
                           {userRole !== 'Admin' &&
                            <Row className='mb-3'>

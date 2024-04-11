@@ -7,19 +7,17 @@ import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import Logo from 'Assets/images/kouture-konect-logo.png';
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { GoBell, GoHeart } from "react-icons/go";
-import { BsEnvelope } from "react-icons/bs";
-import { BsCartCheck } from "react-icons/bs";
+import { BsEnvelope,BsArrowLeft,BsCartCheck } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import { IoCloseOutline, IoCalendarClearOutline } from "react-icons/io5";
 import UserPlaceholder from 'Assets/images/user.png';
-import NewOrder from 'Assets/images/new-order-icon.png';
 import NewAppointment from 'Assets/images/new-appointment-icon.png';
 import { Link } from 'react-router-dom';
 import { RxDashboard } from "react-icons/rx";
 import toast from 'react-hot-toast';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { PiNotepadLight, PiScissorsLight } from "react-icons/pi";
+import { PiNotepadLight } from "react-icons/pi";
 import User from 'Assets/images/user.png';
 import { GoAlertFill } from 'react-icons/go';
 import 'Assets/styles/HeaderSeller/style.css'
@@ -199,7 +197,7 @@ const HeaderSeller = () => {
                     setNotificationsLoading(false);
                 });
         }
-    }, [reloadCount]);
+    }, [reloadCount]); 
 
     return (
         <>
@@ -314,11 +312,32 @@ const HeaderSeller = () => {
                                                     }
                                                     {userMenuOpen && (
                                                         <div className="action-box user-menu-seller-survey">
-                                                            {userRole !== 'Admin' &&
+                                                            {/* {userRole !== 'Admin' &&
                                                                 <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-2' color='#000000' />
                                                                     <span className='text-black'>Profile</span>
                                                                 </Link>
-                                                            }
+                                                            } */}
+
+                                                    {userRole !== 'Admin' &&
+                                                        <Row className='mb-3'>
+                                                            <Col lg="3">
+                                                                <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
+                                                                    {userImage ?
+                                                                        <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                                                        :
+                                                                        <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
+                                                                    }
+                                                                </Link>
+                                                            </Col>
+
+                                                            <Col lg="9">
+                                                                <div className='fw-600'>Hi,&nbsp;{user.first_name}!</div>
+                                                                <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
+                                                                <div><BsArrowLeft className="me-1" size={10}/><span className='fs-12'>See your profile</span></div>
+                                                                </Link>
+                                                            </Col>
+                                                        </Row>
+                                                    }
 
                                                             {userRole !== 'Admin' &&
                                                                 <Link to={`/wishlist`} className="mb-3 text-decoration-none d-block"><GoHeart className='me-2' color='#000000' />

@@ -15,6 +15,7 @@ import Loading from 'Assets/images/loading.gif'
 import GetUserData from 'Utils/GetUserData';
 import GoBack from 'Components/Shared/GoBack';
 import { useCookies } from 'react-cookie';
+import { HiOutlineBuildingStorefront } from "react-icons/hi2";
 import toast from 'react-hot-toast';
 import { GoArrowUpRight } from "react-icons/go";
 import AdminPortfolio from 'Components/Shared/Admin/AdminPortfolioGrid';
@@ -180,7 +181,7 @@ const Profile = () => {
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
 
-        } else if (tab === "portfolio") {
+        } else if (tab == "portfolio") {
             setPortfolioShow(true);
             setAboutShow(false);
             setFabricShow(false);
@@ -188,7 +189,7 @@ const Profile = () => {
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
 
-        } else if (tab === "fabric") {
+        } else if (tab == "fabric") {
             setFabricShow(true);
             setPortfolioShow(false);
             setAboutShow(false);
@@ -196,7 +197,7 @@ const Profile = () => {
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
 
-        } else if (tab === "process") {
+        } else if (tab == "process") {
             setProcessShow(true);
             setPortfolioShow(false);
             setAboutShow(false);
@@ -204,7 +205,7 @@ const Profile = () => {
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
 
-        } else if (tab === "calendar") {
+        } else if (tab == "calendar") {
             setLimitedDesignShow(true);
             setProcessShow(false);
             setPortfolioShow(false);
@@ -257,7 +258,7 @@ const Profile = () => {
                 setLimitedDesignShow(false);
                 setMyCalendarShow(false);
 
-            } else if (activeProfileTab === "portfolio") {
+            } else if (activeProfileTab == "portfolio") {
                 setPortfolioShow(true);
                 setAboutShow(false);
                 setFabricShow(false);
@@ -265,7 +266,7 @@ const Profile = () => {
                 setLimitedDesignShow(false);
                 setMyCalendarShow(false);
 
-            } else if (activeProfileTab === "fabric") {
+            } else if (activeProfileTab == "fabric") {
                 setFabricShow(true);
                 setPortfolioShow(false);
                 setAboutShow(false);
@@ -273,7 +274,7 @@ const Profile = () => {
                 setLimitedDesignShow(false);
                 setMyCalendarShow(false);
 
-            } else if (activeProfileTab === "process") {
+            } else if (activeProfileTab == "process") {
                 setProcessShow(true);
                 setPortfolioShow(false);
                 setAboutShow(false);
@@ -281,7 +282,7 @@ const Profile = () => {
                 setLimitedDesignShow(false);
                 setMyCalendarShow(false);
 
-            } else if (activeProfileTab === "calendar") {
+            } else if (activeProfileTab == "calendar") {
                 setLimitedDesignShow(true);
                 setProcessShow(false);
                 setPortfolioShow(false);
@@ -352,18 +353,22 @@ const Profile = () => {
                                             }
                                         </div>
 
+                                        <div className='mb-3'>
+                                            <Button href="/user/profile/edit" type='button' className='btn btn-primary'>
+                                                <span>Complete your profile</span> 
+                                            </Button>
+
+                                            <span><HiOutlineBuildingStorefront size={30} className='me-2'/> 
+                                                <span className='fw-500'>Set up your shop</span>
+                                            </span>
+                                        </div>
+
                                         <div>
                                             <div className="position-relative">
                                                 <label className="progress-bar-value" htmlFor="progress-bar"></label>
                                                 <progress id="progress-bar" value="20" max="100"></progress>
                                                 <div className='fs-12 mb-3'>Your profile completion is at 20%</div>
                                             </div>
-                                        </div>
-
-                                        <div>
-                                            <Button href="/user/profile/edit" type='button' className='btn btn-primary'>
-                                                <span>Complete your profile</span> 
-                                            </Button>
                                         </div>
                                     </div>
                                 </div>
@@ -558,18 +563,24 @@ const Profile = () => {
                             null
                         }
 
-                    {user.is_seller == 1 && user.is_designer == 1 && 
-                        <>
-                        {portfolioShow ?
-                            <AdminPortfolio currentUser={currentUser} reloadCount={reloadCount} />
-                            :
-                            null
+                        {user.is_designer == 1 && 
+                            <>
+                                {portfolioShow ?
+                                    <AdminPortfolio currentUser={currentUser} reloadCount={reloadCount} />
+                                    :
+                                    null
+                                }
+                            </>
                         }
                       
-                        {fabricShow ?
-                            <AdminFabrics currentUser={currentUser} reloadCount={reloadCount} />
-                            :
-                            null
+                        {user.is_seller == 1 && 
+                            <>
+                                {fabricShow ?
+                                    <AdminFabrics currentUser={currentUser} reloadCount={reloadCount} />
+                                    :
+                                    null
+                                }
+                          </>
                         }
 
                         {processShow ?
@@ -594,8 +605,6 @@ const Profile = () => {
                             :
                             null
                         }
-                        </>
-                    }
 
                     </Container>
                 </section >

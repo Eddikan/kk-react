@@ -42,6 +42,9 @@ const intitialConsultationData = {
 
 const localizer = momentLocalizer(moment)
 
+
+
+
 const ConsultationCalendar = ({ toggleEvent }) => {
     const calendarRef = useRef(null);
     const navigate = useNavigate();
@@ -72,7 +75,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const { designerId } = useParams();
     const { appointmentscheduleId } = useParams();
 
-    const [events, setEvents] = useState([]);
+    const [events ,setEvents ] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedDate12, setSelectedDate12] = useState("");
@@ -91,12 +94,9 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const [modalHeading, setModalHeading] = useState();
     const [scheduleLoading, setScheduleLoading] = useState(false);
 
-    const [appointments, setAppointments] = useState([]);
     const [appointmentLoading, setAppointmentLoading] = useState(true);
 
     const [isScheduled, setIsScheduled] = useState(false);
-
-    console.log("appointmentscheduleId", appointmentscheduleId);
 
     const postSetAppointment = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/set/appointment?user_id=' + currentUser, data);
@@ -110,21 +110,30 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId + '/availability?date=' + e);
     };
 
-    const getAppointments = async () => {
+    const getAppointment = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT +  'designer/appointment/' + appointmentscheduleId);
     };
 
-    const convertToDateOnly = (selectedDate) => {
-        const resultDate = new Date(selectedDate);
+    // const convertToDateOnly = (selectedDate) => {
+    //     const resultDate = new Date(selectedDate);
 
-        const year = resultDate.getFullYear();
-        const month = String(resultDate.getMonth() + 1).padStart(2, '0');
-        const day = String(resultDate.getDate()).padStart(2, '0');
+    //     const year = resultDate.getFullYear();
+    //     const month = String(resultDate.getMonth() + 1).padStart(2, '0');
+    //     const day = String(resultDate.getDate()).padStart(2, '0');
 
-        const dateOnly = `${year}-${month}-${day}`;
+    //     const dateOnly = `${year}-${month}-${day}`;
 
-        return dateOnly;
-    };
+    //     return dateOnly;
+    // };
+
+
+    const formatDate = (selectedDate) => {
+        const date = new Date(selectedDate);
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('en-US', options);
+      }
+
+
 
     const convertHoursToDatetime = (time) => {
         const [hours, minutes, period] = time.split(/[: ]/);
@@ -203,6 +212,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     }
 
     const handleCalendarTimeslotClick = ({ start, end }) => {
+        console.log(start);
         setScheduleLoading(true);
         const isPast = moment(start).isBefore(moment(), 'day');
 
@@ -219,6 +229,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
         const formattedDate = new Intl.DateTimeFormat('en-US', options).format(start);
+        console.log(formattedDate);
         setSelectedDate(formattedDate);
         const timeDifference = end - start;
 
@@ -261,9 +272,12 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         });
     };
 
+    const [selectedTime, setSelectedTime] = useState('');
+
     const handleTimeslotClick = (data) => {
         setSelectedTimeSlot(convert12to24(data.time));
         setClickedTimeslotButton(data.index);
+        setSelectedTime(data.time);
     }
 
     const handleTimeslotNextClick = () => {
@@ -275,7 +289,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
             consultation_date_time: convertHoursToDatetime(selectedTimeSlot),
             consultation_hour_end: addOneHour(selectedTimeSlot),
             consultation_hour_start: selectedTimeSlot,
-            consultation_date: convertToDateOnly(selectedDate),
+            consultation_date: formatDate(selectedDate),
             timezone: currentTimezone,
         });
         setCurrentStep(2);
@@ -301,7 +315,6 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                 if (status === "Success") {
                     setFormStatus('standby');
                     setReloadCount(reloadCount + 1);
-                    // setYouAreScheduleShow(!youAreScheduleShow);
                     setAppointmentFormData(initialAppointments);
                     toast.success('Consultation added successfully!');
 
@@ -334,7 +347,6 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                 if (status === "Success") {
                     setFormStatus('standby');
                     setReloadCount(reloadCount + 1);
-                    // setYouAreScheduleShow(!youAreScheduleShow);
                     setAppointmentFormData(initialAppointments);
                     toast.success('Consultation updated successfully!');
                    
@@ -374,26 +386,34 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         }
     }, [calendarRef.current]);
 
-    // useEffect(() => {
-    //     if (currentUser) {
-    //         getAppointments()
-    //             .then((response) => {
-    //                 setAppointmentLoading(false);
-    //                 const selectedAppointments = response.data.data;
-    //                 if (selectedAppointments) {
-    //                     setAppointments(selectedAppointments);
-    //                 } else {
-    //                     toast.error('There has been an error getting the appointments, please try again!');
-    //                     setAppointmentLoading(false);
-    //                 }
-    //             })
-    //             .catch((error) => {
-    //                 toast.error('There has been an error getting the appointments, please try again!');
-    //                 setAppointmentLoading(false);
-    //             });
-    //     }
-    // },
-    //     [reloadCount]);
+    useEffect(() => {
+        if (currentUser && appointmentscheduleId != 0) {
+            getAppointment()
+                .then((response) => {
+                    setAppointmentLoading(false);
+                    const selectedAppointment = response.data.data;
+                    if (selectedAppointment) {
+                        setConsultationFormData(selectedAppointment);
+
+                        // const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                        // const formattedDate = new Intl.DateTimeFormat('en-US', options).format(selectedAppointment.consultation_date);
+                        // setSelectedDate(formattedDate);
+
+                        setSelectedDate(formatDate(selectedAppointment.consultation_date));
+
+                        setSelectedTime(convertTo12HourFormat(selectedAppointment.consultation_hour_start));
+                    } else {
+                        toast.error('There has been an error getting the appointments, please try again!');
+                        setAppointmentLoading(false);
+                    }
+                })
+                .catch((error) => {
+                    toast.error('There has been an error getting the appointments, please try again!');
+                    setAppointmentLoading(false);
+                });
+        }
+    },
+        [reloadCount]);
 
     return (
         <>
@@ -404,7 +424,9 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
                         {selectedDate != "" &&
                             <>
-                                <p><FiCalendar size={20} color={'#CEA835'} /><span className="fw-500 current-date">{selectedDate}</span></p>
+                                <p><FiCalendar size={20} color={'#CEA835'} className='mb-1' />
+                                    <span className="fw-500 current-date">{selectedDate}</span>
+                                </p>
                             </>
                         }
                         {/* {formattedSelectedDate != "" &&
@@ -414,17 +436,23 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                         } */}
                         {consultationFormData.timezone != "" &&
                             <>
-                                <p><LuGlobe2 size={20} color={'#CEA835'} /><span className="fw-500 current-date">{consultationFormData.timezone}</span></p>
+                                <p><LuGlobe2 size={20} color={'#CEA835'} className='mb-1'/>
+                                    <span className="fw-500 current-date">{consultationFormData.timezone}</span>
+                                </p>
                             </>
                         }
                         {consultationFormData.first_name != "" &&
                             <>
-                                <p><FaRegUser size={20} color={'#CEA835'} /><span className="fw-500 current-date">{consultationFormData.first_name} {consultationFormData.last_name}</span></p>
+                                <p><FaRegUser size={20} color={'#CEA835'} className='mb-1'/>
+                                    <span className="fw-500 current-date">{consultationFormData.first_name} {consultationFormData.last_name}</span>
+                                </p>
                             </>
                         }
                         {consultationFormData.email != "" &&
                             <>
-                                <p><MdOutlineEmail size={20} color={'#CEA835'} /><span className="fw-500 current-date">{consultationFormData.email}</span></p>
+                                <p><MdOutlineEmail size={20} color={'#CEA835'} className='mb-1'/>
+                                    <span className="fw-500 current-date">{consultationFormData.email}</span>
+                                </p>
                             </>
                         }
 
@@ -469,13 +497,39 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                                         {selectedHoursArray.map((time, index) => (
                                                             <div className="timeslots-column" key={index}>
                                                                 <div>
-                                                                    <button key={index} className={clickedTimeslotButton == index ? "btn btn-primary timeslot-btn" : "btn btn-primary"} onClick={() => handleTimeslotClick({ time, index })}>{time}</button>
+                                                                    <button 
+                                                                        key={index} 
+                                                                        className={clickedTimeslotButton == index || selectedTime === time ? "btn btn-primary timeslot-btn" : "btn btn-primary"} 
+                                                                        onClick={() => handleTimeslotClick({ time, index })}
+                                                                        >
+                                                                        {time}
+                                                                    </button>
                                                                 </div>
+
                                                                 <div>
-                                                                    {clickedTimeslotButton == index && (
-                                                                        <button key={index} className="btn btn-primary timeslot-btn" onClick={() => handleTimeslotNextClick()}>Next</button>
+                                                                    {(clickedTimeslotButton === index ? "btn btn-primary timeslot-btn" : "btn btn-primary" || selectedTime === time) && (
+                                                                        <button 
+                                                                            key={index} 
+                                                                            className="btn btn-primary timeslot-btn"
+                                                                            onClick={() => handleTimeslotNextClick()}
+                                                                            autoFocus={selectedTime === time} 
+                                                                        >
+                                                                            Next
+                                                                        </button>
                                                                     )}
                                                                 </div>
+                                                                
+                                                                {/* <div>
+                                                                    {(clickedTimeslotButton == index || selectedTime === time) && (
+                                                                        <button 
+                                                                            key={index} 
+                                                                            className="btn btn-primary timeslot-btn" 
+                                                                            onClick={() => handleTimeslotNextClick()}
+                                                                            >
+                                                                            Next
+                                                                        </button>
+                                                                    )}
+                                                                </div> */}
                                                             </div>
 
                                                         ))}
@@ -512,7 +566,13 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
                         {/* temporary, should be inside the form */}
                         <div className="send-btn-container">
-                            <button className="btn btn-primary bg-transparent text-black" onClick={() => { setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate(''); setSelectedHoursArray([]); }}>Cancel</button>
+                            <button 
+                                className="btn btn-primary bg-transparent text-black" 
+                                onClick={() => { setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate(''); setSelectedHoursArray([]); }}
+                                >
+                                Cancel
+                            </button>
+
                             {/* {formStatus != "loading" ?
                                 <button className="btn btn-primary" onClick={() => addAppointmentSubmit("You are Scheduled!")}>Schedule Now</button>
 
@@ -548,7 +608,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                 <>
                                 {formStatus == "loading" ?
                                     <>
-                                        <button className="btn btn-primary">
+                                        <button className="btn btn-primary disabled">
                                             Updating Now
                                         </button>
                                     </>

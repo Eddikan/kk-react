@@ -24,6 +24,7 @@ const AdminPortfolioGrid = (props) => {
     const navigate = useNavigate();
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [portfolio, setPortfolio] = useState([]);
+    const [portfolioDesigner, setPortfolioDesigner] = useState([]);
     const [portfolioLoading, setPortfolioLoading] = useState(true);
     const [portfolioDraftLoading, setPortfolioDraftLoading] = useState(false);
     const [portfolioPublishLoading, setPortfolioPublishLoading] = useState(false);
@@ -85,6 +86,7 @@ const AdminPortfolioGrid = (props) => {
             const portfolioData = await GetUserPortfolioData(e);
             if (portfolioData) {
                 setPortfolio(portfolioData);
+                setPortfolioDesigner(portfolioData.user)
                 setPortfolioLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -284,12 +286,12 @@ const AdminPortfolioGrid = (props) => {
                                             </Col>
                                         )
                                     })}
-                                    {/* <Col className="portfolio-grid mb-3" xs="4" md="2">
+                                    <Col className="portfolio-grid mb-3" xs="4" md="2">
                                         <div onClick={addNewPortfolio} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
                                             <GoPlus color="#a4a4a4" size="150px" className="mt-3" />
                                             <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
                                         </div>
-                                    </Col> */}
+                                    </Col>
                                 </Row>
                             </>
                             :
@@ -308,9 +310,15 @@ const AdminPortfolioGrid = (props) => {
                                         <div className="text-center">
                                             <p className="text-center mb-2 fs-20">No portfolio found.</p>
                                             <p className="text-center mb-3">Showcase your best works, enrich your portfolio, and join a flourishing community.</p>
-                                            {/* <Link to="/user/center/design/add">
-                                                <Button className="btn btn-primary">Upload Portfolio</Button>
-                                            </Link> */}
+                                            
+                                        {/* {portfolioDesigner.is_designer == 1 && 
+                                            <> */}
+                                                <Link to="/user/center/design/add">
+                                                    <Button className="btn btn-primary">Upload Portfolio</Button>
+                                                </Link>
+                                            {/* </>
+                                        } */}
+
                                         </div>
                                     </Card.Body>
                                 </Card>
