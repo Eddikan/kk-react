@@ -266,18 +266,17 @@ const Header = () => {
   return (
     <>
 
-      <div className='banner-completion text-center'>
+      {/* <div className='banner-completion text-center'>
           <span className='text-white'>Your profile completion is at 20%. 
           <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span></span>
       </div>
 
-      <div className='banner-set-up text-center'>
+      <div className='bg-dark py-2 text-center'>
           <span className='text-white cursor-pointer'>
-            <HiOutlineBuildingStorefront size={20} className='me-2' color="#551755"/> 
+            <HiOutlineBuildingStorefront size={20} className='me-2' color="#CEA835"/> 
             Set up your shop 
-            <FaArrowRightLong className='ms-2'/>
           </span>
-      </div>
+      </div> */}
 
       <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
         <Container className="position-relative">

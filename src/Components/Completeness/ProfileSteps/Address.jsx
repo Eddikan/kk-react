@@ -23,14 +23,14 @@ const AddressStep = ({ user, currentUser, reload, token }) => {
     async function submitProfile(e) {
         e.preventDefault();
         setFormStatus(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...profileFormData, profile_completeness: 50}).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...profileFormData, profile_completeness: 50 }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
                 const userData = data.user;
                 const user_details = { currentUser: userData.id, id: userData.id, first_name: userData.first_name, last_name: userData.last_name, image: userData.image, email_verified_at: userData.email_verified_at }
                 setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-                toast.success('Personal information added successfully!');
+                toast.success('Address details updated successfully!');
                 reload();
             } else {
                 const errors = response.data.errors;

@@ -17,6 +17,10 @@ import axios from 'axios';
 import Countries from 'Utils/Countries';
 import AboutStep from 'Components/Completeness/ProfileSteps/About';
 import AddressStep from 'Components/Completeness/ProfileSteps/Address';
+import ContactStep from 'Components/Completeness/ProfileSteps/Contact';
+import SocialMediaStep from 'Components/Completeness/ProfileSteps/SocialMedia';
+import ThankyouStep from 'Components/Completeness/ProfileSteps/Thankyou';
+import ProfileProgress from 'Components/Completeness/Wizards/ProfileCompletenessProgress';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -206,7 +210,7 @@ const ProfileCompleteness = () => {
                 :
                 <section id='profile' className='py-5 px-2'>
                     <Container>
-                        <Row>
+                        {/* <Row>
                             <Col lg="12" className='mb-3'>
                                 <div className='d-flex column-gap-20 justify-content-between'>
                                     <div className="d-flex column-gap-20">
@@ -242,226 +246,70 @@ const ProfileCompleteness = () => {
                                     </div>
                                 </div>
                             </Col>
+                        </Row> */}
+                        <Row className='d-flex'>
+                            <Col md="3" className={`flex-grow-1 flex-shrink-0 ${completeness == 100 && 'd-none'}`}>
+                                <Card className='h-100'>
+                                    <Card.Body>
+                                        <ProfileProgress 
+                                            completeness={completeness}
+                                        />
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                            <Col md={`${completeness != 100 ? '9' : '12'}`} className='flex-grow-1 flex-shrink-0'>
+                                <Card className='h-100'>
+                                    <Card.Body>
+                                        {completeness == 0 ?
+                                            <>
+                                                <AboutStep
+                                                    currentUser={currentUser}
+                                                    token={token}
+                                                    user={profileFormData}
+                                                    reload={() => setReloadCount(reloadCount + 1)}
+                                                />
+                                            </>
+                                        :completeness == 25 ?
+                                            <>
+                                                <AddressStep
+                                                    currentUser={currentUser}
+                                                    token={token}
+                                                    user={profileFormData}
+                                                    reload={() => setReloadCount(reloadCount + 1)}
+                                                />
+                                            </>
+                                        :completeness == 50 ?
+                                            <>
+                                                <ContactStep
+                                                    currentUser={currentUser}
+                                                    token={token}
+                                                    user={profileFormData}
+                                                    reload={() => setReloadCount(reloadCount + 1)}
+                                                />
+                                            </>
+                                        :completeness == 75 ?
+                                            <>
+                                                <SocialMediaStep
+                                                    currentUser={currentUser}
+                                                    token={token}
+                                                    user={profileFormData}
+                                                    reload={() => setReloadCount(reloadCount + 1)}
+                                                />
+                                            </>
+                                        :
+                                            <>
+                                                <ThankyouStep
+                                                    currentUser={currentUser}
+                                                    token={token}
+                                                    user={profileFormData}
+                                                    reload={() => setReloadCount(reloadCount + 1)}
+                                                />
+                                            </>
+                                        }
+                                    </Card.Body>
+                                </Card>
+                            </Col>
                         </Row>
-                        <Form onSubmit={submitProfile}>
-                            <Row className='d-flex'>
-                                <Col md="3" className='flex-grow-1 flex-shrink-0'>
-                                    <Card className='h-100'>
-                                        <Card.Body>
-                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${profileShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("profile"); }}>About</p>
-                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${addressShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("address"); }}>Address</p>
-                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${contactShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("contact") }}>Contact</p>
-                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${socialMediaShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("social_media") }}>Social Media</p>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                                <Col md="9" className='flex-grow-1 flex-shrink-0'>
-                                    <Card className='h-100'>
-                                        <Card.Body>
-                                            {completeness == 0 ?
-                                                <>
-                                                    <AboutStep
-                                                        currentUser={currentUser}
-                                                        token={token}
-                                                        user={profileFormData}
-                                                        reload={() => setReloadCount(reloadCount + 1)}
-                                                    />
-                                                </>
-                                            :completeness == 25 ?
-                                                <>
-                                                    <AddressStep
-                                                        currentUser={currentUser}
-                                                        token={token}
-                                                        user={profileFormData}
-                                                        reload={() => setReloadCount(reloadCount + 1)}
-                                                    />
-                                                </>
-                                            :
-                                                <>
-                                                
-                                                </>
-                                            }
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-
-                                <Col md="9" className='flex-grow-1 flex-shrink-0'>
-                                    <Card className='h-100'>
-                                        <Card.Body>
-                                            {addressShow ?
-                                                <div className='edit-address mt-3'>
-                                                    <Col lg="12">
-                                                        <Form.Group className='mb-4'>
-                                                            <Form.Label>Address Line 1</Form.Label>
-                                                            <FormControl type='text' name='address_line_1' value={profileFormData.address_line_1} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                        </Form.Group>
-                                                        <Form.Group className='mb-4'>
-                                                            <Form.Label>Address Line 2</Form.Label>
-                                                            <FormControl type='text' name='address_line_2' value={profileFormData.address_line_2} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                        </Form.Group>
-                                                    </Col>
-                                                    <Row>
-                                                        <Col lg="6">
-                                                            <Form.Group className='mb-4'>
-                                                                <Form.Label>City</Form.Label>
-                                                                <FormControl type='text' name='city' value={profileFormData.city} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                            </Form.Group>
-                                                        </Col>
-                                                        <Col lg="6">
-                                                            <Form.Group className='mb-4'>
-                                                                <Form.Label>State/Region</Form.Label>
-                                                                <FormControl type='text' name='province' value={profileFormData.province} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                            </Form.Group>
-                                                        </Col>
-                                                        <Col lg="6">
-                                                            <Form.Group className='mb-4'>
-                                                                <Form.Label>Postal Code</Form.Label>
-                                                                <FormControl type='number' name='postal_code' value={profileFormData.postal_code} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                            </Form.Group>
-                                                        </Col>
-                                                        <Col lg="6">
-                                                            <Form.Group className='mb-4'>
-                                                                <Form.Label>Country</Form.Label>
-                                                                {/* <FormControl type='text' name='country' value={profileFormData.country} className='mr-sm-2' onChange={handleChange} required placeholder='' /> */}
-                                                                <Form.Control as='select' name='country' value={profileFormData.country} className='mr-sm-2' onChange={handleChange} required>
-                                                                    <option value=''>Select Country</option>
-                                                                    {Countries.map((country, index) => (
-                                                                        <option key={country + "-" + index} value={country}>
-                                                                            {country}
-                                                                        </option>
-                                                                    ))}
-                                                                </Form.Control>
-                                                            </Form.Group>
-                                                        </Col>
-                                                        <div className="text-right mt-0 mb-2">
-                                                            {profileFormLoading ?
-                                                                <Button type='button' className="btn-save">Saving...</Button>
-                                                                :
-                                                                <Button type='submit' className="btn-save">Save</Button>
-                                                            }
-                                                        </div>
-                                                    </Row>
-                                                </div>
-                                                :
-                                                null
-                                            }
-                                            {contactShow ?
-                                                <div className="edit-contact mt-3">
-                                                    <Col lg="12">
-                                                        <Form.Group className='mb-4'>
-                                                            <Form.Label>Website</Form.Label>
-                                                            <FormControl type='text' name='website' value={profileFormData.website} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                        </Form.Group>
-                                                    </Col>
-                                                    <Row>
-                                                        <Col lg="6">
-                                                            <Form.Group className='mb-4'>
-                                                                <Form.Label>Phone Number</Form.Label>
-                                                                <FormControl type='number' name='phone_number' value={profileFormData.phone_number} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                            </Form.Group>
-                                                        </Col>
-                                                        <Col lg="6">
-                                                            <Form.Group className='mb-4'>
-                                                                <Form.Label>Secondary Email</Form.Label>
-                                                                <FormControl type='email' name='secondary_email_address' value={profileFormData.secondary_email_address} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                            </Form.Group>
-                                                        </Col>
-                                                    </Row>
-                                                    <div className="text-right mt-0 mb-2">
-                                                        {profileFormLoading ?
-                                                            <Button type='button' className="btn-save">Saving...</Button>
-                                                            :
-                                                            <Button type='submit' className="btn-save">Save</Button>
-                                                        }
-                                                    </div>
-                                                </div>
-                                                :
-                                                null
-                                            }
-
-                                            {socialMediaShow ?
-                                                <div className="edit-social-media mt-3">
-                                                    <Col lg="12">
-                                                        <Form.Group className='mb-4'>
-                                                            <Form.Label>Facebook</Form.Label>
-                                                            <FormControl type='text' name='facebook' value={profileFormData.facebook} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                        </Form.Group>
-                                                        <Form.Group className='mb-4'>
-                                                            <Form.Label>Twitter</Form.Label>
-                                                            <FormControl type='text' name='twitter' value={profileFormData.twitter} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                        </Form.Group>
-                                                        <Form.Group className='mb-4'>
-                                                            <Form.Label>Instagram</Form.Label>
-                                                            <FormControl type='text' name='instagram' value={profileFormData.instagram} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                        </Form.Group>
-                                                        <Form.Group className='mb-4'>
-                                                            <Form.Label>LinkedIn</Form.Label>
-                                                            <FormControl type='text' name='linkedin' value={profileFormData.linkedin} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                        </Form.Group>
-                                                        <Form.Group className='mb-4'>
-                                                            <Form.Label>Pinterest</Form.Label>
-                                                            <FormControl type='text' name='pinterest' value={profileFormData.pinterest} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                        </Form.Group>
-                                                        <Form.Group className='mb-4'>
-                                                            <Form.Label>Behance</Form.Label>
-                                                            <FormControl type='text' name='behance' value={profileFormData.behance} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                        </Form.Group>
-                                                        <Form.Group className='mb-4'>
-                                                            <Form.Label>YouTube</Form.Label>
-                                                            <FormControl type='text' name='youtube' value={profileFormData.youtube} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                        </Form.Group>
-                                                        <div className="text-right mt-4 mb-2">
-                                                            {profileFormLoading ?
-                                                                <Button type='button' className="btn-save">Saving...</Button>
-                                                                :
-                                                                <Button type='submit' className="btn-save">Save</Button>
-                                                            }
-                                                        </div>
-                                                    </Col>
-                                                </div>
-                                                :
-                                                null
-                                            }
-                                            {skillShow ?
-                                                <div className="edit-skills mt-3">
-                                                    <Form.Label className='mb-1 fs-18'>
-                                                        Areas of Specialization and Expertise
-                                                    </Form.Label>
-                                                    <Form.Label className="mb-3 mt-2 small">
-                                                        Specify your areas of expertise (e.g., bridal wear, ready-to-wear women’s clothing, casual, haute couture, sustainable fashion)
-                                                    </Form.Label>
-                                                    <Form.Group>
-                                                        <TagsInput
-                                                            value={areasOfSpecializationData}
-                                                            onChange={setAreaOfSpecializationData}
-                                                            name="areas_of_specialization"
-                                                            className="form-control"
-                                                            isEditOnRemove={true}
-                                                            onBlur={(e) => {
-                                                                const value = e.target.value;
-                                                                if (!areasOfSpecializationData.includes(value) && value !== "") {
-                                                                    setAreaOfSpecializationData([...areasOfSpecializationData, value]);
-                                                                    e.target.value = "";
-                                                                }
-                                                            }}
-                                                        />
-                                                    </Form.Group>
-                                                    <div className="text-right mt-4 mb-2">
-                                                        {profileFormLoading ?
-                                                            <Button type='button' className="btn-save">Saving...</Button>
-                                                            :
-                                                            <Button type='button' onClick={submitDesigner} className="btn-save">Save</Button>
-                                                        }
-                                                    </div>
-                                                </div>
-                                                :
-                                                null
-                                            }
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            </Row>
-                        </Form>
                     </Container>
                 </section>
             }

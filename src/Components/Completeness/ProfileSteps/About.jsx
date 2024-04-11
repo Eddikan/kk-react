@@ -42,7 +42,7 @@ const AboutStep = ({ user, currentUser, reload, token }) => {
                     const userData = data.user;
                     const user_details = { currentUser: userData.id, id: userData.id, first_name: userData.first_name, last_name: userData.last_name, image: userData.image, email_verified_at: userData.email_verified_at }
                     setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-                    toast.success('Personal information added successfully!');
+                    toast.success('Personal information updated successfully!');
                     reload();
                 } else {
                     const errors = response.data.errors;
