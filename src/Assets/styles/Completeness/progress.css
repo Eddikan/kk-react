@@ -1,3 +1,16 @@
+.wizard-cont {
+    width: 100%;
+    position: absolute;
+}
+
+.step-container {
+    margin-bottom: 35px !important;
+}
+
+.progress-circle {
+    z-index: 99 !important;
+}
+
 .progress-circle-inactive {
     width: 30px;
     height: 30px;
@@ -12,4 +25,56 @@
 
 .inactive span {
     color: #8F8F8F !important;
+}
+
+.progress-lines {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    position: absolute;
+    top: 0;
+}
+
+.progress-line {
+    margin-top: 13px;
+    width: 5px;
+    height: 53px;
+    max-height: 70px !important;
+    background-color: #8F8F8F;
+    position: relative;
+    z-index: 1;
+    margin-left: 12px;
+}
+
+/* ACTIVE */
+.progress-circle-active {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #CEA835;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #CEA835;
+    background-color: #ffffff;
+}
+
+.active .full-active-circle {
+    width: 20px;
+    height: 20px;
+    background-color: #CEA835;
+    border-radius: 50%;
+}
+
+/* CHECK */
+.progress-circle-check {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #CEA835;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    background-color: #CEA835;
 }

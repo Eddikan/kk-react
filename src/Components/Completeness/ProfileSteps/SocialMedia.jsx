@@ -83,7 +83,7 @@ const SocialMediaStep = ({ user, currentUser, reload, token }) => {
                         {formStatus ?
                             <Button type='button' className="btn-save">Saving...</Button>
                             :
-                            <Button type='button' onClick={submitProfile} className="btn-save">Save</Button>
+                            <Button type='button' onClick={submitProfile} className="btn-save">Finish</Button>
                         }
                     </div>
                 </Col>
