@@ -2145,3 +2145,19 @@ svg.gr-status-icon {
     background-color: var(--white) !important;
     border-color: var(--black) !important;
 }
+
+.btn-back, .btn-back:focus {
+    font-size: 15px !important;
+    padding: 10px 20px !important;
+    min-width: 150px !important;
+    border-radius: 5px !important;
+    border-width: 2px !important;
+    color: var(--black) !important;
+    background-color: transparent !important;
+    border-color: var(--black) !important;
+}
+.btn-back:hover {
+    color: #000000 !important;
+    border-color: #000000 !important;
+    background-color: transparent !important;
+}

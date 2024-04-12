@@ -41,6 +41,20 @@ const ContactStep = ({ user, currentUser, reload, token }) => {
         });
     }
 
+    async function submitBack(e) {
+        e.preventDefault();
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { profile_completeness: 25 }).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                reload();
+            } else {
+                const errors = response.data.errors;
+            }
+        }).catch(() => {
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    }
+
     useEffect(() => {
         if (user) {
             setProfileFormData(user);
@@ -71,6 +85,7 @@ const ContactStep = ({ user, currentUser, reload, token }) => {
                     </Col>
                 </Row>
                 <div className="text-right mt-0 mb-2">
+                    <Button type='button' onClick={submitBack} className="btn-back mx-2">Back</Button>
                     {formStatus ?
                         <Button type='button' className="btn-save">Saving...</Button>
                         :

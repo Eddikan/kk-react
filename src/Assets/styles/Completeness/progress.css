@@ -46,6 +46,10 @@
     margin-left: 12px;
 }
 
+.line-active {
+    background-color: #CEA835 !important; 
+}
+
 /* ACTIVE */
 .progress-circle-active {
     width: 30px;
