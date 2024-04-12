@@ -285,7 +285,7 @@ const Header = () => {
             <>
               <div className='bg-dark py-2 text-center'>
                 <span className='text-white cursor-pointer'>
-                  <Link to="/user/shop-manager" className='text-decoration-none text-white'>
+                  <Link to="/user/shop/setup" className='text-decoration-none text-white'>
                   <HiOutlineBuildingStorefront size={20} className='me-2' color="#CEA835"/> 
                   Set up your shop 
                   </Link>
@@ -303,7 +303,7 @@ const Header = () => {
             <Nav className="align-items-center column-gap-30">
               {/* <Nav.Link href="/find-designs">Find Designs</Nav.Link>
             <Nav.Link href="/inspirations">Inspirations</Nav.Link> */}
-              <Nav.Link href="/about-kouture-konect">About KK</Nav.Link>
+              <Nav.Link href="/about-kouture-konect">About Us</Nav.Link>
               <Nav.Link href="/how-it-works" >How It Works</Nav.Link>
               {/* <Nav.Link href="/blog">Blog</Nav.Link> */}
             </Nav>
@@ -409,16 +409,34 @@ const Header = () => {
                           {userRole !== 'Admin' &&
                           <>
 
-                             {(user.shop_completed == 1 && (userDetails.is_seller == 1 || userDetails.is_designer == 1)) &&
-                              <>
-                                <a href={`/user/center/calendar`}>
-                                  <div className="nav-link header-tooltip cursor-pointer">
-                                    <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                                    <BsShopWindow size={23} />
-                                  </div>
-                                </a>
-                              </>
-                             }
+                             
+                              {user.shop_completed != 1 ?
+                                <>
+                                  {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
+                                    <>
+                                      <a href={`/user/shop/setup`}>
+                                        <div className="nav-link header-tooltip cursor-pointer">
+                                          <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                                          <BsShopWindow size={23} />
+                                        </div>
+                                      </a>
+                                    </>
+                                  }
+                                </>
+                                :
+                                <>
+                                  {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
+                                    <>
+                                      <a href={`/user/center/calendar`}>
+                                        <div className="nav-link header-tooltip cursor-pointer">
+                                          <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                                          <BsShopWindow size={23} />
+                                        </div>
+                                      </a>
+                                    </>
+                                  }
+                                </>
+                              }
 
                             </>
                           }

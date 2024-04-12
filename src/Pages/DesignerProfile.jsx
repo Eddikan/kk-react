@@ -412,12 +412,14 @@ const DesignerProfile = () => {
                                 {/* {!isDesignerCurrentUser && (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${calendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("calendar"); }}>Calendar</span>
                                 )} */}
+
                                 {elements && elements.length > 0 ? (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${guidePreviewModalShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { toggleGuidePreviewModal(); }}>Measurement Guide</span>
                                 )
                                     :
                                     null
                                 }
+
                                
                                 <hr className='mt-2' />
                             </Col>

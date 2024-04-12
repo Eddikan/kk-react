@@ -13,6 +13,7 @@ import { IoCloseOutline, IoCalendarClearOutline } from "react-icons/io5";
 import UserPlaceholder from 'Assets/images/user.png';
 import NewAppointment from 'Assets/images/new-appointment-icon.png';
 import { Link } from 'react-router-dom';
+import { HiOutlineBuildingStorefront } from "react-icons/hi2";
 import { RxDashboard } from "react-icons/rx";
 import toast from 'react-hot-toast';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -38,8 +39,10 @@ const HeaderSeller = () => {
     const [notifications, setNotifications] = useState([]);
     const [notificationsLoading, setNotificationsLoading] = useState(true);
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole','isLoggedIn']);
+    const isLoggedIn = cookies.isLoggedIn;
     const [userType, setUserType] = useState('user');
+
     const userRole = cookies.userRole;
     const userRef = useRef(null);
     const bellRef = useRef(null);
@@ -173,6 +176,11 @@ const HeaderSeller = () => {
                     if (selectedUser) {
                         setUser(selectedUser);
                         setDesignerId(selectedUser.designer.id);
+
+                        if (selectedUser.shop_completed != 1) {
+                            navigate('/user/shop/setup');
+                            // toast.error('Please setup your shop!');
+                        }
                     } else {
                         toast.error('There has been an error getting the date, please try again!');
                     }
@@ -201,6 +209,35 @@ const HeaderSeller = () => {
 
     return (
         <>
+        {isLoggedIn && 
+        <>
+          {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 || user.profile_completeness == 75)  && 
+            <>
+              <div className='banner-completion text-center'>
+        
+                <span className='text-white'>Your profile completion is at 20%. 
+                  <Link to="/user/complete-profile" className='text-decoration-none'>
+                  <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span>
+                  </Link>
+                </span>
+              </div>
+            </>
+          }
+
+          {/* {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) && 
+            <>
+              <div className='bg-dark py-2 text-center'>
+                <span className='text-white cursor-pointer'>
+                  <Link to="/user/shop/setup" className='text-decoration-none text-white'>
+                  <HiOutlineBuildingStorefront size={20} className='me-2' color="#CEA835"/> 
+                  Set up your shop 
+                  </Link>
+                </span>
+            </div>
+            </>
+          } */}
+        </>
+      }
             <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
                 <Container fluid className='d-block'>
                     <Row>

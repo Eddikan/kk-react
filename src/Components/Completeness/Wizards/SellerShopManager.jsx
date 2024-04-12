@@ -4,11 +4,6 @@ import { FaCheck } from "react-icons/fa";
 
 const SellerShopManager = ({ progress }) => {
 
-    // const step1 = [0];
-    // const step2 = [0, 25];
-    // const step3 = [0, 25, 50];
-    // const step4 = [0, 25, 50, 75];
-
     return (
         <>
             <div className='wizard-cont'>
@@ -19,7 +14,7 @@ const SellerShopManager = ({ progress }) => {
                                 <div className='progress-circle progress-circle-active'>
                                     <div className='full-active-circle'></div>
                                 </div>
-                                <span className='ms-2 text-gold fw-700'>Upload your products</span>
+                                <span className='ms-2 fw-500'>Upload your products</span>
                             </div>
                         </>
                     :progress == 1 || progress == 2 || progress == 3 ?
@@ -28,14 +23,14 @@ const SellerShopManager = ({ progress }) => {
                                 <div className='progress-circle progress-circle-check'>
                                     <FaCheck color='#ffffff' />
                                 </div>
-                                <span className='ms-2 text-gold fw-700'>Upload your products</span>
+                                <span className='ms-2 fw-500'>Upload your products</span>
                             </div>
                         </>
                     :
                         <>
                             <div className='d-flex align-items-center inactive'>
                                 <div className='progress-circle progress-circle-inactive'>
-                                    <span className='fs-12 fw-700'>1</span>
+                                    <span className='fs-12 fw-500'>1</span>
                                 </div>
                                 <span className='ms-2'>Upload your products</span>
                             </div>
@@ -50,7 +45,7 @@ const SellerShopManager = ({ progress }) => {
                                 <div className='progress-circle progress-circle-active'>
                                     <div className='full-active-circle'></div>
                                 </div>
-                                <span className='ms-2 text-gold fw-700'>Build your measurement guide</span>
+                                <span className='ms-2 fw-500'>Build your measurement guide</span>
                             </div>
                         </>
                     :progress == 2 || progress == 2 || progress == 3?
@@ -59,14 +54,14 @@ const SellerShopManager = ({ progress }) => {
                                 <div className='progress-circle progress-circle-check'>
                                     <FaCheck color='#ffffff' />
                                 </div>
-                                <span className='ms-2 text-gold fw-700'>Build your measurement guide</span>
+                                <span className='ms-2 fw-500'>Build your measurement guide</span>
                             </div>
                         </>
                     :
                         <>
                             <div className='d-flex align-items-center inactive'>
                                 <div className='progress-circle progress-circle-inactive'>
-                                    <span className='fs-12 fw-700'>2</span>
+                                    <span className='fs-12 fw-500'>2</span>
                                 </div>
                                 <span className='ms-2'>Build your measurement guide</span>
                             </div>
@@ -75,22 +70,22 @@ const SellerShopManager = ({ progress }) => {
                 </div>
                 
                 <div className='progress-lines'>
-                    {progress == 1 || progress == 2 ?
+                    {progress == 2 || progress == 3 ?
                         <>
                             <div className='progress-line line-active'></div>
                         </>
                     :
                         <>
-                            <div className='progress-line'></div>
+                            <div className='progress-line '></div>
                         </>
                     }
-                    {progress == 2 || progress == 3 ?
+                    {progress == 3 ?
                         <>
-                            {/* <div className='progress-line line-active'></div> */}
+                           
                         </>
                     :
                         <>
-                            {/* <div className='progress-line'></div> */}
+                            
                         </>
                     }
                     
