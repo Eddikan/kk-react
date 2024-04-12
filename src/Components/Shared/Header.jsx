@@ -49,7 +49,7 @@ const Header = () => {
   const [userOrdersLoading, setUserOrdersLoading] = useState(true);
   const [cartItemCounts, setCartItemCounts] = useState([]);
 
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole']);
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn']);
   const [userType, setUserType] = useState('user');
   const userRef = useRef(null);
   const bellRef = useRef(null);
@@ -62,6 +62,7 @@ const Header = () => {
   const currentUser = cookies.currentUser;
   const userDetails = cookies.userDetails;
   const userRole = cookies.userRole;
+  const isLoggedIn = cookies.isLoggedIn;
   const signupType = cookies.signup_type;
   const completedQuestionnaire = cookies.completed_questionnaire;
 
@@ -265,23 +266,32 @@ const Header = () => {
 
   return (
     <>
+      {isLoggedIn && 
+        <>
+          {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 || user.profile_completeness == 75)  && 
+            <>
+              <div className='banner-completion text-center'>
+                <span className='text-white'>Your profile completion is at 20%. 
+                  <Link to="/user/complete-profile" className='text-decoration-none'>
+                  <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span>
+                  </Link>
+                </span>
+              </div>
+            </>
+          }
 
-      <div className='banner-completion text-center'>
-        
-          <span className='text-white'>Your profile completion is at 20%. 
-          <Link to="/user/complete-profile" className='text-decoration-none'>
-          <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span>
-          </Link>
-          </span>
-      </div>
-
-      <div className='bg-dark py-2 text-center'>
-          <span className='text-white cursor-pointer'>
-            <HiOutlineBuildingStorefront size={20} className='me-2' color="#CEA835"/> 
-            Set up your shop 
-          </span>
-      </div>
-
+          {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) && 
+            <>
+              <div className='bg-dark py-2 text-center'>
+                <span className='text-white cursor-pointer'>
+                  <HiOutlineBuildingStorefront size={20} className='me-2' color="#CEA835"/> 
+                  Set up your shop 
+                </span>
+            </div>
+            </>
+          }
+        </>
+      }
       <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
         <Container className="position-relative">
           <Navbar.Brand href="/"><img src={Logo} /></Navbar.Brand>
@@ -396,7 +406,7 @@ const Header = () => {
                           {userRole !== 'Admin' &&
                           <>
 
-                             {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
+                             {(user.shop_completed == 1 && (userDetails.is_seller == 1 || userDetails.is_designer == 1)) &&
                               <>
                                 <a href={`/user/center/calendar`}>
                                   <div className="nav-link header-tooltip cursor-pointer">

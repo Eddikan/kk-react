@@ -20,7 +20,7 @@ const ThankYou = (props) => {
                     </Col>
                     <Col lg={12} className='text-center mb-4'>
                         <div className='fs-50 rufina-family mt-3'>
-                        Thank you for completing your profile!
+                            Thank you for completing your profile!
                         </div>
                     </Col>
 

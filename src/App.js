@@ -128,6 +128,9 @@ const UserMeasurementGuide = lazy(() =>
   import("./Pages/User/MeasurementGuide")
 );
 
+const SellerForm = lazy(() => import("./Pages/User/SellerForm"));
+const DesignerForm = lazy(() => import("./Pages/User/DesignerForm"));
+
 const ThankYou = lazy(() => import("./Pages/User/ThankYou"));
 const ShopAvailability = lazy(() => import("./Pages/User/ShopAvailability"));
 
@@ -213,6 +216,8 @@ const App = () => {
           <Route path="/thankyou" exact element={<ThankYou />} />
           <Route path="/user/shop-manager" exact element={<ShopAvailability />} />
           
+          <Route path="/user/seller-form" exact element={<SellerForm />} />
+          <Route path="/user/designer-form" exact element={<DesignerForm />} />
 
           <Route
             path="/:user/profile/edit"

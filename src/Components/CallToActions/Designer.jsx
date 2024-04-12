@@ -14,7 +14,7 @@ const BecomeDesigner = () => {
                             <span className='fs-14'>Set up your designer profile and add your portfolio.</span>
                         </Col>
                         <Col lg="4" className='text-end'>
-                            <Button variant='primary' >PROCEED</Button>
+                            <Button variant='primary' href='/user/designer-form' >PROCEED</Button>
                         </Col>
                     </Row>
                 </Card.Body>

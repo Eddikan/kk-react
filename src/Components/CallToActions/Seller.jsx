@@ -14,7 +14,7 @@ const BecomeSeller = () => {
                             <span className='fs-14'>Set up your seller profile and add your products</span>
                         </Col>
                         <Col lg="4" className='text-end'>
-                            <Button className='cta-button' >PROCEED</Button>
+                            <Button className='cta-button' href='/user/seller-form' >PROCEED</Button>
                         </Col>
                     </Row>
                 </Card.Body>

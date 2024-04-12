@@ -22,13 +22,15 @@ const ThankyouStep = ({ user, currentUser, reload, token }) => {
 
                 <Col lg={12} className='text-center mb-4'>
                     <div className='d-flex align-items-center justify-content-center'>
-                        <a className='btn btn-primary me-3 btn-complete-profile' href="/user/profile">View Profile</a>
-                        <div>
-                            <span><HiOutlineBuildingStorefront size={30} className='text-gold me-2'/> 
-                                <span className='fw-500 cursor-pointer'>
-                                Set up your shop<FaArrowRightLong className='ms-2'/></span>
-                            </span>
-                        </div>
+                        <a className={`btn btn-primary ${(user.is_designer == 1 || user.is_seller == 1) && 'me-3'}`} href="/user/profile">View Profile</a>
+                        {(user.is_designer == 1 || user.is_seller == 1) &&
+                            <div>
+                                <span><HiOutlineBuildingStorefront size={30} className='text-gold me-2'/> 
+                                    <span className='fw-500 cursor-pointer'>
+                                    Set up your shop<FaArrowRightLong className='ms-2'/></span>
+                                </span>
+                            </div>
+                        }
                     </div>
                 </Col>
             </Row>
