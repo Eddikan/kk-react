@@ -354,21 +354,29 @@ const Profile = () => {
                                             }
                                         </div>
 
-                                        {/* <div className='mb-2 d-flex justify-content-center align-items-center'>
-                                            <div>
-                                            <Button href="/user/profile/edit" type='button' className='btn btn-primary btn-complete-profile'>
-                                                <span>Complete your profile</span> 
-                                            </Button>
-                                            </div>
+                                        <div className='mb-2 d-flex align-items-center'>
+                                            {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 ||user.profile_completeness == 75) &&
+                                                <>
+                                                     <div>
+                                                        <Button href="/user/complete-profile" type='button' className='btn btn-primary'>
+                                                            <span>Complete your profile</span> 
+                                                        </Button>
+                                                    </div>
+                                                </>
+                                            }
 
-                                        <div>
-                                            <span><HiOutlineBuildingStorefront size={30} className='text-gold me-2 ms-4'/> 
-                                                <span className='fw-500 cursor-pointer'>
-                                                Set up your shop<FaArrowRightLong className='ms-2'/></span>
-                                            </span>
+                                            {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) &&
+                                                <>
+                                                    <a href='/user/shop/setup' className='text-decoration-none'>
+                                                        <span><HiOutlineBuildingStorefront size={30} className={`text-gold me-2 ${user.profile_completeness != 100 && 'ms-4'}`}/> 
+                                                            <span className='fw-500 cursor-pointer'>
+                                                            Set up your shop<FaArrowRightLong className='ms-2'/></span>
+                                                        </span>
+                                                    </a>
+                                                </>
+                                            }
+
                                         </div>
-
-                                        </div> */}
 
                                         <div>
                                             <div className="position-relative">

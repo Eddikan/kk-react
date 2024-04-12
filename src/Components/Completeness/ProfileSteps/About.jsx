@@ -67,13 +67,13 @@ const AboutStep = ({ user, currentUser, reload, token }) => {
                     <Row>
                         <Col lg="6">
                             <Form.Group className='mb-3'>
-                                <Form.Label>First Name</Form.Label>
+                                <Form.Label>First Name<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='text' name='first_name' value={profileFormData.first_name} className='mr-sm-2' onChange={handleChange} required />
                             </Form.Group>
                         </Col>
                         <Col lg="6">
                             <Form.Group className='mb-3'>
-                                <Form.Label>Last Name</Form.Label>
+                                <Form.Label>Last Name<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='text' name='last_name' value={profileFormData.last_name} className='mr-sm-2' onChange={handleChange} required />
                             </Form.Group>
                         </Col>
@@ -86,7 +86,7 @@ const AboutStep = ({ user, currentUser, reload, token }) => {
                             </Form.Group>
                         </Col>
                         <Col lg="3">
-                            <Form.Label>Gender</Form.Label>
+                            <Form.Label>Gender<span className='text-danger'>*</span></Form.Label>
                             <Row>
                                 <Form.Group as={Col}>
                                     <Form.Check

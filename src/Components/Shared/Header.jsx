@@ -427,7 +427,7 @@ const Header = () => {
                                 <>
                                   {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
                                     <>
-                                      <a href={`/user/center/calendar`}>
+                                      <a href={`${userDetails.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`}>
                                         <div className="nav-link header-tooltip cursor-pointer">
                                           <span className="icon-tooltiptext fs-14">Shop Manager</span>
                                           <BsShopWindow size={23} />

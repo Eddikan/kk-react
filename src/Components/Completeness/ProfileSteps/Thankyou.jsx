@@ -30,7 +30,7 @@ const ThankyouStep = ({ user, currentUser, reload, token }) => {
                                 {user.shop_completed == 1 ?
                                     <>
                                         <div>
-                                            <Link to="/user/center/calendar" className='text-decoration-none'>
+                                            <Link to={`${user.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`} className='text-decoration-none'>
                                                 <span><HiOutlineBuildingStorefront size={30} className='text-gold me-2'/> 
                                                     <span className='fw-500 cursor-pointer'>
                                                     Set up your shop<FaArrowRightLong className='ms-2'/></span>

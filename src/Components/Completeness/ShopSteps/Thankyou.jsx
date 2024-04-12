@@ -3,8 +3,11 @@ import { Row, Col } from 'react-bootstrap';
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { HiOutlineBuildingStorefront } from "react-icons/hi2";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { useCookies } from 'react-cookie';
 
 const ThankYouProgress = ({ user, currentUser, reload, token, onStepPlusFour }) => {
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser','userDetails']);
+    const userDetails = cookies.userDetails;
 
     return (
         <>
@@ -22,7 +25,7 @@ const ThankYouProgress = ({ user, currentUser, reload, token, onStepPlusFour }) 
 
                 <Col lg={12} className='text-center mb-4'>
                     <div className='d-flex align-items-center justify-content-center'>
-                        <a className='btn btn-primary' href="/user/center/calendar">View Shop Manager</a>
+                        <a className='btn btn-primary' href={`${userDetails.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`}>View Shop</a>
                         {/* <div>
                             <span><HiOutlineBuildingStorefront size={30} className='text-gold me-2'/> 
                                 <span className='fw-500 cursor-pointer'>

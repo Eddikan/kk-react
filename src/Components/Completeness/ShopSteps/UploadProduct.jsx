@@ -235,7 +235,7 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                                                 <Row className="align-items-center text-center my-5">
                                                     <Col>
                                                         <Form.Label className="mb-1 fs-20">
-                                                            Upload your designs
+                                                            Upload your products
                                                         </Form.Label>
                                                         <br />
                                                         <Form.Label className="mb-4 fs-16 mt-1 small">
