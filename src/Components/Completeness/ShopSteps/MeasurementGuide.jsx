@@ -53,7 +53,7 @@ const initialUserData = Object.freeze({
     instagram: '',
 });
 
-const MeasurementGuide = (props, { onStepPlusThree }) => {
+const MeasurementGuide = ({ onStepPlusThree, onStepMinusThree, props }) => {
     const navigate = useNavigate();
     const [user, setUser] = useState(initialUserData);
     const [userLoading, setUserLoading] = useState(true);
@@ -115,7 +115,7 @@ const MeasurementGuide = (props, { onStepPlusThree }) => {
                 const data = response.data.data;
                 // toast.success('Measurement guide updated successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
-                onStepPlusThree();
+                // onStepPlusThree();
                 setMeasurementLoading(false);
             } else {
                 const errors = response.data.errors;
@@ -147,6 +147,23 @@ const MeasurementGuide = (props, { onStepPlusThree }) => {
     useEffect(() => {
         fetchData({ token: token, currentUser: currentUser });
     }, [reloadCount]);
+
+    async function submitFinish(e) {
+        e.preventDefault();
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { shop_completed: 1 }).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                const user = response.data.data.user;
+                const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer, shop_completed: user.shop_completed, profile_completeness: user.profile_completeness  }
+                setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+                onStepPlusThree();
+            } else {
+                const errors = response.data.errors;
+            }
+        }).catch(() => {
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    }
 
     return (
         <>
@@ -277,10 +294,12 @@ const MeasurementGuide = (props, { onStepPlusThree }) => {
                                 </Row>
                                 
                                 <div className='text-right mt-3'>
+                                <Button className='btn-back me-3' type="button" onClick={() => onStepMinusThree()} >Back</Button>
+                                
                                 {measurementLoading ?
                                     <Button className='btn-savess me-3' type="button">Saving...</Button>
                                     :
-                                    <Button className='btn-save' type="submit">Next</Button>
+                                    <Button className='btn-save' onClick={submitFinish} type="button">Next</Button>
                                 }
                                 </div>
                            
@@ -302,7 +321,12 @@ const MeasurementGuide = (props, { onStepPlusThree }) => {
                         <Modal.Body>
                             <Card className='border-0'>
                                 <Card.Body className='p-0'>
-                                    <DetailBuilder size="normal" addElement={handleAddElement} closeModal={toggleGuideModal} elements={elements} actionType={actionType} />
+                                    <DetailBuilder 
+                                    size="normal" 
+                                    addElement={handleAddElement} 
+                                    closeModal={toggleGuideModal} 
+                                    elements={elements} 
+                                    actionType={actionType} />
                                 </Card.Body>
                             </Card>
                         </Modal.Body>

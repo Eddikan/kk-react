@@ -68,7 +68,7 @@ const LogIn = () => {
           toast.success('Successfully signed in!');
           setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
           setCookie('userRole', JSON.stringify(user.role), { path: '/' });
-          const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer  }
+          const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer, shop_completed: user.shop_completed, profile_completeness: user.profile_completeness  }
           setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
           setCookie('isLoggedIn', true, { path: '/' });
           setCookie('token', data.token, { path: '/' });

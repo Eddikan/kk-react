@@ -271,6 +271,7 @@ const Header = () => {
           {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 || user.profile_completeness == 75)  && 
             <>
               <div className='banner-completion text-center'>
+        
                 <span className='text-white'>Your profile completion is at 20%. 
                   <Link to="/user/complete-profile" className='text-decoration-none'>
                   <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span>
@@ -284,8 +285,10 @@ const Header = () => {
             <>
               <div className='bg-dark py-2 text-center'>
                 <span className='text-white cursor-pointer'>
+                  <Link to="/user/shop-manager" className='text-decoration-none text-white'>
                   <HiOutlineBuildingStorefront size={20} className='me-2' color="#CEA835"/> 
                   Set up your shop 
+                  </Link>
                 </span>
             </div>
             </>

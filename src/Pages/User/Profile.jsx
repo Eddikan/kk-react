@@ -612,7 +612,6 @@ const Profile = () => {
                             :
                             null
                         }
-
                     </Container>
                 </section >
             }

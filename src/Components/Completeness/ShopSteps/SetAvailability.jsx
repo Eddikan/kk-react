@@ -45,11 +45,22 @@ const SetAvailability = ({ user, reload, token, onStepPlusOne }) => {
     const [formStatus, setFormStatus] = useState(false);
     const [currentTimezone, setCurrentTimezone] = useState(null);
     const [reloadCount, setReloadCount] = useState(0);
+    const [noAvailableHours, setNoAvailableHors] = useState(false);
+    const [scheduleReloadCount, setScheduleReloadCount] = useState(0);
+    const [times, setTimes] = useState([]);
 
    
 
     const postBusinessHours = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/availability?user_id=' + currentUser, data);
+    };
+
+    const getBusinessHours = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId);
+    };
+
+    const putBusinessHourss = async (data) => {
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/availability/' + designerId, data);
     };
 
 
@@ -390,12 +401,214 @@ const handleRemoveSaturdayHours = (index) => {
     }
 
 
+
+    const BusinessHoursSubmitPut = (e) => {
+        setFormStatus('loading');
+        const content = [ 
+            {
+                day: 'sunday',
+                availabilities: sundayHoursFormData
+            },
+            {
+                day: 'monday',
+                availabilities: mondayHoursFormData
+            },
+            {
+                day: 'tuesday',
+                availabilities: tuesdayHoursFormData
+            },
+            {
+                day: 'wednesday',
+                availabilities: wednesdayHoursFormData
+            },
+            {
+                day: 'thursday',
+                availabilities: thursdayHoursFormData
+            },
+            {
+                day: 'friday',
+                availabilities: fridayHoursFormData
+            },
+            {
+                day: 'saturday',
+                availabilities: saturdayHoursFormData
+            },
+        ];
+        putBusinessHourss({ content, designer_id: designerId, timezone: currentTimezone }).then(response => {
+            const status = response.data.status;
+            if (status === "Success") {
+                setFormStatus('standby');
+                setReloadCount(reloadCount + 1);
+                onStepPlusOne();
+                setBusinessHoursFormData(initialBusinessHours);
+                toast.success('Availability added successfully!');
+            } else {
+                setFormStatus('standby');
+                toast.error('There has been an error saving the availability hours, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error saving the availability hours, please try again!');
+        });
+    }
+
+
+
+
+
+
+    useEffect(() => {
+        getBusinessHours()
+            .then((response) => {
+                const selectedTime = response.data.data;
+                const status = response.data.status;
+                if (status == "Fail") {
+                    // toast.error('There are no available hours found!');
+                    setNoAvailableHors(true);
+                }
+                else {
+                    if (selectedTime) {
+                        setTimes(selectedTime.content);
+                        if (selectedTime && selectedTime.content && selectedTime.content.length > 0) {
+
+                            const sundayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'sunday');
+                            const mondayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'monday');
+                            const tuesdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'tuesday');
+                            const wednesdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'wednesday');
+                            const thursdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'thursday');
+                            const fridayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'friday');
+                            const saturdayEntry = selectedTime.content.find(entry => entry.day.toLowerCase() === 'saturday');
+
+                            if (sundayEntry && mondayEntry && tuesdayEntry) {
+                                const sundayAvailabilities = sundayEntry.availabilities || [];
+
+                                const mappedSundayBusinessHours = sundayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const mondayAvailabilities = mondayEntry.availabilities || [];
+
+                                const mappedMondayBusinessHours = mondayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const tuesdayAvailabilities = tuesdayEntry.availabilities || [];
+
+                                const mappedTuesdayBusinessHours = tuesdayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const wednesdayAvailabilities = wednesdayEntry.availabilities || [];
+
+                                const mappedWednesdayBusinessHours = wednesdayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const thursdayAvailabilities = thursdayEntry.availabilities || [];
+
+                                const mappedThursdayBusinessHours = thursdayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const fridayAvailabilities = fridayEntry.availabilities || [];
+
+                                const mappedFridayBusinessHours = fridayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                const saturdayAvailabilities = saturdayEntry.availabilities || [];
+
+                                const mappedSaturdayBusinessHours = saturdayAvailabilities.map(availability => ({
+                                    start: availability.start || '',
+                                    end: availability.end || '',
+
+                                }));
+
+                                if (mappedFridayBusinessHours.length <= 0) {
+                                    //means that the day is unavailable
+                                    setIsFridayChecked(true);
+                                } else if (mappedSundayBusinessHours.length <= 0) {
+                                    setIsSundayChecked(true);
+                                } else if (mappedMondayBusinessHours.length <= 0) {
+                                    setIsMondayChecked(true);
+                                } else if (mappedTuesdayBusinessHours.length <= 0) {
+                                    setIsTuesdayChecked(true);
+                                } else if (mappedWednesdayBusinessHours.length <= 0) {
+                                    setIsWednesdayChecked(true);
+                                } else if (mappedThursdayBusinessHours.length <= 0) {
+                                    setIsThursdayChecked(true);
+                                } else if (mappedSaturdayBusinessHours.length <= 0) {
+                                    setIsSaturdayChecked(true);
+                                }
+
+                                if (!isSundayChecked) {
+                                    setSundayHoursFormData(mappedSundayBusinessHours);
+                                    setSundayHoursCopyFormData(mappedSundayBusinessHours);
+                                }
+
+                                if (!isMondayChecked) {
+                                    setMondayHoursFormData(mappedMondayBusinessHours);
+                                    setMondayHoursCopyFormData(mappedMondayBusinessHours);
+                                }
+
+                                if (!isTuesdayChecked) {
+                                    setTuesdayHoursFormData(mappedTuesdayBusinessHours);
+                                    setTuesdayHoursCopyFormData(mappedTuesdayBusinessHours);
+                                }
+
+                                if (!isWednesdayChecked) {
+                                    setWednesdayHoursFormData(mappedWednesdayBusinessHours);
+                                    setWednesdayHoursCopyFormData(mappedWednesdayBusinessHours);
+                                }
+
+                                if (!isThursdayChecked) {
+                                    setThursdayHoursFormData(mappedThursdayBusinessHours);
+                                    setThursdayHoursCopyFormData(mappedThursdayBusinessHours);
+                                }
+
+                                if (!isFridayChecked) {
+                                    setFridayHoursFormData(mappedFridayBusinessHours);
+                                    setFridayHoursCopyFormData(mappedFridayBusinessHours);
+                                }
+
+                                if (!isSaturdayChecked) {
+                                    setSaturdayHoursFormData(mappedSaturdayBusinessHours);
+                                    setSaturdayHoursCopyFormData(mappedSaturdayBusinessHours);
+                                }
+
+                            } else {
+                                setSundayHoursFormData([initialBusinessHours]);
+                            }
+
+                        }
+                        setBusinessHoursFormData([initialBusinessHours]);
+                    } else {
+                        toast.error('There has been an error getting the appointment, please try again!');
+                    }
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the appointment, please try again!');
+            });
+
+    }, [scheduleReloadCount]);
+
+
     return (
         <>
             <Row className="h-100">
                                 <Col lg="12">
-                                <div className='fs-25 rufina-family mb-2'>Set your availability</div>
-                                <hr className='mb-4 mt-0'/>
                                     <Row>
                                         <Col lg="2">
                                             <h4 className="day-header">Sunday</h4>
@@ -911,7 +1124,21 @@ const handleRemoveSaturdayHours = (index) => {
                                         {formStatus ?
                                             <Button type='button' className="btn-save">Saving...</Button>
                                         :
-                                            <Button type='button' onClick={BusinessHoursSubmitPost} className="btn-save">Next</Button>
+                                            <Button 
+                                            type='button' 
+                                            // onClick={BusinessHoursSubmitPost}
+                                            onClick={() => {
+                                                if (!times.length) {
+                                                    BusinessHoursSubmitPost()
+                                                } else {
+                                                    BusinessHoursSubmitPut()
+                                                }
+                    
+                                            }}  
+                                            className="btn-save"
+                                            >
+                                                Next
+                                                </Button>
                                         }
                                     </div>
                                 </Col>

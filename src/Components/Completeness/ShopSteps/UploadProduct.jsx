@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 import { TagsInput } from "react-tag-input-component";
 import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
-import NewProduct from 'Components/Forms/Product/NewProduct';
+import NewProductShopManager from 'Components/Forms/Product/NewProductShopManager';
 import GetUserProductsData from 'Utils/GetUserProductsData';
 import DateTimePicker from 'Components/Shared/DateTimePicker';
 
@@ -22,10 +22,8 @@ const initialQuestionnaire3Data = Object.freeze({
     is_seller: 1,
 });
 
-const Questionnaire3 = (props) => {
+const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
     const navigate = useNavigate();
-    const currentStep = props.step;
-    const user = props.user;
 
     const [questionnaire3Data, setQuestionnaire3Data] = useState(initialQuestionnaire3Data);
     const [questionnaire3Loading, setQuestionnaire3Loading] = useState(false);
@@ -93,10 +91,6 @@ const Questionnaire3 = (props) => {
         setUploadFileShow(false);
     }
 
-    const hideAll = (e) => {
-        props.onHideAll(e);
-    };
-
     const handleChange = (e) => {
         setQuestionnaire3Data({
             ...questionnaire3Data,
@@ -131,9 +125,7 @@ const Questionnaire3 = (props) => {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'seller?user_id=' + currentUser + '&token=' + token, {...questionnaire3Data, types_of_fabric: typesOfFabric, user_id: currentUser, products: productItems, availability: availability, post_type: postType  }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
-                const data = response.data.data;
-                setCookie('currentUserSeller', JSON.stringify(data.id), { path: '/' });
-                hideAll(4);
+                onStepPlusTwo();
                 setQuestionnaire3Loading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -184,47 +176,11 @@ const Questionnaire3 = (props) => {
 
     return (
         <>
-            <Container className='q1 narrow-750 py-5 px-4 mt-5 text-dgray'>
-                <Row>
-                    <Col lg='12' className='text-center'>
-                        <h2 className='form-title pb-2 mb-3'>Showcase the rich textures, and pattern of your fabrics</h2>
-                    </Col>
-                </Row>
                 <Form onSubmit={questionnaire3Submit}>
-                    <Row className="mb-3">
+                    <Row>
                         <Col lg="12">
                             <Card className='mb-4 border-white'>
-                                <CardBody>
-                                    <Form.Label className='mb-1 fs-18'>
-                                        Type of Fabrics
-                                    </Form.Label>
-                                    <br />
-                                    <Form.Label className="mb-3 small mt-1">
-                                        Specify type of fabrics (e.g., linen, cotton, silk)
-                                    </Form.Label>
-                                    <Form.Group>
-                                        <TagsInput
-                                            value={typesOfFabric}
-                                            onChange={setTypesOfFabric}
-                                            name="types_of_fabrics"
-                                            className="form-control"
-                                            ref={tagsInputRef}
-                                            isEditOnRemove={true}
-                                            onBlur={(e) => {
-                                                const value = e.target.value;
-                                                if (!typesOfFabric.includes(value) && value !== "") {
-                                                    setTypesOfFabric([...typesOfFabric, value]);
-                                                    e.target.value = "";
-                                                }
-                                            }}
-                                            required
-                                            // placeholder="Fabric Type" // uncomment if needed
-                                        />
-                                    </Form.Group>
-                                </CardBody>
-                            </Card>
-                            <Card className='mb-4 border-white'>
-                                <CardBody>
+                            <CardBody className='p-0 pt-3 pb-3'>
                                     <Card className='background-dashed'>
                                         {productItems ?
                                             <CardBody className={`${productItems.length > 0 ? "pt-0" : ""}`}>
@@ -259,17 +215,17 @@ const Questionnaire3 = (props) => {
                                                     :
                                                     <Row className="align-items-center text-center my-5">
                                                         <Col>
-                                                            <Form.Label className="mb-1 fs-20">
+                                                            <div className="mb-3 fs-20">
                                                                 Upload your products 
-                                                            </Form.Label>
-                                                            <Form.Label className="mb-4 fs-16 mt-1 small">
+                                                            </div>
+                                                            <div className="mb-4 fs-16 mt-1 small">
                                                                 Share your fabric snapshot to uncover a realm of creative possibilities.
-                                                            </Form.Label>
+                                                            </div>
                                                             <Button className='btn-primary'
                                                                 onClick={toggleuploadFile}
                                                                 type="button"
                                                             >
-                                                                Upload
+                                                               Upload Your First Fabric
                                                             </Button>
                                                         </Col>
                                                     </Row>
@@ -299,88 +255,27 @@ const Questionnaire3 = (props) => {
                                     </Card>
                                 </CardBody>
                             </Card>
-                            <Card className='mb-4 border-white'>
-                                <CardBody>
-                                    <Form.Label className='mb-1 fs-18 d-block'>
-                                        Fabric Process Insights
-                                    </Form.Label>
-                                    <Form.Label className="mb-3 mt-1 small">
-                                        Provider information about fabric.
-                                    </Form.Label>
-                                    <Form.Group>
-                                        <Form.Control
-                                            as="textarea"
-                                            name="fabric_process_insights"
-                                            rows={5} // You can adjust the number of rows as needed
-                                            value={questionnaire3Data.fabric_process_insights}
-                                            placeholder=""
-                                            onChange={handleChange}
-                                        />
-                                    </Form.Group>
-                                </CardBody>
-                            </Card>
-                            <Card className='mb-4 border-white'>
-                                <CardBody>
-                                    <Form.Label className='mb-1 fs-18 d-block'>
-                                        Pricing Structure
-                                    </Form.Label>
-                                    <Form.Label className="mb-3 mt-1 small">
-                                        Provide information about the typical pricing structures, helps set expectations.
-                                    </Form.Label>
-                                    <Form.Group>
-                                        <Form.Control
-                                            as="textarea"
-                                            name="pricing_structure"
-                                            rows={5} // You can adjust the number of rows as needed
-                                            value={questionnaire3Data.pricing_structure}
-                                            placeholder=""
-                                            onChange={handleChange}
-                                        />
-                                    </Form.Group>
-                                </CardBody>
-                            </Card>
-{/*                             
-                            <Card className='mb-4 border-white'>
-                                <CardBody>
-                                    <Form.Label className='mb-2 fs-18'>
-                                        Calendar Availability
-                                    </Form.Label>
-                                    <Form.Group className="d-flex column-gap-10">
-                                        <Form.Control
-                                            type="date"
-                                            name="target_date"
-                                            value={questionnaire3Data.target_date}
-                                            onChange={handleChange}
-                                            style={{maxWidth: '250px'}}
-                                        />
-                                        <Button className='btn-primary' onClick={toggleSchedule} type="button">Schedule</Button>
-                                    </Form.Group>
-                                </CardBody>
-                            </Card> */}
+                            
+
                         </Col>
                     </Row>
                     <Row>
                         <Col lg="12" className="text-right">
-                            {signupType == "seller" ?
-                                null
-                                :
-                                <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(3); }}>Back</Button>
-                            }
+                            <Button className='btn-back me-3' type="button" onClick={() => onStepMinusTwo()} >Back</Button>
+
                             {questionnaire3Loading ?
-                                <Button className='btn-primary me-3' type="button">Saving...</Button>
+                                <Button className='btn-save' type="button">Saving...</Button>
                                 :
-                                <Button className='btn-primary me-3' type="submit">Save</Button>
+                                <Button className='btn-save' type="submit">Next</Button>
                             }
-                            {/* <span className="cursor-pointer text-black" onClick={function () { hideAll(3); }}>Skip <IoIosArrowRoundForward /></span> */}
                         </Col>
                     </Row>
                 </Form>
-            </Container>
             <Modal
                 isOpen={uploadFileShow}
                 className='modal-preview'
                 fade={false}
-                style={{ minWidth: '600px' }}
+                style={{ minWidth: '1000px' }}
                 centered
             >
                 <ModalHeader className="pb-0">
@@ -391,36 +286,14 @@ const Questionnaire3 = (props) => {
                     <h2 className='modal-title fs-25 fw-600 text-center'>Upload your Fabrics</h2>
                     <Card className="border-0">
                         <CardBody className="p-2">
-                            <NewProduct size="small" withDraft={false} onSuccess={refreshProducts} onCancel={hideUpload} onSave={saveProductItems} />
+                            <NewProductShopManager size="small" withDraft={false} onSuccess={refreshProducts} onCancel={hideUpload} onSave={saveProductItems} />
                         </CardBody>
                     </Card>
                 </ModalBody>
             </Modal>
-            {/* Schedule */}
-            <Modal
-                isOpen={scheduleShow}
-                className='modal-preview'
-                fade={false}
-                centered
-            >
-                <ModalHeader className="pb-0">
-                    <h5 className='modal-title text-uppercase text-left'></h5>
-                    <button type='button' className='close react-modal-close' onClick={toggleSchedule} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
-                    </button>
-                </ModalHeader>
-                <ModalBody>
-                    <h4 className='text-center fs-25 fw-600'>Schedule</h4>
-                    <Card>
-                        <CardBody className="text-center py-5">
-                            <GoAlertFill size="60px" color="#000" className="mb-2" />
-                            <p className="fs-20 text-black">Under Construction</p>
-                            {/* <DateTimePicker onTimeChange={handleTimeChange} onDone={handleDoneTimeChange} availability={currentAvailability} /> */}
-                        </CardBody>
-                    </Card>
-                </ModalBody>
-            </Modal>
+           
         </>
     );
 };
 
-export default Questionnaire3;
+export default UploadProduct;

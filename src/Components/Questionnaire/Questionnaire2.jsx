@@ -135,6 +135,8 @@ const Questionnaire2 = (props) => {
             if (success == 'Success') {
                 hideAll(3);
                 setQuestionnaire2Loading(false);
+                const data = response.data.data;
+                setCookie('currentUserDesigner', JSON.stringify(data.id), { path: '/' });
                 // navigate('/');
                 // setReloadCount(reloadCount + 1);
             } else {

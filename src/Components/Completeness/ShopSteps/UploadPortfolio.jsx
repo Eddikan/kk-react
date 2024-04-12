@@ -12,7 +12,7 @@ import { TagsInput } from "react-tag-input-component";
 import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
 import NewPortfolioShopManager from 'Components/Forms/Portolio/NewPortfolioShopManager';
-import GetUserPortfolioData from 'Utils/GetPortfolioData';
+import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
 import DateTimePicker from 'Components/Shared/DateTimePicker';
 
 const initialQuestionnaire2Data = Object.freeze({
@@ -43,6 +43,7 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
     const [currentAvailability, setCurrentAvailability] = useState([]);
     const [postType, setPostType] = useState('post');
     const [designerId, setDesignerId] = useState('');
+    const [portfolioDesigner, setPortfolioDesigner] = useState([]);
     const tagsInputRef = useRef(null);
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
@@ -56,6 +57,7 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
             const portfolioData = await GetUserPortfolioData(e);
             if (portfolioData) {
                 setPortfolio(portfolioData);
+                setPortfolioDesigner(portfolioData.user)
                 setPortfolioLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -128,8 +130,7 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
             const status = response.data.status;
             if (status === 'Success') {
                 setQuestionnaire2Loading(false);
-                onStepPlusTwo(); 
-                onStepMinusTwo();
+                onStepPlusTwo();
             } else {
                 toast.error('An error occured. Please try again or contact the administrator. 222');
                 setQuestionnaire2Loading(false);
@@ -142,6 +143,10 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
 
     useEffect(() => {
         fetchData(currentUser);
+
+        // if (user){
+        //     setPortfolioItems(user.portfolio_items);
+        // }
 
         const handleDocumentClick = (event) => {
             // Check if the click is outside the TagsInput component
@@ -162,13 +167,9 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
         };
     }, [reloadCount, user]);
 
+
     return (
         <>
-                <Row>
-                    <Col lg='12' className='text-left'>
-                        <h2 className='fs-25 rufina-family pb-2'>Showcase the rich textures, and pattern of your design</h2>
-                    </Col>
-                </Row>
                 <Form onSubmit={questionnaire2Submit}>
                     <Row>
                         <Col lg="12">
@@ -252,14 +253,14 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                     </Row>
                     <Row>
                         <Col lg="12" className="text-right">
-                            <Button className='btn-outline me-3' type="button" onClick={() => onStepMinusTwo()} >Back</Button>
+                            <Button className='btn-back me-3' type="button" onClick={() => onStepMinusTwo()} >Back</Button>
                             
                             {questionnaire2Loading ?
                                 <Button className='btn-save' type="button">Saving...</Button>
                                 :
                                 <Button className='btn-save' type="submit">Next</Button>
                             }
-                            {/* <span className="cursor-pointer text-black" onClick={function () { hideAll(3); }}>Skip <IoIosArrowRoundForward /></span> */}
+                            
                         </Col>
                     </Row>
                 </Form>

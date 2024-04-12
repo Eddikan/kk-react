@@ -166,7 +166,7 @@ const DetailBuilder = (props) => {
                                         <Form.Control id="elementType" as='select' name='element_type' value={elementType} onChange={(e) => setElementType(e.target.value)} required>
                                             <option value="">Select Element Type</option>
                                             <option value="Heading">Heading</option>
-                                            <option value="Paragraph">Pargraph</option>
+                                            <option value="Paragraph">Paragraph</option>
                                             <option value="Image">Image</option>
                                             <option value="Video">Video Upload</option>
                                             <option value="YouTube Embed Link">YouTube Embed</option>

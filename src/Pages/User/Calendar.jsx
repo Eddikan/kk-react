@@ -567,7 +567,7 @@ const Calendar = (props) => {
 
     const BusinessHoursSubmitPut = (e) => {
         setFormStatus('loading');
-        const content = [
+        const content = [ 
             {
                 day: 'sunday',
                 availabilities: sundayHoursFormData
