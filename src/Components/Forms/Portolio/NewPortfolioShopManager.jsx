@@ -76,63 +76,30 @@ const NewPortfolioShopManager = (props) => {
 
     async function PortfolioSubmit(e) {
         e.preventDefault();
-        if (size == "small") {
+        if (portfolioData.image_urls) {
             setPortfolioLoading(true);
-            setTimeout(function(){
-                setPortfolioLoading(false);
-                savePortfolioItems({...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' });
-                handleCancel();
-            }, 1000);
-        } else {
-            if (portfolioData.image_urls) {
-                setPortfolioLoading(true);
-                axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
-                    const success = response.data.status;
-                    if(success == 'Success') {
-                        toast.success('Design added successfully!');
-                        setPortfolioLoading(false);
-                        reloadPage(true);
-                        formSuccess(true);
-                    } else {
-                        toast.error('An error occured. Please try again or contact the administrator.');
-                        setPortfolioLoading(false);
-                        formSuccess(false);
-                    }
-                }).catch(() => {
+            axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
+                const success = response.data.status;
+                if(success == 'Success') {
+                    toast.success('Design added successfully!');
+                    setPortfolioLoading(false);
+                    props.onCancel(true);
+                    props.onSuccess(true)
+                } else {
                     toast.error('An error occured. Please try again or contact the administrator.');
                     setPortfolioLoading(false);
-                    formSuccess(true);
-                });
-            } else {
-                toast.error('Please upload design images!');
-            }
+                }
+            }).catch(() => {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setPortfolioLoading(false);
+            });
+        } else {
+            toast.error('Please upload design images!');
         }
     };
 
-    async function PortfolioDraftSubmit(e) {
-        e.preventDefault();
-        setPortfolioDraftLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Draft' }).then((response) => {
-            const success = response.data.status;
-            if(success == 'Success') {
-                toast.success('Design saved as draft successfully!');
-                setPortfolioDraftLoading(false);
-                reloadPage(true);
-                formSuccess(true);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setPortfolioDraftLoading(false);
-                formSuccess(true);
-            }
-        }).catch(() => {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setPortfolioDraftLoading(false);
-            formSuccess(true);
-        });
-    };
-
     return (
-        <Form onSubmit={PortfolioSubmit}>
+        // <Form>
             <Row>
                 <Col lg='12'>
                     <Card className='mb-3'>
@@ -276,22 +243,11 @@ const NewPortfolioShopManager = (props) => {
                     {portfolioLoading ?
                         <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..." }</Button>
                         :
-                        <Button className='btn-primary' type="submit">{size == "small" ? "Upload" : "Save" }</Button>
-                    }
-                    {withDraft ?
-                        <>
-                            {portfolioDraftLoading ?
-                                <span className="cursor-pointer text-black ms-3">Saving as Draft...</span>
-                                :
-                                <span className="cursor-pointer text-black ms-3" onClick={PortfolioDraftSubmit}>Save as Draft <HiOutlineArrowLongRight className="align-text-bottom"/></span>
-                            }
-                        </>
-                        :
-                        null
+                        <Button className='btn-primary' type="button" onClick={PortfolioSubmit}>{size == "small" ? "Upload" : "Save" }</Button>
                     }
                 </Col>
             </Row>
-        </Form>
+        // </Form>
     );
 };
 

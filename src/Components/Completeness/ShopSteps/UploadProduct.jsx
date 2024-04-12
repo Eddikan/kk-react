@@ -14,6 +14,10 @@ import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'react
 import NewProductShopManager from 'Components/Forms/Product/NewProductShopManager';
 import GetUserProductsData from 'Utils/GetUserProductsData';
 import DateTimePicker from 'Components/Shared/DateTimePicker';
+import { ImLeaf } from 'react-icons/im';
+
+import Loading from 'Components/Shared/Loading';
+import PlaceholderImage from 'Assets/images/placeholders/image.png';
 
 const initialQuestionnaire3Data = Object.freeze({
     types_of_fabric: '',
@@ -119,22 +123,8 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
         }
     };
 
-    async function questionnaire3Submit(e) {
-        e.preventDefault();
-        setQuestionnaire3Loading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'seller?user_id=' + currentUser + '&token=' + token, {...questionnaire3Data, types_of_fabric: typesOfFabric, user_id: currentUser, products: productItems, availability: availability, post_type: postType  }).then((response) => {
-            const success = response.data.status;
-            if(success == 'Success') {
-                onStepPlusTwo();
-                setQuestionnaire3Loading(false);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setQuestionnaire3Loading(false);
-            }
-        }).catch(() => {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setQuestionnaire3Loading(false);
-        });
+    const toggleNextTab = () => {
+        onStepPlusTwo();
     }
 
     useEffect(() => {
@@ -176,87 +166,96 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
 
     return (
         <>
-                <Form onSubmit={questionnaire3Submit}>
                     <Row>
                         <Col lg="12">
                             <Card className='mb-4 border-white'>
-                            <CardBody className='p-0 pt-3 pb-3'>
-                                    <Card className='background-dashed'>
-                                        {productItems ?
-                                            <CardBody className={`${productItems.length > 0 ? "pt-0" : ""}`}>
-                                                {productItems.length > 0 ?
-                                                    <>
-                                                        <Row>
-                                                            {productItems.map((productItem, index) => (
-                                                                <>
-                                                                    {productItem.image_urls && productItem.image_urls.length > 0 ?
-                                                                        <>
-                                                                            {productItem.image_urls.map((image, imageIndex) => (
-                                                                                <Col lg={4} key={image.id} className="image-preview mt-3">
-                                                                                    <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '190px'}}>
-                                                                                        <div className="dnd-actions-overlay"></div>
-                                                                                    </div>
-                                                                                </Col>
-                                                                            ))}
-                                                                        </>
-                                                                        :
-                                                                        null
-                                                                    }
-                                                                </>
-                                                            ))}
-                                                            <Col className="mt-3" lg={4}>
-                                                                <div onClick={toggleuploadFile} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed" style={{minHeight: '190px'}}>
-                                                                    <GoPlus color="#a4a4a4" size="130px" className="mt-3" />
-                                                                    <p className="text-dgray" style={{marginTop: '-15px'}}>Add More</p>
+                                <CardBody className='p-0 pt-3 pb-3'>
+                                {productsLoading ?
+                                    <>
+                                        <p className='text-center mb-3 mt-3'>
+                                            <Loading className="bg-white loading-height" />
+                                        </p>
+                                    </>
+                                    :
+                                    <>
+                                        {products && products.length > 0 ?
+                                            <>
+                                                <Row className="portfolio-row">
+                                                    {products.map((product, index) => {
+                                                        if (product.image_urls?.[0]?.image_url) {
+                                                            var productImage = process.env.REACT_APP_STORAGE_URL + 'product/' + product.image_urls[0].image_url;
+                                                        } else {
+                                                            var productImage = PlaceholderImage;
+                                                        }
+                                                        var wishlist_user_ids = product.wishlist_user_ids;
+                                                        const userWishlist = wishlist_user_ids.includes(currentUser);
+                                                        return (
+                                                            <Col className={`portfolio-grid mb-3`} xs="4" md="2">
+                                                                <div className={`portfolio-grid-div w-100 ${product.collection_type == "Limited" ? "limited" : " "} ${product.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + productImage + ")" }}>
+                                                                    <div className="portfolio-overlay">
+                                                                        
+                                                                    </div>
+                                                                    <a className="text-decoration-none">
+                                                                        <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
+                                                                    </a>
+                                                                </div>
+
+                                                                <div className='d-flex align-items-center'>
+                                                                    <h2 className="text-black text-decoration-none rufina-family fs-18 mt-2 pb-3 ellipsis-products">{product.name ?? "-"}</h2>
+                                                                    {product.eco_friendly != null && product.eco_friendly != '' && (
+                                                                        <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
+                                                                            <div className='tooltip-content'>
+                                                                                <span className="green-leaf-tooltiptext"></span>
+                                                                            </div>
+                                                                            <ImLeaf color="#55d140" className='mb-3' />
+                                                                        </span>
+                                                                    )}
                                                                 </div>
                                                             </Col>
-                                                        </Row>
-                                                    </>
-                                                    :
-                                                    <Row className="align-items-center text-center my-5">
-                                                        <Col>
-                                                            <div className="mb-3 fs-20">
-                                                                Upload your products 
-                                                            </div>
-                                                            <div className="mb-4 fs-16 mt-1 small">
-                                                                Share your fabric snapshot to uncover a realm of creative possibilities.
-                                                            </div>
-                                                            <Button className='btn-primary'
-                                                                onClick={toggleuploadFile}
-                                                                type="button"
-                                                            >
-                                                               Upload Your First Fabric
-                                                            </Button>
-                                                        </Col>
-                                                    </Row>
-                                                }
-                                                
-                                            </CardBody>
+                                                        )
+                                                    })}
+                                                    <Col className="portfolio-grid mb-3" xs="4" md="2">
+                                                        <div onClick={toggleuploadFile} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
+                                                            <GoPlus color="#a4a4a4" size="150px" className="mt-3" />
+                                                            <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
+                                                        </div>
+                                                    </Col>
+                                                </Row>
+                                            </>
                                             :
-                                            <CardBody>
+                                            <>
+                                                {/* <Card className='border-none'>
+                                                    <Card.Body className="image-drop-container pt-5 pb-5">
+                                                        <div className="text-center">
+                                                            <p className="text-center mb-3">The user doesn't have a fabric to showcase their work and experience.</p>
+                                                        </div>
+                                                    </Card.Body>
+                                                </Card> */}
+
                                                 <Row className="align-items-center text-center my-5">
                                                     <Col>
                                                         <Form.Label className="mb-1 fs-20">
-                                                            Upload your design
+                                                            Upload your designs
                                                         </Form.Label>
+                                                        <br />
                                                         <Form.Label className="mb-4 fs-16 mt-1 small">
                                                             Showcase your best work, get feedback, likes, and join a growing community.
                                                         </Form.Label>
+                                                        <br />
                                                         <Button className='btn-primary'
                                                             onClick={toggleuploadFile}
                                                             type="button"
                                                         >
-                                                            Upload Your First Shot
+                                                            Upload
                                                         </Button>
                                                     </Col>
                                                 </Row>
-                                            </CardBody>
+                                            </>
                                         }
-                                    </Card>
+                                    </>
+                                }
                                 </CardBody>
                             </Card>
-                            
-
                         </Col>
                     </Row>
                     <Row>
@@ -266,11 +265,10 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                             {questionnaire3Loading ?
                                 <Button className='btn-save' type="button">Saving...</Button>
                                 :
-                                <Button className='btn-save' type="submit">Next</Button>
+                                <Button className='btn-save' type="button" onClick={toggleNextTab}>Next</Button>
                             }
                         </Col>
                     </Row>
-                </Form>
             <Modal
                 isOpen={uploadFileShow}
                 className='modal-preview'

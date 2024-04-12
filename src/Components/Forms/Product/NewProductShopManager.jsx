@@ -169,62 +169,32 @@ const NewProductShopManager = (props) => {
 
     async function ProductSubmit(e) {
         e.preventDefault();
-        if (size == "small") {
-            setProductLoading(true);
-            setTimeout(function(){
-                setProductLoading(false);
-                saveProductItems({...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' });
-                handleCancel();
-            }, 1000);
-        } else {
+        
             if (productData.image_urls) {
                 setProductLoading(true);
-                // axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
-                //     const success = response.data.status;
-                //     if(success == 'Success') {
-                //         toast.success('Fabric added successfully!');
-                //         setProductLoading(false);
-                //         reloadPage(true);
-                //         formSuccess(true);
-                //     } else {
-                //         toast.error('An error occured. Please try again or contact the administrator.');
-                //         setProductLoading(false);
-                //         formSuccess(false);
-                //     }
-                // }).catch(() => {
-                //     toast.error('An error occured. Please try again or contact the administrator.');
-                //     setProductLoading(false);
-                //     formSuccess(false);
-                // });
+                axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+                    const success = response.data.status;
+                    if(success == 'Success') {
+                        toast.success('Fabric added successfully!');
+                        setProductLoading(false);
+                        props.onSuccess(true);
+                        props.onCancel(true);
+                    } else {
+                        toast.error('An error occured. Please try again or contact the administrator.');
+                        setProductLoading(false);
+                        formSuccess(false);
+                    }
+                }).catch(() => {
+                    toast.error('An error occured. Please try again or contact the administrator.');
+                    setProductLoading(false);
+                    formSuccess(false);
+                });
                 
             } else {
                 toast.error('Please upload design images!');
             }
-        }
-        console.log("Product Data", productData);
     };
 
-    async function ProductDraftSubmit(e) {
-        e.preventDefault();
-        setProductDraftLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, {...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
-            const success = response.data.status;
-            if(success == 'Success') {
-                toast.success('Fabric saved as draft successfully!');
-                setProductDraftLoading(false);
-                reloadPage(true);
-                formSuccess(true);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-                setProductDraftLoading(false);
-                formSuccess(true);
-            }
-        }).catch(() => {
-            toast.error('An error occured. Please try again or contact the administrator.');
-            setProductDraftLoading(false);
-            formSuccess(true);
-        });
-    };
 
     return (
         <Form onSubmit={ProductSubmit} ref={formRef}>
@@ -534,7 +504,7 @@ const NewProductShopManager = (props) => {
                                     null
                                 }
                             </Form.Group>
-</Col>
+                            </Col>
                             </Row>
                             <Form.Group className='my-4'>
                                 <Form.Label>Notes (Additional notes/remarks)</Form.Label>
@@ -554,17 +524,6 @@ const NewProductShopManager = (props) => {
                         <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..." }</Button>
                         :
                         <Button className='btn-primary' type="submit">{size == "small" ? "Upload" : "Save" }</Button>
-                    }
-                    {withDraft ?
-                        <>
-                            {productDraftLoading ?
-                                <span className="cursor-pointer text-black ms-3">Saving as Draft...</span>
-                                :
-                                <span className="cursor-pointer text-black ms-3" onClick={ProductDraftSubmit}>Save as Draft <HiOutlineArrowLongRight className="align-text-bottom"/></span>
-                            }
-                        </>
-                        :
-                        null
                     }
                 </Col>
             </Row>
