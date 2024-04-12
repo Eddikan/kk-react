@@ -211,7 +211,7 @@ const App = () => {
           <Route path="/:user/profile" exact element={<UserProfile />} />
           <Route path="/user/complete-profile" exact element={<ProfileCompleteness />} />
           <Route path="/thankyou" exact element={<ThankYou />} />
-          <Route path="/shop-manager-completion" exact element={<ShopAvailability />} />
+          <Route path="/user/shop-manager" exact element={<ShopAvailability />} />
           
 
           <Route

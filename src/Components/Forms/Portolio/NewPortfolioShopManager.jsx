@@ -224,72 +224,7 @@ const NewPortfolioShopManager = (props) => {
                             </Form.Group>
                                 </Col>
                             </Row>
-                            {/* <Form.Group className='my-4'>
-                                <Form.Label>Categories</Form.Label>
-                                <TagsInput
-                                    value={categories}
-                                    onChange={setCategories}
-                                    name="categories"
-                                    className="form-control"
-                                    onBlur={(e) => {
-                                        const value = e.target.value;
-                                        if (!categories.includes(value) && value !== "") {
-                                            setCategories([...categories, value]);
-                                            e.target.value = "";
-                                        }
-                                    }}
-                                />
-                            </Form.Group> */}
-                            {/* <Form.Group className='my-4'>
-                                <Form.Label>Season</Form.Label>
-                                <FormControl type='text' name='season' value={portfolioData.season} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                            </Form.Group>
-                            <Form.Group className='my-4'>
-                                <Form.Label>Colors</Form.Label>
-                                <TagsInput
-                                    value={colors}
-                                    onChange={setColors}
-                                    name="colors"
-                                    className="form-control"
-                                    onBlur={(e) => {
-                                        const value = e.target.value;
-                                        if (!colors.includes(value) && value !== "") {
-                                            setColors([...colors, value]);
-                                            e.target.value = "";
-                                        }
-                                    }}
-                                />
-                            </Form.Group> */}
-                            {/* <Form.Group className='my-4'>
-                                <Form.Label>Materials</Form.Label>
-                                <TagsInput
-                                    value={materials}
-                                    onChange={setMaterials}
-                                    name="materials"
-                                    className="form-control"
-                                    onBlur={(e) => {
-                                        const value = e.target.value;
-                                        if (!materials.includes(value) && value !== "") {
-                                            setMaterials([...materials, value]);
-                                            e.target.value = "";
-                                        }
-                                    }}
-                                />
-                            </Form.Group> */}
-                            {/* <Form.Group className='my-4'>
-                                <Form.Label>Lead Time (No. of days)</Form.Label>
-                                <FormControl type='text' name='lead_time' required placeholder='' />
-                            </Form.Group>
-                            <Form.Group className='my-4'>
-                                <Form.Label>Pricing Structure</Form.Label>
-                                <FormControl as="textarea"
-                                    name="description"
-                                    rows={3}
-                                    // value={portfolioData.description}
-                                    placeholder=''
-                                    // onChange={handleChange} 
-                                    required />
-                            </Form.Group> */}
+                            
                             <Form.Group className='my-4'>
                                 <Form.Label>Tags</Form.Label>
                                 <TagsInput

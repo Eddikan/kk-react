@@ -1,66 +1,268 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Row, Col, Button, Form, FormControl } from 'react-bootstrap';
+import React, { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Button, FormGroup, ModalFooter } from 'react-bootstrap';
+import { IoIosArrowRoundForward } from "react-icons/io";
+import Form from 'react-bootstrap/Form';
+import { GoPlus, GoAlertFill } from 'react-icons/go';
+import FormControl from 'react-bootstrap/FormControl';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { TagsInput } from "react-tag-input-component";
+import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
 import NewPortfolioShopManager from 'Components/Forms/Portolio/NewPortfolioShopManager';
-import { GoPlus } from "react-icons/go";
-import toast from 'react-hot-toast';
-import axios from 'axios';
-import { useCookies } from 'react-cookie';
-import Countries from 'Utils/Countries';
+import GetUserPortfolioData from 'Utils/GetPortfolioData';
+import DateTimePicker from 'Components/Shared/DateTimePicker';
 
-const UploadPortfolio = ({ user, currentUser, reload, token }) => {
+const initialQuestionnaire2Data = Object.freeze({
+    design_inspirations: '',
+    pricing_structure: '',
+    lead_time: '',
+    areas_of_specialization: '',
+    design_process: '',
+    is_designer: 1,
+});
+
+const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
     const navigate = useNavigate();
-    const [uploadFileShow, setUploadFileShow] = useState(false);
+
+    const [questionnaire2Data, setQuestionnaire2Data] = useState(initialQuestionnaire2Data);
+    const [questionnaire2Loading, setQuestionnaire2Loading] = useState(false);
+    const [userLoading, setUserLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
+    const [scheduleShow, setScheduleShow] = useState(false);
+    const [uploadFileShow, setUploadFileShow] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [imageName, setImageName] = useState('');
+    const [selectedSpecialization, setSelectedSpecialization] = useState([]);
+    const [portfolio, setPortfolio] = useState([]);
+    const [portfolioLoading, setPortfolioLoading] = useState([]);
+    const [portfolioItems, setPortfolioItems] = useState([]);
+    const [availability, setAvailability] = useState([]);
+    const [currentAvailability, setCurrentAvailability] = useState([]);
+    const [postType, setPostType] = useState('post');
+    const [designerId, setDesignerId] = useState('');
+    const tagsInputRef = useRef(null);
+
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
+
+    const token = cookies.token;
+    const currentUser = cookies.currentUser;
+    const signupType = cookies.signup_type;
+
+    const fetchData = async (e) => {
+        try {
+            const portfolioData = await GetUserPortfolioData(e);
+            if (portfolioData) {
+                setPortfolio(portfolioData);
+                setPortfolioLoading(false);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+            // Update state or perform other logic with userData
+        } catch (error) {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            // Handle the error, if needed
+        }
+    };
+
+    const savePortfolioItems = (e) => {
+        if (portfolioItems && portfolioItems.length > 0) {
+            setPortfolioItems([...portfolioItems, e]);
+        } else {
+            setPortfolioItems([e]);
+        }
+    }
+
+    const toggleSchedule = (e) => {
+        e.preventDefault();
+        setScheduleShow(!scheduleShow);
+    }
 
     const toggleuploadFile = (e) => {
         e.preventDefault();
         setUploadFileShow(!uploadFileShow);
     }
 
-    // const refreshPortfolio = (e) => {
-    //     if (e) {
-    //         setReloadCount(reloadCount + 1);
-    //     }
-    // }
+    const handleTimeChange = (e) => {
+        setAvailability(e);
+    }
 
-    // const savePortfolioItems = (e) => {
-    //     if (portfolioItems && portfolioItems.length > 0) {
-    //         setPortfolioItems([...portfolioItems, e]);
-    //     } else {
-    //         setPortfolioItems([e]);
-    //     }
-    // }
+    const hideUpload = (e) => {
+        setUploadFileShow(false);
+    }
 
-    const addNewPortfolio = () => {
-        navigate('/user/center/design/add')
+    const handleChange = (e) => {
+        setQuestionnaire2Data({
+            ...questionnaire2Data,
+            [e.target.name]: e.target.value,
+        })
+    }
+
+    const refreshPortfolio = (e) => {
+        if (e) {
+            setReloadCount(reloadCount + 1);
+        }
+    }
+
+    const handleDoneTimeChange = (e) => {
+        setScheduleShow(false);
+        setCurrentAvailability(availability);
+    }
+
+    const handleDocumentClick = (event) => {
+        // Check if the click is outside the TagsInput component
+        if (tagsInputRef.current && !tagsInputRef.current.contains(event.target)) {
+            // Simulate an "Enter" key press
+            if (event.key === 'Enter') {
+                tagsInputRef.current.handleKeyDown({ key: 'Enter' });
+            }
+        }
     };
-    
+
+    async function questionnaire2Submit(e) {
+        e.preventDefault();
+        setQuestionnaire2Loading(true);
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?user_id=' + currentUser + '&token=' + token, { ...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, post_type: postType }).then((response) => {
+            const status = response.data.status;
+            if (status === 'Success') {
+                setQuestionnaire2Loading(false);
+                onStepPlusTwo(); 
+                onStepMinusTwo();
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator. 222');
+                setQuestionnaire2Loading(false);
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setQuestionnaire2Loading(false);
+        });
+    }
+
+    useEffect(() => {
+        fetchData(currentUser);
+
+        const handleDocumentClick = (event) => {
+            // Check if the click is outside the TagsInput component
+            if (tagsInputRef.current && !tagsInputRef.current.contains(event.target)) {
+                // Simulate an "Enter" key press
+                if (event.key === 'Enter') {
+                    tagsInputRef.current.handleKeyDown({ key: 'Enter' });
+                }
+            }
+        };
+
+        // Attach the event listener when the component mounts
+        document.addEventListener('click', handleDocumentClick);
+
+        // Cleanup the event listener when the component unmounts
+        return () => {
+            document.removeEventListener('click', handleDocumentClick);
+        };
+    }, [reloadCount, user]);
 
     return (
         <>
-            {/* <div className='fs-25 rufina-family mb-4'>Upload at least one item on your portfolio</div> */}
+                <Row>
+                    <Col lg='12' className='text-left'>
+                        <h2 className='fs-25 rufina-family pb-2'>Showcase the rich textures, and pattern of your design</h2>
+                    </Col>
+                </Row>
+                <Form onSubmit={questionnaire2Submit}>
+                    <Row>
+                        <Col lg="12">
+                            <Card className='mb-4 border-white'>
+                                <CardBody className='p-0 pt-3 pb-3'>
+                                    <Card className='background-dashed'>
+                                        {portfolioItems ?
+                                            <CardBody className={`${portfolioItems.length > 0 ? "pt-0" : ""}`}>
+                                                {portfolioItems.length > 0 ?
+                                                    <>
+                                                        <Row>
+                                                            {portfolioItems.map((portfolioItem, index) => (
+                                                                <>
+                                                                    {portfolioItem.image_urls && portfolioItem.image_urls.length > 0 ?
+                                                                        <>
+                                                                            {portfolioItem.image_urls.map((image, imageIndex) => (
+                                                                                <Col lg={4} key={image.id} className="image-preview mt-3">
+                                                                                    <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image.image_url + ")", minHeight: '190px' }}>
+                                                                                        <div className="dnd-actions-overlay"></div>
+                                                                                    </div>
+                                                                                </Col>
+                                                                            ))}
+                                                                        </>
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </>
+                                                            ))}
+                                                            <Col className="mt-3" lg={4}>
+                                                                <div onClick={toggleuploadFile} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed" style={{ minHeight: '190px' }}>
+                                                                    <GoPlus color="#a4a4a4" size="130px" className="mt-3" />
+                                                                    <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
+                                                                </div>
+                                                            </Col>
+                                                        </Row>
+                                                    </>
+                                                    :
+                                                    <Row className="align-items-center text-center my-5">
+                                                        <Col>
+                                                            <div className="mb-3 fs-20">
+                                                                Upload your design
+                                                            </div>
+                                                            <div className="mb-4 fs-16 mt-1 small">
+                                                                Showcase your best work, get feedback, likes, and join a growing community.
+                                                            </div>
+                                                            <Button className='btn-primary'
+                                                                onClick={toggleuploadFile}
+                                                                type="button"
+                                                            >
+                                                                Upload Your First Design
+                                                            </Button>
+                                                        </Col>
+                                                    </Row>
+                                                }
 
-            <Row className=" text-center my-5">
-                <Col className='background-dashed p-5'>
-                    <div className="mb-1 fs-20">
-                        Upload your design
-                    </div>
-                    <div className="mb-4 fs-16 mt-1 small">
-                        Showcase your best work, get feedback, likes, and join a growing community.
-                    </div>
-                    <div>
-                    <Button className='btn-primary'
-                        onClick={toggleuploadFile}
-                        type="button"
-                    >
-                        Upload Your Design
-                    </Button>
-                    </div>
-                </Col>
-            </Row>
-
+                                            </CardBody>
+                                            :
+                                            <CardBody>
+                                                <Row className="align-items-center text-center my-5">
+                                                    <Col>
+                                                        <Form.Label className="mb-1 fs-20">
+                                                            Upload your design
+                                                        </Form.Label>
+                                                        <Form.Label className="mb-4 fs-16 mt-1 small">
+                                                            Showcase your best work, get feedback, likes, and join a growing community.
+                                                        </Form.Label>
+                                                        <Button className='btn-primary'
+                                                            onClick={toggleuploadFile}
+                                                            type="button"
+                                                        >
+                                                            Upload Your First Shot
+                                                        </Button>
+                                                    </Col>
+                                                </Row>
+                                            </CardBody>
+                                        }
+                                    </Card>
+                                </CardBody>
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col lg="12" className="text-right">
+                            <Button className='btn-outline me-3' type="button" onClick={() => onStepMinusTwo()} >Back</Button>
+                            
+                            {questionnaire2Loading ?
+                                <Button className='btn-save' type="button">Saving...</Button>
+                                :
+                                <Button className='btn-save' type="submit">Next</Button>
+                            }
+                            {/* <span className="cursor-pointer text-black" onClick={function () { hideAll(3); }}>Skip <IoIosArrowRoundForward /></span> */}
+                        </Col>
+                    </Row>
+                </Form>
 
             <Modal
                 isOpen={uploadFileShow}
@@ -77,24 +279,14 @@ const UploadPortfolio = ({ user, currentUser, reload, token }) => {
                     <h2 className='modal-title fs-25 fw-600 text-center'>Upload your Design</h2>
                     <Card className="border-0">
                         <CardBody className="p-2">
-                            <NewPortfolioShopManager 
-                            // size="small" 
-                            // withDraft={false} 
-                            // onSuccess={refreshPortfolio} 
-                            // onCancel={hideUpload} 
-                            // onSave={savePortfolioItems} 
-                            />
+                            <NewPortfolioShopManager size="small" withDraft={false} onSuccess={refreshPortfolio} onCancel={hideUpload} onSave={savePortfolioItems} />
                         </CardBody>
                     </Card>
                 </ModalBody>
             </Modal>
-
-            {/* <div onClick={addNewPortfolio} className="portfolio-grid-div add-more-box w-100 text-center cursor-pointer background-dashed">
-                <GoPlus color="#a4a4a4" size="150px" className="mt-3" />
-                <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
-            </div> */}
+           
         </>
-    )
-}
+    );
+};
 
 export default UploadPortfolio;

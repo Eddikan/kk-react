@@ -13,8 +13,9 @@ const initialBusinessHours = {
     end: ''
 };
 
-const SetAvailability = ({ user, currentUser, reload, token, onStepPlusOne }) => {
+const SetAvailability = ({ user, reload, token, onStepPlusOne }) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const currentUser = cookies.currentUser;
     const designerId = cookies.currentUserDesigner;
     const [isSundayChecked, setIsSundayChecked] = useState(false);
     const [isMondayChecked, setIsMondayChecked] = useState(false);
@@ -393,7 +394,8 @@ const handleRemoveSaturdayHours = (index) => {
         <>
             <Row className="h-100">
                                 <Col lg="12">
-                                <div className='fs-25 rufina-family mb-4'>Set your availability</div>
+                                <div className='fs-25 rufina-family mb-2'>Set your availability</div>
+                                <hr className='mb-4 mt-0'/>
                                     <Row>
                                         <Col lg="2">
                                             <h4 className="day-header">Sunday</h4>
@@ -905,7 +907,7 @@ const handleRemoveSaturdayHours = (index) => {
                                         </Col>
                                     </Row>
 
-                                    <div className="text-right mt-4 mb-2">
+                                    <div className="text-right mt-3 mb-2">
                                         {formStatus ?
                                             <Button type='button' className="btn-save">Saving...</Button>
                                         :

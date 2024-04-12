@@ -267,8 +267,12 @@ const Header = () => {
     <>
 
       <div className='banner-completion text-center'>
+        
           <span className='text-white'>Your profile completion is at 20%. 
-          <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span></span>
+          <Link to="/user/complete-profile" className='text-decoration-none'>
+          <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span>
+          </Link>
+          </span>
       </div>
 
       <div className='bg-dark py-2 text-center'>
