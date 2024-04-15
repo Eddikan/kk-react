@@ -83,7 +83,7 @@ const Designers = (props) => {
                     </>
                     :
                     <>
-                        {designers && designers.length > 0 ? (
+                        {designers && designers.length > 0 ? ( 
                             <>
                                 <Row>
                                     {designers.map((designer, index) => (

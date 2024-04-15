@@ -1,11 +1,7 @@
 #schedule-consultation {
     padding-top: 50px;
-}
-
-#schedule-consultation h1 {
-    font-size: 30px;
-    font-weight: 700;
-    margin-bottom: 20px;
+    padding-bottom: 50px;
+    background: #ffffff;
 }
 
 .appointment-calendar-container {
@@ -83,6 +79,12 @@
     display: flex;
     column-gap: 15px;
     justify-content: end;
+}
+
+#schedule-consultation h1 {
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 20px;
 }
 
 .appointment-calendar-container .rbc-toolbar {

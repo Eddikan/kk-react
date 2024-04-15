@@ -415,6 +415,20 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     }, [calendarRef.current]);
 
     useEffect(() => {
+        getDesigner()
+        .then((response) => {
+            const selectedDesigner = response.data.data;
+            if (selectedDesigner) {
+                setDesigner(selectedDesigner);
+                setDesignerUser(selectedDesigner.user);
+            } else {
+                toast.error('There has been an error getting the designer, please try again!');
+            }
+        })
+        .catch((error) => {
+            toast.error('There has been an error getting the designer, please try again!');
+        });
+
         if (currentUser && appointmentscheduleId != 0) {
             getAppointment()
                 .then((response) => {
@@ -423,14 +437,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                     if (selectedAppointment) {
                         setConsultationFormData(selectedAppointment);
                         setConsultationDetails(selectedAppointment.consultation_details);
-
-                        // const options = { year: 'numeric', month: 'long', day: 'numeric' };
-                        // const formattedDate = new Intl.DateTimeFormat('en-US', options).format(selectedAppointment.consultation_date);
-                        // setSelectedDate(formattedDate);
-
                         setSelectedDate(formatDate(selectedAppointment.consultation_date));
-
-                        // setSelectedTime(convertTo12HourFormat(selectedAppointment.consultation_hour_start));
                     } else {
                         toast.error('There has been an error getting the appointments, please try again!');
                         setAppointmentLoading(false);
@@ -444,35 +451,12 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     },
         [reloadCount]);
 
-        useEffect(() => {
-            getDesigner()
-                .then((response) => {
-                    const selectedDesigner = response.data.data;
-                    if (selectedDesigner) {
-                        setDesigner(selectedDesigner);
-                        setDesignerUser(selectedDesigner.user);
-                        console.log("selectedDesigner.user",selectedDesigner.user);
-                    } else {
-                        toast.error('There has been an error getting the designer, please try again!');
-                    }
-                })
-                .catch((error) => {
-                    toast.error('There has been an error getting the designer, please try again!');
-                });
-    
-        }, [reloadCount]);
-
-console.log("designerUser",designerUser);
-
     return (
         <>
             <Col lg="3">
-
-                <div className="appointment-preview-container">
-
-                <h3 className='mb-2 user-image-calendar'>Designer</h3>
+            <div className="appointment-preview-container">
+                <h3 className='mb-3 user-image-calendar'>Designer</h3>
                     <div className='fw-500 mb-4 user-image-calendar d-flex'> 
-
                             {designerUser.image ?
                                 <div
                                     className='user-photo-calendar me-2'
@@ -487,11 +471,13 @@ console.log("designerUser",designerUser);
                                     </div>
                             }
                         
-                        <span className='d-flex align-items-center'>{designer?.user?.first_name} {designer?.user?.last_name}</span>
-                </div>
+                        <span className='d-flex align-items-center'>
+                            {designer?.user?.first_name} {designer?.user?.last_name}
+                        </span>
+                 </div>
 
-                    <h3>Appointment Preview</h3>
-                    <div>
+                <h3>Appointment Preview</h3>
+            <div>
 
                         {selectedDate != "" &&
                             <>
@@ -501,18 +487,17 @@ console.log("designerUser",designerUser);
                             </>
                         }
 
-
                         {/* {formattedSelectedDate != "" &&
                          <>
                             <p><FiCalendar size={20} color={'#CEA835'}/><span className="fw-500 current-date">{formattedSelectedDate}</span></p>
                         </> 
                         } */}
 
-                        {consultationFormData.consultation_hour_start != "" &&
+                        {consultationFormData.consultation_hour_start != "" && consultationFormData.consultation_hour_end != "" && 
                             <>
                                 <p><TfiAlarmClock   size={20} color={'#CEA835'} className='mb-1'/>
                                 <span className="fw-500 current-date">
-                                    {convert24hrTo12hr(consultationFormData.consultation_hour_start)} &nbsp;-&nbsp; 
+                                    {convert24hrTo12hr(consultationFormData.consultation_hour_start)}&nbsp;-&nbsp; 
                                     {convert24hrTo12hr(consultationFormData.consultation_hour_end)}
                                 </span>
                                 </p>
@@ -526,13 +511,15 @@ console.log("designerUser",designerUser);
                                 </p>
                             </>
                         }
-                        {consultationFormData.first_name != "" &&
+                        
+                        {/* {consultationFormData.first_name != "" &&
                             <>
                                 <p><FaRegUser size={20} color={'#CEA835'} className='mb-1'/>
                                     <span className="fw-500 current-date">{consultationFormData.first_name} {consultationFormData.last_name}</span>
                                 </p>
                             </>
-                        }
+                        } */}
+
                         {consultationFormData.email != "" &&
                             <>
                                 <p><MdOutlineEmail size={20} color={'#CEA835'} className='mb-1'/>
@@ -541,16 +528,13 @@ console.log("designerUser",designerUser);
                             </>
                         }
 
-
-                        {/* {consultationFormData.consultation_details != "" &&
+                        {/* {selectedTimeSlot != "" &&
                             <>
-                                <p><BiCommentDetail  size={20} color={'#CEA835'} className='mb-1'/>
-                                    <span className="fw-500 current-date">{consultationFormData.consultation_details}</span>
+                                <p><TfiAlarmClock  size={20} color={'#CEA835'} className='mb-1'/>
+                                    <span className="fw-500 current-date">{selectedTimeSlot}</span>
                                 </p>
                             </>
                         } */}
-
-
                     </div>
                 </div>
             </Col>
