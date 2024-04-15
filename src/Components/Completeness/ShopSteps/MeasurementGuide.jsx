@@ -113,9 +113,8 @@ const MeasurementGuide = ({ onStepPlusThree, onStepMinusThree, props }) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
-                // toast.success('Measurement guide updated successfully!');
+                toast.success('Measurement guide updated successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
-                // onStepPlusThree();
                 setMeasurementLoading(false);
             } else {
                 const errors = response.data.errors;

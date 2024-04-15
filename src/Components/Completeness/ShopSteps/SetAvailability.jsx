@@ -1126,7 +1126,6 @@ const handleRemoveSaturdayHours = (index) => {
                                         :
                                             <Button 
                                             type='button' 
-                                            // onClick={BusinessHoursSubmitPost}
                                             onClick={() => {
                                                 if (!times.length) {
                                                     BusinessHoursSubmitPost()

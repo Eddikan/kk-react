@@ -103,6 +103,19 @@ const NewPortfolio = (props) => {
 
     async function PortfolioSubmit(e) {
         e.preventDefault();
+
+        if (portfolioData.image_urls == ''
+    ) {
+        toast.error('Please upload atleast one photo!');
+    } 
+    else if (portfolioData.name == '' ||
+            portfolioData.description == '' ||
+            categories.length == 0 ||
+            portfolioData.season == '' 
+    ) {
+        toast.error('Kindly complete the fields marked as required!');
+    } else {
+
         if (size == "small") {
             setPortfolioLoading(true);
             setTimeout(function(){
@@ -134,6 +147,7 @@ const NewPortfolio = (props) => {
                 toast.error('Please upload design images!');
             }
         }
+    }
     };
 
     async function PortfolioDraftSubmit(e) {
@@ -161,7 +175,7 @@ const NewPortfolio = (props) => {
     return (
         <>
         
-        <Form onSubmit={PortfolioSubmit}>
+        {/* <Form onSubmit={PortfolioSubmit}> */}
             <Row>
                 <Col lg='8'>
                     <div>
@@ -173,11 +187,11 @@ const NewPortfolio = (props) => {
                         <Card>
                             <Card.Body className='bg-lgray'>
                                 <Form.Group className='mb-3 mt-2'>
-                                    <Form.Label>Name</Form.Label>
+                                    <Form.Label>Name<span className='text-danger'>*</span></Form.Label>
                                     <FormControl type='text' name='name' value={portfolioData.name} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                 </Form.Group>
                                 <Form.Group className='my-3'>
-                                    <Form.Label>Description</Form.Label>
+                                    <Form.Label>Description<span className='text-danger'>*</span></Form.Label>
                                     <FormControl as="textarea"
                                         name="description"
                                         rows={3} // You can adjust the number of rows as needed
@@ -204,7 +218,7 @@ const NewPortfolio = (props) => {
                             {portfolioLoading ?
                                 <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..." }</Button>
                                 :
-                                <Button className='btn-primary' type="submit">{size == "small" ? "Upload" : "Save" }</Button>
+                                <Button className='btn-primary' type="button" onClick={PortfolioSubmit}>{size == "small" ? "Upload" : "Save" }</Button>
                             }
                             {withDraft ?
                                 <>
@@ -224,7 +238,7 @@ const NewPortfolio = (props) => {
                     <Card>
                         <Card.Body className="bg-lgray">
                             <Form.Group className='mb-3'>
-                                <Form.Label>Categories</Form.Label>
+                                <Form.Label>Categories<span className='text-danger'>*</span></Form.Label>
                                 <TagsInput
                                     value={categories}
                                     onChange={setCategories}
@@ -240,7 +254,7 @@ const NewPortfolio = (props) => {
                                 />
                             </Form.Group>
                             <Form.Group className='my-3'>
-                                <Form.Label>Season</Form.Label>
+                                <Form.Label>Season<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='text' name='season' value={portfolioData.season} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-3'>
@@ -336,7 +350,6 @@ const NewPortfolio = (props) => {
                     </Card>
                 </Col>
             </Row>
-        </Form>
         <Modal
                 show={guideModalShow} 
                 onHide={toggleGuideModal}

@@ -508,11 +508,11 @@ const Fabrics = (props) => {
                                     </div> */}
                                 </div>
                             </Col>
-                            <Col lg="9" className='d-flex '>
+                            <Col lg="9">
                                 <div id="profile-designs">
                                     {fabricsLoading ?
                                         <>
-                                            {/* <Loading className="bg-white" /> */}
+                                            <Loading className="bg-white" />
                                         </>
                                         :
                                         <>
@@ -533,14 +533,14 @@ const Fabrics = (props) => {
                                                                 <>
                                                                     {ecoFriendly == 1 && fabric.eco_friendly == 1 && (
                                                                         <>
-                                                                            <Col className="designs-grid mb-3">
+                                                                            <Col className="designs-grid mb-3" xs="12" md="3">
                                                                                 <div className="portfolio-link">
                                                                                 {userRole !== 'Admin' ?
                                                                                         <>
                                                                                     <div
                                                                                         className="designs-grid-div w-100 cursor-pointer"
                                                                                         onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }}
-                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' , minWidth: '250px' }}
+                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}
                                                                                     >
                                                                                     </div>
                                                                                     </>
@@ -639,14 +639,14 @@ const Fabrics = (props) => {
 
                                                                     {ecoFriendly == 0 && (
                                                                         <>
-                                                                            <Col className="designs-grid mb-3">
+                                                                            <Col className="designs-grid mb-3" xs="12" md="3">
                                                                                 <div className="portfolio-link">
                                                                                 {userRole !== 'Admin' ?
                                                                                         <>
                                                                                     <div
                                                                                         className="designs-grid-div w-100 cursor-pointer"
                                                                                         onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }}
-                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' , minWidth: '250px'}}
+                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px'}}
                                                                                     >
                                                                                     </div>
                                                                                     </>
@@ -655,7 +655,7 @@ const Fabrics = (props) => {
                                                                                     <div
                                                                                         className="designs-grid-div w-100 cursor-pointer"
                                                                                         onClick={function () { toggleAddViewCount(fabric.id); navigate('/admin/fabric/' + fabric.id); }}
-                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' , minWidth: '250px'}}
+                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px'}}
                                                                                     >
                                                                                     </div>
                                                                                     </>

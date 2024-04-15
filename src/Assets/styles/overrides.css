@@ -1974,6 +1974,17 @@ a.schedule-consultation {
     visibility: visible;
 }
 
+.btn-save {
+    font-size: 15px;
+    padding: 10px 20px;
+    min-width: 150px !important;
+    border-radius: 5px;
+    border-width: 2px;
+    color: var(--white);
+    background-color: var(--black);
+    border-color: var(--black);
+}
+
 .placeholder-img-survey {
     width: 45px;
     height: 45px;

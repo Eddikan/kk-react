@@ -190,6 +190,24 @@ const NewProductNormal = (props) => {
 
     async function ProductSubmit(e) {
         e.preventDefault();
+
+        if (productData.image_urls == ''
+    ) {
+        toast.error('Please upload atleast one photo!');
+    } 
+    else if (productData.name == '' ||
+            productData.description == '' ||
+            composition.length == 0 ||
+            weave.length == '' ||
+            productData.texture == '' ||
+            productData.pattern == '' ||
+            productData.care_instructions == '' ||
+            productData.country == '' ||
+            productData.price == '' 
+    ) {
+        toast.error('Kindly complete the fields marked as required!');
+    } else {
+
         if (size == "small") {
             setProductLoading(true);
             setTimeout(function () {
@@ -222,6 +240,7 @@ const NewProductNormal = (props) => {
                 toast.error('Please upload design images!');
             }
         }
+    }
     };
 
     async function ProductDraftSubmit(e) {
@@ -248,7 +267,7 @@ const NewProductNormal = (props) => {
 
     return (
         <>
-            <Form onSubmit={ProductSubmit} ref={formRef}>
+            {/* <Form onSubmit={ProductSubmit} ref={formRef}> */}
                 <Row>
                     <Col lg='8'>
                         <div>
@@ -260,11 +279,11 @@ const NewProductNormal = (props) => {
                             <Card className="mb-3">
                                 <Card.Body className='bg-lgray'>
                                     <Form.Group className='mb-3 mt-2'>
-                                        <Form.Label>Name</Form.Label>
+                                        <Form.Label>Name<span className='text-danger'>*</span></Form.Label>
                                         <FormControl type='text' name='name' value={productData.name} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                     </Form.Group>
                                     <Form.Group className='my-3'>
-                                        <Form.Label>Description</Form.Label>
+                                        <Form.Label>Description<span className='text-danger'>*</span></Form.Label>
                                         <FormControl as="textarea"
                                             name="description"
                                             rows={3} // You can adjust the number of rows as needed
@@ -273,7 +292,7 @@ const NewProductNormal = (props) => {
                                             onChange={handleChange} required />
                                     </Form.Group>
                                     <Form.Group className='my-3'>
-                                        <Form.Label>Care Instructions</Form.Label>
+                                        <Form.Label>Care Instructions <span className='text-danger'>*</span></Form.Label>
                                         <FormControl as="textarea"
                                             name="care_instructions"
                                             rows={3} // You can adjust the number of rows as needed
@@ -325,7 +344,7 @@ const NewProductNormal = (props) => {
                                             <Row>
                                                 <Col lg="6">
                                                     <Form.Group className='my-1'>
-                                                        <Form.Label>Price (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
+                                                        <Form.Label>Price<span className='text-danger'>*</span> (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
                                                         <FormControl type='number' name='price' value={productData.price} className='mr-sm-2' onChange={handleChange} placeholder='' required />
                                                     </Form.Group>
                                                 </Col>
@@ -371,7 +390,7 @@ const NewProductNormal = (props) => {
                             {productLoading ?
                                 <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..."}</Button>
                                 :
-                                <Button className='btn-primary' type="submit">{size == "small" ? "Upload" : "Save"}</Button>
+                                <Button className='btn-primary' type="button" onClick={ProductSubmit}>{size == "small" ? "Upload" : "Save"}</Button>
                             }
                             {withDraft ?
                                 <>
@@ -390,7 +409,7 @@ const NewProductNormal = (props) => {
                         <Card className='mb-3 h-100'>
                             <Card.Body className='bg-lgray'>
                                 <Form.Group className='my-2'>
-                                    <Form.Label>Country of Origin</Form.Label>
+                                    <Form.Label>Country of Origin<span className='text-danger'>*</span></Form.Label>
                                     <Form.Control as='select' name='country' value={productData.country} className='mr-sm-2' onChange={handleChange} required>
                                         <option value=''>Select Country</option>
                                         {Countries.map((country, index) => (
@@ -432,7 +451,7 @@ const NewProductNormal = (props) => {
                                     />
                                 </Form.Group>
                                 <Form.Group className='mb-3 mt-2'>
-                                    <Form.Label>Composition</Form.Label>
+                                    <Form.Label>Composition<span className='text-danger'>*</span></Form.Label>
                                     <Form.Control as='select' name='composition' value={composition} className='mr-sm-2 mb-2' onChange={handleChangeComposition} required>
                                         <option value=''>Select Composition</option>
                                         <option value='Polyamide'>Polyamide</option>
@@ -450,7 +469,7 @@ const NewProductNormal = (props) => {
                                     }
                                 </Form.Group>
                                 <Form.Group className='mb-3 mt-2'>
-                                    <Form.Label>Weave</Form.Label>
+                                    <Form.Label>Weave<span className='text-danger'>*</span></Form.Label>
                                     <Form.Control as='select' name='weave' value={weave} className='mr-sm-2 mb-2' onChange={handleChangeWeave} required>
                                         <option value=''>Select Weave</option>
                                         <option value='Plain'>Plain</option>
@@ -470,15 +489,15 @@ const NewProductNormal = (props) => {
                                     }
                                 </Form.Group>
                                 <Form.Group className='my-3'>
-                                    <Form.Label>Pattern</Form.Label>
+                                    <Form.Label>Pattern<span className='text-danger'>*</span></Form.Label>
                                     <FormControl type='text' name='pattern' value={productData.pattern} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                 </Form.Group>
                                 <Form.Group className='my-3'>
-                                    <Form.Label>Texture</Form.Label>
+                                    <Form.Label>Texture<span className='text-danger'>*</span></Form.Label>
                                     <FormControl type='text' name='texture' value={productData.texture} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                 </Form.Group>
                                 <Form.Group className='my-3'>
-                                    <Form.Label>Opacity</Form.Label>
+                                    <Form.Label>Opacity<span className='text-danger'>*</span></Form.Label>
                                     <FormControl type='text' name='opacity' value={productData.opacity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                 </Form.Group>
                                 <Form.Group className='my-3'>
@@ -575,7 +594,7 @@ const NewProductNormal = (props) => {
                         </Card>
                     </Col>
                 </Row>
-            </Form>
+            {/* </Form> */}
         </>
     );
 };

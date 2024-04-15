@@ -19,7 +19,7 @@ const ProfileProgress = ({ completeness }) => {
                                 <div className='progress-circle progress-circle-active'>
                                     <div className='full-active-circle'></div>
                                 </div>
-                                <span className='ms-2 text-gold fw-700'>Personal Information</span>
+                                <span className='ms-2 fw-500'>Personal Information</span>
                             </div>
                         </>
                     :completeness == 25 || completeness == 50 || completeness == 75 || completeness == 100 ?
@@ -28,14 +28,14 @@ const ProfileProgress = ({ completeness }) => {
                                 <div className='progress-circle progress-circle-check'>
                                     <FaCheck color='#ffffff' />
                                 </div>
-                                <span className='ms-2 text-gold fw-700'>Personal Information</span>
+                                <span className='ms-2 fw-500'>Personal Information</span>
                             </div>
                         </>
                     :
                         <>
                             <div className='d-flex align-items-center inactive'>
                                 <div className='progress-circle progress-circle-inactive'>
-                                    <span className='fs-12 fw-700'>1</span>
+                                    <span className='fs-12 fw-500'>1</span>
                                 </div>
                                 <span className='ms-2'>Personal Information</span>
                             </div>
@@ -49,7 +49,7 @@ const ProfileProgress = ({ completeness }) => {
                                 <div className='progress-circle progress-circle-active'>
                                     <div className='full-active-circle'></div>
                                 </div>
-                                <span className='ms-2 text-gold fw-700'>Address Details</span>
+                                <span className='ms-2 fw-500'>Address Details</span>
                             </div>
                         </>
                     :completeness == 50 || completeness == 75 || completeness == 100 ?
@@ -58,14 +58,14 @@ const ProfileProgress = ({ completeness }) => {
                                 <div className='progress-circle progress-circle-check'>
                                     <FaCheck color='#ffffff' />
                                 </div>
-                                <span className='ms-2 text-gold fw-700'>Address Details</span>
+                                <span className='ms-2 fw-500'>Address Details</span>
                             </div>
                         </>
                     :
                         <>
                             <div className='d-flex align-items-center inactive'>
                                 <div className='progress-circle progress-circle-inactive'>
-                                    <span className='fs-12 fw-700'>2</span>
+                                    <span className='fs-12 fw-500'>2</span>
                                 </div>
                                 <span className='ms-2'>Address Details</span>
                             </div>
@@ -79,7 +79,7 @@ const ProfileProgress = ({ completeness }) => {
                                 <div className='progress-circle progress-circle-active'>
                                     <div className='full-active-circle'></div>
                                 </div>
-                                <span className='ms-2 text-gold fw-700'>Contact Information</span>
+                                <span className='ms-2 fw-500'>Contact Information</span>
                             </div>
                         </>
                     :completeness == 75 || completeness == 100 ?
@@ -88,14 +88,14 @@ const ProfileProgress = ({ completeness }) => {
                                 <div className='progress-circle progress-circle-check'>
                                     <FaCheck color='#ffffff' />
                                 </div>
-                                <span className='ms-2 text-gold fw-700'>Contact Information</span>
+                                <span className='ms-2 fw-500'>Contact Information</span>
                             </div>
                         </>
                     :
                         <>
                             <div className='d-flex align-items-center inactive'>
                                 <div className='progress-circle progress-circle-inactive'>
-                                    <span className='fs-12 fw-700'>3</span>
+                                    <span className='fs-12 fw-500'>3</span>
                                 </div>
                                 <span className='ms-2'>Contact Information</span>
                             </div>
@@ -109,7 +109,7 @@ const ProfileProgress = ({ completeness }) => {
                                 <div className='progress-circle progress-circle-active'>
                                     <div className='full-active-circle'></div>
                                 </div>
-                                <span className='ms-2 text-gold fw-700'>Social Media</span>
+                                <span className='ms-2 fw-500'>Social Media</span>
                             </div>
                         </>
                     :completeness == 100 ?
@@ -118,14 +118,14 @@ const ProfileProgress = ({ completeness }) => {
                                 <div className='progress-circle progress-circle-check'>
                                     <FaCheck color='#ffffff' />
                                 </div>
-                                <span className='ms-2 text-gold fw-700'>Social Media</span>
+                                <span className='ms-2 fw-500'>Social Media</span>
                             </div>
                         </>
                     :
                         <>
                             <div className='d-flex align-items-center inactive'>
                                 <div className='progress-circle progress-circle-inactive'>
-                                    <span className='fs-12 fw-700'>4</span>
+                                    <span className='fs-12 fw-500'>4</span>
                                 </div>
                                 <span className='ms-2'>Social Media</span>
                             </div>

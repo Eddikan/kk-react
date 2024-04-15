@@ -254,9 +254,10 @@ const AdminPortfolioGrid = (props) => {
                                                             <BsThreeDots className="cursor-pointer action-menu" color="#ffffff" size="30px" onClick={() => handleActionClick(index)} />
                                                             {selectedItemIndex === index && (
                                                                 <div className="action-box">
-                                                                    {/* <Link className="text-decoration-none" to={`/user/center/design/${object.id}/edit`}>
+                                                                    
+                                                                    <Link className="text-decoration-none" to={`/user/center/design/${object.id}/edit`}>
                                                                         <p className="mb-3 text-decoration-none"><GoPencil /> Edit</p>
-                                                                    </Link> */}
+                                                                    </Link>
                                                                     <p className="mb-3 cursor-pointer" onClick={function () { deleteConfirm(object.id); }}><GoTrash /> Delete</p>
                                                                     {object.status != "Draft" ?
                                                                         <p className="mb-0 cursor-pointer" onClick={function () { PortfolioDraftSubmit(object.id); }}><IoDocumentOutline /> {portfolioDraftLoading ? "Drafting..." : "Draft"}</p>

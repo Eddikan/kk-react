@@ -247,7 +247,7 @@ const Portfolio = (props) => {
 
                                                 <Row>
                                                     {portfolio.map((object, index) => (
-                                                        <Col className={`portfolio-grid-image mb-3`} xs="4" md="2">
+                                                        <Col className={`portfolio-grid-image mb-4`} xs="4" md="2">
                                                             <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`}
                                                                 style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url + ")" }}
                                                             >

@@ -15,6 +15,7 @@ const initialPortfolioData = Object.freeze({
     name: '',
     description: '',
     season: '',
+    categories: '',
     collection_type: 'Regular',
 });
 
@@ -76,6 +77,19 @@ const NewPortfolioShopManager = (props) => {
 
     async function PortfolioSubmit(e) {
         e.preventDefault();
+
+        if (portfolioData.image_urls == ''
+        ) {
+            toast.error('Please upload atleast one photo!');
+        } 
+        else if (portfolioData.name == '' ||
+                portfolioData.description == '' ||
+                categories.length == 0 ||
+                portfolioData.season == ''
+        ) {
+            toast.error('Kindly complete the fields marked as required!');
+        } else {
+
         if (portfolioData.image_urls) {
             setPortfolioLoading(true);
             axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
@@ -95,11 +109,11 @@ const NewPortfolioShopManager = (props) => {
             });
         } else {
             toast.error('Please upload design images!');
-        }
+    }
+}
     };
 
     return (
-        // <Form>
             <Row>
                 <Col lg='12'>
                     <Card className='mb-3'>
@@ -112,23 +126,33 @@ const NewPortfolioShopManager = (props) => {
                     <Card>
                         <Card.Body className='bg-lgray'>
                             <Form.Group className='mb-4 mt-2'>
-                                <Form.Label>Name</Form.Label>
-                                <FormControl type='text' name='name' value={portfolioData.name} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                <Form.Label>Name<span className='text-danger'>*</span></Form.Label>
+                                <FormControl 
+                                type='text' 
+                                name='name' 
+                                value={portfolioData.name} 
+                                className='mr-sm-2' 
+                                onChange={handleChange} 
+                                required 
+                                />
                             </Form.Group>
+
                             <Form.Group className='my-4'>
-                                <Form.Label>Description</Form.Label>
+                                <Form.Label>Description <span className='text-danger'>*</span></Form.Label>
                                 <FormControl as="textarea"
                                     name="description"
                                     rows={3} // You can adjust the number of rows as needed
                                     value={portfolioData.description}
                                     placeholder=''
-                                    onChange={handleChange} required />
+                                    onChange={handleChange}
+                                    required
+                                    />
                             </Form.Group>
 
                             <Row>
                                 <Col lg="6">
                                 <Form.Group className='my-4'>
-                                <Form.Label>Categories</Form.Label>
+                                <Form.Label>Categories<span className='text-danger'>*</span></Form.Label>
                                 <TagsInput
                                     value={categories}
                                     onChange={setCategories}
@@ -148,7 +172,7 @@ const NewPortfolioShopManager = (props) => {
                                 <Col lg="6">
 
                                 <Form.Group className='my-4'>
-                                <Form.Label>Season</Form.Label>
+                                <Form.Label>Season<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='text' name='season' value={portfolioData.season} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                                 </Col>
@@ -239,15 +263,14 @@ const NewPortfolioShopManager = (props) => {
                     </Card>
                 </Col>
                 <Col lg="12" className="text-right mt-4">
-                    <Button className='btn-outline me-3' type="button" onClick={handleCancel}>Cancel</Button>
+                    <Button className='btn-back me-3' type="button" onClick={handleCancel}>Cancel</Button>
                     {portfolioLoading ?
-                        <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..." }</Button>
+                        <Button className='btn-save btn' type="button">{size == "small" ? "Uploading..." : "Saving..." }</Button>
                         :
-                        <Button className='btn-primary' type="button" onClick={PortfolioSubmit}>{size == "small" ? "Upload" : "Save" }</Button>
+                        <Button className='btn-save btn' type="button" onClick={PortfolioSubmit}>{size == "small" ? "Upload" : "Save" }</Button>
                     }
                 </Col>
             </Row>
-        // </Form>
     );
 };
 

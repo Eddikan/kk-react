@@ -311,6 +311,7 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                                                                     <Button className='btn-primary'
                                                                         onClick={toggleuploadFile}
                                                                         type="button"
+                                                                      
                                                                     >
                                                                         Upload
                                                                     </Button>

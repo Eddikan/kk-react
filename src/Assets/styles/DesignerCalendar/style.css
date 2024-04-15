@@ -167,3 +167,15 @@ button.rbc-button-link {
 .highlighted-date {
     background-color: #912121; /* Change this to the highlight color you prefer */
 }
+
+.user-image-calendar .user-photo-calendar {
+    min-width: 25px;
+    min-height: 25px;
+    max-width: 25px;
+    max-height: 25px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+}
+
