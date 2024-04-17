@@ -1037,10 +1037,16 @@ form select::placeholder {
     border-radius: 5px;
 }
 
+.user-profile-picture {
+    max-height: 120px;
+}
+
 @media only screen and (min-width: 981px) {
     .portfolio-grid {
         width: 20%;
     }
+
+    
 }
 
 /* Portfolio Grid */

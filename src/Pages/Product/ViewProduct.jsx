@@ -408,7 +408,11 @@ const ViewProduct = () => {
                                                 {
                                                     product.video_demo_type == "Youtube" || product.video_demo_type == "Vimeo" ?
                                                         <>
-                                                            <ResponsiveEmbedVideo src={product.video_demo_url} title={product.name} />
+                                                            {product.video_demo_url.includes('http://') || product.video_demo_url.includes('https://') ? 
+                                                                <ResponsiveEmbedVideo src={product.video_demo_url} title={product.name} />
+                                                                :
+                                                                null
+                                                            }
                                                         </>
                                                         :
                                                         <>

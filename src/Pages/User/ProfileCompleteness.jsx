@@ -121,55 +121,7 @@ const ProfileCompleteness = () => {
             [e.target.name]: e.target.value,
         })
     };
-
-    async function submitProfile(e) {
-        e.preventDefault();
-        setProfileFormLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, profileFormData).then((response) => {
-            const success = response.data.status;
-            if (success == 'Success') {
-                const data = response.data.data;
-                const user = data.user;
-                const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
-                setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-                toast.success('Profile updated successfully!');
-                setReloadCount((prevReloadCount) => prevReloadCount + 1);
-            } else {
-                const errors = response.data.errors;
-            }
-            setProfileFormLoading(false);
-        }).catch((error) => {
-            setProfileFormLoading(false);
-            toast.error('Something went wrong, please contact the administrator!');
-        });
-    }
-
-    async function submitDesigner(e) {
-        if (areasOfSpecializationData.length > 0) {
-            e.preventDefault();
-            setProfileFormLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designer.id + '?user_id=' + currentUser + '&token=' + token, { areas_of_specialization: areasOfSpecializationData }).then((response) => {
-                const success = response.data.status;
-                if (success == 'Success') {
-                    const data = response.data.data;
-                    const user = data.user;
-                    toast.success('Profile updated successfully!');
-                    setReloadCount((prevReloadCount) => prevReloadCount + 1);
-                } else {
-                    const errors = response.data.errors;
-                }
-                setProfileFormLoading(false);
-            }).catch((error) => {
-                setProfileFormLoading(false);
-                toast.error('Something went wrong, please contact the administrator!');
-            });
-        } else {
-            setProfileFormLoading(false);
-            toast.error('Please insert your specialization and experties!');
-        }
-
-    }
-
+    
     const [completeness, setCompleteness] = useState(0);
 
     const fetchData = async (e) => {

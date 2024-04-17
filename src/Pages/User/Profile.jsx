@@ -312,7 +312,7 @@ const Profile = () => {
                         <Row>
                             <Col lg="6" className='mb-5'>
                                 <div className='d-flex column-gap-20'>
-                                    <div className='text-left position-relative'>
+                                    <div className='text-left position-relative user-profile-picture'>
                                         {uploadStatus != "standby" ?
                                             <div className="profile-image" style={{ backgroundImage: "url(" + Loading + ")", backgroundColor: '#f5f6f8' }}></div>
                                             :

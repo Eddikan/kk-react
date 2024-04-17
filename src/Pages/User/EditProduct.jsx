@@ -20,7 +20,11 @@ const EditProductDetails = () => {
     const editSuccess = (e) => {
         if (e) {
             setTimeout(function(){
-                navigate("/user/profile");
+                // navigate("/user/profile");
+                if (window.history.length > 1) {
+                    // Check if there is a previous page in the history
+                    navigate(-1); // Navigates back in the history
+                }
             }, 1000);
         }
     };

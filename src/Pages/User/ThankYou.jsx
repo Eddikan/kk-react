@@ -7,6 +7,7 @@ import Layout from 'Components/Layout/Layout';
 
 
 const ThankYou = (props) => {
+    console.log(props);
 
     return (
         <Layout>
