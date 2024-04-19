@@ -1,0 +1,63 @@
+.measure-table {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #eeeeee;
+}
+
+.bg-measurement-guide {
+    background-color: #fafafa;
+}
+
+.body-type-image {
+    border: 1px solid #eeeeee;
+    border-radius: 10px;
+}
+
+.table-color {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+td, th {
+    border: 1px solid #eeeeee;
+    text-align: left;
+    padding: 12px;
+    background-color: #ffffff;
+}
+  
+tr:nth-child(even) {
+    background-color: none;
+}
+
+ol {
+    padding-left: 1rem;
+}
+
+.body-measurement-table {
+    background-color: #ffffff;
+    padding: 15px;
+    border: 1px solid #eeeeee;
+    margin-bottom: 15px;
+    border-radius: 10px;
+}
+
+.how-to-measure {
+    background-color: #ffffff;
+    padding: 25px;
+    border: 1px solid #eeeeee;
+    border-radius: 10px;
+}
+
+.comprehensive-img {
+    border-radius: 10px;
+    width: 100%;
+    height: 600px;
+    background: #ffffff;
+    margin-bottom: 30px;
+    border: 1px solid #eeeeee;
+}
+
+.body-measurement-images {
+    height: 250px;
+}

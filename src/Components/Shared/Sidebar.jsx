@@ -75,6 +75,8 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                         )}
                         {userDetails.is_seller == 1 && (
                             <>
+                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/products')}><PiScissorsLight size="22" className="me-2 mb-1" />Fabrics</div>
+                            
                             <div className='mt-3 d-flex justify-content-between'>
                                 <div className='yellow-hover'>
                                     <span
@@ -124,7 +126,7 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                                     </Card>
                                 </span>
                             </div>
-                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/products')}><PiScissorsLight size="22" className="me-2 mb-1" />Fabrics</div>
+                            
                             </>
                         )}
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/guide')}><RxRulerHorizontal size="22" className="me-2 mb-1" />Measurement Guide</div>

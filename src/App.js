@@ -43,6 +43,8 @@ const LiveStream = lazy(() => import("./Pages/LiveStream"));
 const UserAppointments = lazy(() => import("./Pages/Seller/Appointments"));
 const ViewSurvey = lazy(() => import("./Pages/Seller/ViewSurvey"));
 const WhyWorkWithKK = lazy(() => import("./Pages/WhyWorkWithKK"));
+const MeasurementGuideFormat = lazy(() => import("./Pages/MeasurementGuideFormat"));
+
 
 
 // Survey
@@ -520,6 +522,9 @@ const App = () => {
 
           <Route path="/view/order/:orderId/survey/:surveyId" exact element={<ViewSurvey />} />
           <Route path="/admin/view/order/:orderId/survey/:surveyId" exact element={<AdminViewSurvey />} />
+          <Route path="/measurement-guide-format" exact element={<MeasurementGuideFormat />} />
+          
+          
         </Routes>
       </Suspense>
     </Router>

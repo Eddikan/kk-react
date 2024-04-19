@@ -323,7 +323,7 @@ const Cart = (props) => {
                                                                             <Col lg={2}>
                                                                                 <input
                                                                                     type="number"
-                                                                                    className="form-control p-2 d-inline-block"
+                                                                                    className="form-control p-2 me-2 d-inline-block"
                                                                                     min="1"
                                                                                     style={{ maxWidth: 60 }}
                                                                                     defaultValue={cartItem.quantity}
