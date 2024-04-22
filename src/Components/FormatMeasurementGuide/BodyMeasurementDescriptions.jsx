@@ -72,7 +72,7 @@ const BodyMeasurementDescriptions = (props) => {
                 <table className='w-100'>
                     <tr>
                         <td className='text-center'>
-                            <img src={UpperNeck} className='body-measurement-images'/>
+                            <img src={UpperNeck}/>
                         </td>
 
                         <td className='text-center'>
@@ -84,7 +84,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={LowerNeck} className='body-measurement-images'/>
+                             <img src={LowerNeck}/>
                         </td>
                         <td className='text-center'>
                             <strong>Lower Neck Circumference*** (Reference Point A1)</strong>
@@ -96,7 +96,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={ChestCircumference} className='body-measurement-images'/>
+                             <img src={ChestCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Chest Circumference*** (Reference Point Line C)</strong>
@@ -107,7 +107,7 @@ const BodyMeasurementDescriptions = (props) => {
 
 
                         <td className='text-center'>
-                             <img src={BustCircumference} className='body-measurement-images'/>
+                             <img src={BustCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Bust Circumference*** (Reference Line C1)</strong>
@@ -119,7 +119,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={UnderBustCircumference} className='body-measurement-images'/>
+                             <img src={UnderBustCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Under Bust Circumference*** (Reference Line C2)</strong>
@@ -129,7 +129,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={WaistCircumference} className='body-measurement-images'/>
+                             <img src={WaistCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Waist Circumference*** (Reference Line D)</strong>
@@ -141,7 +141,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={MidHipCircumference} className='body-measurement-images'/>
+                             <img src={MidHipCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Mid Hip Circumference*** (Reference Line E)</strong>
@@ -151,7 +151,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={HipCircumference} className='body-measurement-images'/>
+                             <img src={HipCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Hip Circumference*** (Reference Line F)</strong>
@@ -163,7 +163,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={BustDistance} className='body-measurement-images'/>
+                             <img src={BustDistance}/>
                         </td>
                         <td className='text-center'>
                             <strong>Bust Distance (Reference Points C3 - C5)</strong>
@@ -173,7 +173,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={FrontChestWidth} className='body-measurement-images'/>
+                             <img src={FrontChestWidth}/>
                         </td>
                         <td className='text-center'>
                             <strong>Front Chest Width (Reference Points C6 - C7)</strong>
@@ -188,7 +188,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={BackChestWidth} className='body-measurement-images'/>
+                             <img src={BackChestWidth}/>
                         </td>
                         <td className='text-center'>
                             <strong>Back Chest Width (Reference Points C6 - C7)</strong>
@@ -198,7 +198,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={FrontWaistLength} className='body-measurement-images'/>
+                             <img src={FrontWaistLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>Front Waist Length (Reference Point M to Line D)</strong>
@@ -210,7 +210,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={BackWaistLength} className='body-measurement-images'/>
+                             <img src={BackWaistLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>Back Waist Length (Reference Point M to Line D)</strong>
@@ -220,7 +220,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={CenterFrontLength} className='body-measurement-images'/>
+                             <img src={CenterFrontLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>Center Front Length (Reference Point A1 to Front Line D)</strong>
@@ -232,7 +232,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={CenterBackLength} className='body-measurement-images'/>
+                             <img src={CenterBackLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>Center Back Length  (Reference Point A1 to Back Line D)</strong>
@@ -242,7 +242,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={FrontNeckDepth} className='body-measurement-images'/>
+                             <img src={FrontNeckDepth}/>
                         </td>
                         <td className='text-center'>
                             <strong>Front Neck Depth (Reference Point M to the desired length)</strong>
@@ -254,7 +254,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={BackNeckDepth} className='body-measurement-images'/>
+                             <img src={BackNeckDepth}/>
                         </td>
                         <td className='text-center'>
                             <strong>Back Neck Depth (Reference Point A1 to your desired length)</strong>
@@ -264,7 +264,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={BustDepthRadius} className='body-measurement-images'/>
+                             <img src={BustDepthRadius}/>
                         </td>
                         <td className='text-center'>
                             <strong>Bust Depth/Radius (Reference Point C3 - C4)</strong>
@@ -278,7 +278,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={ArmholeDepth} className='body-measurement-images'/>
+                             <img src={ArmholeDepth}/>
                         </td>
                         <td className='text-center'>
                             <strong>Armhole Depth (Reference Point N to under the armpit line on line C)</strong>
@@ -289,7 +289,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={BustHeight} className='body-measurement-images'/>
+                             <img src={BustHeight}/>
                         </td>
                         <td className='text-center'>
                             <strong>Bust Height (Reference Point M - Line C3)</strong>
@@ -301,7 +301,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={FrontShoulderWidth} className='body-measurement-images'/>
+                             <img src={FrontShoulderWidth}/>
                         </td>
                         <td className='text-center'>
                             <strong>Front Shoulder Width (Reference Point N - N)</strong>
@@ -312,7 +312,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={BackShoulderWidth} className='body-measurement-images'/>
+                             <img src={BackShoulderWidth}/>
                         </td>
                         <td className='text-center'>
                             <strong>Back Shoulder Width (Reference Point N - N)</strong>
@@ -324,7 +324,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={ShoulderLength} className='body-measurement-images'/>
+                             <img src={ShoulderLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>Shoulder Length (Reference Point M - N)</strong>
@@ -335,7 +335,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={ShoulderDepth} className='body-measurement-images'/>
+                             <img src={ShoulderDepth}/>
                         </td>
                         <td className='text-center'>
                             <strong>Shoulder Depth (Reference point A1 - back line point N)</strong>
@@ -347,7 +347,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={ElbowCircumference} className='body-measurement-images'/>
+                             <img src={ElbowCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Elbow Circumference*** (Reference Point P)</strong>
@@ -358,7 +358,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={UnderarmLength} className='body-measurement-images'/>
+                             <img src={UnderarmLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>Underarm  Length (Lince C - Reference point Q)</strong>
@@ -372,7 +372,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={SleeveLength} className='body-measurement-images'/>
+                             <img src={SleeveLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>Sleeve Length (Reference Points N - P - O)</strong>
@@ -383,7 +383,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={ArmCircumference} className='body-measurement-images'/>
+                             <img src={ArmCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Arm Circumference*** (Reference Point O)</strong>
@@ -395,7 +395,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={WristCircumference} className='body-measurement-images'/>
+                             <img src={WristCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Wrist Circumference*** (Reference Point Q)</strong>
@@ -406,7 +406,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={ElbowLength} className='body-measurement-images'/>
+                             <img src={ElbowLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>Elbow Length (Reference Point N - P)</strong>
@@ -418,7 +418,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={ArmholeCircumference} className='body-measurement-images'/>
+                             <img src={ArmholeCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Armhole Circumference*** (Reference Point N - C6)</strong>
@@ -428,7 +428,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={SleeveCapHeight} className='body-measurement-images'/>
+                             <img src={SleeveCapHeight}/>
                         </td>
                         <td className='text-center'>
                             <strong>Sleeve Cap Height (Reference Point N - O)</strong>
@@ -440,7 +440,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={HipDepth} className='body-measurement-images'/>
+                             <img src={HipDepth}/>
                         </td>
                         <td className='text-center'>
                             <strong>Hip Depth ( Reference Point Side line mark D - F)</strong>
@@ -450,7 +450,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={CrotchDepth} className='body-measurement-images'/>
+                             <img src={CrotchDepth}/>
                         </td>
                         <td className='text-center'>
                             <strong>Crotch Depth (Reference Point D - F)</strong>
@@ -462,7 +462,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={CrotchLength} className='body-measurement-images'/>
+                             <img src={CrotchLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>Crotch Length ( Reference Point Front D - F - back D)</strong>
@@ -472,7 +472,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={PantsTrouserLength} className='body-measurement-images'/>
+                             <img src={PantsTrouserLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>Pants/Trouser Length ( Reference Point D - L)</strong>
@@ -484,7 +484,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={KneeLength} className='body-measurement-images'/>
+                             <img src={KneeLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>Knee Length (Reference Point D - I)</strong>
@@ -494,7 +494,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={InSeamLength} className='body-measurement-images'/>
+                             <img src={InSeamLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>In Seam Length (Reference Point F - L)</strong>
@@ -506,7 +506,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={ThighCircumference} className='body-measurement-images'/>
+                             <img src={ThighCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Thigh Circumference*** (Line G)</strong>
@@ -516,7 +516,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={MidthighCircumference} className='body-measurement-images'/>
+                             <img src={MidthighCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Mid-thigh Circumference*** (Line H)</strong>
@@ -528,7 +528,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={KneeCircumference} className='body-measurement-images'/>
+                             <img src={KneeCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Knee Circumference*** (Line I)</strong>
@@ -538,7 +538,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={CalfCircumference} className='body-measurement-images'/>
+                             <img src={CalfCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Calf Circumference*** (Line J)</strong>
@@ -550,7 +550,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={AnkleCircumference} className='body-measurement-images'/>
+                             <img src={AnkleCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Ankle Circumference*** (Line K)</strong>
@@ -560,7 +560,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={AnkleHeelCircumference} className='body-measurement-images'/>
+                             <img src={AnkleHeelCircumference}/>
                         </td>
                         <td className='text-center'>
                             <strong>Ankle-Heel Circumference*** (Line K1)</strong>
@@ -572,7 +572,7 @@ const BodyMeasurementDescriptions = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                             <img src={BodyHeight} className='body-measurement-images'/>
+                             <img src={BodyHeight}/>
                         </td>
                         <td className='text-center'>
                             <strong>Body Height (Reference Point A0 - L)</strong>
@@ -582,7 +582,7 @@ const BodyMeasurementDescriptions = (props) => {
                         </td>
 
                         <td className='text-center'>
-                             <img src={BodyLength} className='body-measurement-images'/>
+                             <img src={BodyLength}/>
                         </td>
                         <td className='text-center'>
                             <strong>Body Length (Reference Point A1 - L)</strong>

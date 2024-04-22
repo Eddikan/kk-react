@@ -14,7 +14,14 @@ const BodyMeasurementTable = (props) => {
                 <Col lg={12} className='mb-4'>
                     <div>
                             <div className='rufina-family fs-30 fw-600 mb-3'>Body Measurement Table</div>
-                            <p className='mb-3'>Download and print a copy of this body measurement table to accurately record your measurements. Alternatively, you can enter your measurements directly into the table. Please indicate your chosen unit of measurement by circling it on the chart.</p>
+                    </div>
+
+                    <div className='mb-4'>
+                        <Card>
+                                <Card.Body>
+                                <p className='mb-0'>Download and print a copy of this body measurement table to accurately record your measurements. Alternatively, you can enter your measurements directly into the table. Please indicate your chosen unit of measurement by circling it on the chart.</p>
+                                </Card.Body>
+                        </Card>
                     </div>
 
                     <table className='w-100'>

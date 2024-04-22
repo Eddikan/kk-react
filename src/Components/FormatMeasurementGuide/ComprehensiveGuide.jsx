@@ -24,10 +24,7 @@ import Comprehensive20 from 'Assets/images/comprehensive-20.png';
 import Comprehensive21 from 'Assets/images/comprehensive-21.png';
 import Comprehensive22 from 'Assets/images/comprehensive-22.png';
 
-
 const ComprehensiveGuide = (props) => {
-   
-
     return (
             <Row>
                 

@@ -23,11 +23,11 @@ const initialStatus = {
 };
 
 const initialOrderStatus = {
-    status: ''
+    status: 'Pending'
 };
 
 const initialLogStatus = {
-    status: ''
+    status: 'Pending'
 };
 
 const OrderDetails = (props) => {
@@ -48,7 +48,7 @@ const OrderDetails = (props) => {
     const [orderItemLog, setOrderItemLog] = useState(initialLogStatus);
     const [orderItemLogFormData, setOrderItemLogFormData] = useState(initialLogStatus);
     const [orderLoading, setOrderLoading] = useState(true);
-    const [orderItemsFormData, setOrderItemsFormData] = useState(initialStatus);
+    const [orderItemsFormData, setOrderItemsFormData] = useState(initialLogStatus);
     const [orderFormData, setOrderFormData] = useState(initialOrderStatus);
     const [updateStatusShow, setUpdateStatusShow] = useState(false);
     const [updateOrderStatusShow, setUpdateOrderStatusShow] = useState(false);
@@ -57,26 +57,49 @@ const OrderDetails = (props) => {
     const [reorderLoading, setReorderLoading] = useState(false);
     const [survey, setSurvey] = useState('');
 
+    const [item, setItem] = useState('');
+    const [itemStatus, setItemStatus] = useState('');
+
     function toggleUpdateStatus(order_item_id) {
         setUpdateStatusShow(true);
         setOrderItemId(order_item_id)
 
-        getOrderItemLog(order_item_id)
+        getOrderStatus(order_item_id)
             .then((response) => {
                 setOrderLoading(false);
-                const selectedOrderItemLog = response.data.data;
-                if (selectedOrderItemLog) {
-                    setOrderItemLog(selectedOrderItemLog.order_item_log ?? initialLogStatus);
-                    setOrderItemLogFormData(selectedOrderItemLog.order_item_log ?? initialLogStatus);
+                const status = response.data.status;
+                if (status === 'Success') {
+                    const data = response.data.data;
+                    setItem(data.item);
+                    setItemStatus(data.item.status)
+
+                    console.log(data.item);
                 } else {
-                    // toast.error('There has been an error getting the order item log, please try again!');
+                    toast.error('There has been an error getting the order item log, please try again!');
                     setOrderLoading(false);
                 }
             })
             .catch((error) => {
-                // toast.error('There has been an error getting the order item log, please try again!');
+                toast.error('There has been an error getting the order item log, please try again!');
                 setOrderLoading(false);
             });
+
+        // getOrderItemLog(order_item_id)
+        //     .then((response) => {
+        //         setOrderLoading(false);
+        //         const selectedOrderItemLog = response.data.data;
+        //         if (selectedOrderItemLog) {
+        //             setOrderItemLog(selectedOrderItemLog.order_item_log ?? initialLogStatus);
+        //             setOrderItemLogFormData(selectedOrderItemLog.order_item_log ?? initialLogStatus);
+        //         } else {
+        //             // toast.error('There has been an error getting the order item log, please try again!');
+        //             setOrderLoading(false);
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         // toast.error('There has been an error getting the order item log, please try again!');
+        //         setOrderLoading(false);
+        //     });
     }
 
     function toggleUpdateOrderStatus() {
@@ -114,10 +137,17 @@ const OrderDetails = (props) => {
         });
     };
 
+    // const handleChangeStatus = (e) => {
+    //     const { name, value } = e.target;
+    //     setOrderItemLogFormData({
+    //         ...orderItemLogFormData,
+    //         [name]: value,
+    //     });
+    // };
+
     const handleChangeStatus = (e) => {
         const { name, value } = e.target;
-        setOrderItemsFormData({
-            ...orderItemsFormData,
+        setItem({
             [name]: value,
         });
     };
@@ -136,6 +166,14 @@ const OrderDetails = (props) => {
 
     const putOrder = async (data) => {
         return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId, data);
+    };
+
+    const putOrderStatus = async (data) => {
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'item/' + orderItemId + '/status/update',data);
+    };
+
+    const getOrderStatus = async (order_item_id) => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'item/' + order_item_id );
     };
 
     async function reorderProducts(e) {
@@ -160,25 +198,25 @@ const OrderDetails = (props) => {
         });
     }
 
-    const statusSubmit = (e) => {
-        setOrderLoading(true);
-        postOrderItemLog({ ...orderItemsFormData, order_id: orderId, user_id: currentUser, order_item_id: orderItemId }).then(response => {
-            const status = response.data.status;
-            if (status === "Success") {
-                setOrderLoading(false);
-                setOrderItemsFormData(initialStatus);
-                toast.success('Status updated successfully!');
-                setReloadCount((prevReloadCount) => prevReloadCount + 1);
-                setUpdateStatusShow(false);
-            } else {
-                setUpdateStatusShow(false);
-                setOrderLoading(false);
-                toast.error('There has been an error saving the status, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error saving the status, please try again!');
-        });
-    }
+    // const statusSubmit = (e) => {
+    //     setOrderLoading(true);
+    //     postOrderItemLog({ ...orderItemLogFormData, order_id: orderId, user_id: currentUser, order_item_id: orderItemId }).then(response => {
+    //         const status = response.data.status;
+    //         if (status === "Success") {
+    //             setOrderLoading(false);
+    //             setOrderItemLogFormData(initialLogStatus);
+    //             toast.success('Status updated successfully!');
+    //             setReloadCount((prevReloadCount) => prevReloadCount + 1);
+    //             setUpdateStatusShow(false);
+    //         } else {
+    //             setUpdateStatusShow(false);
+    //             setOrderLoading(false);
+    //             toast.error('There has been an error saving the status, please try again!');
+    //         }
+    //     }).catch(() => {
+    //         toast.error('There has been an error saving the status, please try again!');
+    //     });
+    // }
 
     const statusOrderSubmit = (e) => {
         setOrderLoading(true);
@@ -190,6 +228,27 @@ const OrderDetails = (props) => {
                 toast.success('Order Status updated successfully!');
                 setUpdateOrderStatusShow(false);
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
+            } else {
+                setUpdateStatusShow(false);
+                setOrderLoading(false);
+                toast.error('There has been an error saving the status, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error saving the status, please try again!');
+        });
+    }
+
+
+    const orderStatusSubmit = (e) => {
+        setOrderLoading(true);
+        putOrderStatus({ ...item }).then(response => {
+            const status = response.data.status;
+            if (status === "Success") {
+                setOrderLoading(false);
+                setOrderItemLogFormData(initialLogStatus);
+                toast.success('Status updated successfully!');
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                setUpdateStatusShow(false);
             } else {
                 setUpdateStatusShow(false);
                 setOrderLoading(false);
@@ -249,26 +308,33 @@ const OrderDetails = (props) => {
 
                                     {survey === '' ?
                                         <>
-                                            <button className='btn btn-primary mb-3 me-3' disabled>
+                                            {/* <button className='btn btn-primary mb-3' disabled>
                                             <PiEyeSlash  className="me-2" size={20}/> View Survey
-                                            </button>
+                                            </button> */}
                                             </>
                                             : 
                                             <>
                                             <Link to={`/admin/view/order/${orderId}/survey/${survey.id}`} className="text-decoration-none">
-                                                <button className='btn btn-primary mb-3 me-3'>
+                                                <button className='btn btn-primary mb-3'>
                                                 <PiEyeLight className="me-2" size={20}/>View Survey
                                                 </button>
                                             </Link>
                                         </> 
                                     }
 
+                                    {order.status === "Completed" ?
+                                    null
+                                    :
+                                    <>
                                     <button 
-                                    className='btn btn-primary mb-3' 
-                                    onClick={() => toggleUpdateOrderStatus(order.id)}
-                                    >
-                                        Order Status
-                                    </button>
+                                        className='btn btn-primary mb-3 ms-3' 
+                                        onClick={() => toggleUpdateOrderStatus(order.id)}
+                                        >
+                                            Order Status
+                                        </button>
+                                    </>
+                                    }
+                                   
                                 </Col>
                             </Row>
                         </Col>
@@ -390,21 +456,38 @@ const OrderDetails = (props) => {
 
                                                                                                     <Col lg={3}>
                                                                                                         <a href={`/product/${order_item_product.id}`} className="cursor-pointer check-datails-decoration" >
-                                                                                                            <p className='text-gold mb-1'><IoEyeOutline className='me-2' size={20} />View Product</p>
+                                                                                                            <p className='text-gold mb-1'>
+                                                                                                                <IoEyeOutline className='me-2 mb-1' size={20} />
+                                                                                                                View Product
+                                                                                                            </p>
                                                                                                         </a>
                                                                                                         <a href={`/order/${order_item.id}/track`} className="cursor-pointer check-datails-decoration">
-                                                                                                            <p className='text-black mb-1'><CgTrack className='me-2' size={20} />Track</p>
+                                                                                                            <p className='text-black mb-1'>
+                                                                                                                <CgTrack className='me-2 mb-1' size={20} />
+                                                                                                                Track
+                                                                                                            </p>
                                                                                                         </a>
+                                                                                                      
+                                                                                                            {/* <div className="cursor-pointer" onClick={() => toggleUpdateStatus(order_item.id)}>
+                                                                                                            <p className='text-black mb-0'>
+                                                                                                                <GrStatusInfo className='gr-status-icon mb-1' size={15} />
+                                                                                                                Update Status
+                                                                                                            </p>
+                                                                                                        </div> */}
 
-                                                                                                        <div className="cursor-pointer" onClick={() => toggleUpdateStatus(order_item.id)}>
-                                                                                                            <p className='text-black mb-0'><GrStatusInfo className='gr-status-icon' size={15} />Update Status</p>
-                                                                                                        </div>
-
-                                                                                                        {/* {reorderLoading ?
-                                                                                                            <button type="button" className='btn btn-primary'>Loading...</button>
+                                                                                                        
+                                                                                                        {order_items[0].status === "Completed" ?
+                                                                                                                    null
                                                                                                             :
-                                                                                                            <button onClick={() => { reorderProducts(order_items); }}className='btn btn-primary'>Buy Again</button>
-                                                                                                        } */}
+                                                                                                            <>
+                                                                                                         <div className="cursor-pointer" onClick={() => toggleUpdateStatus(order_item.id)}>
+                                                                                                            <p className='text-black mb-0'>
+                                                                                                                <GrStatusInfo className='gr-status-icon mb-1' size={15} />
+                                                                                                                Update Status
+                                                                                                            </p>
+                                                                                                        </div>
+                                                                                                        </>
+                                                                                                        }
                                                                                                     </Col>
                                                                                                 </Row>
                                                                                                 {order_items.length > 1 && index + 1 < order_items.length ?
@@ -549,38 +632,88 @@ const OrderDetails = (props) => {
                     <Card>
                         <Card.Body>
                             <div>
-                                <label htmlFor="orderStatus" className='mb-2'>Status:</label>
-                                <select
+
+                            {item.status === "Completed" ?
+                                <>
+                                    <div><strong>Status:</strong>&nbsp;Completed</div>
+                                </>
+                                :
+                                <>
+                                    <label htmlFor="orderStatus" className='mb-2'>Status:</label>
+                                        <select
+                                            id="orderStatus"
+                                            name='status'
+                                            className='form-control mb-1'
+                                            value={item.status}
+                                            onChange={handleChangeStatus}
+                                        >
+                                            {itemStatus == "Pending" ?
+                                                <>
+                                                    <option value="Pending">Pending</option>
+                                                    <option value="Processing">Processing</option>
+                                                </>
+                                                : itemStatus== "Processing" ?
+                                                <>
+                                                    <option value="Processing">Processing</option>
+                                                    <option value="Shipped">Order Shipped</option>
+                                                </>
+                                                : itemStatus == "Shipped" ?
+                                                <>
+                                                    <option value="Shipped">Order Shipped</option>
+                                                    <option value="Delivered">Delivered</option>
+                                                </>
+                                                : itemStatus == "Delivered" ?
+                                                <>
+                                                    <option value="Delivered">Delivered</option>
+                                                    <option value="Completed">Completed</option>
+                                                </>
+                                                : itemStatus == "Completed" ?
+                                                <>
+                                                    <option value="Completed">Completed</option>
+                                                </>
+                                                :
+                                                null
+                                            }
+                                        </select>
+                                </>
+                            }
+
+                                {/* <label htmlFor="orderStatus" className='mb-2'>Status:</label> */}
+                                {/* <select
                                     id="orderStatus"
                                     name='status'
                                     className='form-control mb-1'
                                     value={orderItemLogFormData.status}
                                     onChange={handleChangeStatus}
                                 >
-                                    {orderItemLog.status == "Pending" ?
+                                    {orderItemLogFormData.status == "Pending" ?
                                         <>
                                             <option value="Pending">Pending</option>
                                             <option value="Processing">Processing</option>
                                         </>
-                                        : orderItemLog.status == "Processing" ?
+                                        : orderItemLogFormData.status == "Processing" ?
                                         <>
                                             <option value="Processing">Processing</option>
                                             <option value="Shipped">Order Shipped</option>
                                         </>
-                                        : orderItemLog.status == "Shipped" ?
+                                        : orderItemLogFormData.status == "Shipped" ?
                                         <>
                                             <option value="Shipped">Order Shipped</option>
                                             <option value="Delivered">Delivered</option>
                                         </>
-                                        : orderItemLog.status == "Processing" ?
+                                        : orderItemLogFormData.status == "Delivered" ?
                                         <>
                                             <option value="Delivered">Delivered</option>
+                                            <option value="Completed">Completed</option>
+                                        </>
+                                        : orderItemLogFormData.status == "Completed" ?
+                                        <>
                                             <option value="Completed">Completed</option>
                                         </>
                                         :
                                         null
                                     }
-                                </select>
+                                </select> */}
                             </div>
                         </Card.Body>
                     </Card>
@@ -604,7 +737,7 @@ const OrderDetails = (props) => {
                             <button
                                 className="btn btn-primary btn-style"
                                 type="button"
-                                onClick={statusSubmit}
+                                onClick={orderStatusSubmit}
                             >
                                 Save
                             </button>
@@ -630,6 +763,7 @@ const OrderDetails = (props) => {
                     <Card>
                         <Card.Body>
                             <div>
+                            
                                 <label htmlFor="orderStatus" className='mb-2'>Status:</label>
                                     <select
                                         id="orderStatus"
@@ -653,7 +787,7 @@ const OrderDetails = (props) => {
                                                 <option value="Shipped">Order Shipped</option>
                                                 <option value="Delivered">Delivered</option>
                                             </>
-                                            : order.status == "Processing" ?
+                                            : order.status == "Delivered" ?
                                             <>
                                                 <option value="Delivered">Delivered</option>
                                                 <option value="Completed">Completed</option>

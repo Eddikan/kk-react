@@ -8,6 +8,7 @@ import {
 } from 'reactstrap';
 import { useCookies } from 'react-cookie';
 import 'Assets/styles/Sidebar/style.css'
+import 'Assets/styles/FormatMeasurementGuide/style.css';
 import { HiOutlineScissors } from "react-icons/hi2";
 import { Link, useNavigate } from 'react-router-dom';
 import { Row, Col, Button, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
@@ -39,7 +40,7 @@ const SidebarMeasurementGuide = ({ onChangeTab }) => {
 
     return (
         <>
-            <div id="sidebar" className="pe-3">
+            <div id="sidebar-measurement-guide" className="pe-3">
                 <UncontrolledAccordion>
                     <AccordionItem className='padding-sidebar pt-4'>
                         <p className="fs-20 text-black"><strong>Measurement Guide</strong></p>

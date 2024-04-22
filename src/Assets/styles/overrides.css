@@ -1497,6 +1497,7 @@ span.featured-designs {
 .btn-style{
     min-width: 100px;
     padding: 9px 20px;
+    font-size: 15px !important;
 }
 
 .title-designer,
@@ -1766,6 +1767,10 @@ a.schedule-consultation {
 
 .padding-right-admin {
     padding-right: 40px;
+}
+
+.padding-right-measurement {
+    padding-right: 100px;
 }
 
 /* Disable Button on Calendar */

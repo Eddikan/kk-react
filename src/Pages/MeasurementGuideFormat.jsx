@@ -18,43 +18,39 @@ const MeasurementGuideFormat = (props) => {
         <>
         <LayoutSellerCenter>
                 <Row className='bg-measurement-guide'>
-                  <Col lg={2}>
+                  <Col lg={3}>
                     <SidebarMeasurementGuide currentTab={currentTab} onChangeTab={(e) => setCurrentTab(e)}/>
                   </Col>
 
                   {currentTab == 1 && (
-                    <Col lg={10} className='py-5 mx-auto padding-right-admin max-width-column'>
+                    <Col lg={9} className='py-5 mx-auto padding-right-measurement max-width-column'>
                         <HowToMeasureYourSelf/>
                     </Col>
                   )}
 
                   {currentTab == 2 &&
-                    <Col lg={10} className='py-5 mx-auto padding-right-admin max-width-column'>
+                    <Col lg={9} className='py-5 mx-auto padding-right-measurement max-width-column'>
                         <FemaleBodyTypes/>
                     </Col>
                   }
 
                   {currentTab == 3 &&
-                  <Col lg={10} className='py-5 mx-auto padding-right-admin max-width-column'>
+                  <Col lg={9} className='py-5 mx-auto padding-right-measurement max-width-column'>
                     <BodyMeasurementTable/>
                   </Col>
                   }
 
                  {currentTab == 4 &&
-                  <Col lg={10} className='py-5 mx-auto padding-right-admin max-width-column'>
+                  <Col lg={9} className='py-5 mx-auto padding-right-measurement max-width-column'>
                     <ComprehensiveGuide/>
                   </Col>
                   } 
-
                   
                  {currentTab == 5 &&
-                  <Col lg={10} className='py-5 mx-auto padding-right-admin max-width-column'>
+                  <Col lg={9} className='py-5 mx-auto padding-right-measurement max-width-column'>
                     <BodyMeasurementDescriptions/>
                   </Col>
                   } 
-
-
-
                 </Row>
         </LayoutSellerCenter>
         </>

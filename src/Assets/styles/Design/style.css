@@ -69,10 +69,10 @@ select#sort-by {
 }
 
 .user-image .user-photo {
-    min-width: 60px;
-    min-height: 60px;
-    max-width: 45px;
-    max-height: 45px;
+    min-width: 50px;
+    min-height: 50px;
+    max-width: 50px;
+    max-height: 50px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
