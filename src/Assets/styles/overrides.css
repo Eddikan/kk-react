@@ -984,6 +984,7 @@ form select::placeholder {
 .portfolio-overlay {
     height: 100%;
     position: absolute;
+    top: 0;
     right: 0;
     left: 0;
     width: 100%;
@@ -1297,6 +1298,7 @@ form select::placeholder {
     position: absolute;
     bottom: 15px;
     right: 15px;
+    z-index: 2;
 }
 
 .portfolio-link .save-link {

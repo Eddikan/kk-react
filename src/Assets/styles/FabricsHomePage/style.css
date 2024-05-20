@@ -42,6 +42,12 @@
     margin-right: auto;
 }
 
+.designs-grid-placeholder {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
 .thumbnail-table:hover .table_content {
     visibility: visible !important;
 }

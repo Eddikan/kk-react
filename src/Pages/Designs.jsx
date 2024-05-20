@@ -10,7 +10,7 @@ import { Form, ModalHeader, ModalFooter } from 'react-bootstrap';
 import { Rating } from 'react-simple-star-rating';
 import { PiNotepadFill } from "react-icons/pi";
 import { IoIosCheckmarkCircle } from "react-icons/io";
-import { GoAlertFill } from "react-icons/go";
+import { GoAlertFill, GoHeart } from "react-icons/go";
 import UserPlaceholder from 'Assets/images/user.png';
 import PinIcon from '../Assets/images/pin.png';
 import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoHeartOutline, IoEyeOutline } from "react-icons/io5";
@@ -75,6 +75,7 @@ const Designs = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCount, setPageCount] = useState(1);
     const [pageSize, setPageSize] = useState(1);
+    const [inWishlist, setInWishlist] = useState(false);
 
     const compositions = ['Polyamide', 'Polyester', 'Polyurethane', 'Acrylic', 'Cashmere', 'Mental']; // Replace with your array of composition options
     const weaves = ['Plain', 'Twill', 'Satin', 'Basket', 'Herringbone', 'Jacquard', 'Dobby', 'Leno']; // Replace with your array of weave options
@@ -257,6 +258,18 @@ const Designs = (props) => {
         setSearch(value);
     };
 
+    async function wishlistDesignUpdate(e) {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'design/wishlist/update', e).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
+        }).catch((error) => {
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    };
+
     const responsive = {
         desktop: {
             breakpoint: { max: 3000, min: 1024 },
@@ -275,8 +288,9 @@ const Designs = (props) => {
         }
     };
 
-    function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId) {
+    function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId, userWishlist) {
         setPortfolioImage(true);
+        setInWishlist(userWishlist);
         setSingleDesign({
             id: id ?? 0,
             userId: userId ?? 0,
@@ -330,6 +344,19 @@ const Designs = (props) => {
                 toast.error('An error occured. Please try again or contact the administrator.');
             }
         }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+        });
+    }
+
+    async function getDesign(id) {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + '/portfolio/'+id+'/details').then((response) => {
+            const data = response.data;
+            if (data) {
+                setPortfolioCategories(data);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+        }).catch((e) => {
             toast.error('An error occured. Please try again or contact the administrator.');
         });
     }
@@ -389,7 +416,6 @@ const Designs = (props) => {
         // Only run the filter API call after the component has mounted
         if (mounted) {
             // Call the API with the updated filter values
-
             onFilterChange({
                 sortField: selectedSortField,
                 sortOrder: selectedSortOrder,
@@ -576,6 +602,8 @@ const Designs = (props) => {
                                                             } else {
                                                                 var designImage = DressPlaceholder;
                                                             }
+                                                            var wishlist_user_ids = design.wishlist_user_ids ?? [];
+                                                            const userWishlist = wishlist_user_ids.includes(currentUser);
 
                                                             return (
                                                                 <>
@@ -589,31 +617,82 @@ const Designs = (props) => {
 
                                                                             {userRole !== 'Admin' ?
                                                                                 <>
-                                                                                    <div
-                                                                                        className="designs-grid-div w-100 cursor-pointer"
-                                                                                        onClick={function () {
-                                                                                            togglePortfolioImage(
-                                                                                                design.id,
-                                                                                                design.designer.id,
-                                                                                                design.user.first_name,
-                                                                                                design.user.last_name,
-                                                                                                design.image_urls,
-                                                                                                design.user.image,
-                                                                                                design.user.address_line_1,
-                                                                                                design.user.province,
-                                                                                                design.tags,
-                                                                                                design.description,
-                                                                                                design.user.id);
-                                                                                        }}
-                                                                                        style={{ backgroundImage: "url(" + designImage + ")" }}>
+                                                                                    <div className="designs-grid-div w-100 cursor-pointer" style={{ backgroundImage: "url(" + designImage + ")" }}>
+                                                                                        <div className="designs-grid-placeholder" onClick={function () {
+                                                                                                togglePortfolioImage(
+                                                                                                    design.id,
+                                                                                                    design.designer.id,
+                                                                                                    design.user.first_name,
+                                                                                                    design.user.last_name,
+                                                                                                    design.image_urls,
+                                                                                                    design.user.image,
+                                                                                                    design.user.address_line_1,
+                                                                                                    design.user.province,
+                                                                                                    design.tags,
+                                                                                                    design.description,
+                                                                                                    design.user.id,
+                                                                                                    userWishlist
+                                                                                                );
+                                                                                            }}
+                                                                                        >
+                                                                                        </div>
+                                                                                        {userRole !== 'Admin' ?
+                                                                                            <>
+                                                                                                <div className='save-link'>
+                                                                                                    {userWishlist ?
+                                                                                                        <div
+                                                                                                            className="action-button bg-gold"
+                                                                                                            onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
+                                                                                                        >
+                                                                                                            <GoHeart className="text-white" />
+                                                                                                        </div>
+                                                                                                        :
+                                                                                                        <div
+                                                                                                            className="action-button bg-white"
+                                                                                                            onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
+                                                                                                        >
+                                                                                                            <GoHeart className="text-black" />
+                                                                                                        </div>
+                                                                                                    }
+                                                                                                </div>
+                                                                                            </>
+                                                                                            :
+                                                                                            <>
+
+                                                                                            </>
+                                                                                        }
                                                                                     </div>
                                                                                 </>
                                                                                 :
                                                                                 <>
-                                                                                    <div
-                                                                                        className="designs-grid-div w-100 cursor-pointer"
-                                                                                        onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}
-                                                                                        style={{ backgroundImage: "url(" + designImage + ")" }}>
+                                                                                    <div className="designs-grid-div w-100 cursor-pointer" style={{ backgroundImage: "url(" + designImage + ")" }}>
+                                                                                        <div className="designs-grid-placeholder"  onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}>
+                                                                                        </div>
+                                                                                        {userRole !== 'Admin' ?
+                                                                                            <>
+                                                                                                <div className='save-link'>
+                                                                                                    {userWishlist ?
+                                                                                                        <div
+                                                                                                            className="action-button bg-gold"
+                                                                                                            onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
+                                                                                                        >
+                                                                                                            <GoHeart className="text-white" />
+                                                                                                        </div>
+                                                                                                        :
+                                                                                                        <div
+                                                                                                            className="action-button bg-white"
+                                                                                                            onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
+                                                                                                        >
+                                                                                                            <GoHeart className="text-black" />
+                                                                                                        </div>
+                                                                                                    }
+                                                                                                </div>
+                                                                                            </>
+                                                                                            :
+                                                                                            <>
+
+                                                                                            </>
+                                                                                        }
                                                                                     </div>
                                                                                 </>
                                                                             }
@@ -657,14 +736,14 @@ const Designs = (props) => {
                                                 </>
                                                 :
                                                 <>
-                                                <Card>
-                                                <Card.Body className=" pt-5 pb-5">
-                                                        <div className="text-center">
-                                                        <GoAlertFill size="40px" className="mb-2 text-gold" />
-                                                        <p className="text-center mb-3">There are currently no designs available for viewing.</p>
-                                                        </div>
-                                                </Card.Body>
-                                                </Card>
+                                                    <Card>
+                                                        <Card.Body className=" pt-5 pb-5">
+                                                            <div className="text-center">
+                                                                <GoAlertFill size="40px" className="mb-2 text-gold" />
+                                                                <p className="text-center mb-3">There are currently no designs available for viewing.</p>
+                                                            </div>
+                                                        </Card.Body>
+                                                    </Card>
                                                 </>
                                                 // <p className="text-center mb-3 mt-3">There are currently no portfolio available for viewing.</p>
                                             }
@@ -931,6 +1010,27 @@ const Designs = (props) => {
                                     </div>
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Description</div>
                                 </div>
+                                {userRole !== 'Admin' ?
+                                    <>
+                                        {inWishlist ?
+                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: singleDesign.id }); }}>
+                                                <div className="action-button-designs bg-gold">
+                                                    <GoHeart className="text-white mt-2" size={30} />
+                                                </div>
+                                                <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Wishlist</div>
+                                            </div>
+                                            :
+                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: singleDesign.id }); }}>
+                                                <div className="action-button-designs bg-white">
+                                                    <GoHeart className="text-black mt-2" size={30} />
+                                                </div>
+                                                <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Wishlist</div>
+                                            </div>
+                                        }
+                                    </>
+                                    :
+                                    <></>
+                                }
                             </div>
                         </Col>
                     </Row>

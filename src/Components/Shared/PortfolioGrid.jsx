@@ -43,6 +43,7 @@ const PortfolioGrid = (props) => {
     const [modalHeading, setModalHeading] = useState('');
     const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
     const [messageShow, setMessageShow] = useState(false);
+    const [inWishlist, setInWishlist] = useState(false);
 
     const [user, setUser] = useState('');
 
@@ -157,6 +158,19 @@ const PortfolioGrid = (props) => {
         }
     };
 
+    async function wishlistDesignUpdate(e) {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'design/wishlist/update', e).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                fetchData(user_id);
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
+        }).catch((error) => {
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    };
+
     useEffect(() => {
         fetchData(user_id);
     }, [reloadCount]);
@@ -182,31 +196,34 @@ const PortfolioGrid = (props) => {
                                         } else {
                                             var portfolioImage = PlaceholderImage;
                                         }
+
+                                        var wishlist_user_ids = object.wishlist_user_ids ?? [];
+                                        const userWishlist = wishlist_user_ids.includes(currentUser);
+
                                         return (
                                             <Col className={`portfolio-grid mb-3`} xs="4" md="2">
                                                 {/* <div className={`portfolio-grid-div w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + portfolioImage + ")" }}> */}
 
                                                 {userRole !== 'Admin' ?
                                                     <>
-                                                        <div
-                                                            className='portfolio-link cursor-pointer'
-                                                            onClick={function () {
-                                                                togglePortfolioImage(
-                                                                    object.id,
-                                                                    object.designer.id,
-                                                                    object.user.first_name,
-                                                                    object.user.last_name,
-                                                                    object.image_urls,
-                                                                    object.user.image,
-                                                                    object.user.address_line_1,
-                                                                    object.user.province,
-                                                                    object.tags,
-                                                                    object.description,
-                                                                    object.user.id);
-                                                            }}
-                                                        >
+                                                        <div className='portfolio-link cursor-pointer'>
                                                             <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '200px' }}></div>
-                                                            <div className="portfolio-overlay">
+                                                            <div className="portfolio-overlay" onClick={function () {
+                                                                    togglePortfolioImage(
+                                                                        object.id,
+                                                                        object.designer.id,
+                                                                        object.user.first_name,
+                                                                        object.user.last_name,
+                                                                        object.image_urls,
+                                                                        object.user.image,
+                                                                        object.user.address_line_1,
+                                                                        object.user.province,
+                                                                        object.tags,
+                                                                        object.description,
+                                                                        object.user.id,
+                                                                        userWishlist
+                                                                    );
+                                                                }}>
                                                                 <div className="portfolio-details">
                                                                     {object.status == "Draft" ?
                                                                         <span className="text-warning small fw-600">Draft</span>
@@ -215,16 +232,34 @@ const PortfolioGrid = (props) => {
                                                                     }
                                                                 </div>
                                                             </div>
+                                                            <div className='save-link'>
+                                                                {userRole !== 'Admin' &&
+                                                                    <>
+                                                                        {userWishlist ?
+                                                                            <div
+                                                                                className="action-button bg-gold"
+                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, product_id: object.id }); }}
+                                                                            >
+                                                                                <GoHeart className="text-white" />
+                                                                            </div>
+                                                                            :
+                                                                            <div
+                                                                                className="action-button bg-white"
+                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, product_id: object.id }); }}
+                                                                            >
+                                                                                <GoHeart className="text-black" />
+                                                                            </div>
+                                                                        }
+                                                                    </>
+                                                                }
+                                                            </div>
                                                         </div>
                                                     </>
                                                     :
                                                     <>
-                                                        <div
-                                                            className='portfolio-link cursor-pointer'
-                                                            onClick={function () { toggleAddViewCount(object.id); navigate('/admin/portfolio/' + object.id); }}
-                                                        >
+                                                        <div className='portfolio-link cursor-pointer'>
                                                             <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '200px' }}></div>
-                                                            <div className="portfolio-overlay">
+                                                            <div className="portfolio-overlay" onClick={function () { toggleAddViewCount(object.id); navigate('/admin/portfolio/' + object.id); }}>
                                                                 <div className="portfolio-details">
                                                                     {object.status == "Draft" ?
                                                                         <span className="text-warning small fw-600">Draft</span>
@@ -232,6 +267,27 @@ const PortfolioGrid = (props) => {
                                                                         null
                                                                     }
                                                                 </div>
+                                                            </div>
+                                                            <div className='save-link'>
+                                                                {userRole !== 'Admin' &&
+                                                                    <>
+                                                                        {userWishlist ?
+                                                                            <div
+                                                                                className="action-button bg-gold"
+                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, product_id: object.id }); }}
+                                                                            >
+                                                                                <GoHeart className="text-white" />
+                                                                            </div>
+                                                                            :
+                                                                            <div
+                                                                                className="action-button bg-white"
+                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, product_id: object.id }); }}
+                                                                            >
+                                                                                <GoHeart className="text-black" />
+                                                                            </div>
+                                                                        }
+                                                                    </>
+                                                                }
                                                             </div>
                                                         </div>
                                                     </>
@@ -522,6 +578,27 @@ const PortfolioGrid = (props) => {
                                     </div>
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Description</div>
                                 </div>
+                                {userRole !== 'Admin' ?
+                                    <>
+                                        {inWishlist ?
+                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: singleDesign.id }); }}>
+                                                <div className="action-button-designs bg-gold">
+                                                    <GoHeart className="text-white mt-2" size={30} />
+                                                </div>
+                                                <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Wishlist</div>
+                                            </div>
+                                            :
+                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: singleDesign.id }); }}>
+                                                <div className="action-button-designs bg-white">
+                                                    <GoHeart className="text-black mt-2" size={30} />
+                                                </div>
+                                                <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Wishlist</div>
+                                            </div>
+                                        }
+                                    </>
+                                    :
+                                    <></>
+                                }
                             </div>
                         </Col>
                     </Row>

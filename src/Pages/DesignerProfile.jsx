@@ -17,7 +17,7 @@ import TopSellingFabrics from 'Components/Shared/TopSellingFabrics';
 import ProductGrid from 'Components/Shared/ProductGrid';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import DesignerCalendar from 'Components/Shared/DesignerCalendar';
-import { GoAlertFill } from 'react-icons/go';
+import { GoAlertFill, GoHeart } from 'react-icons/go';
 import GoBack from 'Components/Shared/GoBack';
 import { PiNotepadFill } from "react-icons/pi";
 import { IoCloseOutline, IoVideocam } from "react-icons/io5";
@@ -52,7 +52,6 @@ const initialUserData = Object.freeze({
     website: '',
     phone_number: '',
     secondary_email_address: '',
-
 });
 
 const initialDesignerData = Object.freeze({
@@ -132,7 +131,6 @@ const DesignerProfile = () => {
         setUnderConstructionShow(true);
         setModalHeading(message);
     };
-
 
     const showTab = (tab) => {
         if (tab === "about") {
