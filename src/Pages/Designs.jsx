@@ -14,10 +14,12 @@ import { GoAlertFill, GoHeart } from "react-icons/go";
 import UserPlaceholder from 'Assets/images/user.png';
 import PinIcon from '../Assets/images/pin.png';
 import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoHeartOutline, IoEyeOutline } from "react-icons/io5";
+import { BsCartPlus } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import { ImEmbed2 } from "react-icons/im";
 import { LuLink } from "react-icons/lu";
 import Countries from 'Utils/Countries';
+import Signup from 'Components/Forms/User/Signup';
 import CopyTo from 'Utils/CopyLink';
 import DressPlaceholder from 'Assets/images/placeholder-dress.jpeg';
 import { AiFillMessage } from "react-icons/ai";
@@ -74,18 +76,24 @@ const Designs = (props) => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCount, setPageCount] = useState(1);
-    const [pageSize, setPageSize] = useState(1);
+    const [pageSize, setPageSize] = useState(12);
     const [inWishlist, setInWishlist] = useState(false);
+
+    const [fabricsModalShow, setFabricsModalShow] = useState(false);
+    const [designsModalShow, setDesignsModalShow] = useState(false);
+  
+    const [signupModalShow, setSignupModalShow] = useState(false);
+    const [signupType, setSignupType] = useState('');
 
     const compositions = ['Polyamide', 'Polyester', 'Polyurethane', 'Acrylic', 'Cashmere', 'Mental']; // Replace with your array of composition options
     const weaves = ['Plain', 'Twill', 'Satin', 'Basket', 'Herringbone', 'Jacquard', 'Dobby', 'Leno']; // Replace with your array of weave options
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+
     const currentUser = cookies.currentUser;
     const token = cookies.token;
     const userRole = cookies.userRole;
     let iframeLink = `<iframe src="https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
-    let PageSize = 10;
 
     const [sortOptions] = useState([
         { value: 'created_at', label: 'All' },
@@ -113,6 +121,11 @@ const Designs = (props) => {
         }
         return [];
     };
+
+    const showSignupModal = (e) => {
+        setSignupType(e);
+        setSignupModalShow(true);
+    }
 
     function toggleMessage() {
         setMessageShow(true);
@@ -289,33 +302,39 @@ const Designs = (props) => {
     };
 
     function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId, userWishlist) {
-        setPortfolioImage(true);
-        setInWishlist(userWishlist);
-        setSingleDesign({
-            id: id ?? 0,
-            userId: userId ?? 0,
-            portfolioId: portfolioId ?? 0,
-            first_name: first_name ?? '-',
-            last_name: last_name ?? '-',
-            image: image ?? '-',
-            address_line_1: address_line_1 ?? '-',
-            province: province ?? '-',
-            tags: tags ?? '-',
-            description: description ?? '-'
-        })
+        if (currentUser && currentUser != "") {
+            setPortfolioImage(true);
+            setInWishlist(userWishlist);
+            setSingleDesign({
+                id: id ?? 0,
+                userId: userId ?? 0,
+                portfolioId: portfolioId ?? 0,
+                first_name: first_name ?? '-',
+                last_name: last_name ?? '-',
+                image: image ?? '-',
+                address_line_1: address_line_1 ?? '-',
+                province: province ?? '-',
+                tags: tags ?? '-',
+                description: description ?? '-'
+            })
 
-        setDesignImages(image_urls);
-        if (image_urls?.[0]?.image_url) {
-            setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
-        } else {
-            setActiveImage(PlaceholderImage);
-        }
+            setDesignImages(image_urls);
+            if (image_urls?.[0]?.image_url) {
+                setActiveImage(process.env.REACT_APP_STORAGE_URL + 'portfolio/' + image_urls[0].image_url);
+            } else {
+                setActiveImage(PlaceholderImage);
+            }
 
-        if (currentUser == userId) {
-            setIsDesignCurrentUser(true);
+            if (currentUser == userId) {
+                setIsDesignCurrentUser(true);
+            } else {
+                setIsDesignCurrentUser(false);
+            }
         } else {
-            setIsDesignCurrentUser(false);
+            showSignupModal('user_design')
         }
+        
+        
     }
 
     async function toggleSortDesigns(type, sort) {
@@ -335,17 +354,19 @@ const Designs = (props) => {
     }
 
     async function toggleAddViewCount(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
-            const success = response.data.status;
-            if (success == 'Success') {
-                // toast.success('Design saved as draft successfully!');
-                // setReloadCount((prevReloadCount) => prevReloadCount + 1);
-            } else {
+        if (currentUser && currentUser != "") {
+            axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/view/' + id).then((response) => {
+                const success = response.data.status;
+                if (success == 'Success') {
+                    // toast.success('Design saved as draft successfully!');
+                    // setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                } else {
+                    toast.error('An error occured. Please try again or contact the administrator.');
+                }
+            }).catch(() => {
                 toast.error('An error occured. Please try again or contact the administrator.');
-            }
-        }).catch(() => {
-            toast.error('An error occured. Please try again or contact the administrator.');
-        });
+            });
+        }
     }
 
     async function getDesign(id) {
@@ -607,7 +628,7 @@ const Designs = (props) => {
 
                                                             return (
                                                                 <>
-                                                                    <Col className="designs-grid mb-4" xs="12" md="4">
+                                                                    <Col className="designs-grid mb-4" xs="12" md="3">
                                                                         <div className="portfolio-link">
                                                                             {/* <div
                                                                                 className="designs-grid-div w-100 cursor-pointer"
@@ -633,22 +654,22 @@ const Designs = (props) => {
                                                                                                     design.user.id,
                                                                                                     userWishlist
                                                                                                 );
+
+                                                                                                toggleAddViewCount(design.id);
                                                                                             }}
                                                                                         >
                                                                                         </div>
-                                                                                        {userRole !== 'Admin' ?
+                                                                                        {userRole !== 'Admin' && currentUser && currentUser != "" ?
                                                                                             <>
                                                                                                 <div className='save-link'>
                                                                                                     {userWishlist ?
-                                                                                                        <div
-                                                                                                            className="action-button bg-gold"
+                                                                                                        <div className="action-button bg-gold"
                                                                                                             onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
                                                                                                         >
                                                                                                             <GoHeart className="text-white" />
                                                                                                         </div>
                                                                                                         :
-                                                                                                        <div
-                                                                                                            className="action-button bg-white"
+                                                                                                        <div className="action-button bg-white"
                                                                                                             onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
                                                                                                         >
                                                                                                             <GoHeart className="text-black" />
@@ -668,19 +689,17 @@ const Designs = (props) => {
                                                                                     <div className="designs-grid-div w-100 cursor-pointer" style={{ backgroundImage: "url(" + designImage + ")" }}>
                                                                                         <div className="designs-grid-placeholder"  onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}>
                                                                                         </div>
-                                                                                        {userRole !== 'Admin' ?
+                                                                                        {userRole !== 'Admin' && currentUser && currentUser != "" ?
                                                                                             <>
                                                                                                 <div className='save-link'>
                                                                                                     {userWishlist ?
-                                                                                                        <div
-                                                                                                            className="action-button bg-gold"
+                                                                                                        <div className="action-button bg-gold"
                                                                                                             onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
                                                                                                         >
                                                                                                             <GoHeart className="text-white" />
                                                                                                         </div>
                                                                                                         :
-                                                                                                        <div
-                                                                                                            className="action-button bg-white"
+                                                                                                        <div className="action-button bg-white"
                                                                                                             onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
                                                                                                         >
                                                                                                             <GoHeart className="text-black" />
@@ -701,6 +720,18 @@ const Designs = (props) => {
                                                                         <div className="design-details">
                                                                             <div className='d-flex align-items-center justify-content-between'>
                                                                                 <p className="text-black fs-18 fw-400 mb-0 text-ellipsis rufina-family">{design.name ?? '-'}</p>
+                                                                                <div className="design-atc-container">
+                                                                                    <div className="design-atc cursor-pointer">
+                                                                                        <div className="kouture-tooltip">
+                                                                                            <div className="action-button bg-black">
+                                                                                                <BsCartPlus className="text-white atc-icon" />
+                                                                                            </div>
+                                                                                            <div className="kouture-tooltiptext">
+                                                                                                Add to Cart
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                             {/* <div className="star-ratings mt-1">
                                                                                 <Rating
@@ -733,6 +764,19 @@ const Designs = (props) => {
                                                             )
                                                         })}
                                                     </Row>
+                                                    {currentUser && currentUser != "" ?
+                                                        <Pagination
+                                                            className="mt-4 mb-0"
+                                                            currentPage={currentPage}
+                                                            totalCount={pageCount}
+                                                            pageSize={pageSize}
+                                                            onPageChange={page => handleChangePage(page)}
+                                                        />
+                                                        :
+                                                        <Col lg={12} className="text-center mt-4">
+                                                            <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_design')}>View More</Button>
+                                                        </Col>
+                                                    }
                                                 </>
                                                 :
                                                 <>
@@ -751,13 +795,6 @@ const Designs = (props) => {
                                     }
                                 </div>
                             </Col>
-                            <Pagination
-                                className="mt-4 mb-0"
-                                currentPage={currentPage}
-                                totalCount={pageCount}
-                                pageSize={PageSize}
-                                onPageChange={page => handleChangePage(page)}
-                            />
                         </Row>
                     </Container>
                 </section>
@@ -1031,6 +1068,12 @@ const Designs = (props) => {
                                     :
                                     <></>
                                 }
+                                <div className='text-center mb-4'>
+                                    <div className="action-button-designs bg-white">
+                                        <BsCartPlus className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Add to Cart</div>
+                                </div>
                             </div>
                         </Col>
                     </Row>
@@ -1309,6 +1352,22 @@ const Designs = (props) => {
                             </div >
                         </Card.Body>
                     </Card>
+                </Modal.Body>
+            </Modal>
+            
+            {/* Signup */}
+            <Modal show={signupModalShow} fullscreen={false} onHide={() => setSignupModalShow(false)}>
+                <Modal.Header closeButton>
+                <Modal.Title></Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <Container className="h-100">
+                    <Row className="h-100">
+                    <Col lg="12">
+                        <Signup type={signupType} />
+                    </Col>
+                    </Row>
+                </Container>
                 </Modal.Body>
             </Modal>
 

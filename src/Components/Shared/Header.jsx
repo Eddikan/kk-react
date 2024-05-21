@@ -131,7 +131,6 @@ const Header = () => {
     setUserOrdersOpen(!userOrdersOpen);
   };
 
-
   const logOut = () => {
     removeCookies();
     navigate('/login');
@@ -177,10 +176,6 @@ const Header = () => {
         }
       }
 
-    } else {
-      if (currentUrl.includes('user') || currentUrl.includes('designers') || currentUrl.includes('fabrics') || currentUrl.includes('designs')) {
-        navigate("/login");
-      }
     }
 
     // if (signupType == "user_designer" || signupType == "user_fabric" || signupType == "user_design") {

@@ -12,7 +12,6 @@ import GetUserData from 'Utils/GetUserData';
 import toast from 'react-hot-toast';
 import PortfolioGrid from 'Components/Shared/PortfolioGrid';
 import FeaturedDesign from 'Components/Shared/FeaturedDesign'
-import FeaturedDesigns from 'Components/Grids/FeaturedDesigns';
 import TopSellingFabrics from 'Components/Shared/TopSellingFabrics';
 import ProductGrid from 'Components/Shared/ProductGrid';
 import LoadingPage from 'Components/Shared/LoadingPage';
@@ -89,6 +88,7 @@ const DesignerProfile = () => {
     const [customer, setCustomer] = useState('');
     const [appointmentId, setAppointmentId] = useState('');
     const [guidePreviewModalShow, setGuidePreviewModalShow] = useState(false);
+    const [userWishlist, setUserWishlist] = useState(false);
 
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
@@ -204,6 +204,19 @@ const DesignerProfile = () => {
         return moment(time, 'HH:mm').format('h:mm A');
     };
 
+    async function wishlistDesignerUpdate(e) {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update', e).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                setReloadCount(reloadCount + 1 )
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
+        }).catch((error) => {
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    };
+
     useEffect(() => {
         fetchData({ token: token, currentUser: user_id });
     }, [reloadCount]);
@@ -287,7 +300,7 @@ const DesignerProfile = () => {
                 <section id='designer-profile' className='py-5 px-2'>
                     <Container>
                         <Row>
-                            <Col lg="6" className='mb-5'>
+                            <Col lg="4" className='mb-5'>
                                 <div className='d-flex column-gap-20'>
                                     <div className='text-left position-relative'>
                                         {uploadStatus != "standby" ?
@@ -310,6 +323,23 @@ const DesignerProfile = () => {
                                                 :
                                                 <span>-</span>
                                             }
+                                            {/* <div className='designer-links-relative d-inline-block ms-3 vertical-align-middle'>
+                                                {userWishlist ?
+                                                    <div
+                                                        className="action-button bg-gold"
+                                                        onClick={function () { wishlistDesignerUpdate({ user_id: currentUser, designer_id: designer.id }); }}
+                                                    >
+                                                        <GoHeart size="16px" className="text-white" style={{marginTop: '-10px' }}/>
+                                                    </div>
+                                                    :
+                                                    <div
+                                                        className="action-button bg-white"
+                                                        onClick={function () { wishlistDesignerUpdate({ user_id: currentUser, designer_id: designer.id }); }}
+                                                    >
+                                                        <GoHeart size="16px" className="text-black" style={{marginTop: '-10px' }}/>
+                                                    </div>
+                                                }
+                                            </div> */}
                                             {/* {isDesignerCurrentUser ?
                                                 <>
                                                     <AiFillMessage className="ms-3 cursor-pointer" size={20} color="#CEA835" onClick={() => toggleUnderConstruction("Chat Designer")} />
@@ -324,6 +354,7 @@ const DesignerProfile = () => {
                                                     />
                                                 </>
                                             } */}
+                                            
                                         </h2>
 
                                         <div className='icons-d-flex'>
@@ -351,17 +382,17 @@ const DesignerProfile = () => {
                                 </div>
                             </Col>
 
-                            <Col lg="6" className='text-right'>
+                            <Col lg="8" className='text-right'>
                                 <Row>
                                     <Col lg={10}>
-                                        {userRole !== 'Admin' ?
+                                        {userRole !== 'Admin' && currentUser && currentUser != "" ?
                                             <>
                                                 {isDesignerCurrentUser ?
                                                     null
                                                     :
                                                     <>
                                                         <span>
-                                                            <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 btn-style'
+                                                            <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 btn-style ms-3'
                                                                 onClick={() => toggleRequestAQuote(true)}
                                                             >
                                                                 <PiNotepadFill className='me-2' size="20" />

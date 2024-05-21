@@ -4,7 +4,7 @@ import { Row, Col, Button, ModalHeader, Card, ModalFooter } from 'react-bootstra
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import toast from 'react-hot-toast';
 import GetDesignsData from 'Utils/GetDesignsData';
-import { GoAlertFill } from "react-icons/go";
+import { GoAlertFill, GoHeart } from "react-icons/go";
 import PinIcon from 'Assets/images/pin.png';
 import { useCookies } from 'react-cookie';
 import Modal from 'react-bootstrap/Modal';
@@ -41,6 +41,7 @@ const Designs = (props) => {
     const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
     const [profileViewShow, setProfileViewShow] = useState(false);
+    const [inWishlist, setInWishlist] = useState(false);
 
     const [shareShowModal, setShareShowModal] = useState(false);
     const [copyEmbedLink, setCopyEmbedLink] = useState(false);
@@ -91,8 +92,9 @@ const Designs = (props) => {
         setModalHeading(message);
     }
 
-    function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId) {
+    function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId, userWishlist) {
         setPortfolioImage(true);
+        setInWishlist(userWishlist);
         setSingleDesign({
             id: id ?? 0,
             portfolioId: portfolioId ?? 0,
@@ -165,6 +167,18 @@ const Designs = (props) => {
         });
     }
 
+    async function wishlistDesignUpdate(e) {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'design/wishlist/update', e).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
+        }).catch((error) => {
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    };
+
     useEffect(() => {
         fetchData(currentUser);
     }, [reloadCount]);
@@ -223,42 +237,74 @@ const Designs = (props) => {
                                         } else {
                                             var designImage = PlaceholderImage;
                                         }
+                                        var wishlist_user_ids = design.wishlist_user_ids ?? [];
+                                        const userWishlist = wishlist_user_ids.includes(currentUser);
+
                                         return (
                                             <>
                                                 {index < limit ?
                                                     <Col className="designs-grid mb-3" xs="12" md="3">
                                                         {currentUser ?
                                                             <>
-
                                                                 {userRole !== 'Admin' ?
+                                                                    <>
+                                                                        <div className="position-relative">
+                                                                            <div className='portfolio-link cursor-pointer'
+                                                                                onClick={function () {
+                                                                                    togglePortfolioImage(
+                                                                                        design.id,
+                                                                                        design.designer.id,
+                                                                                        design.user.first_name,
+                                                                                        design.user.last_name,
+                                                                                        design.image_urls,
+                                                                                        design.user.image,
+                                                                                        design.user.address_line_1,
+                                                                                        design.user.province,
+                                                                                        design.tags,
+                                                                                        design.description,
+                                                                                        design.user.id,
+                                                                                        userWishlist
+                                                                                    );
+                                                                                }}
+                                                                            >
+                                                                                <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}></div>
+                                                                            </div>
+                                                                            {userRole !== 'Admin' ?
+                                                                                <>
+                                                                                    <div className='save-link'>
+                                                                                        {userWishlist ?
+                                                                                            <div
+                                                                                                className="action-button bg-gold"
+                                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
+                                                                                            >
+                                                                                                <GoHeart className="text-white" />
+                                                                                            </div>
+                                                                                            :
+                                                                                            <div
+                                                                                                className="action-button bg-white"
+                                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
+                                                                                            >
+                                                                                                <GoHeart className="text-black" />
+                                                                                            </div>
+                                                                                        }
+                                                                                    </div>
+                                                                                </>
+                                                                                :
+                                                                                <>
+
+                                                                                </>
+                                                                            }
+                                                                        </div>
+                                                                    </>
+                                                                    :
                                                                     <>
                                                                         <div
                                                                             className='portfolio-link cursor-pointer'
-                                                                            onClick={function () {
-                                                                                togglePortfolioImage(
-                                                                                    design.id,
-                                                                                    design.designer.id,
-                                                                                    design.user.first_name,
-                                                                                    design.user.last_name,
-                                                                                    design.image_urls,
-                                                                                    design.user.image,
-                                                                                    design.user.address_line_1,
-                                                                                    design.user.province,
-                                                                                    design.tags,
-                                                                                    design.description,
-                                                                                    design.user.id);
-                                                                            }}
+                                                                            onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}
                                                                         >
                                                                             <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}></div>
                                                                         </div>
                                                                     </>
-                                                                    :
-                                                                    <div
-                                                                        className='portfolio-link cursor-pointer'
-                                                                        onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}
-                                                                    >
-                                                                        <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}></div>
-                                                                    </div>
 
                                                                 }
                                                             </>
@@ -343,7 +389,6 @@ const Designs = (props) => {
                                             :
                                             <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_design')}>View More</Button>
                                         }
-
                                     </Col>
                                 </Row>
                             </>
@@ -601,6 +646,27 @@ const Designs = (props) => {
                                     </div>
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Description</div>
                                 </div>
+                                {userRole !== 'Admin' ?
+                                    <>
+                                        {inWishlist ?
+                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: singleDesign.id }); }}>
+                                                <div className="action-button-designs bg-gold">
+                                                    <GoHeart className="text-white mt-2" size={30} />
+                                                </div>
+                                                <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Wishlist</div>
+                                            </div>
+                                            :
+                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: singleDesign.id }); }}>
+                                                <div className="action-button-designs bg-white">
+                                                    <GoHeart className="text-black mt-2" size={30} />
+                                                </div>
+                                                <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Wishlist</div>
+                                            </div>
+                                        }
+                                    </>
+                                    :
+                                    <></>
+                                }
                             </div>
                         </Col>
                     </Row>

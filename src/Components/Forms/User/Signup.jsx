@@ -112,10 +112,11 @@ const SignUp = (props) => {
     return (
         <section id='signup' className='d-flex align-items-center' ref={formRef}>
             <Container fluid>
-                <Row style={{ minHeight: '100vh' }}>
+                {/*  style={{ minHeight: '100vh' }} */}
+                <Row>
                     <Col lg='12' className='d-flex flex-column justify-content-center pb-4'>
                         <div className='sign-up-container'>
-                            <Card>
+                            <Card className="border-none">
                                 <Card.Body>
                                     <a href="/">
                                         <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" style={{ maxWidth: '50px' }} />
@@ -139,7 +140,10 @@ const SignUp = (props) => {
                                             :
                                             <>
                                                 <h1 className='text-center'>Sign up to Kouture Konect</h1>
-                                                <div className="divider-small mb-4 mt-4"></div>
+                                                <p className="text-center small mb-0">
+                                                    Join Kouture Konect to view more Designers, Designs and Fabrics!
+                                                </p>
+                                                <div className="divider-small mb-4 mt-3"></div>
                                             </>
                                     }
                                     <Form onSubmit={registerSubmit}>

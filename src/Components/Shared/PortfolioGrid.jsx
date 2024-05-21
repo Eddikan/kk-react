@@ -14,6 +14,7 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 import { PiNotepadFill } from "react-icons/pi";
 import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline } from "react-icons/io5";
 import PinIcon from 'Assets/images/pin.png';
+import { BsCartPlus } from "react-icons/bs";
 import { ImEmbed2 } from "react-icons/im";
 import User from 'Assets/images/user.png';
 import Loading from './Loading';
@@ -599,6 +600,12 @@ const PortfolioGrid = (props) => {
                                     :
                                     <></>
                                 }
+                                <div className='text-center mb-4'>
+                                    <div className="action-button-designs bg-white">
+                                        <BsCartPlus className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Add to Cart</div>
+                                </div>
                             </div>
                         </Col>
                     </Row>

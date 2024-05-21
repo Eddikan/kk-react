@@ -96,7 +96,7 @@ const Designers = (props) => {
                                     <div key={index} className="designers-grid mb-3">
                                         {designer.user.image ? (
                                             <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})` }}>
-                                                <div className='bg-black-faded'>
+                                                <div className='bg-black-faded designer-overlay'>
                                                     <div className="designer-details">
                                                         <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
                                                         <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p>
@@ -106,7 +106,7 @@ const Designers = (props) => {
                                         ) : (
                                             <>
                                                 <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${designer.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}>
-                                                    <div className='bg-black-faded'>
+                                                    <div className='bg-black-faded designer-overlay'>
                                                         <div className="designer-details">
                                                             <h3 className="designer-name text-white fs-25 mb-1">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
                                                             <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p>

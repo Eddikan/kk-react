@@ -33,6 +33,7 @@ const Home = (props) => {
 
   const [fabricsModalShow, setFabricsModalShow] = useState(false);
   const [designsModalShow, setDesignsModalShow] = useState(false);
+  const [marketplaceFlowShow, setMarketplaceFlowShow] = useState(false);
 
   const [signupModalShow, setSignupModalShow] = useState(false);
   const [signupType, setSignupType] = useState('');
@@ -42,9 +43,13 @@ const Home = (props) => {
   const handleShowUser = () => {
     setUserModalShow(true);
   }
-
+  
   const handleShowFabrics = () => {
     setFabricsModalShow(true);
+  }
+
+  const toggleMarketplaceFlow = () => {
+    setMarketplaceFlowShow(!marketplaceFlowShow);
   }
 
   const handleShowDesigns = () => {
@@ -91,10 +96,14 @@ const Home = (props) => {
                 null
                 :
                 <>
-                  <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>I'm Just Browsing</Button>
-                  <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('designer')} >I'm a Designer</Button>
-                  <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('seller')} >I'm a Fabric Vendor</Button>
+                  <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>Explore</Button>
+                  <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => toggleMarketplaceFlow()}>Explore Marketplace</Button>
                 </>
+                // <>
+                //   <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>I'm Just Browsing</Button>
+                //   <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('designer')} >I'm a Designer</Button>
+                //   <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('seller')} >I'm a Fabric Vendor</Button>
+                // </>
               }
             </div>
           </Container>
@@ -109,7 +118,7 @@ const Home = (props) => {
           </Row>
         </Container>
       </section> */}
-      <section id="fabrics" className="pt-5 mb-5 mt-xl-5">
+      <section id="fabrics" className="pt-5 mb-5 mt-xl-5 px-2">
         <Container>
           <Row>
             <Col lg="12">
@@ -123,7 +132,7 @@ const Home = (props) => {
         <EcoFriendly currentUser={currentUser} onSignup={showSignupModal} />
       </section>
 
-      <section id="designs" className="py-5">
+      <section id="designs" className="py-5 px-2">
         <Container>
           <Row>
             <Col lg="12">
@@ -137,7 +146,7 @@ const Home = (props) => {
         <CustomerSatisfactionCta />
       </section>
 
-      <section id="recent-designs" className="py-5 mb-5">
+      <section id="recent-designs" className="py-5 mb-5 px-2">
         <Container>
           <Row>
             <Col lg="12">
@@ -152,51 +161,59 @@ const Home = (props) => {
 
       
       {/* User Box */}
-      <Modal show={userModalShow} fullscreen={true} onHide={() => setUserModalShow(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title></Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+      <Modal show={userModalShow} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setUserModalShow(false)}>
+        <Modal.Body className="py-5">
+          <button type="button" className="btn-close no-header-close" onClick={() => setUserModalShow(false)} aria-label="Close"></button>
           <Container className="narrow-850 h-100">
             <Row className=" align-items-center h-100">
               <Col lg="12">
-                <h3 className="text-center fw-600 mb-5">I am looking for...</h3>
+                {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
+                <h3 className="text-center fw-600 mb-5">I am interested in...</h3>
                 <Row>
                   <Col lg="4">
-                    <Card className="cursor-pointer bg-white border-gold-hover border-solid-2" onClick={() => showSignupModal('user_designer')}>
-                      <Card.Body>
-                        <div className="user-box">
-                          <div>
-                            <img src={DesignerIcon} alt="Designers" />
-                            <h3 className="fw-600">Designers</h3>
+                    <Link to="/designers" className="text-decoration-none">
+                      {/* onClick={() => showSignupModal('user_designer')} */}
+                      <Card className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                        <Card.Body>
+                          <div className="user-box">
+                            <div>
+                              <img src={DesignerIcon} alt="Designers" />
+                              <h3 className="fw-600">Designers</h3>
+                            </div>
                           </div>
-                        </div>
-                      </Card.Body>
-                    </Card>
+                        </Card.Body>
+                      </Card>
+                    </Link>
                   </Col>
                   <Col lg="4">
-                    <Card className="cursor-pointer bg-white border-gold-hover border-solid-2" onClick={() => handleShowFabrics()}>
-                      <Card.Body>
-                        <div className="user-box">
-                          <div>
-                            <img src={FabricIcon} alt="Fabrics" />
-                            <h3 className="fw-600">Fabrics</h3>
+                    <Link to="/fabrics" className="text-decoration-none">
+                      {/* onClick={() => handleShowFabrics()} */}
+                      <Card className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                        <Card.Body>
+                          <div className="user-box">
+                            <div>
+                              <img src={FabricIcon} alt="Fabrics" />
+                              <h3 className="fw-600">Fabrics</h3>
+                            </div>
                           </div>
-                        </div>
-                      </Card.Body>
-                    </Card>
+                        </Card.Body>
+                      </Card>
+                    </Link>
                   </Col>
                   <Col lg="4">
-                    <Card className="cursor-pointer bg-white border-gold-hover border-solid-2" onClick={() => handleShowDesigns()}>
-                      <Card.Body>
-                        <div className="user-box">
-                          <div>
-                            <img src={DesignIcon} alt="Designs" />
-                            <h3 className="fw-600">Designs</h3>
+                    <Link to="/designs" className="text-decoration-none">
+                      {/* onClick={() => handleShowDesigns()} */}
+                      <Card className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                        <Card.Body>
+                          <div className="user-box">
+                            <div>
+                              <img src={DesignIcon} alt="Designs" />
+                              <h3 className="fw-600">Designs</h3>
+                            </div>
                           </div>
-                        </div>
-                      </Card.Body>
-                    </Card>
+                        </Card.Body>
+                      </Card>
+                    </Link>
                   </Col>
                 </Row>
               </Col>
@@ -206,7 +223,7 @@ const Home = (props) => {
       </Modal>
 
       {/* Fabrics */}
-      <Modal show={fabricsModalShow} fullscreen={true} onHide={() => setFabricsModalShow(false)}>
+      <Modal show={fabricsModalShow} fullscreen={false} onHide={() => setFabricsModalShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title></Modal.Title>
         </Modal.Header>
@@ -230,7 +247,7 @@ const Home = (props) => {
       </Modal>
 
       {/* Designs */}
-      <Modal show={designsModalShow} fullscreen={true} onHide={() => setDesignsModalShow(false)}>
+      <Modal show={designsModalShow} fullscreen={false} onHide={() => setDesignsModalShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title></Modal.Title>
         </Modal.Header>
@@ -254,7 +271,7 @@ const Home = (props) => {
       </Modal>
 
       {/* Signup */}
-      <Modal show={signupModalShow} fullscreen={true} onHide={() => setSignupModalShow(false)}>
+      <Modal show={signupModalShow} fullscreen={false} onHide={() => setSignupModalShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title></Modal.Title>
         </Modal.Header>
@@ -263,6 +280,22 @@ const Home = (props) => {
             <Row className="h-100">
               <Col lg="12">
                 <Signup type={signupType} />
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
+
+      {/* Fabrics */}
+      <Modal show={marketplaceFlowShow} fullscreen={false} onHide={() => setMarketplaceFlowShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container className="h-100">
+            <Row className="h-100">
+              <Col lg="12" className="pb-100">
+                <h2 className="mb-4 fw-600">Marketplace Flow</h2>
               </Col>
             </Row>
           </Container>

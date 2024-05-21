@@ -42,6 +42,10 @@ body {
     overflow-x: hidden;
 }
 
+.container {
+    max-width: 1860px;
+}
+
 h1,
 h2,
 h3,
@@ -63,6 +67,18 @@ h5 {
 p {
     line-height: 1.7;
 }
+
+.design-atc .action-button, .design-atc .atc-icon {
+    transition: 0.5s;
+}
+
+.design-atc:hover .action-button {
+    background: var(--gold) !important;
+} 
+
+.design-atc:hover .atc-icon {
+    color: var(--white) !important;
+} 
 
 .rti--container {
     border: 2px solid var(--gray) !important;
@@ -522,6 +538,10 @@ a {
 
 .calendar-date {
     padding: 10px 6.6667px;
+}
+
+.modal-dialog.modal-lg {
+    max-width: 800px !important;
 }
 
 #measurement-guide.modal-dialog {
@@ -1001,6 +1021,12 @@ form select::placeholder {
     display: block;
 }
 
+.no-header-close {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+
 .portfolio-overlay .portfolio-details {
     position: absolute;
     bottom: 0px;
@@ -1012,13 +1038,16 @@ form select::placeholder {
 .action-button {
     background: var(--white);
     color: var(--black);
-    padding: 3px 5px 5px 5px;
+    padding: 4px 5px 5px 5px;
     height: 28px;
     display: inline-block;
     width: 28px;
     border-radius: 50%;
     text-align: center;
     cursor: pointer;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.25);
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.25);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.25);
 }
 
 .portfolio-name-img {
@@ -1173,21 +1202,25 @@ form select::placeholder {
 
 .bg-black-faded {
     background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.1) 22%, rgba(0, 0, 0, 0) 100%);
-    width: 100%;
-    min-height: 400px;
+}
+
+.bg-black-faded.designer-overlay {
     border-radius: 15px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 /* Design */
-.designs-row {
+/* .designs-row {
     margin-left: -20px;
     margin-right: -20px;
-}
+} */
 
-.designs-grid {
+/* .designs-grid {
     padding-left: 20px;
     padding-right: 20px;
-}
+} */
 
 .designs-grid-div {
     min-height: 300px;
@@ -1299,6 +1332,34 @@ form select::placeholder {
     bottom: 15px;
     right: 15px;
     z-index: 2;
+}
+
+.designer-links {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    position: absolute;
+    bottom: 48px;
+    right: 15px;
+    z-index: 2;
+}
+
+/* .designer-links .action-button {
+    padding: 6px 5px 5px 5px;
+    height: 40px;
+    width: 40px;
+} */
+
+.designs-grid .save-link {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.designs-grid .portfolio-link:hover .save-link {
+    opacity: 1;
+}
+
+.designer-box-details:hover .designer-links {
+    opacity: 1;
 }
 
 .portfolio-link .save-link {

@@ -14,6 +14,7 @@ import { AiFillMessage } from "react-icons/ai";
 import CopyTo from 'Utils/CopyLink';
 import { PiNotepadFill } from "react-icons/pi";
 import { GoAlertFill } from "react-icons/go";
+import { BsCartPlus } from "react-icons/bs";
 import DressPlaceholder from 'Assets/images/placeholder-dress.jpeg';
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import UserPlaceholder from 'Assets/images/user.png';
@@ -224,7 +225,7 @@ const PortfolioGrid = (props) => {
                                                                 </div>
                                                             </div>
                                                             <div className='save-link'>
-                                                                {userRole !== 'Admin' &&
+                                                                {currentUser && currentUser != "" ?
                                                                     <>
                                                                         {userWishlist ?
                                                                             <div
@@ -242,6 +243,8 @@ const PortfolioGrid = (props) => {
                                                                             </div>
                                                                         }
                                                                     </>
+                                                                    :
+                                                                    null
                                                                 }
                                                             </div>
                                                         </div>
@@ -260,7 +263,7 @@ const PortfolioGrid = (props) => {
                                                                 </div>
                                                             </div>
                                                             <div className='save-link'>
-                                                                {userRole !== 'Admin' &&
+                                                                {userRole !== 'Admin' && currentUser && currentUser != "" ?
                                                                     <>
                                                                         {userWishlist ?
                                                                             <div
@@ -278,6 +281,8 @@ const PortfolioGrid = (props) => {
                                                                             </div>
                                                                         }
                                                                     </>
+                                                                    :
+                                                                    null
                                                                 }
                                                             </div>
                                                         </div>
@@ -393,12 +398,16 @@ const PortfolioGrid = (props) => {
                                                 null
                                                 :
                                                 <>
-                                                    <div className='btn-book-bar'>
-                                                        {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
-                                                        <a href={`/designer/${singleDesign.id}/appointment/schedule/0`}>
-                                                            <button className='btn btn-book-consultation'>Book a Consultation</button>
-                                                        </a>
-                                                    </div>
+                                                    {currentUser && currentUser != "" ?
+                                                        <div className='btn-book-bar'>
+                                                            {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
+                                                            <a href={`/designer/${singleDesign.id}/appointment/schedule/0`}>
+                                                                <button className='btn btn-book-consultation'>Book a Consultation</button>
+                                                            </a>
+                                                        </div>
+                                                        :
+                                                        null
+                                                    }
                                                 </>
                                             }
                                         </p>
@@ -463,25 +472,32 @@ const PortfolioGrid = (props) => {
                                                             null
                                                             :
                                                             <>
-                                                                <hr />
-                                                                <div className='text-center'>
-                                                                    {/* <a className='book-consultation btn-book btn w-100'
-                                                                        href={`/appointment/schedule/${singleDesign.id}`}
-                                                                    > */}
-                                                                    <a
-                                                                        className='book-consultation btn-book btn w-100'
-                                                                        href={`/designer/${singleDesign.id}/appointment/schedule/0`}
-                                                                    >
-                                                                        <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
-                                                                </div>
+                                                                {currentUser && currentUser != "" ?
+                                                                    <>
+                                                                        <hr />
+                                                                        <div className='text-center'>
+                                                                            {/* <a className='book-consultation btn-book btn w-100'
+                                                                                href={`/appointment/schedule/${singleDesign.id}`}
+                                                                            > */}
+                                                                            <a
+                                                                                className='book-consultation btn-book btn w-100'
+                                                                                href={`/designer/${singleDesign.id}/appointment/schedule/0`}
+                                                                            >
+                                                                                <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
+                                                                        </div>
 
-                                                                <div className='text-center mt-2'
-                                                                    onClick={() => { toggleUnderConstruction("Message"); setProfileViewShow(false); }}
-                                                                >
-                                                                    <a className='book-consultation btn-message-designer btn w-100'
-                                                                    >
-                                                                        <AiFillMessage className="me-2" />Send Message</a>
-                                                                </div>
+                                                                        <div className='text-center mt-2'
+                                                                            onClick={() => { toggleUnderConstruction("Message"); setProfileViewShow(false); }}
+                                                                        >
+                                                                            <a className='book-consultation btn-message-designer btn w-100'
+                                                                            >
+                                                                                <AiFillMessage className="me-2" />Send Message</a>
+                                                                        </div>
+                                                                    </>
+                                                                    :
+                                                                    null
+                                                                }
+                                                                
                                                             </>
                                                         }
 
@@ -513,23 +529,30 @@ const PortfolioGrid = (props) => {
                                 {isDesignCurrentUser ?
                                     null
                                     :
-                                    <>
-                                        <div className='text-center mb-4' >
-                                            {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
-                                            <a href={`/designer/${singleDesign.id}/appointment/schedule/0`}>
-                                                <div className="action-button-designs bg-white">
-                                                    <PiNotepadFill className="text-black mt-2" size={30} />
+                                    <>  
+                                        {currentUser && currentUser != "" ?
+                                            <>
+                                                <div className='text-center mb-4' >
+                                                    {/* <a href={`/appointment/schedule/${singleDesign.id}`}> */}
+                                                    <a href={`/designer/${singleDesign.id}/appointment/schedule/0`}>
+                                                        <div className="action-button-designs bg-white">
+                                                            <PiNotepadFill className="text-black mt-2" size={30} />
+                                                        </div>
+                                                    </a>
+                                                    <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                                 </div>
-                                            </a>
-                                            <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
-                                        </div>
 
-                                        <div className='text-center mb-4' onClick={() => toggleUnderConstruction("Message")}>
-                                            <div className="action-button-designs bg-white">
-                                                <AiFillMessage className="text-black mt-2" size={30} />
-                                            </div>
-                                            <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
-                                        </div>
+                                                <div className='text-center mb-4' onClick={() => toggleUnderConstruction("Message")}>
+                                                    <div className="action-button-designs bg-white">
+                                                        <AiFillMessage className="text-black mt-2" size={30} />
+                                                    </div>
+                                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
+                                                </div>
+                                            </>
+                                            :
+                                            null
+                                        }
+                                        
                                     </>
                                 }
 
@@ -548,7 +571,7 @@ const PortfolioGrid = (props) => {
                                     </div>
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Description</div>
                                 </div>
-                                {userRole !== 'Admin' ?
+                                {userRole !== 'Admin' && currentUser && currentUser != "" ?
                                     <>
                                         {inWishlist ?
                                             <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: singleDesign.id }); }}>
@@ -567,8 +590,14 @@ const PortfolioGrid = (props) => {
                                         }
                                     </>
                                     :
-                                    <></>
+                                    null
                                 }
+                                <div className='text-center mb-4'>
+                                    <div className="action-button-designs bg-white">
+                                        <BsCartPlus className="text-black mt-2" size={30} />
+                                    </div>
+                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Add to Cart</div>
+                                </div>
                             </div>
                         </Col>
                     </Row>
@@ -766,7 +795,6 @@ const PortfolioGrid = (props) => {
                                             autoPlaySpeed={1000}
                                         >
                                             {designImages.map((image, index) => {
-
                                                 return (
                                                     <>
                                                         <div key={index} className="single-image-slider-share mb-4"

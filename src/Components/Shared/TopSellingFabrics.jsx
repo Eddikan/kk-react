@@ -93,21 +93,21 @@ const ProductGrid = (props) => {
                                                     <div className={`portfolio-grid-selling w-100 ${product.collection_type == "Limited" ? "limited" : " "} ${product.status == "Draft" ? "draft" : ""}`}
                                                         style={{ backgroundImage: "url(" + productImage + ")" }}
                                                     >
-                                                {userRole !== 'Admin' ?
+                                                        {userRole !== 'Admin' ?
                                                             <>
-                                                        <Link to={`/product/${product.id}`} className="text-decoration-none">
-                                                            <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
-                                                        </Link>
-                                                        </>
-                                                        :
-                                                        <>
-                                                        <Link to={`/admin/fabric/${product.id}`} className="text-decoration-none">
-                                                            <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
-                                                        </Link>
-                                                        </>
-                                                }
+                                                                <Link to={`/product/${product.id}`} className="text-decoration-none">
+                                                                    <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
+                                                                </Link>
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <Link to={`/admin/fabric/${product.id}`} className="text-decoration-none">
+                                                                    <div className="portfolio-overlay" style={{ background: 'transparent', height: '85%', bottom: 0 }}></div>
+                                                                </Link>
+                                                            </>
+                                                        }
                                                         <div className='save-link'>
-                                                            {userRole !== 'Admin' &&
+                                                            {userRole !== 'Admin' && currentUser && currentUser != "" ?
                                                                 <>
                                                                     {userWishlist ?
                                                                         <div
@@ -125,6 +125,8 @@ const ProductGrid = (props) => {
                                                                         </div>
                                                                     }
                                                                 </>
+                                                                :
+                                                                null
                                                             }
                                                         </div>
 
