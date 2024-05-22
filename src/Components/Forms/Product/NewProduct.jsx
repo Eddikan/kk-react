@@ -15,6 +15,7 @@ import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 
 const initialProductData = Object.freeze({
     image_urls: [],
+    final_product_image_urls: [],
     name: '',
     description: '',
     colors: [],
@@ -143,6 +144,14 @@ const NewProduct = (props) => {
         });
     };
 
+    const handleFinalImagesChange = (images) => {
+        // Use the images as needed in the parent component (e.g., for uploading)
+        setProductData({
+            ...productData,
+            final_product_image_urls: images,
+        });
+    };
+
     useEffect(() => {
         setProductData({
             ...productData,
@@ -232,7 +241,14 @@ const NewProduct = (props) => {
                 <Col lg='12'>
                     <Card className='mb-3'>
                         <Card.Body className='bg-lgray'>
+                            <Form.Label>Fabric Photos</Form.Label>
                             <ImageDragAndDrop type="product" onImagesChange={handleImagesChange} size={size} />
+                        </Card.Body>
+                    </Card>
+                    <Card className='mb-3'>
+                        <Card.Body className='bg-lgray'>
+                            <Form.Label>Photos of Final Products</Form.Label>
+                            <ImageDragAndDrop type="product" onImagesChange={handleFinalImagesChange} size={size} />
                         </Card.Body>
                     </Card>
                 </Col>

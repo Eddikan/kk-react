@@ -76,8 +76,10 @@ const Designs = (props) => {
 
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCount, setPageCount] = useState(1);
-    const [pageSize, setPageSize] = useState(12);
+    const [pageSize, setPageSize] = useState(1);
     const [inWishlist, setInWishlist] = useState(false);
+
+    let PageSize = 12;
 
     const [fabricsModalShow, setFabricsModalShow] = useState(false);
     const [designsModalShow, setDesignsModalShow] = useState(false);
@@ -272,9 +274,11 @@ const Designs = (props) => {
     };
 
     async function wishlistDesignUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'design/wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update', e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
+                handleChangePage(currentPage);
+                setInWishlist(!inWishlist);
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
@@ -316,7 +320,7 @@ const Designs = (props) => {
                 province: province ?? '-',
                 tags: tags ?? '-',
                 description: description ?? '-'
-            })
+            });
 
             setDesignImages(image_urls);
             if (image_urls?.[0]?.image_url) {
@@ -654,23 +658,22 @@ const Designs = (props) => {
                                                                                                     design.user.id,
                                                                                                     userWishlist
                                                                                                 );
-
                                                                                                 toggleAddViewCount(design.id);
                                                                                             }}
                                                                                         >
                                                                                         </div>
-                                                                                        {userRole !== 'Admin' && currentUser && currentUser != "" ?
+                                                                                        {userRole !== 'Admin' && currentUser && currentUser != "" && design.user.id != currentUser ?
                                                                                             <>
                                                                                                 <div className='save-link'>
                                                                                                     {userWishlist ?
                                                                                                         <div className="action-button bg-gold"
-                                                                                                            onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
+                                                                                                            onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: design.id }); }}
                                                                                                         >
                                                                                                             <GoHeart className="text-white" />
                                                                                                         </div>
                                                                                                         :
                                                                                                         <div className="action-button bg-white"
-                                                                                                            onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
+                                                                                                            onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: design.id }); }}
                                                                                                         >
                                                                                                             <GoHeart className="text-black" />
                                                                                                         </div>
@@ -689,18 +692,18 @@ const Designs = (props) => {
                                                                                     <div className="designs-grid-div w-100 cursor-pointer" style={{ backgroundImage: "url(" + designImage + ")" }}>
                                                                                         <div className="designs-grid-placeholder"  onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}>
                                                                                         </div>
-                                                                                        {userRole !== 'Admin' && currentUser && currentUser != "" ?
+                                                                                        {userRole !== 'Admin' && currentUser && currentUser != "" && design.user.id != currentUser ?
                                                                                             <>
                                                                                                 <div className='save-link'>
                                                                                                     {userWishlist ?
                                                                                                         <div className="action-button bg-gold"
-                                                                                                            onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
+                                                                                                            onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: design.id }); }}
                                                                                                         >
                                                                                                             <GoHeart className="text-white" />
                                                                                                         </div>
                                                                                                         :
                                                                                                         <div className="action-button bg-white"
-                                                                                                            onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: design.id }); }}
+                                                                                                            onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: design.id }); }}
                                                                                                         >
                                                                                                             <GoHeart className="text-black" />
                                                                                                         </div>
@@ -720,18 +723,22 @@ const Designs = (props) => {
                                                                         <div className="design-details">
                                                                             <div className='d-flex align-items-center justify-content-between'>
                                                                                 <p className="text-black fs-18 fw-400 mb-0 text-ellipsis rufina-family">{design.name ?? '-'}</p>
-                                                                                <div className="design-atc-container">
-                                                                                    <div className="design-atc cursor-pointer">
-                                                                                        <div className="kouture-tooltip">
-                                                                                            <div className="action-button bg-black">
-                                                                                                <BsCartPlus className="text-white atc-icon" />
-                                                                                            </div>
-                                                                                            <div className="kouture-tooltiptext">
-                                                                                                Add to Cart
+                                                                                {design.user.id != currentUser ?
+                                                                                    <div className="design-atc-container">
+                                                                                        <div className="design-atc cursor-pointer">
+                                                                                            <div className="kouture-tooltip">
+                                                                                                <div className="action-button bg-black">
+                                                                                                    <BsCartPlus className="text-white atc-icon" />
+                                                                                                </div>
+                                                                                                <div className="kouture-tooltiptext">
+                                                                                                    Add to Cart
+                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                </div>
+                                                                                    :
+                                                                                    null
+                                                                                }
                                                                             </div>
                                                                             {/* <div className="star-ratings mt-1">
                                                                                 <Rating
@@ -769,7 +776,7 @@ const Designs = (props) => {
                                                             className="mt-4 mb-0"
                                                             currentPage={currentPage}
                                                             totalCount={pageCount}
-                                                            pageSize={pageSize}
+                                                            pageSize={PageSize}
                                                             onPageChange={page => handleChangePage(page)}
                                                         />
                                                         :
@@ -1047,17 +1054,17 @@ const Designs = (props) => {
                                     </div>
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Description</div>
                                 </div>
-                                {userRole !== 'Admin' ?
+                                {userRole !== 'Admin' && !isDesignCurrentUser ?
                                     <>
                                         {inWishlist ?
-                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: singleDesign.id }); }}>
+                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: singleDesign.portfolioId }); }}>
                                                 <div className="action-button-designs bg-gold">
                                                     <GoHeart className="text-white mt-2" size={30} />
                                                 </div>
                                                 <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Wishlist</div>
                                             </div>
                                             :
-                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: singleDesign.id }); }}>
+                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: singleDesign.portfolioId }); }}>
                                                 <div className="action-button-designs bg-white">
                                                     <GoHeart className="text-black mt-2" size={30} />
                                                 </div>
@@ -1068,12 +1075,16 @@ const Designs = (props) => {
                                     :
                                     <></>
                                 }
-                                <div className='text-center mb-4'>
-                                    <div className="action-button-designs bg-white">
-                                        <BsCartPlus className="text-black mt-2" size={30} />
+                                {!isDesignCurrentUser ?
+                                    <div className='text-center mb-4'>
+                                        <div className="action-button-designs bg-white">
+                                            <BsCartPlus className="text-black mt-2" size={30} />
+                                        </div>
+                                        <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Add to Cart</div>
                                     </div>
-                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Add to Cart</div>
-                                </div>
+                                    :
+                                    null
+                                }
                             </div>
                         </Col>
                     </Row>

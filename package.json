@@ -5,6 +5,7 @@
   "dependencies": {
     "@firebase/firestore": "^4.5.1",
     "@react-oauth/google": "^0.12.1",
+    "@smastrom/react-email-autocomplete": "^1.2.0",
     "@stream-io/video-react-sdk": "^0.5.3",
     "@stripe/react-stripe-js": "^2.1.2",
     "@stripe/stripe-js": "^2.1.0",

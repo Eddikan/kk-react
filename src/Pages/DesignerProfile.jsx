@@ -385,20 +385,20 @@ const DesignerProfile = () => {
                             <Col lg="8" className='text-right'>
                                 <Row>
                                     <Col lg={10}>
-                                        {userRole !== 'Admin' && currentUser && currentUser != "" ?
+                                        {userRole !== 'Admin' ?
                                             <>
                                                 {isDesignerCurrentUser ?
                                                     null
                                                     :
                                                     <>
-                                                        <span>
+                                                        {/* <span>
                                                             <p className='btn request-quote-btn mb-0 cursor-pointer fs-16 fw-400 btn-style ms-3'
                                                                 onClick={() => toggleRequestAQuote(true)}
                                                             >
                                                                 <PiNotepadFill className='me-2' size="20" />
                                                                 Request a Quote
                                                             </p>
-                                                        </span>
+                                                        </span> */}
                                                         {designerAvailable ?
                                                             <span className='w-100'>
                                                                 <a

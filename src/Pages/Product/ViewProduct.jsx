@@ -36,6 +36,7 @@ const ViewProduct = () => {
     const [productPrice, setProductPrice] = useState(0.00);
     const [productLoading, setProductLoading] = useState(true);
     const [images, setImages] = useState([]);
+     const [finalProductImages, setFinalProductImages] = useState([]);
     const [activeImage, setActiveImage] = useState('');
     const [commentsTabShow, setCommentsTabShow] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
@@ -165,6 +166,7 @@ const ViewProduct = () => {
                 setProduct(productData);
                 setProductLoading(false);
                 setImages(productData.image_urls);
+                setFinalProductImages(productData.final_product_image_urls );
                 if (productData.price && productData.price > 0) {
                     setProductPrice(Number(productData.price).toFixed(2))
                 }
@@ -396,7 +398,7 @@ const ViewProduct = () => {
                                             <div className="single-image-slider mb-4" style={{ backgroundImage: "url(" + activeImage + ")" }}>
 
                                             </div>
-                                            <ImageSlider type="product" slidesToShow={4} images={images} onActiveImageChange={handleActiveImageChange} />
+                                            <ImageSlider type="product" slidesToShow={4} images={images} finalProductImages={finalProductImages} onActiveImageChange={handleActiveImageChange} />
                                         </>
                                         :
                                         <div className="single-image-slider" style={{ backgroundImage: "url(" + activeImage + ")" }}>
@@ -480,7 +482,7 @@ const ViewProduct = () => {
 
                                                                         </div>
 
-                                                                        {userWishlist ?
+                                                                        {/* {userWishlist ?
                                                                             <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
                                                                                 <div className="action-button bg-gold me-2" >
                                                                                     <span class="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
@@ -495,7 +497,7 @@ const ViewProduct = () => {
                                                                                 </div>
 
                                                                             </div>
-                                                                        }
+                                                                        } */}
                                                                     </div>
 
                                                                 </>

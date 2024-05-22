@@ -7,7 +7,7 @@ const GetUserWishlistsData = async (data) => {
     const token = data.token;
     try {
         const response = await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/'+currentUser+'/wishlist?user_id='+currentUser+'&token='+token);
-        return response.data.data;
+        return response.data;
     } catch (error) {
         // Handle the error or show a toast message
         console.error('Error fetching wishlist data:', error);

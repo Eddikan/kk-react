@@ -48,7 +48,7 @@ const Fabrics = (props) => {
     const currentUser = cookies.currentUser;
     const userRole = cookies.userRole;
     const token = cookies.token;
-    let PageSize = 10;
+    let PageSize = 12;
 
     const [sortOptions] = useState([
         { value: 'created_at', label: 'Date' },
@@ -118,7 +118,7 @@ const Fabrics = (props) => {
 
     async function onFilterChange(data) {
         setFabricsLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page='+currentPage+'&user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setFabrics(selectedDesigns);
@@ -483,7 +483,7 @@ const Fabrics = (props) => {
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Price Range</Form.Label>
                                         <Form.Group as={Row} className="mt-3 position-relative">
-                                            <MultiRangeSlider min={10} max={1000} onChange={priceRangeChange} />
+                                            <MultiRangeSlider min={1} max={100000} onChange={priceRangeChange} />
                                         </Form.Group>
                                     </Form.Group>
 
@@ -535,27 +535,26 @@ const Fabrics = (props) => {
                                                                         <>
                                                                             <Col className="designs-grid mb-3" xs="12" md="3">
                                                                                 <div className="portfolio-link">
-                                                                                {userRole !== 'Admin' ?
-                                                                                        <>
-                                                                                    <div
-                                                                                        className="designs-grid-div w-100 cursor-pointer"
-                                                                                        onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }}
-                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}
-                                                                                    >
-                                                                                    </div>
-                                                                                    </>
-                                                                                    :
-                                                                                    <>
-                                                                                    <div
-                                                                                        className="designs-grid-div w-100 cursor-pointer"
-                                                                                        onClick={function () { toggleAddViewCount(fabric.id); navigate('/admin/fabric/' + fabric.id); }}
-                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' , minWidth: '250px'}}
-                                                                                    >
-                                                                                    </div>
-                                                                                    </>
-                                                                                }
-
                                                                                     {userRole !== 'Admin' ?
+                                                                                            <>
+                                                                                        <div
+                                                                                            className="designs-grid-div w-100 cursor-pointer"
+                                                                                            onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }}
+                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}
+                                                                                        >
+                                                                                        </div>
+                                                                                        </>
+                                                                                        :
+                                                                                        <>
+                                                                                        <div
+                                                                                            className="designs-grid-div w-100 cursor-pointer"
+                                                                                            onClick={function () { toggleAddViewCount(fabric.id); navigate('/admin/fabric/' + fabric.id); }}
+                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' , minWidth: '250px'}}
+                                                                                        >
+                                                                                        </div>
+                                                                                        </>
+                                                                                    }
+                                                                                    {userRole !== 'Admin' && fabric.user.id != currentUser  ?
                                                                                         <>
                                                                                             <div className='save-link'>
                                                                                                 {userWishlist ?
@@ -661,7 +660,7 @@ const Fabrics = (props) => {
                                                                                     </>
                                                                                 }   
 
-                                                                                    {userRole !== 'Admin' ?
+                                                                                    {userRole !== 'Admin' && fabric.user.id != currentUser ?
                                                                                         <>
                                                                                             <div className='save-link'>
 

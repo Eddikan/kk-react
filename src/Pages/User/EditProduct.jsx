@@ -15,6 +15,7 @@ const EditProductDetails = () => {
     const [product, setProduct] = useState('');
     const [productLoading, setProductLoading] = useState(true);
     const [images, setImages] = useState([]);
+    const [finalProductImages, setFinalProductImages] = useState([]);
     const [reloadCount, setReloadCount] = useState(0);
 
     const editSuccess = (e) => {
@@ -44,6 +45,8 @@ const EditProductDetails = () => {
             setProduct(productData);
             setProductLoading(false);
             setImages(productData.image_urls);
+            setFinalProductImages(productData.final_product_image_urls);
+
           } else {
             setProductLoading(false);
             toast.error('Product item does not exist!');
@@ -74,7 +77,7 @@ const EditProductDetails = () => {
                                 <GoBack fallBack="/user/profile" />
                             </Col>
                         </Row>
-                        <EditProductNormal size="normal" productId={productId} product={product} images={images} withDraft={true} onSuccess={editSuccess} onReloadPage={reloadPage} onCancel={cancel} />
+                        <EditProductNormal size="normal" productId={productId} product={product} images={images} finalProductImages={finalProductImages} withDraft={true} onSuccess={editSuccess} onReloadPage={reloadPage} onCancel={cancel} />
                     </Container> 
                 </section>
             }

@@ -5,8 +5,10 @@ import "Assets/styles/ImageSlider/style.css";
 
 const ImageSlider = (props) => {
     const images = props.images;
+    const final_product_image_urls = props.finalProductImages
     const type = props.type ?? 'portfolio';
     const slidesToShow = props.slidesToShow ?? 3;
+    const [allImages, setAllImages] = useState([]);
 
     const responsive = {
         desktop: {
@@ -63,6 +65,14 @@ const ImageSlider = (props) => {
         if (images && images.length > 0) {
             props.onActiveImageChange(images[0]);
         }
+
+        if (final_product_image_urls && final_product_image_urls.length > 0) {
+            const combinedImages = [...images, ...final_product_image_urls];
+            setAllImages(combinedImages);
+        } else {
+            setAllImages(images);
+        }
+        
     }, []);
 
 
@@ -83,7 +93,7 @@ const ImageSlider = (props) => {
                 dotListClass="custom-dot-list-style"
                 afterChange={handleActiveImageChange}
             >
-                {images.map((image, index) => {
+                {allImages.map((image, index) => {
                     return (
                         <div className="slider pt-0" key={index}>
                             {type == 'product' ?
@@ -99,6 +109,7 @@ const ImageSlider = (props) => {
                         </div>
                     );
                 })}
+                
             </Carousel>
         </div>
     );

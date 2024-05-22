@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Email, domains } from '@smastrom/react-email-autocomplete'
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button }  from 'react-bootstrap';
@@ -44,6 +45,13 @@ const SignUp = () => {
       [e.target.name]: e.target.value,
     })
   };
+
+  const handleChangeEmail = (e) => {
+    setRegisterFormData({
+      ...registerFormData,
+      email: e,
+    })
+  }
 
   const getUser = async (e) => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + e);
@@ -162,7 +170,16 @@ const SignUp = () => {
       is_seller: signupType == "seller" ? 1 : 0,
       completed_questionnaire: signupType == "user" ? 1 : 0,
     });
-  }, [currentUser, signupType]);  
+  }, [currentUser, signupType]); 
+  
+  const baseList = [
+    'gmail.com',
+    'yahoo.com',
+    'hotmail.com',
+    'aol.com',
+    'msn.com',
+    'proton.me',
+  ];
 
   return (
     <LayoutNoFooter>
@@ -220,7 +237,15 @@ const SignUp = () => {
                       </Row>
                       <Form.Group className='mb-3' controlId='formBasicEmail'>
                           <Form.Label>Email Address</Form.Label>
-                          <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required />
+                          <Email
+                            baseList={baseList}
+                            refineList={domains}
+                            onChange={(e) => handleChangeEmail(e)} // or (newValue) => customSetter(newValue)
+                            value={registerFormData.email}
+                            className="form-control mr-sm-2 email-suggestion"
+                            required
+                          />
+                          {/* <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required /> */}
                       </Form.Group>
                       <Form.Group className='mb-3' controlId='formBasicPassword'>
                           <Form.Label>Password</Form.Label>

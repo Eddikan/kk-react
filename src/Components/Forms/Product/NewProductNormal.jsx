@@ -15,9 +15,9 @@ import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
 import VideoDragAndDrop from 'Components/Shared/VideoDragAndDrop';
 import DetailBuilder from 'Components/Shared/DetailBuilder';
 
-
 const initialProductData = Object.freeze({
     image_urls: [],
+    final_product_image_urls: [],
     name: '',
     description: '',
     colors: [],
@@ -164,6 +164,15 @@ const NewProductNormal = (props) => {
         });
     };
 
+    const handleFinalImagesChange = (images) => {
+        // Use the images as needed in the parent component (e.g., for uploading)
+        setProductData({
+            ...productData,
+            final_product_image_urls: images,
+        });
+    };
+
+
     useEffect(() => {
         setProductData({
             ...productData,
@@ -190,12 +199,10 @@ const NewProductNormal = (props) => {
 
     async function ProductSubmit(e) {
         e.preventDefault();
-
-        if (productData.image_urls == ''
-    ) {
-        toast.error('Please upload atleast one photo!');
-    } 
-    else if (productData.name == '' ||
+        if (productData.image_urls == '') {
+            toast.error('Please upload atleast one photo!');
+        }
+        else if (productData.name == '' ||
             productData.description == '' ||
             composition.length == 0 ||
             weave.length == '' ||
@@ -203,44 +210,44 @@ const NewProductNormal = (props) => {
             productData.pattern == '' ||
             productData.care_instructions == '' ||
             productData.country == '' ||
-            productData.price == '' 
-    ) {
-        toast.error('Kindly complete the fields marked as required!');
-    } else {
-
-        if (size == "small") {
-            setProductLoading(true);
-            setTimeout(function () {
-                setProductLoading(false);
-                saveProductItems({ ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' });
-                handleCancel();
-            }, 1000);
+            productData.price == ''
+        ) {
+            toast.error('Kindly complete the fields marked as required!');
         } else {
-            if (productData.image_urls) {
+
+            if (size == "small") {
                 setProductLoading(true);
-                axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
-                    const success = response.data.status;
-                    if (success == 'Success') {
-                        toast.success('Fabric added successfully!');
-                        setProductLoading(false);
-                        reloadPage(true);
-                        formSuccess(true);
-                    } else {
+                setTimeout(function () {
+                    setProductLoading(false);
+                    saveProductItems({ ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' });
+                    handleCancel();
+                }, 1000);
+            } else {
+                if (productData.image_urls) {
+                    setProductLoading(true);
+                    axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+                        const success = response.data.status;
+                        if (success == 'Success') {
+                            toast.success('Fabric added successfully!');
+                            setProductLoading(false);
+                            reloadPage(true);
+                            formSuccess(true);
+                        } else {
+                            toast.error('An error occured. Please try again or contact the administrator.');
+                            setProductLoading(false);
+                            formSuccess(false);
+                        }
+                    }).catch(() => {
                         toast.error('An error occured. Please try again or contact the administrator.');
                         setProductLoading(false);
                         formSuccess(false);
-                    }
-                }).catch(() => {
-                    toast.error('An error occured. Please try again or contact the administrator.');
-                    setProductLoading(false);
-                    formSuccess(false);
-                });
+                    });
 
-            } else {
-                toast.error('Please upload design images!');
+                } else {
+                    toast.error('Please upload design images!');
+                }
             }
         }
-    }
     };
 
     async function ProductDraftSubmit(e) {
@@ -268,332 +275,339 @@ const NewProductNormal = (props) => {
     return (
         <>
             {/* <Form onSubmit={ProductSubmit} ref={formRef}> */}
-                <Row>
-                    <Col lg='8'>
-                        <div>
-                            <Card className='mb-3'>
-                                <Card.Body className='bg-lgray'>
-                                    <ImageDragAndDrop type="product" onImagesChange={handleImagesChange} size={size} />
-                                </Card.Body>
-                            </Card>
-                            <Card className="mb-3">
-                                <Card.Body className='bg-lgray'>
-                                    <Form.Group className='mb-3 mt-2'>
-                                        <Form.Label>Name<span className='text-danger'>*</span></Form.Label>
-                                        <FormControl type='text' name='name' value={productData.name} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                    </Form.Group>
-                                    <Form.Group className='my-3'>
-                                        <Form.Label>Description<span className='text-danger'>*</span></Form.Label>
-                                        <FormControl as="textarea"
-                                            name="description"
-                                            rows={3} // You can adjust the number of rows as needed
-                                            value={productData.description}
-                                            placeholder=''
-                                            onChange={handleChange} required />
-                                    </Form.Group>
-                                    <Form.Group className='my-3'>
-                                        <Form.Label>Care Instructions <span className='text-danger'>*</span></Form.Label>
-                                        <FormControl as="textarea"
-                                            name="care_instructions"
-                                            rows={3} // You can adjust the number of rows as needed
-                                            value={productData.care_instructions}
-                                            placeholder=''
-                                            onChange={handleChange} required />
-                                    </Form.Group>
-                                    <Form.Label>Measurements</Form.Label>
-                                    <Card className="mb-3">
-                                        <Card.Body className='bg-mdgray'>
-                                            <Row>
-                                                <Col lg="4">
-                                                    <Form.Group className="my-1">
-                                                        <Form.Label>Unit of Measurement</Form.Label>
-                                                        <Form.Control as='select' name='unit_measurement' value={unitMeasurement} className='mr-sm-2 mb-2' onChange={handleChangeUnitMeasurement} required>
-                                                            <option value=''>Select Unit of Measurement</option>
-                                                            <option value='centimeter'>Centimeter</option>
-                                                            <option value='meter'>Meter</option>
-                                                            <option value='inch'>Inch</option>
-                                                            <option value='feet'>Feet</option>
-                                                            <option value='yard'>Yard</option>
-                                                            <option value='Other'>Other</option>
-                                                        </Form.Control>
-                                                        {(unitMeasurement != "centimeter" && unitMeasurement != "meter" && unitMeasurement != "inch" && unitMeasurement != "feet" && unitMeasurement != "yard" || unitMeasurement == "Other") && unitMeasurement != "" ?
-                                                            <FormControl type='text' name='unit_measurement' value={otherUnitMeasurement} className='mr-sm-2' onChange={handleChangeOtherUnitMeasurement} placeholder='' />
-                                                            :
-                                                            null
-                                                        }
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col lg="4">
-                                                    <Form.Group className="my-1">
-                                                        <Form.Label>Width ({otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
-                                                        <FormControl type='number' name='width' value={productData.width} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col lg="4">
-                                                    <Form.Group className="my-1">
-                                                        <Form.Label>Weight (KG per sq. {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
-                                                        <FormControl type='number' name='weight' value={productData.weight} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                    </Form.Group>
-                                                </Col>
-                                            </Row>
-                                        </Card.Body>
-                                    </Card>
-                                    <Form.Label>Pricing</Form.Label>
-                                    <Card>
-                                        <Card.Body className='bg-mdgray'>
-                                            <Row>
-                                                <Col lg="6">
-                                                    <Form.Group className='my-1'>
-                                                        <Form.Label>Price<span className='text-danger'>*</span> (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
-                                                        <FormControl type='number' name='price' value={productData.price} className='mr-sm-2' onChange={handleChange} placeholder='' required />
-                                                    </Form.Group>
-                                                </Col>
-                                                <Col lg="6">
-                                                    <Form.Group className='my-1'>
-                                                        <Form.Label>Stock Quantity</Form.Label>
-                                                        <FormControl type='number' name='quantity' value={productData.quantity} className='mr-sm-2' onChange={handleChange} placeholder='' required />
-                                                    </Form.Group>
-                                                </Col>
-                                            </Row>
-                                        </Card.Body>
-                                    </Card>
-                                    <Form.Group className='my-3'>
-                                        <Form.Label>Certifications (Organic, sustainable, etc)</Form.Label>
-                                        <TagsInput
-                                            value={certifications}
-                                            onChange={setCertifications}
-                                            name="certifications"
-                                            className="form-control"
-                                            onBlur={(e) => {
-                                                const value = e.target.value;
-                                                if (!certifications.includes(value) && value !== "") {
-                                                    setCertifications([...certifications, value]);
-                                                    e.target.value = "";
-                                                }
-                                            }}
-                                        />
-                                    </Form.Group>
-                                    <Form.Group className='my-3'>
-                                        <Form.Label>Notes (Additional notes/remarks)</Form.Label>
-                                        <FormControl as="textarea"
-                                            name="notes"
-                                            rows={5} // You can adjust the number of rows as needed
-                                            value={productData.notes}
-                                            placeholder=''
-                                            onChange={handleChange} />
-                                    </Form.Group>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                        <div className="text-left mt-5">
-                            <Button className='btn-outline me-3' type="button" onClick={handleCancel}>Cancel</Button>
-                            {productLoading ?
-                                <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..."}</Button>
-                                :
-                                <Button className='btn-primary' type="button" onClick={ProductSubmit}>{size == "small" ? "Upload" : "Save"}</Button>
-                            }
-                            {withDraft ?
-                                <>
-                                    {productDraftLoading ?
-                                        <span className="cursor-pointer text-black ms-3">Saving as Draft...</span>
-                                        :
-                                        <span className="cursor-pointer text-black ms-3" onClick={ProductDraftSubmit}>Save as Draft <HiOutlineArrowLongRight className="align-text-center" /></span>
-                                    }
-                                </>
-                                :
-                                null
-                            }
-                        </div>
-                    </Col>
-                    <Col lg='4'>
-                        <Card className='mb-3 h-100'>
+            <Row>
+                <Col lg='8'>
+                    <div>
+                        <Card className='mb-3'>
                             <Card.Body className='bg-lgray'>
-                                <Form.Group className='my-2'>
-                                    <Form.Label>Country of Origin<span className='text-danger'>*</span></Form.Label>
-                                    <Form.Control as='select' name='country' value={productData.country} className='mr-sm-2' onChange={handleChange} required>
-                                        <option value=''>Select Country</option>
-                                        {Countries.map((country, index) => (
-                                            <option key={country + "-" + index} value={country}>
-                                                {country}
-                                            </option>
-                                        ))}
-                                    </Form.Control>
+                                <Form.Label>Fabric Photos</Form.Label>
+                                <ImageDragAndDrop type="product" onImagesChange={handleImagesChange} size={size} />
+                            </Card.Body>
+                        </Card>
+                        <Card className='mb-3'>
+                            <Card.Body className='bg-lgray'>
+                                <Form.Label>Photos of Final Products</Form.Label>
+                                <ImageDragAndDrop type="product" onImagesChange={handleFinalImagesChange} size={size} />
+                            </Card.Body>
+                        </Card>
+                        <Card className="mb-3">
+                            <Card.Body className='bg-lgray'>
+                                <Form.Group className='mb-3 mt-2'>
+                                    <Form.Label>Name<span className='text-danger'>*</span></Form.Label>
+                                    <FormControl type='text' name='name' value={productData.name} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                 </Form.Group>
                                 <Form.Group className='my-3'>
-                                    <Form.Label>Environmentally Conscious Options</Form.Label>
-                                    <Row className="mt-1">
-                                        <Form.Group as={Col} lg={12}>
-                                            <Form.Check
-                                                className="cursor-pointer"
-                                                type="checkbox"
-                                                label="Eco-Friendly"
-                                                name="eco_friendly"
-                                                checked={productData.eco_friendly === 1}
-                                                onChange={(e) => handleChangeCheckbox(e.target.checked)}
-                                            />
-                                        </Form.Group>
-                                    </Row>
+                                    <Form.Label>Description<span className='text-danger'>*</span></Form.Label>
+                                    <FormControl as="textarea"
+                                        name="description"
+                                        rows={3} // You can adjust the number of rows as needed
+                                        value={productData.description}
+                                        placeholder=''
+                                        onChange={handleChange} required />
                                 </Form.Group>
-                                <Form.Group className='mt-2 mb-3'>
-                                    <Form.Label>Colors</Form.Label>
+                                <Form.Group className='my-3'>
+                                    <Form.Label>Care Instructions <span className='text-danger'>*</span></Form.Label>
+                                    <FormControl as="textarea"
+                                        name="care_instructions"
+                                        rows={3} // You can adjust the number of rows as needed
+                                        value={productData.care_instructions}
+                                        placeholder=''
+                                        onChange={handleChange} required />
+                                </Form.Group>
+                                <Form.Label>Measurements</Form.Label>
+                                <Card className="mb-3">
+                                    <Card.Body className='bg-mdgray'>
+                                        <Row>
+                                            <Col lg="4">
+                                                <Form.Group className="my-1">
+                                                    <Form.Label>Unit of Measurement</Form.Label>
+                                                    <Form.Control as='select' name='unit_measurement' value={unitMeasurement} className='mr-sm-2 mb-2' onChange={handleChangeUnitMeasurement} required>
+                                                        <option value=''>Select Unit of Measurement</option>
+                                                        <option value='centimeter'>Centimeter</option>
+                                                        <option value='meter'>Meter</option>
+                                                        <option value='inch'>Inch</option>
+                                                        <option value='feet'>Feet</option>
+                                                        <option value='yard'>Yard</option>
+                                                        <option value='Other'>Other</option>
+                                                    </Form.Control>
+                                                    {(unitMeasurement != "centimeter" && unitMeasurement != "meter" && unitMeasurement != "inch" && unitMeasurement != "feet" && unitMeasurement != "yard" || unitMeasurement == "Other") && unitMeasurement != "" ?
+                                                        <FormControl type='text' name='unit_measurement' value={otherUnitMeasurement} className='mr-sm-2' onChange={handleChangeOtherUnitMeasurement} placeholder='' />
+                                                        :
+                                                        null
+                                                    }
+                                                </Form.Group>
+                                            </Col>
+                                            <Col lg="4">
+                                                <Form.Group className="my-1">
+                                                    <Form.Label>Width ({otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
+                                                    <FormControl type='number' name='width' value={productData.width} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                </Form.Group>
+                                            </Col>
+                                            <Col lg="4">
+                                                <Form.Group className="my-1">
+                                                    <Form.Label>Weight (KG per sq. {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
+                                                    <FormControl type='number' name='weight' value={productData.weight} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                </Form.Group>
+                                            </Col>
+                                        </Row>
+                                    </Card.Body>
+                                </Card>
+                                <Form.Label>Pricing</Form.Label>
+                                <Card>
+                                    <Card.Body className='bg-mdgray'>
+                                        <Row>
+                                            <Col lg="6">
+                                                <Form.Group className='my-1'>
+                                                    <Form.Label>Price<span className='text-danger'>*</span> (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
+                                                    <FormControl type='number' name='price' value={productData.price} className='mr-sm-2' onChange={handleChange} placeholder='' required />
+                                                </Form.Group>
+                                            </Col>
+                                            <Col lg="6">
+                                                <Form.Group className='my-1'>
+                                                    <Form.Label>Stock Quantity</Form.Label>
+                                                    <FormControl type='number' name='quantity' value={productData.quantity} className='mr-sm-2' onChange={handleChange} placeholder='' required />
+                                                </Form.Group>
+                                            </Col>
+                                        </Row>
+                                    </Card.Body>
+                                </Card>
+                                <Form.Group className='my-3'>
+                                    <Form.Label>Certifications (Organic, sustainable, etc)</Form.Label>
                                     <TagsInput
-                                        value={colors}
-                                        onChange={setColors}
-                                        name="colors"
+                                        value={certifications}
+                                        onChange={setCertifications}
+                                        name="certifications"
                                         className="form-control"
                                         onBlur={(e) => {
                                             const value = e.target.value;
-                                            if (!colors.includes(value) && value !== "") {
-                                                setColors([...colors, value]);
+                                            if (!certifications.includes(value) && value !== "") {
+                                                setCertifications([...certifications, value]);
                                                 e.target.value = "";
                                             }
                                         }}
                                     />
                                 </Form.Group>
-                                <Form.Group className='mb-3 mt-2'>
-                                    <Form.Label>Composition<span className='text-danger'>*</span></Form.Label>
-                                    <Form.Control as='select' name='composition' value={composition} className='mr-sm-2 mb-2' onChange={handleChangeComposition} required>
-                                        <option value=''>Select Composition</option>
-                                        <option value='Polyamide'>Polyamide</option>
-                                        <option value='Polyester'>Polyester</option>
-                                        <option value='Polyurethane'>Polyurethane</option>
-                                        <option value='Acrylic'>Acrylic</option>
-                                        <option value='Cashmere'>Cashmere</option>
-                                        <option value='Mental'>Mental</option>
-                                        <option value='Other'>Other</option>
-                                    </Form.Control>
-                                    {(composition != "Polyamide" && composition != "Polyester" && composition != "Acrylic" && composition != "Polyurethane" && composition != "Cashmere" && composition != "Mental" || composition == "Other") && composition != "" ?
-                                        <FormControl type='text' name='composition' value={otherComposition} className='mr-sm-2' onChange={handleChangeOtherComposition} placeholder='' />
-                                        :
-                                        null
-                                    }
-                                </Form.Group>
-                                <Form.Group className='mb-3 mt-2'>
-                                    <Form.Label>Weave<span className='text-danger'>*</span></Form.Label>
-                                    <Form.Control as='select' name='weave' value={weave} className='mr-sm-2 mb-2' onChange={handleChangeWeave} required>
-                                        <option value=''>Select Weave</option>
-                                        <option value='Plain'>Plain</option>
-                                        <option value='Twill'>Twill</option>
-                                        <option value='Satin'>Satin</option>
-                                        <option value='Basket'>Basket</option>
-                                        <option value='Herringbone'>Herringbone</option>
-                                        <option value='Jacquard'>Jacquard</option>
-                                        <option value='Dobby'>Dobby</option>
-                                        <option value='Leno'>Leno</option>
-                                        <option value='Other'>Other</option>
-                                    </Form.Control>
-                                    {(weave != "Plain" && weave != "Twill" && weave != "Satin" && weave != "Basket" && weave != "Herringbone" && weave != "Jacquard" && weave != "Dobby" && weave != "Leno" || weave == "Other") && weave != "" ?
-                                        <FormControl type='text' name='weave' value={otherWeave} className='mr-sm-2' onChange={handleChangeOtherWeave} placeholder='' />
-                                        :
-                                        null
-                                    }
-                                </Form.Group>
                                 <Form.Group className='my-3'>
-                                    <Form.Label>Pattern<span className='text-danger'>*</span></Form.Label>
-                                    <FormControl type='text' name='pattern' value={productData.pattern} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                    <Form.Label>Notes (Additional notes/remarks)</Form.Label>
+                                    <FormControl as="textarea"
+                                        name="notes"
+                                        rows={5} // You can adjust the number of rows as needed
+                                        value={productData.notes}
+                                        placeholder=''
+                                        onChange={handleChange} />
                                 </Form.Group>
-                                <Form.Group className='my-3'>
-                                    <Form.Label>Texture<span className='text-danger'>*</span></Form.Label>
-                                    <FormControl type='text' name='texture' value={productData.texture} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                </Form.Group>
-                                <Form.Group className='my-3'>
-                                    <Form.Label>Opacity<span className='text-danger'>*</span></Form.Label>
-                                    <FormControl type='text' name='opacity' value={productData.opacity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                </Form.Group>
-                                <Form.Group className='my-3'>
-                                    <Form.Label>Stretch</Form.Label>
-                                    <Row className="mt-1">
-                                        <Form.Group as={Col} lg={3}>
-                                            <Form.Check
-                                                className="cursor-pointer"
-                                                type="radio"
-                                                label="Stretch"
-                                                name="stretch"
-                                                value="Stretch"
-                                                checked={productData.stretch === 'Stretch'}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group as={Col} lg={2}>
-                                            <Form.Check
-                                                className="cursor-pointer"
-                                                type="radio"
-                                                label="Rigid"
-                                                name="stretch"
-                                                value="Rigid"
-                                                checked={productData.stretch === 'Rigid'}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                    </Row>
-                                </Form.Group>
-                                <Form.Group className='my-3'>
-                                    <Form.Label>Drape</Form.Label>
-                                    <Row className="mt-1">
-                                        <Form.Group as={Col} lg={3}>
-                                            <Form.Check
-                                                className="cursor-pointer"
-                                                type="radio"
-                                                label="Hang"
-                                                name="drape"
-                                                value="Hang"
-                                                checked={productData.drape === 'Hang'}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                        <Form.Group as={Col} lg={2}>
-                                            <Form.Check
-                                                className="cursor-pointer"
-                                                type="radio"
-                                                label="Drapes"
-                                                name="drape"
-                                                value="Drapes"
-                                                checked={productData.drape === 'Drapes'}
-                                                onChange={handleChange}
-                                            />
-                                        </Form.Group>
-                                    </Row>
-                                </Form.Group>
-                                <Card className='mb-3'>
-                                    <Card.Body className='bg-mdgray'>
-                                        <Row>
-                                            <Col lg="12">
-                                                <Form.Group className='my-1'>
-                                                    <Form.Label>Video Demonstration</Form.Label>
-                                                    <Form.Control as='select' name='video_demo_type' value={productData.video_demo_type} className='mr-sm-2' onChange={handleChangeVideoType}>
-                                                        <option value=''>Select Type</option>
-                                                        <option value='Youtube'>Youtube</option>
-                                                        <option value='Vimeo'>Vimeo</option>
-                                                        <option value='Upload'>Upload Video</option>
-                                                    </Form.Control>
-                                                    {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Vimeo" ?
-                                                        <>
-                                                            <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />
-                                                            {productData.video_demo_url && productData.video_demo_url != "" ?
-                                                                <div className="mt-3">
-                                                                    <ResponsiveEmbedVideo src={productData.video_demo_url} title={productData.name} />
-                                                                </div>
-                                                                :
-                                                                null
-                                                            }
-                                                        </>
-                                                        : productData.video_demo_type == "Upload" ?
+                            </Card.Body>
+                        </Card>
+                    </div>
+                    <div className="text-left mt-5">
+                        <Button className='btn-outline me-3' type="button" onClick={handleCancel}>Cancel</Button>
+                        {productLoading ?
+                            <Button className='btn-primary' type="button">{size == "small" ? "Uploading..." : "Saving..."}</Button>
+                            :
+                            <Button className='btn-primary' type="button" onClick={ProductSubmit}>{size == "small" ? "Upload" : "Save"}</Button>
+                        }
+                        {withDraft ?
+                            <>
+                                {productDraftLoading ?
+                                    <span className="cursor-pointer text-black ms-3">Saving as Draft...</span>
+                                    :
+                                    <span className="cursor-pointer text-black ms-3" onClick={ProductDraftSubmit}>Save as Draft <HiOutlineArrowLongRight className="align-text-center" /></span>
+                                }
+                            </>
+                            :
+                            null
+                        }
+                    </div>
+                </Col>
+                <Col lg='4'>
+                    <Card className='mb-3 h-100'>
+                        <Card.Body className='bg-lgray'>
+                            <Form.Group className='my-2'>
+                                <Form.Label>Country of Origin<span className='text-danger'>*</span></Form.Label>
+                                <Form.Control as='select' name='country' value={productData.country} className='mr-sm-2' onChange={handleChange} required>
+                                    <option value=''>Select Country</option>
+                                    {Countries.map((country, index) => (
+                                        <option key={country + "-" + index} value={country}>
+                                            {country}
+                                        </option>
+                                    ))}
+                                </Form.Control>
+                            </Form.Group>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Environmentally Conscious Options</Form.Label>
+                                <Row className="mt-1">
+                                    <Form.Group as={Col} lg={12}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="checkbox"
+                                            label="Eco-Friendly"
+                                            name="eco_friendly"
+                                            checked={productData.eco_friendly === 1}
+                                            onChange={(e) => handleChangeCheckbox(e.target.checked)}
+                                        />
+                                    </Form.Group>
+                                </Row>
+                            </Form.Group>
+                            <Form.Group className='mt-2 mb-3'>
+                                <Form.Label>Colors</Form.Label>
+                                <TagsInput
+                                    value={colors}
+                                    onChange={setColors}
+                                    name="colors"
+                                    className="form-control"
+                                    onBlur={(e) => {
+                                        const value = e.target.value;
+                                        if (!colors.includes(value) && value !== "") {
+                                            setColors([...colors, value]);
+                                            e.target.value = "";
+                                        }
+                                    }}
+                                />
+                            </Form.Group>
+                            <Form.Group className='mb-3 mt-2'>
+                                <Form.Label>Composition<span className='text-danger'>*</span></Form.Label>
+                                <Form.Control as='select' name='composition' value={composition} className='mr-sm-2 mb-2' onChange={handleChangeComposition} required>
+                                    <option value=''>Select Composition</option>
+                                    <option value='Polyamide'>Polyamide</option>
+                                    <option value='Polyester'>Polyester</option>
+                                    <option value='Polyurethane'>Polyurethane</option>
+                                    <option value='Acrylic'>Acrylic</option>
+                                    <option value='Cashmere'>Cashmere</option>
+                                    <option value='Mental'>Mental</option>
+                                    <option value='Other'>Other</option>
+                                </Form.Control>
+                                {(composition != "Polyamide" && composition != "Polyester" && composition != "Acrylic" && composition != "Polyurethane" && composition != "Cashmere" && composition != "Mental" || composition == "Other") && composition != "" ?
+                                    <FormControl type='text' name='composition' value={otherComposition} className='mr-sm-2' onChange={handleChangeOtherComposition} placeholder='' />
+                                    :
+                                    null
+                                }
+                            </Form.Group>
+                            <Form.Group className='mb-3 mt-2'>
+                                <Form.Label>Weave<span className='text-danger'>*</span></Form.Label>
+                                <Form.Control as='select' name='weave' value={weave} className='mr-sm-2 mb-2' onChange={handleChangeWeave} required>
+                                    <option value=''>Select Weave</option>
+                                    <option value='Plain'>Plain</option>
+                                    <option value='Twill'>Twill</option>
+                                    <option value='Satin'>Satin</option>
+                                    <option value='Basket'>Basket</option>
+                                    <option value='Herringbone'>Herringbone</option>
+                                    <option value='Jacquard'>Jacquard</option>
+                                    <option value='Dobby'>Dobby</option>
+                                    <option value='Leno'>Leno</option>
+                                    <option value='Other'>Other</option>
+                                </Form.Control>
+                                {(weave != "Plain" && weave != "Twill" && weave != "Satin" && weave != "Basket" && weave != "Herringbone" && weave != "Jacquard" && weave != "Dobby" && weave != "Leno" || weave == "Other") && weave != "" ?
+                                    <FormControl type='text' name='weave' value={otherWeave} className='mr-sm-2' onChange={handleChangeOtherWeave} placeholder='' />
+                                    :
+                                    null
+                                }
+                            </Form.Group>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Pattern<span className='text-danger'>*</span></Form.Label>
+                                <FormControl type='text' name='pattern' value={productData.pattern} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                            </Form.Group>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Texture<span className='text-danger'>*</span></Form.Label>
+                                <FormControl type='text' name='texture' value={productData.texture} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                            </Form.Group>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Opacity<span className='text-danger'>*</span></Form.Label>
+                                <FormControl type='text' name='opacity' value={productData.opacity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                            </Form.Group>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Stretch</Form.Label>
+                                <Row className="mt-1">
+                                    <Form.Group as={Col} lg={3}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="Stretch"
+                                            name="stretch"
+                                            value="Stretch"
+                                            checked={productData.stretch === 'Stretch'}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={2}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="Rigid"
+                                            name="stretch"
+                                            value="Rigid"
+                                            checked={productData.stretch === 'Rigid'}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                </Row>
+                            </Form.Group>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Drape</Form.Label>
+                                <Row className="mt-1">
+                                    <Form.Group as={Col} lg={3}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="Hang"
+                                            name="drape"
+                                            value="Hang"
+                                            checked={productData.drape === 'Hang'}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={2}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="Drapes"
+                                            name="drape"
+                                            value="Drapes"
+                                            checked={productData.drape === 'Drapes'}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                </Row>
+                            </Form.Group>
+                            <Card className='mb-3'>
+                                <Card.Body className='bg-mdgray'>
+                                    <Row>
+                                        <Col lg="12">
+                                            <Form.Group className='my-1'>
+                                                <Form.Label>Video Demonstration</Form.Label>
+                                                <Form.Control as='select' name='video_demo_type' value={productData.video_demo_type} className='mr-sm-2' onChange={handleChangeVideoType}>
+                                                    <option value=''>Select Type</option>
+                                                    <option value='Youtube'>Youtube</option>
+                                                    <option value='Vimeo'>Vimeo</option>
+                                                    <option value='Upload'>Upload Video</option>
+                                                </Form.Control>
+                                                {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Vimeo" ?
+                                                    <>
+                                                        <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />
+                                                        {productData.video_demo_url && productData.video_demo_url != "" ?
                                                             <div className="mt-3">
-                                                                <VideoDragAndDrop type="product" onVideoChange={handleVideoChange} size={size} />
+                                                                <ResponsiveEmbedVideo src={productData.video_demo_url} title={productData.name} />
                                                             </div>
                                                             :
                                                             null
-                                                    }
-                                                </Form.Group>
-                                            </Col>
+                                                        }
+                                                    </>
+                                                    : productData.video_demo_type == "Upload" ?
+                                                        <div className="mt-3">
+                                                            <VideoDragAndDrop type="product" onVideoChange={handleVideoChange} size={size} />
+                                                        </div>
+                                                        :
+                                                        null
+                                                }
+                                            </Form.Group>
+                                        </Col>
 
-                                        </Row>
-                                    </Card.Body>
-                                </Card>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
+                                    </Row>
+                                </Card.Body>
+                            </Card>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
             {/* </Form> */}
         </>
     );

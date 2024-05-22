@@ -15,6 +15,7 @@ const AdminEditProduct = () => {
     const [product, setProduct] = useState('');
     const [productLoading, setProductLoading] = useState(true);
     const [images, setImages] = useState([]);
+    const [finalProductImages, setFinalProductImages] = useState([]);
     const [reloadCount, setReloadCount] = useState(0);
 
     const editSuccess = (e) => {
@@ -40,6 +41,7 @@ const AdminEditProduct = () => {
                 setProduct(productData);
                 setProductLoading(false);
                 setImages(productData.image_urls);
+                setFinalProductImages(productData.final_product_image_urls);
             } else {
                 setProductLoading(false);
                 toast.error('Product item does not exist!');
@@ -76,6 +78,7 @@ const AdminEditProduct = () => {
                             productId={productId}
                             product={product}
                             images={images}
+                            finalProductImages={finalProductImages}
                             withDraft={true}
                             onSuccess={editSuccess}
                             onReloadPage={reloadPage}

@@ -17,6 +17,7 @@ import VideoDragAndDrop from 'Components/Shared/VideoDragAndDrop';
 
 const initialProductData = Object.freeze({
     image_urls: [],
+    final_product_image_urls: [],
     name: '',
     description: '',
     season: '',

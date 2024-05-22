@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Email, domains } from '@smastrom/react-email-autocomplete';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import { Link, useNavigate } from 'react-router-dom';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
@@ -39,6 +40,13 @@ const LogIn = () => {
     setLoginFormData({
       ...loginFormData,
       [e.target.name]: e.target.value,
+    })
+  }
+
+  const handleChangeEmail = (e) => {
+    setLoginFormData({
+      ...loginFormData,
+      email: e,
     })
   }
 
@@ -262,6 +270,14 @@ const LogIn = () => {
     }
   }, [googleEmail]);
 
+  const baseList = [
+    'gmail.com',
+    'yahoo.com',
+    'hotmail.com',
+    'aol.com',
+    'msn.com',
+    'proton.me',
+  ];
 
   return (
     <LayoutNoFooter>
@@ -284,7 +300,15 @@ const LogIn = () => {
                 <Form onSubmit={loginSubmit}>
                   <Form.Group className='mb-3' controlId='formBasicEmail'>
                     <Form.Label>Email Address</Form.Label>
-                    <FormControl type='email' name='email' value={loginFormData.email} className='mr-sm-2' onChange={handleChange} required />
+                    <Email
+                      baseList={baseList}
+                      refineList={domains}
+                      onChange={(e) => handleChangeEmail(e)} // or (newValue) => customSetter(newValue)
+                      value={loginFormData.email}
+                      className="form-control mr-sm-2 email-suggestion"
+                      required
+                    />
+                    {/* <FormControl type='email' name='email' value={loginFormData.email} className='mr-sm-2' onChange={handleChange} required /> */}
                   </Form.Group>
                   <Form.Group className='mb-3' controlId='formBasicPassword'>
                     <Form.Label>Password</Form.Label>

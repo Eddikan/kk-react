@@ -18,6 +18,7 @@ const Wishlists = (props) => {
     const reloadCount = props.reloadCount;
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [wishlists, setWishlists] = useState([]);
+    const [portfolioItemWishlists, setPortfolioItemWishlists] = useState([]);
     const [wishlistsLoading, setWishlistsLoading] = useState(true);
     const [connectShow, setConnectShow] = useState(false);
     const [addToCartLoading, setAddToCartLoading] = useState(false);
@@ -33,7 +34,8 @@ const Wishlists = (props) => {
         try {
             const wishlistsData = await GetUserWishlistsData(e);
             if (wishlistsData) {
-                setWishlists(wishlistsData);
+                setWishlists(wishlistsData.wishlists);
+                setPortfolioItemWishlists(wishlistsData.portfolio_item_wishlists);
                 setWishlistsLoading(false);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');

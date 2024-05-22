@@ -29,13 +29,16 @@ const AdminProductEdit = (props) => {
     const withDraft = props.withDraft;
     const product = props.product;
     const image_urls = props.images;
+    const final_image_urls = props.finalProductImages;
     const productId = props.productId;
 
     const fileInputRef = useRef(null);
+    const finalFileInputRef = useRef(null);
     const formRef = useRef(null);
 
     const [productData, setProductData] = useState(initialProductData);
     const [images, setImages] = useState([]);
+    const [finalProductImages, setFinalProductImages] = useState([]);
     const [productLoading, setProductLoading] = useState(false);
     const [productDraftLoading, setProductDraftLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
@@ -135,9 +138,19 @@ const AdminProductEdit = (props) => {
         fileInputRef.current.click();
     };
 
+    const handleFinalAddMore = () => {
+        // Trigger the file input when the "Add More" button is clicked
+        finalFileInputRef.current.click();
+    };
+
     const handleFileInput = (e) => {
         const selectedFiles = e.target.files;
         handleFiles(selectedFiles);
+    };
+
+    const handleFinalFileInput = (e) => {
+        const selectedFiles = e.target.files;
+        handleFinalFiles(selectedFiles);
     };
 
     const handleFiles = (fileList) => {
@@ -148,6 +161,16 @@ const AdminProductEdit = (props) => {
         }));
 
         submitDocumentsSequentially(newImages);
+    };
+
+    const handleFinalFiles = (fileList) => {
+        const newImages = Array.from(fileList).map((file) => ({
+            id: Date.now(),
+            file,
+            url: URL.createObjectURL(file),
+        }));
+
+        submitFinalDocumentsSequentially(newImages);
     };
 
     const handleVideoChange = (url) => {
@@ -220,8 +243,75 @@ const AdminProductEdit = (props) => {
         setUploadStatus("standby");
     };
 
+    const submitFinalDocumentsSequentially = async (images) => {
+        setUploadStatus("loading");
+        const updatedImageUrls = [...images];
+
+        for (const imageInfo of images) {
+            const dataArray = new FormData();
+            dataArray.append("image_url", imageInfo.file);
+
+            try {
+                const response = await axios.post(
+                    `${process.env.REACT_APP_API_ENDPOINT}product/image?user_id=${currentUser}&token=${token}`,
+                    dataArray,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data"
+                        }
+                    }
+                );
+
+                if (response.data.status === "Success") {
+                    const image = response.data.data.image_url;
+                    const imageUrlObject = { id: imageInfo.id, image_url: image };
+
+                    updatedImageUrls.push(imageUrlObject);
+
+                    // Image have been uploaded
+                    const uploadedFiles = [...updatedImageUrls];
+                    setFinalProductImages((prevImageUrls) => [...prevImageUrls, imageUrlObject]);
+
+                    let reader = new FileReader();
+
+                    reader.onloadend = () => {
+                        // Do something with the uploaded image, if needed
+                        // For example, update state or perform additional actions
+                        // setDocuments((prevDocuments) => [
+                        //   ...prevDocuments,
+                        //   { media_id: mediaId, name: imageInfo.file.name, url: reader.result, type: imageInfo.file.type }
+                        // ]);
+                    };
+
+                    reader.readAsDataURL(imageInfo.file);
+                } else {
+                    const errors = response.data.errors;
+                    if (errors.image_url) {
+                        toast.error(errors.image_url[0]);
+                    } else {
+                        errors.map((error, index) => {
+                            toast.error(error);
+                            return null; // React requires a return value, so we return null here
+                        });
+                    }
+                }
+            } catch (error) {
+                toast.error("An error occurred. Please try again or contact the administrator.");
+                setUploadStatus("standby");
+                // Handle error if needed
+            }
+        }
+
+        // All images have been uploaded
+        setUploadStatus("standby");
+    };
+
     const handleRemove = (e) => {
         setImages((prevImages) => prevImages.filter((img, index) => index !== e));
+    };
+
+    const handleRemoveFinal = (e) => {
+        setFinalProductImages((prevImages) => prevImages.filter((img, index) => index !== e));
     };
 
     useEffect(() => {
@@ -266,6 +356,9 @@ const AdminProductEdit = (props) => {
             if (image_urls) {
                 setImages(image_urls);
             }
+            if (final_image_urls) {
+                setFinalProductImages(final_image_urls);
+            }
         } else {
             toast.error('Design does not exist!');
             setTimeout(function () {
@@ -295,7 +388,7 @@ const AdminProductEdit = (props) => {
         e.preventDefault();
         if (images) {
             setProductLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages, colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     toast.success('Fabric updated successfully!');
@@ -321,7 +414,7 @@ const AdminProductEdit = (props) => {
     async function ProductDraftSubmit(e) {
         e.preventDefault();
         setProductDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
@@ -347,7 +440,7 @@ const AdminProductEdit = (props) => {
                     <Card className="mb-3">
                         <Card.Body className='bg-lgray'>
                             <Form.Group className='mb-3'>
-                                <Form.Label>Photos</Form.Label>
+                                <Form.Label>Fabric Photos</Form.Label>
                                 <Card>
                                     <Card.Body>
                                         <Row>
@@ -500,6 +593,170 @@ const AdminProductEdit = (props) => {
                                             onChange={handleFileInput}
                                             className="file-input d-block opacity-0 d-none"
                                             ref={fileInputRef}
+                                            accept="image/*"
+                                            multiple
+                                        />
+                                    </Card.Body>
+                                </Card>
+                            </Form.Group>
+                        </Card.Body>
+                    </Card>
+                    <Card className="mb-3">
+                        <Card.Body className='bg-lgray'>
+                            <Form.Group className='mb-3'>
+                                <Form.Label>Photos of Final Products</Form.Label>
+                                <Card>
+                                    <Card.Body>
+                                        <Row>
+                                            {finalProductImages ?
+                                                <>
+                                                    {finalProductImages.map((image, index) => (
+                                                        <>
+                                                            {size == "small" ?
+                                                                <>
+                                                                    {finalProductImages.length > 6 && index + 1 > 6 ?
+                                                                        <Col lg={2} key={image.id} className="image-preview mt-3">
+                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                                <div className="dnd-actions-overlay">
+                                                                                    <FaTimesCircle size="25px" onClick={() => handleRemoveFinal(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </Col>
+                                                                        :
+                                                                        <Col lg={2} key={image.id} className="image-preview">
+                                                                            <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                                <div className="dnd-actions-overlay">
+                                                                                    <FaTimesCircle size="25px" onClick={() => handleRemoveFinal(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </Col>
+                                                                    }
+                                                                </>
+                                                                : size == "normal" ?
+                                                                    <>
+                                                                        {finalProductImages.length > 4 && index + 1 > 4 ?
+                                                                            <Col lg={3} key={image.id} className="image-preview mt-3">
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
+                                                                                    <div className="dnd-actions-overlay">
+                                                                                        <FaTimesCircle size="25px" onClick={() => handleRemoveFinal(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </Col>
+                                                                            :
+                                                                            <Col lg={3} key={image.id} className="image-preview">
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '175px' }}>
+                                                                                    <div className="dnd-actions-overlay">
+                                                                                        <FaTimesCircle size="25px" onClick={() => handleRemoveFinal(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </Col>
+                                                                        }
+                                                                    </>
+                                                                    :
+                                                                    <>
+                                                                        {finalProductImages.length > 6 && index + 1 > 6 ?
+                                                                            <Col lg={2} key={image.id} className="image-preview mt-3">
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                                    <div className="dnd-actions-overlay">
+                                                                                        <FaTimesCircle size="25px" onClick={() => handleRemoveFinal(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </Col>
+                                                                            :
+                                                                            <Col lg={2} key={image.id} className="image-preview">
+                                                                                <div className="image-dnd" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url + ")", minHeight: '170px' }}>
+                                                                                    <div className="dnd-actions-overlay">
+                                                                                        <FaTimesCircle size="25px" onClick={() => handleRemoveFinal(index)} className="remove-icon cursor-pointer text-danger" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </Col>
+                                                                        }
+                                                                    </>
+                                                            }
+
+                                                        </>
+                                                    ))}
+                                                </>
+                                                :
+                                                null
+                                            }
+                                            {uploadStatus != "standby" ?
+                                                <>
+                                                    {size == "small" ?
+                                                        <>
+                                                            {finalProductImages.length >= 6 ?
+                                                                <Col lg={2} className="image-preview mt-3" style={{ minHeight: '170px' }}>
+                                                                    <Loading />
+                                                                </Col>
+                                                                :
+                                                                <Col lg={2} className="image-preview" style={{ minHeight: '170px' }}>
+                                                                    <Loading />
+                                                                </Col>
+                                                            }
+                                                        </>
+                                                        : size == "normal" ?
+                                                            <>
+                                                                {finalProductImages.length >= 4 ?
+                                                                    <Col lg={3} className="image-preview mt-3" style={{ minHeight: '175px' }}>
+                                                                        <Loading />
+                                                                    </Col>
+                                                                    :
+                                                                    <Col lg={3} className="image-preview" style={{ minHeight: '175px' }}>
+                                                                        <Loading />
+                                                                    </Col>
+                                                                }
+                                                            </>
+                                                            :
+                                                            <>
+                                                                {finalProductImages.length >= 6 ?
+                                                                    <Col lg={2} className="image-preview mt-3" style={{ minHeight: '170px' }}>
+                                                                        <Loading />
+                                                                    </Col>
+                                                                    :
+                                                                    <Col lg={2} className="image-preview" style={{ minHeight: '170px' }}>
+                                                                        <Loading />
+                                                                    </Col>
+                                                                }
+                                                            </>
+                                                    }
+                                                </>
+                                                :
+                                                <>
+                                                    {size == "small" ?
+                                                        <>
+                                                            <Col lg={2} className={`image-preview ${finalProductImages && finalProductImages.length >= 6 ? "mt-3" : ""}`}>
+                                                                <div onClick={handleFinalAddMore} className="product-grid-div add-more-box w-100 text-center cursor-pointer background-dashed bg-lgray" style={{ minHeight: '170px' }}>
+                                                                    <GoPlus color="#a4a4a4" size="130px" className="mt-2" />
+                                                                    <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
+                                                                </div>
+                                                            </Col>
+                                                        </>
+                                                        : size == "normal" ?
+                                                            <Col lg={3} className={`image-preview ${finalProductImages && finalProductImages.length >= 4 ? "mt-3" : ""}`}>
+                                                                <div onClick={handleFinalAddMore} className="product-grid-div add-more-box w-100 text-center cursor-pointer background-dashed bg-lgray" style={{ minHeight: '175px' }}>
+                                                                    <GoPlus color="#a4a4a4" size="130px" className="mt-2" />
+                                                                    <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
+                                                                </div>
+                                                            </Col>
+                                                            :
+                                                            <Col lg={2} className={`image-preview ${finalProductImages && finalProductImages.length >= 6 ? "mt-3" : ""}`}>
+                                                                <div onClick={handleFinalAddMore} className="product-grid-div add-more-box w-100 text-center cursor-pointer background-dashed bg-lgray" style={{ minHeight: '170px' }}>
+                                                                    <GoPlus color="#a4a4a4" size="130px" className="mt-2" />
+                                                                    <p className="text-dgray" style={{ marginTop: '-15px' }}>Add More</p>
+                                                                </div>
+                                                            </Col>
+                                                    }
+                                                </>
+
+                                            }
+                                        </Row>
+                                        <input
+                                            type="file"
+                                            key={fileInputKey} // Add a key to the file input
+                                            id="fileInput"
+                                            onChange={handleFinalFileInput}
+                                            className="file-input d-block opacity-0 d-none"
+                                            ref={finalFileInputRef}
                                             accept="image/*"
                                             multiple
                                         />

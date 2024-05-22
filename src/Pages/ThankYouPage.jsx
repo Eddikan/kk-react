@@ -38,10 +38,17 @@ const ThankYouPage = (props) => {
                             </p>
                         </Col>
 
-                        <Col lg={12} className='text-center mt-5'>
+                        {/* <Col lg={12} className='text-center mt-5'>
                             <Link to={`/post-purchase-survey?order_id=${order_id}`}>
                                 <div>
                                     <button className='btn btn-primary'>Start Survey</button>
+                                </div>
+                            </Link>
+                        </Col> */}
+                        <Col lg={12} className='text-center mt-5'>
+                            <Link to="/">
+                                <div>
+                                    <button className='btn btn-primary'>Back to Home</button>
                                 </div>
                             </Link>
                         </Col>

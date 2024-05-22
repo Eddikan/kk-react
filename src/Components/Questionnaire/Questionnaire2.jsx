@@ -8,6 +8,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { FaTimes  } from "react-icons/fa";
 import { TagsInput } from "react-tag-input-component";
 import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
@@ -45,6 +46,7 @@ const Questionnaire2 = (props) => {
     const [currentAvailability, setCurrentAvailability] = useState([]);
     const [postType, setPostType] = useState('post');
     const [designerId, setDesignerId] = useState('');
+    const [pricingStructure, setPricingStructure] = useState([{name: '', price: ''}]);
     const tagsInputRef = useRef(null);
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
@@ -130,7 +132,7 @@ const Questionnaire2 = (props) => {
     async function questionnaire2Submit(e) {
         e.preventDefault();
         setQuestionnaire2Loading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?user_id=' + currentUser + '&token=' + token, { ...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, post_type: postType }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?user_id=' + currentUser + '&token=' + token, { ...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, pricing_structure: pricingStructure, post_type: postType }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 hideAll(3);
@@ -147,7 +149,23 @@ const Questionnaire2 = (props) => {
             toast.error('An error occured. Please try again or contact the administrator.');
             setQuestionnaire2Loading(false);
         });
-    }
+    };
+
+    const addPricingStructure = () => {
+        setPricingStructure([...pricingStructure, { name: '', price: '' }]);
+    };
+
+    const editPricingStructure = (index, updatedItem) => {
+        const updatedPricingStructure = pricingStructure.map((item, idx) =>
+            idx === index ? updatedItem : item
+        );
+        setPricingStructure(updatedPricingStructure);
+    };
+
+    const deletePricingStructure = (index) => {
+        const updatedPricingStructure = pricingStructure.filter((_, idx) => idx !== index);
+        setPricingStructure(updatedPricingStructure);
+    };
 
     useEffect(() => {
         fetchData(currentUser);
@@ -156,10 +174,16 @@ const Questionnaire2 = (props) => {
                 setQuestionnaire2Data(user.designer);
                 const specialization = user.designer.areas_of_specialization;
                 const current_availability = user.designer.availability.date_time;
+                const pricing_structure = user.designer.pricing_structure;
                 setSelectedSpecialization(specialization);
                 setCurrentAvailability(current_availability);
                 setAvailability(current_availability);
                 setDesignerId(user.designer.id);
+                if (pricing_structure) {
+                    if (Array.isArray(pricing_structure)) {
+                        setPricingStructure(pricing_structure);
+                    }
+                }
                 setPostType('put');
             } else {
                 setPostType('post');
@@ -349,14 +373,69 @@ const Questionnaire2 = (props) => {
                                         Pricing Structure
                                     </Form.Label>
                                     <Form.Group>
-                                        <Form.Control
+                                        {pricingStructure.map((item, index) => (
+                                            <>
+                                                {pricingStructure.length > 1 ?
+                                                    <div className="position-relative pe-5">
+                                                        <Row className='mb-3' key={index}>
+                                                            <Col lg="6">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={item.name}
+                                                                    onChange={(e) => editPricingStructure(index, { ...item, name: e.target.value })}
+                                                                    placeholder="Name"
+                                                                />
+                                                            </Col>
+                                                            <Col lg="6">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={item.price}
+                                                                    onChange={(e) => editPricingStructure(index, { ...item, price: e.target.value })}
+                                                                    placeholder="Price"
+                                                                />
+                                                            </Col>
+                                                        </Row>
+                                                        <div className="remove-pricing-structure remove-btn cursor-pointer" onClick={() => deletePricingStructure(index)} >
+                                                            <FaTimes  size="20px" color="#ffffff" />
+                                                        </div>
+                                                    </div>
+                                                    :
+                                                    <div className="position-relative">
+                                                        <Row className='mb-3' key={index}>
+                                                            <Col lg="6">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={item.name}
+                                                                    onChange={(e) => editPricingStructure(index, { ...item, name: e.target.value })}
+                                                                    placeholder="Name"
+                                                                />
+                                                            </Col>
+                                                            <Col lg="6">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={item.price}
+                                                                    onChange={(e) => editPricingStructure(index, { ...item, price: e.target.value })}
+                                                                    placeholder="Price"
+                                                                />
+                                                            </Col>
+                                                        </Row>
+                                                    </div>
+                                                }
+                                            </>
+                                        ))}
+                                        <Row>
+                                            <Col lg="12" className="text-right">
+                                                <Button onClick={addPricingStructure} className='btn-primary mt-3' type="button">Add More</Button>
+                                            </Col>
+                                        </Row>
+                                        {/* <Form.Control
                                             as="textarea"
                                             name="pricing_structure"
                                             rows={5} // You can adjust the number of rows as needed
                                             value={questionnaire2Data.pricing_structure}
                                             placeholder=""
                                             onChange={handleChange}
-                                        />
+                                        /> */}
                                     </Form.Group>
                                 </CardBody>
                             </Card>

@@ -22,7 +22,9 @@ const Designers = (props) => {
     const [designersLoading, setDesignersLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCount, setPageCount] = useState(1);
-    const [pageSize, setPageSize] = useState(12);
+    const [pageSize, setPageSize] = useState(1);
+
+    let PageSize = 12;
 
     const [signupModalShow, setSignupModalShow] = useState(false);
     const [signupType, setSignupType] = useState('');
@@ -226,7 +228,7 @@ const Designers = (props) => {
                                                             className="mt-4 mb-0"
                                                             currentPage={currentPage}
                                                             totalCount={pageCount}
-                                                            pageSize={pageSize}
+                                                            pageSize={PageSize}
                                                             onPageChange={page => handleChangePage(page)}
                                                         />
                                                         :

@@ -302,14 +302,14 @@ const ViewPortFolio = () => {
                                                     <>
                                                         {!isPortfolioCurrentUser ?
                                                             <>
-                                                                <span>
+                                                                {/* <span>
                                                                     <p className='btn request-quote-btn mt-4 mb-0 fs-16 fw-400 bg-transparent text-black request-a-quote'
                                                                         onClick={() => toggleRequestAQuote(true)}
                                                                     >
                                                                         <PiNotepadFill color="#000000" className='me-2 pi-note-pad' size="20" />
                                                                         Request a Quote
                                                                     </p>
-                                                                </span>
+                                                                </span> */}
 
                                                                 <span className='w-100'>
                                                                     <a href={`/appointment/schedule/${portfolio.designer.id}`} className='btn mt-4 ms-3 btn-primary fs-16 fw-400 consultation-btn'>

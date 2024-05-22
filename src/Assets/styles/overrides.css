@@ -375,6 +375,16 @@ a {
     border-radius: 0;
 }
 
+.remove-pricing-structure.remove-btn {
+    position: absolute;
+    right: 0;
+    top: 5px;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding-top: 4px;
+}
+
 /* .modal-fullscreen .modal-content {
     background-color: #f5f6f8;
 } */
@@ -2247,5 +2257,36 @@ svg.gr-status-icon {
     background-color: transparent !important;
 }
 
+/* Email Suggestion */
+.email-suggestion {
+    position: relative;
+}
 
+.email-suggestion input {
+    width: 100%;
+    border: 0;
+    outline: none;
+}
+
+.email-suggestion ul {
+    list-style-type: none;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #f3f3f3;
+    border-radius: 5px;
+    padding: 10px 15px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    top: 50px;
+}
+
+.email-suggestion ul li {
+    margin-bottom:10px;
+    cursor: pointer;
+}
+
+.email-suggestion ul li:last-child() {
+    margin-bottom: 0;
+}
   

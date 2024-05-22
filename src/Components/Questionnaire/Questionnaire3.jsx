@@ -10,6 +10,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import { TagsInput } from "react-tag-input-component";
 import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
+import { FaTimes } from 'react-icons/fa';
 import { Card, CardBody, CardFooter, ModalHeader, ModalBody, Modal } from 'reactstrap';
 import NewProduct from 'Components/Forms/Product/NewProduct';
 import GetUserProductsData from 'Utils/GetUserProductsData';
@@ -43,6 +44,8 @@ const Questionnaire3 = (props) => {
     const [currentAvailability, setCurrentAvailability] = useState([]);
     const [postType, setPostType] = useState('post');
     const [sellerId, setSellerId] = useState('');
+    const [pricingStructure, setPricingStructure] = useState([{name: '', price: ''}]);
+
     const tagsInputRef = useRef(null);
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
@@ -128,7 +131,7 @@ const Questionnaire3 = (props) => {
     async function questionnaire3Submit(e) {
         e.preventDefault();
         setQuestionnaire3Loading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'seller?user_id=' + currentUser + '&token=' + token, {...questionnaire3Data, types_of_fabric: typesOfFabric, user_id: currentUser, products: productItems, availability: availability, post_type: postType  }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'seller?user_id=' + currentUser + '&token=' + token, {...questionnaire3Data, types_of_fabric: typesOfFabric, user_id: currentUser, products: productItems, availability: availability, post_type: postType, pricing_structure: pricingStructure  }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 const data = response.data.data;
@@ -143,7 +146,23 @@ const Questionnaire3 = (props) => {
             toast.error('An error occured. Please try again or contact the administrator.');
             setQuestionnaire3Loading(false);
         });
-    }
+    };
+
+    const addPricingStructure = () => {
+        setPricingStructure([...pricingStructure, { name: '', price: '' }]);
+    };
+
+    const editPricingStructure = (index, updatedItem) => {
+        const updatedPricingStructure = pricingStructure.map((item, idx) =>
+            idx === index ? updatedItem : item
+        );
+        setPricingStructure(updatedPricingStructure);
+    };
+
+    const deletePricingStructure = (index) => {
+        const updatedPricingStructure = pricingStructure.filter((_, idx) => idx !== index);
+        setPricingStructure(updatedPricingStructure);
+    };
 
     useEffect(() => {
         fetchData(currentUser);
@@ -156,6 +175,12 @@ const Questionnaire3 = (props) => {
                 // setCurrentAvailability(current_availability);
                 // setAvailability(current_availability);
                 setSellerId(user.seller.id);
+                const pricing_structure = user.seller.pricing_structure;    
+                if (pricing_structure) {
+                    if (Array.isArray(pricing_structure)) {
+                        setPricingStructure(pricing_structure);
+                    }
+                }
                 setPostType('put');
             } else {
                 setPostType('post');
@@ -236,6 +261,19 @@ const Questionnaire3 = (props) => {
                                                                     {productItem.image_urls && productItem.image_urls.length > 0 ?
                                                                         <>
                                                                             {productItem.image_urls.map((image, imageIndex) => (
+                                                                                <Col lg={4} key={image.id} className="image-preview mt-3">
+                                                                                    <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '190px'}}>
+                                                                                        <div className="dnd-actions-overlay"></div>
+                                                                                    </div>
+                                                                                </Col>
+                                                                            ))}
+                                                                        </>
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                    {productItem.final_product_image_urls && productItem.final_product_image_urls.length > 0 ?
+                                                                        <>
+                                                                            {productItem.final_product_image_urls.map((image, imageIndex) => (
                                                                                 <Col lg={4} key={image.id} className="image-preview mt-3">
                                                                                     <div className="image-dnd" style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'product/'+image.image_url+")", minHeight: '190px'}}>
                                                                                         <div className="dnd-actions-overlay"></div>
@@ -328,14 +366,69 @@ const Questionnaire3 = (props) => {
                                         Provide information about the typical pricing structures, helps set expectations.
                                     </Form.Label>
                                     <Form.Group>
-                                        <Form.Control
+                                        {/* <Form.Control
                                             as="textarea"
                                             name="pricing_structure"
                                             rows={5} // You can adjust the number of rows as needed
                                             value={questionnaire3Data.pricing_structure}
                                             placeholder=""
                                             onChange={handleChange}
-                                        />
+                                        /> */}
+                                        {pricingStructure.map((item, index) => (
+                                            <>
+                                                {pricingStructure.length > 1 ?
+                                                    <div className="position-relative pe-5">
+                                                        <Row className='mb-3' key={index}>
+                                                            <Col lg="6">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={item.name}
+                                                                    onChange={(e) => editPricingStructure(index, { ...item, name: e.target.value })}
+                                                                    placeholder="Name"
+                                                                />
+                                                            </Col>
+                                                            <Col lg="6">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={item.price}
+                                                                    onChange={(e) => editPricingStructure(index, { ...item, price: e.target.value })}
+                                                                    placeholder="Price"
+                                                                />
+                                                            </Col>
+                                                        </Row>
+                                                        <div className="remove-pricing-structure remove-btn cursor-pointer" onClick={() => deletePricingStructure(index)} >
+                                                            <FaTimes  size="20px" color="#ffffff" />
+                                                        </div>
+                                                    </div>
+                                                    :
+                                                    <div className="position-relative">
+                                                        <Row className='mb-3' key={index}>
+                                                            <Col lg="6">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={item.name}
+                                                                    onChange={(e) => editPricingStructure(index, { ...item, name: e.target.value })}
+                                                                    placeholder="Name"
+                                                                />
+                                                            </Col>
+                                                            <Col lg="6">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={item.price}
+                                                                    onChange={(e) => editPricingStructure(index, { ...item, price: e.target.value })}
+                                                                    placeholder="Price"
+                                                                />
+                                                            </Col>
+                                                        </Row>
+                                                    </div>
+                                                }
+                                            </>
+                                        ))}
+                                        <Row>
+                                            <Col lg="12" className="text-right">
+                                                <Button onClick={addPricingStructure} className='btn-primary mt-3' type="button">Add More</Button>
+                                            </Col>
+                                        </Row>
                                     </Form.Group>
                                 </CardBody>
                             </Card>

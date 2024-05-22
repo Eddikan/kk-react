@@ -170,10 +170,11 @@ const PortfolioGrid = (props) => {
     }, [reloadCount]);
 
     async function wishlistDesignUpdate(e) {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'design/wishlist/update', e).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update', e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 fetchData(user_id);
+                setInWishlist(!inWishlist);
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
@@ -225,19 +226,19 @@ const PortfolioGrid = (props) => {
                                                                 </div>
                                                             </div>
                                                             <div className='save-link'>
-                                                                {currentUser && currentUser != "" ?
+                                                                {currentUser && currentUser != "" && object.designer.id != currentUser?
                                                                     <>
                                                                         {userWishlist ?
                                                                             <div
                                                                                 className="action-button bg-gold"
-                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, product_id: object.id }); }}
+                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: object.id }); }}
                                                                             >
                                                                                 <GoHeart className="text-white" />
                                                                             </div>
                                                                             :
                                                                             <div
                                                                                 className="action-button bg-white"
-                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, product_id: object.id }); }}
+                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: object.id }); }}
                                                                             >
                                                                                 <GoHeart className="text-black" />
                                                                             </div>
@@ -263,19 +264,19 @@ const PortfolioGrid = (props) => {
                                                                 </div>
                                                             </div>
                                                             <div className='save-link'>
-                                                                {userRole !== 'Admin' && currentUser && currentUser != "" ?
+                                                                {currentUser && currentUser != "" && object.designer.id != currentUser?
                                                                     <>
                                                                         {userWishlist ?
                                                                             <div
                                                                                 className="action-button bg-gold"
-                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, product_id: object.id }); }}
+                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: object.id }); }}
                                                                             >
                                                                                 <GoHeart className="text-white" />
                                                                             </div>
                                                                             :
                                                                             <div
                                                                                 className="action-button bg-white"
-                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, product_id: object.id }); }}
+                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: object.id }); }}
                                                                             >
                                                                                 <GoHeart className="text-black" />
                                                                             </div>
@@ -571,17 +572,17 @@ const PortfolioGrid = (props) => {
                                     </div>
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Description</div>
                                 </div>
-                                {userRole !== 'Admin' && currentUser && currentUser != "" ?
+                                {userRole !== 'Admin' && currentUser && currentUser != "" && !isDesignCurrentUser ?
                                     <>
                                         {inWishlist ?
-                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: singleDesign.id }); }}>
+                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: singleDesign.id }); }}>
                                                 <div className="action-button-designs bg-gold">
                                                     <GoHeart className="text-white mt-2" size={30} />
                                                 </div>
                                                 <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Wishlist</div>
                                             </div>
                                             :
-                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, design_id: singleDesign.id }); }}>
+                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: singleDesign.id }); }}>
                                                 <div className="action-button-designs bg-white">
                                                     <GoHeart className="text-black mt-2" size={30} />
                                                 </div>
@@ -592,12 +593,17 @@ const PortfolioGrid = (props) => {
                                     :
                                     null
                                 }
-                                <div className='text-center mb-4'>
-                                    <div className="action-button-designs bg-white">
-                                        <BsCartPlus className="text-black mt-2" size={30} />
+                                {!isDesignCurrentUser ?
+                                    <div className='text-center mb-4'>
+                                        <div className="action-button-designs bg-white">
+                                            <BsCartPlus className="text-black mt-2" size={30} />
+                                        </div>
+                                        <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Add to Cart</div>
                                     </div>
-                                    <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Add to Cart</div>
-                                </div>
+                                    :
+                                    null
+                                }
+                                
                             </div>
                         </Col>
                     </Row>
