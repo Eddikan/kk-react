@@ -141,6 +141,10 @@ const Header = () => {
     setModalHeading(message);
   }
 
+  const getTotalQuantity = (cartItems) => {
+    return cartItems.reduce((total, item) => total + item.quantity, 0);
+  };
+
   function truncateDescription(description, wordLimit) {
     const words = description.split(' ');
     if (words.length > wordLimit) {
@@ -241,23 +245,40 @@ const Header = () => {
           toast.error('There has been an error getting the notifications, please try again!');
           setNotificationsLoading(false);
         });
+
+        getUserCartItems()
+          .then((response) => {
+            const selectedCartItem = response.data.data;
+            if (selectedCartItem) {
+              const totalQuantity = getTotalQuantity(selectedCartItem);
+              setCartItemCounts(totalQuantity);
+            } else {
+              toast.error('There has been an error getting the notifications, please try again!');
+            }
+          })
+          .catch((error) => {
+            toast.error('There has been an error getting the notifications, please try again!');
+          });
     }
   }, [reloadCount]);
 
   useEffect(() => {
-    getUserCartItems()
-    .then((response) => {
-      const selectedCartItem = response.data.data;
-      if (selectedCartItem) {
-        setCartItemCounts(selectedCartItem.length);
-      } else {
+    setInterval(function(){
+      getUserCartItems()
+      .then((response) => {
+        const selectedCartItem = response.data.data;
+        if (selectedCartItem) {
+          const totalQuantity = getTotalQuantity(selectedCartItem);
+          setCartItemCounts(totalQuantity);
+        } else {
+          toast.error('There has been an error getting the notifications, please try again!');
+        }
+      })
+      .catch((error) => {
         toast.error('There has been an error getting the notifications, please try again!');
-      }
-    })
-    .catch((error) => {
-      toast.error('There has been an error getting the notifications, please try again!');
-    });
-}, [reloadCount]);
+      });
+    }, 5000);
+  }, []);
 
   return (
     <>

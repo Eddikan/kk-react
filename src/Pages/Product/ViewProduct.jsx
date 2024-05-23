@@ -8,6 +8,7 @@ import GoBack from 'Components/Shared/GoBack';
 import GetSingleProductData from 'Utils/GetSingleProductData';
 import toast from 'react-hot-toast';
 import ImageSlider from 'Components/Shared/ImageSlider';
+import ImageCarousel from 'Components/Shared/Carousel/ImageCarousel'
 import { Form, Container, Row, Col, Button, Card, Modal } from 'react-bootstrap';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { IoCloseOutline, IoVideocam } from "react-icons/io5";
@@ -273,9 +274,9 @@ const ViewProduct = () => {
             if (success == 'Success') {
                 toast.success("Fabric added to cart successfully!");
 
-                setTimeout(() => {
-                    window.location.reload(); 
-                }, 500);
+                // setTimeout(() => {
+                //     window.location.reload(); 
+                // }, 500);
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
@@ -395,14 +396,11 @@ const ViewProduct = () => {
                                 <Col lg={5}>
                                     {images && images.length > 0 ?
                                         <>
-                                            <div className="single-image-slider mb-4" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-
-                                            </div>
-                                            <ImageSlider type="product" slidesToShow={4} images={images} finalProductImages={finalProductImages} onActiveImageChange={handleActiveImageChange} />
+                                            <ImageCarousel images={images} finalProductImages={finalProductImages} type="product" />
+                                            {/* <ImageSlider type="product" slidesToShow={4} images={images} finalProductImages={finalProductImages} onActiveImageChange={handleActiveImageChange} /> */}
                                         </>
                                         :
-                                        <div className="single-image-slider" style={{ backgroundImage: "url(" + activeImage + ")" }}>
-                                        </div>
+                                        <div className="single-image-slider" style={{ backgroundImage: "url(" + activeImage + ")" }}></div>
                                     }
                                     {product.video_demo_type && product.video_demo_type != "" && product.video_demo_url && product.video_demo_url != "" && (
                                         <div className="mt-4">
@@ -463,18 +461,18 @@ const ViewProduct = () => {
                                                                 <>
                                                                     <div>
                                                                         <Link to={`/user/center/product/${product.id}/edit`} className="text-decoration-none">
-                                                                            <div class="kouture-tooltip">
+                                                                            <div className="kouture-tooltip">
                                                                                 <div className="action-button bg-smgray me-2">
-                                                                                    <span class="kouture-tooltiptext fs-14">Edit</span>
+                                                                                    <span className="kouture-tooltiptext fs-14">Edit</span>
                                                                                     <GoPencil className="text-black" />
                                                                                 </div>
 
                                                                             </div>
                                                                         </Link>
 
-                                                                        <div class="kouture-tooltip" onClick={toggleShareModal}>
+                                                                        <div className="kouture-tooltip" onClick={toggleShareModal}>
                                                                             <div className="action-button bg-smgray me-2">
-                                                                                <span class="kouture-tooltiptext fs-14">
+                                                                                <span className="kouture-tooltiptext fs-14">
                                                                                     Share
                                                                                 </span>
                                                                                 <GoShareAndroid className="text-black" />
@@ -483,16 +481,16 @@ const ViewProduct = () => {
                                                                         </div>
 
                                                                         {/* {userWishlist ?
-                                                                            <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
                                                                                 <div className="action-button bg-gold me-2" >
-                                                                                    <span class="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
+                                                                                    <span className="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
                                                                                     <GoHeart className="text-white" />
                                                                                 </div>
                                                                             </div>
                                                                             :
-                                                                            <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
                                                                                 <div className="action-button bg-smgray me-2">
-                                                                                    <span class="wishlist-tooltiptext fs-14">Add to Wishlist</span>
+                                                                                    <span className="wishlist-tooltiptext fs-14">Add to Wishlist</span>
                                                                                     <GoHeart className="text-black" />
                                                                                 </div>
 
@@ -505,24 +503,24 @@ const ViewProduct = () => {
                                                                 <>
                                                                     <div>
 
-                                                                        <div class="kouture-tooltip" onClick={toggleShareModal}>
+                                                                        <div className="kouture-tooltip" onClick={toggleShareModal}>
                                                                             <div className="action-button bg-smgray me-2">
-                                                                                <span class="kouture-tooltiptext fs-14">  Share</span>
+                                                                                <span className="kouture-tooltiptext fs-14">  Share</span>
                                                                                 <GoShareAndroid className="text-black" />
                                                                             </div>
                                                                         </div>
 
                                                                         {userWishlist ?
-                                                                            <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
                                                                                 <div className="action-button bg-gold me-2" >
-                                                                                    <span class="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
+                                                                                    <span className="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
                                                                                     <GoHeart className="text-white" />
                                                                                 </div>
                                                                             </div>
                                                                             :
-                                                                            <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
                                                                                 <div className="action-button bg-smgray me-2" >
-                                                                                    <span class="wishlist-tooltiptext fs-14">Add to Wishlist</span>
+                                                                                    <span className="wishlist-tooltiptext fs-14">Add to Wishlist</span>
                                                                                     <GoHeart className="text-black" />
                                                                                 </div>
 
@@ -661,7 +659,11 @@ const ViewProduct = () => {
                                                             </Col>
                                                         </Row>
                                                     </div>
-                                                    <hr />
+                                                    {!isProductCurrentUser ? 
+                                                        <hr />
+                                                        :
+                                                        null
+                                                    }
                                                     {/* <div>
                                                         <p className="mb-2 fs-16 fw-600">Fabric Process Insight</p>
                                                         <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.fabric_process_insights ?? "-"}</p>
@@ -735,6 +737,14 @@ const ViewProduct = () => {
                                                                                         Buy Now
                                                                                     </Button>
                                                                                 }
+                                                                                <Link to="/designers">
+                                                                                    <Button
+                                                                                        className="w-auto me-3 btn-primary fs-16"
+                                                                                        type="button"
+                                                                                    >
+                                                                                        Connect to a Designer
+                                                                                    </Button>
+                                                                                </Link>
 
                                                                             </>
                                                                             :

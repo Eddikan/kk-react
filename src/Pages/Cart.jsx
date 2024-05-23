@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import LayoutNoFooter from 'Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import 'Assets/styles/DesignerCalendar/style.css'
@@ -214,7 +214,7 @@ const Cart = (props) => {
                                     </Row>
                                 </Col>
 
-                                <Col lg={9}>
+                                <Col lg={12}>
                                     <Card>
                                         <Card.Body className='bg-light'>
                                             <Row>
@@ -376,9 +376,18 @@ const Cart = (props) => {
                                             </Row>
                                         </Card.Body>
                                     </Card>
+                                    <div className="text-right">
+                                            {selectedCartItems.length < 1 || cartItems.length < 1 ?
+                                                <button className='btn btn-primary mt-3' disabled={true}>Check Out</button>
+                                                :
+                                                <Link to="/checkout">
+                                                    <button className='btn btn-primary mt-3'>Check Out</button>
+                                                </Link>
+                                            }
+                                    </div>
                                 </Col>
 
-                                <Col lg={3}>
+                                <Col lg={3} className="d-none">
                                     <Card>
                                         <Card.Body>
                                             <div className='fs-22 rufina-family fw-600'>Payment Info</div>
@@ -479,7 +488,7 @@ const Cart = (props) => {
                 <Modal.Body>
                     <Card>
                         <Card.Body>
-                            <p className="mb-0">Are you sure you want to delete this design?</p>
+                            <p className="mb-0">Are you sure you want to delete this fabric?</p>
                         </Card.Body>
                     </Card>
                     <Card.Footer className="text-right mt-3">
