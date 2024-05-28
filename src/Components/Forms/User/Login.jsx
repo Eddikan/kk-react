@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Email, domains } from '@smastrom/react-email-autocomplete';
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
@@ -20,24 +20,15 @@ const initialLoginData = Object.freeze({
 
 const LogIn = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // Parse search string to get query parameters
-  const searchParams = new URLSearchParams(location.search);
-
-  // Access individual query parameters using get method
-  const redirect_to = searchParams.get('redirect_to');
 
   const [loginFormData, setLoginFormData] = useState(initialLoginData);
   const [loginFormLoading, setLoginFormLoading] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'tempCart']);
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
   const [googleUser, setGoogleUser] = useState(null);
   const [googleProfile, setGoogleProfile] = useState(null);
   const [googleEmail, setGoogleEmail] = useState('');
   const [googleSignupProfile, setGoogleSignupProfile] = useState(null);
   const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
-  const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
-  const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
 
   const currentUser = cookies.currentUser;
   const isLoggedIn = cookies.isLoggedIn;
@@ -57,46 +48,6 @@ const LogIn = () => {
       ...loginFormData,
       email: e,
     })
-  };
-
-  async function addTempCartToCart(data) {
-    // setReorderLoading(true);
-    axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: data.order_items, user_id: data.user_id }).then((response) => {
-        const success = response.data.status;
-        if (success == 'Success') {
-            const data = response.data.data;
-        } else {
-            const errors = response.data.errors;
-            errors.map((error, index) => {
-                toast.error(error);
-                return null; // React requires a return value, so we return null here
-            });
-        }
-        // setReorderLoading(false);
-    }).catch((error) => {
-        // setReorderLoading(false);
-        toast.error('Something went wrong, please contact the administrator!');
-    });
-  }
-
-  async function addTempFavoritesToFavorites(data) {
-    // setReorderLoading(true);
-    axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/bulk', { favorites: data.favorites, user_id: data.user_id }).then((response) => {
-        const success = response.data.status;
-        if (success == 'Success') {
-            const data = response.data.data;
-        } else {
-            const errors = response.data.errors;
-            errors.map((error, index) => {
-                toast.error(error);
-                return null; // React requires a return value, so we return null here
-            });
-        }
-        // setReorderLoading(false);
-    }).catch((error) => {
-        // setReorderLoading(false);
-        toast.error('Something went wrong, please contact the administrator!');
-    });
   }
 
   async function loginSubmit(e) {
@@ -107,16 +58,6 @@ const LogIn = () => {
       if (success == 'Success') {
         const data = response.data.data;
         const user = data.user;
-        if (tempCart && tempCart.length > 0) {
-          addTempCartToCart({order_items: tempCart, user_id: user.id});
-          removeCookie('tempCart', { path: '/' });
-        }
-
-        if (tempFavorites && tempFavorites.length > 0) {
-          addTempFavoritesToFavorites({favorites: tempFavorites, user_id: user.id});
-          removeCookie('tempFavorites', { path: '/' });
-        }
-
         if (user.designer) {
           setCookie('currentUserDesigner', JSON.stringify(user.designer.id), { path: '/' });
         }
@@ -149,11 +90,7 @@ const LogIn = () => {
           setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
           setCookie('token', data.token, { path: '/' });
           setTimeout(function () {
-            if (redirect_to && redirect_to != "") {
-              navigate("/"+redirect_to);
-            } else {
-              navigate("/");
-            }
+            navigate("/");
           }, 1000);
         }
 

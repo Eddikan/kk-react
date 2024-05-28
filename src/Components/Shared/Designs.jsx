@@ -4,7 +4,7 @@ import { Row, Col, Button, ModalHeader, Card, ModalFooter } from 'react-bootstra
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import toast from 'react-hot-toast';
 import GetDesignsData from 'Utils/GetDesignsData';
-import { GoAlertFill, GoHeart } from "react-icons/go";
+import { GoAlertFill, GoHeart, GoStar } from "react-icons/go";
 import PinIcon from 'Assets/images/pin.png';
 import { useCookies } from 'react-cookie';
 import Modal from 'react-bootstrap/Modal';
@@ -23,7 +23,7 @@ import MeetingChat from 'Components/Chat/MeetingChat';
 import axios from 'axios';
 
 const Designs = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites']);
     const navigate = useNavigate();
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
@@ -43,10 +43,11 @@ const Designs = (props) => {
     const [modalHeading, setModalHeading] = useState('');
     const [profileViewShow, setProfileViewShow] = useState(false);
     const [inWishlist, setInWishlist] = useState(false);
+    const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
 
     const [shareShowModal, setShareShowModal] = useState(false);
     const [copyEmbedLink, setCopyEmbedLink] = useState(false);
-    const [copy, setCopy] = useState(false)
+    const [copy, setCopy] = useState(false);
 
     let iframeLink = `<iframe src="https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
 
@@ -168,7 +169,7 @@ const Designs = (props) => {
         });
     }
 
-    async function wishlistDesignUpdate(e) {
+    async function favoriteDesignUpdate(e) {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update', e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
@@ -180,6 +181,25 @@ const Designs = (props) => {
         }).catch((error) => {
             toast.error('Something went wrong, please contact the administrator!');
         });
+    };
+
+    const toggleTempFavorite = (item) => {
+        // Check if the item ID already exists in the array
+        const itemExists = tempFavorites.some(favItem => favItem.id === item.id);
+    
+        let updatedFavorites;
+        if (itemExists) {
+          // Remove the item from the array
+          updatedFavorites = tempFavorites.filter(favItem => favItem.id !== item.id);
+        } else {
+          // Add the new item to the array
+          updatedFavorites = [...tempFavorites, item];
+        }
+    
+        // Set the updated favorites array in cookies
+        setCookie('tempFavorites', JSON.stringify(updatedFavorites), { path: '/' });
+        // Update the local state
+        setTempFavorites(updatedFavorites);
     };
 
     useEffect(() => {
@@ -247,90 +267,111 @@ const Designs = (props) => {
                                             <>
                                                 {index < limit ?
                                                     <Col className="designs-grid mb-3" xs="12" md="3">
-                                                        {currentUser ?
+                                                        {userRole !== 'Admin' ?
                                                             <>
-                                                                {userRole !== 'Admin' ?
-                                                                    <>
-                                                                        <div className="position-relative">
-                                                                            <div className='portfolio-link cursor-pointer'>
-                                                                                <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}>
-                                                                                    <div className="designs-grid-placeholder" 
-                                                                                        onClick={function () {
-                                                                                            togglePortfolioImage(
-                                                                                                design.id,
-                                                                                                design.designer.id,
-                                                                                                design.user.first_name,
-                                                                                                design.user.last_name,
-                                                                                                design.image_urls,
-                                                                                                design.user.image,
-                                                                                                design.user.address_line_1,
-                                                                                                design.user.province,
-                                                                                                design.tags,
-                                                                                                design.description,
-                                                                                                design.user.id,
-                                                                                                userWishlist
-                                                                                            );
-                                                                                            toggleAddViewCount(design.id);
-                                                                                        }}
-                                                                                    ></div>
-                                                                                </div>
-                                                                                {userRole !== 'Admin' && design.user.id != currentUser ?
+                                                                <div className="position-relative">
+                                                                    <div className='portfolio-link cursor-pointer'>
+                                                                        <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}>
+                                                                            <div className="designs-grid-placeholder" 
+                                                                                onClick={function () {
+                                                                                    togglePortfolioImage(
+                                                                                        design.id,
+                                                                                        design.designer.id,
+                                                                                        design.user.first_name,
+                                                                                        design.user.last_name,
+                                                                                        design.image_urls,
+                                                                                        design.user.image,
+                                                                                        design.user.address_line_1,
+                                                                                        design.user.province,
+                                                                                        design.tags,
+                                                                                        design.description,
+                                                                                        design.user.id,
+                                                                                        userWishlist
+                                                                                    );
+                                                                                    toggleAddViewCount(design.id);
+                                                                                }}
+                                                                            ></div>
+                                                                        </div>
+                                                                        {userRole !== 'Admin' && design.user.id != currentUser ?
+                                                                            <>
+                                                                                {currentUser ?
                                                                                     <>
                                                                                         <div className='save-link'>
                                                                                             {userWishlist ?
-                                                                                                <div
-                                                                                                    className="action-button bg-gold"
-                                                                                                    onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: design.id }); }}
-                                                                                                >
-                                                                                                    <GoHeart className="text-white" />
+                                                                                                <div className="kouture-tooltip">
+                                                                                                    <div className="action-button bg-gold"
+                                                                                                        onClick={function () { favoriteDesignUpdate({ user_id: currentUser, portfolio_item_id: design.id }); }}
+                                                                                                    >
+                                                                                                        <GoStar className="text-white" />
+                                                                                                    </div>
+                                                                                                    <div className="kouture-tooltiptext" style={{width: '200px', left: '-25px'}}>
+                                                                                                        Remove from Favorites
+                                                                                                    </div>
                                                                                                 </div>
                                                                                                 :
-                                                                                                <div
-                                                                                                    className="action-button bg-white"
-                                                                                                    onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: design.id }); }}
-                                                                                                >
-                                                                                                    <GoHeart className="text-black" />
+                                                                                                <div className="kouture-tooltip">
+                                                                                                    <div className="action-button bg-white"
+                                                                                                        onClick={function () { favoriteDesignUpdate({ user_id: currentUser, portfolio_item_id: design.id }); }}
+                                                                                                    >
+                                                                                                        <GoStar className="text-black" />
+                                                                                                    </div>
+                                                                                                    <div className="kouture-tooltiptext" style={{width: '200px', left: '-25px'}}>
+                                                                                                        Add to Favorites
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             }
                                                                                         </div>
                                                                                     </>
                                                                                     :
                                                                                     <>
-
+                                                                                        <div className='save-link'>
+                                                                                            {tempFavorites.some(favItem => favItem.id === design.id) ?
+                                                                                                <div className="kouture-tooltip">
+                                                                                                    <div
+                                                                                                        className="action-button bg-gold"
+                                                                                                        onClick={function () { toggleTempFavorite({id: design.id, user_id: currentUser, name: design.name, description: design.description, image_urls: design.image_urls[0], designer_user_id: design.user.id}); }}
+                                                                                                    >
+                                                                                                        <GoStar className="text-white" />
+                                                                                                    </div>
+                                                                                                    <div className="kouture-tooltiptext" style={{width: '200px', left: '-25px'}}>
+                                                                                                        Remove from Favorites
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                :
+                                                                                                <div className="kouture-tooltip">
+                                                                                                    <div
+                                                                                                        className="action-button bg-white"
+                                                                                                        onClick={function () { toggleTempFavorite({id: design.id, user_id: currentUser, name: design.name, description: design.description, image_urls: design.image_urls[0], designer_user_id: design.user.id}); }}
+                                                                                                        >
+                                                                                                        <GoStar className="text-black" />
+                                                                                                    </div>
+                                                                                                    <div className="kouture-tooltiptext" style={{width: '200px', left: '-25px'}}>
+                                                                                                        Add to Favorites
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            }
+                                                                                        </div>
                                                                                     </>
                                                                                 }
-                                                                            </div>
-                                                                        </div>
-                                                                    </>
-                                                                    :
-                                                                    <>
-                                                                        <div
-                                                                            className='portfolio-link cursor-pointer'
-                                                                            onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}
-                                                                        >
-                                                                            <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}></div>
-                                                                        </div>
-                                                                    </>
+                                                                                
+                                                                            </>
+                                                                            :
+                                                                            <>
 
-                                                                }
+                                                                            </>
+                                                                        }
+                                                                    </div>
+                                                                </div>
                                                             </>
                                                             :
                                                             <>
-                                                                <div className="designs-grid-div cursor-pointer w-100" style={{ backgroundImage: "url(" + designImage + ")" }} onClick={() => showSignupModal('user_design')}>
-                                                                    {/* {currentUser ?
-                                                                        <div className='save-link'>
-                                                                            <div className="action-button bg-white me-2">
-                                                                                <GoBookmark className="text-black" />
-                                                                            </div>
-                                                                            <div className="action-button bg-white">
-                                                                                <GoHeart className="text-black" />
-                                                                            </div>
-                                                                        </div>
-                                                                        :
-                                                                        null
-                                                                    } */}
+                                                                <div
+                                                                    className='portfolio-link cursor-pointer' onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}
+                                                                >
+                                                                    <div className="designs-grid-div w-100" style={{ backgroundImage: "url(" + designImage + ")", minHeight: '200px' }}></div>
                                                                 </div>
                                                             </>
+
                                                         }
                                                         <div className="design-details">
                                                             <div className='d-flex align-items-center justify-content-between'>
@@ -654,26 +695,49 @@ const Designs = (props) => {
                                 </div>
                                 {userRole !== 'Admin' && !isDesignCurrentUser ?
                                     <>
-                                        {inWishlist ?
-                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: singleDesign.portfolioId }); }}>
-                                                <div className="action-button-designs bg-gold">
-                                                    <GoHeart className="text-white mt-2" size={30} />
-                                                </div>
-                                                <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Wishlist</div>
-                                            </div>
+                                        {currentUser ?
+                                            <>  
+                                                {inWishlist ?
+                                                    <div className='text-center mb-4' onClick={function () { favoriteDesignUpdate({ user_id: currentUser, portfolio_item_id: singleDesign.portfolioId }); }}>
+                                                        <div className="action-button-designs bg-gold">
+                                                            <GoStar className="text-white mt-2" size={30} />
+                                                        </div>
+                                                        <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Remove from Favorites</div>
+                                                    </div>
+                                                    :
+                                                    <div className='text-center mb-4' onClick={function () { favoriteDesignUpdate({ user_id: currentUser, portfolio_item_id: singleDesign.portfolioId }); }}>
+                                                        <div className="action-button-designs bg-white">
+                                                            <GoStar className="text-black mt-2" size={30} />
+                                                        </div>
+                                                        <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Add to Favorites</div>
+                                                    </div>
+                                                }
+                                            </>
                                             :
-                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: singleDesign.portfolioId }); }}>
-                                                <div className="action-button-designs bg-white">
-                                                    <GoHeart className="text-black mt-2" size={30} />
-                                                </div>
-                                                <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Wishlist</div>
-                                            </div>
+                                            <>
+                                                {tempFavorites.some(favItem => favItem.id === singleDesign.portfolioId) ?
+                                                    <div className='text-center mb-4' onClick={function () { toggleTempFavorite({id: singleDesign.portfolioId, user_id: currentUser, name: singleDesign.name, description: singleDesign.description, image_urls: singleDesign.image[0], designer_user_id: singleDesign.userId}); }}>
+                                                        <div className="action-button-designs bg-gold">
+                                                            <GoStar className="text-white mt-2" size={30} />
+                                                        </div>
+                                                        <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Remove from Favorites</div>
+                                                    </div>
+                                                    :
+                                                    <div className='text-center mb-4' onClick={function () { toggleTempFavorite({id: singleDesign.portfolioId, user_id: currentUser, name: singleDesign.name,  description: singleDesign.description, image_urls: singleDesign.image[0], designer_user_id: singleDesign.userId}); }}>
+                                                        <div className="action-button-designs bg-white">
+                                                            <GoStar className="text-black mt-2" size={30} />
+                                                        </div>
+                                                        <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Add to Favorites</div>
+                                                    </div>
+                                                }
+                                            </>
                                         }
+                                        
                                     </>
                                     :
                                     <></>
                                 }
-                                {!isDesignCurrentUser ?
+                                {/* {!isDesignCurrentUser ?
                                     <div className='text-center mb-4'>
                                         <div className="action-button-designs bg-white">
                                             <BsCartPlus className="text-black mt-2" size={30} />
@@ -682,7 +746,7 @@ const Designs = (props) => {
                                     </div>
                                     :
                                     null
-                                }
+                                } */}
                             </div>
                         </Col>
                     </Row>

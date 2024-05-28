@@ -170,71 +170,50 @@ const Fabrics = (props) => {
                                             <>
                                                 {index < limit ?
                                                     <Col className="designs-grid mb-3" xs="12" md="3">
-                                                        {currentUser ?
-                                                            <>
-                                                                <div className="portfolio-link">
-                                                                {userRole !== 'Admin' ?
-                                                                        <>
-                                                                    <Link to={`/product/${fabric.id}`}>
-                                                                        <div className="designs-grid-div w-100 cursor-pointer"
-                                                                            onClick={function () { toggleAddViewCount(fabric.id); }}
-                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}>
-                                                                        </div>
-                                                                    </Link>
-                                                                    </>
-                                                                    :
+                                                        <div className="portfolio-link">
+                                                            {userRole !== 'Admin' ?
                                                                     <>
-                                                                    <Link to={`/admin/fabric/${fabric.id}`}>
-                                                                        <div className="designs-grid-div w-100 cursor-pointer"
-                                                                            onClick={function () { toggleAddViewCount(fabric.id); }}
-                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}>
-                                                                        </div>
-                                                                    </Link>
-                                                                    </>
-                                                                }
+                                                                <Link to={`/product/${fabric.id}`}>
+                                                                    <div className="designs-grid-div w-100 cursor-pointer"
+                                                                        onClick={function () { toggleAddViewCount(fabric.id); }}
+                                                                        style={{ backgroundImage: "url(" + fabricImage + ")" }}>
+                                                                    </div>
+                                                                </Link>
+                                                                </>
+                                                                :
+                                                                <>
+                                                                <Link to={`/admin/fabric/${fabric.id}`}>
+                                                                    <div className="designs-grid-div w-100 cursor-pointer"
+                                                                        onClick={function () { toggleAddViewCount(fabric.id); }}
+                                                                        style={{ backgroundImage: "url(" + fabricImage + ")" }}>
+                                                                    </div>
+                                                                </Link>
+                                                                </>
+                                                            }
 
-                                                                    {userRole !== 'Admin' &&
-                                                                        <>
-                                                                            {currentUser ?
-                                                                                <div className='save-link'>
-                                                                                    {/* <div className="action-button bg-white me-2">
-                                                                                        <GoBookmark className="text-black" />
-                                                                                    </div> */}
-                                                                                    {userWishlist ?
-                                                                                        <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
-                                                                                            <GoHeart className="text-white" />
-                                                                                        </div>
-                                                                                        :
-                                                                                        <div className="action-button bg-white" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
-                                                                                            <GoHeart className="text-black" />
-                                                                                        </div>
-                                                                                    }
-                                                                                </div>
-                                                                                :
-                                                                                null
-                                                                            }
-                                                                        </>
-                                                                    }
-                                                                </div>
-                                                            </>
-                                                            :
-                                                            <>
-                                                                <div className="designs-grid-div  cursor-pointer w-100" style={{ backgroundImage: "url(" + fabricImage + ")" }} onClick={() => showSignupModal('user_design')}>
+                                                            {userRole !== 'Admin' &&
+                                                                <>
                                                                     {currentUser ?
                                                                         <div className='save-link'>
                                                                             {/* <div className="action-button bg-white me-2">
                                                                                 <GoBookmark className="text-black" />
                                                                             </div> */}
-                                                                            <div className="action-button bg-white">
-                                                                                <GoHeart className="text-black" />
-                                                                            </div>
+                                                                            {userWishlist ?
+                                                                                <div className="action-button bg-gold" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                    <GoHeart className="text-white" />
+                                                                                </div>
+                                                                                :
+                                                                                <div className="action-button bg-white" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}>
+                                                                                    <GoHeart className="text-black" />
+                                                                                </div>
+                                                                            }
                                                                         </div>
                                                                         :
                                                                         null
                                                                     }
-                                                                </div>
-                                                            </>
-                                                        }
+                                                                </>
+                                                            }
+                                                        </div>
                                                         <div className="design-details">
                                                             <div className='d-flex align-items-center justify-content-between'>
                                                                 <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis mt-2 pb-1">{fabric.name ?? '-'}</h4>
@@ -297,7 +276,10 @@ const Fabrics = (props) => {
                                                 <Button className="btn-primary" variant="primary">View All</Button>
                                             </Link>
                                             :
-                                            <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_fabric')}>View More</Button>
+                                            <Link to="/fabrics">
+                                                <Button className="btn-primary" variant="primary">View More</Button>
+                                            </Link>
+                                            // <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_fabric')}>View More</Button>
                                         }
                                     </Col>
                                 </Row>

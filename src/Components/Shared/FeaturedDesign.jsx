@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Row, Col, Button, Modal, ModalHeader, Card, ModalFooter } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import GetUserPortfolioData from 'Utils/GetUserPortfolioData';
-import { GoHeart } from "react-icons/go";
+import { GoStar } from "react-icons/go";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import { useLocation } from 'react-router-dom'
 import Carousel from 'react-multi-carousel';
@@ -27,6 +27,7 @@ import { useCookies } from 'react-cookie';
 
 const PortfolioGrid = (props) => {
     const navigate = useNavigate();
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites']);
     const [portfolio, setPortfolio] = useState([]);
     const [portfolioLoading, setPortfolioLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
@@ -48,11 +49,10 @@ const PortfolioGrid = (props) => {
     const [copyEmbedLink, setCopyEmbedLink] = useState(false);
     const [copy, setCopy] = useState(false);
 
-
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const userRole = cookies.userRole;
     const token = cookies.token;
+    const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
 
     let iframeLink = `<iframe src="https://kouture-konect.web.app/view-design/${singleDesign.portfolioId}" height="316" width="404" allowfullscreen lazyload frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
 
@@ -163,13 +163,32 @@ const PortfolioGrid = (props) => {
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
         });
-    }
+    };
+
+    const toggleTempFavorite = (item) => {
+        // Check if the item ID already exists in the array
+        const itemExists = tempFavorites.some(favItem => favItem.id === item.id);
+    
+        let updatedFavorites;
+        if (itemExists) {
+          // Remove the item from the array
+          updatedFavorites = tempFavorites.filter(favItem => favItem.id !== item.id);
+        } else {
+          // Add the new item to the array
+          updatedFavorites = [...tempFavorites, item];
+        }
+    
+        // Set the updated favorites array in cookies
+        setCookie('tempFavorites', JSON.stringify(updatedFavorites), { path: '/' });
+        // Update the local state
+        setTempFavorites(updatedFavorites);
+    };
 
     useEffect(() => {
         fetchData(user_id);
     }, [reloadCount]);
 
-    async function wishlistDesignUpdate(e) {
+    async function favoriteDesignUpdate(e) {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/update', e).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
@@ -198,27 +217,27 @@ const PortfolioGrid = (props) => {
                             <>
                                 <Row className="portfolio-row">
 
-                                    {portfolio.slice(0, 3).map((object, index) => {
-                                        if (object.image_urls?.[0]?.image_url) {
-                                            var portfolioImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + object.image_urls[0].image_url;
+                                    {portfolio.slice(0, 3).map((design, index) => {
+                                        if (design.image_urls?.[0]?.image_url) {
+                                            var portfolioImage = process.env.REACT_APP_STORAGE_URL + 'portfolio/' + design.image_urls[0].image_url;
                                         } else {
                                             var portfolioImage = PlaceholderImage;
                                         }
 
-                                        var wishlist_user_ids = object.wishlist_user_ids ?? [];
+                                        var wishlist_user_ids = design.wishlist_user_ids ?? [];
                                         const userWishlist = wishlist_user_ids.includes(currentUser);
 
                                         return (
                                             <Col className={`mb-0`} lg="4">
-                                                {/* <div className={`portfolio-grid-featured w-100 ${object.collection_type == "Limited" ? "limited" : " "} ${object.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + portfolioImage + ")" }}> */}
+                                                {/* <div className={`portfolio-grid-featured w-100 ${design.collection_type == "Limited" ? "limited" : " "} ${design.status == "Draft" ? "draft" : ""}`} style={{ backgroundImage: "url(" + portfolioImage + ")" }}> */}
 
                                                 {userRole !== 'Admin' ?
                                                     <>
                                                         <div className='portfolio-link cursor-pointer'>
                                                             <div className="portfolio-grid-featured w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '130px' }}> </div>
-                                                            <div className="portfolio-overlay" onClick={function () { togglePortfolioImage(object.id, object.designer.id, object.user.first_name, object.user.last_name, object.image_urls, object.user.image, object.user.address_line_1, object.user.province, object.tags, object.description, object.user.id, userWishlist); }} >
+                                                            <div className="portfolio-overlay" onClick={function () { togglePortfolioImage(design.id, design.designer.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description, design.user.id, userWishlist); }} >
                                                                 <div className="portfolio-details">
-                                                                    {object.status == "Draft" ?
+                                                                    {design.status == "Draft" ?
                                                                         <span className="text-warning small fw-600">Draft</span>
                                                                         :
                                                                         null
@@ -226,27 +245,67 @@ const PortfolioGrid = (props) => {
                                                                 </div>
                                                             </div>
                                                             <div className='save-link'>
-                                                                {currentUser && currentUser != "" && object.designer.id != currentUser?
+                                                                {currentUser ?
                                                                     <>
-                                                                        {userWishlist ?
-                                                                            <div
-                                                                                className="action-button bg-gold"
-                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: object.id }); }}
-                                                                            >
-                                                                                <GoHeart className="text-white" />
-                                                                            </div>
+                                                                        {design.designer.id != currentUser?
+                                                                            <>
+                                                                                {userWishlist ?
+                                                                                    <div className="kouture-tooltip">
+                                                                                        <div className="action-button bg-gold"
+                                                                                            onClick={function () { favoriteDesignUpdate({ user_id: currentUser, portfolio_item_id: design.id }); }}
+                                                                                        >
+                                                                                            <GoStar className="text-white" />
+                                                                                        </div>
+                                                                                        <div className="kouture-tooltiptext" style={{width: '200px', left: '-25px'}}>
+                                                                                            Remove from Favorites
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    
+                                                                                    :
+                                                                                    <div className="kouture-tooltip">
+                                                                                        <div className="action-button bg-white"
+                                                                                            onClick={function () { favoriteDesignUpdate({ user_id: currentUser, portfolio_item_id: design.id }); }}
+                                                                                        >
+                                                                                            <GoStar className="text-black" />
+                                                                                        </div>
+                                                                                        <div className="kouture-tooltiptext" style={{width: '200px', left: '-25px'}}>
+                                                                                            Add to Favorites
+                                                                                        </div>
+                                                                                    </div>
+                                                                                }
+                                                                            </>
                                                                             :
-                                                                            <div
-                                                                                className="action-button bg-white"
-                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: object.id }); }}
-                                                                            >
-                                                                                <GoHeart className="text-black" />
-                                                                            </div>
+                                                                            null
                                                                         }
                                                                     </>
                                                                     :
-                                                                    null
+                                                                    <>
+                                                                        {tempFavorites.some(favItem => favItem.id === design.id) ?
+                                                                            <div className="kouture-tooltip">
+                                                                                <div className="action-button bg-gold"
+                                                                                    onClick={function () { toggleTempFavorite({id: design.id, user_id: currentUser, name: design.name, description: design.description, image_urls: design.image_urls[0], designer_user_id: design.user.id}); }}
+                                                                                >
+                                                                                    <GoStar className="text-white" />
+                                                                                </div>
+                                                                                <div className="kouture-tooltiptext" style={{width: '200px', left: '-25px'}}>
+                                                                                    Remove from Favorites
+                                                                                </div>
+                                                                            </div>
+                                                                            :
+                                                                            <div className="kouture-tooltip">
+                                                                                <div className="action-button bg-white"
+                                                                                    onClick={function () { toggleTempFavorite({id: design.id, user_id: currentUser, name: design.name, description: design.description, image_urls: design.image_urls[0], designer_user_id: design.user.id}); }}
+                                                                                >
+                                                                                    <GoStar className="text-black" />
+                                                                                </div>
+                                                                                <div className="kouture-tooltiptext" style={{width: '200px', left: '-25px'}}>
+                                                                                    Add to Favorites
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                    </>
                                                                 }
+                                                                
                                                             </div>
                                                         </div>
                                                     </>
@@ -254,37 +313,14 @@ const PortfolioGrid = (props) => {
                                                     <>
                                                         <div className='portfolio-link cursor-pointer'>
                                                             <div className="portfolio-grid-featured w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '130px' }}> </div>
-                                                            <div className="portfolio-overlay" onClick={function () { toggleAddViewCount(object.id); navigate('/admin/portfolio/' + object.id); }}>
+                                                            <div className="portfolio-overlay" onClick={function () { toggleAddViewCount(design.id); navigate('/admin/portfolio/' + design.id); }}>
                                                                 <div className="portfolio-details">
-                                                                    {object.status == "Draft" ?
+                                                                    {design.status == "Draft" ?
                                                                         <span className="text-warning small fw-600">Draft</span>
                                                                         :
                                                                         null
                                                                     }
                                                                 </div>
-                                                            </div>
-                                                            <div className='save-link'>
-                                                                {currentUser && currentUser != "" && object.designer.id != currentUser?
-                                                                    <>
-                                                                        {userWishlist ?
-                                                                            <div
-                                                                                className="action-button bg-gold"
-                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: object.id }); }}
-                                                                            >
-                                                                                <GoHeart className="text-white" />
-                                                                            </div>
-                                                                            :
-                                                                            <div
-                                                                                className="action-button bg-white"
-                                                                                onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: object.id }); }}
-                                                                            >
-                                                                                <GoHeart className="text-black" />
-                                                                            </div>
-                                                                        }
-                                                                    </>
-                                                                    :
-                                                                    null
-                                                                }
                                                             </div>
                                                         </div>
                                                     </>
@@ -572,28 +608,51 @@ const PortfolioGrid = (props) => {
                                     </div>
                                     <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Description</div>
                                 </div>
-                                {userRole !== 'Admin' && currentUser && currentUser != "" && !isDesignCurrentUser ?
+                                {userRole !== 'Admin' && !isDesignCurrentUser ?
                                     <>
-                                        {inWishlist ?
-                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: singleDesign.id }); }}>
-                                                <div className="action-button-designs bg-gold">
-                                                    <GoHeart className="text-white mt-2" size={30} />
-                                                </div>
-                                                <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Wishlist</div>
-                                            </div>
+                                        {currentUser ?
+                                            <>  
+                                                {inWishlist ?
+                                                    <div className='text-center mb-4' onClick={function () { favoriteDesignUpdate({ user_id: currentUser, portfolio_item_id: singleDesign.portfolioId }); }}>
+                                                        <div className="action-button-designs bg-gold">
+                                                            <GoStar className="text-white mt-2" size={30} />
+                                                        </div>
+                                                        <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Remove from Favorites</div>
+                                                    </div>
+                                                    :
+                                                    <div className='text-center mb-4' onClick={function () { favoriteDesignUpdate({ user_id: currentUser, portfolio_item_id: singleDesign.portfolioId }); }}>
+                                                        <div className="action-button-designs bg-white">
+                                                            <GoStar className="text-black mt-2" size={30} />
+                                                        </div>
+                                                        <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Add to Favorites</div>
+                                                    </div>
+                                                }
+                                            </>
                                             :
-                                            <div className='text-center mb-4' onClick={function () { wishlistDesignUpdate({ user_id: currentUser, portfolio_item_id: singleDesign.id }); }}>
-                                                <div className="action-button-designs bg-white">
-                                                    <GoHeart className="text-black mt-2" size={30} />
-                                                </div>
-                                                <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Wishlist</div>
-                                            </div>
+                                            <>
+                                                {tempFavorites.some(favItem => favItem.id === singleDesign.portfolioId) ?
+                                                    <div className='text-center mb-4' onClick={function () { toggleTempFavorite({id: singleDesign.portfolioId, user_id: currentUser, name: singleDesign.name, description: singleDesign.description, image_urls: singleDesign.image[0], designer_user_id: singleDesign.userId}); }}>
+                                                        <div className="action-button-designs bg-gold">
+                                                            <GoStar className="text-white mt-2" size={30} />
+                                                        </div>
+                                                        <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Remove from Favorites</div>
+                                                    </div>
+                                                    :
+                                                    <div className='text-center mb-4' onClick={function () { toggleTempFavorite({id: singleDesign.portfolioId, user_id: currentUser, name: singleDesign.name,  description: singleDesign.description, image_urls: singleDesign.image[0], designer_user_id: singleDesign.userId}); }}>
+                                                        <div className="action-button-designs bg-white">
+                                                            <GoStar className="text-black mt-2" size={30} />
+                                                        </div>
+                                                        <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Add to Favorites</div>
+                                                    </div>
+                                                }
+                                            </>
                                         }
+                                        
                                     </>
                                     :
-                                    null
+                                    <></>
                                 }
-                                {!isDesignCurrentUser ?
+                                {/* {!isDesignCurrentUser ?
                                     <div className='text-center mb-4'>
                                         <div className="action-button-designs bg-white">
                                             <BsCartPlus className="text-black mt-2" size={30} />
@@ -602,7 +661,7 @@ const PortfolioGrid = (props) => {
                                     </div>
                                     :
                                     null
-                                }
+                                } */}
                                 
                             </div>
                         </Col>

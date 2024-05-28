@@ -188,6 +188,14 @@ p {
     border-color: var(--black);
 }
 
+.btn-secondary {
+    font-size: 15px;
+    padding: 10px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 1px;
+}
+
 .btn-danger {
     font-size: 15px;
     padding: 10px 20px;
@@ -423,7 +431,8 @@ a {
 .user-menu.action-box {
     background: #fff;
     position: absolute;
-    width: 200px;
+    /* width: 200px; */
+    width: 350px;
     padding: 12px;
     border-radius: 5px;
     right: 26px;
@@ -892,6 +901,10 @@ form select::placeholder {
     position: relative;
 }
 
+.portfolio-link .action-button {
+    padding: 3px 5px 5px 6px;
+}
+
 .portfolio-grid-div.limited::before {
     content: 'LIMITED DESIGN';
     position: absolute;
@@ -1244,6 +1257,25 @@ form select::placeholder {
     width: 100%;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.favorite-details {
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.wishlist-details button, .favorite-details button {
+    position: absolute;
+    bottom: 0px;
+}
+
+.favorite-description, .wishlist-description {
+    display: -webkit-box;        /* Use flexbox layout */
+    -webkit-line-clamp: 4;       /* Limit the block container to 3 lines */
+    -webkit-box-orient: vertical;/* Set the box orientation to vertical */
+    overflow: hidden;            /* Hide overflowing content */
+    text-overflow: ellipsis;     /* Add ellipsis at the end of the truncated content */
 }
 
 .design-details {

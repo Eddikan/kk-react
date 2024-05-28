@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import LayoutNoFooter from 'Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Modal, Card, FormGroup, FormControl } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
@@ -52,6 +52,7 @@ const initialCheckOut = {
 const Cart = (props) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const formRef = useRef(null);
 
     // Parse search string to get query parameters
     const searchParams = new URLSearchParams(location.search);
@@ -59,7 +60,7 @@ const Cart = (props) => {
     // Access individual query parameters using get method
     const item = searchParams.get('item');
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole', 'checkoutStep', 'selectedCartItems']);
     const currentUser = cookies.currentUser;
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
@@ -67,12 +68,13 @@ const Cart = (props) => {
     const [cartItems, setCartItems] = useState('');
     const [cartItemId, setCartItemId] = useState('');
     const [checkOutFormData, setCheckOutFormData] = useState(initialCheckOut);
-    const [selectedCartItems, setSelectedCartItems] = useState([]);
     const [cartItemModalDelete, setCartItemModalDelete] = useState(false);
     const [cartLoading, setCartLoading] = useState(true);
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [subtotalAmount, setSubtotalAmount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
+    const [checkoutStep, setCheckoutStep] = useState(cookies.checkoutStep ?? 1);
+    const [selectedCartItems, setSelectedCartItems] = useState(cookies.selectedCartItems ?? []);
 
     const getTotalQuantity = (cartItems) => {
         return cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -99,7 +101,6 @@ const Cart = (props) => {
         return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'cart/' + cartItemId);
     };
 
-
     const handleChangePaymentInfo = (e) => {
         const { name, value } = e.target;
         setCheckOutFormData({
@@ -107,14 +108,6 @@ const Cart = (props) => {
             [name]: value,
         });
     }
-
-    const handleCheckboxChange = (id) => {
-        if (selectedCartItems.includes(id)) {
-            setSelectedCartItems(selectedCartItems.filter((cartItemId) => cartItemId !== id));
-        } else {
-            setSelectedCartItems([...selectedCartItems, id]);
-        }
-    };
 
     const checkOutSubmit = (e) => {
         e.preventDefault();
@@ -128,6 +121,7 @@ const Cart = (props) => {
                 console.log("data", data);
                 setTimeout(() => {
                     setReloadCount(prevReloadCount => prevReloadCount + 1);
+                    removeCookie('setSelectedCartItems', { path: '/' });
                     navigate(`/thank-you?order_id=${data.order.id}`);
                 }, 1000);
             } else {
@@ -138,39 +132,26 @@ const Cart = (props) => {
         });
     }
 
-    const updateItemQuantity = (data) => {
-        updateQuantity({ user_id: currentUser, quantity: data.quantity, id: data.id }).then(response => {
-            const success = response.data.status;
-            if (success == success) {
-                setReloadCount(reloadCount + 1);
-            } else {
-                toast.error('There has been an error adding the order, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error adding the order, please try again!');
-        });
+    const checkoutButtonClick = (e) => {
+        setCheckoutStep(2);
+        setCookie('checkoutStep', 2, { path: '/' });
     }
 
-    const deleteCartItemSubmit = (cartItemId) => {
-        setDeleteLoading(true);
-        deleteCartItem(cartItemId).then(response => {
-            const success = response.data.status;
-            if (success) {
-                setFormStatus('standby');
-                setReloadCount(reloadCount + 1);
-                setDeleteLoading(false);
-                toast.success('Cart Item deleted successfully!');
-                setCartItemModalDelete(false);
-            } else {
-                setFormStatus('standby');
-                toast.error('There has been an error getting the item, please try again!');
-                setDeleteLoading(false);
-            }
-        }).catch(() => {
-            toast.error('There has been an error getting the item, please try again!');
-            setDeleteLoading(false);
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver(() => {
+            // Your resize logic here
         });
-    }
+
+        if (formRef.current) {
+            resizeObserver.observe(formRef.current);
+        }
+
+        return () => {
+            if (formRef.current) {
+                resizeObserver.unobserve(formRef.current);
+            }
+        };
+    }, []);
 
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
@@ -199,25 +180,7 @@ const Cart = (props) => {
                 const cartItemsData = response.data.data;
                 if (cartItemsData) {
                     setCartItems(cartItemsData);
-                    const totalQuantity = getTotalQuantity(cartItemsData);
-                    setCheckOutFormData({
-                        ...checkOutFormData,
-                        product_count: totalQuantity,
-                    });
-                    if (item && item !== "") {
-                        // Extract item ids from cartItemsData and add parseInt(item)
-                        const updatedSelectedCartItems = [...cartItemsData.map(cartItem => cartItem.id), parseInt(item)];
-                        setSelectedCartItems(updatedSelectedCartItems);
-                        setCartLoading(false);
-                    } else {
-                        // Map over cartItemsData to extract item ids and add them to selectedCartItems
-                        const updatedSelectedCartItems = cartItemsData.map(cartItem => cartItem.id);
-                        setSelectedCartItems(updatedSelectedCartItems);
-                        setCartLoading(false);
-                    }
-                    if (cartItemsData.length < 1) {
-                        window.location.href = "/";
-                    }
+                    setCartLoading(false);
                 } else {
                     toast.error('There has been an error getting the products, please try again!');
                     setCartLoading(false);
@@ -269,50 +232,53 @@ const Cart = (props) => {
                                     <>
                                         {cartItems ?
                                             <>
-                                                {cartItems.length > 0 ?
+                                                {cartItems.length > 0 && selectedCartItems.length > 0 ?
                                                     <>
                                                         {cartItems.map((cartItem) => {
-                                                            var cart_product = cartItem.product;
-                                                            if (cart_product.image_urls) {
-                                                                var image_urls = JSON.parse(cart_product.image_urls);
-                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                            } else {
-                                                                var fabricImage = PlaceholderImage;
+                                                            
+                                                            if (selectedCartItems.includes(cartItem.id)) {
+                                                                var cart_product = cartItem.product;
+                                                                if (cart_product.image_urls) {
+                                                                    var image_urls = JSON.parse(cart_product.image_urls);
+                                                                    var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                                } else {
+                                                                    var fabricImage = PlaceholderImage;
+                                                                }
+
+                                                                return (
+                                                                    <Card className='mt-2'>
+                                                                        <Card.Body>
+                                                                            <Row className="align-items-center">
+                                                                                <Col lg={8}>
+                                                                                    <div className='d-flex'>
+                                                                                        <div className="designs-grid-div fabric-image"
+                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", width: '100px', height: '100px' }}>
+                                                                                        </div>
+
+                                                                                        <div className='ms-3'>
+                                                                                            <div className='mb-1 fw-500 text-black'>
+                                                                                                {cartItem.product.name}
+                                                                                            </div>
+                                                                                            <div className="">
+                                                                                                <p>Qty. {cartItem.quantity} {cartItem.product.unit_measurement}</p>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </Col>
+
+                                                                                <Col lg={4} className="text-right">
+                                                                                    <h3><strong>${(cartItem.product.price * cartItem.quantity).toFixed(2)}</strong></h3>
+                                                                                    {cartItem.quantity > 1 ?
+                                                                                        <p className="small text-muted">${cartItem.product.price} each</p>
+                                                                                        :
+                                                                                        null
+                                                                                    }
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Card.Body>
+                                                                    </Card>
+                                                                );
                                                             }
-
-                                                            return (
-                                                                <Card className='mt-2'>
-                                                                    <Card.Body>
-                                                                        <Row className="align-items-center">
-                                                                            <Col lg={8}>
-                                                                                <div className='d-flex'>
-                                                                                    <div className="designs-grid-div fabric-image"
-                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", width: '100px', height: '100px' }}>
-                                                                                    </div>
-
-                                                                                    <div className='ms-3'>
-                                                                                        <div className='mb-1 fw-500 text-black'>
-                                                                                            {cartItem.product.name}
-                                                                                        </div>
-                                                                                        <div className="">
-                                                                                            <p>Qty. {cartItem.quantity} {cartItem.product.unit_measurement}</p>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </Col>
-
-                                                                            <Col lg={4} className="text-right">
-                                                                                <h3><strong>${(cartItem.product.price * cartItem.quantity).toFixed(2)}</strong></h3>
-                                                                                {cartItem.quantity > 1 ?
-                                                                                    <p className="small text-muted">${cartItem.product.price} each</p>
-                                                                                    :
-                                                                                    null
-                                                                                }
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Card.Body>
-                                                                </Card>
-                                                            );
                                                         })}
 
                                                     </>
@@ -342,7 +308,7 @@ const Cart = (props) => {
                                 </Col>
 
                                 <Col lg={6}>
-                                    <Form onSubmit={checkOutSubmit} >
+                                    <Form onSubmit={checkOutSubmit} ref={formRef}>
                                         <Card className="mb-3">
                                             <Card.Body>
                                                 <div className='fs-22 rufina-family fw-600'>Shipping Information</div>
@@ -602,12 +568,25 @@ const Cart = (props) => {
                                                     null
                                                 }
                                                 <div className='text-center mt-4'>
-                                                    {selectedCartItems.length < 1 || cartItems.length < 1 ?
-                                                        <button type="button" className='btn btn-primary w-100' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
-                                                        :
-                                                        <button type="submit" className='btn btn-primary w-100'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
-                                                    }
-
+                                                    <Row>
+                                                        <Col lg="6">
+                                                            {selectedCartItems.length < 1 || cartItems.length < 1 ?
+                                                                <button type="button" className='btn btn-primary w-100' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                                :
+                                                                <button type="submit" className='btn btn-primary w-100'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                            }
+                                                        </Col>
+                                                        <Col lg="6">
+                                                            <Link to="/designers">
+                                                                <button
+                                                                    className="btn btn-secondary w-100"
+                                                                    type="button"
+                                                                >
+                                                                    Connect to a Designer
+                                                                </button>
+                                                            </Link>
+                                                        </Col>
+                                                    </Row>
                                                 </div>
                                             </Card.Body>
                                         </Card>
@@ -618,45 +597,6 @@ const Cart = (props) => {
                     </section>
                 </>
             }
-
-            <Modal
-                show={cartItemModalDelete}
-                size='lg'
-                centered
-            >
-                <Modal.Header className='pb-0'>
-                    <h5 className='modal-title text-left fs-22'>Confirm Delete</h5>
-                    <button
-                        type='button'
-                        className='close react-modal-close'
-                        onClick={function () { setCartItemModalDelete(false); }}
-                    >
-                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
-                    </button>
-                </Modal.Header>
-
-                <Modal.Body>
-                    <Card>
-                        <Card.Body>
-                            <p className="mb-0">Are you sure you want to delete this fabric?</p>
-                        </Card.Body>
-                    </Card>
-                    <Card.Footer className="text-right mt-3">
-                        <button
-                            className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
-                            onClick={() => setCartItemModalDelete(false)} type="button"
-                        >
-                            Cancel
-                        </button>
-
-                        {deleteLoading ?
-                            <button className="btn btn-primary btn-style" type="button">Deleting...</button>
-                            :
-                            <button className="btn btn-primary btn-style" type="button" onClick={deleteCartItemSubmit}>Delete</button>
-                        }
-                    </Card.Footer>
-                </Modal.Body>
-            </Modal>
 
         </LayoutNoFooter >
     );

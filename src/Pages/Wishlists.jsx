@@ -163,7 +163,7 @@ const Wishlists = (props) => {
                                                                         <div className="portfolio-link">
                                                                             <Row>
                                                                                 <Col lg="3" xs="12">
-                                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(wishlist.product.id); navigate('/product/' + wishlist.product.id); }} style={{ backgroundImage: "url(" + wishlistImage + ")", minHeight: '100%' }}>
+                                                                                    <div className="designs-grid-div w-100 cursor-pointer" onClick={function () { toggleAddViewCount(wishlist.product.id); navigate('/product/' + wishlist.product.id); }} style={{ backgroundImage: "url(" + wishlistImage + ")", minHeight: '200px' }}>
 
                                                                                     </div>
                                                                                 </Col>
@@ -188,7 +188,7 @@ const Wishlists = (props) => {
                                                                                             }
                                                                                             &nbsp;&nbsp; */}
                                                                                             {/* <p className="text-black fs-14 mb-0">{wishlist.user.first_name && wishlist.user.first_name != "" ? wishlist.user.first_name : "-"} {wishlist.user.last_name && wishlist.user.last_name != "" ? wishlist.user.last_name : "-"}</p> */}
-                                                                                            <p className="text-black fs-14 mb-0 wishlist-description">{wishlist.product?.description ?? '-'}</p>
+                                                                                            <p className="text-black fs-14 mb-3 wishlist-description">{wishlist.product?.description ?? '-'}</p>
                                                                                         </div>
 
                                                                                         {/* {isWishlistCurrentUser ?

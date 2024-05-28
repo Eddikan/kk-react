@@ -32,7 +32,7 @@ const Cart = (props) => {
     // Access individual query parameters using get method
     const item = searchParams.get('item');
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole', 'tempCart']);
     const currentUser = cookies.currentUser;
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
@@ -40,12 +40,14 @@ const Cart = (props) => {
     const [cartItems, setCartItems] = useState('');
     const [cartItemId, setCartItemId] = useState('');
     const [checkOutFormData, setCheckOutFormData] = useState(initialCheckOut);
-    const [selectedCartItems, setSelectedCartItems] = useState([]);
+    const [selectedCartItems, setSelectedCartItems] = useState(cookies.selectedCartItems ?? []);
     const [cartItemModalDelete, setCartItemModalDelete] = useState(false);
     const [cartLoading, setCartLoading] = useState(true);
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [subtotalAmount, setSubtotalAmount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
+    const [tempCartItems, setTempCartItems] = useState(cookies.tempCart ?? []);
+    const [tempCartTotal, setTempCartTotal] = useState(0.00);
 
     const toggleDeleteCartItem = (id) => {
         setCartItemId(id);
@@ -68,6 +70,34 @@ const Cart = (props) => {
         return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'cart/' + cartItemId);
     };
 
+    const deleteTempCartItem = (id) => {
+        const tempCart = tempCartItems;
+
+        // Filter out the item with the given id
+        const updatedCart = tempCart.filter(item => item.id !== id);
+        toast.success('Cart item deleted successfully!');
+
+        // Set the updated cart in cookies
+        setCookie('tempCart', JSON.stringify(updatedCart), { path: '/' });
+        setTempCartItems(updatedCart);
+    };
+
+    const updateTempItemQuantity = (data) => {
+        const tempCart = tempCartItems;
+
+        // Map over tempCart to update the quantity of the item with the specified id
+        const updatedCart = tempCart.map(item => {
+            if (item.id === data.id) {
+                return { ...item, quantity: data.quantity, total: data.quantity * item.price };
+            }
+            return item;
+        });
+
+
+        // Set the updated cart in cookies
+        setCookie('tempCart', JSON.stringify(updatedCart), { path: '/' });
+        setTempCartItems(updatedCart);
+    }
 
     const handleChangePaymentInfo = (e) => {
         const { name, value } = e.target;
@@ -84,28 +114,6 @@ const Cart = (props) => {
             setSelectedCartItems([...selectedCartItems, id]);
         }
     };
-
-    const checkOutSubmit = (e) => {
-        e.preventDefault();
-        setFormStatus('loading');
-        const uniqueSelectedCartItems = [...new Set(selectedCartItems)];
-        postCheckOut({ user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems }).then(response => {
-            const success = response.data.status;
-            const data = response.data.data;
-            if (success == success) {
-                toast.success('Order added successfully!');
-                console.log("data", data);
-                setTimeout(() => {
-                    setReloadCount(prevReloadCount => prevReloadCount + 1);
-                    navigate(`/thank-you?order_id=${data.order.id}`);
-                }, 1000);
-            } else {
-                toast.error('There has been an error adding the order, please try again!');
-            }
-        }).catch(() => {
-            toast.error('There has been an error adding the order, please try again!');
-        });
-    }
 
     const updateItemQuantity = (data) => {
         updateQuantity({ user_id: currentUser, quantity: data.quantity, id: data.id }).then(response => {
@@ -128,7 +136,7 @@ const Cart = (props) => {
                 setFormStatus('standby');
                 setReloadCount(reloadCount + 1);
                 setDeleteLoading(false);
-                toast.success('Cart Item deleted successfully!');
+                toast.success('Cart item deleted successfully!');
                 setCartItemModalDelete(false);
             } else {
                 setFormStatus('standby');
@@ -160,11 +168,15 @@ const Cart = (props) => {
         if (cart_total > 0) {
             setTotalAmount(cart_total.toFixed(2));
             setSubtotalAmount(cart_total.toFixed(2));
+        } else {
+            setTotalAmount(0);
+            setSubtotalAmount(0);
         }
     }, [selectedCartItems, item, reloadCount, cartItems]);
 
     useEffect(() => {
-        getUserCartItems()
+        if (currentUser) {
+            getUserCartItems()
             .then((response) => {
                 const cartItemsData = response.data.data;
                 if (cartItemsData) {
@@ -176,8 +188,10 @@ const Cart = (props) => {
                         setCartLoading(false);
                     } else {
                         // Map over cartItemsData to extract item ids and add them to selectedCartItems
-                        const updatedSelectedCartItems = cartItemsData.map(cartItem => cartItem.id);
-                        setSelectedCartItems(updatedSelectedCartItems);
+                        if (!selectedCartItems || selectedCartItems.length < 1) {
+                            const updatedSelectedCartItems = cartItemsData.map(cartItem => cartItem.id);
+                            setSelectedCartItems(updatedSelectedCartItems);
+                        }
                         setCartLoading(false);
                     }
 
@@ -190,7 +204,43 @@ const Cart = (props) => {
                 toast.error('There has been an error getting the products, please try again!');
                 setCartLoading(false);
             });
+        } else {
+            if (tempCartItems) {
+                if (!selectedCartItems || selectedCartItems.length < 1) {
+                    const updatedSelectedCartItems = tempCartItems.map(cartItem => cartItem.id);
+                    setSelectedCartItems(updatedSelectedCartItems);
+                }
+                setCartLoading(false);
+            }
+            
+        }
     }, [reloadCount, item]);
+
+    useEffect(() => {
+        if (!currentUser && tempCartItems) {
+            let cart_total = 0;
+            if (tempCartItems.length > 0 && tempCartItems.length > 0) {
+                cart_total = tempCartItems.reduce((acc, item) => {
+                    if (selectedCartItems.includes(item.id)) {
+                        const subtotal = parseInt(item.price) * parseInt(item.quantity);
+                        return acc + subtotal;
+                    }
+                    return acc;
+                }, 0);
+
+            }
+            if (cart_total > 0) {
+                setTempCartTotal(cart_total.toFixed(2));
+            } else {
+                setTempCartTotal(0.00);
+            }
+        }
+
+    }, [tempCartItems, selectedCartItems, reloadCount, item]);
+
+    useEffect(() => {
+        setCookie('selectedCartItems', JSON.stringify(selectedCartItems), { path: '/' });
+    }, [selectedCartItems]);
 
     return (
         <LayoutNoFooter>
@@ -219,18 +269,34 @@ const Cart = (props) => {
                                         <Card.Body className='bg-light'>
                                             <Row>
                                                 <Col lg={1}>
-                                                    <input
-                                                        type="checkbox"
-                                                        className="check-box check-box-color date-width mb-1"
-                                                        checked={selectedCartItems.length === cartItems.length && cartItems.length > 0}
-                                                        onChange={() => {
-                                                            if (selectedCartItems.length === cartItems.length) {
-                                                                setSelectedCartItems([]);
-                                                            } else {
-                                                                setSelectedCartItems(cartItems.map((cartItem) => cartItem.id));
-                                                            }
-                                                        }}
-                                                    />
+                                                    {currentUser ?
+                                                        <input
+                                                            type="checkbox"
+                                                            className="check-box check-box-color date-width mb-1"
+                                                            checked={selectedCartItems.length === cartItems.length && cartItems.length > 0}
+                                                            onChange={() => {
+                                                                if (selectedCartItems.length === cartItems.length) {
+                                                                    setSelectedCartItems([]);
+                                                                } else {
+                                                                    setSelectedCartItems(cartItems.map((cartItem) => cartItem.id));
+                                                                }
+                                                            }}
+                                                        />
+                                                        :
+                                                        <input
+                                                            type="checkbox"
+                                                            className="check-box check-box-color date-width mb-1"
+                                                            checked={selectedCartItems.length === tempCartItems.length && tempCartItems.length > 0}
+                                                            onChange={() => {
+                                                                if (selectedCartItems.length === tempCartItems.length) {
+                                                                    setSelectedCartItems([]);
+                                                                } else {
+                                                                    setSelectedCartItems(tempCartItems.map((cartItem) => cartItem.id));
+                                                                }
+                                                            }}
+                                                        />
+                                                    }
+                                                    
                                                 </Col>
                                                 <Col lg={4}>
                                                     Item
@@ -256,98 +322,108 @@ const Cart = (props) => {
                                     </Card>
 
                                     <>
-                                        {cartItems ?
+                                        {currentUser ?
                                             <>
-                                                {cartItems.length > 0 ?
+                                                {cartItems ?
                                                     <>
-                                                        {cartItems.map((cartItem) => {
-                                                            var cart_product = cartItem.product;
-                                                            if (cart_product.image_urls) {
-                                                                var image_urls = JSON.parse(cart_product.image_urls);
-                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                            } else {
-                                                                var fabricImage = PlaceholderImage;
-                                                            }
+                                                        {cartItems.length > 0 ?
+                                                            <>
+                                                                {cartItems.map((cartItem) => {
+                                                                    var cart_product = cartItem.product;
+                                                                    if (cart_product.image_urls) {
+                                                                        var image_urls = JSON.parse(cart_product.image_urls);
+                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                                    } else {
+                                                                        var fabricImage = PlaceholderImage;
+                                                                    }
 
-                                                            return (
-                                                                <Card className='mt-2'>
-                                                                    <Card.Body>
-                                                                        <Row className="align-items-center">
-                                                                            <Col lg={1}>
-                                                                                <input
-                                                                                    type="checkbox"
-                                                                                    className="check-box me-2 check-box-color cursor-pointer"
-                                                                                    checked={selectedCartItems.includes(cartItem.id)}
-                                                                                    onChange={(e) => { handleCheckboxChange(cartItem.id); }}
-                                                                                />
-                                                                            </Col>
-                                                                            <Col lg={4}>
-                                                                                <div className='d-flex'>
-                                                                                    <div className="designs-grid-div fabric-image"
-                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")" }}>
-                                                                                    </div>
+                                                                    return (
+                                                                        <Card className='mt-2'>
+                                                                            <Card.Body>
+                                                                                <Row className="align-items-center">
+                                                                                    <Col lg={1}>
+                                                                                        <input
+                                                                                            type="checkbox"
+                                                                                            className="check-box me-2 check-box-color cursor-pointer"
+                                                                                            checked={selectedCartItems.includes(cartItem.id)}
+                                                                                            onChange={(e) => { handleCheckboxChange(cartItem.id); }}
+                                                                                        />
+                                                                                    </Col>
+                                                                                    <Col lg={4}>
+                                                                                        <div className='d-flex'>
+                                                                                            <div className="designs-grid-div fabric-image"
+                                                                                                style={{ backgroundImage: "url(" + fabricImage + ")" }}>
+                                                                                            </div>
 
-                                                                                    <div className='ms-3'>
-                                                                                        <div className='mb-1 fw-500 text-black'>
-                                                                                            {cartItem.product.name}
-                                                                                        </div>
-
-                                                                                        <div className='d-flex align-items-center user-image-chat'>
-                                                                                            {cartItem.seller.image ?
-                                                                                                <div
-                                                                                                    className='user-photo-chat'
-                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${cartItem.seller.image})` }}
-                                                                                                >
+                                                                                            <div className='ms-3'>
+                                                                                                <div className='mb-1 fw-500 text-black'>
+                                                                                                    {cartItem.product.name}
                                                                                                 </div>
-                                                                                                :
-                                                                                                <div
-                                                                                                    className='user-photo-chat'
-                                                                                                    style={{ backgroundImage: `url(${UserPlaceholder})` }}
-                                                                                                >
+
+                                                                                                <div className='d-flex align-items-center user-image-chat'>
+                                                                                                    {cartItem.seller.image ?
+                                                                                                        <div
+                                                                                                            className='user-photo-chat'
+                                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${cartItem.seller.image})` }}
+                                                                                                        >
+                                                                                                        </div>
+                                                                                                        :
+                                                                                                        <div
+                                                                                                            className='user-photo-chat'
+                                                                                                            style={{ backgroundImage: `url(${UserPlaceholder})` }}
+                                                                                                        >
+                                                                                                        </div>
+                                                                                                    }
+                                                                                                    <span className='name-user ms-2'>
+                                                                                                        {cartItem.seller.first_name}
+                                                                                                        &nbsp;
+                                                                                                        {cartItem.seller.last_name}
+                                                                                                    </span>
                                                                                                 </div>
-                                                                                            }
-                                                                                            <span className='name-user ms-2'>
-                                                                                                {cartItem.seller.first_name}
-                                                                                                &nbsp;
-                                                                                                {cartItem.seller.last_name}
-                                                                                            </span>
+                                                                                            </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </Col>
+                                                                                    </Col>
 
-                                                                            <Col lg={2}>
-                                                                                ${cartItem.product.price}
-                                                                            </Col>
+                                                                                    <Col lg={2}>
+                                                                                        ${cartItem.product.price}
+                                                                                    </Col>
 
-                                                                            <Col lg={2}>
-                                                                                <input
-                                                                                    type="number"
-                                                                                    className="form-control p-2 me-2 d-inline-block"
-                                                                                    min="1"
-                                                                                    style={{ maxWidth: 60 }}
-                                                                                    defaultValue={cartItem.quantity}
-                                                                                    onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id })}
-                                                                                />
-                                                                                {cartItem.product.unit_measurement}
-                                                                            </Col>
+                                                                                    <Col lg={2}>
+                                                                                        <input
+                                                                                            type="number"
+                                                                                            className="form-control p-2 me-2 d-inline-block"
+                                                                                            min="1"
+                                                                                            style={{ maxWidth: 60 }}
+                                                                                            defaultValue={cartItem.quantity}
+                                                                                            onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id })}
+                                                                                        />
+                                                                                        {cartItem.product.unit_measurement}
+                                                                                    </Col>
 
-                                                                            <Col lg={2}>
-                                                                                ${(cartItem.product.price * cartItem.quantity).toFixed(2)}
-                                                                            </Col>
+                                                                                    <Col lg={2}>
+                                                                                        ${(cartItem.product.price * cartItem.quantity).toFixed(2)}
+                                                                                    </Col>
 
-                                                                            <Col lg={1} className='text-center cursor-pointer delete-tooltip'
-                                                                                onClick={function () { toggleDeleteCartItem(cartItem.id); }}
-                                                                            >
-                                                                                <span className="icon-tooltiptext fs-14">Delete</span>
-                                                                                <AiOutlineDelete size="20" />
-                                                                            </Col>
-                                                                        </Row>
-                                                                    </Card.Body>
-                                                                </Card>
-                                                            );
-                                                        })}
+                                                                                    <Col lg={1} className='text-center cursor-pointer delete-tooltip'
+                                                                                        onClick={function () { toggleDeleteCartItem(cartItem.id); }}
+                                                                                    >
+                                                                                        <span className="icon-tooltiptext fs-14">Delete</span>
+                                                                                        <AiOutlineDelete size="20" />
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            </Card.Body>
+                                                                        </Card>
+                                                                    );
+                                                                })}
 
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <div className='text-center my-3'>
+                                                                    Your cart is empty.
+                                                                </div>
+                                                            </>
+                                                        }
                                                     </>
                                                     :
                                                     <>
@@ -359,7 +435,114 @@ const Cart = (props) => {
                                             </>
                                             :
                                             <>
+                                                {tempCartItems ?
+                                                    <>
+                                                        {tempCartItems.length > 0 ?
+                                                            <>
+                                                                {tempCartItems.map((cartItem) => {
+                                                                    var cart_product = cartItem;
+                                                                    if (cart_product.images) {
+                                                                        var image = cart_product.images;
+                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url;
+                                                                    } else {
+                                                                        var fabricImage = PlaceholderImage;
+                                                                    }
 
+                                                                    return (
+                                                                        <Card className='mt-2'>
+                                                                            <Card.Body>
+                                                                                <Row className="align-items-center">
+                                                                                    <Col lg={1}>
+                                                                                        <input
+                                                                                            type="checkbox"
+                                                                                            className="check-box me-2 check-box-color cursor-pointer"
+                                                                                            checked={selectedCartItems.includes(cartItem.id)}
+                                                                                            onChange={(e) => { handleCheckboxChange(cartItem.id); }}
+                                                                                        />
+                                                                                    </Col>
+                                                                                    <Col lg={4}>
+                                                                                        <div className='d-flex'>
+                                                                                            <div className="designs-grid-div fabric-image"
+                                                                                                style={{ backgroundImage: "url(" + fabricImage + ")" }}>
+                                                                                            </div>
+
+                                                                                            <div className='ms-3'>
+                                                                                                <div className='mb-1 fw-500 text-black'>
+                                                                                                    {cartItem.name}
+                                                                                                </div>
+
+                                                                                                <div className='d-flex align-items-center user-image-chat'>
+                                                                                                    {cartItem.user_image ?
+                                                                                                        <div
+                                                                                                            className='user-photo-chat'
+                                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${cartItem.user_image})` }}
+                                                                                                        >
+                                                                                                        </div>
+                                                                                                        :
+                                                                                                        <div
+                                                                                                            className='user-photo-chat'
+                                                                                                            style={{ backgroundImage: `url(${UserPlaceholder})` }}
+                                                                                                        >
+                                                                                                        </div>
+                                                                                                    }
+                                                                                                    <span className='name-user ms-2'>
+                                                                                                        {cartItem.user_first_name}
+                                                                                                        &nbsp;
+                                                                                                        {cartItem.user_last_name}
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </Col>
+
+                                                                                    <Col lg={2}>
+                                                                                        ${cartItem.price}
+                                                                                    </Col>
+
+                                                                                    <Col lg={2}>
+                                                                                        <input
+                                                                                            type="number"
+                                                                                            className="form-control p-2 me-2 d-inline-block"
+                                                                                            min="1"
+                                                                                            style={{ maxWidth: 60 }}
+                                                                                            defaultValue={cartItem.quantity}
+                                                                                            onChange={(e) => updateTempItemQuantity({ id: cartItem.id, quantity: e.target.value })}
+                                                                                        />
+                                                                                        {cartItem.unit_measurement}
+                                                                                    </Col>
+
+                                                                                    <Col lg={2}>
+                                                                                        ${(cartItem.price * cartItem.quantity).toFixed(2)}
+                                                                                    </Col>
+
+                                                                                    <Col lg={1} className='text-center cursor-pointer delete-tooltip'
+                                                                                        onClick={function () { deleteTempCartItem(cartItem.id); }}
+                                                                                    >
+                                                                                        <span className="icon-tooltiptext fs-14">Delete</span>
+                                                                                        <AiOutlineDelete size="20" />
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            </Card.Body>
+                                                                        </Card>
+                                                                    );
+                                                                })}
+
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <div className='text-center my-3'>
+                                                                    Your cart is empty.
+                                                                </div>
+                                                            </>
+                                                        }
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <div className='text-center my-3'>
+                                                            Your cart is empty.
+                                                        </div>
+                                                    </>
+                                                }
                                             </>
                                         }
                                     </>
@@ -370,98 +553,40 @@ const Cart = (props) => {
                                                 </Col>
                                                 <Col lg={6}>
                                                 </Col>
-                                                <Col className='text-right'>
-                                                    <span className='fs-18 me-3'>Total Amount</span><span className='total-price fs-20 fw-600'>${totalAmount}</span>
-                                                </Col>
+                                                {currentUser ?
+                                                    <Col className='text-right'>
+                                                        <span className='fs-18 me-3'>Total Amount</span><span className='total-price fs-20 fw-600'>${totalAmount}</span>
+                                                    </Col>
+                                                    :
+                                                    <Col className='text-right'>
+                                                        <span className='fs-18 me-3'>Total Amount</span><span className='total-price fs-20 fw-600'>${tempCartTotal}</span>
+                                                    </Col>
+                                                }
+                                                
                                             </Row>
                                         </Card.Body>
                                     </Card>
                                     <div className="text-right">
-                                            {selectedCartItems.length < 1 || cartItems.length < 1 ?
-                                                <button className='btn btn-primary mt-3' disabled={true}>Check Out</button>
-                                                :
-                                                <Link to="/checkout">
-                                                    <button className='btn btn-primary mt-3'>Check Out</button>
-                                                </Link>
-                                            }
-                                    </div>
-                                </Col>
-
-                                <Col lg={3} className="d-none">
-                                    <Card>
-                                        <Card.Body>
-                                            <div className='fs-22 rufina-family fw-600'>Payment Info</div>
-                                            <hr className='mt-2' />
-                                            <div>Payment Method</div>
-                                            <div className='mt-3 d-flex'>
-                                                <div className='d-flex'>
-                                                    <input
-                                                        type="radio"
-                                                        name="visa"
-                                                        onChange={(e) => { setRadioButtonValue(1); }}
-                                                    />
-                                                </div>
-
-                                                <div className='ms-3'>
-                                                    <CiCreditCard2 size={20} />
-                                                </div>
-
-                                                <div className='ms-2'>
-                                                    VISA
-                                                </div>
-                                            </div>
-
-                                            {radioButtonValue == 1 &&
-                                                <div>
-                                                    <hr />
-                                                    <div className='mb-4'>
-                                                        <div className='mb-2'>Card Name:</div>
-                                                        <input
-                                                            type="text"
-                                                            className='form-control'
-                                                            name="card_name"
-                                                            value={checkOutFormData.card_name}
-                                                            onChange={handleChangePaymentInfo}
-                                                        />
-                                                    </div>
-                                                    <hr />
-
-                                                    <div>
-                                                        <div className='mb-2'>Card Number:</div>
-                                                        <input
-                                                            type="text"
-                                                            name="card_number"
-                                                            className='form-control mb-2'
-                                                            value={checkOutFormData.card_number}
-                                                            onChange={handleChangePaymentInfo}
-                                                            maxLength={15}
-                                                            pattern="[0-9]*"
-                                                        />
-                                                    </div>
-
-                                                    <div className='mt-3'>
-                                                        <div className='mb-2'>Expiration Date:</div>
-                                                        <input
-                                                            type="date"
-                                                            className='form-control'
-                                                            name="date"
-                                                            value={checkOutFormData.date}
-                                                            onChange={handleChangePaymentInfo}
-                                                        />
-                                                    </div>
-
-                                                </div>
-                                            }
-                                            <div className='text-center mt-4'>
-                                                {selectedCartItems.length < 1 || cartItems.length < 1 ?
-                                                    <button className='btn btn-primary w-100' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                        {(selectedCartItems.length < 1 || cartItems.length < 1) && tempCartItems.length < 1 ?
+                                            <button className='btn btn-primary mt-3' disabled={true}>Check Out</button>
+                                            :
+                                            <>
+                                                {currentUser ?
+                                                    <Link to="/checkout">
+                                                        <button className='btn btn-primary mt-3'>Check Out</button>
+                                                    </Link>
                                                     :
-                                                    <button onClick={checkOutSubmit} className='btn btn-primary w-100'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                    <>
+                                                    <Link to="/login?redirect_to=cart">
+                                                        <button className='btn btn-primary mt-3'>Check Out</button>
+                                                    </Link>
+                                                    <p className="m-0 mt-2 text-danger text-small">You need to log in before checking out!</p>
+                                                    </>
                                                 }
-
-                                            </div>
-                                        </Card.Body>
-                                    </Card>
+                                            </>
+                                            
+                                        }
+                                    </div>
                                 </Col>
                             </Row>
                         </Container>

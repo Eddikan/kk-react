@@ -31,13 +31,13 @@ const initialReviewData = Object.freeze({
 });
 
 const ViewProduct = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole', 'tempCart']);
     const { productId } = useParams();
     const [product, setProduct] = useState('');
     const [productPrice, setProductPrice] = useState(0.00);
     const [productLoading, setProductLoading] = useState(true);
     const [images, setImages] = useState([]);
-     const [finalProductImages, setFinalProductImages] = useState([]);
+    const [finalProductImages, setFinalProductImages] = useState([]);
     const [activeImage, setActiveImage] = useState('');
     const [commentsTabShow, setCommentsTabShow] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
@@ -57,12 +57,12 @@ const ViewProduct = () => {
     const [reviewText, setReviewText] = useState('Terrible');
     const [modalHeading, setModalHeading] = useState('');
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
-    const [unitMeasurement, setUnitMeasurement] = useState(1.00);
+    const [unitCount, setUnitCount] = useState(1.00);
     const [yards, setYards] = useState(0.00);
     const [addToCartLoading, setAddToCartLoading] = useState(false);
     const [buyNowLoading, setBuyNowLoading] = useState(false);
     const [isProductCurrentUser, setIsProductCurrentUser] = useState(false);
-
+    const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -120,7 +120,7 @@ const ViewProduct = () => {
 
     const handleChange = (e) => {
         const { value, name } = e.target;
-        setUnitMeasurement(value);
+        setUnitCount(value);
         setYards(value * 1.09);
         if (product.unit_measurement == "centimeter") {
             setYards(value * 0.01)
@@ -143,17 +143,6 @@ const ViewProduct = () => {
         });
     }
 
-    const handleSubtract = (e) => {
-        var newUnitMeasurement = unitMeasurement - 1;
-        setUnitMeasurement(newUnitMeasurement);
-        setYards(newUnitMeasurement * 1.09)
-    }
-
-    const handleAdd = (e) => {
-        var newUnitMeasurement = unitMeasurement + 1;
-        setUnitMeasurement(newUnitMeasurement);
-        setYards(newUnitMeasurement * 1.09)
-    }
 
     const fetchData = async (e) => {
         try {
@@ -167,7 +156,7 @@ const ViewProduct = () => {
                 setProduct(productData);
                 setProductLoading(false);
                 setImages(productData.image_urls);
-                setFinalProductImages(productData.final_product_image_urls );
+                setFinalProductImages(productData.final_product_image_urls);
                 if (productData.price && productData.price > 0) {
                     setProductPrice(Number(productData.price).toFixed(2))
                 }
@@ -285,6 +274,67 @@ const ViewProduct = () => {
             setAddToCartLoading(false);
             toast.error('Something went wrong, please contact the administrator!');
         });
+    }
+
+    const addToTempCart = (e) => {
+        setAddToCartLoading(true);
+        const itemIndex = tempCart.findIndex(item => item.id === e.id); // Assuming each item has a unique 'id'
+
+        let updatedCart;
+
+        if (itemIndex !== -1) {
+            // Item exists, update the quantity
+            updatedCart = tempCart.map((item, index) => {
+                if (index === itemIndex) {
+                    return {
+                        ...item,
+                        quantity: parseInt(item.quantity) + parseInt(e.quantity) // Update the quantity
+                    };
+                }
+                return item;
+            });
+        } else {
+            // Item does not exist, add it to the cart
+            updatedCart = [...tempCart, e];
+        }
+
+        setTempCart(updatedCart);
+        setCookie('tempCart', JSON.stringify(updatedCart), { path: '/' });
+        setTimeout(function () {
+            toast.success("Fabric added to cart successfully!");
+            setAddToCartLoading(false);
+        }, 500);
+    }
+
+    const buyTempCart = (e) => {
+        setBuyNowLoading(true);
+        const itemIndex = tempCart.findIndex(item => item.id === e.id); // Assuming each item has a unique 'id'
+
+        let updatedCart;
+
+        if (itemIndex !== -1) {
+            // Item exists, update the quantity
+            updatedCart = tempCart.map((item, index) => {
+                if (index === itemIndex) {
+                    return {
+                        ...item,
+                        quantity: parseInt(item.quantity) + parseInt(e.quantity) // Update the quantity
+                    };
+                }
+                return item;
+            });
+        } else {
+            // Item does not exist, add it to the cart
+            updatedCart = [...tempCart, e];
+        }
+
+        setTempCart(updatedCart);
+        setCookie('tempCart', JSON.stringify(updatedCart), { path: '/' });
+
+        setTimeout(function () {
+            setBuyNowLoading(false);
+            navigate("/cart?item=" + e.id);
+        }, 500);
     }
 
     async function buyNow(e) {
@@ -408,7 +458,7 @@ const ViewProduct = () => {
                                                 {
                                                     product.video_demo_type == "Youtube" || product.video_demo_type == "Vimeo" ?
                                                         <>
-                                                            {product.video_demo_url.includes('http://') || product.video_demo_url.includes('https://') ? 
+                                                            {product.video_demo_url.includes('http://') || product.video_demo_url.includes('https://') ?
                                                                 <ResponsiveEmbedVideo src={product.video_demo_url} title={product.name} />
                                                                 :
                                                                 null
@@ -479,23 +529,6 @@ const ViewProduct = () => {
                                                                             </div>
 
                                                                         </div>
-
-                                                                        {/* {userWishlist ?
-                                                                            <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
-                                                                                <div className="action-button bg-gold me-2" >
-                                                                                    <span className="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
-                                                                                    <GoHeart className="text-white" />
-                                                                                </div>
-                                                                            </div>
-                                                                            :
-                                                                            <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
-                                                                                <div className="action-button bg-smgray me-2">
-                                                                                    <span className="wishlist-tooltiptext fs-14">Add to Wishlist</span>
-                                                                                    <GoHeart className="text-black" />
-                                                                                </div>
-
-                                                                            </div>
-                                                                        } */}
                                                                     </div>
 
                                                                 </>
@@ -509,25 +542,29 @@ const ViewProduct = () => {
                                                                                 <GoShareAndroid className="text-black" />
                                                                             </div>
                                                                         </div>
+                                                                        {currentUser ?
+                                                                            <>
+                                                                                {userWishlist ?
+                                                                                    <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                                        <div className="action-button bg-gold me-2" >
+                                                                                            <span className="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
+                                                                                            <GoHeart className="text-white" />
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    :
+                                                                                    <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                                        <div className="action-button bg-smgray me-2" >
+                                                                                            <span className="wishlist-tooltiptext fs-14">Add to Wishlist</span>
+                                                                                            <GoHeart className="text-black" />
+                                                                                        </div>
 
-                                                                        {userWishlist ?
-                                                                            <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
-                                                                                <div className="action-button bg-gold me-2" >
-                                                                                    <span className="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
-                                                                                    <GoHeart className="text-white" />
-                                                                                </div>
-                                                                            </div>
+                                                                                    </div>
+                                                                                }
+                                                                            </>
                                                                             :
-                                                                            <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
-                                                                                <div className="action-button bg-smgray me-2" >
-                                                                                    <span className="wishlist-tooltiptext fs-14">Add to Wishlist</span>
-                                                                                    <GoHeart className="text-black" />
-                                                                                </div>
-
-                                                                            </div>
+                                                                            null
                                                                         }
                                                                     </div>
-
                                                                 </>
                                                             }
                                                         </>
@@ -659,7 +696,7 @@ const ViewProduct = () => {
                                                             </Col>
                                                         </Row>
                                                     </div>
-                                                    {!isProductCurrentUser ? 
+                                                    {!isProductCurrentUser ?
                                                         <hr />
                                                         :
                                                         null
@@ -687,7 +724,7 @@ const ViewProduct = () => {
                                                                             +
                                                                         </Button> */}
 
-                                                                        <span className="fs-18 fw-600">{Number(unitMeasurement)?.toFixed(2)} {
+                                                                        <span className="fs-18 fw-600">{Number(unitCount)?.toFixed(2)} {
                                                                             product.unit_measurement !== 'inch' && product.unit_measurement !== 'feet'
                                                                                 ? product.unit_measurement + 's'
                                                                                 : product.unit_measurement === 'feet'
@@ -699,7 +736,7 @@ const ViewProduct = () => {
                                                                     :
                                                                     null
                                                                 }
-                                                                
+
                                                             </Col>
 
                                                             <Col lg="12">
@@ -707,36 +744,74 @@ const ViewProduct = () => {
                                                                     <>
                                                                         {!isProductCurrentUser ?
                                                                             <>
-                                                                                {addToCartLoading ?
-                                                                                    <Button
-                                                                                        className="w-auto me-3 btn-primary fs-16"
-                                                                                        type="button"
-                                                                                    >
-                                                                                        Adding to Cart...
-                                                                                    </Button>
+                                                                                {currentUser ?
+                                                                                    <>
+                                                                                        {addToCartLoading ?
+                                                                                            <Button
+                                                                                                className="w-auto me-3 btn-primary fs-16"
+                                                                                                type="button"
+                                                                                            >
+                                                                                                Adding to Cart...
+                                                                                            </Button>
+                                                                                            :
+                                                                                            <Button
+                                                                                                className="w-auto me-3 btn-primary fs-16"
+                                                                                                onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: unitCount })}
+                                                                                            >
+                                                                                                Add to Cart
+                                                                                            </Button>
+                                                                                        }
+                                                                                        {buyNowLoading ?
+                                                                                            <Button
+                                                                                                className="w-auto me-3 btn-secondary fs-16"
+                                                                                                type="button"
+                                                                                            >
+                                                                                                Adding to Cart...
+                                                                                            </Button>
+                                                                                            :
+                                                                                            <Button
+                                                                                                className="bg-gold border-gold text-white w-auto me-3 btn-secondary fs-16"
+                                                                                                onClick={() => buyNow({ user_id: currentUser, product_id: product.id, quantity: unitCount })}
+                                                                                            >
+                                                                                                Buy Now
+                                                                                            </Button>
+                                                                                        }
+                                                                                    </>
                                                                                     :
-                                                                                    <Button
-                                                                                        className="w-auto me-3 btn-primary fs-16"
-                                                                                        onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: unitMeasurement })}
-                                                                                    >
-                                                                                        Add to Cart
-                                                                                    </Button>
+                                                                                    <>
+                                                                                        {addToCartLoading ?
+                                                                                            <Button
+                                                                                                className="w-auto me-3 btn-primary fs-16"
+                                                                                                type="button"
+                                                                                            >
+                                                                                                Adding to Cart...
+                                                                                            </Button>
+                                                                                            :
+                                                                                            <Button
+                                                                                                className="w-auto me-3 btn-primary fs-16"
+                                                                                                onClick={() => addToTempCart({ id: product.id, product_id: product.id, price: product.price, name: product.name, quantity: unitCount, user_first_name: product.user.first_name, user_last_name: product.user.last_name, user_image: product.user.image, total: unitCount * product.price, unit_measurement: product.unit_measurement, images: product.image_urls[0] })}
+                                                                                            >
+                                                                                                Add to Cart
+                                                                                            </Button>
+                                                                                        }
+                                                                                        {buyNowLoading ?
+                                                                                            <Button
+                                                                                                className="w-auto me-3 btn-secondary fs-16"
+                                                                                                type="button"
+                                                                                            >
+                                                                                                Adding to Cart...
+                                                                                            </Button>
+                                                                                            :
+                                                                                            <Button
+                                                                                                className="bg-gold border-gold text-white w-auto me-3 btn-secondary fs-16"
+                                                                                                onClick={() => buyTempCart({ id: product.id, product_id: product.id, price: product.price, name: product.name, quantity: unitCount, user_first_name: product.user.first_name, user_last_name: product.user.last_name, user_image: product.user.image, total: unitCount * product.price, unit_measurement: product.unit_measurement, images: product.image_urls[0] })}
+                                                                                            >
+                                                                                                Buy Now
+                                                                                            </Button>
+                                                                                        }
+                                                                                    </>
                                                                                 }
-                                                                                {buyNowLoading ?
-                                                                                    <Button
-                                                                                        className="w-auto me-3 btn-secondary fs-16"
-                                                                                        type="button"
-                                                                                    >
-                                                                                        Adding to Cart...
-                                                                                    </Button>
-                                                                                    :
-                                                                                    <Button
-                                                                                        className="bg-gold border-gold text-white w-auto me-3 btn-secondary fs-16"
-                                                                                        onClick={() => buyNow({ user_id: currentUser, product_id: product.id, quantity: unitMeasurement })}
-                                                                                    >
-                                                                                        Buy Now
-                                                                                    </Button>
-                                                                                }
+
                                                                                 <Link to="/designers">
                                                                                     <Button
                                                                                         className="w-auto me-3 btn-primary fs-16"
@@ -752,7 +827,7 @@ const ViewProduct = () => {
                                                                         }
                                                                     </>
                                                                 }
-                                                                {/* <span className="fw-600 fs-24">${(unitMeasurement * productPrice).toFixed(2)} 
+                                                                {/* <span className="fw-600 fs-24">${(unitCount * productPrice).toFixed(2)} 
                                                             <span className="fs-16 fw-400 text-muted d-inline-block vertical-align-middle">(Total Price)</span></span> */}
                                                             </Col>
                                                         </Row>

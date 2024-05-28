@@ -11,8 +11,6 @@ import toast from 'react-hot-toast';
 import KoutureLogo from 'Assets/images/kouture-konect-icon.png';
 
 const initialRegisterData = Object.freeze({
-    first_name: '',
-    last_name: '',
     email: '',
     password: '',
     password_confirmation: ''
@@ -147,7 +145,7 @@ const SignUp = (props) => {
                                             </>
                                     }
                                     <Form onSubmit={registerSubmit}>
-                                        <Row>
+                                        {/* <Row>
                                             <Col lg="6">
                                                 <Form.Group className='mb-3' controlId='formBasicFirstName'>
                                                     <Form.Label>First Name</Form.Label>
@@ -160,7 +158,7 @@ const SignUp = (props) => {
                                                     <FormControl type='text' name='last_name' onChange={handleChange} className='mr-sm-2' required />
                                                 </Form.Group>
                                             </Col>
-                                        </Row>
+                                        </Row> */}
                                         <Form.Group className='mb-3' controlId='formBasicEmail'>
                                             <Form.Label>Email Address</Form.Label>
                                             <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required />

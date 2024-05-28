@@ -13,8 +13,6 @@ import toast from 'react-hot-toast';
 import KoutureLogo from 'Assets/images/kouture-konect-icon.png';
 
 const initialRegisterData = Object.freeze({
-  first_name: '',
-  last_name: '',
   email: '',
   password: '',
   password_confirmation: ''
@@ -31,13 +29,15 @@ const SignUp = () => {
   const [signupOption, setSignupOption] = useState(query.get("option"));
   const [registerFormData, setRegisterFormData] = useState(initialRegisterData);
   const [registerFormLoading, setRegisterFormLoading] = useState(false);
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn','userDetails','userRole']);
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'tempCart']);
 
   const currentUser = cookies.currentUser;
   const isLoggedIn = cookies.isLoggedIn;
   const userDetails = cookies.userDetails;
   const userRole = cookies.userRole;
   const token = cookies.token;
+  const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
+  const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
 
   const handleChange = (e) => {
     setRegisterFormData({
@@ -84,6 +84,46 @@ const SignUp = () => {
     });
   }
 
+  async function addTempCartToCart(data) {
+    // setReorderLoading(true);
+    axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: data.order_items, user_id: data.user_id }).then((response) => {
+        const success = response.data.status;
+        if (success == 'Success') {
+            const data = response.data.data;
+        } else {
+            const errors = response.data.errors;
+            errors.map((error, index) => {
+                toast.error(error);
+                return null; // React requires a return value, so we return null here
+            });
+        }
+        // setReorderLoading(false);
+    }).catch((error) => {
+        // setReorderLoading(false);
+        toast.error('Something went wrong, please contact the administrator!');
+    });
+  }
+
+  async function addTempFavoritesToFavorites(data) {
+    // setReorderLoading(true);
+    axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/bulk', { favorites: data.favorites, user_id: data.user_id }).then((response) => {
+        const success = response.data.status;
+        if (success == 'Success') {
+            const data = response.data.data;
+        } else {
+            const errors = response.data.errors;
+            errors.map((error, index) => {
+                toast.error(error);
+                return null; // React requires a return value, so we return null here
+            });
+        }
+        // setReorderLoading(false);
+    }).catch((error) => {
+        // setReorderLoading(false);
+        toast.error('Something went wrong, please contact the administrator!');
+    });
+  }
+
   async function registerSubmit(e) {
     e.preventDefault();
     setRegisterFormLoading(true);
@@ -92,6 +132,16 @@ const SignUp = () => {
       if (success == 'Success') {
         const data = response.data.data;
         const user = data.user;
+        if (tempCart && tempCart.length > 0) {
+          addTempCartToCart({order_items: tempCart, user_id: user.id});
+          removeCookie('tempCart', { path: '/' });
+        }
+
+        if (tempFavorites && tempFavorites.length > 0) {
+          addTempFavoritesToFavorites({favorites: tempFavorites, user_id: user.id});
+          removeCookie('tempFavorites', { path: '/' });
+        }
+        
         toast.success('Successfully signed up!');
         setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
         setCookie('userRole', JSON.stringify(user.role), { path: '/' });
@@ -221,7 +271,7 @@ const SignUp = () => {
                   <hr className='mb-0 mt-5'/>
                   <p className='sign-up-with-email'>or create an account</p> */}
                   <Form onSubmit={registerSubmit}>
-                      <Row>
+                      {/* <Row>
                         <Col lg="6">
                           <Form.Group className='mb-3' controlId='formBasicFirstName'>
                             <Form.Label>First Name</Form.Label>
@@ -234,7 +284,7 @@ const SignUp = () => {
                             <FormControl type='text' name='last_name' onChange={handleChange} className='mr-sm-2' required />
                           </Form.Group>
                         </Col>
-                      </Row>
+                      </Row> */}
                       <Form.Group className='mb-3' controlId='formBasicEmail'>
                           <Form.Label>Email Address</Form.Label>
                           <Email

@@ -5,13 +5,15 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
+import ReactFlagsSelect from 'react-flags-select';
+import countryCodes from 'Utils/CountryCodes';
 import { BsArrowLeft } from "react-icons/bs";
 import { Container, Button, Col, Row } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { BsCartCheck } from "react-icons/bs";
 import { IoCalendarClearOutline, IoCartOutline, IoCloseOutline } from "react-icons/io5";
-import { GoBell, GoHeart, GoAlertFill } from "react-icons/go";
+import { GoBell, GoHeart, GoAlertFill, GoStar } from "react-icons/go";
 import { BsEnvelope, BsShopWindow } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import { LiaUserTieSolid } from "react-icons/lia";
@@ -26,6 +28,7 @@ import Logo from 'Assets/images/kouture-konect-logo.png';
 import 'Assets/styles/Headers/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
+import GetUserWishlistsData from 'Utils/GetUserWishlistsData';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { PiNotepadLight, PiScissorsLight } from "react-icons/pi";
@@ -47,9 +50,11 @@ const Header = () => {
   const [notifications, setNotifications] = useState([]);
   const [notificationsLoading, setNotificationsLoading] = useState(true);
   const [userOrdersLoading, setUserOrdersLoading] = useState(true);
-  const [cartItemCounts, setCartItemCounts] = useState([]);
+  const [cartItemCount, setCartItemCount] = useState(0);
+  const [favoritesCount, setFavoritesCount] = useState(0);
+  const [favorites, setFavorites] = useState([]);
 
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn']);
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode']);
   const [userType, setUserType] = useState('user');
   const userRef = useRef(null);
   const bellRef = useRef(null);
@@ -59,12 +64,17 @@ const Header = () => {
   const orderRef = useRef(null);
   const [underConstructionShow, setUnderConstructionShow] = useState(false);
   const [modalHeading, setModalHeading] = useState();
+  const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedCountryCode, setSelectedCountryCode] = useState('US');
   const currentUser = cookies.currentUser;
+  const token = cookies.token;
   const userDetails = cookies.userDetails;
   const userRole = cookies.userRole;
   const isLoggedIn = cookies.isLoggedIn;
   const signupType = cookies.signup_type;
   const completedQuestionnaire = cookies.completed_questionnaire;
+  const tempCart = cookies.tempCart;
+  const tempFavorites = cookies.tempFavorites;
 
   const getUser = async () => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
@@ -83,7 +93,7 @@ const Header = () => {
 
   const getUserCartItems = async () => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart');
-};
+  };
 
   // removeCookies
   const removeCookies = () => {
@@ -96,6 +106,13 @@ const Header = () => {
     removeCookie('isLoggedIn', { path: '/' });
     removeCookie('userRole', { path: '/' });
     removeCookie('signup_type', { path: '/' });
+  };
+
+  const selectCountry = (code) => {
+    setSelectedCountryCode(code);
+    setSelectedCountry(countryCodes[code]);
+    setCookie('selectedCountry', countryCodes[code], { path: '/' });
+    setCookie('selectedCountryCode', code, { path: '/' });
   };
 
   // Close the dropdown when clicking outside of it
@@ -112,7 +129,6 @@ const Header = () => {
     if (orderRef.current && !orderRef.current.contains(event.target)) {
       setUserOrdersOpen(false);
     }
-
   };
 
   const toggleUserMenu = () => {
@@ -142,7 +158,7 @@ const Header = () => {
   }
 
   const getTotalQuantity = (cartItems) => {
-    return cartItems.reduce((total, item) => total + item.quantity, 0);
+    return cartItems.reduce((total, item) => parseInt(total) + parseInt(item.quantity), 0);
   };
 
   function truncateDescription(description, wordLimit) {
@@ -198,8 +214,30 @@ const Header = () => {
     };
   }, []);
 
+  const fetchData = async (e) => {
+    try {
+      const favoritesData = await GetUserWishlistsData(e);
+      if (favoritesData) {
+        const filteredFavorites = favoritesData.portfolio_item_wishlists.filter(
+          (item) => item.portfolio_item.user_id !== currentUser
+        );
+        
+        setFavorites(filteredFavorites);
+        setFavoritesCount(filteredFavorites.length);
+      } else {
+        toast.error('An error occured. Please try again or contact the administrator.');
+        setFavoritesCount(0);
+      }
+
+    } catch (error) {
+      toast.error('An error occured. Please try again or contact the administrator.');
+      setFavoritesCount(0);
+    }
+  };
+
   useEffect(() => {
     if (currentUser) {
+      fetchData({ currentUser: currentUser, token: token });
       getUser()
         .then((response) => {
           const selectedUser = response.data.data;
@@ -246,12 +284,40 @@ const Header = () => {
           setNotificationsLoading(false);
         });
 
+      getUserCartItems()
+        .then((response) => {
+          const selectedCartItem = response.data.data;
+          if (selectedCartItem) {
+            const totalQuantity = getTotalQuantity(selectedCartItem);
+            setCartItemCount(totalQuantity);
+          } else {
+            toast.error('There has been an error getting the notifications, please try again!');
+          }
+        })
+        .catch((error) => {
+          toast.error('There has been an error getting the notifications, please try again!');
+        });
+    } else {
+      if (tempCart) {
+        const totalQuantity = getTotalQuantity(tempCart);
+        setCartItemCount(totalQuantity);
+      }
+      if (tempFavorites) {
+        const totalFavoritesCount = tempFavorites.length;
+        setFavoritesCount(totalFavoritesCount);
+      }
+    }
+  }, [reloadCount]);
+
+  useEffect(() => {
+    if (currentUser) {
+      const intervalId = setInterval(() => {
         getUserCartItems()
           .then((response) => {
             const selectedCartItem = response.data.data;
             if (selectedCartItem) {
               const totalQuantity = getTotalQuantity(selectedCartItem);
-              setCartItemCounts(totalQuantity);
+              setCartItemCount(totalQuantity);
             } else {
               toast.error('There has been an error getting the notifications, please try again!');
             }
@@ -259,54 +325,52 @@ const Header = () => {
           .catch((error) => {
             toast.error('There has been an error getting the notifications, please try again!');
           });
-    }
-  }, [reloadCount]);
 
-  useEffect(() => {
-    setInterval(function(){
-      getUserCartItems()
-      .then((response) => {
-        const selectedCartItem = response.data.data;
-        if (selectedCartItem) {
-          const totalQuantity = getTotalQuantity(selectedCartItem);
-          setCartItemCounts(totalQuantity);
-        } else {
-          toast.error('There has been an error getting the notifications, please try again!');
-        }
-      })
-      .catch((error) => {
-        toast.error('There has been an error getting the notifications, please try again!');
-      });
-    }, 5000);
-  }, []);
+        fetchData({ currentUser: currentUser, token: token });
+
+      }, 5000);
+
+      // Cleanup function to clear the interval
+      return () => clearInterval(intervalId);
+    } else {
+      if (tempCart) {
+        const totalQuantity = getTotalQuantity(tempCart);
+        setCartItemCount(totalQuantity);
+      }
+      if (tempFavorites) {
+        const totalFavoritesCount = tempFavorites.length;
+        setFavoritesCount(totalFavoritesCount);
+      }
+    }
+  }, [cookies]);
 
   return (
     <>
-      {isLoggedIn && 
+      {isLoggedIn &&
         <>
-          {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 || user.profile_completeness == 75)  && 
+          {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 || user.profile_completeness == 75) &&
             <>
               <div className='banner-completion text-center'>
-        
-                <span className='text-white'>Your profile completion is at 20%. 
+
+                <span className='text-white'>Your profile completion is at 20%.
                   <Link to="/user/complete-profile" className='text-decoration-none'>
-                  <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span>
+                    <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span>
                   </Link>
                 </span>
               </div>
             </>
           }
 
-          {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) && 
+          {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) &&
             <>
               <div className='bg-dark py-2 text-center'>
                 <span className='text-white cursor-pointer'>
                   <Link to="/user/shop/setup" className='text-decoration-none text-white'>
-                  <HiOutlineBuildingStorefront size={20} className='me-2' color="#CEA835"/> 
-                  Set up your shop 
+                    <HiOutlineBuildingStorefront size={20} className='me-2' color="#CEA835" />
+                    Set up your shop
                   </Link>
                 </span>
-            </div>
+              </div>
             </>
           }
         </>
@@ -420,123 +484,66 @@ const Header = () => {
                       </a>
                     }
 
-
-                   
-                          {userRole !== 'Admin' &&
+                    {userRole !== 'Admin' &&
+                      <>
+                        {user.shop_completed != 1 ?
                           <>
+                            {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
+                              <>
+                                <a href={`/user/shop/setup`}>
+                                  <div className="nav-link header-tooltip cursor-pointer">
+                                    <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                                    <BsShopWindow size={23} />
+                                  </div>
+                                </a>
+                              </>
+                            }
+                          </>
+                          :
+                          <>
+                            {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
+                              <>
+                                <a href={`${userDetails.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`}>
+                                  <div className="nav-link header-tooltip cursor-pointer">
+                                    <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                                    <BsShopWindow size={23} />
+                                  </div>
+                                </a>
+                              </>
+                            }
+                          </>
+                        }
 
-                             
-                              {user.shop_completed != 1 ?
-                                <>
-                                  {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
-                                    <>
-                                      <a href={`/user/shop/setup`}>
-                                        <div className="nav-link header-tooltip cursor-pointer">
-                                          <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                                          <BsShopWindow size={23} />
-                                        </div>
-                                      </a>
-                                    </>
-                                  }
-                                </>
-                                :
-                                <>
-                                  {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
-                                    <>
-                                      <a href={`${userDetails.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`}>
-                                        <div className="nav-link header-tooltip cursor-pointer">
-                                          <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                                          <BsShopWindow size={23} />
-                                        </div>
-                                      </a>
-                                    </>
-                                  }
-                                </>
-                              }
+                      </>
+                    }
 
-                            </>
-                          }
-                      
-                   
+                    {userRole !== 'Admin' &&
+                      <a href={`/favorites`}>
+                        <div className="nav-link header-tooltip">
+                          <span className="icon-tooltiptext fs-14">Favorites</span>
+                          <GoStar size={26} />
+                          <div>
+                            <div className='cart-added position-absolute badge-primary text-white'>
+                              <span className='cart-count'>{favoritesCount}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    }
 
                     {userRole !== 'Admin' &&
                       <a href={`/cart/`}>
                         <div className="nav-link header-tooltip">
                           <span className="icon-tooltiptext fs-14">Cart</span>
                           <IoCartOutline size={26} />
-
-                          {cartItemCounts !== 0 && (
-                            <div>
-                              <div className='cart-added position-absolute badge-primary text-white'>
-                                <span className='cart-count'>{cartItemCounts}</span>
-                              </div>
+                          <div>
+                            <div className='cart-added position-absolute badge-primary text-white'>
+                              <span className='cart-count'>{cartItemCount}</span>
                             </div>
-                          )}
+                          </div>
                         </div>
                       </a>
                     }
-
-                    {/* {userRole !== 'Admin' &&
-                      <div className="user-dropdown nav-link" ref={orderRef}>
-                        <a href="/orders" className="text-decoration-none">
-                          <div className="cursor-pointer nav-link" >Orders</div>
-                        </a>
-
-                        {userOrdersOpen && (
-                          <div className="action-box-orders user-menu-orders">
-                            {userOrders.length > 0 ? (
-                              <>
-                                {userOrders.slice(0, 4).map((order) => {
-                                  const productImageArray = order?.order_items[0].product.image_urls;
-                                  let imageName;
-                                  let imageURL;
-                                  if (productImageArray) {
-                                    imageName = JSON.parse(productImageArray);
-                                    imageURL = process.env.REACT_APP_STORAGE_URL + 'product/' + imageName[0].image_url;
-                                  }
-                                  return (
-                                    <>
-                                      <Row>
-                                        <Col
-                                          lg="3"
-                                          className='cursor-pointer product-size me-3 mt-1'
-                                          style={{ backgroundImage: `url(${productImageArray ? imageURL : PlaceholderSquare})` }}
-                                        >
-                                        </Col>
-
-                                        <Col lg="9" className='mt-1'>
-                                          <div className='fs-14 body-text-bell mb-3'>
-                                            {order.order_items[0].product.name}
-                                            <div className='mt-1'>
-                                              {truncateDescription(order.order_items[0].product.description, 10)}
-                                            </div>
-                                            <div className='mt-1'>
-                                              <span className='price-color-orders'>${order.total_amount}</span> | <span className='text-gold ms-1 cursor-pointer' onClick={() => toggleUnderConstruction("To Ship")}>{order.status}</span>
-                                            </div>
-                                          </div>
-                                        </Col>
-                                        <hr />
-                                      </Row>
-
-                                      
-                                    </>
-                                  );
-                                })}
-                                <div className='text-right'>
-                                  <a href="/orders" className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All</a>
-                                </div>
-                              </>
-                            ) : (
-                              <div className='text-center'>
-                                <GoAlertFill size="50px" className="mb-2 text-gold" />
-                                <p className="mb-0">No orders found.</p>
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                      </div>
-                    } */}
 
                     <div className="user-dropdown nav-link" ref={userRef}>
                       {userImage ?
@@ -550,27 +557,37 @@ const Header = () => {
                             <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-2' color='#000000' />
                               <span className='text-black'>Profile</span>
                             </Link>
-                          } */} 
+                          } */}
 
                           {userRole !== 'Admin' &&
-                           <Row className='mb-3'>
-                            <Col lg="3">
-                              <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
+                            <Row className='mb-3'>
+                              <Col lg="3">
+                                <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
                                   {userImage ?
                                     <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                                     :
                                     <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
                                   }
-                              </Link>
-                            </Col>
+                                </Link>
+                              </Col>
 
-                            <Col lg="9">
-                              <div className='fw-600'>Hi,&nbsp;{user.first_name}!</div>
-                              <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
-                              <div><BsArrowLeft className="me-1" size={10}/><span className='fs-12'>See your profile</span></div>
-                              </Link>
-                            </Col>
-                           </Row>
+                              <Col lg="9">
+                                <div className='fw-600'>Hi,&nbsp;{user.first_name}!</div>
+                                <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
+                                  <div><BsArrowLeft className="me-1" size={10} /><span className='fs-12'>See your profile</span></div>
+                                </Link>
+                              </Col>
+                            </Row>
+                          }
+
+                          {userRole !== 'Admin' &&
+                            <ReactFlagsSelect
+                              selected={selectedCountryCode}
+                              onSelect={selectCountry}
+                              fullWidth={true}
+                              placeholder=""
+                              className="mb-2 form-control"
+                            />
                           }
 
                           {userRole !== 'Admin' &&
@@ -618,6 +635,28 @@ const Header = () => {
                   </>
                   :
                   <>
+                    <a href={`/favorites`}>
+                      <div className="nav-link header-tooltip">
+                        <span className="icon-tooltiptext fs-14">Favorites</span>
+                        <GoStar size={26} />
+                        <div>
+                          <div className='cart-added position-absolute badge-primary text-white'>
+                            <span className='cart-count'>{favoritesCount}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                    <a href={`/cart`}>
+                      <div className="nav-link header-tooltip">
+                        <span className="icon-tooltiptext fs-14">Cart</span>
+                        <IoCartOutline size={26} />
+                        <div>
+                          <div className='cart-added position-absolute badge-primary text-white'>
+                            <span className='cart-count'>{cartItemCount}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
                     <Nav.Link href="/login">Log in</Nav.Link>
                     <Nav.Link href="/sign-up"><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link>
                   </>
