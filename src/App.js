@@ -86,8 +86,6 @@ const AdminViewPortFolio = lazy(() => import("./Pages/Admin/AdminViewPortFolio")
 const AdminVendorSurvey = lazy(() => import("./Pages/Admin/AdminVendorSurvey"));
 // const AdminViewProfile = lazy(() => import("./Pages/Admin/AdminViewProfile"));
 
-
-
 const AdminViewSellerProfile = lazy(() =>
   import("./Pages/Admin/AdminViewSellerProfile")
 );
@@ -145,6 +143,9 @@ const Wishlists = lazy(() => import("./Pages/Wishlists"));
 
 // Favorites
 const Favorites = lazy(() => import("./Pages/Favorites"));
+
+// Designer Wishlist
+const DesignerWishlist = lazy(() => import("./Pages/DesignerWishlist"));
 
 // Portfolio
 const UserPortfolio = lazy(() => import("./Pages/User/Portfolio"));
@@ -401,11 +402,15 @@ const App = () => {
             exact
             element={<ViewPortfolio />}
           />
+
+
+          <Route path="/wishlist" exact element={<Wishlists />} />
+          <Route path="/favorites" exact element={<Favorites />} />
+          <Route path="/designer/wishlist" exact element={<DesignerWishlist />} />
+
           {/* Under Construction */}
           <Route path="/inspirations" exact element={<UnderConstruction />} />
           <Route path="/blog" exact element={<UnderConstruction />} />
-          <Route path="/wishlist" exact element={<Wishlists />} />
-          <Route path="/favorites" exact element={<Favorites />} />
           <Route path="/orders" exact element={<Orders />} />
           <Route path="/category/tops" exact element={<UnderConstruction />} />
           <Route path="/category/pants" exact element={<UnderConstruction />} />

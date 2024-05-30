@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import { IoShirtSharp } from "react-icons/io5";
 import Layout from 'Components/Layout/Layout';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
@@ -9,6 +10,8 @@ import toast from 'react-hot-toast';
 import { ImLeaf } from "react-icons/im";
 import GoBack from 'Components/Shared/GoBack';
 import { GoHeart } from "react-icons/go";
+import { AiOutlineShoppingCart } from "react-icons/ai";
+
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -22,6 +25,7 @@ import Pagination from 'Components/Pagination/Pagination';
 
 const Fabrics = (props) => {
     const navigate = useNavigate();
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart']);
     const [mounted, setMounted] = useState(false);
     const [fabrics, setFabrics] = useState([]);
     const [fabricsLoading, setFabricsLoading] = useState(true);
@@ -39,12 +43,15 @@ const Fabrics = (props) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageCount, setPageCount] = useState(1);
     const [pageSize, setPageSize] = useState(1);
+    const [selectedCountry, setSelectedCountry] = useState(cookies.selectedCountry ?? '');
+    const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
+    const [addToCartLoading, setAddToCartLoading] = useState(false);
+    const [fabricsFilter, setFabricsFilter] = useState({});
 
     const colors = ['Red', 'Blue', 'Green', 'Yellow']; // Replace with your array of colors
     const compositions = ['Polyamide', 'Polyester', 'Polyurethane', 'Acrylic', 'Cashmere', 'Mental']; // Replace with your array of composition options
     const weaves = ['Plain', 'Twill', 'Satin', 'Basket', 'Herringbone', 'Jacquard', 'Dobby', 'Leno']; // Replace with your array of weave options
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const userRole = cookies.userRole;
     const token = cookies.token;
@@ -118,7 +125,8 @@ const Fabrics = (props) => {
 
     async function onFilterChange(data) {
         setFabricsLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page='+currentPage+'&user_id=' + currentUser + '&token=' + token, data).then((response) => {
+        setFabricsFilter(data);
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page=' + currentPage + '&user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setFabrics(selectedDesigns);
@@ -283,7 +291,7 @@ const Fabrics = (props) => {
 
     // Pagination
     const handleChangePage = (pageNumber) => {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product/filter?page=' + pageNumber + '&user_id=' + currentUser, fabricsFilter)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -303,6 +311,56 @@ const Fabrics = (props) => {
                 toast.error('There has been an error getting the products, please try again!');
             });
     };
+
+    async function addToCart(e) {
+        setAddToCartLoading(true);
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                toast.success("Fabric added to cart successfully!");
+
+                // setTimeout(() => {
+                //     window.location.reload(); 
+                // }, 500);
+            } else {
+                toast.error('Something went wrong, please contact the administrator!');
+            }
+            setAddToCartLoading(false);
+        }).catch((error) => {
+            setAddToCartLoading(false);
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    }
+
+    const addToTempCart = (e) => {
+        setAddToCartLoading(true);
+        const itemIndex = tempCart.findIndex(item => item.id === e.id); // Assuming each item has a unique 'id'
+
+        let updatedCart;
+
+        if (itemIndex !== -1) {
+            // Item exists, update the quantity
+            updatedCart = tempCart.map((item, index) => {
+                if (index === itemIndex) {
+                    return {
+                        ...item,
+                        quantity: parseInt(item.quantity) + parseInt(e.quantity) // Update the quantity
+                    };
+                }
+                return item;
+            });
+        } else {
+            // Item does not exist, add it to the cart
+            updatedCart = [...tempCart, e];
+        }
+
+        setTempCart(updatedCart);
+        setCookie('tempCart', JSON.stringify(updatedCart), { path: '/' });
+        setTimeout(function () {
+            toast.success("Fabric added to cart successfully!");
+            setAddToCartLoading(false);
+        }, 500);
+    }
 
     useEffect(() => {
         // Only run the filter API call after the component has mounted
@@ -324,6 +382,11 @@ const Fabrics = (props) => {
             setMounted(true);
         }
     }, [ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, priceRange, reloadCount, searchValue, country]);
+
+    useEffect(() => {
+        setSelectedCountry(cookies.selectedCountry ?? '');
+        setCountry(cookies.selectedCountry ?? '');
+    }, [cookies]);
 
 
     return (
@@ -531,223 +594,152 @@ const Fabrics = (props) => {
 
                                                             return (
                                                                 <>
-                                                                    {ecoFriendly == 1 && fabric.eco_friendly == 1 && (
-                                                                        <>
-                                                                            <Col className="designs-grid mb-3" xs="12" md="3">
-                                                                                <div className="portfolio-link">
-                                                                                    {userRole !== 'Admin' ?
-                                                                                            <>
-                                                                                        <div
-                                                                                            className="designs-grid-div w-100 cursor-pointer"
-                                                                                            onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }}
-                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}
-                                                                                        >
-                                                                                        </div>
-                                                                                        </>
-                                                                                        :
-                                                                                        <>
-                                                                                        <div
-                                                                                            className="designs-grid-div w-100 cursor-pointer"
-                                                                                            onClick={function () { toggleAddViewCount(fabric.id); navigate('/admin/fabric/' + fabric.id); }}
-                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' , minWidth: '250px'}}
-                                                                                        >
-                                                                                        </div>
-                                                                                        </>
-                                                                                    }
-                                                                                    {userRole !== 'Admin' && fabric.user.id != currentUser  ?
-                                                                                        <>
-                                                                                            <div className='save-link'>
-                                                                                                {userWishlist ?
-                                                                                                    <div
-                                                                                                        className="action-button bg-gold"
-                                                                                                        onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
-                                                                                                    >
-                                                                                                        <GoHeart className="text-white" />
-                                                                                                    </div>
-                                                                                                    :
-                                                                                                    <div
-                                                                                                        className="action-button bg-white"
-                                                                                                        onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
-                                                                                                    >
-                                                                                                        <GoHeart className="text-black" />
-                                                                                                    </div>
-                                                                                                }
-                                                                                            </div>
-                                                                                        </>
-                                                                                        :
-                                                                                        <>
-
-                                                                                        </>
-                                                                                    }
-                                                                                </div>
-                                                                                <div className="design-details">
-                                                                                    <div className='d-flex'>
-                                                                                        <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis pb-1">{fabric.name ?? '-'}</h4>
-
-                                                                                        {currentUser ?
-                                                                                            <div className='d-flex align-items-center'>
-                                                                                                {fabric.eco_friendly != null && fabric.eco_friendly != '' && (
-                                                                                                    <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
-                                                                                                        <div className='tooltip-content'>
-                                                                                                            <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
-                                                                                                        </div>
-                                                                                                        <ImLeaf color="#55d140" className='mb-1' />
-                                                                                                    </span>
-                                                                                                )}
-                                                                                            </div>
-                                                                                            :
-                                                                                            null
-                                                                                        }
-                                                                                    </div>
-
-                                                                                    <div className="star-ratings mt-1">
-                                                                                        <Rating
-                                                                                            initialValue={0}
-                                                                                            readonly={true}
-                                                                                            allowFraction={true}
-                                                                                            size={20}
-                                                                                            className="star-rating"
-                                                                                            showTooltip={true}
-                                                                                            emptyColor="#dddddd"
-                                                                                            fillColor="#cea835"
-                                                                                            tooltipArray={[
-                                                                                                0, 1, 2, 3, 4, 5
-                                                                                            ]}
-                                                                                            tooltipDefaultText="0.0"
-                                                                                        /* Available Props */
-                                                                                        />
-                                                                                    </div>
-                                                                                    <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
-                                                                                    {/* {currentUser ?
-                                                                                <div className='d-flex align-items-center mt-1'>
-                                                                                    {fabric.user.image ?
-                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
-                                                                                        :
-                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
-                                                                                    }
-                                                                                    &nbsp;&nbsp;
-                                                                                    <p className="text-black fs-14 mb-0">{fabric.user.first_name && fabric.user.first_name != "" ? fabric.user.first_name : "-"} {fabric.user.last_name && fabric.user.last_name != "" ? fabric.user.last_name : "-"}</p>
-                                                                                </div>
-                                                                                :
-                                                                                null
-                                                                            } */}
-                                                                                </div>
-                                                                            </Col>
-                                                                        </>
-                                                                    )}
-
-                                                                    {ecoFriendly == 0 && (
-                                                                        <>
-                                                                            <Col className="designs-grid mb-3" xs="12" md="3">
-                                                                                <div className="portfolio-link">
-                                                                                {userRole !== 'Admin' ?
-                                                                                        <>
+                                                                    <Col className="designs-grid mb-3" xs="12" md="3">
+                                                                        <div className="portfolio-link">
+                                                                            {userRole !== 'Admin' ?
+                                                                                <>
                                                                                     <div
                                                                                         className="designs-grid-div w-100 cursor-pointer"
                                                                                         onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }}
-                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px'}}
+                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}
                                                                                     >
                                                                                     </div>
-                                                                                    </>
-                                                                                    :
-                                                                                    <>
+                                                                                </>
+                                                                                :
+                                                                                <>
                                                                                     <div
                                                                                         className="designs-grid-div w-100 cursor-pointer"
                                                                                         onClick={function () { toggleAddViewCount(fabric.id); navigate('/admin/fabric/' + fabric.id); }}
-                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px'}}
+                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px', minWidth: '250px' }}
                                                                                     >
                                                                                     </div>
-                                                                                    </>
-                                                                                }   
-
-                                                                                    {userRole !== 'Admin' && fabric.user.id != currentUser ?
-                                                                                        <>
-                                                                                            <div className='save-link'>
-
-                                                                                                {userWishlist ?
-                                                                                                    <div
-                                                                                                        className="action-button bg-gold"
-                                                                                                        onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
-                                                                                                    >
-                                                                                                        <GoHeart className="text-white" />
-                                                                                                    </div>
-                                                                                                    :
-                                                                                                    <div
-                                                                                                        className="action-button bg-white"
-                                                                                                        onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
-                                                                                                    >
-                                                                                                        <GoHeart className="text-black" />
-                                                                                                    </div>
-                                                                                                }
-                                                                                            </div>
-                                                                                        </>
-                                                                                        :
-                                                                                        <>
-                                                                                        </>
-                                                                                    }
-                                                                                </div>
-                                                                                <div className="design-details">
-                                                                                    <div className='d-flex'>
-                                                                                        <h4 className="text-black fs-18 fw-600 mb-0 fabric-ellipsis pb-1">{fabric.name ?? '-'}</h4>
-
-                                                                                        {currentUser ?
-                                                                                            <div className='d-flex align-items-center'>
-                                                                                                {fabric.eco_friendly != null && fabric.eco_friendly != '' && (
-                                                                                                    <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
-                                                                                                        <div className='tooltip-content'>
-                                                                                                            <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
-                                                                                                        </div>
-                                                                                                        <ImLeaf color="#55d140" className='mb-1' />
-                                                                                                    </span>
-                                                                                                )}
+                                                                                </>
+                                                                            }
+                                                                            {userRole !== 'Admin' && fabric.user.id != currentUser ?
+                                                                                <>
+                                                                                    <div className='save-link'>
+                                                                                        {userWishlist ?
+                                                                                            <div
+                                                                                                className="action-button bg-gold"
+                                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
+                                                                                            >
+                                                                                                <GoHeart className="text-white" />
                                                                                             </div>
                                                                                             :
-                                                                                            null
+                                                                                            <div
+                                                                                                className="action-button bg-white"
+                                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
+                                                                                            >
+                                                                                                <GoHeart className="text-black" />
+                                                                                            </div>
                                                                                         }
                                                                                     </div>
-
-                                                                                    <div className="star-ratings mt-1">
-                                                                                        <Rating
-                                                                                            initialValue={0}
-                                                                                            readonly={true}
-                                                                                            allowFraction={true}
-                                                                                            size={20}
-                                                                                            className="star-rating"
-                                                                                            showTooltip={true}
-                                                                                            emptyColor="#dddddd"
-                                                                                            fillColor="#cea835"
-                                                                                            tooltipArray={[
-                                                                                                0, 1, 2, 3, 4, 5
-                                                                                            ]}
-                                                                                            tooltipDefaultText="0.0"
-                                                                                        /* Available Props */
-                                                                                        />
-                                                                                    </div>
-                                                                                    <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
-                                                                                    {/* {currentUser ?
-                                                                                <div className='d-flex align-items-center mt-1'>
-                                                                                    {fabric.user.image ?
-                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
-                                                                                        :
-                                                                                        <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
-                                                                                    }
-                                                                                    &nbsp;&nbsp;
-                                                                                    <p className="text-black fs-14 mb-0">{fabric.user.first_name && fabric.user.first_name != "" ? fabric.user.first_name : "-"} {fabric.user.last_name && fabric.user.last_name != "" ? fabric.user.last_name : "-"}</p>
-                                                                                </div>
+                                                                                </>
                                                                                 :
-                                                                                null
-                                                                            } */}
+                                                                                <>
+
+                                                                                </>
+                                                                            }
+                                                                        </div>
+                                                                        <div className="design-details">
+                                                                            <div className='d-flex justify-content-between align-items-center'>
+                                                                                <div className="d-flex">
+                                                                                    <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis pb-1">{fabric.name ?? '-'}</h4>
+                                                                                    {fabric.eco_friendly == 1 ?
+                                                                                        <div className='d-flex align-items-center'>
+                                                                                            <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
+                                                                                                <div className='tooltip-content'>
+                                                                                                    <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
+                                                                                                </div>
+                                                                                                <ImLeaf color="#55d140" className='mb-1' />
+                                                                                            </span>
+                                                                                        </div>
+                                                                                        :
+                                                                                        null
+                                                                                    }
                                                                                 </div>
-                                                                            </Col>
-                                                                        </>
-                                                                    )}
+                                                                                {currentUser ?
+                                                                                    <>
+                                                                                        <div>
+                                                                                            <div className="kouture-tooltip">
+                                                                                                <div className="action-button bg-black"
+                                                                                                    onClick={() => addToCart({ user_id: currentUser, product_id: fabric.id, quantity: 1 })}
+                                                                                                >
+                                                                                                    <AiOutlineShoppingCart className="text-white" />
+                                                                                                </div>
+                                                                                                <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
+                                                                                                    Add to Cart
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </>
+                                                                                    :
+                                                                                    <>
+                                                                                        <div>
+                                                                                            <div className="kouture-tooltip">
+                                                                                                <div className="action-button bg-black"
+                                                                                                    onClick={() => addToTempCart({ id: fabric.id, product_id: fabric.id, price: fabric.price, name: fabric.name, quantity: 1, user_first_name: fabric.user.first_name, user_last_name: fabric.user.last_name, user_image: fabric.user.image, total: 1 * fabric.price, unit_measurement: fabric.unit_measurement, images: fabric.image_urls[0] })}
+                                                                                                >
+                                                                                                    <AiOutlineShoppingCart className="text-white" />
+                                                                                                </div>
+                                                                                                <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
+                                                                                                    Add to Cart
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </>
+                                                                                }
+                                                                                
+                                                                            </div>
+
+                                                                            <div className="star-ratings mt-1">
+                                                                                <Rating
+                                                                                    initialValue={0}
+                                                                                    readonly={true}
+                                                                                    allowFraction={true}
+                                                                                    size={20}
+                                                                                    className="star-rating"
+                                                                                    showTooltip={true}
+                                                                                    emptyColor="#dddddd"
+                                                                                    fillColor="#cea835"
+                                                                                    tooltipArray={[
+                                                                                        0, 1, 2, 3, 4, 5
+                                                                                    ]}
+                                                                                    tooltipDefaultText="0.0"
+                                                                                /* Available Props */
+                                                                                />
+                                                                            </div>
+                                                                            <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
+                                                                            {/* {currentUser ?
+                                                                        <div className='d-flex align-items-center mt-1'>
+                                                                            {fabric.user.image ?
+                                                                                <div className='designer-photo-small' style={{ backgroundImage: "url("+process.env.REACT_APP_STORAGE_URL+'user/'+fabric.user.image+")"}} ></div>
+                                                                                :
+                                                                                <div className='designer-photo-small' style={{ backgroundImage: "url("+UserPlaceholder+")"}} ></div>
+                                                                            }
+                                                                            &nbsp;&nbsp;
+                                                                            <p className="text-black fs-14 mb-0">{fabric.user.first_name && fabric.user.first_name != "" ? fabric.user.first_name : "-"} {fabric.user.last_name && fabric.user.last_name != "" ? fabric.user.last_name : "-"}</p>
+                                                                        </div>
+                                                                        :
+                                                                        null
+                                                                    } */}
+                                                                        </div>
+                                                                    </Col>
+
+
+
                                                                 </>
                                                             )
                                                         })}
                                                     </Row>
                                                 </>
                                                 :
-                                                <p className="text-center fs-20 mb-3 mt-3">No records found.</p>
+                                                <Card className="text-center">
+                                                    <Card.Body>
+                                                        <IoShirtSharp size="60px" className="mt-2" />
+                                                        <p className="text-center fs-20 mb-2 mt-3">No records found.</p>
+                                                    </Card.Body>
+                                                </Card>
                                             }
                                         </>
                                     }

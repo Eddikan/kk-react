@@ -202,11 +202,14 @@ const Favorites = (props) => {
                                                                                         </Col>
                                                                                     </Row>
                                                                                     <div className='save-link' style={{ opacity: 1, bottom: 'unset', top: '0', right: '0' }}>
-
-                                                                                        <div className="action-button bg-gold" onClick={function () { favoriteUpdate({ user_id: currentUser, portfolio_item_id: favorite.portfolio_item.id }); removeFavorite(favorite.portfolio_item.id) }}>
-                                                                                            <GoStar className="text-white" />
+                                                                                        <div className="kouture-tooltip">
+                                                                                            <div className="action-button bg-gold" onClick={function () { favoriteUpdate({ user_id: currentUser, portfolio_item_id: favorite.portfolio_item.id }); removeFavorite(favorite.portfolio_item.id) }}>
+                                                                                                <GoStar className="text-white" />
+                                                                                            </div>
+                                                                                            <div className="kouture-tooltiptext" style={{width: '200px', left: '-25px'}}>
+                                                                                                Remove from Favorites
+                                                                                            </div>
                                                                                         </div>
-
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -288,11 +291,16 @@ const Favorites = (props) => {
                                                                                         </Col>
                                                                                     </Row>
                                                                                     <div className='save-link' style={{ opacity: 1, bottom: 'unset', top: '0', right: '0' }}>
-
-                                                                                        <div className="action-button bg-gold"  onClick={function () { toggleTempFavorite({id: favorite.id}); }}>
-                                                                                            <GoStar className="text-white" />
+                                                                                        <div className="kouture-tooltip">
+                                                                                            <div className="action-button bg-gold"
+                                                                                                onClick={function () { toggleTempFavorite({id: favorite.id}); }}
+                                                                                            >
+                                                                                                <GoStar className="text-white" />
+                                                                                            </div>
+                                                                                            <div className="kouture-tooltiptext" style={{width: '200px', left: '-25px'}}>
+                                                                                                Remove from Favorites
+                                                                                            </div>
                                                                                         </div>
-
                                                                                     </div>
                                                                                 </div>
                                                                             </div>

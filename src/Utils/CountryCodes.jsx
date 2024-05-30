@@ -199,6 +199,6 @@ const countryCodes = {
     YE: 'Yemen',
     ZM: 'Zambia',
     ZW: 'Zimbabwe'
-  };
+};
   
-  export default countryCodes;
+export default countryCodes;

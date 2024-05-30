@@ -7,6 +7,7 @@ import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
 import GoBack from 'Components/Shared/GoBack';
 import { Form, ModalHeader, ModalFooter } from 'react-bootstrap';
+import { IoShirtSharp } from 'react-icons/io5';
 import { Rating } from 'react-simple-star-rating';
 import { PiNotepadFill } from "react-icons/pi";
 import { IoIosCheckmarkCircle } from "react-icons/io";
@@ -36,7 +37,7 @@ import axios from 'axios';
 
 const Designs = (props) => {
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'selectedCountry']);
     const currentUser = cookies.currentUser;
     const token = cookies.token;
     const userRole = cookies.userRole;
@@ -74,6 +75,7 @@ const Designs = (props) => {
     const [selectedAllCategories, setSelectedAllCategories] = useState(false);
     const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
     const [profileViewShow, setProfileViewShow] = useState(false);
+    const [selectedCountry, setSelectedCountry] = useState(cookies.selectedCountry ?? '')
 
     const [shareViewShow, setShareViewShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
@@ -183,7 +185,7 @@ const Designs = (props) => {
 
     async function onFilterChange(data) {
         setDesignsLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?user_id=' + currentUser + '&token=' + token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?country='+selectedCountry+'&user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setDesigns(selectedDesigns);
@@ -431,7 +433,7 @@ const Designs = (props) => {
 
     // Pagination
     const handleChangePage = (pageNumber) => {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?page=' + pageNumber + '&user_id=' + currentUser)
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?country='+selectedCountry+'&page=' + pageNumber + '&user_id=' + currentUser)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -467,7 +469,12 @@ const Designs = (props) => {
             setMounted(true);
         }
 
-    }, [mounted, searchValue, selectedCategories]);
+    }, [mounted, searchValue, selectedCategories, selectedCountry]);
+
+    useEffect(() => {
+        // Only run the filter API call after the component has mounted
+        setSelectedCountry(cookies.selectedCountry ?? '');
+    }, [cookies]);
 
     useEffect(() => {
         getPortfolioCategories();
@@ -874,12 +881,18 @@ const Designs = (props) => {
                                                 </>
                                                 :
                                                 <>
-                                                    <Card>
+                                                    {/* <Card>
                                                         <Card.Body className=" pt-5 pb-5">
                                                             <div className="text-center">
                                                                 <GoAlertFill size="40px" className="mb-2 text-gold" />
                                                                 <p className="text-center mb-3">There are currently no designs available for viewing.</p>
                                                             </div>
+                                                        </Card.Body>
+                                                    </Card> */}
+                                                    <Card className="text-center">
+                                                        <Card.Body>
+                                                            <IoShirtSharp size="60px" className="mt-2" />
+                                                            <p className="text-center fs-20 mb-2 mt-3">No records found.</p>
                                                         </Card.Body>
                                                     </Card>
                                                 </>

@@ -122,4 +122,5 @@ input[type='checkbox'] {
     border: 2px solid gray;
     box-shadow: none;
     font-size: 4px;
+    margin-right: 10px;
 }

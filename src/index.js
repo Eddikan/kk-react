@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import GoogleTranslate from './GoogleTranslate';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <GoogleOAuthProvider clientId="766257099679-9tknmarbin95ka99g25km3eea92ergqb.apps.googleusercontent.com">
+        <GoogleTranslate />
         <App />
     </GoogleOAuthProvider>
 );

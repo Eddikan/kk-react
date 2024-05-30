@@ -570,20 +570,9 @@ const Cart = (props) => {
                                         {(selectedCartItems.length < 1 || cartItems.length < 1) && tempCartItems.length < 1 ?
                                             <button className='btn btn-primary mt-3' disabled={true}>Check Out</button>
                                             :
-                                            <>
-                                                {currentUser ?
-                                                    <Link to="/checkout">
-                                                        <button className='btn btn-primary mt-3'>Check Out</button>
-                                                    </Link>
-                                                    :
-                                                    <>
-                                                    <Link to="/login?redirect_to=cart">
-                                                        <button className='btn btn-primary mt-3'>Check Out</button>
-                                                    </Link>
-                                                    <p className="m-0 mt-2 text-danger text-small">You need to log in before checking out!</p>
-                                                    </>
-                                                }
-                                            </>
+                                            <Link to="/checkout">
+                                                <button className='btn btn-primary mt-3'>Check Out</button>
+                                            </Link>
                                             
                                         }
                                     </div>
@@ -600,7 +589,7 @@ const Cart = (props) => {
                 centered
             >
                 <Modal.Header className='pb-0'>
-                    <h5 className='modal-title text-left fs-22'>Confirm Delete</h5>
+                    <h5 className='modal-title text-left fs-22'>Delete Item</h5>
                     <button
                         type='button'
                         className='close react-modal-close'

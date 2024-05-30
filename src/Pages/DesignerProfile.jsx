@@ -400,13 +400,28 @@ const DesignerProfile = () => {
                                                             </p>
                                                         </span> */}
                                                         {designerAvailable ?
-                                                            <span className='w-100'>
-                                                                <a
-                                                                    className='btn ms-3 btn-consultation fs-16 fw-400 btn-style'
-                                                                    href={`/designer/${designer.id}/appointment/schedule/0`}
-                                                                >
-                                                                    <IoVideocam className='me-2' size="20" />Schedule a Consultation</a>
-                                                            </span>
+                                                            <>
+                                                                {currentUser ?
+                                                                    <span className='w-100'>
+                                                                        <a
+                                                                            className='btn ms-3 btn-consultation fs-16 fw-400 btn-style'
+                                                                            href={`/designer/${designer.id}/appointment/schedule/0`}
+                                                                        >
+                                                                            <IoVideocam className='me-2' size="20" />Schedule a Consultation</a>
+                                                                    </span> 
+                                                                    :
+                                                                    <>
+                                                                        <span className='w-100'>
+                                                                            <a
+                                                                                className='btn ms-3 btn-consultation fs-16 fw-400 btn-style'
+                                                                                href={`/login?redirect_to=designer/${designer.id}/appointment/schedule/0`}
+                                                                            >
+                                                                                <IoVideocam className='me-2' size="20" />Schedule a Consultation</a>
+                                                                        </span>
+                                                                        <p className="text-danger text-small" style={{fontSize: '12px', marginTop: '10px'}}>You must log in to schedule a consultation!</p>
+                                                                    </>
+                                                                }
+                                                            </>
                                                             :
                                                             <span className='w-100'>
                                                                 <button className='btn ms-3 btn-consultation fs-16 fw-400 btn-style' disabled>

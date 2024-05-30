@@ -330,7 +330,6 @@ const ViewProduct = () => {
 
         setTempCart(updatedCart);
         setCookie('tempCart', JSON.stringify(updatedCart), { path: '/' });
-
         setTimeout(function () {
             setBuyNowLoading(false);
             navigate("/cart?item=" + e.id);

@@ -14,7 +14,7 @@ import 'Assets/styles/DesignerCalendar/style.css';
 import UserPlaceholder from 'Assets/images/user.png';
 import { useCookies } from 'react-cookie';
 import { Modal } from 'react-bootstrap';
-import { TfiAlarmClock  } from "react-icons/tfi";
+import { TfiAlarmClock } from "react-icons/tfi";
 import { GoAlertFill } from 'react-icons/go';
 import { BiCommentDetail } from "react-icons/bi";
 import { useNavigate, useParams, Link } from 'react-router-dom';
@@ -43,10 +43,7 @@ const intitialConsultationData = {
     consultation_details: '',
 }
 
-const localizer = momentLocalizer(moment)
-
-
-
+const localizer = momentLocalizer(moment);
 
 const ConsultationCalendar = ({ toggleEvent }) => {
     const calendarRef = useRef(null);
@@ -56,6 +53,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         const isPast = (date) => moment(date, 'DD').isBefore(moment(), 'day');
 
         const dayCells = document.querySelectorAll('.rbc-date-cell'); // Select all day cell elements
+        
         dayCells.forEach(cell => {
             const button = cell.querySelector('button'); // Select the button element inside the day cell
             const dateText = button.textContent.trim(); // Get the text content of the button
@@ -78,9 +76,9 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     const { designerId } = useParams();
     const { appointmentscheduleId } = useParams();
 
-    const [events ,setEvents ] = useState([]);
+    const [events, setEvents] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
-    
+
     const [designer, setDesigner] = useState("");
     const [designerUser, setDesignerUser] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
@@ -118,11 +116,11 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     };
 
     const getAppointment = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT +  'designer/appointment/' + appointmentscheduleId);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/appointment/' + appointmentscheduleId);
     };
 
     const getDesigner = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT +  'designer/' + designerId);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designer/' + designerId);
     };
 
 
@@ -147,10 +145,10 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
     // const convertToDateOnly = (selectedDate) => {
     //     const resultDate = new Date(selectedDate);
-    
+
     //     const options = { month: 'long', day: 'numeric', year: 'numeric' };
     //     const dateOnly = resultDate.toLocaleDateString('en-US', options);
-    
+
     //     return dateOnly;
     // };
 
@@ -159,7 +157,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
         const date = new Date(selectedDate);
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return date.toLocaleDateString('en-US', options);
-      }
+    }
 
 
 
@@ -241,6 +239,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
     const handleCalendarTimeslotClick = ({ start, end }) => {
         console.log(start);
+        console.log(end);
         setScheduleLoading(true);
         const isPast = moment(start).isBefore(moment(), 'day');
 
@@ -346,17 +345,18 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                     setAppointmentFormData(initialAppointments);
                     toast.success('Consultation added successfully!');
 
-                    {userRole !== 'Admin' ?
-                    setTimeout(() => {
-                        setReloadCount(prevReloadCount => prevReloadCount + 1);
-                        navigate('/appointments/' + currentUser);
-                    }, 1000)
-                    :
-                    setTimeout(() => {
-                        setReloadCount(prevReloadCount => prevReloadCount + 1);
-                        navigate('/admin/appointments');
-                    }, 1000)
-                } 
+                    {
+                        userRole !== 'Admin' ?
+                        setTimeout(() => {
+                            setReloadCount(prevReloadCount => prevReloadCount + 1);
+                            navigate('/appointments/' + currentUser);
+                        }, 1000)
+                        :
+                        setTimeout(() => {
+                            setReloadCount(prevReloadCount => prevReloadCount + 1);
+                            navigate('/admin/appointments');
+                        }, 1000)
+                    }
 
                 } else {
                     setFormStatus('standby');
@@ -377,18 +377,19 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                     setReloadCount(reloadCount + 1);
                     setAppointmentFormData(initialAppointments);
                     toast.success('Consultation updated successfully!');
-                   
-                     {userRole !== 'Admin' ?
-                    setTimeout(() => {
-                        setReloadCount(prevReloadCount => prevReloadCount + 1);
-                        navigate('/appointments/' + currentUser);
-                    }, 1000)
-                    :
-                    setTimeout(() => {
-                        setReloadCount(prevReloadCount => prevReloadCount + 1);
-                        navigate('/admin/appointments');
-                    }, 1000)
-                }
+
+                    {
+                        userRole !== 'Admin' ?
+                        setTimeout(() => {
+                            setReloadCount(prevReloadCount => prevReloadCount + 1);
+                            navigate('/appointments/' + currentUser);
+                        }, 1000)
+                        :
+                        setTimeout(() => {
+                            setReloadCount(prevReloadCount => prevReloadCount + 1);
+                            navigate('/admin/appointments');
+                        }, 1000)
+                    }
 
                 } else {
                     setFormStatus('standby');
@@ -405,6 +406,12 @@ const ConsultationCalendar = ({ toggleEvent }) => {
             setCurrentTimezone(timezone);
         };
 
+        const currentDate = new Date();
+        const nextDate = new Date();
+        nextDate.setDate(currentDate.getDate() + 1);
+
+        handleCalendarTimeslotClick({ start: currentDate, end: nextDate });
+
         getTimezone();
     }, []);
 
@@ -416,18 +423,18 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
     useEffect(() => {
         getDesigner()
-        .then((response) => {
-            const selectedDesigner = response.data.data;
-            if (selectedDesigner) {
-                setDesigner(selectedDesigner);
-                setDesignerUser(selectedDesigner.user);
-            } else {
+            .then((response) => {
+                const selectedDesigner = response.data.data;
+                if (selectedDesigner) {
+                    setDesigner(selectedDesigner);
+                    setDesignerUser(selectedDesigner.user);
+                } else {
+                    toast.error('There has been an error getting the designer, please try again!');
+                }
+            })
+            .catch((error) => {
                 toast.error('There has been an error getting the designer, please try again!');
-            }
-        })
-        .catch((error) => {
-            toast.error('There has been an error getting the designer, please try again!');
-        });
+            });
 
         if (currentUser && appointmentscheduleId != 0) {
             getAppointment()
@@ -454,30 +461,30 @@ const ConsultationCalendar = ({ toggleEvent }) => {
     return (
         <>
             <Col lg="3">
-            <div className="appointment-preview-container">
-                <h3 className='mb-3 user-image-calendar'>Designer</h3>
-                    <div className='fw-500 mb-4 user-image-calendar d-flex'> 
-                            {designerUser.image ?
-                                <div
-                                    className='user-photo-calendar me-2'
-                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designerUser.image})` }}
-                                >
-                                </div>
-                                :
-                                    <div
-                                        className='user-photo-calendar me-2'
-                                        style={{ backgroundImage: `url(${UserPlaceholder})` }}
-                                    >
-                                    </div>
-                            }
-                        
+                <div className="appointment-preview-container">
+                    <h3 className='mb-3 user-image-calendar'>Designer</h3>
+                    <div className='fw-500 mb-4 user-image-calendar d-flex'>
+                        {designerUser.image ?
+                            <div
+                                className='user-photo-calendar me-2'
+                                style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designerUser.image})` }}
+                            >
+                            </div>
+                            :
+                            <div
+                                className='user-photo-calendar me-2'
+                                style={{ backgroundImage: `url(${UserPlaceholder})` }}
+                            >
+                            </div>
+                        }
+
                         <span className='d-flex align-items-center'>
                             {designer?.user?.first_name} {designer?.user?.last_name}
                         </span>
-                 </div>
+                    </div>
 
-                <h3>Appointment Preview</h3>
-            <div>
+                    <h3>Appointment Preview</h3>
+                    <div>
 
                         {selectedDate != "" &&
                             <>
@@ -493,25 +500,25 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                         </> 
                         } */}
 
-                        {consultationFormData.consultation_hour_start != "" && consultationFormData.consultation_hour_end != "" && 
+                        {consultationFormData.consultation_hour_start != "" && consultationFormData.consultation_hour_end != "" &&
                             <>
-                                <p><TfiAlarmClock   size={20} color={'#CEA835'} className='mb-1'/>
-                                <span className="fw-500 current-date">
-                                    {convert24hrTo12hr(consultationFormData.consultation_hour_start)}&nbsp;-&nbsp; 
-                                    {convert24hrTo12hr(consultationFormData.consultation_hour_end)}
-                                </span>
+                                <p><TfiAlarmClock size={20} color={'#CEA835'} className='mb-1' />
+                                    <span className="fw-500 current-date">
+                                        {convert24hrTo12hr(consultationFormData.consultation_hour_start)}&nbsp;-&nbsp;
+                                        {convert24hrTo12hr(consultationFormData.consultation_hour_end)}
+                                    </span>
                                 </p>
                             </>
                         }
 
                         {consultationFormData.timezone != "" &&
                             <>
-                                <p><LuGlobe2 size={20} color={'#CEA835'} className='mb-1'/>
+                                <p><LuGlobe2 size={20} color={'#CEA835'} className='mb-1' />
                                     <span className="fw-500 current-date">{consultationFormData.timezone}</span>
                                 </p>
                             </>
                         }
-                        
+
                         {/* {consultationFormData.first_name != "" &&
                             <>
                                 <p><FaRegUser size={20} color={'#CEA835'} className='mb-1'/>
@@ -522,7 +529,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
                         {consultationFormData.email != "" &&
                             <>
-                                <p><MdOutlineEmail size={20} color={'#CEA835'} className='mb-1'/>
+                                <p><MdOutlineEmail size={20} color={'#CEA835'} className='mb-1' />
                                     <span className="fw-500 current-date">{consultationFormData.email}</span>
                                 </p>
                             </>
@@ -546,18 +553,25 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                         <Row>
                             <Col lg="8">
                                 <div className="schedule-calendar-container">
-                                    <Calendar
-                                        ref={calendarRef}
-                                        localizer={localizer}
-                                        events={events}
-                                        defaultView={Views.MONTH}
-                                        startAccessor="start"
-                                        endAccessor="end"
-                                        onSelectSlot={handleCalendarTimeslotClick}
-                                        selectable
-                                        onView={applyPastDateClass}
-                                        views={views}
-                                    />
+                                <Calendar
+                                    ref={calendarRef}
+                                    localizer={localizer}
+                                    events={events}
+                                    defaultView={Views.MONTH}
+                                    startAccessor="start"
+                                    endAccessor="end"
+                                    onSelectSlot={handleCalendarTimeslotClick}
+                                    selectable
+                                    onView={(view, element) => {
+                                        applyPastDateClass();
+                                        if (view === 'month') {
+                                            // Scroll to today's date when the month view is loaded
+                                            calendarRef.current.getApi().gotoDate(new Date());
+                                        }
+                                    }}
+                                    onRangeChange={applyPastDateClass}
+                                    views={views}
+                                />
                                 </div>
                             </Col>
 
@@ -576,11 +590,11 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                                         {selectedHoursArray.map((time, index) => (
                                                             <div className="timeslots-column" key={index}>
                                                                 <div>
-                                                                    <button 
-                                                                        key={index} 
-                                                                        className={clickedTimeslotButton == index || selectedTime === time ? "btn btn-primary timeslot-btn" : "btn btn-primary"} 
+                                                                    <button
+                                                                        key={index}
+                                                                        className={clickedTimeslotButton == index || selectedTime === time ? "btn btn-primary timeslot-btn" : "btn btn-primary"}
                                                                         onClick={() => handleTimeslotClick({ time, index })}
-                                                                        >
+                                                                    >
                                                                         {time}
                                                                     </button>
                                                                 </div>
@@ -597,14 +611,14 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                                                         </button>
                                                                     )}
                                                                 </div> */}
-                                                                
+
                                                                 <div>
                                                                     {(clickedTimeslotButton == index || selectedTime === time) && (
-                                                                        <button 
-                                                                            key={index} 
-                                                                            className="btn btn-primary timeslot-btn" 
+                                                                        <button
+                                                                            key={index}
+                                                                            className="btn btn-primary timeslot-btn"
                                                                             onClick={() => handleTimeslotNextClick()}
-                                                                            >
+                                                                        >
                                                                             Next
                                                                         </button>
                                                                     )}
@@ -635,7 +649,7 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                                 <Form.Label>Provide any information regarding the details of the meeting.</Form.Label>
                                 <FormControl as="textarea"
                                     name="consultation_details"
-                                    rows={5} 
+                                    rows={5}
                                     value={consultationFormData.consultation_details}
                                     placeholder='I would like to discuss the design specifications, required materials, and other related details.'
                                     onChange={handleChangeConsultation}
@@ -645,10 +659,10 @@ const ConsultationCalendar = ({ toggleEvent }) => {
 
                         {/* temporary, should be inside the form */}
                         <div className="send-btn-container">
-                            <button 
-                                className="btn btn-primary bg-transparent text-black" 
+                            <button
+                                className="btn btn-primary bg-transparent text-black"
                                 onClick={() => { setCurrentStep(1); setConsultationFormData(intitialConsultationData); setSelectedDate(''); setSelectedHoursArray([]); }}
-                                >
+                            >
                                 Cancel
                             </button>
 
@@ -672,32 +686,32 @@ const ConsultationCalendar = ({ toggleEvent }) => {
                             {appointmentscheduleId == 0 || appointmentscheduleId == "0" ? (
                                 <>
                                     {formStatus == "loading" ?
-                                    <>
-                                        <button className="btn btn-primary" disabled>
-                                            Submitting
-                                        </button>
-                                    </>
-                                    :
+                                        <>
+                                            <button className="btn btn-primary" disabled>
+                                                Submitting
+                                            </button>
+                                        </>
+                                        :
                                         <button className="btn btn-primary" onClick={() => addAppointmentSubmit("You are Scheduled!")}>
-                                        Schedule Now
+                                            Schedule Now
                                         </button>
                                     }
                                 </>
                             ) : (
                                 <>
-                                {formStatus == "loading" ?
-                                    <>
-                                        <button className="btn btn-primary" disabled>
-                                            Updating Now
-                                        </button>
-                                    </>
-                                :
-                                    <>
-                                        <button className="btn btn-primary" onClick={() => putAppointmentSubmit("You are Updated!")}>
-                                            Update Now
-                                        </button>
-                                    </> 
-                                }
+                                    {formStatus == "loading" ?
+                                        <>
+                                            <button className="btn btn-primary" disabled>
+                                                Updating Now
+                                            </button>
+                                        </>
+                                        :
+                                        <>
+                                            <button className="btn btn-primary" onClick={() => putAppointmentSubmit("You are Updated!")}>
+                                                Update Now
+                                            </button>
+                                        </>
+                                    }
                                 </>
                             )}
 

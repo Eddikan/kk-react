@@ -7,13 +7,16 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import ReactFlagsSelect from 'react-flags-select';
 import countryCodes from 'Utils/CountryCodes';
+import CountryCurrencyLanguageSelector from './CountryCurrencyLanguageSelector';
 import { BsArrowLeft } from "react-icons/bs";
+import { AiOutlineAntDesign } from "react-icons/ai";
 import { Container, Button, Col, Row } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { BsCartCheck } from "react-icons/bs";
-import { IoCalendarClearOutline, IoCartOutline, IoCloseOutline } from "react-icons/io5";
-import { GoBell, GoHeart, GoAlertFill, GoStar } from "react-icons/go";
+import { IoCalendarClearOutline, IoCartOutline, IoCloseOutline, IoShirtOutline } from "react-icons/io5";
+import { FaCaretDown, FaCaretUp } from "react-icons/fa";
+import { GoBell, GoHeart, GoAlertFill, GoStar, GoGlobe } from "react-icons/go";
 import { BsEnvelope, BsShopWindow } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import { LiaUserTieSolid } from "react-icons/lia";
@@ -42,6 +45,8 @@ const Header = () => {
   const [userBellOpen, setUserBellOpen] = useState(false);
   const [userEnvelopOpen, setUserEnvelopOpen] = useState(false);
   const [userOrdersOpen, setUserOrdersOpen] = useState(false);
+  const [userCountryOpen, setUserCountryOpen] = useState(false);
+  const [userWishlistOpen, setUserWishlistOpen] = useState(false);
   const [userImage, setUserImage] = useState('');
   const [user, setUser] = useState('');
   const [reloadCount, setReloadCount] = useState(0);
@@ -54,13 +59,14 @@ const Header = () => {
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [favorites, setFavorites] = useState([]);
 
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode']);
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'selectedCartItems', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode', 'selectedLanguage', 'selectedCurrency', 'selectedCurrencyCode']);
   const [userType, setUserType] = useState('user');
   const userRef = useRef(null);
   const bellRef = useRef(null);
   const messageRef = useRef(null);
   const wishlistRef = useRef(null);
   const appointmentRef = useRef(null);
+  const countryRef = useRef(null);
   const orderRef = useRef(null);
   const [underConstructionShow, setUnderConstructionShow] = useState(false);
   const [modalHeading, setModalHeading] = useState();
@@ -108,13 +114,6 @@ const Header = () => {
     removeCookie('signup_type', { path: '/' });
   };
 
-  const selectCountry = (code) => {
-    setSelectedCountryCode(code);
-    setSelectedCountry(countryCodes[code]);
-    setCookie('selectedCountry', countryCodes[code], { path: '/' });
-    setCookie('selectedCountryCode', code, { path: '/' });
-  };
-
   // Close the dropdown when clicking outside of it
   const handleClickOutside = (event) => {
     if (userRef.current && !userRef.current.contains(event.target)) {
@@ -129,10 +128,20 @@ const Header = () => {
     if (orderRef.current && !orderRef.current.contains(event.target)) {
       setUserOrdersOpen(false);
     }
+    if (countryRef.current && !countryRef.current.contains(event.target)) {
+      setUserCountryOpen(false);
+    }
+    if (wishlistRef.current && !wishlistRef.current.contains(event.target)) {
+      setUserWishlistOpen(false);
+    }
   };
 
   const toggleUserMenu = () => {
     setUserMenuOpen(!userMenuOpen);
+  };
+
+  const toggleCountryMenu = () => {
+    setUserCountryOpen(!userCountryOpen);
   };
 
   const toggleBellMenu = () => {
@@ -145,6 +154,10 @@ const Header = () => {
 
   const toggleOrdersMenu = () => {
     setUserOrdersOpen(!userOrdersOpen);
+  };
+
+  const toggleWishlistMenu = () => {
+    setUserWishlistOpen(!userWishlistOpen);
   };
 
   const logOut = () => {
@@ -328,7 +341,7 @@ const Header = () => {
 
         fetchData({ currentUser: currentUser, token: token });
 
-      }, 5000);
+      }, 10000);
 
       // Cleanup function to clear the interval
       return () => clearInterval(intervalId);
@@ -545,7 +558,19 @@ const Header = () => {
                       </a>
                     }
 
-                    <div className="user-dropdown nav-link" ref={userRef}>
+                    <div className="country-dropdown nav-link position-relative" ref={countryRef}>
+                      <div className="nav-link header-tooltip cursor-pointer" onClick={toggleCountryMenu}>
+                        <span className="icon-tooltiptext fs-14">Country</span>
+                        <GoGlobe size={26} />
+                      </div>
+                      {userCountryOpen && (
+                        <div className="action-box user-menu country-box">
+                          <CountryCurrencyLanguageSelector />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="user-dropdown nav-link position-relative" ref={userRef}>
                       {userImage ?
                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
                         :
@@ -580,21 +605,30 @@ const Header = () => {
                             </Row>
                           }
 
-                          {userRole !== 'Admin' &&
-                            <ReactFlagsSelect
-                              selected={selectedCountryCode}
-                              onSelect={selectCountry}
-                              fullWidth={true}
-                              placeholder=""
-                              className="mb-2 form-control"
-                            />
-                          }
-
-                          {userRole !== 'Admin' &&
-                            <Link to={`/wishlist`} className="mb-3 text-decoration-none d-block"><GoHeart className='me-2' color='#000000' />
-                              <span className='text-black'>Wishlist</span>
-                            </Link>
-                          }
+                          {userRole !== 'Admin' && (
+                            <>
+                              {userWishlistOpen ?
+                                <Link to={`#`} onClick={toggleWishlistMenu} className="mb-2 text-decoration-none d-block position-relative"><GoHeart className='me-2' color='#000000' />
+                                  <span className='text-black'>Wishlist</span><FaCaretUp style={{ position: 'absolute', right: '0px', top: '3px'}} />
+                                </Link>
+                                :
+                                <Link to={`#`} onClick={toggleWishlistMenu} className="mb-3 text-decoration-none d-block position-relative"><GoHeart className='me-2' color='#000000' />
+                                  <span className='text-black'>Wishlist</span><FaCaretDown style={{ position: 'absolute', right: '0px', top: '3px'}} />
+                                </Link>
+                              }
+                              
+                              {userWishlistOpen && (
+                                <div className="user-wishlist-menu mb-2 ms-3">
+                                  <Link to={`/wishlist`} className="mb-2 text-decoration-none d-block"><IoShirtOutline className='me-2' color='#000000' />
+                                    <span className='text-black'>Fabrics</span>
+                                  </Link>
+                                  <Link to={`/designer/wishlist`} className="text-decoration-none d-block"><AiOutlineAntDesign className='me-2' color='#000000' />
+                                    <span className='text-black'>Designers</span>
+                                  </Link>
+                                </div>
+                              )}
+                             </>
+                          )}
 
                           {userRole !== 'Admin' &&
                             <Link to={`/orders`} className="mb-3 text-decoration-none d-block"><BsCartCheck className='me-2 mb-1' color='#000000' />
@@ -657,6 +691,17 @@ const Header = () => {
                         </div>
                       </div>
                     </a>
+                    <div className="country-dropdown nav-link position-relative" ref={countryRef}>
+                      <div className="nav-link header-tooltip cursor-pointer" onClick={toggleCountryMenu}>
+                        <span className="icon-tooltiptext fs-14">Country</span>
+                        <GoGlobe size={26} />
+                      </div>
+                      {userCountryOpen && (
+                        <div className="action-box user-menu country-box">
+                          <CountryCurrencyLanguageSelector />
+                        </div>
+                      )}
+                    </div>
                     <Nav.Link href="/login">Log in</Nav.Link>
                     <Nav.Link href="/sign-up"><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link>
                   </>
