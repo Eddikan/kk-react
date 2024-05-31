@@ -157,7 +157,7 @@ const Cart = (props) => {
         let cart_total = 0;
         if (cartItems.length > 0 && selectedCartItems.length > 0) {
             cart_total = cartItems.reduce((acc, item) => {
-                if (selectedCartItems.includes(item.id)) {
+                if (selectedCartItems.includes(item.product.id)) {
                     const subtotal = item.product.price * item.quantity;
                     return acc + subtotal;
                 }
@@ -183,13 +183,13 @@ const Cart = (props) => {
                     setCartItems(cartItemsData);
                     if (item && item !== "") {
                         // Extract item ids from cartItemsData and add parseInt(item)
-                        const updatedSelectedCartItems = [...cartItemsData.map(cartItem => cartItem.id), parseInt(item)];
+                        const updatedSelectedCartItems = [...cartItemsData.map(cartItem => cartItem.product.id), parseInt(item)];
                         setSelectedCartItems(updatedSelectedCartItems);
                         setCartLoading(false);
                     } else {
                         // Map over cartItemsData to extract item ids and add them to selectedCartItems
                         if (!selectedCartItems || selectedCartItems.length < 1) {
-                            const updatedSelectedCartItems = cartItemsData.map(cartItem => cartItem.id);
+                            const updatedSelectedCartItems = cartItemsData.map(cartItem => cartItem.product.id);
                             setSelectedCartItems(updatedSelectedCartItems);
                         }
                         setCartLoading(false);
@@ -231,8 +231,13 @@ const Cart = (props) => {
             }
             if (cart_total > 0) {
                 setTempCartTotal(cart_total.toFixed(2));
+                setTotalAmount(cart_total.toFixed(2));
+                setSubtotalAmount(cart_total.toFixed(2));
+
             } else {
                 setTempCartTotal(0.00);
+                setTotalAmount(0.00);
+                setSubtotalAmount(0.00);
             }
         }
 
@@ -278,7 +283,7 @@ const Cart = (props) => {
                                                                 if (selectedCartItems.length === cartItems.length) {
                                                                     setSelectedCartItems([]);
                                                                 } else {
-                                                                    setSelectedCartItems(cartItems.map((cartItem) => cartItem.id));
+                                                                    setSelectedCartItems(cartItems.map((cartItem) => cartItem.product.id));
                                                                 }
                                                             }}
                                                         />
@@ -345,8 +350,8 @@ const Cart = (props) => {
                                                                                         <input
                                                                                             type="checkbox"
                                                                                             className="check-box me-2 check-box-color cursor-pointer"
-                                                                                            checked={selectedCartItems.includes(cartItem.id)}
-                                                                                            onChange={(e) => { handleCheckboxChange(cartItem.id); }}
+                                                                                            checked={selectedCartItems.includes(cartItem.product.id)}
+                                                                                            onChange={(e) => { handleCheckboxChange(cartItem.product.id); }}
                                                                                         />
                                                                                     </Col>
                                                                                     <Col lg={4}>
@@ -567,13 +572,12 @@ const Cart = (props) => {
                                         </Card.Body>
                                     </Card>
                                     <div className="text-right">
-                                        {(selectedCartItems.length < 1 || cartItems.length < 1) && tempCartItems.length < 1 ?
-                                            <button className='btn btn-primary mt-3' disabled={true}>Check Out</button>
-                                            :
+                                        {totalAmount > 0 ?
                                             <Link to="/checkout">
                                                 <button className='btn btn-primary mt-3'>Check Out</button>
                                             </Link>
-                                            
+                                            :
+                                            <button className='btn btn-primary mt-3' disabled={true}>Check Out</button>
                                         }
                                     </div>
                                 </Col>

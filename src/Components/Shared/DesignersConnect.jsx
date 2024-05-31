@@ -16,7 +16,7 @@ import Loading from 'Components/Shared/Loading';
 import axios from 'axios';
 import 'react-multi-carousel/lib/styles.css';
 
-const Designers = (props) => {
+const DesignersConnect = (props) => {
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempDesignerWishlist', 'selectedCountry', 'selectedCountryCode']);
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
@@ -57,9 +57,8 @@ const Designers = (props) => {
 
     }
 
-    const showSignupModal = (e) => {
-        setSignupType(e);
-        setSignupModalShow(true);
+    const handleSelectDesigner = (e) => {
+        props.onSelectDesigner(e);
     }
 
     const handleChangePage = (pageNumber) => {
@@ -142,15 +141,7 @@ const Designers = (props) => {
 
     return (
         <>
-            <Row className='mb-3'>
-                <Col lg="8" className=''>
-                    <h2 className='fs-40'>Designers</h2>
-                </Col>
-                <Col lg="4" className='text-right'>
-                    <GoBack fallBack="/" />
-                </Col>
-            </Row>
-            <div id="profile-designers">
+            <div id="designers">
                 <Row>
                     <Col lg="3">
                         <div className="filter-sidebar pe-4">
@@ -180,110 +171,38 @@ const Designers = (props) => {
                                     <>
                                         <Row>
                                             {designers.map((designer, index) => {
-                                                var wishlist_user_ids = designer.wishlist_user_ids ?? [];
-                                                const userWishlist = wishlist_user_ids.includes(currentUser);
                                                 return (
-                                                    <Col lg={3}>
+                                                    <Col lg={4}>
                                                         <div key={index} className="mb-4 position-relative designer-box-details">
-                                                            {designer.livestream && currentUser && currentUser != "" ?
-                                                                <>
-                                                                    <a href={`/designer/live/stream/${designer.livestream?.id}`} target="_blank">
-                                                                        <button className="btn btn-danger designer-live fw-600"> <BsBroadcast size="22px" /> Live</button>
-                                                                    </a>
-                                                                </>
-                                                                :
-                                                                null
-                                                            }
                                                             {designer.user.image ? (
-                                                                <div onClick={() => toggleGetUser(designer.user.id)} className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})` }}>
+                                                                <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})`, minHeight: '300px' }}>
                                                                     <div className='bg-black-faded cursor-pointer designer-overlay'>
                                                                         <div className="designer-details">
-                                                                            <h3 className="designer-name text-white fs-25 mb-1 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
-                                                                            <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p>
+                                                                            <h3 className="designer-name text-white fs-25 mb-2 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
+                                                                            {/* <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p> */}
+                                                                            <button onClick={() => { handleSelectDesigner(designer); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white">Connect with Designer</button>
                                                                         </div>
                                                                     </div>
+                                                                    {/* <div className="connect-designer-container">
+                                                                        <button onClick={() => { handleSelectDesigner(designer); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white">Connect with Designer</button>
+                                                                    </div> */}
                                                                 </div>
                                                             ) : (
                                                                 <>
-                                                                    <div onClick={() => toggleGetUser(designer.user.id)} className="designers-grid-div w-100" style={{ backgroundImage: `url(${designer.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}>
+                                                                    <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${designer.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})`, minHeight: '300px' }}>
                                                                         <div className='bg-black-faded cursor-pointer designer-overlay'>
                                                                             <div className="designer-details">
-                                                                                <h3 className="designer-name text-white fs-25 mb-1 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
-                                                                                <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p>
+                                                                                <h3 className="designer-name text-white fs-25 mb-2 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
+                                                                                <button onClick={() => { handleSelectDesigner(designer); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white">Connect with Designer</button>
+                                                                                {/* <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p> */}
                                                                             </div>
                                                                         </div>
+                                                                        {/* <div className="connect-designer-container">
+                                                                            <button onClick={() => { handleSelectDesigner(designer); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white ">Connect with Designer</button>
+                                                                        </div> */}
                                                                     </div>
                                                                 </>
                                                             )}
-                                                            {userRole !== 'Admin' && designer.user.id != currentUser ?
-                                                                <>
-                                                                    {currentUser ?
-                                                                        <>
-                                                                            <div className='save-link designer-link'>
-                                                                                {userWishlist ?
-                                                                                    <div className="kouture-tooltip">
-                                                                                        <div className="action-button bg-gold"
-                                                                                            onClick={function () { wishlistDesignerUpdate({ user_id: currentUser, designer_id: designer.id }); }}
-                                                                                        >
-                                                                                            <GoHeart className="text-white" />
-                                                                                        </div>
-                                                                                        <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
-                                                                                            Remove from Wishlist
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    :
-                                                                                    <div className="kouture-tooltip">
-                                                                                        <div className="action-button bg-white"
-                                                                                            onClick={function () { wishlistDesignerUpdate({ user_id: currentUser, designer_id: designer.id }); }}
-                                                                                        >
-                                                                                            <GoHeart className="text-black" />
-                                                                                        </div>
-                                                                                        <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
-                                                                                            Add to Wishlist
-                                                                                        </div>
-                                                                                    </div>
-                                                                                }
-                                                                            </div>
-                                                                        </>
-                                                                        :
-                                                                        // <>
-                                                                        //     <div className='save-link designer-link'>
-                                                                        //         {tempDesignerWishlist.some(wishlistItem => wishlistItem.id === designer.id) ?
-                                                                        //             <div className="kouture-tooltip">
-                                                                        //                 <div
-                                                                        //                     className="action-button bg-gold"
-                                                                        //                     onClick={function () { toggleTempDesignerWishlist({id: designer.id, user_id: currentUser, first_name: designer.user.name, last_name: designer.user.last_name, short_bio: designer.user.short_bio, image_url: designer.image, designer_user_id: designer.user.id}); }}
-                                                                        //                 >
-                                                                        //                     <GoHeart className="text-white" />
-                                                                        //                 </div>
-                                                                        //                 <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
-                                                                        //                     Remove from Wishlist
-                                                                        //                 </div>
-                                                                        //             </div>
-                                                                        //             :
-                                                                        //             <div className="kouture-tooltip">
-                                                                        //                 <div
-                                                                        //                     className="action-button bg-white"
-                                                                        //                     onClick={function () { toggleTempDesignerWishlist({id: designer.id, user_id: currentUser, first_name: designer.user.name, last_name: designer.user.last_name, short_bio: designer.user.short_bio, image_url: designer.image, designer_user_id: designer.user.id}); }}
-                                                                        //                     >
-                                                                        //                     <GoHeart className="text-black" />
-                                                                        //                 </div>
-                                                                        //                 <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
-                                                                        //                     Add to Wishlist
-                                                                        //                 </div>
-                                                                        //             </div>
-                                                                        //         }
-                                                                        //     </div>
-                                                                        // </>
-                                                                        null
-                                                                    }
-                                                                    
-                                                                </>
-                                                                :
-                                                                <>
-
-                                                                </>
-                                                            }
                                                         </div>
                                                     </Col>
                                                 )
@@ -323,4 +242,4 @@ const Designers = (props) => {
     );
 };
 
-export default Designers;
+export default DesignersConnect;

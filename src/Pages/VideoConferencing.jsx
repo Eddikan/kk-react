@@ -8,6 +8,7 @@ import { useCookies } from 'react-cookie';
 import { IoIosInformationCircleOutline } from "react-icons/io";
 import { HiMiniUsers } from "react-icons/hi2";
 import GoBack from 'Components/Shared/GoBack';
+import { FaVideo } from "react-icons/fa";
 import { FiUser, FiMonitor } from "react-icons/fi";
 import { GoAlertFill } from 'react-icons/go';
 import { IoCloseOutline } from "react-icons/io5";
@@ -270,8 +271,9 @@ const VideoConferencing = (props) => {
                                 <Card>
                                     <Card.Body className='card-video'>
                                         <Row>
-                                            <Col lg="12">
-                                                {consultationFormData.role === "" ?
+                                            <Col lg="12" className="text-center">
+                                                <FaVideo className="my-5" size="350px" />
+                                                {/* {consultationFormData.role === "" ?
                                                     <>
                                                         <whereby-embed
                                                             minimal
@@ -292,13 +294,13 @@ const VideoConferencing = (props) => {
                                                             style={{ height: '620px' }}
                                                         />
                                                     </>
-                                                }
+                                                } */}
                                             </Col>
                                         </Row>
                                     </Card.Body>
                                 </Card>
 
-                                <Col lg="12" className='d-flex justify-content-center align-items-center mt-3'>
+                                <Col lg="12" className='d-flex justify-content-center align-items-center mt-3 d-none'>
                                     <div className='d-flex'>
                                         <div className="meeting-tooltip">
                                             <button
@@ -368,6 +370,21 @@ const VideoConferencing = (props) => {
                             </Col>
 
                             <Col lg="4">
+                                <Card className="mb-3">
+                                    <Card.Body>
+                                        <Row>
+                                            <Col lg="12">
+                                                <div className='fw-600 fs-18 text-gold'>Checklist</div>
+                                                <hr />
+                                            </Col>
+
+                                            <Col lg="12">
+                                                <p>1. Upload your measurements</p>
+                                                <p>2. Upload your measurements</p>
+                                            </Col>
+                                        </Row>
+                                    </Card.Body>
+                                </Card>
                                 <Card>
                                     <Card.Body>
                                         {chatShow ?

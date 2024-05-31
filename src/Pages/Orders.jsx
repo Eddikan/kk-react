@@ -277,7 +277,7 @@ const Orders = (props) => {
                                                 <>
                                                     {orders.map((order) => {
                                                         var order_items = order.order_items;
-                                                        var order_product = order_items[0].product;
+                                                        var order_product = order_items[0]?.product;
                                                         if (order_product.image_urls) {
                                                             var image_urls = JSON.parse(order_product.image_urls);
                                                             var cartItemImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;

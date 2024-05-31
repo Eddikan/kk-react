@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom';
 import { VscSend } from "react-icons/vsc";
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { IoMdVideocam, IoIosAttach } from "react-icons/io";
+import { FaEye } from "react-icons/fa";
 import { IoCloseOutline } from "react-icons/io5";
 import { BiSolidPencil } from "react-icons/bi";
 import UserPlaceholder from 'Assets/images/user.png';
@@ -379,10 +380,17 @@ const Appointments = (props) => {
                                                                                         }
 
                                                                                         {/* {currentDate === appointment.consultation_date ? ( */}
-                                                                                        <a href={`/consultation-meeting/${appointment.id}`}>
+                                                                                        {/* <a href={`/consultation-meeting/${appointment.id}`}>
                                                                                             <div className="cursor-pointer appointments-tooltip">
                                                                                                 <span className="icon-tooltiptext fs-14">Video call</span>
                                                                                                 <IoMdVideocam className='video-cam me-3' size={20} color='#000000' />
+                                                                                            </div>
+                                                                                        </a> */}
+
+                                                                                        <a href={`/consultation-meeting/${appointment.id}`}>
+                                                                                            <div className="cursor-pointer appointments-tooltip">
+                                                                                                <span className="icon-tooltiptext fs-14">View Appointment</span>
+                                                                                                <FaEye className='video-cam me-3' size={20} color='#000000' />
                                                                                             </div>
                                                                                         </a>
 
@@ -401,7 +409,7 @@ const Appointments = (props) => {
                                                                                         //     )
                                                                                         // )} */}
 
-                                                                                        <div className="cursor-pointer appointments-tooltip me-3"
+                                                                                        {/* <div className="cursor-pointer appointments-tooltip me-3"
                                                                                             onClick={function () {
                                                                                                 toggleChatbox(
                                                                                                     appointment.id,
@@ -413,7 +421,7 @@ const Appointments = (props) => {
                                                                                         >
                                                                                             <span className="icon-tooltiptext fs-14">Message Designer</span>
                                                                                             <span><AiFillMessage className='video-cam' size={20} color='#000000' /></span>
-                                                                                        </div>
+                                                                                        </div> */}
 
                                                                                         <div
                                                                                             className="cursor-pointer appointments-tooltip"

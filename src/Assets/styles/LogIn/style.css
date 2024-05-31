@@ -18,7 +18,7 @@ section#login .login-container {
     width: 100%;
 }
 
-section#login .login-container .kouture-icon {
+section#login .login-container .kouture-icon, #login-column .kouture-icon {
     max-width: 70px;
     margin-left: auto;
     margin-right: auto;

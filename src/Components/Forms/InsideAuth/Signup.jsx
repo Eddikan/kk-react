@@ -28,7 +28,6 @@ const SignUp = (props) => {
     const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
     const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
 
-
     const handleChange = (e) => {
         setRegisterFormData({
             ...registerFormData,
@@ -38,53 +37,53 @@ const SignUp = (props) => {
 
     const handleInterestChange = (value) => {
         if (interestedIn.includes(value)) {
-          // Remove the value if it's already checked
-          setInterestedIn(interestedIn.filter(item => item !== value));
+            // Remove the value if it's already checked
+            setInterestedIn(interestedIn.filter(item => item !== value));
         } else {
-          // Add the value if it's not checked
-          setInterestedIn([...interestedIn, value]);
+            // Add the value if it's not checked
+            setInterestedIn([...interestedIn, value]);
         }
     };
 
     async function addTempCartToCart(data) {
         // setReorderLoading(true);
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: data.order_items, user_id: data.user_id }).then((response) => {
-          const success = response.data.status;
-          if (success == 'Success') {
-            const data = response.data.data;
-          } else {
-            const errors = response.data.errors;
-            errors.map((error, index) => {
-              toast.error(error);
-              return null; // React requires a return value, so we return null here
-            });
-          }
-          // setReorderLoading(false);
+            const success = response.data.status;
+            if (success == 'Success') {
+                const data = response.data.data;
+            } else {
+                const errors = response.data.errors;
+                errors.map((error, index) => {
+                    toast.error(error);
+                    return null; // React requires a return value, so we return null here
+                });
+            }
+            // setReorderLoading(false);
         }).catch((error) => {
-          // setReorderLoading(false);
-          toast.error('Something went wrong, please contact the administrator!');
+            // setReorderLoading(false);
+            toast.error('Something went wrong, please contact the administrator!');
         });
-      }
-    
-      async function addTempFavoritesToFavorites(data) {
+    }
+
+    async function addTempFavoritesToFavorites(data) {
         // setReorderLoading(true);
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/item/wishlist/bulk', { favorites: data.favorites, user_id: data.user_id }).then((response) => {
-          const success = response.data.status;
-          if (success == 'Success') {
-            const data = response.data.data;
-          } else {
-            const errors = response.data.errors;
-            errors.map((error, index) => {
-              toast.error(error);
-              return null; // React requires a return value, so we return null here
-            });
-          }
-          // setReorderLoading(false);
+            const success = response.data.status;
+            if (success == 'Success') {
+                const data = response.data.data;
+            } else {
+                const errors = response.data.errors;
+                errors.map((error, index) => {
+                    toast.error(error);
+                    return null; // React requires a return value, so we return null here
+                });
+            }
+            // setReorderLoading(false);
         }).catch((error) => {
-          // setReorderLoading(false);
-          toast.error('Something went wrong, please contact the administrator!');
+            // setReorderLoading(false);
+            toast.error('Something went wrong, please contact the administrator!');
         });
-      }
+    }
 
     async function registerSubmit(e) {
         e.preventDefault();
@@ -105,7 +104,7 @@ const SignUp = (props) => {
                     addTempFavoritesToFavorites({ favorites: tempFavorites, user_id: user.id });
                     removeCookie('tempFavorites', { path: '/' });
                 }
-
+                
                 setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
                 setCookie('userRole', JSON.stringify(user.role), { path: '/' });
                 const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type }
@@ -239,43 +238,43 @@ const SignUp = (props) => {
                                         <Form.Group className='mb-3'>
                                             <Form.Label className="mb-3">I'm interested in...</Form.Label>
                                             <div className="interests">
-                                            <Form.Label className="me-3" style={{minWidth: '90px'}}>
-                                                <input
-                                                type="checkbox"
-                                                checked={interestedIn.includes('Men')}
-                                                onChange={() => handleInterestChange('Men')}
-                                                className="d-inline-block vertical-align-middle me-1"
-                                                />
-                                                <span>Men</span>
-                                            </Form.Label>
-                                            <Form.Label style={{minWidth: '90px'}}>
-                                                <input
-                                                type="checkbox"
-                                                checked={interestedIn.includes('Baby/Toddlers')}
-                                                onChange={() => handleInterestChange('Baby/Toddlers')}
-                                                className="d-inline-block vertical-align-middle me-1"
-                                                />
-                                                <span>Baby/Toddlers</span>
-                                            </Form.Label>
-                                            <br />
-                                            <Form.Label className="me-3" style={{minWidth: '90px'}}>
-                                                <input
-                                                type="checkbox"
-                                                checked={interestedIn.includes('Women')}
-                                                onChange={() => handleInterestChange('Women')}
-                                                className="d-inline-block vertical-align-middle me-1"
-                                                />
-                                                <span>Women</span>
-                                            </Form.Label>
-                                            <Form.Label style={{minWidth: '90pxs'}}>
-                                                <input
-                                                type="checkbox"
-                                                checked={interestedIn.includes('Others')}
-                                                onChange={() => handleInterestChange('Others')}
-                                                className="d-inline-block vertical-align-middle me-1"
-                                                />
-                                                <span>Others</span>
-                                            </Form.Label>
+                                                <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={interestedIn.includes('Men')}
+                                                        onChange={() => handleInterestChange('Men')}
+                                                        className="d-inline-block vertical-align-middle me-1"
+                                                    />
+                                                    <span>Men</span>
+                                                </Form.Label>
+                                                <Form.Label style={{ minWidth: '90px' }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={interestedIn.includes('Baby/Toddlers')}
+                                                        onChange={() => handleInterestChange('Baby/Toddlers')}
+                                                        className="d-inline-block vertical-align-middle me-1"
+                                                    />
+                                                    <span>Baby/Toddlers</span>
+                                                </Form.Label>
+                                                <br />
+                                                <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={interestedIn.includes('Women')}
+                                                        onChange={() => handleInterestChange('Women')}
+                                                        className="d-inline-block vertical-align-middle me-1"
+                                                    />
+                                                    <span>Women</span>
+                                                </Form.Label>
+                                                <Form.Label style={{ minWidth: '90pxs' }}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={interestedIn.includes('Others')}
+                                                        onChange={() => handleInterestChange('Others')}
+                                                        className="d-inline-block vertical-align-middle me-1"
+                                                    />
+                                                    <span>Others</span>
+                                                </Form.Label>
                                             </div>
                                         </Form.Group>
                                         <Form.Group className='mb-3'>

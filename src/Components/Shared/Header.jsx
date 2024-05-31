@@ -111,7 +111,15 @@ const Header = () => {
     removeCookie('currentUserSeller', { path: '/' });
     removeCookie('isLoggedIn', { path: '/' });
     removeCookie('userRole', { path: '/' });
-    removeCookie('signup_type', { path: '/' });
+    removeCookie('selectedCartItems', { path: '/' });
+    removeCookie('tempCart', { path: '/' });
+    removeCookie('tempFavorites', { path: '/' });
+    removeCookie('selectedCountry', { path: '/' });
+    removeCookie('selectedCountryCode', { path: '/' });
+    removeCookie('selectedLanguage', { path: '/' });
+    removeCookie('selectedCurrency', { path: '/' });
+    removeCookie('selectedCurrencyCode', { path: '/' });
+
   };
 
   // Close the dropdown when clicking outside of it
@@ -225,7 +233,7 @@ const Header = () => {
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, []);
+  }, [cookies]);
 
   const fetchData = async (e) => {
     try {
@@ -265,21 +273,21 @@ const Header = () => {
           toast.error('There has been an error getting the date, please try again!');
         });
 
-      getUserOrders()
-        .then((response) => {
-          const userOrder = response.data.data;
-          if (userOrder) {
-            setUserOrders(userOrder);
-            setUserOrdersLoading(false);
-          } else {
-            toast.error('There has been an error getting the orders, please try again!');
-            setUserOrdersLoading(false);
-          }
-        })
-        .catch((error) => {
-          toast.error('There has been an error getting the orders, please try again!');
-          setUserOrdersLoading(false);
-        });
+      // getUserOrders()
+      //   .then((response) => {
+      //     const userOrder = response.data.data;
+      //     if (userOrder) {
+      //       setUserOrders(userOrder);
+      //       setUserOrdersLoading(false);
+      //     } else {
+      //       toast.error('There has been an error getting the orders, please try again!');
+      //       setUserOrdersLoading(false);
+      //     }
+      //   })
+      //   .catch((error) => {
+      //     toast.error('There has been an error getting the orders, please try again!');
+      //     setUserOrdersLoading(false);
+      //   });
 
       getNotifications()
         .then((response) => {
@@ -296,20 +304,6 @@ const Header = () => {
           toast.error('There has been an error getting the notifications, please try again!');
           setNotificationsLoading(false);
         });
-
-      getUserCartItems()
-        .then((response) => {
-          const selectedCartItem = response.data.data;
-          if (selectedCartItem) {
-            const totalQuantity = getTotalQuantity(selectedCartItem);
-            setCartItemCount(totalQuantity);
-          } else {
-            toast.error('There has been an error getting the notifications, please try again!');
-          }
-        })
-        .catch((error) => {
-          toast.error('There has been an error getting the notifications, please try again!');
-        });
     } else {
       if (tempCart) {
         const totalQuantity = getTotalQuantity(tempCart);
@@ -320,7 +314,7 @@ const Header = () => {
         setFavoritesCount(totalFavoritesCount);
       }
     }
-  }, [reloadCount]);
+  }, [cookies, reloadCount]);
 
   useEffect(() => {
     if (currentUser) {

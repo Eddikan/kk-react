@@ -171,7 +171,7 @@ const Home = (props) => {
                 <h3 className="text-center fw-600 mb-5">I am interested in...</h3>
                 <Row>
                   <Col lg="4">
-                    <Link to="/designers" className="text-decoration-none">
+                    <Link to="/designers" onClick={() => setUserModalShow(false) } className="text-decoration-none">
                       {/* onClick={() => showSignupModal('user_designer')} */}
                       <Card className="cursor-pointer bg-white border-gold-hover border-solid-2">
                         <Card.Body>
@@ -186,7 +186,7 @@ const Home = (props) => {
                     </Link>
                   </Col>
                   <Col lg="4">
-                    <Link to="/fabrics" className="text-decoration-none">
+                    <Link to="/fabrics" onClick={() => setUserModalShow(false)} className="text-decoration-none">
                       {/* onClick={() => handleShowFabrics()} */}
                       <Card className="cursor-pointer bg-white border-gold-hover border-solid-2">
                         <Card.Body>
@@ -201,7 +201,7 @@ const Home = (props) => {
                     </Link>
                   </Col>
                   <Col lg="4">
-                    <Link to="/designs" className="text-decoration-none">
+                    <Link to="/designs" onClick={() => setUserModalShow(false)} className="text-decoration-none">
                       {/* onClick={() => handleShowDesigns()} */}
                       <Card className="cursor-pointer bg-white border-gold-hover border-solid-2">
                         <Card.Body>
