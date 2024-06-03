@@ -76,15 +76,7 @@ const SignUp = () => {
         const user_details = { currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at }
         setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
         setCookie('signup_type', selectedUser.signup_type, { path: '/' });
-        if (selectedUser.signup_type == "user_designer") {
-          navigate("/designers");
-        } else if (selectedUser.signup_type == "user_fabric") {
-          navigate("/fabrics");
-        } else if (selectedUser.signup_type == "user_design") {
-          navigate("/designs");
-        } else {
-          navigate("/questionnaire");
-        }
+        navigate("/questionnaire?type="+selectedUser.signup_type);
 
       } else {
         const message = 'There has been an error getting the user, please try again!';
@@ -160,12 +152,12 @@ const SignUp = () => {
         const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type }
         setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
         let signupTypeOption = "";
-        if (signupType == "user" && signupOption == "designers") {
-          signupTypeOption = "user_designer";
-        } else if (signupType == "user" && signupOption == "fabrics") {
-          signupTypeOption = "user_fabric";
-        } else if (signupType == "user" && signupOption == "designs") {
-          signupTypeOption = "user_design";
+        if (signupType == "designer") {
+          signupTypeOption = "designer";
+        } else if (signupType == "seller") {
+          signupTypeOption = "seller";
+        } else if (signupType == "designer_seller") {
+          signupTypeOption = "designer_seller";
         } else {
           signupTypeOption = signupType;
         }
@@ -199,30 +191,28 @@ const SignUp = () => {
   useEffect(() => {
     if (currentUser && currentUser !== "") {
       // toast.error("You are already logged in!");
-      if (signupType == "user" && signupOption == "designers") {
-        navigate("/designers");
-      } else if (signupType == "user" && signupOption == "fabrics") {
-        navigate("/fabrics");
-      } else if (signupType == "user" && signupOption == "designs") {
-        navigate("/designs");
+      if (signupType == "customer") {
+        navigate("/");
+      } else if (signupType == "designer") {
+        navigate("/user/center/calendar");
+      } else if (signupType == "seller") {
+        navigate("/user/center/calendar");
+      } else if (signupType == "designer_seller") {
+        navigate("/user/center/calendar");
+      } else {
+        navigate("/user/center/calendar");
       }
-    } else if (!signupType) {
-      setSignupType("normal");
     }
 
     let signupTypeOption = "";
-    if (signupType && signupOption) {
-      if (signupType == "user" && signupOption == "designers") {
-        signupTypeOption = "user_designer";
-      } else if (signupType == "user" && signupOption == "fabrics") {
-        signupTypeOption = "user_fabric";
-      } else if (signupType == "user" && signupOption == "designs") {
-        signupTypeOption = "user_design";
-      }
-    } else if (signupType) {
-      signupTypeOption = signupType;
+    if (signupType == "designer") {
+      signupTypeOption = "designer";
+    } else if (signupType == "seller") {
+      signupTypeOption = "seller";
+    } else if (signupType == "designer_seller") {
+      signupTypeOption = "designer_seller";
     } else {
-      signupTypeOption = "normal"
+      signupTypeOption = signupType;
     }
 
     setRegisterFormData({
@@ -230,7 +220,7 @@ const SignUp = () => {
       signup_type: signupTypeOption,
       is_designer: signupType == "designer" ? 1 : 0,
       is_seller: signupType == "seller" ? 1 : 0,
-      completed_questionnaire: signupType == "user" ? 1 : 0,
+      completed_questionnaire: signupType == "customer" ? 1 : 0,
     });
   }, [currentUser, signupType]);
 
@@ -317,7 +307,7 @@ const SignUp = () => {
                     <Form.Label>Confirm Password</Form.Label>
                     <FormControl type='password' name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
                   </Form.Group>
-                  <Form.Group className='mb-3'>
+                  {/* <Form.Group className='mb-3'>
                     <Form.Label className="mb-3">I'm interested in...</Form.Label>
                     <div className="interests">
                       <Form.Label className="me-3" style={{minWidth: '90px'}}>
@@ -362,7 +352,7 @@ const SignUp = () => {
                   <Form.Group className='mb-3'>
                     <Form.Label>Event Date</Form.Label>
                     <FormControl type='date' name='event_date' onChange={handleChange} className='mr-sm-2' required />
-                  </Form.Group>
+                  </Form.Group> */}
                   <div className="alert alert-primary mb-0 small lh-1-7" role="alert">
                     As part of our ongoing commitment to security and user safety, we are requiring users to provide a valid identification document for access to certain enhanced features on our platform.
                   </div>

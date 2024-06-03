@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../Components/Layout/Layout';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import Designers from 'Components/Shared/Designers';
 import '../Assets/styles/Home/style.css'
@@ -21,6 +21,7 @@ import Signup from 'Components/Forms/User/Signup'
 import HeroLoggedIn from 'Components/Pages/Home/HeroLoggedIn';
 
 const Home = (props) => {
+  const navigate = useNavigate();
   const [fullscreen, setFullscreen] = useState(true);
   const [userModalShow, setUserModalShow] = useState(false);
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
@@ -33,7 +34,7 @@ const Home = (props) => {
 
   const [fabricsModalShow, setFabricsModalShow] = useState(false);
   const [designsModalShow, setDesignsModalShow] = useState(false);
-  const [marketplaceFlowShow, setMarketplaceFlowShow] = useState(false);
+  const [setupShopShow, setSetupShopShow] = useState(false);
 
   const [signupModalShow, setSignupModalShow] = useState(false);
   const [signupType, setSignupType] = useState('');
@@ -48,8 +49,8 @@ const Home = (props) => {
     setFabricsModalShow(true);
   }
 
-  const toggleMarketplaceFlow = () => {
-    setMarketplaceFlowShow(!marketplaceFlowShow);
+  const toggleSetupShopShow = () => {
+    setSetupShopShow(!setupShopShow);
   }
 
   const handleShowDesigns = () => {
@@ -96,8 +97,8 @@ const Home = (props) => {
                 null
                 :
                 <>
-                  <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>Explore</Button>
-                  <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => toggleMarketplaceFlow()}>Explore Marketplace</Button>
+                  <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>Explore Marketplace</Button>
+                  <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => toggleSetupShopShow()}>Set Up Shop </Button>
                 </>
                 // <>
                 //   <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>I'm Just Browsing</Button>
@@ -286,16 +287,56 @@ const Home = (props) => {
         </Modal.Body>
       </Modal>
 
-      {/* Fabrics */}
-      <Modal show={marketplaceFlowShow} fullscreen={false} onHide={() => setMarketplaceFlowShow(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title></Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Container className="h-100">
-            <Row className="h-100">
-              <Col lg="12" className="pb-100">
-                <h2 className="mb-4 fw-600">Marketplace Flow</h2>
+      {/* Setup Shop  */}
+      <Modal show={setupShopShow} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setSetupShopShow(false)}>
+        <Modal.Body className="py-5">
+          <button type="button" className="btn-close no-header-close" onClick={() => setSetupShopShow(false)} aria-label="Close"></button>
+          <Container className="narrow-850 h-100">
+            <Row className=" align-items-center h-100">
+              <Col lg="12">
+                {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
+                <h3 className="text-left fw-600 mb-5">Set Up Shop</h3>
+                <Row>
+                  <Col lg="12" className="mb-3">
+                    {/* onClick={() => showSignupModal('user_designer')} */}
+                    <Card onClick={() => navigate('/sign-up?type=designer') } className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                      <Card.Body>
+                        <div className="user-box">
+                          <div>
+                            <img src={DesignerIcon} alt="Designers" />
+                            <h3 className="fw-600">I am a designer</h3>
+                          </div>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                  <Col lg="12" className="mb-3">
+                    {/* onClick={() => handleShowFabrics()} */}
+                    <Card onClick={() => navigate('/sign-up?type=seller') } className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                      <Card.Body>
+                        <div className="user-box">
+                          <div>
+                            <img src={FabricIcon} alt="Fabrics" />
+                            <h3 className="fw-600">I am a fabric vendor</h3>
+                          </div>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                  <Col lg="12">
+                    {/* onClick={() => handleShowDesigns()} */}
+                    <Card onClick={() => navigate('/sign-up?type=designer_seller') } className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                      <Card.Body>
+                        <div className="user-box">
+                          <div>
+                            <img src={DesignIcon} alt="Designs" />
+                            <h3 className="fw-600">I am both a designer and a fabric vendor</h3>
+                          </div>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </Container>
