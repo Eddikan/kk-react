@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Modal, Container, Row, Col, Button, Form, Card } from 'react-bootstrap';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
+import Countries from 'Utils/Countries';
 import { IoShirtSharp } from 'react-icons/io5';
 import toast from 'react-hot-toast';
 import Pagination from 'Components/Pagination/Pagination';
@@ -117,13 +118,14 @@ const Designers = (props) => {
     };
 
     useEffect(() => {
+        setDesignersLoading(true);
         getDesigners()
             .then((response) => {
-                setDesignersLoading(false);
                 const selectedDesigners = response.data.data;
                 if (selectedDesigners) {
                     setDesigners(selectedDesigners);
                     setPageCount(() => response.data.meta.total);
+                    setDesignersLoading(false);
                 } else {
                     toast.error('There has been an error getting the designers, please try again!');
                     setDesignersLoading(false);
@@ -134,6 +136,11 @@ const Designers = (props) => {
                 setDesignersLoading(false);
             });
     }, [reloadCount, selectedCountry]);
+
+    const handleChangeCountry = (e) => {
+        const {name, value} = e.target;
+        setSelectedCountry(value ?? '');
+    };
 
     useEffect(() => {
         // Only run the filter API call after the component has mounted
@@ -162,15 +169,34 @@ const Designers = (props) => {
                                             <option key={option.value} value={option.value}>{option.label}</option>
                                         ))}
                                     </Form.Control>
-                                    <Form.Label className="fw-600">Categories</Form.Label>
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`All`}
-                                        name={`day`}
-                                        className={`mb - 2`}
-                                        // onChange={(e) => handleChangeAllCategories(e.target.checked)}
-                                        // checked={portfolioCategories.length == selectedCategories.length || selectedAllCategories}
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Country</Form.Label>
+                                        <Form.Control
+                                            as='select'
+                                            name='country'
+                                            value={selectedCountry}
+                                            className='mr-sm-2'
+                                            onChange={handleChangeCountry}
+                                        >
+                                            <option value=''>Select Country</option>
+                                            {Countries.map((country, index) => (
+                                                <option key={country + "-" + index} value={country}>
+                                                    {country}
+                                                </option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Categories</Form.Label>
+                                        <Form.Check
+                                            type={`checkbox`}
+                                            label={`All`}
+                                            name={`day`}
+                                            className={`mb - 2`}
+                                            // onChange={(e) => handleChangeAllCategories(e.target.checked)}
+                                            // checked={portfolioCategories.length == selectedCategories.length || selectedAllCategories}
                                     />
+                                    </Form.Group>
                                 </div>
                             </Col>
                             <Col lg="9">
@@ -179,7 +205,11 @@ const Designers = (props) => {
                                         {/* <p className='text-center mb-3 mt-3'>
                                             Loading...
                                         </p> */}
-                                        <Loading className="bg-white" />
+                                        <Card className="text-center">
+                                            <Card.Body>
+                                                <Loading className="bg-white py-0" />
+                                            </Card.Body>
+                                        </Card>
                                     </>
                                     :
                                     <>
@@ -304,17 +334,18 @@ const Designers = (props) => {
                                                             onPageChange={page => handleChangePage(page)}
                                                         />
                                                         :
-                                                        // <Col lg={12} className="text-center mt-4">
-                                                        //     <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_designer')}>View More</Button>
-                                                        // </Col>
-                                                        null
+                                                        <Col lg={12} className="text-center mt-4">
+                                                            <Link to="/sign-up?type=customer&option=designers">
+                                                                <Button type="button" className="btn-primary" variant="primary">View More</Button>
+                                                            </Link>
+                                                        </Col>
                                                     }
                                                 </Row>
                                             </>
                                         ) : (
                                             <Card className="text-center">
                                                 <Card.Body>
-                                                    <IoShirtSharp size="60px" className="mt-2" />
+                                                    <IoShirtSharp size="50px" className="mt-2" />
                                                     <p className="text-center fs-20 mb-2 mt-3">No records found.</p>
                                                 </Card.Body>
                                             </Card>
@@ -323,8 +354,6 @@ const Designers = (props) => {
                                 }
                             </Col>
                         </Row>
-
-
                     </div>
                 </Container>
             </section>

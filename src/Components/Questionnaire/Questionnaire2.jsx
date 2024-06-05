@@ -29,6 +29,7 @@ const Questionnaire2 = (props) => {
     const navigate = useNavigate();
     const currentStep = props.step;
     const user = props.user;
+    const signupType = props.signupType;
 
     const [questionnaire2Data, setQuestionnaire2Data] = useState(initialQuestionnaire2Data);
     const [questionnaire2Loading, setQuestionnaire2Loading] = useState(false);
@@ -53,7 +54,7 @@ const Questionnaire2 = (props) => {
 
     const token = cookies.token;
     const currentUser = cookies.currentUser;
-    const signupType = cookies.signup_type;
+    const selectedSignupType = cookies.signup_type;
 
     const fetchData = async (e) => {
         try {
@@ -135,7 +136,11 @@ const Questionnaire2 = (props) => {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?user_id=' + currentUser + '&token=' + token, { ...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, pricing_structure: pricingStructure, post_type: postType }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
-                hideAll(3);
+                if (signupType == "designer_seller" || selectedSignupType == "designer_seller") {
+                    hideAll(3);
+                } else {
+                    hideAll(4);
+                }
                 setQuestionnaire2Loading(false);
                 const data = response.data.data;
                 setCookie('currentUserDesigner', JSON.stringify(data.id), { path: '/' });
@@ -215,7 +220,8 @@ const Questionnaire2 = (props) => {
             <Container className='q1 narrow-750 py-5 px-4 mt-5 text-dgray'>
                 <Row>
                     <Col lg='12' className='text-center'>
-                        <h2 className='form-title pb-2 mb-3'>Showcase the rich textures, and pattern of your fabrics</h2>
+                        {/* <h2 className='form-title pb-2 mb-3'>Showcase the rich textures, and pattern of your fabrics</h2> */}
+                        <h2 className='form-title pb-2 mb-3'>Showcase your designs</h2>
                     </Col>
                 </Row>
                 <Form onSubmit={questionnaire2Submit}>
@@ -298,7 +304,7 @@ const Questionnaire2 = (props) => {
                                                                 onClick={toggleuploadFile}
                                                                 type="button"
                                                             >
-                                                                Upload Your First Shot
+                                                                Upload your designs
                                                             </Button>
                                                         </Col>
                                                     </Row>
@@ -319,7 +325,7 @@ const Questionnaire2 = (props) => {
                                                             onClick={toggleuploadFile}
                                                             type="button"
                                                         >
-                                                            Upload Your First Shot
+                                                            Upload your designs
                                                         </Button>
                                                     </Col>
                                                 </Row>
@@ -334,7 +340,7 @@ const Questionnaire2 = (props) => {
                                         Design Process Insights
                                     </Form.Label>
                                     <Form.Label className="mb-3 mt-1 small">
-                                        Provider information about your design process, from ideation to creation.
+                                        Provide information about your design process, from ideation to creation.
                                     </Form.Label>
                                     <Form.Group>
                                         <Form.Control
@@ -441,8 +447,11 @@ const Questionnaire2 = (props) => {
                             </Card>
                             <Card className='mb-4 border-white'>
                                 <CardBody>
-                                    <Form.Label className='mb-3 fs-18 d-block'>
+                                    <Form.Label className='mb-1 fs-18 d-block'>
                                         Design Inspirations and Influences
+                                    </Form.Label>
+                                    <Form.Label className="mb-3 mt-1 small">
+                                        Briefly describe the inspirations and influences that shape your design work.
                                     </Form.Label>
                                     <Form.Group>
                                         <Form.Control
@@ -477,10 +486,16 @@ const Questionnaire2 = (props) => {
                     </Row>
                     <Row>
                         <Col lg="12" className="text-right">
-                            {signupType == "designer" ?
-                                null
+                            {signupType == "designer" ||  signupType == "designer_seller"?
+                                <>  
+                                    {selectedSignupType != "designer" && selectedSignupType != "designer_seller" ?
+                                        <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(0); }}>Back</Button>
+                                        :
+                                        null
+                                    }
+                                </>
                                 :
-                                <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(2); }}>Back</Button>
+                                <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(0); }}>Back</Button>
                             }
                             {questionnaire2Loading ?
                                 <Button className='btn-primary me-3' type="button">Saving...</Button>

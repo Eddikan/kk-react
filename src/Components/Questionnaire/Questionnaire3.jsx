@@ -27,6 +27,7 @@ const Questionnaire3 = (props) => {
     const navigate = useNavigate();
     const currentStep = props.step;
     const user = props.user;
+    const signupType = props.signupType;
 
     const [questionnaire3Data, setQuestionnaire3Data] = useState(initialQuestionnaire3Data);
     const [questionnaire3Loading, setQuestionnaire3Loading] = useState(false);
@@ -52,7 +53,7 @@ const Questionnaire3 = (props) => {
 
     const token = cookies.token;
     const currentUser = cookies.currentUser;
-    const signupType = cookies.signup_type;
+    const selectedSignupType = cookies.signup_type;
 
     const fetchData = async (e) => {
         try {
@@ -212,7 +213,8 @@ const Questionnaire3 = (props) => {
             <Container className='q1 narrow-750 py-5 px-4 mt-5 text-dgray'>
                 <Row>
                     <Col lg='12' className='text-center'>
-                        <h2 className='form-title pb-2 mb-3'>Showcase the rich textures, and pattern of your fabrics</h2>
+                        {/* <h2 className='form-title pb-2 mb-3'>Showcase the rich textures, and pattern of your fabrics</h2> */
+                        <h2 className='form-title pb-2 mb-3'>Showcase your fabrics</h2>}
                     </Col>
                 </Row>
                 <Form onSubmit={questionnaire3Submit}>
@@ -307,7 +309,7 @@ const Questionnaire3 = (props) => {
                                                                 onClick={toggleuploadFile}
                                                                 type="button"
                                                             >
-                                                                Upload
+                                                                Upload your fabrics
                                                             </Button>
                                                         </Col>
                                                     </Row>
@@ -319,16 +321,16 @@ const Questionnaire3 = (props) => {
                                                 <Row className="align-items-center text-center my-5">
                                                     <Col>
                                                         <Form.Label className="mb-1 fs-20">
-                                                            Upload your design
+                                                            Upload your products 
                                                         </Form.Label>
                                                         <Form.Label className="mb-4 fs-16 mt-1 small">
-                                                            Showcase your best work, get feedback, likes, and join a growing community.
+                                                            Share your fabric snapshot to uncover a realm of creative possibilities.
                                                         </Form.Label>
                                                         <Button className='btn-primary'
                                                             onClick={toggleuploadFile}
                                                             type="button"
                                                         >
-                                                            Upload Your First Shot
+                                                            Upload your fabrics
                                                         </Button>
                                                     </Col>
                                                 </Row>
@@ -343,7 +345,7 @@ const Questionnaire3 = (props) => {
                                         Fabric Process Insights
                                     </Form.Label>
                                     <Form.Label className="mb-3 mt-1 small">
-                                        Provider information about fabric.
+                                        Provide information about fabric.
                                     </Form.Label>
                                     <Form.Group>
                                         <Form.Control
@@ -454,10 +456,18 @@ const Questionnaire3 = (props) => {
                     </Row>
                     <Row>
                         <Col lg="12" className="text-right">
-                            {signupType == "seller" ?
-                                null
+                            {signupType == "seller" ||  signupType == "designer_seller" ?
+                                <> 
+                                    {signupType == "designer_seller" && selectedSignupType == "designer_seller"?
+                                        <>
+                                            <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(2); }}>Back</Button>
+                                        </>
+                                        :
+                                        <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(0); }}>Back</Button>
+                                    }
+                                </>
                                 :
-                                <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(3); }}>Back</Button>
+                                <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(0); }}>Back</Button>
                             }
                             {questionnaire3Loading ?
                                 <Button className='btn-primary me-3' type="button">Saving...</Button>

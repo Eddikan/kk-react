@@ -599,7 +599,7 @@ const Cart = (props) => {
                                                                                     </Form.Label>
                                                                                     <FormControl
                                                                                         type="text"
-                                                                                        name="first_name"
+                                                                                        name="delivery_first_name"
                                                                                         value={checkOutFormData.delivery_first_name}
                                                                                         onChange={handleChangePaymentInfo}
                                                                                         id="first_name"
@@ -612,7 +612,7 @@ const Cart = (props) => {
                                                                                     </Form.Label>
                                                                                     <FormControl
                                                                                         type="text"
-                                                                                        name="last_name"
+                                                                                        name="delivery_last_name"
                                                                                         value={checkOutFormData.delivery_last_name}
                                                                                         onChange={handleChangePaymentInfo}
                                                                                         id="last_name"
@@ -629,7 +629,7 @@ const Cart = (props) => {
                                                                                     </Form.Label>
                                                                                     <FormControl
                                                                                         type="email"
-                                                                                        name="email"
+                                                                                        name="delivery_email"
                                                                                         value={checkOutFormData.delivery_email}
                                                                                         onChange={handleChangePaymentInfo}
                                                                                         id="email"
@@ -642,7 +642,7 @@ const Cart = (props) => {
                                                                                     </Form.Label>
                                                                                     <FormControl
                                                                                         type="text"
-                                                                                        name="phone"
+                                                                                        name="delivery_phone"
                                                                                         value={checkOutFormData.delivery_phone}
                                                                                         onChange={handleChangePaymentInfo}
                                                                                         id="phone"
@@ -657,7 +657,7 @@ const Cart = (props) => {
                                                                             </Form.Label>
                                                                             <FormControl
                                                                                 type="text"
-                                                                                name="address_line_1"
+                                                                                name="delivery_address_line_1"
                                                                                 value={checkOutFormData.delivery_address_line_1}
                                                                                 onChange={handleChangePaymentInfo}
                                                                                 id="address_line_1"
@@ -670,7 +670,7 @@ const Cart = (props) => {
                                                                             </Form.Label>
                                                                             <FormControl
                                                                                 type="text"
-                                                                                name="address_line_2"
+                                                                                name="delivery_address_line_2"
                                                                                 value={checkOutFormData.delivery_address_line_2}
                                                                                 onChange={handleChangePaymentInfo}
                                                                                 id="address_line_2"
@@ -685,7 +685,7 @@ const Cart = (props) => {
                                                                                     </Form.Label>
                                                                                     <FormControl
                                                                                         type="text"
-                                                                                        name="city"
+                                                                                        name="delivery_city"
                                                                                         value={checkOutFormData.delivery_city}
                                                                                         onChange={handleChangePaymentInfo}
                                                                                         id="city"
@@ -698,7 +698,7 @@ const Cart = (props) => {
                                                                                     </Form.Label>
                                                                                     <FormControl
                                                                                         type="text"
-                                                                                        name="province"
+                                                                                        name="delivery_province"
                                                                                         value={checkOutFormData.delivery_province}
                                                                                         onChange={handleChangePaymentInfo}
                                                                                         id="province"
@@ -715,7 +715,7 @@ const Cart = (props) => {
                                                                                     </Form.Label>
                                                                                     <FormControl
                                                                                         type="text"
-                                                                                        name="postal_code"
+                                                                                        name="delivery_postal_code"
                                                                                         value={checkOutFormData.delivery_postal_code}
                                                                                         onChange={handleChangePaymentInfo}
                                                                                         id="postal_code"
@@ -726,7 +726,7 @@ const Cart = (props) => {
                                                                                     <Form.Label htmlFor="province" className='mb-2'>
                                                                                         Country
                                                                                     </Form.Label>
-                                                                                    <Form.Control as='select' name='country' value={checkOutFormData.delivery_country} className='' onChange={handleChangePaymentInfo} required>
+                                                                                    <Form.Control as='select' name='delivery_country' value={checkOutFormData.delivery_country} className='' onChange={handleChangePaymentInfo} required>
                                                                                         <option value=''>Select Country</option>
                                                                                         {Countries.map((country, index) => (
                                                                                             <option key={country + "-" + index} value={country}>
@@ -867,7 +867,7 @@ const Cart = (props) => {
                                                                         </>
                                                                         
                                                                     }
-                                                                </Col>-
+                                                                </Col>
                                                             </Row>
                                                         </div>
                                                     </Card.Body>

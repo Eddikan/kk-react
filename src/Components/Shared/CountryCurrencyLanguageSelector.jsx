@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ReactFlagsSelect from 'react-flags-select';
-import countryCodes from 'Utils/CountryCodes';
+import CountryCodes from 'Utils/CountryCodes';
 import CountryData from 'Utils/CountryData';
 import { useCookies } from 'react-cookie';
 
@@ -12,6 +12,13 @@ const CountryCurrencyLanguageSelector = (props) => {
     const [selectedLanguageCode, setSelectedLanguageCode] = useState(cookies.selectedLanguageCode ?? "");
     const [selectedCurrency, setSelectedCurrency] = useState(cookies.selectedCurrency ?? "");
     const [selectedCurrencyCode, setSelectedCurrencyCode] = useState(cookies.selectedCurrency ?? "");
+
+    const customLabels = {
+        '': 'Select a country',
+        ...CountryCodes
+    };
+
+    const countries = ['', ...Object.keys(CountryCodes)];
 
     // Extract unique languages and currencies
     const extractUniqueLanguagesAndCurrencies = (data) => {
@@ -31,7 +38,8 @@ const CountryCurrencyLanguageSelector = (props) => {
 
     const { uniqueLanguages, uniqueCurrencies } = extractUniqueLanguagesAndCurrencies(CountryData);
 
-    const selectCountry = (code) => {
+    const selectCountry = (e) => {
+        const code = e.target.value;
         if (CountryData[code]?.name) {
             setSelectedCountryCode(code);
             setSelectedCountry(CountryData[code].name);
@@ -139,16 +147,17 @@ const CountryCurrencyLanguageSelector = (props) => {
             <div className="country-currency-language-selector p-2">
                 {/* Country Select */}
                 <label className="mb-2">Country</label>
-                <ReactFlagsSelect
-                    selected={selectedCountryCode}
-                    onSelect={selectCountry}
-                    fullWidth={true}
-                    placeholder="Select Country"
-                    className="mb-3 country-selector"
-                    countries={["PH","PF","FJ"]}
-                    blacklistCountries
-                />
-
+                <select 
+                    className="form-control mb-3 cursor-pointer"
+                    value={selectedCountryCode} 
+                    onChange={selectCountry}>
+                        <option value=''>Select a country</option>
+                        {Object.entries(CountryCodes).map(([code, name]) => (
+                            <option key={code} value={code}>
+                                {name}
+                            </option>
+                        ))}
+                </select>
                 {/* Currency Select */}
                 <label className="mb-2">Currency</label>
                 <select

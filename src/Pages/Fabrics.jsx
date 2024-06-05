@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import { IoShirtSharp } from "react-icons/io5";
 import Layout from 'Components/Layout/Layout';
@@ -451,6 +451,24 @@ const Fabrics = (props) => {
                                     </div>
 
                                     <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Country</Form.Label>
+                                        <Form.Control
+                                            as='select'
+                                            name='country'
+                                            value={country}
+                                            className='mr-sm-2'
+                                            onChange={handleChangeCountry}
+                                        >
+                                            <option value=''>Select Country</option>
+                                            {Countries.map((country, index) => (
+                                                <option key={country + "-" + index} value={country}>
+                                                    {country}
+                                                </option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+
+                                    <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Eco-Friendly</Form.Label>
                                         <div className='d-flex'>
                                             <div>
@@ -526,24 +544,6 @@ const Fabrics = (props) => {
                                     </Form.Group> */}
 
                                     <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600">Country</Form.Label>
-                                        <Form.Control
-                                            as='select'
-                                            name='country'
-                                            value={country}
-                                            className='mr-sm-2'
-                                            onChange={handleChangeCountry}
-                                        >
-                                            <option value=''>Select Country</option>
-                                            {Countries.map((country, index) => (
-                                                <option key={country + "-" + index} value={country}>
-                                                    {country}
-                                                </option>
-                                            ))}
-                                        </Form.Control>
-                                    </Form.Group>
-
-                                    <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Price Range</Form.Label>
                                         <Form.Group as={Row} className="mt-3 position-relative">
                                             <MultiRangeSlider min={1} max={100000} onChange={priceRangeChange} />
@@ -575,7 +575,11 @@ const Fabrics = (props) => {
                                 <div id="profile-designs">
                                     {fabricsLoading ?
                                         <>
-                                            <Loading className="bg-white" />
+                                            <Card className="text-center">
+                                                <Card.Body>
+                                                    <Loading className="bg-white py-0" />
+                                                </Card.Body>
+                                            </Card>
                                         </>
                                         :
                                         <>
@@ -736,7 +740,7 @@ const Fabrics = (props) => {
                                                 :
                                                 <Card className="text-center">
                                                     <Card.Body>
-                                                        <IoShirtSharp size="60px" className="mt-2" />
+                                                        <IoShirtSharp size="50px" className="mt-2" />
                                                         <p className="text-center fs-20 mb-2 mt-3">No records found.</p>
                                                     </Card.Body>
                                                 </Card>
@@ -744,16 +748,22 @@ const Fabrics = (props) => {
                                         </>
                                     }
                                 </div>
+                                {currentUser && currentUser != "" ?
+                                    <Pagination
+                                        className="mt-4 mb-0"
+                                        currentPage={currentPage}
+                                        totalCount={pageCount}
+                                        pageSize={PageSize}
+                                        onPageChange={page => handleChangePage(page)}
+                                    />
+                                    :
+                                    <Col lg={12} className="text-center mt-4">
+                                        <Link to="/sign-up?type=customer&option=fabrics">
+                                            <Button type="button" className="btn-primary" variant="primary">View More</Button>
+                                        </Link>
+                                    </Col>
+                                }
                             </Col>
-
-                            <Pagination
-                                className="mt-4 mb-0"
-                                currentPage={currentPage}
-                                totalCount={pageCount}
-                                pageSize={PageSize}
-                                onPageChange={page => handleChangePage(page)}
-                            />
-
                         </Row>
                     </Container>
                 </section>

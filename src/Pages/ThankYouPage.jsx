@@ -31,7 +31,6 @@ const ThankYouPage = (props) => {
                                 Thankyou for your purchase!
                             </div>
                         </Col>
-
                         <Col lg={12}>
                             <p className='fs-20 thank-you text-center mb-5 mt-5'>
                                 Thank you for your purchase! You'll be receiving an email from us shortly. We greatly value your feedback and would appreciate it if you could take a moment to fill out our survey.

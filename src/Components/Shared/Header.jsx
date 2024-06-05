@@ -335,7 +335,7 @@ const Header = () => {
 
         fetchData({ currentUser: currentUser, token: token });
 
-      }, 10000);
+      }, 60000);
 
       // Cleanup function to clear the interval
       return () => clearInterval(intervalId);

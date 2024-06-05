@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Email, domains } from '@smastrom/react-email-autocomplete'
+import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button } from 'react-bootstrap';
@@ -25,13 +26,21 @@ const SignUp = () => {
     return new URLSearchParams(useLocation().search);
   }
   let query = useQuery();
-
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'tempCart', 'tempFavorites']);
+  
   const [signupType, setSignupType] = useState(query.get("type"));
   const [signupOption, setSignupOption] = useState(query.get("option"));
   const [registerFormData, setRegisterFormData] = useState(initialRegisterData);
+  const [googleRegisterFormData, setGoogleRegisterFormData] = useState(null);
   const [registerFormLoading, setRegisterFormLoading] = useState(false);
   const [interestedIn, setInterestedIn] = useState([]);
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'tempCart', 'tempFavorites']);
+  // Signup with Google
+  const [loginFormLoading, setLoginFormLoading] = useState(false);
+  const [googleUser, setGoogleUser] = useState(null);
+  const [googleProfile, setGoogleProfile] = useState(null);
+  const [googleEmail, setGoogleEmail] = useState('');
+  const [googleSignupProfile, setGoogleSignupProfile] = useState(null);
+  const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
 
   const currentUser = cookies.currentUser;
   const isLoggedIn = cookies.isLoggedIn;
@@ -76,7 +85,11 @@ const SignUp = () => {
         const user_details = { currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at }
         setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
         setCookie('signup_type', selectedUser.signup_type, { path: '/' });
-        navigate("/questionnaire?type="+selectedUser.signup_type);
+        if (signupOption && signupOption != "") { 
+          navigate("/questionnaire?option="+signupOption);
+        } else {
+          navigate("/questionnaire");
+        }
 
       } else {
         const message = 'There has been an error getting the user, please try again!';
@@ -218,11 +231,18 @@ const SignUp = () => {
     setRegisterFormData({
       ...registerFormData,
       signup_type: signupTypeOption,
-      is_designer: signupType == "designer" ? 1 : 0,
-      is_seller: signupType == "seller" ? 1 : 0,
-      completed_questionnaire: signupType == "customer" ? 1 : 0,
+      is_designer: signupType == "designer" || signupType == "designer_seller" ? 1 : 0,
+      is_seller: signupType == "seller" || signupType == "designer_seller" ? 1 : 0,
     });
-  }, [currentUser, signupType]);
+
+    setGoogleRegisterFormData({
+      ...googleRegisterFormData,
+      signup_type: signupTypeOption,
+      is_designer: signupType == "designer" || signupType == "designer_seller" ? 1 : 0,
+      is_seller: signupType == "seller" || signupType == "designer_seller" ? 1 : 0,
+    });
+    
+  }, []);
 
   const baseList = [
     'gmail.com',
@@ -232,6 +252,155 @@ const SignUp = () => {
     'msn.com',
     'proton.me',
   ];
+
+  async function createGoogleUser(e) {
+    axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/google/register', {...e, ...googleRegisterFormData}).then((response) => {
+      const success = response.data.status;
+      if (success == 'Success') {
+        const data = response.data.data;
+        const user = data.user;
+        if (user.designer) {
+          setCookie('currentUserDesigner', JSON.stringify(user.designer.id), { path: '/' });
+        }
+        if (user.seller) {
+          setCookie('currentUserSeller', JSON.stringify(user.seller.id), { path: '/' });
+        }
+        if (user.role == 'Admin') {
+          toast.success('Successfully signed in!');
+          setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
+          setCookie('userRole', JSON.stringify(user.role), { path: '/' });
+          const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer }
+          setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+          setCookie('isLoggedIn', true, { path: '/' });
+          setCookie('token', data.token, { path: '/' });
+          setCookie('signup_type', user.signup_type, { path: '/' });
+          setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
+          setCookie('token', data.token, { path: '/' });
+          setTimeout(function () {
+            navigate("/admin/users");
+            setGoogleLoginLoading(false);
+          }, 1000);
+        } else {
+          toast.success('Successfully signed in!');
+          setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
+          setCookie('userRole', JSON.stringify(user.role), { path: '/' });
+          const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer, shop_completed: user.shop_completed, profile_completeness: user.profile_completeness }
+          setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+          setCookie('isLoggedIn', true, { path: '/' });
+          setCookie('token', data.token, { path: '/' });
+          setCookie('signup_type', user.signup_type, { path: '/' });
+          setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
+          setCookie('token', data.token, { path: '/' });
+          setTimeout(function () {
+            getUserDetails(user.id);
+            setGoogleLoginLoading(false);
+          }, 500);
+        }
+
+      } else {
+        const errors = response.data.errors;
+        if (errors.email) {
+          toast.error(errors.email[0]);
+        } if (errors.password) {
+          toast.error(errors.password[0]);
+        } else {
+          errors.map((error, index) => {
+            toast.error(error);
+            return null; // React requires a return value, so we return null here
+          });
+        }
+      }
+      setLoginFormLoading(false);
+    }).catch((error) => {
+      setLoginFormLoading(false);
+      toast.error('Something went wrong, please contact the administrator!');
+    });
+  }
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => setGoogleUser(codeResponse),
+    onError: (error) => console.log('Login Failed:', error)
+  });
+
+  useEffect(() => {
+    if (googleUser) {
+      setGoogleLoginLoading(true);
+      axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${googleUser.access_token}`, {
+        headers: {
+          Authorization: `Bearer ${googleUser.access_token}`,
+          Accept: 'application/json'
+        }
+      })
+        .then((res) => {
+          setGoogleProfile(res.data);
+          setGoogleEmail(res.data.email);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [googleUser]);
+
+  useEffect(() => {
+    if (googleSignupProfile) {
+      createGoogleUser(googleSignupProfile);
+    }
+  }, [googleSignupProfile]);
+
+  useEffect(() => {
+    if (googleEmail) {
+      const data = {
+        email: googleEmail
+      };
+      axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/email', data).then((response) => {
+        const success = response.data.status;
+        if (success == 'Success') {
+          const data = response.data.data;
+          if (data) {
+            const user = data.user;
+            if (user.designer) {
+              setCookie('currentUserDesigner', JSON.stringify(user.designer.id), { path: '/' });
+            }
+            if (user.seller) {
+              setCookie('currentUserSeller', JSON.stringify(user.seller.id), { path: '/' });
+            }
+            if (user.role == 'Admin') {
+              toast.success('Successfully signed in!');
+              setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
+              setCookie('userRole', JSON.stringify(user.role), { path: '/' });
+              const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer }
+              setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+              setCookie('isLoggedIn', true, { path: '/' });
+              setCookie('token', data.token, { path: '/' });
+              setCookie('signup_type', user.signup_type, { path: '/' });
+              setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
+              setCookie('token', data.token, { path: '/' });
+              setTimeout(function () {
+                navigate("/admin/users");
+                setGoogleLoginLoading(false);
+              }, 1000);
+            } else {
+              toast.success('Successfully signed in!');
+              setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
+              setCookie('userRole', JSON.stringify(user.role), { path: '/' });
+              const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer, shop_completed: user.shop_completed, profile_completeness: user.profile_completeness }
+              setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+              setCookie('isLoggedIn', true, { path: '/' });
+              setCookie('token', data.token, { path: '/' });
+              setCookie('signup_type', user.signup_type, { path: '/' });
+              setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
+              setCookie('token', data.token, { path: '/' });
+              setTimeout(function () {
+                getUserDetails(user.id);
+                setGoogleLoginLoading(false);
+              }, 500);
+            }
+
+          }
+        } else {
+          setGoogleSignupProfile(googleProfile);
+        }
+      }).catch((err) => console.log(err));
+    }
+  }, [googleEmail]);
 
   return (
     <LayoutNoFooter>
@@ -360,6 +529,11 @@ const SignUp = () => {
                     <Button className='w-100 mt-4' variant='primary' type='submit'>Signing up...</Button>
                     :
                     <Button className='w-100 mt-4' variant='primary' type='submit'>Sign up</Button>
+                  }
+                  {googleLoginLoading ?
+                    <Button className='w-100 mt-3' variant='secondary' type='button'>Signing up using Google...</Button>
+                    :
+                    <Button className='w-100 mt-3' variant='secondary' type='button' onClick={login}>Sign up with Google</Button>
                   }
                   <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to='/login'>Log In</Link></p>
                 </Form>

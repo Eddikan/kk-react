@@ -254,10 +254,6 @@ const Designs = (props) => {
         setSelectedCategories([]);
     };
 
-    const handleChangeCountry = (e) => {
-        setCountry(e.target.value);
-    };
-
     const priceRangeChange = (e) => {
         // Clear the previous debounce timer
         priceRangeChangeDebounce.cancel();
@@ -454,6 +450,11 @@ const Designs = (props) => {
             });
     };
 
+    const handleChangeCountry = (e) => {
+        const {name, value} = e.target;
+        setSelectedCountry(value ?? '');
+    }
+
     useEffect(() => {
         // Only run the filter API call after the component has mounted
         if (mounted) {
@@ -513,33 +514,51 @@ const Designs = (props) => {
                                             <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
                                         ))}
                                     </Form.Control>
-                                    <Form.Label className="fw-600">Categories</Form.Label>
-                                    <Form.Check
-                                        type={`checkbox`}
-                                        label={`All`}
-                                        name={`day`}
-                                        className={`mb - 2`}
-                                        onChange={(e) => handleChangeAllCategories(e.target.checked)}
-                                        checked={portfolioCategories.length == selectedCategories.length || selectedAllCategories}
-                                    />
-                                    {portfolioCategories && portfolioCategories.length > 0 ?
-                                        <>
-                                            {portfolioCategories.map((category, index) => (
-                                                <Form.Check
-                                                    key={index}
-                                                    type="checkbox"
-                                                    label={category.label}
-                                                    value={category.value}
-                                                    checked={selectedCategories.includes(category.value)}
-                                                    onChange={handleCategoriesCheckboxChange}
-                                                    className="mb-2"
-                                                />
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Country</Form.Label>
+                                        <Form.Control
+                                            as='select'
+                                            name='country'
+                                            value={selectedCountry}
+                                            className='mr-sm-2'
+                                            onChange={handleChangeCountry}
+                                        >
+                                            <option value=''>Select Country</option>
+                                            {Countries.map((country, index) => (
+                                                <option key={country + "-" + index} value={country}>
+                                                    {country}
+                                                </option>
                                             ))}
-                                        </>
-                                        :
-                                        null
-                                    }
-
+                                        </Form.Control>
+                                    </Form.Group>
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Categories</Form.Label>
+                                        <Form.Check
+                                            type={`checkbox`}
+                                            label={`All`}
+                                            name={`day`}
+                                            className={`mb - 2`}
+                                            onChange={(e) => handleChangeAllCategories(e.target.checked)}
+                                            checked={portfolioCategories.length == selectedCategories.length || selectedAllCategories}
+                                        />
+                                        {portfolioCategories && portfolioCategories.length > 0 ?
+                                            <>
+                                                {portfolioCategories.map((category, index) => (
+                                                    <Form.Check
+                                                        key={index}
+                                                        type="checkbox"
+                                                        label={category.label}
+                                                        value={category.value}
+                                                        checked={selectedCategories.includes(category.value)}
+                                                        onChange={handleCategoriesCheckboxChange}
+                                                        className="mb-2"
+                                                    />
+                                                ))}
+                                            </>
+                                            :
+                                            null
+                                        }
+                                    </Form.Group>
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Search</Form.Label>
                                         <FormControl type='text' name='search' value={search} className='mr-sm-2' onChange={handleChangeSearch} placeholder='Enter your search term...' />
@@ -636,7 +655,11 @@ const Designs = (props) => {
                                 <div id="profile-designs">
                                     {designsLoading ?
                                         <>
-                                            <Loading className="bg-white" />
+                                            <Card className="text-center">
+                                                <Card.Body>
+                                                    <Loading className="bg-white py-0" />
+                                                </Card.Body>
+                                            </Card>
                                         </>
                                         :
                                         <>
@@ -875,7 +898,9 @@ const Designs = (props) => {
                                                         />
                                                         :
                                                         <Col lg={12} className="text-center mt-4">
-                                                            <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_design')}>View More</Button>
+                                                            <Link to="/sign-up?type=customer&option=designs">
+                                                                <Button type="button" className="btn-primary" variant="primary">View More</Button>
+                                                            </Link>
                                                         </Col>
                                                     }
                                                 </>
@@ -891,7 +916,7 @@ const Designs = (props) => {
                                                     </Card> */}
                                                     <Card className="text-center">
                                                         <Card.Body>
-                                                            <IoShirtSharp size="60px" className="mt-2" />
+                                                            <IoShirtSharp size="50px" className="mt-2" />
                                                             <p className="text-center fs-20 mb-2 mt-3">No records found.</p>
                                                         </Card.Body>
                                                     </Card>
@@ -996,7 +1021,7 @@ const Designs = (props) => {
                                                 </div>
                                             </a>
 
-                                            {isDesignCurrentUser ?
+                                            {isDesignCurrentUser || !currentUser ?
                                                 null
                                                 :
                                                 <>
@@ -1066,7 +1091,7 @@ const Designs = (props) => {
                                                             }
                                                         </div>
 
-                                                        {isDesignCurrentUser ?
+                                                        {isDesignCurrentUser || !currentUser?
                                                             null
                                                             :
                                                             <>
@@ -1116,7 +1141,7 @@ const Designs = (props) => {
                                     </div>
                                 </div>
 
-                                {isDesignCurrentUser ?
+                                {isDesignCurrentUser || !currentUser?
                                     null
                                     :
                                     <>

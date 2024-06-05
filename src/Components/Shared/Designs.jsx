@@ -292,7 +292,7 @@ const Designs = (props) => {
                                                                                 }}
                                                                             ></div>
                                                                         </div>
-                                                                        {userRole !== 'Admin' && design.user.id != currentUser ?
+                                                                        {design.user.id != currentUser ?
                                                                             <>
                                                                                 {currentUser ?
                                                                                     <>
@@ -535,7 +535,7 @@ const Designs = (props) => {
                                                 </div>
                                             </a>
 
-                                            {isDesignCurrentUser ?
+                                            {isDesignCurrentUser || !currentUser ?
                                                 null
                                                 :
                                                 <>
@@ -605,7 +605,7 @@ const Designs = (props) => {
                                                             }
                                                         </div>
 
-                                                        {isDesignCurrentUser ?
+                                                        {isDesignCurrentUser || !currentUser ?
                                                             null
                                                             :
                                                             <>
@@ -655,7 +655,7 @@ const Designs = (props) => {
                                     </div>
                                 </div>
 
-                                {isDesignCurrentUser ?
+                                {isDesignCurrentUser || !currentUser?
                                     null
                                     :
                                     <>

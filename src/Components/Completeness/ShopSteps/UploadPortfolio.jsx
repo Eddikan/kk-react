@@ -207,7 +207,7 @@ const UploadPortfolio = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                                                                 onClick={toggleuploadFile}
                                                                 type="button"
                                                             >
-                                                                Upload Your First Design
+                                                                Upload your designs
                                                             </Button>
                                                         </Col>
                                                     </Row>

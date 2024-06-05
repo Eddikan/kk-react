@@ -262,7 +262,7 @@ const BecomeSellerForm = (props) => {
                                                                     onClick={toggleuploadFile}
                                                                     type="button"
                                                                 >
-                                                                    Upload Your First Design
+                                                                    Upload your designs
                                                                 </Button>
                                                             </Col>
                                                         </Row>
@@ -277,7 +277,7 @@ const BecomeSellerForm = (props) => {
                                                 Fabric Process Insights
                                             </Form.Label>
                                             <Form.Label className="mb-3 mt-1 small">
-                                                Provider information about fabric.
+                                                Provide information about fabric.
                                             </Form.Label>
                                             <Form.Group>
                                                 <Form.Control

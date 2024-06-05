@@ -306,7 +306,7 @@ const Questionnaire3 = (props) => {
                                         Design Process Insights
                                     </Form.Label>
                                     <Form.Label className="mb-3 mt-1 small">
-                                        Provider information about your design process, from ideation to creation.
+                                        Provide information about your design process, from ideation to creation.
                                     </Form.Label>
                                     <Form.Group>
                                         <Form.Control

@@ -226,7 +226,7 @@ const DesignersConnect = (props) => {
                                 ) : (
                                     <Card className="text-center">
                                         <Card.Body>
-                                            <IoShirtSharp size="60px" className="mt-2" />
+                                            <IoShirtSharp size="50px" className="mt-2" />
                                             <p className="text-center fs-20 mb-2 mt-3">No records found.</p>
                                         </Card.Body>
                                     </Card>
