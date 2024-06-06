@@ -37,7 +37,7 @@ import axios from 'axios';
 
 const Designs = (props) => {
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'selectedCountry']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'selectedCountry', 'favoriteItemCount']);
     const currentUser = cookies.currentUser;
     const token = cookies.token;
     const userRole = cookies.userRole;
@@ -185,7 +185,7 @@ const Designs = (props) => {
 
     async function onFilterChange(data) {
         setDesignsLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?country='+selectedCountry+'&user_id=' + currentUser + '&token=' + token, data).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?search='+searchValue+'&country='+selectedCountry+'&user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
                 setDesigns(selectedDesigns);
@@ -278,6 +278,10 @@ const Designs = (props) => {
             if (success == 'Success') {
                 handleChangePage(currentPage);
                 setInWishlist(!inWishlist);
+                const currentFavoriteCount = cookies.favoriteItemCount ?? 0;
+                const latestFavoriteItemCount = parseInt(currentFavoriteCount) +  1;
+                setCookie('favoriteItemCount', latestFavoriteItemCount, { path: '/' });
+
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
@@ -301,6 +305,11 @@ const Designs = (props) => {
     
         // Set the updated favorites array in cookies
         setCookie('tempFavorites', JSON.stringify(updatedFavorites), { path: '/' });
+
+        const currentFavoriteCount = cookies.favoriteItemCount ?? 0;
+        const latestFavoriteItemCount = parseInt(currentFavoriteCount) +  1;
+        setCookie('favoriteItemCount', latestFavoriteItemCount, { path: '/' });
+
         // Update the local state
         setTempFavorites(updatedFavorites);
     };
@@ -429,7 +438,7 @@ const Designs = (props) => {
 
     // Pagination
     const handleChangePage = (pageNumber) => {
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?country='+selectedCountry+'&page=' + pageNumber + '&user_id=' + currentUser)
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?search='+searchValue+'&country='+selectedCountry+'&page=' + pageNumber + '&user_id=' + currentUser)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -508,12 +517,19 @@ const Designs = (props) => {
                         <Row className="mt-2">
                             <Col lg="3">
                                 <div className="filter-sidebar pe-4">
-                                    <Form.Control className="mb-4" as='select' onChange={(e) => handleSortFieldChange(e.target.value)}>
-                                        <option value="" disabled selected  >Sort By:</option>
-                                        {sortOptions.map(option => (
-                                            <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
-                                        ))}
-                                    </Form.Control>
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Search</Form.Label>
+                                        <Form.Control  placeholder="Enter your search term..." type="text" onChange={(e) => handleChangeSearch(e)} />
+                                    </Form.Group>
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Sort</Form.Label>
+                                        <Form.Control as='select' onChange={(e) => handleSortFieldChange(e.target.value)}>
+                                            <option value="" disabled selected  >Sort By:</option>
+                                            {sortOptions.map(option => (
+                                                <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Country</Form.Label>
                                         <Form.Control

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import 'Assets/styles/User/Profile/style.css'
 import PinIcon from 'Assets/images/pin.png';
 import LinkIcon from 'Assets/images/link.png';
@@ -14,7 +14,11 @@ import UserPlaceholder from 'Assets/images/user.png';
 import Loading from 'Assets/images/loading.gif'
 import GetUserData from 'Utils/GetUserData';
 import { FaArrowRightLong } from "react-icons/fa6";
+import { CiShop } from "react-icons/ci";
 import GoBack from 'Components/Shared/GoBack';
+import DesignIcon from 'Assets/images/user-box/dress.png';
+import FabricIcon from 'Assets/images/user-box/fabric.png';
+import DesignerIcon from 'Assets/images/user-box/edit-tools.png';
 import { useCookies } from 'react-cookie';
 import { HiOutlineBuildingStorefront } from "react-icons/hi2";
 import toast from 'react-hot-toast';
@@ -25,7 +29,7 @@ import LoadingPage from 'Components/Shared/LoadingPage';
 import { GoPencil } from "react-icons/go";
 import axios from 'axios';
 import MyCalendar from 'Components/Shared/MyCalendar';
-import { useNavigate, useParams,Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import BecomeSeller from 'Components/CallToActions/Seller';
 import BecomeDesigner from 'Components/CallToActions/Designer';
 
@@ -79,8 +83,9 @@ const Profile = () => {
     const [limitedDesignShow, setLimitedDesignShow] = useState(false);
     const [myCalendarShow, setMyCalendarShow] = useState(false);
     const [formStatus, setFormStatus] = useState('standby');
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'activeProfileTab','userDetails']);
-    const [areasOfSpecialization, setAreaOfSpecialization] = useState([])
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'activeProfileTab', 'userDetails']);
+    const [areasOfSpecialization, setAreaOfSpecialization] = useState([]);
+    const [setupShopShow, setSetupShopShow] = useState(false);
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -97,6 +102,10 @@ const Profile = () => {
     };
 
     const navigate = useNavigate();
+
+    const toggleSetupShopShow = () => {
+        setSetupShopShow(!setupShopShow);
+    }
 
     const handleChangeImg = ({ target }) => {
         if (target.files < 1 || !target.validity.valid) {
@@ -356,11 +365,11 @@ const Profile = () => {
                                         </div>
 
                                         <div className='mb-2 d-flex align-items-center'>
-                                            {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 ||user.profile_completeness == 75) &&
+                                            {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 || user.profile_completeness == 75) &&
                                                 <>
-                                                     <div>
+                                                    <div>
                                                         <Button href="/user/complete-profile" type='button' className='btn btn-primary'>
-                                                            <span>Complete your profile</span> 
+                                                            <span>Complete your profile</span>
                                                         </Button>
                                                     </div>
                                                 </>
@@ -369,9 +378,9 @@ const Profile = () => {
                                             {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) &&
                                                 <>
                                                     <a href='/user/shop/setup' className='text-decoration-none'>
-                                                        <span><HiOutlineBuildingStorefront size={30} className={`text-gold me-2 ${user.profile_completeness != 100 && 'ms-4'}`}/> 
+                                                        <span><HiOutlineBuildingStorefront size={30} className={`text-gold me-2 ${user.profile_completeness != 100 && 'ms-4'}`} />
                                                             <span className='fw-500 cursor-pointer'>
-                                                            Set up your shop<FaArrowRightLong className='ms-2'/></span>
+                                                                Update your shop<FaArrowRightLong className='ms-2' /></span>
                                                         </span>
                                                     </a>
                                                 </>
@@ -392,11 +401,20 @@ const Profile = () => {
 
                             <Col lg="6" className='mb-5'>
                                 <Row className="justify-content-end">
-                                    <Col lg="2" className="text-right pe-0">
+                                    <Col lg="12" className="text-right">
+                                        {user.is_designer == 0 && user.is_seller == 0 ?
+                                            <Button onClick={toggleSetupShopShow} className="bg-white-hover text-black-hover me-3" type='button'>
+                                                <CiShop />
+                                                <span className='ms-1'>Set Up Shop</span>
+                                            </Button>
+                                            :
+                                            null
+                                        }
                                         <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className=''>
                                             <GoPencil />
                                             <span className='ms-1'>Edit Profile</span>
                                         </Button>
+
                                     </Col>
 
                                     {/* {user.is_designer == 1 && (
@@ -414,7 +432,7 @@ const Profile = () => {
                                 </Row>
                             </Col>
 
-                            {user.is_seller == 0 && (
+                            {/* {user.is_seller == 0 && (
                                 <Col lg="12" className='mb-2'>
                                     <BecomeSeller />
                                 </Col>
@@ -423,12 +441,12 @@ const Profile = () => {
                                 <Col lg="12">
                                     <BecomeDesigner />
                                 </Col>
-                            )}
+                            )} */}
 
 
                             <Col lg="12" className='mt-4'>
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${aboutShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("about"); }}>About</span>
-                                
+
                                 {user.is_designer == 1 && (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${portfolioShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("portfolio"); }}>Portfolio</span>
                                 )}
@@ -579,7 +597,7 @@ const Profile = () => {
                             null
                         }
 
-                        {user.is_designer == 1 && 
+                        {user.is_designer == 1 &&
                             <>
                                 {portfolioShow ?
                                     <AdminPortfolio currentUser={currentUser} reloadCount={reloadCount} />
@@ -588,15 +606,15 @@ const Profile = () => {
                                 }
                             </>
                         }
-                      
-                        {user.is_seller == 1 && 
+
+                        {user.is_seller == 1 &&
                             <>
                                 {fabricShow ?
                                     <AdminFabrics currentUser={currentUser} reloadCount={reloadCount} />
                                     :
                                     null
                                 }
-                          </>
+                            </>
                         }
 
                         {processShow ?
@@ -625,7 +643,61 @@ const Profile = () => {
                 </section >
             }
 
-
+            {/* Setup Shop  */}
+            <Modal show={setupShopShow} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setSetupShopShow(false)}>
+                <Modal.Body className="py-5">
+                    <button type="button" className="btn-close no-header-close" onClick={() => setSetupShopShow(false)} aria-label="Close"></button>
+                    <Container className="narrow-850 h-100">
+                        <Row className=" align-items-center h-100">
+                            <Col lg="12">
+                                {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
+                                <h3 className="text-left fw-600 mb-5">Set Up Shop</h3>
+                                <Row>
+                                    <Col lg="12" className="mb-3">
+                                        {/* onClick={() => showSignupModal('user_designer')} */}
+                                        <Card onClick={() => navigate('/user/designer-form')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                                            <Card.Body>
+                                                <div className="user-box">
+                                                    <div>
+                                                        <img src={DesignerIcon} alt="Designers" />
+                                                        <h3 className="fw-600">I am a designer</h3>
+                                                    </div>
+                                                </div>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                    <Col lg="12" className="mb-3">
+                                        {/* onClick={() => handleShowFabrics()} */}
+                                        <Card onClick={() => navigate('/user/seller-form')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                                            <Card.Body>
+                                                <div className="user-box">
+                                                    <div>
+                                                        <img src={FabricIcon} alt="Fabrics" />
+                                                        <h3 className="fw-600">I am a fabric vendor</h3>
+                                                    </div>
+                                                </div>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                    <Col lg="12">
+                                        {/* onClick={() => handleShowDesigns()} */}
+                                        <Card onClick={() => navigate('/user/designer-form?type=designer_seller')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                                            <Card.Body>
+                                                <div className="user-box">
+                                                    <div>
+                                                        <img src={DesignIcon} alt="Designs" />
+                                                        <h3 className="fw-600">I am both a designer and a fabric vendor</h3>
+                                                    </div>
+                                                </div>
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
+                    </Container>
+                </Modal.Body>
+            </Modal>
         </Layout >
     );
 };

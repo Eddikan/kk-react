@@ -25,7 +25,7 @@ import Pagination from 'Components/Pagination/Pagination';
 
 const Fabrics = (props) => {
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount']);
     const [mounted, setMounted] = useState(false);
     const [fabrics, setFabrics] = useState([]);
     const [fabricsLoading, setFabricsLoading] = useState(true);
@@ -318,7 +318,9 @@ const Fabrics = (props) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success("Fabric added to cart successfully!");
-
+                const currentCartCount = cookies.cartItemCount ?? 0;
+                const latestCartItemCount = parseInt(currentCartCount) +  parseInt(e.quantity);
+                setCookie('cartItemCount', latestCartItemCount, { path: '/' });
                 // setTimeout(() => {
                 //     window.location.reload(); 
                 // }, 500);
@@ -356,6 +358,11 @@ const Fabrics = (props) => {
 
         setTempCart(updatedCart);
         setCookie('tempCart', JSON.stringify(updatedCart), { path: '/' });
+
+        const currentCartCount = cookies.cartItemCount ?? 0;
+        const latestCartItemCount = parseInt(currentCartCount) +  parseInt(e.quantity);
+        setCookie('cartItemCount', latestCartItemCount, { path: '/' });
+
         setTimeout(function () {
             toast.success("Fabric added to cart successfully!");
             setAddToCartLoading(false);
@@ -426,10 +433,13 @@ const Fabrics = (props) => {
                                             placeholder='Enter your search term...'
                                         />
                                     </Form.Group> */}
-
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Search</Form.Label>
+                                        <Form.Control placeholder="Enter your search term..." type="text" onChange={(e) => handleChangeSearch(e)} />
+                                    </Form.Group>
                                     <div style={{ position: "relative" }} className="mb-4">
                                         <div>
-                                            {/* <Form.Label className="fw-600">Sort By: </Form.Label> */}
+                                            <Form.Label className="fw-600">Sort</Form.Label>
                                             <Form.Control as='select' onChange={(e) => handleSortFieldChange(e.target.value)}>
                                                 <option value="" disabled selected  >Sort By:</option>
                                                 {sortOptions.map(option => (

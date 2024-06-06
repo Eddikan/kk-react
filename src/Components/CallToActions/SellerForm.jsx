@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
+import { FaTimes } from 'react-icons/fa';
 import { GoPlus, GoAlertFill } from 'react-icons/go';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -21,6 +22,11 @@ const becomeSellerData = Object.freeze({
 const BecomeSellerForm = (props) => {
     const navigate = useNavigate(); 
     const user = props.user;
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    }
+    let query = useQuery();
+    const type = query.get('type');
 
     const [questionnaire3Data, setQuestionnaire3Data] = useState(becomeSellerData);
     const [questionnaire3Loading, setQuestionnaire3Loading] = useState(false);
@@ -35,6 +41,7 @@ const BecomeSellerForm = (props) => {
     const [currentAvailability, setCurrentAvailability] = useState([]);
     const [postType, setPostType] = useState('post');
     const [sellerId, setSellerId] = useState('');
+    const [pricingStructure, setPricingStructure] = useState([{name: '', price: ''}]);
     const tagsInputRef = useRef(null);
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
@@ -97,7 +104,7 @@ const BecomeSellerForm = (props) => {
     async function questionnaire3Submit(e) {
         e.preventDefault();
         setQuestionnaire3Loading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'seller?user_id=' + currentUser + '&token=' + token, {...questionnaire3Data, types_of_fabric: typesOfFabric, user_id: currentUser, products: productItems, availability: availability, post_type: postType  }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'seller?user_id=' + currentUser + '&token=' + token, {...questionnaire3Data, types_of_fabric: typesOfFabric, user_id: currentUser, products: productItems, availability: availability, pricing_structure: pricingStructure, post_type: postType  }).then((response) => {
             const status = response.data.status;
             if(status == 'Success') {
                 const data = response.data.data;
@@ -113,7 +120,23 @@ const BecomeSellerForm = (props) => {
             toast.error('An error occured. Please try again or contact the administrator.');
             setQuestionnaire3Loading(false);
         });
-    }
+    };
+
+    const addPricingStructure = () => {
+        setPricingStructure([...pricingStructure, { name: '', price: '' }]);
+    };
+
+    const editPricingStructure = (index, updatedItem) => {
+        const updatedPricingStructure = pricingStructure.map((item, idx) =>
+            idx === index ? updatedItem : item
+        );
+        setPricingStructure(updatedPricingStructure);
+    };
+
+    const deletePricingStructure = (index) => {
+        const updatedPricingStructure = pricingStructure.filter((_, idx) => idx !== index);
+        setPricingStructure(updatedPricingStructure);
+    };
 
     useEffect(() => {
         fetchData(currentUser);
@@ -121,11 +144,17 @@ const BecomeSellerForm = (props) => {
             if (user.seller) {
                 setQuestionnaire3Data(user.seller);
                 const types_of_fabric = user.seller.types_of_fabric;
+                const pricing_structure = user.seller.pricing_structure;
                 // const current_availability = user.seller.availability.date_time;
                 setTypesOfFabric(types_of_fabric);
                 // setCurrentAvailability(current_availability);
                 // setAvailability(current_availability);
                 setSellerId(user.seller.id);
+                if (pricing_structure) {
+                    if (Array.isArray(pricing_structure)) {
+                        setPricingStructure(pricing_structure);
+                    }
+                }
                 setPostType('put');
             } else {
                 setPostType('post');
@@ -159,7 +188,7 @@ const BecomeSellerForm = (props) => {
                     <CardBody>
                         <Row>
                             <Col lg='12' className='text-center'>
-                                <h2 className='form-title fs-24 py-3 pb-2 mb-3'><strong>Showcase the rich textures, and pattern of your fabrics</strong></h2>
+                                <h2 className='form-title fs-24 py-3 pb-2 mb-3'><strong>Showcase your fabrics</strong></h2>
                             </Col>
                         </Row>
                         <Form onSubmit={questionnaire3Submit}>
@@ -241,7 +270,7 @@ const BecomeSellerForm = (props) => {
                                                                         onClick={toggleuploadFile}
                                                                         type="button"
                                                                     >
-                                                                        Upload
+                                                                        Upload your fabrics
                                                                     </Button>
                                                                 </Col>
                                                             </Row>
@@ -300,14 +329,69 @@ const BecomeSellerForm = (props) => {
                                                 Provide information about the typical pricing structures, helps set expectations.
                                             </Form.Label>
                                             <Form.Group>
-                                                <Form.Control
+                                                {pricingStructure.map((item, index) => (
+                                                    <>
+                                                        {pricingStructure.length > 1 ?
+                                                            <div className="position-relative pe-5">
+                                                                <Row className='mb-3' key={index}>
+                                                                    <Col lg="6">
+                                                                        <Form.Control
+                                                                            type="text"
+                                                                            value={item.name}
+                                                                            onChange={(e) => editPricingStructure(index, { ...item, name: e.target.value })}
+                                                                            placeholder="Name"
+                                                                        />
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Control
+                                                                            type="text"
+                                                                            value={item.price}
+                                                                            onChange={(e) => editPricingStructure(index, { ...item, price: e.target.value })}
+                                                                            placeholder="Price"
+                                                                        />
+                                                                    </Col>
+                                                                </Row>
+                                                                <div className="remove-pricing-structure remove-btn cursor-pointer" onClick={() => deletePricingStructure(index)} >
+                                                                    <FaTimes  size="20px" color="#ffffff" />
+                                                                </div>
+                                                            </div>
+                                                            :
+                                                            <div className="position-relative">
+                                                                <Row className='mb-3' key={index}>
+                                                                    <Col lg="6">
+                                                                        <Form.Control
+                                                                            type="text"
+                                                                            value={item.name}
+                                                                            onChange={(e) => editPricingStructure(index, { ...item, name: e.target.value })}
+                                                                            placeholder="Name"
+                                                                        />
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Control
+                                                                            type="text"
+                                                                            value={item.price}
+                                                                            onChange={(e) => editPricingStructure(index, { ...item, price: e.target.value })}
+                                                                            placeholder="Price"
+                                                                        />
+                                                                    </Col>
+                                                                </Row>
+                                                            </div>
+                                                        }
+                                                    </>
+                                                ))}
+                                                <Row>
+                                                    <Col lg="12" className="text-right">
+                                                        <Button onClick={addPricingStructure} className='btn-primary mt-3' type="button">Add More</Button>
+                                                    </Col>
+                                                </Row>
+                                                {/* <Form.Control
                                                     as="textarea"
                                                     name="pricing_structure"
                                                     rows={5} // You can adjust the number of rows as needed
                                                     value={questionnaire3Data.pricing_structure}
                                                     placeholder=""
                                                     onChange={handleChange}
-                                                />
+                                                /> */}
                                             </Form.Group>
                                         </CardBody>
                                     </Card>
@@ -333,6 +417,11 @@ const BecomeSellerForm = (props) => {
                             </Row>
                             <Row>
                                 <Col lg="12" className="text-right">
+                                    {type && type == "designer_seller" ?
+                                        <Button href="/user/designer-form?type=designer_seller" className="btn-outline me-3">Back</Button>
+                                        :
+                                        null
+                                    }
                                     {questionnaire3Loading ?
                                         <Button className='btn-primary' type="button">Saving...</Button>
                                         :

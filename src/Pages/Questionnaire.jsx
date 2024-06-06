@@ -139,16 +139,53 @@ const Questionnaire = () => {
       window.location.href = "/login";
     });
 
-    if (signupType) {
-      if (signupType == "designer" || signupType == "designer_seller") {
+    
+      if (user) {
+        if (user.is_designer == 1 && user.is_seller == 1 || user.is_designer == 1) {
+          setStep(2);
+          setQuestionnaire2Show(true);
+        } else if (user.is_seller == 1) {
+          setStep(3);
+          setQuestionnaire3Show(true);
+        } else {
+          setStep(0);
+        }
+      } else {
+        if (signupType) {
+          if (signupType == "designer" || signupType == "designer_seller") {
+            setStep(2);
+            setQuestionnaire2Show(true);
+          } else if (signupType == "seller") {
+            setStep(3);
+            setQuestionnaire3Show(true);
+          } else {
+            setStep(1);
+            setQuestionnaire1Show(true);
+          }
+        } else {
+          setStep(0);
+        }
+      }
+
+    return () => {
+      // ComponentWillUnmount logic goes here (optional)
+      // This will be executed before the component is unmounted
+      //   console.log('Component is unmounted');
+    };
+  }, [reloadCount]);
+
+  useEffect(() => {
+    // ComponentDidMount logic goes here
+    // This will be executed after the component is mounted
+    if (user) {
+      if ((user.is_designer == 1 && user.is_seller == 1) || user.is_designer == 1) {
         setStep(2);
         setQuestionnaire2Show(true);
-      } else if (signupType == "seller") {
+      } else if (user.is_seller == 1) {
         setStep(3);
         setQuestionnaire3Show(true);
       } else {
-        setStep(1);
-        setQuestionnaire1Show(true);
+        setStep(0);
       }
     } else {
       setStep(0);
@@ -159,11 +196,11 @@ const Questionnaire = () => {
       // This will be executed before the component is unmounted
       //   console.log('Component is unmounted');
     };
-  }, [reloadCount]);
+  }, [reloadCount, user]);
 
   return (
     <Layout>
-      {step === "" ?
+      {step === "" || userLoading ?
         <>
           <LoadingPage />
         </>

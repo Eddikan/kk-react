@@ -18,7 +18,6 @@ import DateTimePicker from 'Components/Shared/DateTimePicker';
 
 const initialQuestionnaire2Data = Object.freeze({
     design_inspirations: '',
-    pricing_structure: '',
     lead_time: '',
     areas_of_specialization: '',
     design_process: '',

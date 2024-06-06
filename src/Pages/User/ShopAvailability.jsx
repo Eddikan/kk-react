@@ -67,8 +67,8 @@ const ShopAvailability = (props) => {
                                             {step === 1 ? (
                                                 <>
                                                     <UploadProduct
-                                                            onStepPlusTwo={() => setStep(step + 1)}
-                                                            onStepMinusTwo={() => setStep(step - 1)}
+                                                        onStepPlusTwo={() => setStep(step + 1)}
+                                                        onStepMinusTwo={() => setStep(step - 1)}
                                                     />
                                                 </>
                                             ) : step === 2 ? (
@@ -171,8 +171,6 @@ const ShopAvailability = (props) => {
                                             )}
                                             </>
                                         }
-
-                                               
 
                                             </Card.Body>
                                         </Card>

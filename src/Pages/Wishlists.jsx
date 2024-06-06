@@ -26,7 +26,7 @@ const Wishlists = (props) => {
 
     const [unitMeasurement, setUnitMeasurement] = useState(1.00);
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token','cartItemCount']);
     const currentUser = cookies.currentUser;
     const token = cookies.token;
 
@@ -55,6 +55,9 @@ const Wishlists = (props) => {
             const success = response.data.status;
             if (success == 'Success') {
                 navigate("/cart");
+                const currentCartCount = cookies.cartItemCount ?? 0;
+                const latestCartItemCount = parseInt(currentCartCount) +  parseInt(e.quantity);
+                setCookie('cartItemCount', latestCartItemCount, { path: '/' });
 
             } else {
                 toast.error('Something went wrong, please contact the administrator!');

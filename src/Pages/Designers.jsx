@@ -15,6 +15,7 @@ import Signup from 'Components/Forms/User/Signup'
 import { useCookies } from 'react-cookie';
 import Loading from 'Components/Shared/Loading';
 import axios from 'axios';
+import { debounce } from 'lodash';
 import 'react-multi-carousel/lib/styles.css';
 
 const Designers = (props) => {
@@ -32,7 +33,8 @@ const Designers = (props) => {
 
     const [signupModalShow, setSignupModalShow] = useState(false);
     const [signupType, setSignupType] = useState('');
-
+    const [search, setSearch] = useState('');
+    const [searchValue, setSearchValue] = useState('');
     const [reloadCount, setReloadCount] = useState(0);
     const currentUser = cookies.currentUser;
     const userRole = cookies.userRole;
@@ -45,7 +47,7 @@ const Designers = (props) => {
     ]);
 
     const getDesigners = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?country='+selectedCountry+'&page=' + currentPage + '&user_id=' + currentUser);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?search='+searchValue+'&country='+selectedCountry+'&page=' + currentPage + '&user_id=' + currentUser);
     };
 
     const toggleGetUser = (e) => {
@@ -56,15 +58,29 @@ const Designers = (props) => {
         // }
         window.location.href = "/designer-profile?user_id=" + e;
 
-    }
+    };
+
+    const searchChangeDebounce = debounce((e) => {
+        setSearchValue(e);
+    }, 1000); // 1000 milliseconds (2 seconds) delay
 
     const showSignupModal = (e) => {
         setSignupType(e);
         setSignupModalShow(true);
-    }
+    };
+
+    const handleChangeSearch = (e) => {
+        const { name, value } = e.target;
+        // Clear the previous debounce timer
+        searchChangeDebounce.cancel();
+
+        // Set a new debounce timer
+        searchChangeDebounce(value);
+        setSearch(value);
+    };
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?country='+selectedCountry+'&page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?search='+searchValue+'&country='+selectedCountry+'&page=' + pageNumber + '&user_id=' + currentUser)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -135,7 +151,7 @@ const Designers = (props) => {
                 toast.error('There has been an error getting the designers, please try again!');
                 setDesignersLoading(false);
             });
-    }, [reloadCount, selectedCountry]);
+    }, [reloadCount, selectedCountry, searchValue]);
 
     const handleChangeCountry = (e) => {
         const {name, value} = e.target;
@@ -163,12 +179,19 @@ const Designers = (props) => {
                         <Row>
                             <Col lg="3">
                                 <div className="filter-sidebar pe-4">
-                                    <Form.Control className="mb-4" as='select'>
-                                        <option value="" disabled selected  >Sort By:</option>
-                                        {sortOptions.map(option => (
-                                            <option key={option.value} value={option.value}>{option.label}</option>
-                                        ))}
-                                    </Form.Control>
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Search</Form.Label>
+                                        <Form.Control  placeholder="Enter your search term..." type="text" onChange={(e) => handleChangeSearch(e)} />
+                                    </Form.Group>
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Sort</Form.Label>
+                                        <Form.Control as='select'>
+                                            <option value="" disabled selected  >Sort By:</option>
+                                            {sortOptions.map(option => (
+                                                <option key={option.value} value={option.value}>{option.label}</option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Country</Form.Label>
                                         <Form.Control

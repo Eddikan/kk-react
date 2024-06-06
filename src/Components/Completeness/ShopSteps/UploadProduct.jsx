@@ -246,7 +246,7 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                                                             onClick={toggleuploadFile}
                                                             type="button"
                                                         >
-                                                            Upload
+                                                            Upload your fabrics
                                                         </Button>
                                                     </Col>
                                                 </Row>
@@ -260,7 +260,7 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                     </Row>
                     <Row>
                         <Col lg="12" className="text-right">
-                            <Button className='btn-back me-3' type="button" onClick={() => onStepMinusTwo()} >Back</Button>
+                            {/* <Button className='btn-back me-3' type="button" onClick={() => onStepMinusTwo()} >Back</Button> */}
 
                             {questionnaire3Loading ?
                                 <Button className='btn-save' type="button">Saving...</Button>

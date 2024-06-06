@@ -223,6 +223,10 @@ p {
     border-width: 1px;
 }
 
+.btn-primary.text-black-hover:hover {
+    color: var(--black) !important;
+}
+
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary:active {
@@ -2011,7 +2015,7 @@ a.schedule-consultation {
 }
 
 .thank-you-height {
-    height: 700px;
+    min-height: 700px;
     display: flex;
     align-items: center;
     justify-content: center;

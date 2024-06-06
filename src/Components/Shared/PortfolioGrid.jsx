@@ -26,7 +26,7 @@ import axios from 'axios';
 const PortfolioGrid = (props) => {
     // const currentUser = props.currentUser;
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites','favoriteItemCount']);
     const currentUser = cookies.currentUser;
     const userRole = cookies.userRole;
     const navigate = useNavigate();
@@ -166,6 +166,9 @@ const PortfolioGrid = (props) => {
             const success = response.data.status;
             if (success == 'Success') {
                 fetchData(user_id);
+                const currentFavoriteCount = cookies.favoriteItemCount ?? 0;
+                const latestFavoriteItemCount = parseInt(currentFavoriteCount) +  1;
+                setCookie('favoriteItemCount', latestFavoriteItemCount, { path: '/' });
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
@@ -189,6 +192,11 @@ const PortfolioGrid = (props) => {
     
         // Set the updated favorites array in cookies
         setCookie('tempFavorites', JSON.stringify(updatedFavorites), { path: '/' });
+
+        const currentFavoriteCount = cookies.favoriteItemCount ?? 0;
+        const latestFavoriteItemCount = parseInt(currentFavoriteCount) +  1;
+        setCookie('favoriteItemCount', latestFavoriteItemCount, { path: '/' });
+
         // Update the local state
         setTempFavorites(updatedFavorites);
     };

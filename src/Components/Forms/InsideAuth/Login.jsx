@@ -162,9 +162,6 @@ const LogIn = (props) => {
                     setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
                     setCookie('token', data.token, { path: '/' });
                 }
-
-                
-
             } else {
                 const errors = response.data.errors;
                 if (errors.email) {

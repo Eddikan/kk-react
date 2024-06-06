@@ -31,7 +31,7 @@ const initialReviewData = Object.freeze({
 });
 
 const ViewProduct = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole', 'tempCart']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole', 'tempCart','cartItemCount']);
     const { productId } = useParams();
     const [product, setProduct] = useState('');
     const [productPrice, setProductPrice] = useState(0.00);
@@ -262,6 +262,9 @@ const ViewProduct = () => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success("Fabric added to cart successfully!");
+                const currentCartCount = cookies.cartItemCount ?? 0;
+                const latestCartItemCount = parseInt(currentCartCount) +  parseInt(e.quantity);
+                setCookie('cartItemCount', latestCartItemCount, { path: '/' });
 
                 // setTimeout(() => {
                 //     window.location.reload(); 
@@ -300,6 +303,11 @@ const ViewProduct = () => {
 
         setTempCart(updatedCart);
         setCookie('tempCart', JSON.stringify(updatedCart), { path: '/' });
+
+        const currentCartCount = cookies.cartItemCount ?? 0;
+        const latestCartItemCount = parseInt(currentCartCount) +  parseInt(e.quantity);
+        setCookie('cartItemCount', latestCartItemCount, { path: '/' });
+
         setTimeout(function () {
             toast.success("Fabric added to cart successfully!");
             setAddToCartLoading(false);

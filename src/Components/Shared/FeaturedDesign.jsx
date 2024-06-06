@@ -27,7 +27,7 @@ import { useCookies } from 'react-cookie';
 
 const PortfolioGrid = (props) => {
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites','favoriteItemCount']);
     const [portfolio, setPortfolio] = useState([]);
     const [portfolioLoading, setPortfolioLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
@@ -180,6 +180,11 @@ const PortfolioGrid = (props) => {
     
         // Set the updated favorites array in cookies
         setCookie('tempFavorites', JSON.stringify(updatedFavorites), { path: '/' });
+
+        const currentFavoriteCount = cookies.favoriteItemCount ?? 0;
+        const latestFavoriteItemCount = parseInt(currentFavoriteCount) +  1;
+        setCookie('favoriteItemCount', latestFavoriteItemCount, { path: '/' });
+
         // Update the local state
         setTempFavorites(updatedFavorites);
     };
@@ -194,6 +199,9 @@ const PortfolioGrid = (props) => {
             if (success == 'Success') {
                 fetchData(user_id);
                 setInWishlist(!inWishlist);
+                const currentFavoriteCount = cookies.favoriteItemCount ?? 0;
+                const latestFavoriteItemCount = parseInt(currentFavoriteCount) +  1;
+                setCookie('favoriteItemCount', latestFavoriteItemCount, { path: '/' });
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }

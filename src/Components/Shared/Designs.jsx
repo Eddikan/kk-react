@@ -23,7 +23,7 @@ import MeetingChat from 'Components/Chat/MeetingChat';
 import axios from 'axios';
 
 const Designs = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'favoriteItemCount']);
     const navigate = useNavigate();
     const reloadCount = props.reloadCount;
     const currentUser = props.currentUser;
@@ -175,6 +175,9 @@ const Designs = (props) => {
             if (success == 'Success') {
                 fetchData(currentUser);
                 setInWishlist(!inWishlist);
+                const currentFavoriteCount = cookies.favoriteItemCount ?? 0;
+                const latestFavoriteItemCount = parseInt(currentFavoriteCount) +  1;
+                setCookie('favoriteItemCount', latestFavoriteItemCount, { path: '/' });
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }
@@ -198,6 +201,11 @@ const Designs = (props) => {
     
         // Set the updated favorites array in cookies
         setCookie('tempFavorites', JSON.stringify(updatedFavorites), { path: '/' });
+
+        const currentFavoriteCount = cookies.favoriteItemCount ?? 0;
+        const latestFavoriteItemCount = parseInt(currentFavoriteCount) +  1;
+        setCookie('favoriteItemCount', latestFavoriteItemCount, { path: '/' });
+
         // Update the local state
         setTempFavorites(updatedFavorites);
     };

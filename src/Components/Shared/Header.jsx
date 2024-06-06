@@ -39,6 +39,7 @@ import { PiNotepadLight, PiScissorsLight } from "react-icons/pi";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'selectedCartItems', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode', 'selectedLanguage', 'selectedCurrency', 'selectedCurrencyCode', 'cartItemCount', 'favoriteItemCount']);
   const currentUrl = window.location.href;
 
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -55,11 +56,10 @@ const Header = () => {
   const [notifications, setNotifications] = useState([]);
   const [notificationsLoading, setNotificationsLoading] = useState(true);
   const [userOrdersLoading, setUserOrdersLoading] = useState(true);
-  const [cartItemCount, setCartItemCount] = useState(0);
+  const [cartItemCount, setCartItemCount] = useState(cookies.cartItemCount ?? 0);
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [favorites, setFavorites] = useState([]);
 
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'selectedCartItems', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode', 'selectedLanguage', 'selectedCurrency', 'selectedCurrencyCode']);
   const [userType, setUserType] = useState('user');
   const userRef = useRef(null);
   const bellRef = useRef(null);
@@ -119,7 +119,6 @@ const Header = () => {
     removeCookie('selectedLanguage', { path: '/' });
     removeCookie('selectedCurrency', { path: '/' });
     removeCookie('selectedCurrencyCode', { path: '/' });
-
   };
 
   // Close the dropdown when clicking outside of it
@@ -242,7 +241,7 @@ const Header = () => {
         const filteredFavorites = favoritesData.portfolio_item_wishlists.filter(
           (item) => item.portfolio_item.user_id !== currentUser
         );
-        
+
         setFavorites(filteredFavorites);
         setFavoritesCount(filteredFavorites.length);
       } else {
@@ -259,6 +258,7 @@ const Header = () => {
   useEffect(() => {
     if (currentUser) {
       fetchData({ currentUser: currentUser, token: token });
+
       getUser()
         .then((response) => {
           const selectedUser = response.data.data;
@@ -304,6 +304,20 @@ const Header = () => {
           toast.error('There has been an error getting the notifications, please try again!');
           setNotificationsLoading(false);
         });
+
+      getUserCartItems()
+        .then((response) => {
+          const selectedCartItem = response.data.data;
+          if (selectedCartItem) {
+            const totalQuantity = getTotalQuantity(selectedCartItem);
+            setCartItemCount(totalQuantity);
+          } else {
+            toast.error('There has been an error getting the notifications, please try again!');
+          }
+        })
+        .catch((error) => {
+          toast.error('There has been an error getting the notifications, please try again!');
+        });
     } else {
       if (tempCart) {
         const totalQuantity = getTotalQuantity(tempCart);
@@ -314,31 +328,62 @@ const Header = () => {
         setFavoritesCount(totalFavoritesCount);
       }
     }
-  }, [cookies, reloadCount]);
+  }, [reloadCount]);
 
   useEffect(() => {
-    if (currentUser) {
-      const intervalId = setInterval(() => {
-        getUserCartItems()
+    const intervalId = setInterval(() => {
+      if (currentUser) {
+        getNotifications()
           .then((response) => {
-            const selectedCartItem = response.data.data;
-            if (selectedCartItem) {
-              const totalQuantity = getTotalQuantity(selectedCartItem);
-              setCartItemCount(totalQuantity);
+            const selectednotifications = response.data.data;
+            if (selectednotifications) {
+              setNotifications(selectednotifications);
+              setNotificationsLoading(false);
             } else {
               toast.error('There has been an error getting the notifications, please try again!');
+              setNotificationsLoading(false);
             }
           })
           .catch((error) => {
             toast.error('There has been an error getting the notifications, please try again!');
+            setNotificationsLoading(false);
           });
+      } else {
+        if (tempCart) {
+          const totalQuantity = getTotalQuantity(tempCart);
+          setCartItemCount(totalQuantity);
+        }
+        if (tempFavorites) {
+          const totalFavoritesCount = tempFavorites.length;
+          setFavoritesCount(totalFavoritesCount);
+        }
+      }
 
-        fetchData({ currentUser: currentUser, token: token });
+    }, 60000);
 
-      }, 60000);
+    // Cleanup function to clear the interval
+    return () => clearInterval(intervalId);
 
-      // Cleanup function to clear the interval
-      return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      getUserCartItems()
+        .then((response) => {
+          const selectedCartItem = response.data.data;
+          if (selectedCartItem) {
+            const totalQuantity = getTotalQuantity(selectedCartItem);
+            setCartItemCount(totalQuantity);
+          } else {
+            toast.error('There has been an error getting the notifications, please try again!');
+          }
+        })
+        .catch((error) => {
+          toast.error('There has been an error getting the notifications, please try again!');
+        });
+
+      fetchData({ currentUser: currentUser, token: token });
+
     } else {
       if (tempCart) {
         const totalQuantity = getTotalQuantity(tempCart);
@@ -349,7 +394,7 @@ const Header = () => {
         setFavoritesCount(totalFavoritesCount);
       }
     }
-  }, [cookies]);
+  }, [cookies.cartItemCount, cookies.favoriteItemCount]);
 
   return (
     <>
@@ -603,14 +648,14 @@ const Header = () => {
                             <>
                               {userWishlistOpen ?
                                 <Link to={`#`} onClick={toggleWishlistMenu} className="mb-2 text-decoration-none d-block position-relative"><GoHeart className='me-2' color='#000000' />
-                                  <span className='text-black'>Wishlist</span><FaCaretUp style={{ position: 'absolute', right: '0px', top: '3px'}} />
+                                  <span className='text-black'>Wishlist</span><FaCaretUp style={{ position: 'absolute', right: '0px', top: '3px' }} />
                                 </Link>
                                 :
                                 <Link to={`#`} onClick={toggleWishlistMenu} className="mb-3 text-decoration-none d-block position-relative"><GoHeart className='me-2' color='#000000' />
-                                  <span className='text-black'>Wishlist</span><FaCaretDown style={{ position: 'absolute', right: '0px', top: '3px'}} />
+                                  <span className='text-black'>Wishlist</span><FaCaretDown style={{ position: 'absolute', right: '0px', top: '3px' }} />
                                 </Link>
                               }
-                              
+
                               {userWishlistOpen && (
                                 <div className="user-wishlist-menu mb-2 ms-3">
                                   <Link to={`/wishlist`} className="mb-2 text-decoration-none d-block"><IoShirtOutline className='me-2' color='#000000' />
@@ -621,7 +666,7 @@ const Header = () => {
                                   </Link>
                                 </div>
                               )}
-                             </>
+                            </>
                           )}
 
                           {userRole !== 'Admin' &&

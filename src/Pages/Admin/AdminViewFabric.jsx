@@ -30,7 +30,7 @@ const initialReviewData = Object.freeze({
 });
 
 const AdminViewFabrics = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole','cartItemCount']);
     const { productId } = useParams();
     const [product, setProduct] = useState('');
     const [productPrice, setProductPrice] = useState(0.00);
@@ -270,6 +270,10 @@ const AdminViewFabrics = () => {
             if (success == 'Success') {
                 // navigate("/cart");
                 toast.success("Fabric added to cart successfully!");
+                const currentCartCount = cookies.cartItemCount ?? 0;
+                const latestCartItemCount = parseInt(currentCartCount) +  parseInt(e.quantity);
+                setCookie('cartItemCount', latestCartItemCount, { path: '/' });
+
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
             }

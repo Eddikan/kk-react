@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Button, FormGroup, ModalFooter } from 'react-bootstrap';
-import { IoIosArrowRoundForward } from "react-icons/io";
+import { FaTimes } from "react-icons/fa";
 import Form from 'react-bootstrap/Form';
 import { GoPlus, GoAlertFill } from 'react-icons/go';
 import FormControl from 'react-bootstrap/FormControl';
@@ -17,7 +17,6 @@ import DateTimePicker from 'Components/Shared/DateTimePicker';
 
 const initialQuestionnaire2Data = Object.freeze({
     design_inspirations: '',
-    pricing_structure: '',
     lead_time: '',
     areas_of_specialization: '',
     design_process: '',
@@ -26,6 +25,11 @@ const initialQuestionnaire2Data = Object.freeze({
 
 const BecomeDesignerForm = (props) => {
     const navigate = useNavigate();
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    }
+    let query = useQuery();
+    const type = query.get('type');
     const currentStep = props.step;
     const user = props.user;
 
@@ -45,6 +49,7 @@ const BecomeDesignerForm = (props) => {
     const [currentAvailability, setCurrentAvailability] = useState([]);
     const [postType, setPostType] = useState('post');
     const [designerId, setDesignerId] = useState('');
+    const [pricingStructure, setPricingStructure] = useState([{name: '', price: ''}]);
     const tagsInputRef = useRef(null);
 
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
@@ -52,6 +57,22 @@ const BecomeDesignerForm = (props) => {
     const token = cookies.token;
     const currentUser = cookies.currentUser;
     const signupType = cookies.signup_type;
+
+    const addPricingStructure = () => {
+        setPricingStructure([...pricingStructure, { name: '', price: '' }]);
+    };
+
+    const editPricingStructure = (index, updatedItem) => {
+        const updatedPricingStructure = pricingStructure.map((item, idx) =>
+            idx === index ? updatedItem : item
+        );
+        setPricingStructure(updatedPricingStructure);
+    };
+
+    const deletePricingStructure = (index) => {
+        const updatedPricingStructure = pricingStructure.filter((_, idx) => idx !== index);
+        setPricingStructure(updatedPricingStructure);
+    };
 
     const fetchData = async (e) => {
         try {
@@ -111,13 +132,17 @@ const BecomeDesignerForm = (props) => {
     async function questionnaire2Submit(e) {
         e.preventDefault();
         setQuestionnaire2Loading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?user_id=' + currentUser + '&token=' + token, { ...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, post_type: postType }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer?user_id=' + currentUser + '&token=' + token, { ...questionnaire2Data, areas_of_specialization: selectedSpecialization, user_id: currentUser, portfolio_items: portfolioItems, availability: availability, pricing_structure: pricingStructure, post_type: postType }).then((response) => {
             const status = response.data.status;
             if (status == 'Success') {
                 const data = response.data.data;
                 setCookie('currentUserDesigner', JSON.stringify(data.id), { path: '/' });
                 setQuestionnaire2Loading(false);
-                navigate("/user/profile");
+                if (type && type == "designer_seller") {
+                    navigate("/user/seller-form");
+                } else {
+                    navigate("/user/profile");
+                }
                 toast.success('Designer form submitted successfully!');
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
@@ -136,10 +161,16 @@ const BecomeDesignerForm = (props) => {
                 setQuestionnaire2Data(user.designer);
                 const specialization = user.designer.areas_of_specialization;
                 const current_availability = user.designer.availability.date_time;
+                const pricing_structure = user.designer.pricing_structure;
                 setSelectedSpecialization(specialization);
                 setCurrentAvailability(current_availability);
                 setAvailability(current_availability);
                 setDesignerId(user.designer.id);
+                if (pricing_structure) {
+                    if (Array.isArray(pricing_structure)) {
+                        setPricingStructure(pricing_structure);
+                    }
+                }
                 setPostType('put');
             } else {
                 setPostType('post');
@@ -173,7 +204,7 @@ const BecomeDesignerForm = (props) => {
                     <CardBody>
                         <Row>
                             <Col lg='12' className='text-center'>
-                                <h2 className='form-title fs-24 py-3 pb-2 mb-3'><strong>Showcase the rich textures, and pattern of your fabrics</strong></h2>
+                                <h2 className='form-title fs-24 py-3 pb-2 mb-3'><strong>Showcase your designs</strong></h2>
                             </Col>
                         </Row>
                         <Form onSubmit={questionnaire2Submit}>
@@ -331,22 +362,80 @@ const BecomeDesignerForm = (props) => {
                                                 Pricing Structure
                                             </Form.Label>
                                             <Form.Group>
-                                                <Form.Control
+                                                {pricingStructure.map((item, index) => (
+                                                    <>
+                                                        {pricingStructure.length > 1 ?
+                                                            <div className="position-relative pe-5">
+                                                                <Row className='mb-3' key={index}>
+                                                                    <Col lg="6">
+                                                                        <Form.Control
+                                                                            type="text"
+                                                                            value={item.name}
+                                                                            onChange={(e) => editPricingStructure(index, { ...item, name: e.target.value })}
+                                                                            placeholder="Name"
+                                                                        />
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Control
+                                                                            type="text"
+                                                                            value={item.price}
+                                                                            onChange={(e) => editPricingStructure(index, { ...item, price: e.target.value })}
+                                                                            placeholder="Price"
+                                                                        />
+                                                                    </Col>
+                                                                </Row>
+                                                                <div className="remove-pricing-structure remove-btn cursor-pointer" onClick={() => deletePricingStructure(index)} >
+                                                                    <FaTimes  size="20px" color="#ffffff" />
+                                                                </div>
+                                                            </div>
+                                                            :
+                                                            <div className="position-relative">
+                                                                <Row className='mb-3' key={index}>
+                                                                    <Col lg="6">
+                                                                        <Form.Control
+                                                                            type="text"
+                                                                            value={item.name}
+                                                                            onChange={(e) => editPricingStructure(index, { ...item, name: e.target.value })}
+                                                                            placeholder="Name"
+                                                                        />
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Control
+                                                                            type="text"
+                                                                            value={item.price}
+                                                                            onChange={(e) => editPricingStructure(index, { ...item, price: e.target.value })}
+                                                                            placeholder="Price"
+                                                                        />
+                                                                    </Col>
+                                                                </Row>
+                                                            </div>
+                                                        }
+                                                    </>
+                                                ))}
+                                                <Row>
+                                                    <Col lg="12" className="text-right">
+                                                        <Button onClick={addPricingStructure} className='btn-primary mt-3' type="button">Add More</Button>
+                                                    </Col>
+                                                </Row>
+                                                {/* <Form.Control
                                                     as="textarea"
                                                     name="pricing_structure"
                                                     rows={5} // You can adjust the number of rows as needed
                                                     value={questionnaire2Data.pricing_structure}
                                                     placeholder=""
                                                     onChange={handleChange}
-                                                />
+                                                /> */}
                                             </Form.Group>
                                         </CardBody>
                                     </Card>
                                     <Card className='border-white'>
                                         <CardBody>
-                                            <Form.Label className='mb-3 fs-18 d-block'>
-                                                Design Inspirations and Influences
-                                            </Form.Label>
+                                        <Form.Label className='mb-1 fs-18 d-block'>
+                                            Design Inspirations and Influences
+                                        </Form.Label>
+                                        <Form.Label className="mb-3 mt-1 small">
+                                            Briefly describe the inspirations and influences that shape your design work.
+                                        </Form.Label>
                                             <Form.Group>
                                                 <Form.Control
                                                     as="textarea"

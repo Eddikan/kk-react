@@ -13,6 +13,7 @@ import { GoHeart } from 'react-icons/go';
 import Signup from 'Components/Forms/User/Signup'
 import { useCookies } from 'react-cookie';
 import Loading from 'Components/Shared/Loading';
+import Countries from 'Utils/Countries';
 import axios from 'axios';
 import 'react-multi-carousel/lib/styles.css';
 
@@ -115,7 +116,13 @@ const DesignersConnect = (props) => {
         setTempDesignerWishlist(updatedDesignerWishlist);
     };
 
+    const handleChangeCountry = (e) => {
+        const {name, value} = e.target;
+        setSelectedCountry(value ?? '');
+    };
+
     useEffect(() => {
+        setDesignersLoading(true);
         getDesigners()
             .then((response) => {
                 setDesignersLoading(false);
@@ -123,6 +130,7 @@ const DesignersConnect = (props) => {
                 if (selectedDesigners) {
                     setDesigners(selectedDesigners);
                     setPageCount(() => response.data.meta.total);
+                    setDesignersLoading(false);
                 } else {
                     toast.error('There has been an error getting the designers, please try again!');
                     setDesignersLoading(false);
@@ -151,6 +159,23 @@ const DesignersConnect = (props) => {
                                     <option key={option.value} value={option.value}>{option.label}</option>
                                 ))}
                             </Form.Control>
+                            <Form.Group className='mb-4'>
+                                <Form.Label className="fw-600">Country</Form.Label>
+                                <Form.Control
+                                    as='select'
+                                    name='country'
+                                    value={selectedCountry}
+                                    className='mr-sm-2'
+                                    onChange={handleChangeCountry}
+                                >
+                                    <option value=''>Select Country</option>
+                                    {Countries.map((country, index) => (
+                                        <option key={country + "-" + index} value={country}>
+                                            {country}
+                                        </option>
+                                    ))}
+                                </Form.Control>
+                            </Form.Group>
                             <Form.Label className="fw-600">Categories</Form.Label>
                             <Form.Check
                                 type={`checkbox`}
@@ -163,7 +188,11 @@ const DesignersConnect = (props) => {
                     <Col lg="9">
                         {designersLoading ?
                             <>
-                                <Loading className="bg-white" />
+                                <Card className="text-center">
+                                    <Card.Body>
+                                        <Loading className="bg-white py-0" />
+                                    </Card.Body>
+                                </Card>
                             </>
                             :
                             <>

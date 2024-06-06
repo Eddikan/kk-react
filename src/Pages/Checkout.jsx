@@ -5,15 +5,12 @@ import { Container, Row, Col, Button, Modal, Card, FormGroup, FormControl } from
 import Form from 'react-bootstrap/Form';
 import 'Assets/styles/DesignerCalendar/style.css';
 import { useCookies } from 'react-cookie';
-import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
-import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
 import GoBack from 'Components/Shared/GoBack';
 import SignUp from 'Components/Forms/InsideAuth/Signup';
 import Login from 'Components/Forms/InsideAuth/Login';
 import { FaCcVisa, FaCcMastercard, FaTruck  } from "react-icons/fa";
 import LoadingPage from 'Components/Shared/LoadingPage';
 import 'Assets/styles/Cart/style.css';
-import { IoCloseOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import DesignersConnect from 'Components/Shared/DesignersConnect';
 import UserPlaceholder from 'Assets/images/user.png';
@@ -40,6 +37,8 @@ const initialCheckOut = {
     email: '',
     phone: '',
 
+    designer_id: '',
+
     delivery_first_name: '',
     delivery_last_name: '',
     delivery_address_line_1: '',
@@ -51,8 +50,6 @@ const initialCheckOut = {
     delivery_email: '',
     delivery_phone: '',
     needs_designer: '',
-
-    product_count: 0,
 };
 
 const Cart = (props) => {
@@ -70,7 +67,7 @@ const Cart = (props) => {
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
     const [radioButtonValue, setRadioButtonValue] = useState(0);
-    const [cartItems, setCartItems] = useState('');
+    const [cartItems, setCartItems] = useState([]);
     const [cartItemId, setCartItemId] = useState('');
     const [checkOutFormData, setCheckOutFormData] = useState(initialCheckOut);
     const [cartItemModalDelete, setCartItemModalDelete] = useState(false);
@@ -84,10 +81,10 @@ const Cart = (props) => {
     const [tempCartTotal, setTempCartTotal] = useState(0.00);
     const [designerId, setDesignerId] = useState('');
     const [selectedDesigner, setSelectedDesigner] = useState(null);
-    const [selectedDesignerShow, setSelectDesignerShow] = useState(false);
     const [authModalShow, setAuthModalShow] = useState(false);
     const [activeAuth, setActiveAuth] = useState('login');
     const [currentUser, setCurrentUser] = useState(cookies.currentUser ?? null);
+    const [productCount, setProductCount] = useState(0);
 
     const getTotalQuantity = (cartItems) => {
         return cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -105,9 +102,6 @@ const Cart = (props) => {
     const handleLogin = (e) => {
         setCurrentUser(e.user_id);
         setCartItems(e.cart_items);
-
-        console.log(e.cart_items);
-
         toggleAuthModal();
     }
 
@@ -131,25 +125,12 @@ const Cart = (props) => {
         return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'cart/' + cartItemId);
     };
 
-    const toggleSelectDesignerShow = (e) => {
-        setSelectDesignerShow(!selectedDesignerShow);
-    }
-
     const handleChangePaymentInfo = (e) => {
         const { name, value } = e.target;
         setCheckOutFormData({
             ...checkOutFormData,
             [name]: value,
         });
-    }
-
-    const handleSelectDesigner = (e) => {
-        setSelectedDesigner(e);
-        setCheckOutFormData({
-            ...checkOutFormData,
-            designer_id: e.id,
-        });
-        toggleSelectDesignerShow();
     }
 
     const checkOutSubmit = (e) => {
@@ -162,9 +143,8 @@ const Cart = (props) => {
                 .map(item => item.id)
             )
         ];
-          
 
-        postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems }).then(response => {
+        postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount }).then(response => {
             const success = response.data.status;
             const data = response.data.data;
             if (success == success) {
@@ -183,26 +163,7 @@ const Cart = (props) => {
         });
     }
 
-    const handleChangeDesigner = (e) => {
-        const { name, value } = e.target;
-        setCheckOutFormData({
-            ...checkOutFormData,
-            [name]: value,
-            designer_id: value == "" ? "" : checkOutFormData.designer_id
-        });
-
-        if (value != "") {
-            setCheckoutStep(2);
-        } else {
-            setCheckoutStep(1);
-        }
-        if (value == "Yes") {
-            setSelectDesignerShow(true);
-        } else {
-            setSelectDesignerShow(false);
-            setSelectedDesigner(null);
-        }
-    }
+    
 
     useEffect(() => {
         const resizeObserver = new ResizeObserver(() => {
@@ -251,6 +212,11 @@ const Cart = (props) => {
                 if (cartItemsData) {
                     setCartItems(cartItemsData);
                     setCartLoading(false);
+                    cartItemsData.map((cartItem) => {
+                        if (selectedCartItems.includes(cartItem.product.id)) {
+                            setProductCount((prevProductCount) => prevProductCount + cartItem.quantity);
+                        }
+                    });
                 } else {
                     toast.error('There has been an error getting the products, please try again!');
                     setCartLoading(false);
@@ -273,6 +239,12 @@ const Cart = (props) => {
                     }
                     return acc;
                 }, 0);
+
+                tempCartItems.map((cartItem) => {
+                    if (selectedCartItems.includes(cartItem.id)) {
+                        setProductCount((prevProductCount) => prevProductCount + cartItem.quantity);
+                    }
+                });
 
             }
             if (cart_total > 0) {
@@ -315,7 +287,7 @@ const Cart = (props) => {
                                         <Card.Body className='bg-light'>
                                             <Row>
                                                 <Col lg={8}>
-                                                    Item
+                                                    Item {productCount}
                                                 </Col>
 
                                                 <Col className="text-right" lg={4}>
@@ -493,432 +465,317 @@ const Cart = (props) => {
                                     <Form onSubmit={checkOutSubmit}>
                                         <Card className="mb-3">
                                             <Card.Body>
-                                                <div className='fs-22 rufina-family fw-600'>Connect with a Designer</div>
+                                                <div className='fs-22 rufina-family fw-600'>Shipping Information</div>
                                                 <hr className='mt-2' />
                                                 <FormGroup>
-                                                    <Form.Label htmlFor="needs_designer" className='mb-2'>
-                                                        Need a Designer?
+                                                    <Form.Label htmlFor="ship_to" className='mb-2'>
+                                                        Ship to
                                                     </Form.Label>
-                                                    <select id="needs_designer" name="needs_designer" value={checkOutFormData.needs_designer} onChange={handleChangeDesigner} className="form-control mb-3" required>
+                                                    <select id="ship_to" name="ship_to" value={checkOutFormData.ship_to} onChange={handleChangePaymentInfo} className="form-control mb-3" required>
                                                         <option value=""></option>
-                                                        <option value="Yes">Yes</option>
-                                                        <option value="No">No</option>
+                                                        <option value="Ship to my address">Ship to my address</option>
+                                                        <option value="Ship to designer">Ship to designer</option>
                                                     </select>
                                                 </FormGroup>
-                                            </Card.Body>
-                                        </Card>
-                                        {checkOutFormData.needs_designer == "Yes" ?
-                                            <>
-                                                {selectedDesigner ?
-                                                    <Card className="mb-3">
-                                                        <Card.Body>
-                                                            <div className='d-flex align-items-center justify-content-between'>
-                                                                <span className="fs-22 rufina-family fw-600">Designer</span>
-                                                                <button onClick={() => { toggleSelectDesignerShow(); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white">Select Designer</button>
-                                                            </div>
-                                                            <hr className='mt-2' />
-                                                            <div className='d-flex'>
-                                                                {selectedDesigner.user.image && selectedDesigner.user.image != "" ?
-                                                                    <div className="designs-grid-div fabric-image"
-                                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${selectedDesigner.user.image})`, width: '65px', height: '65px' }}>
-                                                                    </div>
-                                                                    :
-                                                                    <div className="designs-grid-div fabric-image"
-                                                                        style={{ backgroundImage: `url(${selectedDesigner.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})`, width: '65px', height: '65px' }}>
-                                                                    </div>
-                                                                }
-                                                                <div className='ms-3'>
-                                                                    <div className='mb-0 fw-500 text-black fs-18'>
-                                                                        <strong>{selectedDesigner.user.first_name} {selectedDesigner.user.last_name}</strong>
-                                                                    </div>
-                                                                    <div className="">
-                                                                        <p>{selectedDesigner.user.short_bio}</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </Card.Body>
-                                                    </Card>
-                                                    :
-                                                    <Card className="mb-3">
-                                                        <Card.Body>
-                                                            <div className='d-flex align-items-center justify-content-between'>
-                                                                <span className="fs-22 rufina-family fw-600">Designer</span>
-                                                                <button onClick={() => { toggleSelectDesignerShow(); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white">Select Designer</button>
-                                                            </div>
-                                                            <hr className='mt-2' />
-                                                            <div className='d-flex'>
-                                                                <div className="designs-grid-div fabric-image"
-                                                                    style={{ backgroundImage: `url(${MalePlaceholder})`, width: '65px', height: '65px' }}>
-                                                                </div>
-                                                                <div className='ms-3'>
-                                                                    <div className='mb-0 fw-500 text-black fs-18'>
-                                                                        <strong>-</strong>
-                                                                    </div>
-                                                                    <div className="">
-                                                                        <p>-</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </Card.Body>
-                                                    </Card>
-                                                }
-                                            </>
-                                            :
-                                            null
-                                        }
-                                        
-                                        {checkoutStep != 1 ?
-                                            <>
-                                                <Card className="mb-3">
-                                                    <Card.Body>
-                                                        <div className='fs-22 rufina-family fw-600'>Shipping Information</div>
-                                                        <hr className='mt-2' />
-                                                        <FormGroup>
-                                                            <Form.Label htmlFor="ship_to" className='mb-2'>
-                                                                Ship to
-                                                            </Form.Label>
-                                                            <select id="ship_to" name="ship_to" value={checkOutFormData.ship_to} onChange={handleChangePaymentInfo} className="form-control mb-3" required>
-                                                                <option value=""></option>
-                                                                <option value="Ship to my address">Ship to my address</option>
-                                                                <option value="Ship to designer">Ship to designer</option>
-                                                            </select>
-                                                        </FormGroup>
-                                                        {checkOutFormData.ship_to != "" ?
+                                                {checkOutFormData.ship_to != "" ?
+                                                    <>
+                                                        {checkOutFormData.ship_to != "Ship to designer" || !selectedDesigner ?
                                                             <>
-                                                                {checkOutFormData.ship_to != "Ship to designer" || !selectedDesigner ?
-                                                                    <>
-                                                                        <hr className='mt-2' />
-                                                                        <Form.Label className='mb-2'>
-                                                                            <strong>Shipping Address</strong>
-                                                                        </Form.Label>
-                                                                        <FormGroup className="mb-3">
-                                                                            <Row>
-                                                                                <Col lg="6">
-                                                                                    <Form.Label htmlFor="first_name" className='mb-2'>
-                                                                                        First Name
-                                                                                    </Form.Label>
-                                                                                    <FormControl
-                                                                                        type="text"
-                                                                                        name="delivery_first_name"
-                                                                                        value={checkOutFormData.delivery_first_name}
-                                                                                        onChange={handleChangePaymentInfo}
-                                                                                        id="first_name"
-                                                                                        required
-                                                                                    />
-                                                                                </Col>
-                                                                                <Col lg="6">
-                                                                                    <Form.Label htmlFor="last_name" className='mb-2'>
-                                                                                        Last Name
-                                                                                    </Form.Label>
-                                                                                    <FormControl
-                                                                                        type="text"
-                                                                                        name="delivery_last_name"
-                                                                                        value={checkOutFormData.delivery_last_name}
-                                                                                        onChange={handleChangePaymentInfo}
-                                                                                        id="last_name"
-                                                                                        required
-                                                                                    />
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </FormGroup>
-                                                                        <FormGroup className="mb-3">
-                                                                            <Row>
-                                                                                <Col lg="6">
-                                                                                    <Form.Label htmlFor="email" className='mb-2'>
-                                                                                        Email
-                                                                                    </Form.Label>
-                                                                                    <FormControl
-                                                                                        type="email"
-                                                                                        name="delivery_email"
-                                                                                        value={checkOutFormData.delivery_email}
-                                                                                        onChange={handleChangePaymentInfo}
-                                                                                        id="email"
-                                                                                        required
-                                                                                    />
-                                                                                </Col>
-                                                                                <Col lg="6">
-                                                                                    <Form.Label htmlFor="phone" className='mb-2'>
-                                                                                        Phone Number
-                                                                                    </Form.Label>
-                                                                                    <FormControl
-                                                                                        type="text"
-                                                                                        name="delivery_phone"
-                                                                                        value={checkOutFormData.delivery_phone}
-                                                                                        onChange={handleChangePaymentInfo}
-                                                                                        id="phone"
-                                                                                        required
-                                                                                    />
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </FormGroup>
-                                                                        <FormGroup className="mb-3">
-                                                                            <Form.Label htmlFor="address_line_1" className='mb-2'>
-                                                                                Address Line 1
+                                                                <hr className='mt-2' />
+                                                                <Form.Label className='mb-2'>
+                                                                    <strong>Shipping Address</strong>
+                                                                </Form.Label>
+                                                                <FormGroup className="mb-3">
+                                                                    <Row>
+                                                                        <Col lg="6">
+                                                                            <Form.Label htmlFor="first_name" className='mb-2'>
+                                                                                First Name
                                                                             </Form.Label>
                                                                             <FormControl
                                                                                 type="text"
-                                                                                name="delivery_address_line_1"
-                                                                                value={checkOutFormData.delivery_address_line_1}
+                                                                                name="delivery_first_name"
+                                                                                value={checkOutFormData.delivery_first_name}
                                                                                 onChange={handleChangePaymentInfo}
-                                                                                id="address_line_1"
+                                                                                id="first_name"
                                                                                 required
                                                                             />
-                                                                        </FormGroup>
-                                                                        <FormGroup className="mb-3">
-                                                                            <Form.Label htmlFor="address_line_2" className='mb-2'>
-                                                                                Address Line 2
+                                                                        </Col>
+                                                                        <Col lg="6">
+                                                                            <Form.Label htmlFor="last_name" className='mb-2'>
+                                                                                Last Name
                                                                             </Form.Label>
                                                                             <FormControl
                                                                                 type="text"
-                                                                                name="delivery_address_line_2"
-                                                                                value={checkOutFormData.delivery_address_line_2}
+                                                                                name="delivery_last_name"
+                                                                                value={checkOutFormData.delivery_last_name}
                                                                                 onChange={handleChangePaymentInfo}
-                                                                                id="address_line_2"
+                                                                                id="last_name"
                                                                                 required
                                                                             />
-                                                                        </FormGroup>
-                                                                        <FormGroup className="mb-3">
-                                                                            <Row>
-                                                                                <Col lg="6">
-                                                                                    <Form.Label htmlFor="city" className='mb-2'>
-                                                                                        City
-                                                                                    </Form.Label>
-                                                                                    <FormControl
-                                                                                        type="text"
-                                                                                        name="delivery_city"
-                                                                                        value={checkOutFormData.delivery_city}
-                                                                                        onChange={handleChangePaymentInfo}
-                                                                                        id="city"
-                                                                                        required
-                                                                                    />
-                                                                                </Col>
-                                                                                <Col lg="6">
-                                                                                    <Form.Label htmlFor="province" className='mb-2'>
-                                                                                        Province/State
-                                                                                    </Form.Label>
-                                                                                    <FormControl
-                                                                                        type="text"
-                                                                                        name="delivery_province"
-                                                                                        value={checkOutFormData.delivery_province}
-                                                                                        onChange={handleChangePaymentInfo}
-                                                                                        id="province"
-                                                                                        required
-                                                                                    />
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </FormGroup>
-                                                                        <FormGroup className="mb-3">
-                                                                            <Row>
-                                                                                <Col lg="6">
-                                                                                    <Form.Label htmlFor="postal_code" className='mb-2'>
-                                                                                        ZIP/Postal Code
-                                                                                    </Form.Label>
-                                                                                    <FormControl
-                                                                                        type="text"
-                                                                                        name="delivery_postal_code"
-                                                                                        value={checkOutFormData.delivery_postal_code}
-                                                                                        onChange={handleChangePaymentInfo}
-                                                                                        id="postal_code"
-                                                                                        required
-                                                                                    />
-                                                                                </Col>
-                                                                                <Col lg="6">
-                                                                                    <Form.Label htmlFor="province" className='mb-2'>
-                                                                                        Country
-                                                                                    </Form.Label>
-                                                                                    <Form.Control as='select' name='delivery_country' value={checkOutFormData.delivery_country} className='' onChange={handleChangePaymentInfo} required>
-                                                                                        <option value=''>Select Country</option>
-                                                                                        {Countries.map((country, index) => (
-                                                                                            <option key={country + "-" + index} value={country}>
-                                                                                                {country}
-                                                                                            </option>
-                                                                                        ))}
-                                                                                    </Form.Control>
-                                                                                </Col>
-                                                                            </Row>
-                                                                        </FormGroup>
-                                                                    </>
-                                                                    :
-                                                                    null
-                                                                }
-                                                                
+                                                                        </Col>
+                                                                    </Row>
+                                                                </FormGroup>
+                                                                <FormGroup className="mb-3">
+                                                                    <Row>
+                                                                        <Col lg="6">
+                                                                            <Form.Label htmlFor="email" className='mb-2'>
+                                                                                Email
+                                                                            </Form.Label>
+                                                                            <FormControl
+                                                                                type="email"
+                                                                                name="delivery_email"
+                                                                                value={checkOutFormData.delivery_email}
+                                                                                onChange={handleChangePaymentInfo}
+                                                                                id="email"
+                                                                                required
+                                                                            />
+                                                                        </Col>
+                                                                        <Col lg="6">
+                                                                            <Form.Label htmlFor="phone" className='mb-2'>
+                                                                                Phone Number
+                                                                            </Form.Label>
+                                                                            <FormControl
+                                                                                type="text"
+                                                                                name="delivery_phone"
+                                                                                value={checkOutFormData.delivery_phone}
+                                                                                onChange={handleChangePaymentInfo}
+                                                                                id="phone"
+                                                                                required
+                                                                            />
+                                                                        </Col>
+                                                                    </Row>
+                                                                </FormGroup>
+                                                                <FormGroup className="mb-3">
+                                                                    <Form.Label htmlFor="address_line_1" className='mb-2'>
+                                                                        Address Line 1
+                                                                    </Form.Label>
+                                                                    <FormControl
+                                                                        type="text"
+                                                                        name="delivery_address_line_1"
+                                                                        value={checkOutFormData.delivery_address_line_1}
+                                                                        onChange={handleChangePaymentInfo}
+                                                                        id="address_line_1"
+                                                                        required
+                                                                    />
+                                                                </FormGroup>
+                                                                <FormGroup className="mb-3">
+                                                                    <Form.Label htmlFor="address_line_2" className='mb-2'>
+                                                                        Address Line 2
+                                                                    </Form.Label>
+                                                                    <FormControl
+                                                                        type="text"
+                                                                        name="delivery_address_line_2"
+                                                                        value={checkOutFormData.delivery_address_line_2}
+                                                                        onChange={handleChangePaymentInfo}
+                                                                        id="address_line_2"
+                                                                    />
+                                                                </FormGroup>
+                                                                <FormGroup className="mb-3">
+                                                                    <Row>
+                                                                        <Col lg="6">
+                                                                            <Form.Label htmlFor="city" className='mb-2'>
+                                                                                City
+                                                                            </Form.Label>
+                                                                            <FormControl
+                                                                                type="text"
+                                                                                name="delivery_city"
+                                                                                value={checkOutFormData.delivery_city}
+                                                                                onChange={handleChangePaymentInfo}
+                                                                                id="city"
+                                                                                required
+                                                                            />
+                                                                        </Col>
+                                                                        <Col lg="6">
+                                                                            <Form.Label htmlFor="province" className='mb-2'>
+                                                                                Province/State
+                                                                            </Form.Label>
+                                                                            <FormControl
+                                                                                type="text"
+                                                                                name="delivery_province"
+                                                                                value={checkOutFormData.delivery_province}
+                                                                                onChange={handleChangePaymentInfo}
+                                                                                id="province"
+                                                                                required
+                                                                            />
+                                                                        </Col>
+                                                                    </Row>
+                                                                </FormGroup>
+                                                                <FormGroup className="mb-3">
+                                                                    <Row>
+                                                                        <Col lg="6">
+                                                                            <Form.Label htmlFor="postal_code" className='mb-2'>
+                                                                                ZIP/Postal Code
+                                                                            </Form.Label>
+                                                                            <FormControl
+                                                                                type="text"
+                                                                                name="delivery_postal_code"
+                                                                                value={checkOutFormData.delivery_postal_code}
+                                                                                onChange={handleChangePaymentInfo}
+                                                                                id="postal_code"
+                                                                                required
+                                                                            />
+                                                                        </Col>
+                                                                        <Col lg="6">
+                                                                            <Form.Label htmlFor="province" className='mb-2'>
+                                                                                Country
+                                                                            </Form.Label>
+                                                                            <Form.Control as='select' name='delivery_country' value={checkOutFormData.delivery_country} className='' onChange={handleChangePaymentInfo} required>
+                                                                                <option value=''>Select Country</option>
+                                                                                {Countries.map((country, index) => (
+                                                                                    <option key={country + "-" + index} value={country}>
+                                                                                        {country}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </Form.Control>
+                                                                        </Col>
+                                                                    </Row>
+                                                                </FormGroup>
                                                             </>
                                                             :
                                                             null
                                                         }
-                                                    </Card.Body>
-                                                </Card>
-                                                <Card>
-                                                    <Card.Body>
-                                                        <div className='fs-22 rufina-family fw-600'>Payment Info</div>
-                                                        <hr className='mt-2' />
-                                                        <div>Payment Method</div>
-                                                        <div className='mt-3 d-flex'>
-                                                            <div className='d-flex'>
-                                                                <input
-                                                                    type="radio"
-                                                                    name="payment_method"
-                                                                    value="VISA"
-                                                                    onChange={(e) => { setRadioButtonValue("VISA"); handleChangePaymentInfo(e); }}
-                                                                    required
-                                                                />
-                                                            </div>
-                                                            <div className='ms-3'>
-                                                                <FaCcVisa size={20} />
-                                                            </div>
-
-                                                            <div className='ms-2'>
-                                                                VISA
-                                                            </div>
+                                                        
+                                                    </>
+                                                    :
+                                                    null
+                                                }
+                                            </Card.Body>
+                                        </Card>
+                                        {checkOutFormData.ship_to != "" ?
+                                            <Card>
+                                                <Card.Body>
+                                                    <div className='fs-22 rufina-family fw-600'>Payment Info</div>
+                                                    <hr className='mt-2' />
+                                                    <div>Payment Method</div>
+                                                    <div className='mt-3 d-flex'>
+                                                        <div className='d-flex'>
+                                                            <input
+                                                                type="radio"
+                                                                name="payment_method"
+                                                                value="VISA"
+                                                                onChange={(e) => { setRadioButtonValue("VISA"); handleChangePaymentInfo(e); }}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div className='ms-3'>
+                                                            <FaCcVisa size={20} />
                                                         </div>
 
-                                                        <div className='mt-2 d-flex'>
-                                                            <div className='d-flex'>
-                                                                <input
-                                                                    type="radio"
-                                                                    name="payment_method"
-                                                                    value="MasterCard"
-                                                                    onChange={(e) => { setRadioButtonValue("MasterCard"); handleChangePaymentInfo(e); }}
-                                                                    required
-                                                                />
-                                                            </div>
-                                                            <div className='ms-3'>
-                                                                <FaCcMastercard size={20} />
-                                                            </div>
-
-                                                            <div className='ms-2'>
-                                                                MasterCard
-                                                            </div>
+                                                        <div className='ms-2'>
+                                                            VISA
                                                         </div>
-                                                        <div className='mt-2 d-flex'>
-                                                            <div className='d-flex'>
-                                                                <input
-                                                                    type="radio"
-                                                                    name="payment_method"
-                                                                    value="Cash on Delivery"
-                                                                    onChange={(e) => { setRadioButtonValue("Cash on Delivery"); handleChangePaymentInfo(e); }}
-                                                                    required
-                                                                />
-                                                            </div>
-                                                            <div className='ms-3'>
-                                                                <FaTruck size={20} />
-                                                            </div>
+                                                    </div>
 
-                                                            <div className='ms-2'>
-                                                                Cash on Delivery
-                                                            </div>
+                                                    <div className='mt-2 d-flex'>
+                                                        <div className='d-flex'>
+                                                            <input
+                                                                type="radio"
+                                                                name="payment_method"
+                                                                value="MasterCard"
+                                                                onChange={(e) => { setRadioButtonValue("MasterCard"); handleChangePaymentInfo(e); }}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div className='ms-3'>
+                                                            <FaCcMastercard size={20} />
                                                         </div>
 
-                                                        {radioButtonValue != "" && radioButtonValue != "Cash on Delivery" ?
+                                                        <div className='ms-2'>
+                                                            MasterCard
+                                                        </div>
+                                                    </div>
+                                                    <div className='mt-2 d-flex'>
+                                                        <div className='d-flex'>
+                                                            <input
+                                                                type="radio"
+                                                                name="payment_method"
+                                                                value="Cash on Delivery"
+                                                                onChange={(e) => { setRadioButtonValue("Cash on Delivery"); handleChangePaymentInfo(e); }}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div className='ms-3'>
+                                                            <FaTruck size={20} />
+                                                        </div>
+
+                                                        <div className='ms-2'>
+                                                            Cash on Delivery
+                                                        </div>
+                                                    </div>
+
+                                                    {radioButtonValue != "" && radioButtonValue != "Cash on Delivery" ?
+                                                        <div>
+                                                            <hr />
+                                                            <div className='mb-4'>
+                                                                <div className='mb-2'>Card Name:</div>
+                                                                <input
+                                                                    type="text"
+                                                                    className='form-control'
+                                                                    name="card_name"
+                                                                    value={checkOutFormData.card_name}
+                                                                    onChange={handleChangePaymentInfo}
+                                                                />
+                                                            </div>
+                                                            <hr />
+
                                                             <div>
-                                                                <hr />
-                                                                <div className='mb-4'>
-                                                                    <div className='mb-2'>Card Name:</div>
-                                                                    <input
-                                                                        type="text"
-                                                                        className='form-control'
-                                                                        name="card_name"
-                                                                        value={checkOutFormData.card_name}
-                                                                        onChange={handleChangePaymentInfo}
-                                                                    />
-                                                                </div>
-                                                                <hr />
-
-                                                                <div>
-                                                                    <div className='mb-2'>Card Number:</div>
-                                                                    <input
-                                                                        type="text"
-                                                                        name="card_number"
-                                                                        className='form-control mb-2'
-                                                                        value={checkOutFormData.card_number}
-                                                                        onChange={handleChangePaymentInfo}
-                                                                        maxLength={15}
-                                                                        pattern="[0-9]*"
-                                                                    />
-                                                                </div>
-
-                                                                <div className='mt-3'>
-                                                                    <div className='mb-2'>Expiration Date:</div>
-                                                                    <input
-                                                                        type="date"
-                                                                        className='form-control'
-                                                                        name="date"
-                                                                        value={checkOutFormData.date}
-                                                                        onChange={handleChangePaymentInfo}
-                                                                    />
-                                                                </div>
-
+                                                                <div className='mb-2'>Card Number:</div>
+                                                                <input
+                                                                    type="text"
+                                                                    name="card_number"
+                                                                    className='form-control mb-2'
+                                                                    value={checkOutFormData.card_number}
+                                                                    onChange={handleChangePaymentInfo}
+                                                                    maxLength={15}
+                                                                    pattern="[0-9]*"
+                                                                />
                                                             </div>
-                                                            :
-                                                            null
-                                                        }
-                                                        <div className='mt-4'>
-                                                            <Row>
-                                                                <Col lg="12">
-                                                                    {totalAmount < 0 ?
-                                                                        <button type="button" className='btn btn-primary' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
-                                                                        :
-                                                                        <>
-                                                                            {currentUser ?
-                                                                                <button type="submit" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
-                                                                                :
-                                                                                <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
-                                                                            }
-                                                                        </>
-                                                                        
-                                                                    }
-                                                                </Col>
-                                                            </Row>
+
+                                                            <div className='mt-3'>
+                                                                <div className='mb-2'>Expiration Date:</div>
+                                                                <input
+                                                                    type="date"
+                                                                    className='form-control'
+                                                                    name="date"
+                                                                    value={checkOutFormData.date}
+                                                                    onChange={handleChangePaymentInfo}
+                                                                />
+                                                            </div>
+
                                                         </div>
-                                                    </Card.Body>
-                                                </Card>
-                                            </>
+                                                        :
+                                                        null
+                                                    }
+                                                    <div className='mt-4'>
+                                                        <Row>
+                                                            <Col lg="12">
+                                                                {totalAmount < 0 ?
+                                                                    <button type="button" className='btn btn-primary' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                                    :
+                                                                    <>
+                                                                        {currentUser ?
+                                                                            <button type="submit" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                                            :
+                                                                            <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                        }
+                                                                    </>
+                                                                    
+                                                                }
+                                                            </Col>
+                                                        </Row>
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
                                             :
                                             null
                                         }
-                                        
                                     </Form>
                                 </Col>
                             </Row>
                         </Container>
                     </section>
-
-
                 </>
             }
-            <Modal
-                show={selectedDesignerShow}
-                size='xl'
-                centered
-                id="designers-connect"
-            >
-                <Modal.Header className='pb-0'>
-                    <h5 className='modal-title text-left fs-22'>Designers</h5>
-                    <button
-                        type='button'
-                        className='close react-modal-close'
-                        onClick={function () { toggleSelectDesignerShow(); }}
-                    >
-                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
-                    </button>
-                </Modal.Header>
-
-                <Modal.Body>
-                    <Card>
-                        <Card.Body>
-                            <DesignersConnect onSelectDesigner={handleSelectDesigner} />
-                        </Card.Body>
-                    </Card>
-                    <Card.Footer className="text-right mt-3">
-                        <button
-                            className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
-                            onClick={() => toggleSelectDesignerShow()} type="button"
-                        >
-                            Cancel
-                        </button>
-                    </Card.Footer>
-                </Modal.Body>
-            </Modal>
 
             {/* Login */}
             <Modal show={authModalShow} fullscreen={false} onHide={() => setAuthModalShow(false)}>
