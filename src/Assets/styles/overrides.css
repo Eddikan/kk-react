@@ -87,6 +87,10 @@ p {
     line-height: 1.7;
 }
 
+.minw-auto {
+    min-width: auto !important;
+}
+
 .design-atc .action-button, .design-atc .atc-icon {
     transition: 0.5s;
 }

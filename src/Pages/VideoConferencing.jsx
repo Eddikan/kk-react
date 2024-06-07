@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Container, Row, Col, Button, Card, Modal, ModalFooter } from 'react-bootstrap';
+import { Form, Container, Row, Col, Button, Card, Modal, ModalFooter, Alert } from 'react-bootstrap';
 import Layout from 'Components/Layout/Layout';
 import '../Assets/styles/EcoFriendly/style.css';
 import '../Assets/styles/ConsultationMeeting/style.css';
@@ -18,6 +18,7 @@ import { BiDetail, BiSolidMessageDetail, BiMicrophone, BiMicrophoneOff } from "r
 import { VscSend } from "react-icons/vsc";
 import { LuAlarmClock } from "react-icons/lu";
 import { Helmet } from "react-helmet";
+import ImageDragAndDrop from 'Components/Shared/ImageDragAndDrop';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
@@ -52,6 +53,61 @@ const intitialConsultationData = {
     consultation_details: '',
 }
 
+const initialChecklistData = {
+    measurement_checklist: 1,
+    upper_neck_circumference: '',
+    lower_neck_circumference: '',
+    chest_circumference: '',
+    bust_circumference: '',
+    under_bust_circumference: '',
+    waist_circumference: '',
+    mid_hip_circumference: '',
+    hip_circumference: '',
+    bust_distance: '',
+    front_chest_width: '',
+    back_chest_width: '',
+    front_waist_length: '',
+    back_waist_length: '',
+    center_front_length: '',
+    center_back_length: '',
+    front_neck_depth: '',
+    back_neck_depth: '',
+    bust_depth: '',
+    armhole_depth: '',
+    bust_height: '',
+    front_shoulder_width: '',
+    back_shoulder_width: '',
+    shoulder_length: '',
+    shoulder_depth: '',
+    elbow_circumference: '',
+    underarm_lenght: '',
+    sleeve_length: '',
+    arm_circumference: '',
+    wrist_circumference: '',
+    elbow_length: '',
+    armhole_circumference: '',
+    sleeve_cap_height: '',
+    hip_depth: '',
+    crotch_depth: '',
+    crotch_length: '',
+    pants_length: '',
+    knee_length: '',
+    in_seem_length: '',
+    thigh_circumference: '',
+    mid_thigh_circumference: '',
+    knee_circumference: '',
+    calf_circumference: '',
+    ankle_circumference: '',
+    ankle_heel_circumference: '',
+    body_height: '',
+    body_length: ''
+
+
+    // measurement_name: '',
+    // measurement_description: '',
+    // measurement_image_urls: [],
+}
+
 const VideoConferencing = (props) => {
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
@@ -62,6 +118,10 @@ const VideoConferencing = (props) => {
     const [appointmentLoading, setAppointmentLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
     const [consultationFormData, setConsultationFormData] = useState(intitialConsultationData);
+    const [checklistData, setChecklistData] = useState(initialChecklistData);
+    const [updateChecklistLoading, setUpdateChecklistLoading] = useState(false);
+    const [measurementModalShow, setMeasurementModalShow] = useState(false);
+    const [uploadMeasurementModalShow, setUploadMeasurementModalShow] = useState(false);
     const [chatShow, setChatShow] = useState(true);
     const [participantsShow, setParticipantsShow] = useState(false);
     const [agendaShow, setAgendaShow] = useState(false);
@@ -92,7 +152,15 @@ const VideoConferencing = (props) => {
 
     const toggleSaveAppointmentModal = () => {
         setEndMeetingModal(!endMeetingModal);
-    }
+    };
+
+    const toggleMeasurementModal = () => {
+        setMeasurementModalShow(!measurementModalShow);
+    };
+
+    const toggleUploadMeasurementModal = () => {
+        setUploadMeasurementModalShow(!uploadMeasurementModalShow);
+    };
 
     const goBack = () => {
         window.history.back();
@@ -106,12 +174,12 @@ const VideoConferencing = (props) => {
     const toggleCam = () => {
         room.toggleCamera();
         setIsCameraVisible(!isCameraVisible);
-    }
+    };
 
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
-    }
+    };
 
     const shareScreen = () => {
         if (!isShareScreenVisible) {
@@ -139,6 +207,21 @@ const VideoConferencing = (props) => {
             setParticipantsShow(false);
             setAgendaShow(true);
         }
+    };
+
+    const handleChange = (e) => {
+        setChecklistData({
+            ...checklistData,
+            [e.target.name]: e.target.value,
+        })
+    };
+
+    const handleImagesChange = (images) => {
+        // Use the images as needed in the parent component (e.g., for uploading)
+        setChecklistData({
+            ...checklistData,
+            measurement_image_urls: images,
+        });
     };
 
     function returnFormattedDate(date) {
@@ -178,6 +261,27 @@ const VideoConferencing = (props) => {
         }).catch(() => {
             toast.error('There has been an error ending the meeting, please try again!');
             setEndMeetingLoading(false);
+        });
+    }
+
+    const updateChecklist = (e) => {
+        setUpdateChecklistLoading(true);
+        e.preventDefault();
+        putSchedule(checklistData).then(response => {
+            const success = response.data.status;
+            if (success == success) {
+                toast.success('Measurement uploaded successfully!');
+                setUpdateChecklistLoading(false);
+                setReloadCount(reloadCount + 1);
+                toggleUploadMeasurementModal();
+                // navigate('/user/center/appointments');
+            } else {
+                toast.error('There has been an error uploading the measurement, please try again!');
+                setUpdateChecklistLoading(false);
+            }
+        }).catch(() => {
+            toast.error('There has been an error uploading the measurement, please try again!');
+            setUpdateChecklistLoading(false);
         });
     }
 
@@ -370,21 +474,19 @@ const VideoConferencing = (props) => {
                             </Col>
 
                             <Col lg="4">
-                                <Card className="mb-3">
-                                    <Card.Body>
-                                        <Row>
-                                            <Col lg="12">
-                                                <div className='fw-600 fs-18 text-gold'>Checklist</div>
-                                                <hr />
-                                            </Col>
-
-                                            <Col lg="12">
-                                                <p>1. Upload your measurements</p>
-                                                <p>2. Upload your measurements</p>
-                                            </Col>
-                                        </Row>
-                                    </Card.Body>
-                                </Card>
+                                {appointment.measurement_checklist == 0 ?
+                                    <Alert variant="warning" className="d-flex justify-content-between align-items-center">
+                                        <span>Please upload your measurements</span> {` `}
+                                        <Button className="px-4 minw-auto" type="button" onClick={toggleUploadMeasurementModal}>Proceed</Button>
+                                    </Alert>
+                                    : appointment.measurement_checklist == 1 ?
+                                        <Alert variant="success" className="d-flex justify-content-between align-items-center">
+                                            <span>You have uploaded your measurements</span> {` `}
+                                            <Button className="px-4 minw-auto" type="button" onClick={toggleMeasurementModal}>View</Button>
+                                        </Alert>
+                                        :
+                                        null
+                                }
                                 <Card>
                                     <Card.Body>
                                         {chatShow ?
@@ -518,6 +620,362 @@ const VideoConferencing = (props) => {
             </Modal>
 
             <Modal
+                show={uploadMeasurementModalShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="lg"
+            >
+                <Modal.Header className="py-0">
+                    <h5 className='modal-title text-left rufina-family fs-22 mt-3'>Body Measurement</h5>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setUploadMeasurementModalShow(false)}
+                    >
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card>
+                        <Card.Body className="text-left">
+                            <Row>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Upper Neck Circumference</Form.Label>
+                                        <Form.Control name="upper_neck_circumference" onChange={handleChange} placeholder="" value={checklistData.upper_neck_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Lower Neck Circumference</Form.Label>
+                                        <Form.Control name="lower_neck_circumference" onChange={handleChange} placeholder="" value={checklistData.lower_neck_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Chest Circumference</Form.Label>
+                                        <Form.Control name="chest_circumference" onChange={handleChange} placeholder="" value={checklistData.chest_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Bust Circumference</Form.Label>
+                                        <Form.Control name="bust_circumference" onChange={handleChange} placeholder="" value={checklistData.bust_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Under Bust Circumference</Form.Label>
+                                        <Form.Control name="under_bust_circumference" onChange={handleChange} placeholder="" value={checklistData.under_bust_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Waist Circumference</Form.Label>
+                                        <Form.Control name="waist_circumference" onChange={handleChange} placeholder="" value={checklistData.waist_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Mid Hip Circumference</Form.Label>
+                                        <Form.Control name="mid_hip_circumference" onChange={handleChange} placeholder="" value={checklistData.mid_hip_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Hip Circumference</Form.Label>
+                                        <Form.Control name="hip_circumference" onChange={handleChange} placeholder="" value={checklistData.hip_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Bust Distance</Form.Label>
+                                        <Form.Control name="bust_distance" onChange={handleChange} placeholder="" value={checklistData.bust_distance} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Front Chest Width</Form.Label>
+                                        <Form.Control name="front_chest_width" onChange={handleChange} placeholder="" value={checklistData.front_chest_width} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Back Chest Width</Form.Label>
+                                        <Form.Control name="back_chest_width" onChange={handleChange} placeholder="" value={checklistData.back_chest_width} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Front Waist Length</Form.Label>
+                                        <Form.Control name="front_waist_length" onChange={handleChange} placeholder="" value={checklistData.front_waist_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Back Waist Length</Form.Label>
+                                        <Form.Control name="back_waist_length" onChange={handleChange} placeholder="" value={checklistData.back_waist_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Center Front Length</Form.Label>
+                                        <Form.Control name="center_front_length" onChange={handleChange} placeholder="" value={checklistData.center_front_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Center Back Length</Form.Label>
+                                        <Form.Control name="center_back_length" onChange={handleChange} placeholder="" value={checklistData.center_back_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Front Neck Depth</Form.Label>
+                                        <Form.Control name="front_neck_depth" onChange={handleChange} placeholder="" value={checklistData.front_neck_depth} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Back Neck Depth</Form.Label>
+                                        <Form.Control name="back_neck_depth" onChange={handleChange} placeholder="" value={checklistData.back_neck_depth} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Bust Depth</Form.Label>
+                                        <Form.Control name="bust_depth" onChange={handleChange} placeholder="" value={checklistData.bust_depth} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Armhole Depth</Form.Label>
+                                        <Form.Control name="armhole_depth" onChange={handleChange} placeholder="" value={checklistData.armhole_depth} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Bust Height</Form.Label>
+                                        <Form.Control name="bust_height" onChange={handleChange} placeholder="" value={checklistData.bust_height} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Front Shoulder Width</Form.Label>
+                                        <Form.Control name="front_shoulder_width" onChange={handleChange} placeholder="" value={checklistData.front_shoulder_width} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Back Shoulder Width</Form.Label>
+                                        <Form.Control name="back_shoulder_width" onChange={handleChange} placeholder="" value={checklistData.back_shoulder_width} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Shoulder Length</Form.Label>
+                                        <Form.Control name="shoulder_length" onChange={handleChange} placeholder="" value={checklistData.shoulder_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Shoulder Depth</Form.Label>
+                                        <Form.Control name="shoulder_depth" onChange={handleChange} placeholder="" value={checklistData.shoulder_depth} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Elbow Circumference</Form.Label>
+                                        <Form.Control name="elbow_circumference" onChange={handleChange} placeholder="" value={checklistData.elbow_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Underarm Length</Form.Label>
+                                        <Form.Control name="underarm_lenght" onChange={handleChange} placeholder="" value={checklistData.underarm_lenght} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Sleeve Length</Form.Label>
+                                        <Form.Control name="sleeve_length" onChange={handleChange} placeholder="" value={checklistData.sleeve_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Arm Circumference</Form.Label>
+                                        <Form.Control name="arm_circumference" onChange={handleChange} placeholder="" value={checklistData.arm_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Wrist Circumference</Form.Label>
+                                        <Form.Control name="wrist_circumference" onChange={handleChange} placeholder="" value={checklistData.wrist_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Elbow Length</Form.Label>
+                                        <Form.Control name="elbow_length" onChange={handleChange} placeholder="" value={checklistData.elbow_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Armhole Circumference</Form.Label>
+                                        <Form.Control name="armhole_circumference" onChange={handleChange} placeholder="" value={checklistData.armhole_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Sleeve Cap Height</Form.Label>
+                                        <Form.Control name="sleeve_cap_height" onChange={handleChange} placeholder="" value={checklistData.sleeve_cap_height} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Hip Depth</Form.Label>
+                                        <Form.Control name="hip_depth" onChange={handleChange} placeholder="" value={checklistData.hip_depth} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Crotch Depth</Form.Label>
+                                        <Form.Control name="crotch_depth" onChange={handleChange} placeholder="" value={checklistData.crotch_depth} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Crotch Length</Form.Label>
+                                        <Form.Control name="crotch_length" onChange={handleChange} placeholder="" value={checklistData.crotch_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Pants Length</Form.Label>
+                                        <Form.Control name="pants_length" onChange={handleChange} placeholder="" value={checklistData.pants_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Knee Length</Form.Label>
+                                        <Form.Control name="knee_length" onChange={handleChange} placeholder="" value={checklistData.knee_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Inseam Length</Form.Label>
+                                        <Form.Control name="in_seem_length" onChange={handleChange} placeholder="" value={checklistData.in_seem_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Thigh Circumference</Form.Label>
+                                        <Form.Control name="thigh_circumference" onChange={handleChange} placeholder="" value={checklistData.thigh_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Mid Thigh Circumference</Form.Label>
+                                        <Form.Control name="mid_thigh_circumference" onChange={handleChange} placeholder="" value={checklistData.mid_thigh_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Knee Circumference</Form.Label>
+                                        <Form.Control name="knee_circumference" onChange={handleChange} placeholder="" value={checklistData.knee_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Calf Circumference</Form.Label>
+                                        <Form.Control name="calf_circumference" onChange={handleChange} placeholder="" value={checklistData.calf_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Ankle Circumference</Form.Label>
+                                        <Form.Control name="ankle_circumference" onChange={handleChange} placeholder="" value={checklistData.ankle_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Ankle Heel Circumference</Form.Label>
+                                        <Form.Control name="ankle_heel_circumference" onChange={handleChange} placeholder="" value={checklistData.ankle_heel_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Body Height</Form.Label>
+                                        <Form.Control name="body_height" onChange={handleChange} placeholder="" value={checklistData.body_height} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="6">
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Body Length</Form.Label>
+                                        <Form.Control name="body_length" onChange={handleChange} placeholder="" value={checklistData.body_length} />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+
+                <ModalFooter className='border-none pt-0'>
+                    <div className='text-right'>
+                        <button
+                            className="btn btn-secondary border-black bg-white text-black btn-style"
+                            onClick={() => setUploadMeasurementModalShow(false)}
+                            type="button">
+                            Close
+                        </button>
+                        {updateChecklistLoading ?
+                            <button className="btn btn-primary btn-style ms-3" type="button">Saving...</button>
+                            :
+                            <button className="btn btn-primary ms-3 btn-style" type="button" onClick={updateChecklist}>Save</button>
+                        }
+                    </div>
+                </ModalFooter>
+            </Modal>
+
+            <Modal
+                show={measurementModalShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="lg"
+            >
+                <Modal.Header className="py-0">
+                    <h5 className='modal-title text-left rufina-family fs-22 mt-3'>{appointment.measurement_name}</h5>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setMeasurementModalShow(false)}
+                    >
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card>
+                        <Card.Body className="text-left">
+                            <p className="fs-16 mb-0 text-black">{appointment.measurement_description}</p>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+
+                <ModalFooter className='border-none pt-0'>
+                    <div className='text-right'>
+                        <button
+                            className="btn btn-secondary border-black bg-white text-black btn-style"
+                            onClick={() => setMeasurementModalShow(false)}
+                            type="button">
+                            Close
+                        </button>
+                    </div>
+                </ModalFooter>
+            </Modal>
+
+            <Modal
                 show={endMeetingModal}
                 className='modal-preview'
                 fade={false}
@@ -552,7 +1010,7 @@ const VideoConferencing = (props) => {
                         </button>
 
                         {endMeetingLoading ?
-                            <button className="btn btn-primary btn-style ms-3" type="button">End Meeting...</button>
+                            <button className="btn btn-primary btn-style ms-3" type="button">Ending Meeting...</button>
                             :
                             <button className="btn btn-primary ms-3 btn-style" type="button" onClick={endMeetingSubmit}>End Meeting</button>
                         }
