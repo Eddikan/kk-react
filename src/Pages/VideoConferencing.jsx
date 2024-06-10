@@ -895,7 +895,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Under Bust Circumference</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(5)}/>
                                         </Form.Group>
                                         <Form.Control name="under_bust_circumference" onChange={handleChange} placeholder="" value={checklistData.under_bust_circumference} />
                                     </Form.Group>
@@ -904,7 +904,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Waist Circumference</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(6)}/>
                                         </Form.Group>
                                         <Form.Control name="waist_circumference" onChange={handleChange} placeholder="" value={checklistData.waist_circumference} />
                                     </Form.Group>
@@ -913,7 +913,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Mid Hip Circumference</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(7)}/>
                                         </Form.Group>
                                         <Form.Control name="mid_hip_circumference" onChange={handleChange} placeholder="" value={checklistData.mid_hip_circumference} />
                                     </Form.Group>
@@ -922,7 +922,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Hip Circumference</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(8)}/>
                                         </Form.Group>
                                         <Form.Control name="hip_circumference" onChange={handleChange} placeholder="" value={checklistData.hip_circumference} />
                                     </Form.Group>
@@ -931,7 +931,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Bust Distance</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(9)}/>
                                         </Form.Group>
                                         <Form.Control name="bust_distance" onChange={handleChange} placeholder="" value={checklistData.bust_distance} />
                                     </Form.Group>
@@ -940,7 +940,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Front Chest Width</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(10)}/>
                                         </Form.Group>
                                         <Form.Control name="front_chest_width" onChange={handleChange} placeholder="" value={checklistData.front_chest_width} />
                                     </Form.Group>
@@ -949,7 +949,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Back Chest Width</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(11)}/>
                                         </Form.Group>
                                         <Form.Control name="back_chest_width" onChange={handleChange} placeholder="" value={checklistData.back_chest_width} />
                                     </Form.Group>
@@ -958,7 +958,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Front Waist Length</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(12)}/>
                                         </Form.Group>
                                         <Form.Control name="front_waist_length" onChange={handleChange} placeholder="" value={checklistData.front_waist_length} />
                                     </Form.Group>
@@ -967,7 +967,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Back Waist Length</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(13)}/>
                                         </Form.Group>
                                         <Form.Control name="back_waist_length" onChange={handleChange} placeholder="" value={checklistData.back_waist_length} />
                                     </Form.Group>
@@ -976,7 +976,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Center Front Length</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(14)}/>
                                         </Form.Group>
                                         <Form.Control name="center_front_length" onChange={handleChange} placeholder="" value={checklistData.center_front_length} />
                                     </Form.Group>
@@ -985,7 +985,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Center Back Length</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(15)}/>
                                         </Form.Group>
                                         <Form.Control name="center_back_length" onChange={handleChange} placeholder="" value={checklistData.center_back_length} />
                                     </Form.Group>
@@ -994,7 +994,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Front Neck Depth</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(16)}/>
                                         </Form.Group>
                                         <Form.Control name="front_neck_depth" onChange={handleChange} placeholder="" value={checklistData.front_neck_depth} />
                                     </Form.Group>
@@ -1003,7 +1003,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Back Neck Depth</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(17)}/>
                                         </Form.Group>
                                         <Form.Control name="back_neck_depth" onChange={handleChange} placeholder="" value={checklistData.back_neck_depth} />
                                     </Form.Group>
@@ -1012,7 +1012,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Bust Depth</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(18)}/>
                                         </Form.Group>
                                         <Form.Control name="bust_depth" onChange={handleChange} placeholder="" value={checklistData.bust_depth} />
                                     </Form.Group>
@@ -1021,7 +1021,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Armhole Depth</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(19)}/>
                                         </Form.Group>
                                         <Form.Control name="armhole_depth" onChange={handleChange} placeholder="" value={checklistData.armhole_depth} />
                                     </Form.Group>
@@ -1030,7 +1030,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Bust Height</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(20)}/>
                                         </Form.Group>
                                         <Form.Control name="bust_height" onChange={handleChange} placeholder="" value={checklistData.bust_height} />
                                     </Form.Group>
@@ -1039,7 +1039,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Front Shoulder Width</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(21)}/>
                                         </Form.Group>
                                         <Form.Control name="front_shoulder_width" onChange={handleChange} placeholder="" value={checklistData.front_shoulder_width} />
                                     </Form.Group>
@@ -1048,7 +1048,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Back Shoulder Width</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(22)}/>
                                         </Form.Group>
                                         <Form.Control name="back_shoulder_width" onChange={handleChange} placeholder="" value={checklistData.back_shoulder_width} />
                                     </Form.Group>
@@ -1057,7 +1057,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Shoulder Length</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(23)}/>
                                         </Form.Group>
                                         <Form.Control name="shoulder_length" onChange={handleChange} placeholder="" value={checklistData.shoulder_length} />
                                     </Form.Group>
@@ -1066,7 +1066,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Shoulder Depth</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(24)}/>
                                         </Form.Group>
                                         <Form.Control name="shoulder_depth" onChange={handleChange} placeholder="" value={checklistData.shoulder_depth} />
                                     </Form.Group>
@@ -1075,7 +1075,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Elbow Circumference</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(25)}/>
                                         </Form.Group>
                                         <Form.Control name="elbow_circumference" onChange={handleChange} placeholder="" value={checklistData.elbow_circumference} />
                                     </Form.Group>
@@ -1084,7 +1084,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Underarm Length</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(26)}/>
                                         </Form.Group>
                                         <Form.Control name="underarm_lenght" onChange={handleChange} placeholder="" value={checklistData.underarm_lenght} />
                                     </Form.Group>
@@ -1093,7 +1093,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Sleeve Length</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(27)}/>
                                         </Form.Group>
                                         <Form.Control name="sleeve_length" onChange={handleChange} placeholder="" value={checklistData.sleeve_length} />
                                     </Form.Group>
@@ -1102,7 +1102,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Arm Circumference</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(28)}/>
                                         </Form.Group>
                                         <Form.Control name="arm_circumference" onChange={handleChange} placeholder="" value={checklistData.arm_circumference} />
                                     </Form.Group>
@@ -1111,7 +1111,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Wrist Circumference</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(29)}/>
                                         </Form.Group>
                                         <Form.Control name="wrist_circumference" onChange={handleChange} placeholder="" value={checklistData.wrist_circumference} />
                                     </Form.Group>
@@ -1120,7 +1120,7 @@ const VideoConferencing = (props) => {
                                     <Form.Group className="mb-3">
                                         <Form.Group>
                                             <Form.Label>Elbow Length</Form.Label>
-                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(30)}/>
                                         </Form.Group>
                                         <Form.Control name="elbow_length" onChange={handleChange} placeholder="" value={checklistData.elbow_length} />
                                     </Form.Group>
