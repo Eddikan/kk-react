@@ -29,6 +29,8 @@ import { FaCrown } from 'react-icons/fa';
 import MeetingChat from '../Components/Chat/MeetingChat';
 import UserPlaceholder from 'Components/Elements/UserPlaceholder';
 // import UserImage from 'components/Image/UserImage';
+import { IoIosHelpCircleOutline } from "react-icons/io";
+import UpperNeck from 'Assets/images/upper-neck-circumference.png';
 
 
 const ToastCss = {
@@ -108,6 +110,190 @@ const initialChecklistData = {
     // measurement_image_urls: [],
 }
 
+const measurementGuideData = [
+    {
+        id: 1,
+        title: 'Upper Neck Circumference',
+        image: require('Assets/images/upper-neck-circumference.png'), // Adjust path
+        description: '<b>Upper Neck Circumference***: (Reference Point A):</b><br>Measure upper portion of the neck.',
+    },
+    {
+        id: 2,
+        title: 'Lower Neck Circumference',
+        image: require('Assets/images/lower-neck-circumference.png'), // Adjust path
+        description: '<b>Lower Neck Circumference*** (Reference Point A1):</b><br>Measure the base of the lower portion of the neck.',
+    },
+    {
+        id: 3,
+        title: 'Chest Circumference',
+        image: require('Assets/images/chest-circumference.png'), // Adjust path
+        description: '<b>Chest Circumference*** (Reference Point Line C):</b><br>Measure around the chest from back to front keeping the tape runs parallel to the floor.',
+    },
+    {
+        id: 4,
+        title: 'Bust Circumference',
+        image: require('Assets/images/bust-circumference.png'), // Adjust path
+        description: '<b>Bust Circumference*** (Reference Line C1):</b><br>Measure around the fullest part of the breast from back to front keeping the tape parallel to the floor.',
+    },
+    {
+        id: 5,
+        title: 'Under Bust Circumference',
+        image: require('Assets/images/under-bust-circumference.png'), // Adjust path
+        description: '<b>Under Bust Circumference*** (Reference Line C2):</b><br>Measure under the bust from back to front keeping the tape parallel to the ground.',
+    },
+    {
+        id: 6,
+        title: 'Waist Circumference',
+        image: require('Assets/images/waist-circumference.png'), // Adjust path
+        description: '<b>Waist Circumference*** (Reference Line D):</b><br>Measure around the narrowest part of the waist from back to front ensuring the tape is parallel to the floor.',
+    },
+    {
+        id: 7,
+        title: 'Mid Hip Circumference',
+        image: require('Assets/images/mid-hip-circumference.png'), // Adjust path
+        description: '<b>Mid Hip Circumference*** (Reference Line E):</b><br>Measure around the area between the widest part of  the hip and the waist line.',
+    },
+    {
+        id: 8,
+        title: 'Hip Circumference',
+        image: require('Assets/images/hip-circumference.png'), // Adjust path
+        description: '<b>Hip Circumference*** (Reference Line F):</b><br>Measure around the widest part of the hip.',
+    },
+    {
+        id: 9,
+        title: 'Bust Distance',
+        image: require('Assets/images/bust-distance.png'), // Adjust path
+        description: '<b>Bust Distance (Reference Points C3 - C5):</b><br>Measure from the nipple point of one breast to the nipple of the other.',
+    },
+    {
+        id: 10,
+        title: 'Front Chest Width',
+        image: require('Assets/images/front-chest-width.png'), // Adjust path
+        description: '<b>Front Chest Width (Reference Points C6 - C7):</b><br>Measure the distance from one armpit to the other.',
+    },
+    {
+        id: 11,
+        title: 'Back Chest Width',
+        image: require('Assets/images/back-chest-width.png'), // Adjust path
+        description: '<b>Back Chest Width (Reference Points C6 - C7):</b><br>Measure the distance from one armpit to the other.',
+    },
+    {
+        id: 12,
+        title: 'Front Waist Length',
+        image: require('Assets/images/front-waist-length.png'), // Adjust path
+        description: '<b>Front Waist Length (Reference Point M to Line D):</b><br>Measure from the base of the neck to the front waistline mark, passing the tape over the bust.',
+    },
+    {
+        id: 13,
+        title: 'Back Waist Length',
+        image: require('Assets/images/back-waist-length.png'), // Adjust path
+        description: '<b>Back Waist Length (Reference Point M to Line D):</b><br>Measure from the base of the neck to the back waistline mark.',
+    },
+    {
+        id: 14,
+        title: 'Center Front Length',
+        image: require('Assets/images/center-front-length.png'), // Adjust path
+        description: '<b>Center Front Length (Reference Point A1 to Front Line D):</b><br>Measure from the center of the front neck down to the center of the front waistline mark.',
+    },
+    {
+        id: 15,
+        title: 'Center Back Length',
+        image: require('Assets/images/center-back-length.png'), // Adjust path
+        description: '<b>Center Back Length (Reference Point A1 to Back Line D):</b><br>Measure from the center of  the back neck down to the center of the back waistline mark.',
+    },
+    {
+        id: 16,
+        title: 'Front Neck Depth',
+        image: require('Assets/images/front-neck-depth.png'), // Adjust path
+        description: '<b>Front Neck Depth (Reference Point M to the desired length):</b><br>Measure from the front shoulder starting at the base of the neck to your desired front neck depth.',
+    },
+    {
+        id: 17,
+        title: 'Back Neck Depth',
+        image: require('Assets/images/back-neck-depth.png'), // Adjust path
+        description: '<b>Back Neck Depth (Reference Point A1 to your desired length):</b><br>Measure from the base of the neck to the desired back neck depth.',
+    },
+    {
+        id: 18,
+        title: 'Bust Depth/Radius',
+        image: require('Assets/images/bust-depth-radius.png'), // Adjust path
+        description: '<b>Bust Depth/Radius (Reference Point C3 - C4):</b><br>Measure from the nipple point on the bust down to under the bust.',
+    },
+    {
+        id: 19,
+        title: 'Armhole Depth',
+        image: require('Assets/images/armhole-depth.png'), // Adjust path
+        description: '<b>Armhole Depth (Reference Point N to under the armpit line on line C):</b><br>With a ruler placed under the armpit, measure from the tip of the shoulder bone to the armpit, touching the ruler.',
+    },
+    {
+        id: 20,
+        title: 'Bust Height',
+        image: require('Assets/images/bust-height.png'), // Adjust path
+        description: '<b>Bust Height (Reference Point M - Line C3):</b><br>Measure from the front shoulder at the base of the neck to the highest point of the bust.',
+    },
+    {
+        id: 21,
+        title: 'Front Shoulder Width',
+        image: require('Assets/images/front-shoulder-width.png'), // Adjust path
+        description: '<b>Front Shoulder Width (Reference Point N - N):</b><br>Request your assistant to place one end of a tape measure flat against one shoulder point. Then, have them extend the tape measure across your front, tracing the natural curve of your shoulders, until it reaches the opposite shoulder point.',
+    },
+    {
+        id: 22,
+        title: 'Back Shoulder Width',
+        image: require('Assets/images/back-shoulder-width.png'), // Adjust path
+        description: '<b>Back Shoulder Width (Reference Point N - N):</b><br>Request your assistant to place one end of a tape measure flat against one shoulder point. Then, have them extend the tape measure across your back, tracing the natural curve of your shoulders, until it reaches the opposite shoulder point.',
+    },
+    {
+        id: 23,
+        title: 'Shoulder Length',
+        image: require('Assets/images/shoulder-length.png'), // Adjust path
+        description: '<b>Shoulder Length (Reference Point M - N):</b><br>Measure along the front from base of neck to the shoulder point.',
+    },
+    {
+        id: 24,
+        title: 'Shoulder Depth',
+        image: require('Assets/images/shoulder-depth.png'), // Adjust path
+        description: '<b>Shoulder Depth (Reference point A1 - back line point N):</b><br>Measure from the nape down to the line that meets the shoulder point.',
+    },
+    {
+        id: 25,
+        title: 'Elbow Circumference',
+        image: require('Assets/images/elbow-circumference.png'), // Adjust path
+        description: '<b>Elbow Circumference*** (Reference Point P):</b><br>With your arm slightly bent and hand resting on your hip, measure around the elbow.',
+    },
+    {
+        id: 26,
+        title: 'Underarm Length',
+        image: require('Assets/images/elbow-circumference.png'), // Adjust path
+        description: '<b>Underarm  Length (Lince C - Reference point Q):</b><br>With your arm slightly bent and hand resting on your hip, measure from the armpit to the wrist.',
+    },
+    {
+        id: 27,
+        title: 'Sleeve Length',
+        image: require('Assets/images/sleeve-length.png'), // Adjust path
+        description: '<b>Sleeve Length (Reference Points N - P - O):</b><br>While the arm is bent, measure from the tip of the shoulder point to the wrist mark, ensuring the measurement passes through the elbow.',
+    },
+    {
+        id: 28,
+        title: 'Arm Circumference)',
+        image: require('Assets/images/arm-circumference.png'), // Adjust path
+        description: '<b>Arm Circumference*** (Reference Point O):</b><br> Measure the widest part of the upper arm.',
+    },
+    {
+        id: 29,
+        title: 'Wrist Circumference',
+        image: require('Assets/images/wrist-circumference.png'), // Adjust path
+        description: '<b>Wrist Circumference*** (Reference Point Q):</b><br>Measure the narrowest area of the wrist.',
+    },
+    {
+        id: 30,
+        title: 'Elbow Length',
+        image: require('Assets/images/elbow-circumference.png'), // Adjust path
+        description: '<b>Elbow Length (Reference Point N - P):</b><br>While the arm is bent, measure from the tip of the shoulder point to the tip of the elbow bone.',
+    },
+
+];
+
 const VideoConferencing = (props) => {
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
@@ -132,6 +318,11 @@ const VideoConferencing = (props) => {
     const [endMeetingModal, setEndMeetingModal] = useState(false);
     const [endMeetingLoading, setEndMeetingLoading] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
+    const [modalHeadingMeasurementGuide, setModalHeadingMeasurementGuide] = useState('');
+    const [measurementGuideDescription, setModalMeasurementGuideDescription] = useState('');
+    const [measurementGuideImage, setModalMeasurementGuideImage] = useState('');
+    const [measurementGuideModalShow, setMeasurementGuideModalShow] = useState(false);
+    const [measurementGuidedataLookup, setMeasurementGuideDataLookup] = useState({});
 
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
@@ -160,6 +351,21 @@ const VideoConferencing = (props) => {
 
     const toggleUploadMeasurementModal = () => {
         setUploadMeasurementModalShow(!uploadMeasurementModalShow);
+    };
+
+    const toggleMeasurementGuideModal = (id) => {
+        // setModalHeadingMeasurementGuide(heading);
+        const data = measurementGuidedataLookup[id];
+        if(data) {
+            setModalHeadingMeasurementGuide(data.title);
+            setModalMeasurementGuideDescription(data.description);
+            setModalMeasurementGuideImage(data.image);
+        } else {
+            setModalHeadingMeasurementGuide('-');
+            setModalMeasurementGuideDescription('-');
+            setModalMeasurementGuideImage('-');
+        }
+        setMeasurementGuideModalShow(!measurementGuideModalShow);
     };
 
     const goBack = () => {
@@ -306,6 +512,15 @@ const VideoConferencing = (props) => {
         }
     },
         [reloadCount]);
+
+    useEffect(() => {
+        // Create lookup object
+        const lookup = measurementGuideData.reduce((acc, item) => {
+            acc[item.id] = item;
+            return acc;
+        }, {});
+        setMeasurementGuideDataLookup(lookup);
+    }, []);
 
     return (
         <Layout>
@@ -642,277 +857,415 @@ const VideoConferencing = (props) => {
                             <Row>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Upper Neck Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Upper Neck Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(1)}/>
+                                        </Form.Group>
                                         <Form.Control name="upper_neck_circumference" onChange={handleChange} placeholder="" value={checklistData.upper_neck_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Lower Neck Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Lower Neck Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(2)}/>
+                                        </Form.Group>
                                         <Form.Control name="lower_neck_circumference" onChange={handleChange} placeholder="" value={checklistData.lower_neck_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Chest Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Chest Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(3)}/>
+                                        </Form.Group>
                                         <Form.Control name="chest_circumference" onChange={handleChange} placeholder="" value={checklistData.chest_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Bust Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Bust Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={()=> toggleMeasurementGuideModal(4)}/>
+                                        </Form.Group>
                                         <Form.Control name="bust_circumference" onChange={handleChange} placeholder="" value={checklistData.bust_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Under Bust Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Under Bust Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="under_bust_circumference" onChange={handleChange} placeholder="" value={checklistData.under_bust_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Waist Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Waist Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="waist_circumference" onChange={handleChange} placeholder="" value={checklistData.waist_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Mid Hip Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Mid Hip Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="mid_hip_circumference" onChange={handleChange} placeholder="" value={checklistData.mid_hip_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Hip Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Hip Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="hip_circumference" onChange={handleChange} placeholder="" value={checklistData.hip_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Bust Distance</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Bust Distance</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="bust_distance" onChange={handleChange} placeholder="" value={checklistData.bust_distance} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Front Chest Width</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Front Chest Width</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="front_chest_width" onChange={handleChange} placeholder="" value={checklistData.front_chest_width} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Back Chest Width</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Back Chest Width</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="back_chest_width" onChange={handleChange} placeholder="" value={checklistData.back_chest_width} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Front Waist Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Front Waist Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="front_waist_length" onChange={handleChange} placeholder="" value={checklistData.front_waist_length} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Back Waist Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Back Waist Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="back_waist_length" onChange={handleChange} placeholder="" value={checklistData.back_waist_length} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Center Front Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Center Front Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="center_front_length" onChange={handleChange} placeholder="" value={checklistData.center_front_length} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Center Back Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Center Back Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="center_back_length" onChange={handleChange} placeholder="" value={checklistData.center_back_length} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Front Neck Depth</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Front Neck Depth</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="front_neck_depth" onChange={handleChange} placeholder="" value={checklistData.front_neck_depth} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Back Neck Depth</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Back Neck Depth</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="back_neck_depth" onChange={handleChange} placeholder="" value={checklistData.back_neck_depth} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Bust Depth</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Bust Depth</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="bust_depth" onChange={handleChange} placeholder="" value={checklistData.bust_depth} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Armhole Depth</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Armhole Depth</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="armhole_depth" onChange={handleChange} placeholder="" value={checklistData.armhole_depth} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Bust Height</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Bust Height</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="bust_height" onChange={handleChange} placeholder="" value={checklistData.bust_height} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Front Shoulder Width</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Front Shoulder Width</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="front_shoulder_width" onChange={handleChange} placeholder="" value={checklistData.front_shoulder_width} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Back Shoulder Width</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Back Shoulder Width</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="back_shoulder_width" onChange={handleChange} placeholder="" value={checklistData.back_shoulder_width} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Shoulder Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Shoulder Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="shoulder_length" onChange={handleChange} placeholder="" value={checklistData.shoulder_length} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Shoulder Depth</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Shoulder Depth</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="shoulder_depth" onChange={handleChange} placeholder="" value={checklistData.shoulder_depth} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Elbow Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Elbow Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="elbow_circumference" onChange={handleChange} placeholder="" value={checklistData.elbow_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Underarm Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Underarm Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="underarm_lenght" onChange={handleChange} placeholder="" value={checklistData.underarm_lenght} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Sleeve Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Sleeve Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="sleeve_length" onChange={handleChange} placeholder="" value={checklistData.sleeve_length} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Arm Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Arm Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="arm_circumference" onChange={handleChange} placeholder="" value={checklistData.arm_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Wrist Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Wrist Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="wrist_circumference" onChange={handleChange} placeholder="" value={checklistData.wrist_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Elbow Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Elbow Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="elbow_length" onChange={handleChange} placeholder="" value={checklistData.elbow_length} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Armhole Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Armhole Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="armhole_circumference" onChange={handleChange} placeholder="" value={checklistData.armhole_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Sleeve Cap Height</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Sleeve Cap Height</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="sleeve_cap_height" onChange={handleChange} placeholder="" value={checklistData.sleeve_cap_height} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Hip Depth</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Hip Depth</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="hip_depth" onChange={handleChange} placeholder="" value={checklistData.hip_depth} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Crotch Depth</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Crotch Depth</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="crotch_depth" onChange={handleChange} placeholder="" value={checklistData.crotch_depth} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Crotch Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Crotch Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="crotch_length" onChange={handleChange} placeholder="" value={checklistData.crotch_length} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Pants Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Pants Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="pants_length" onChange={handleChange} placeholder="" value={checklistData.pants_length} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Knee Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Knee Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="knee_length" onChange={handleChange} placeholder="" value={checklistData.knee_length} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Inseam Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Inseam Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="in_seem_length" onChange={handleChange} placeholder="" value={checklistData.in_seem_length} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Thigh Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Thigh Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="thigh_circumference" onChange={handleChange} placeholder="" value={checklistData.thigh_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Mid Thigh Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Mid Thigh Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="mid_thigh_circumference" onChange={handleChange} placeholder="" value={checklistData.mid_thigh_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Knee Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Knee Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="knee_circumference" onChange={handleChange} placeholder="" value={checklistData.knee_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Calf Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Calf Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="calf_circumference" onChange={handleChange} placeholder="" value={checklistData.calf_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Ankle Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Ankle Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="ankle_circumference" onChange={handleChange} placeholder="" value={checklistData.ankle_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Ankle Heel Circumference</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Ankle Heel Circumference</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="ankle_heel_circumference" onChange={handleChange} placeholder="" value={checklistData.ankle_heel_circumference} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Body Height</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Body Height</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="body_height" onChange={handleChange} placeholder="" value={checklistData.body_height} />
                                     </Form.Group>
                                 </Col>
                                 <Col lg="6">
                                     <Form.Group className="mb-3">
-                                        <Form.Label>Body Length</Form.Label>
+                                        <Form.Group>
+                                            <Form.Label>Body Length</Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn"/>
+                                        </Form.Group>
                                         <Form.Control name="body_length" onChange={handleChange} placeholder="" value={checklistData.body_length} />
                                     </Form.Group>
                                 </Col>
@@ -968,6 +1321,54 @@ const VideoConferencing = (props) => {
                         <button
                             className="btn btn-secondary border-black bg-white text-black btn-style"
                             onClick={() => setMeasurementModalShow(false)}
+                            type="button">
+                            Close
+                        </button>
+                    </div>
+                </ModalFooter>
+            </Modal>
+
+            <Modal
+                show={measurementGuideModalShow}
+                className='modal-preview'
+                fade={false}
+                centered
+                size="lg"
+            >
+                <Modal.Header className="py-0">
+                    <h5 className='modal-title text-left rufina-family fs-22 mt-3'>{modalHeadingMeasurementGuide}</h5>
+                    <button
+                        type='button'
+                        className='close react-modal-close'
+                        onClick={() => setMeasurementGuideModalShow(false)}
+                    >
+                        <IoCloseOutline color="#7e7e7e" size={25} className='mt-2' />
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card>
+                        <Card.Body className="text-left">
+                            <Row>
+                                <Col lg={6}>
+                                    <div>
+                                        <img src={measurementGuideImage}/>
+                                    </div>
+                                    
+                                </Col>
+                                <Col lg={6}>
+                                    <p dangerouslySetInnerHTML={{ __html: measurementGuideDescription }} className="fs-16 mb-0 text-black"/>
+                                </Col>
+                            </Row>
+                            
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+
+                <ModalFooter className='border-none pt-0'>
+                    <div className='text-right'>
+                        <button
+                            className="btn btn-secondary border-black bg-white text-black btn-style"
+                            onClick={() => setMeasurementGuideModalShow(false)}
                             type="button">
                             Close
                         </button>

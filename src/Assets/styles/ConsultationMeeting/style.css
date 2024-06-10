@@ -111,3 +111,8 @@ span.icon-tooltiptext.call-icons {
     color: #cea835;
     cursor: unset;
 }
+
+.question-btn {
+    margin-left: 5px;
+    cursor: pointer;
+}
