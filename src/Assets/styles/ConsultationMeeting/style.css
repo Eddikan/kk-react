@@ -116,3 +116,20 @@ span.icon-tooltiptext.call-icons {
     margin-left: 5px;
     cursor: pointer;
 }
+
+.measurement-guide-modal {
+    max-width: 450px;
+    padding-left: 0px !important;
+    position: absolute;
+    left: 48%;
+    right: 50%;
+    transform: translate(-50%, -50%);
+    top: 484px;
+
+}
+.measurement-image {
+    width: 150px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
