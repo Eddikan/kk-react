@@ -183,7 +183,7 @@ const SignUp = (props) => {
                                     <a href="/">
                                         <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" style={{ maxWidth: '50px' }} />
                                     </a>
-                                    {signupType == "designer" ?
+                                    {/* {signupType == "designer" ?
                                         <>
                                             <h1 className='text-center'>Designer Registration</h1>
                                             <p className="text-center small mb-0">
@@ -207,7 +207,14 @@ const SignUp = (props) => {
                                                 </p>
                                                 <div className="divider-small mb-4 mt-3"></div>
                                             </>
-                                    }
+                                    } */}
+                                    <>
+                                        <h1 className='text-center'>Sign up to Kouture Konect</h1>
+                                        <p className="text-center small mb-0">
+                                            Join Kouture Konect to view more Designers, Designs and Fabrics!
+                                        </p>
+                                        <div className="divider-small mb-4 mt-3"></div>
+                                    </>
                                     <Form onSubmit={registerSubmit}>
                                         {/* <Row>
                                             <Col lg="6">

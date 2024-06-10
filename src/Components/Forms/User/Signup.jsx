@@ -28,7 +28,6 @@ const SignUp = (props) => {
     const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
     const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
 
-
     const handleChange = (e) => {
         setRegisterFormData({
             ...registerFormData,
@@ -64,7 +63,7 @@ const SignUp = (props) => {
           // setReorderLoading(false);
           toast.error('Something went wrong, please contact the administrator!');
         });
-      }
+    }
     
       async function addTempFavoritesToFavorites(data) {
         // setReorderLoading(true);
@@ -84,7 +83,7 @@ const SignUp = (props) => {
           // setReorderLoading(false);
           toast.error('Something went wrong, please contact the administrator!');
         });
-      }
+    }
 
     async function registerSubmit(e) {
         e.preventDefault();

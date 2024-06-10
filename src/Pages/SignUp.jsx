@@ -27,7 +27,7 @@ const SignUp = () => {
   }
   let query = useQuery();
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'tempCart', 'tempFavorites']);
-  
+
   const [signupType, setSignupType] = useState(query.get("type"));
   const [signupOption, setSignupOption] = useState(query.get("option"));
   const [registerFormData, setRegisterFormData] = useState(initialRegisterData);
@@ -85,8 +85,8 @@ const SignUp = () => {
         const user_details = { currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at }
         setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
         setCookie('signup_type', selectedUser.signup_type, { path: '/' });
-        if (signupOption && signupOption != "") { 
-          navigate("/questionnaire?option="+signupOption);
+        if (signupOption && signupOption != "") {
+          navigate("/questionnaire?option=" + signupOption);
         } else {
           navigate("/questionnaire");
         }
@@ -241,7 +241,7 @@ const SignUp = () => {
       is_designer: signupType == "designer" || signupType == "designer_seller" ? 1 : 0,
       is_seller: signupType == "seller" || signupType == "designer_seller" ? 1 : 0,
     });
-    
+
   }, []);
 
   const baseList = [
@@ -254,7 +254,7 @@ const SignUp = () => {
   ];
 
   async function createGoogleUser(e) {
-    axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/google/register', {...e, ...googleRegisterFormData}).then((response) => {
+    axios.post(process.env.REACT_APP_API_ENDPOINT + 'user/google/register', { ...e, ...googleRegisterFormData }).then((response) => {
       const success = response.data.status;
       if (success == 'Success') {
         const data = response.data.data;
@@ -412,7 +412,7 @@ const SignUp = () => {
                 <Link to="/">
                   <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" />
                 </Link>
-                {signupType == "designer" ?
+                {/* {signupType == "designer" ?
                   <>
                     <h1 className='text-center'>Designer Registration</h1>
                     <p className="text-center small mb-0">
@@ -433,8 +433,14 @@ const SignUp = () => {
                       <h1 className='text-center'>Sign up to Kouture Konect</h1>
                       <div className="divider-small mb-4 mt-4"></div>
                     </>
-                }
-
+                } */}
+                <>
+                  <h1 className='text-center'>Sign up to Kouture Konect</h1>
+                  <p className="text-center small mb-0">
+                    Join Kouture Konect to view more Designers, Designs and Fabrics!
+                  </p>
+                  <div className="divider-small mb-4 mt-3"></div>
+                </>
                 {/* <button className='sign-in-google mt-3'>
                       <img src={GoogleIcon}/>
                       <span className='subtitle'>Sign in with Google</span>
