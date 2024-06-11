@@ -115,277 +115,277 @@ const measurementGuideData = [
         id: 1,
         title: 'Upper Neck Circumference',
         image: require('Assets/images/upper-neck-circumference.png'), // Adjust path
-        description: '<b>Upper Neck Circumference***: (Reference Point A):</b><br>Measure upper portion of the neck.',
+        description: 'Measure upper portion of the neck.',
     },
     {
         id: 2,
         title: 'Lower Neck Circumference',
         image: require('Assets/images/lower-neck-circumference.png'), // Adjust path
-        description: '<b>Lower Neck Circumference*** (Reference Point A1):</b><br>Measure the base of the lower portion of the neck.',
+        description: 'Measure the base of the lower portion of the neck.',
     },
     {
         id: 3,
         title: 'Chest Circumference',
         image: require('Assets/images/chest-circumference.png'), // Adjust path
-        description: '<b>Chest Circumference*** (Reference Point Line C):</b><br>Measure around the chest from back to front keeping the tape runs parallel to the floor.',
+        description: 'Measure around the chest from back to front keeping the tape runs parallel to the floor.',
     },
     {
         id: 4,
         title: 'Bust Circumference',
         image: require('Assets/images/bust-circumference.png'), // Adjust path
-        description: '<b>Bust Circumference*** (Reference Line C1):</b><br>Measure around the fullest part of the breast from back to front keeping the tape parallel to the floor.',
+        description: 'Measure around the fullest part of the breast from back to front keeping the tape parallel to the floor.',
     },
     {
         id: 5,
         title: 'Under Bust Circumference',
         image: require('Assets/images/under-bust-circumference.png'), // Adjust path
-        description: '<b>Under Bust Circumference*** (Reference Line C2):</b><br>Measure under the bust from back to front keeping the tape parallel to the ground.',
+        description: 'Measure under the bust from back to front keeping the tape parallel to the ground.',
     },
     {
         id: 6,
         title: 'Waist Circumference',
         image: require('Assets/images/waist-circumference.png'), // Adjust path
-        description: '<b>Waist Circumference*** (Reference Line D):</b><br>Measure around the narrowest part of the waist from back to front ensuring the tape is parallel to the floor.',
+        description: 'Measure around the narrowest part of the waist from back to front ensuring the tape is parallel to the floor.',
     },
     {
         id: 7,
         title: 'Mid Hip Circumference',
         image: require('Assets/images/mid-hip-circumference.png'), // Adjust path
-        description: '<b>Mid Hip Circumference*** (Reference Line E):</b><br>Measure around the area between the widest part of  the hip and the waist line.',
+        description: 'Measure around the area between the widest part of  the hip and the waist line.',
     },
     {
         id: 8,
         title: 'Hip Circumference',
         image: require('Assets/images/hip-circumference.png'), // Adjust path
-        description: '<b>Hip Circumference*** (Reference Line F):</b><br>Measure around the widest part of the hip.',
+        description: 'Measure around the widest part of the hip.',
     },
     {
         id: 9,
         title: 'Bust Distance',
         image: require('Assets/images/bust-distance.png'), // Adjust path
-        description: '<b>Bust Distance (Reference Points C3 - C5):</b><br>Measure from the nipple point of one breast to the nipple of the other.',
+        description: 'Measure from the nipple point of one breast to the nipple of the other.',
     },
     {
         id: 10,
         title: 'Front Chest Width',
         image: require('Assets/images/front-chest-width.png'), // Adjust path
-        description: '<b>Front Chest Width (Reference Points C6 - C7):</b><br>Measure the distance from one armpit to the other.',
+        description: 'Measure the distance from one armpit to the other.',
     },
     {
         id: 11,
         title: 'Back Chest Width',
         image: require('Assets/images/back-chest-width.png'), // Adjust path
-        description: '<b>Back Chest Width (Reference Points C6 - C7):</b><br>Measure the distance from one armpit to the other.',
+        description: 'Measure the distance from one armpit to the other.',
     },
     {
         id: 12,
         title: 'Front Waist Length',
         image: require('Assets/images/front-waist-length.png'), // Adjust path
-        description: '<b>Front Waist Length (Reference Point M to Line D):</b><br>Measure from the base of the neck to the front waistline mark, passing the tape over the bust.',
+        description: 'Measure from the base of the neck to the front waistline mark, passing the tape over the bust.',
     },
     {
         id: 13,
         title: 'Back Waist Length',
         image: require('Assets/images/back-waist-length.png'), // Adjust path
-        description: '<b>Back Waist Length (Reference Point M to Line D):</b><br>Measure from the base of the neck to the back waistline mark.',
+        description: 'Measure from the base of the neck to the back waistline mark.',
     },
     {
         id: 14,
         title: 'Center Front Length',
         image: require('Assets/images/center-front-length.png'), // Adjust path
-        description: '<b>Center Front Length (Reference Point A1 to Front Line D):</b><br>Measure from the center of the front neck down to the center of the front waistline mark.',
+        description: 'Measure from the center of the front neck down to the center of the front waistline mark.',
     },
     {
         id: 15,
         title: 'Center Back Length',
         image: require('Assets/images/center-back-length.png'), // Adjust path
-        description: '<b>Center Back Length (Reference Point A1 to Back Line D):</b><br>Measure from the center of  the back neck down to the center of the back waistline mark.',
+        description: 'Measure from the center of  the back neck down to the center of the back waistline mark.',
     },
     {
         id: 16,
         title: 'Front Neck Depth',
         image: require('Assets/images/front-neck-depth.png'), // Adjust path
-        description: '<b>Front Neck Depth (Reference Point M to the desired length):</b><br>Measure from the front shoulder starting at the base of the neck to your desired front neck depth.',
+        description: 'Measure from the front shoulder starting at the base of the neck to your desired front neck depth.',
     },
     {
         id: 17,
         title: 'Back Neck Depth',
         image: require('Assets/images/back-neck-depth.png'), // Adjust path
-        description: '<b>Back Neck Depth (Reference Point A1 to your desired length):</b><br>Measure from the base of the neck to the desired back neck depth.',
+        description: 'Measure from the base of the neck to the desired back neck depth.',
     },
     {
         id: 18,
-        title: 'Bust Depth/Radius',
+        title: 'Bust Depth',
         image: require('Assets/images/bust-depth-radius.png'), // Adjust path
-        description: '<b>Bust Depth/Radius (Reference Point C3 - C4):</b><br>Measure from the nipple point on the bust down to under the bust.',
+        description: 'Measure from the nipple point on the bust down to under the bust.',
     },
     {
         id: 19,
         title: 'Armhole Depth',
         image: require('Assets/images/armhole-depth.png'), // Adjust path
-        description: '<b>Armhole Depth (Reference Point N to under the armpit line on line C):</b><br>With a ruler placed under the armpit, measure from the tip of the shoulder bone to the armpit, touching the ruler.',
+        description: 'With a ruler placed under the armpit, measure from the tip of the shoulder bone to the armpit, touching the ruler.',
     },
     {
         id: 20,
         title: 'Bust Height',
         image: require('Assets/images/bust-height.png'), // Adjust path
-        description: '<b>Bust Height (Reference Point M - Line C3):</b><br>Measure from the front shoulder at the base of the neck to the highest point of the bust.',
+        description: 'Measure from the front shoulder at the base of the neck to the highest point of the bust.',
     },
     {
         id: 21,
         title: 'Front Shoulder Width',
         image: require('Assets/images/front-shoulder-width.png'), // Adjust path
-        description: '<b>Front Shoulder Width (Reference Point N - N):</b><br>Request your assistant to place one end of a tape measure flat against one shoulder point. Then, have them extend the tape measure across your front, tracing the natural curve of your shoulders, until it reaches the opposite shoulder point.',
+        description: 'Request your assistant to place one end of a tape measure flat against one shoulder point. Then, have them extend the tape measure across your front, tracing the natural curve of your shoulders, until it reaches the opposite shoulder point.',
     },
     {
         id: 22,
         title: 'Back Shoulder Width',
         image: require('Assets/images/back-shoulder-width.png'), // Adjust path
-        description: '<b>Back Shoulder Width (Reference Point N - N):</b><br>Request your assistant to place one end of a tape measure flat against one shoulder point. Then, have them extend the tape measure across your back, tracing the natural curve of your shoulders, until it reaches the opposite shoulder point.',
+        description: 'Request your assistant to place one end of a tape measure flat against one shoulder point. Then, have them extend the tape measure across your back, tracing the natural curve of your shoulders, until it reaches the opposite shoulder point.',
     },
     {
         id: 23,
         title: 'Shoulder Length',
         image: require('Assets/images/shoulder-length.png'), // Adjust path
-        description: '<b>Shoulder Length (Reference Point M - N):</b><br>Measure along the front from base of neck to the shoulder point.',
+        description: 'Measure along the front from base of neck to the shoulder point.',
     },
     {
         id: 24,
         title: 'Shoulder Depth',
         image: require('Assets/images/shoulder-depth.png'), // Adjust path
-        description: '<b>Shoulder Depth (Reference point A1 - back line point N):</b><br>Measure from the nape down to the line that meets the shoulder point.',
+        description: 'Measure from the nape down to the line that meets the shoulder point.',
     },
     {
         id: 25,
         title: 'Elbow Circumference',
         image: require('Assets/images/elbow-circumference.png'), // Adjust path
-        description: '<b>Elbow Circumference*** (Reference Point P):</b><br>With your arm slightly bent and hand resting on your hip, measure around the elbow.',
+        description: 'With your arm slightly bent and hand resting on your hip, measure around the elbow.',
     },
     {
         id: 26,
         title: 'Underarm Length',
         image: require('Assets/images/elbow-circumference.png'), // Adjust path
-        description: '<b>Underarm  Length (Lince C - Reference point Q):</b><br>With your arm slightly bent and hand resting on your hip, measure from the armpit to the wrist.',
+        description: 'With your arm slightly bent and hand resting on your hip, measure from the armpit to the wrist.',
     },
     {
         id: 27,
         title: 'Sleeve Length',
         image: require('Assets/images/sleeve-length.png'), // Adjust path
-        description: '<b>Sleeve Length (Reference Points N - P - O):</b><br>While the arm is bent, measure from the tip of the shoulder point to the wrist mark, ensuring the measurement passes through the elbow.',
+        description: 'While the arm is bent, measure from the tip of the shoulder point to the wrist mark, ensuring the measurement passes through the elbow.',
     },
     {
         id: 28,
         title: 'Arm Circumference)',
         image: require('Assets/images/arm-circumference.png'), // Adjust path
-        description: '<b>Arm Circumference*** (Reference Point O):</b><br> Measure the widest part of the upper arm.',
+        description: 'Measure the widest part of the upper arm.',
     },
     {
         id: 29,
         title: 'Wrist Circumference',
         image: require('Assets/images/wrist-circumference.png'), // Adjust path
-        description: '<b>Wrist Circumference*** (Reference Point Q):</b><br>Measure the narrowest area of the wrist.',
+        description: 'Measure the narrowest area of the wrist.',
     },
     {
         id: 30,
         title: 'Elbow Length',
         image: require('Assets/images/elbow-circumference.png'), // Adjust path
-        description: '<b>Elbow Length (Reference Point N - P):</b><br>While the arm is bent, measure from the tip of the shoulder point to the tip of the elbow bone.',
+        description: 'While the arm is bent, measure from the tip of the shoulder point to the tip of the elbow bone.',
     },
     {
         id: 31,
         title: 'Armhole Circumference',
         image: require('Assets/images/armhole-circumference.png'), // Adjust path
-        description: '<b>Armhole Circumference*** (Reference Point N - C6):</b><br>Measure around the armhole passing over the shoulder point and under the armpit.',
+        description: 'Measure around the armhole passing over the shoulder point and under the armpit.',
     },
     {
         id: 32,
         title: 'Sleeve Cap Height',
         image: require('Assets/images/sleeve-cap-height.png'), // Adjust path
-        description: '<b>Sleeve Cap Height (Reference Point N - O):</b><br>Measure from the tip of the shoulder bone to the widest part of the arm, just below the armpit.',
+        description: 'Measure from the tip of the shoulder bone to the widest part of the arm, just below the armpit.',
     },
     {
         id: 33,
         title: 'Hip Depth',
         image: require('Assets/images/hip-depth.png'), // Adjust path
-        description: '<b>Hip Depth ( Reference Point Side line mark D - F):</b><br>Measure from the waistline to a point on the widest part of the hip.',
+        description: 'Measure from the waistline to a point on the widest part of the hip.',
     },
     {
         id: 34,
         title: 'Crotch Depth',
         image: require('Assets/images/crotch-depth.png'), // Adjust path
-        description: '<b>Crotch Depth (Reference Point D - F):</b><br>Take this measurement while sitting straight. Measure from the side waist point, to the surface of the seat.',
+        description: 'Take this measurement while sitting straight. Measure from the side waist point, to the surface of the seat.',
     },
     {
         id: 35,
         title: 'Crotch Length',
         image: require('Assets/images/crotch-length.png'), // Adjust path
-        description: '<b>Crotch Length ( Reference Point Front D - F - back D):</b><br>Measure from the center front waistline to the center back waist line passing the measuring tape in between the thighs.',
+        description: 'Measure from the center front waistline to the center back waist line passing the measuring tape in between the thighs.',
     },
     {
         id: 36,
         title: 'Pants/Trouser Length',
         image: require('Assets/images/pants-trouser-length.png'), // Adjust path
-        description: '<b>Pants/Trouser Length ( Reference Point D - L):</b><br>Measure from the waistline to the desired pant/trouser length.',
+        description: 'Measure from the waistline to the desired pant/trouser length.',
     },
     {
         id: 37,
         title: 'Knee Length',
         image: require('Assets/images/knee-length.png'), // Adjust path
-        description: '<b>Knee Length (Reference Point D - I):</b><br>Measure from the waist to the narrowest part of the knee.',
+        description: 'Measure from the waist to the narrowest part of the knee.',
     },
     {
         id: 38,
         title: 'In Seam Length',
         image: require('Assets/images/in-seam-length.png'), // Adjust path
-        description: '<b>In Seam Length (Reference Point F - L):</b><br>Measure from the crotch to the feet.',
+        description: 'Measure from the crotch to the feet.',
     },
     {
         id: 39,
         title: 'Thigh Circumference',
         image: require('Assets/images/thigh-circumference.png'), // Adjust path
-        description: '<b>Thigh Circumference*** (Line G):</b><br>Measure the widest portion of the thigh.',
+        description: 'Measure the widest portion of the thigh.',
     },
     {
         id: 40,
         title: 'Mid-thigh Circumference',
         image: require('Assets/images/mid-thigh-circumference.png'), // Adjust path
-        description: '<b>Mid-thigh Circumference*** (Line H):</b><br>Measure around the mid-point of the thigh, between the upper thigh and the knee.',
+        description: 'Measure around the mid-point of the thigh, between the upper thigh and the knee.',
     },
     {
         id: 41,
         title: 'Knee Circumference',
         image: require('Assets/images/knee-circumference.png'), // Adjust path
-        description: '<b>Knee Circumference*** (Line I):</b><br>Measure around the narrowest part of the knee.',
+        description: 'Measure around the narrowest part of the knee.',
     },
     {
         id: 42,
         title: 'Calf Circumference',
         image: require('Assets/images/calf-circumference.png'), // Adjust path
-        description: '<b>Calf Circumference*** (Line J):</b><br>Measure the widest part of each calf, as there may be asymmetry between them. Record the measurement for the widest calf.',
+        description: 'Measure the widest part of each calf, as there may be asymmetry between them. Record the measurement for the widest calf.',
     },
     {
         id: 43,
         title: 'Ankle Circumference',
         image: require('Assets/images/ankle-circumference.png'), // Adjust path
-        description: '<b>Ankle Circumference*** (Line K):</b><br>Measure around the narrowest part of the ankle.',
+        description: 'Measure around the narrowest part of the ankle.',
     },
     {
         id: 44,
         title: 'Ankle-Heel Circumference',
         image: require('Assets/images/ankle-heel-circumference.png'), // Adjust path
-        description: '<b>Ankle-Heel Circumference*** (Line K1):</b><br>Measure around the heel and ankle.',
+        description: 'Measure around the heel and ankle.',
     },
     {
         id: 45,
         title: 'Body Height',
         image: require('Assets/images/body-height.png'), // Adjust path
-        description: '<b>Body Height (Reference Point A0 - L):</b><br>Ask your partner to gently mark the wall with colored tape where the ruler, book, or another flat object meets your head while you stand against the wall. Use a tape measure, preferably a metal one for accuracy, to measure the distance from the floor to the mark on the wall.',
+        description: 'Ask your partner to gently mark the wall with colored tape where the ruler, book, or another flat object meets your head while you stand against the wall. Use a tape measure, preferably a metal one for accuracy, to measure the distance from the floor to the mark on the wall.',
     },
     {
         id: 46,
         title: 'Body Length',
         image: require('Assets/images/body-length.png'), // Adjust path
-        description: '<b>Body Length (Reference Point A1 - L):</b><br>Ask your partner to gently mark the wall with colored tape where the ruler, book, or another flat object meets your nape while you stand against the wall. Use a tape measure, preferably a metal one for accuracy, to measure the distance from the floor to the mark on the wall.',
+        description: 'Ask your partner to gently mark the wall with colored tape where the ruler, book, or another flat object meets your nape while you stand against the wall. Use a tape measure, preferably a metal one for accuracy, to measure the distance from the floor to the mark on the wall.',
     },
 
 ];
