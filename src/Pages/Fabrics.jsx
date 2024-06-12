@@ -633,18 +633,26 @@ const Fabrics = (props) => {
                                                                                 <>
                                                                                     <div className='save-link'>
                                                                                         {userWishlist ?
-                                                                                            <div
-                                                                                                className="action-button bg-gold"
-                                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
-                                                                                            >
-                                                                                                <GoHeart className="text-white" />
+                                                                                            <div className="kouture-tooltip">
+                                                                                                <div className="action-button bg-gold"
+                                                                                                    onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
+                                                                                                >
+                                                                                                    <GoHeart className="text-white" />
+                                                                                                </div>
+                                                                                                <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
+                                                                                                    Remove from Wishlist
+                                                                                                </div>
                                                                                             </div>
                                                                                             :
-                                                                                            <div
-                                                                                                className="action-button bg-white"
-                                                                                                onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
-                                                                                            >
-                                                                                                <GoHeart className="text-black" />
+                                                                                            <div className="kouture-tooltip">
+                                                                                                <div className="action-button bg-white"
+                                                                                                    onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: fabric.id }); }}
+                                                                                                >
+                                                                                                    <GoHeart className="text-black" />
+                                                                                                </div>
+                                                                                                <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
+                                                                                                    Add to Wishlist
+                                                                                                </div>
                                                                                             </div>
                                                                                         }
                                                                                     </div>
