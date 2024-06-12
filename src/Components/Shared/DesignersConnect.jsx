@@ -45,7 +45,7 @@ const DesignersConnect = (props) => {
     ]);
 
     const getDesigners = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?country='+selectedCountry+'&page=' + currentPage + '&user_id=' + currentUser);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?country=' + selectedCountry + '&page=' + currentPage + '&user_id=' + currentUser);
     };
 
     const toggleGetUser = (e) => {
@@ -63,7 +63,7 @@ const DesignersConnect = (props) => {
     }
 
     const handleChangePage = (pageNumber) => {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?country='+selectedCountry+'&page=' + pageNumber + '&user_id=' + currentUser)
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?country=' + selectedCountry + '&page=' + pageNumber + '&user_id=' + currentUser)
             .then((response) => {
                 const data = response.data;
                 setCurrentPage(pageNumber);
@@ -83,7 +83,7 @@ const DesignersConnect = (props) => {
                 toast.error('There has been an error getting the designers, please try again!');
             });
     };
-    
+
     async function wishlistDesignerUpdate(e) {
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'designer/wishlist/update', e).then((response) => {
             const success = response.data.status;
@@ -100,16 +100,16 @@ const DesignersConnect = (props) => {
     const toggleTempDesignerWishlist = (item) => {
         // Check if the item ID already exists in the array
         const itemExists = tempDesignerWishlist.some(wishlistItem => wishlistItem.id === item.id);
-    
+
         let updatedDesignerWishlist;
         if (itemExists) {
-          // Remove the item from the array
-          updatedDesignerWishlist = tempDesignerWishlist.filter(wishlistItem => wishlistItem.id !== item.id);
+            // Remove the item from the array
+            updatedDesignerWishlist = tempDesignerWishlist.filter(wishlistItem => wishlistItem.id !== item.id);
         } else {
-          // Add the new item to the array
-          updatedDesignerWishlist = [...tempDesignerWishlist, item];
+            // Add the new item to the array
+            updatedDesignerWishlist = [...tempDesignerWishlist, item];
         }
-    
+
         // Set the updated favorites array in cookies
         setCookie('tempDesignerWishlist', JSON.stringify(updatedDesignerWishlist), { path: '/' });
         // Update the local state
@@ -117,7 +117,7 @@ const DesignersConnect = (props) => {
     };
 
     const handleChangeCountry = (e) => {
-        const {name, value} = e.target;
+        const { name, value } = e.target;
         setSelectedCountry(value ?? '');
     };
 
@@ -200,41 +200,43 @@ const DesignersConnect = (props) => {
                                     <>
                                         <Row>
                                             {designers.map((designer, index) => {
-                                                return (
-                                                    <Col lg={4}>
-                                                        <div key={index} className="mb-4 position-relative designer-box-details">
-                                                            {designer.user.image ? (
-                                                                <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})`, minHeight: '300px' }}>
-                                                                    <div className='bg-black-faded cursor-pointer designer-overlay'>
-                                                                        <div className="designer-details">
-                                                                            <h3 className="designer-name text-white fs-25 mb-2 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
-                                                                            {/* <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p> */}
-                                                                            <button onClick={() => { handleSelectDesigner(designer); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white">Connect with Designer</button>
-                                                                        </div>
-                                                                    </div>
-                                                                    {/* <div className="connect-designer-container">
-                                                                        <button onClick={() => { handleSelectDesigner(designer); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white">Connect with Designer</button>
-                                                                    </div> */}
-                                                                </div>
-                                                            ) : (
-                                                                <>
-                                                                    <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${designer.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})`, minHeight: '300px' }}>
+                                                if (currentUser && designer.user.id !== currentUser) {
+                                                    return (
+                                                        <Col lg={4}>
+                                                            <div key={index} className="mb-4 position-relative designer-box-details">
+                                                                {designer.user.image ? (
+                                                                    <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})`, minHeight: '300px' }}>
                                                                         <div className='bg-black-faded cursor-pointer designer-overlay'>
                                                                             <div className="designer-details">
                                                                                 <h3 className="designer-name text-white fs-25 mb-2 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
-                                                                                <button onClick={() => { handleSelectDesigner(designer); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white">Connect with Designer</button>
                                                                                 {/* <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p> */}
+                                                                                <button onClick={() => { handleSelectDesigner(designer); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white">Connect with Designer</button>
                                                                             </div>
                                                                         </div>
                                                                         {/* <div className="connect-designer-container">
+                                                                        <button onClick={() => { handleSelectDesigner(designer); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white">Connect with Designer</button>
+                                                                    </div> */}
+                                                                    </div>
+                                                                ) : (
+                                                                    <>
+                                                                        <div className="designers-grid-div w-100" style={{ backgroundImage: `url(${designer.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})`, minHeight: '300px' }}>
+                                                                            <div className='bg-black-faded cursor-pointer designer-overlay'>
+                                                                                <div className="designer-details">
+                                                                                    <h3 className="designer-name text-white fs-25 mb-2 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
+                                                                                    <button onClick={() => { handleSelectDesigner(designer); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white">Connect with Designer</button>
+                                                                                    {/* <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p> */}
+                                                                                </div>
+                                                                            </div>
+                                                                            {/* <div className="connect-designer-container">
                                                                             <button onClick={() => { handleSelectDesigner(designer); }} className="btn bg-gold-hover text-white-hover btn bg-black text-white ">Connect with Designer</button>
                                                                         </div> */}
-                                                                    </div>
-                                                                </>
-                                                            )}
-                                                        </div>
-                                                    </Col>
-                                                )
+                                                                        </div>
+                                                                    </>
+                                                                )}
+                                                            </div>
+                                                        </Col>
+                                                    )
+                                                }
                                             })}
                                             {currentUser && currentUser != "" ?
                                                 <Pagination
@@ -267,7 +269,7 @@ const DesignersConnect = (props) => {
 
 
             </div>
-        </>        
+        </>
     );
 };
 

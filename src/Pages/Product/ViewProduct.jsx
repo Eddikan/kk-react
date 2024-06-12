@@ -819,14 +819,14 @@ const ViewProduct = () => {
                                                                                     </>
                                                                                 }
 
-                                                                                <Link to="/designers">
+                                                                                {/* <Link to="/designers">
                                                                                     <Button
                                                                                         className="w-auto me-3 btn-primary fs-16"
                                                                                         type="button"
                                                                                     >
                                                                                         Connect to a Designer
                                                                                     </Button>
-                                                                                </Link>
+                                                                                </Link> */}
 
                                                                             </>
                                                                             :

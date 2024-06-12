@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom';
 import { GiAlarmClock } from "react-icons/gi";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 import { IoEye } from "react-icons/io5";
+import { FaEye } from "react-icons/fa";
 import 'Assets/styles/AppointmentList/style.css';
 import 'Assets/styles/Appointments/style.css';
 import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
@@ -342,7 +343,7 @@ const Appointments = (props) => {
                                                                                 </Col>
 
                                                                                 <Col lg={2} className='d-flex justify-content-end'>
-                                                                                    <div
+                                                                                    {/* <div
                                                                                         className="cursor-pointer appointments-tooltip"
                                                                                         onClick={() => toggleShowAppointment(
                                                                                             appointment.customer?.first_name,
@@ -356,17 +357,17 @@ const Appointments = (props) => {
                                                                                     >
                                                                                         <span className="icon-tooltiptext fs-14">View Details</span>
                                                                                         <IoEye className='video-cam me-3' size={20} color="#000000" />
-                                                                                    </div>
+                                                                                    </div> */}
 
                                                                                     {/* {currentDate === appointment.consultation_date ? ( */}
-                                                                                    <a href={`/consultation-meeting/${appointment.id}`}>
+                                                                                    {/* <a href={`/consultation-meeting/${appointment.id}`}>
                                                                                         <div className="cursor-pointer appointments-tooltip">
                                                                                             <span className="icon-tooltiptext fs-14">
                                                                                                 Video call
                                                                                             </span>
                                                                                             <IoMdVideocam className='video-cam me-3' size={20} color="#000000" />
                                                                                         </div>
-                                                                                    </a>
+                                                                                    </a> */}
                                                                                     {/* ) : (
                                                                                         currentDate < appointment.consultation_date ? (
                                                                                             <div className="cursor-pointer appointments-tooltip">
@@ -384,6 +385,14 @@ const Appointments = (props) => {
                                                                                             </div>
                                                                                         )
                                                                                     )} */}
+                                                                                    <a href={`/consultation-meeting/${appointment.id}`}>
+                                                                                        <div className="cursor-pointer appointments-tooltip">
+                                                                                            <span className="icon-tooltiptext fs-14">
+                                                                                                View Appointment
+                                                                                            </span>
+                                                                                            <FaEye className='video-cam me-3' size={20} color="#000000" />
+                                                                                        </div>
+                                                                                    </a>
 
                                                                                     <div
                                                                                         className="cursor-pointer appointments-tooltip"
