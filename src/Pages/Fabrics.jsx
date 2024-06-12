@@ -629,7 +629,7 @@ const Fabrics = (props) => {
                                                                                     </div>
                                                                                 </>
                                                                             }
-                                                                            {userRole !== 'Admin' && fabric.user.id != currentUser ?
+                                                                            {userRole !== 'Admin' && fabric.user.id != currentUser && currentUser ?
                                                                                 <>
                                                                                     <div className='save-link'>
                                                                                         {userWishlist ?
