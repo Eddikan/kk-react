@@ -12,6 +12,7 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import KoutureLogo from 'Assets/images/kouture-konect-icon.png';
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 const initialRegisterData = Object.freeze({
   email: '',
@@ -41,6 +42,9 @@ const SignUp = () => {
   const [googleEmail, setGoogleEmail] = useState('');
   const [googleSignupProfile, setGoogleSignupProfile] = useState(null);
   const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
+      
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const currentUser = cookies.currentUser;
   const isLoggedIn = cookies.isLoggedIn;
@@ -476,11 +480,25 @@ const SignUp = () => {
                   </Form.Group>
                   <Form.Group className='mb-3'>
                     <Form.Label>Password</Form.Label>
-                    <FormControl type='password' name='password' onChange={handleChange} className='mr-sm-2' required />
+                      <div class="show-password">
+                        <FormControl type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} className='mr-sm-2' required />
+                        {showPassword ?
+                            <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowPassword(false); }} />
+                            :
+                            <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowPassword(true); }} />
+                        }
+                      </div>
                   </Form.Group>
                   <Form.Group className='mb-3'>
                     <Form.Label>Confirm Password</Form.Label>
-                    <FormControl type='password' name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
+                    <div class="show-password">
+                      <FormControl type={showConfirmPassword ? 'text' : 'password'} name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
+                      {showConfirmPassword ?
+                          <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowConfirmPassword(false); }} />
+                          :
+                          <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowConfirmPassword(true); }} />
+                      }
+                    </div>
                   </Form.Group>
                   {/* <Form.Group className='mb-3'>
                     <Form.Label className="mb-3">I'm interested in...</Form.Label>

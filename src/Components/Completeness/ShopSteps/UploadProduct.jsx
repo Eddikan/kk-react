@@ -127,6 +127,28 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
         onStepPlusTwo();
     }
 
+    async function submitFinish(e) {
+        setQuestionnaire3Loading(true);
+
+        e.preventDefault();
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { shop_completed: 1 }).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                const user = response.data.data.user;
+                const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer, shop_completed: user.shop_completed, profile_completeness: user.profile_completeness  }
+                setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+                onStepPlusTwo();
+                setQuestionnaire3Loading(true);
+            } else {
+                const errors = response.data.errors;
+                setQuestionnaire3Loading(true);
+            }
+        }).catch(() => {
+            toast.error('Something went wrong, please contact the administrator!');
+            setQuestionnaire3Loading(true);
+        });
+    }
+
     useEffect(() => {
         fetchData(currentUser);
         if (user) {
@@ -260,12 +282,13 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                     </Row>
                     <Row>
                         <Col lg="12" className="text-right">
-                            {/* <Button className='btn-back me-3' type="button" onClick={() => onStepMinusTwo()} >Back</Button> */}
+                            <Button className='btn-back me-3' type="button" onClick={() => onStepMinusTwo()} >Back</Button>
 
                             {questionnaire3Loading ?
                                 <Button className='btn-save' type="button">Saving...</Button>
                                 :
-                                <Button className='btn-save' type="button" onClick={toggleNextTab}>Next</Button>
+                                // <Button className='btn-save' type="button" onClick={toggleNextTab}>Next</Button>
+                                    <Button className='btn-save' onClick={submitFinish} type="button">Next</Button>
                             }
                         </Col>
                     </Row>

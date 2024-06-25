@@ -332,7 +332,7 @@ const Designs = (props) => {
         }
     };
 
-    function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId, userWishlist) {
+    function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, city, province, country, tags, description, userId, userWishlist) {
         setPortfolioImage(true);
         setInWishlist(userWishlist);
         setSingleDesign({
@@ -343,7 +343,9 @@ const Designs = (props) => {
             last_name: last_name ?? '-',
             image: image ?? '-',
             address_line_1: address_line_1 ?? '-',
+            city: city ?? '-',
             province: province ?? '-',
+            country: country ?? '-',
             tags: tags ?? '-',
             description: description ?? '-'
         });
@@ -713,7 +715,9 @@ const Designs = (props) => {
                                                                                                     design.image_urls,
                                                                                                     design.user.image,
                                                                                                     design.user.address_line_1,
+                                                                                                    design.user.city,
                                                                                                     design.user.province,
+                                                                                                    design.user.country,
                                                                                                     design.tags,
                                                                                                     design.description,
                                                                                                     design.user.id,
@@ -1086,7 +1090,8 @@ const Designs = (props) => {
                                                         <div className='modal-title text-center fs-18 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
                                                         <div className='fs-14 text-center mt-2'>
                                                             <img src={PinIcon} alt="location pin" className='me-2' />
-                                                            {singleDesign.address_line_1}{singleDesign.province}</div>
+                                                            {/* {singleDesign.address_line_1}{singleDesign.province}</div> */}
+                                                            {singleDesign.city ? singleDesign.city + ',' : singleDesign.province ? singleDesign.province + ',' : ''} {singleDesign.country}</div>
                                                         <div className="mb-2 text-center">
                                                             {singleDesign.tags ?
                                                                 <>

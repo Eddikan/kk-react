@@ -74,3 +74,15 @@ section#signup .sign-up-with-email {
         padding: 30px 0.5rem!important;
     }
 }
+
+.show-password{
+    position: relative;
+}
+.hi-eye-off, .hi-eye {
+    position: absolute;
+    z-index: 9999;
+}
+.off-eye {
+    top: 14px;
+    right: 10px;
+}

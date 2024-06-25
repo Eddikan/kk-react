@@ -339,7 +339,7 @@ const Questionnaire3 = (props) => {
                                     </Card>
                                 </CardBody>
                             </Card>
-                            <Card className='mb-4 border-white'>
+                            {/* <Card className='mb-4 border-white'>
                                 <CardBody>
                                     <Form.Label className='mb-1 fs-18 d-block'>
                                         Fabric Process Insights
@@ -358,8 +358,8 @@ const Questionnaire3 = (props) => {
                                         />
                                     </Form.Group>
                                 </CardBody>
-                            </Card>
-                            <Card className='mb-4 border-white'>
+                            </Card> */}
+                            {/* <Card className='mb-4 border-white'>
                                 <CardBody>
                                     <Form.Label className='mb-1 fs-18 d-block'>
                                         Pricing Structure
@@ -368,14 +368,14 @@ const Questionnaire3 = (props) => {
                                         Provide information about the typical pricing structures, helps set expectations.
                                     </Form.Label>
                                     <Form.Group>
-                                        {/* <Form.Control
+                                        <Form.Control
                                             as="textarea"
                                             name="pricing_structure"
                                             rows={5} // You can adjust the number of rows as needed
                                             value={questionnaire3Data.pricing_structure}
                                             placeholder=""
                                             onChange={handleChange}
-                                        /> */}
+                                        />
                                         {pricingStructure.map((item, index) => (
                                             <>
                                                 {pricingStructure.length > 1 ?
@@ -433,7 +433,7 @@ const Questionnaire3 = (props) => {
                                         </Row>
                                     </Form.Group>
                                 </CardBody>
-                            </Card>
+                            </Card> */}
 {/*                             
                             <Card className='mb-4 border-white'>
                                 <CardBody>

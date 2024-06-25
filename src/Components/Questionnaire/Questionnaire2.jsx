@@ -333,7 +333,7 @@ const Questionnaire2 = (props) => {
                                     </Card>
                                 </CardBody>
                             </Card>
-                            <Card className='mb-4 border-white'>
+                            {/* <Card className='mb-4 border-white'>
                                 <CardBody>
                                     <Form.Label className='mb-1 fs-18 d-block'>
                                         Design Process Insights
@@ -352,7 +352,7 @@ const Questionnaire2 = (props) => {
                                         />
                                     </Form.Group>
                                 </CardBody>
-                            </Card>
+                            </Card> */}
                             <Card className='mb-4 border-white'>
                                 <CardBody>
                                     <Form.Label className='mb-1 fs-18 d-block'>

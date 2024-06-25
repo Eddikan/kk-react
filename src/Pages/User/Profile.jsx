@@ -357,7 +357,8 @@ const Profile = () => {
                                             <img src={PinIcon} alt="location pin" className='profile-icon' />
                                             {user.city || user.province || user.country ?
                                                 <p className='fs-16 color-light-blue mb-2'>
-                                                    {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""}
+                                                    {user.city ? user.city + ',' : user.province ? user.province + ',' : "" } {user.country ? user.country : ""}
+                                                    {/* {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""} */}
                                                 </p>
                                                 :
                                                 <p className='fs-16 color-light-blue mb-2'>-</p>
@@ -410,11 +411,12 @@ const Profile = () => {
                                             :
                                             null
                                         }
-                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className=''>
-                                            <GoPencil />
-                                            <span className='ms-1'>Edit Profile</span>
-                                        </Button>
-
+                                        {user.profile_completeness == 100 && (
+                                            <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className=''>
+                                                <GoPencil />
+                                                <span className='ms-1'>Edit Profile</span>
+                                            </Button>
+                                         )}
                                     </Col>
 
                                     {/* {user.is_designer == 1 && (
@@ -578,7 +580,7 @@ const Profile = () => {
                                                     <p><a href="#">-</a></p>
                                                 </div>
                                             }
-                                            {user.youtube ?
+                                            {/* {user.youtube ?
                                                 <div className='icons-d-flex'>
                                                     <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
                                                     <p className='information-font ellipsis-profile'><a href={user.youtube} target="_blank">{user.youtube}</a></p>
@@ -588,7 +590,7 @@ const Profile = () => {
                                                     <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
                                                     <p><a href="#">-</a></p>
                                                 </div>
-                                            }
+                                            } */}
                                         </div>
                                     </Col>
                                 </Row>

@@ -100,7 +100,7 @@ const SellerDesignerShopManager = ({ progress }) => {
                     }
                 </div>
 
-                <div className='w-100 step-container'>
+                {/* <div className='w-100 step-container'>
                     {progress == 4 ?
                         <>
                             <div className='d-flex align-items-center active'>
@@ -129,7 +129,7 @@ const SellerDesignerShopManager = ({ progress }) => {
                             </div>
                         </>
                     }
-                </div>
+                </div> */}
                 
                 <div className='progress-lines'>
                     {progress == 2 || progress == 3 || progress == 4 ?
@@ -150,7 +150,7 @@ const SellerDesignerShopManager = ({ progress }) => {
                             <div className='progress-line '></div>
                         </>
                     }
-                    {progress == 4 || progress == 5 ?
+                    {/* {progress == 4 || progress == 5 ?
                         <>
                             <div className='progress-line line-active'></div>
                         </>
@@ -158,7 +158,7 @@ const SellerDesignerShopManager = ({ progress }) => {
                         <>
                             <div className='progress-line '></div>
                         </>
-                    }
+                    } */}
 
             {progress == 5 ?
                         <>

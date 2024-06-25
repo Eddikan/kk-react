@@ -33,7 +33,8 @@ const ShopAvailability = (props) => {
                         <Col lg={12} className='mx-auto py-5 max-width-column'>
                             <div>
                                 <Row>
-                                    <Col md={3} className={`flex-grow-1 flex-shrink-0 ${(userDetails.is_designer == 1 && userDetails.is_seller == 0 && step == 4 || userDetails.is_designer == 0 && userDetails.is_seller == 1 && step == 3 || userDetails.is_designer == 1 && userDetails.is_seller == 1 && step == 5 ) && 'd-none'}`}>
+                                    {/* <Col md={3} className={`flex-grow-1 flex-shrink-0 ${(userDetails.is_designer == 1 && userDetails.is_seller == 0 && step == 4 || userDetails.is_designer == 0 && userDetails.is_seller == 1 && step == 3 || userDetails.is_designer == 1 && userDetails.is_seller == 1 && step == 5 ) && 'd-none'}`}> */}
+                                    <Col md={3} className={`flex-grow-1 flex-shrink-0 ${(userDetails.is_designer == 1 && userDetails.is_seller == 0 && step == 4 || step == 4 || userDetails.is_designer == 0 && userDetails.is_seller == 1 && step == 3 || userDetails.is_designer == 1 && userDetails.is_seller == 1 && step == 5 ) && 'd-none'}`}>
                                         <Card className='h-100'>
                                             <Card.Body>
                                                 {userDetails.is_designer == 1 && userDetails.is_seller == 0 &&
@@ -71,15 +72,15 @@ const ShopAvailability = (props) => {
                                                         onStepMinusTwo={() => setStep(step - 1)}
                                                     />
                                                 </>
-                                            ) : step === 2 ? (
-                                                <>
+                                            // ) : step === 2 ? (
+                                            //     <>
                                                
-                                                    <MeasurementGuide 
-                                                        onStepPlusThree={() => setStep(step + 1)}
-                                                        onStepMinusThree={() => setStep(step - 1)}
-                                                    />
+                                            //         <MeasurementGuide 
+                                            //             onStepPlusThree={() => setStep(step + 1)}
+                                            //             onStepMinusThree={() => setStep(step - 1)}
+                                            //         />
                                                    
-                                                </>
+                                            //     </>
 
                                             )  : (
                                                 <>
@@ -110,18 +111,19 @@ const ShopAvailability = (props) => {
                                                    
                                                 </>
 
-                                            ) : step === 3 ? (
-                                                <>
+                                            // ) : step === 3 ? (
+                                            //     <>
                                                
-                                                        <MeasurementGuide 
-                                                        onStepPlusThree={() => setStep(step + 1)}
-                                                        onStepMinusThree={() => setStep(step - 1)}
-                                                        />
-                                                 </>
+                                            //             <MeasurementGuide 
+                                            //             onStepPlusThree={() => setStep(step + 1)}
+                                            //             onStepMinusThree={() => setStep(step - 1)}
+                                            //             />
+                                            //      </>
                                             
                                             ) : (
                                                 <>
-                                                <ThankYouProgress user={userDetails} />
+                                                {/* <ThankYouProgress user={userDetails} /> */}
+                                                <ThankYouProgress />
                                                 </>
                                             )}
                                             </>
@@ -155,14 +157,14 @@ const ShopAvailability = (props) => {
                                                         />
                                                  </>
 
-                                            ) : step === 4 ? (
-                                            <>
+                                            // ) : step === 4 ? (
+                                            // <>
                                         
-                                                    <MeasurementGuide 
-                                                        onStepPlusThree={() => setStep(step + 1)}
-                                                        onStepMinusThree={() => setStep(step - 1)}
-                                                    />  
-                                            </>
+                                            //         <MeasurementGuide 
+                                            //             onStepPlusThree={() => setStep(step + 1)}
+                                            //             onStepMinusThree={() => setStep(step - 1)}
+                                            //         />  
+                                            // </>
                                             
                                             ) : (
                                                 <>

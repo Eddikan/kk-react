@@ -21,6 +21,7 @@ import axios from "axios";
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import MeetingChat from 'Components/Chat/MeetingChat';
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 const intitialConsultationData = {
     consultation_date_time: '',
@@ -262,7 +263,8 @@ const Appointments = (props) => {
                                             <h3 className="fs-30 fw-600 text-black mb-0">Appointments</h3>
                                         </Col>
                                         <Col md={1} className="text-right">
-                                            <GoBack fallBack="/#" />
+                                            {/* <GoBack onClick={()=> window.location.href = '/'} /> */}
+                                            <p onClick={()=> window.location.href = '/'} className='cursor-pointer'><IoIosArrowRoundBack /> Back</p>
                                         </Col>
                                     </Row>
                                 </Col>

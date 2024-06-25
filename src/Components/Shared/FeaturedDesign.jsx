@@ -94,7 +94,7 @@ const PortfolioGrid = (props) => {
         setCopyEmbedLink(true);
     }
 
-    function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId, userWishlist) {
+    function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, city, province, country, tags, description, userId, userWishlist) {
         setPortfolioImage(true);
         setInWishlist(userWishlist);
         setSingleDesign({
@@ -105,7 +105,9 @@ const PortfolioGrid = (props) => {
             last_name: last_name ?? '-',
             image: image ?? '-',
             address_line_1: address_line_1 ?? '-',
+            city: city ?? '-',
             province: province ?? '-',
+            country: country ?? '-',
             tags: tags ?? '-',
             description: description ?? '-'
         })
@@ -243,7 +245,7 @@ const PortfolioGrid = (props) => {
                                                     <>
                                                         <div className='portfolio-link cursor-pointer'>
                                                             <div className="portfolio-grid-featured w-100" style={{ backgroundImage: "url(" + portfolioImage + ")", minHeight: '130px' }}> </div>
-                                                            <div className="portfolio-overlay" onClick={function () { togglePortfolioImage(design.id, design.designer.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.province, design.tags, design.description, design.user.id, userWishlist); }} >
+                                                            <div className="portfolio-overlay" onClick={function () { togglePortfolioImage(design.id, design.designer.id, design.user.first_name, design.user.last_name, design.image_urls, design.user.image, design.user.address_line_1, design.user.city, design.user.province, design.user.country, design.tags, design.description, design.user.id, userWishlist); }} >
                                                                 <div className="portfolio-details">
                                                                     {design.status == "Draft" ?
                                                                         <span className="text-warning small fw-600">Draft</span>
@@ -492,7 +494,8 @@ const PortfolioGrid = (props) => {
                                                         <div className='modal-title text-center fs-18 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
                                                         <div className='fs-14 text-center mt-2'>
                                                             <img src={PinIcon} alt="location pin" className='me-2' />
-                                                            {singleDesign.address_line_1}{singleDesign.province}</div>
+                                                            {/* {singleDesign.address_line_1}{singleDesign.province}</div> */}
+                                                            {singleDesign.city ? singleDesign.city + ',' : singleDesign.province ? singleDesign.province + ',' : ''} {singleDesign.country}</div>
                                                         <div className="mb-2 text-center">
                                                             {singleDesign.tags ?
                                                                 <>

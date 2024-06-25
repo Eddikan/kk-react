@@ -122,7 +122,7 @@ const Portfolio = (props) => {
         navigate('/user/center/design/add')
     };
 
-    function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, province, tags, description, userId) {
+    function togglePortfolioImage(portfolioId, id, first_name, last_name, image_urls, image, address_line_1, city, province, country, tags, description, userId) {
         setPortfolioImage(true);
         setSingleDesign({
             id: id ?? 0,
@@ -132,7 +132,9 @@ const Portfolio = (props) => {
             last_name: last_name ?? '-',
             image: image ?? '-',
             address_line_1: address_line_1 ?? '-',
+            city: city ?? '-',
             province: province ?? '-',
+            country: country ?? '-',
             tags: tags ?? '-',
             description: description ?? '-'
         })
@@ -270,7 +272,9 @@ const Portfolio = (props) => {
                                                                                             object.image_urls,
                                                                                             object.user.image,
                                                                                             object.user.address_line_1,
+                                                                                            object.user.city,
                                                                                             object.user.province,
+                                                                                            object.user.country,
                                                                                             object.tags,
                                                                                             object.description,
                                                                                             object.user.id);
@@ -578,7 +582,8 @@ const Portfolio = (props) => {
                                                         <div className='modal-title text-center fs-18 fw-600 text-black'>{singleDesign.first_name} {singleDesign.last_name}</div>
                                                         <div className='fs-14 text-center mt-2'>
                                                             <img src={PinIcon} alt="location pin" className='me-2' />
-                                                            {singleDesign.address_line_1}{singleDesign.province}</div>
+                                                            {/* {singleDesign.address_line_1}{singleDesign.province}</div> */}
+                                                            {singleDesign.city ? singleDesign.city + ',' : singleDesign.province ? singleDesign.province + ',' : ""} {singleDesign.country}</div>
                                                         <div className="mb-3 text-center">
                                                             {singleDesign.tags ?
                                                                 <>

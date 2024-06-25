@@ -12,6 +12,7 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import KoutureLogo from 'Assets/images/kouture-konect-icon.png';
+import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 
 const initialLoginData = Object.freeze({
   email: '',
@@ -38,6 +39,8 @@ const LogIn = () => {
   const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
   const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
   const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const currentUser = cookies.currentUser;
   const isLoggedIn = cookies.isLoggedIn;
@@ -375,7 +378,14 @@ const LogIn = () => {
                   </Form.Group>
                   <Form.Group className='mb-3' controlId='formBasicPassword'>
                     <Form.Label>Password</Form.Label>
-                    <FormControl type='password' name='password' value={loginFormData.password} className='mr-sm-2' onChange={handleChange} required />
+                    <div class="show-password">
+                      <FormControl type={showPassword ? 'text' : 'password'} name='password' value={loginFormData.password} className='mr-sm-2' onChange={handleChange} required />
+                        {showPassword ?
+                            <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowPassword(false); }} />
+                            :
+                            <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowPassword(true); }} />
+                        }
+                    </div>
                   </Form.Group>
                   <a href="/forgot-password" className='forgot-password text-dgray fs-16'>Forgot Password</a>
                   {loginFormLoading ?
