@@ -396,6 +396,16 @@ const Header = () => {
     }
   }, [cookies.cartItemCount, cookies.favoriteItemCount]);
 
+  useEffect(() => {
+    // Store the current page URL in session storage
+    // const getLocation = sessionStorage.setItem('lastVisitedPage', location.pathname);
+    const currentPath = location.pathname + location.search;
+  }, [location]);
+
+  // const currentPath = location.pathname + location.search;
+  const fullUrl = `${window.location.protocol}//${window.location.host}${location.pathname}${location.search}`;
+  console.log('fullUrl', fullUrl);
+
   return (
     <>
       {isLoggedIn &&
@@ -609,11 +619,21 @@ const Header = () => {
                       )}
                     </div>
 
-                    <div className="user-dropdown nav-link position-relative" ref={userRef}>
+                    <div className="user-dropdown nav-link position-relative" ref={userRef}>                      
                       {userImage ?
-                        <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                        <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}>
+                          {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 || user.profile_completeness == 75) &&
+                            <div className='profile-alert position-absolute badge-danger text-white text-center'>!
+                            </div>
+                          }
+                        </div>
                         :
-                        <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
+                        <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}>
+                          {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 || user.profile_completeness == 75) &&
+                            <div className='profile-alert position-absolute badge-danger text-white text-center'>!
+                            </div>
+                          }
+                        </div>
                       }
                       {userMenuOpen && (
                         <div className="action-box user-menu">
@@ -742,7 +762,9 @@ const Header = () => {
                       )}
                     </div>
                     <Nav.Link href="/login">Log in</Nav.Link>
+                    {/* <Nav.Link href={`/login?reference_url=${encodeURIComponent(fullUrl)}`}>Log in</Nav.Link> */}
                     <Nav.Link href="/sign-up"><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link>
+                    {/* <Nav.Link href={`/sign-up?reference_url=${encodeURIComponent(fullUrl)}`}><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link> */}
                   </>
                 }
               </div>

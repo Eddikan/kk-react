@@ -351,7 +351,7 @@ const ViewSellerProfile = () => {
                                             <img src={PinIcon} alt="location pin" className='profile-icon' />
                                             {user.city || user.province || user.country ?
                                                 <p className='fs-16 color-light-blue'>
-                                                    {user.city ? user.city + ',' : user.province ? user.province + ',' : "" } {user.country ? user.country : ""}
+                                                    {user.province ? user.province + ',' : user.city ? user.city + ','  : "" } {user.country ? user.country : ""}
                                                     {/* {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""} */}
                                                 </p>
                                                 :

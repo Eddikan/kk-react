@@ -168,3 +168,12 @@ span.cart-count {
   font-size: 10px;
   margin-top: 1px;
 }
+
+.profile-alert {
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  right: 0;
+  top: 3px;
+  border: 2px solid #FFFFFF;
+}

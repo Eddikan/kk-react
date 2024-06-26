@@ -34,6 +34,8 @@ const Questionnaire = () => {
     return new URLSearchParams(useLocation().search);
   }
   let query = useQuery();
+  const referenceUrl = query.get('reference_url');
+
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
   const [user, setUser] = useState(initialUserData);
   const [userLoading, setUserLoading] = useState(true);
@@ -96,6 +98,11 @@ const Questionnaire = () => {
           navigate("/" + signupOption);
         } else {
           navigate("/user/profile");
+          // if (referenceUrl && referenceUrl != "" && referenceUrl != null) {
+          //   window.location.href = referenceUrl;
+          // } else {
+          //   navigate("/user/profile");
+          // }
         }
 
         setFormStatus('standby');
@@ -175,6 +182,12 @@ const Questionnaire = () => {
   }, [reloadCount]);
 
   useEffect(() => {
+    if (step === 4) {
+      toggleCompleteQuestionnaire('completed_questionnaire', 1);
+    }
+  }, [step]);
+
+  useEffect(() => {
     // ComponentDidMount logic goes here
     // This will be executed after the component is mounted
     if (user) {
@@ -185,10 +198,12 @@ const Questionnaire = () => {
         setStep(3);
         setQuestionnaire3Show(true);
       } else {
-        setStep(0);
+        // setStep(0);
+        setSetupShopShow((prevStatus) => true);
       }
     } else {
-      setStep(0);
+      // setStep(0);
+      setSetupShopShow((prevStatus) => true);
     }
 
     return () => {
@@ -221,7 +236,7 @@ const Questionnaire = () => {
               </Container>
             </>
           }
-          {step == 0 ?
+          {/* {step == 0 ?
             <Container className='q1 narrow-600 py-5 px-3 mt-5 text-dgray'>
               <Row>
                 <Col lg='12' className='text-center'>
@@ -239,8 +254,8 @@ const Questionnaire = () => {
             </Container>
             :
             null
-          }
-          {setupShopShow ?
+          } */}
+          {setupShopShow || step == 0 ?
             <Container className='q1 narrow-600 py-5 px-3 mt-5 text-dgray'>
               <Row>
                 <Col lg='12' className='text-center'>
@@ -285,11 +300,11 @@ const Questionnaire = () => {
                   </Card>
                 </Col>
               </Row>
-              <Row className='narrow-400 mt-4'>
+              {/* <Row className='narrow-400 mt-4'>
                 <Col lg='12' className='text-right'>
                   <Button className='btn-outline' onClick={function () { setStep((prevStep) => 0); setSetupShopShow(false); }}>Back</Button>
                 </Col>
-              </Row>
+              </Row> */}
             </Container>
             :
             null
@@ -373,7 +388,8 @@ const Questionnaire = () => {
             :
             null
           }
-          {step == 4 ?
+          {/* {step == 4 ? */}
+          {step == 5 ?
             <>
               <Container className='q1 narrow-850 mt-5 px-0 d-flex'>
                 <div className='step4-first-cont p-5 '>

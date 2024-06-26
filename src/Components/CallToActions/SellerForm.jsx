@@ -300,7 +300,7 @@ const BecomeSellerForm = (props) => {
                                             </Card>
                                         </CardBody>
                                     </Card>
-                                    <Card className='mb-3 border-white'>
+                                    {/* <Card className='mb-3 border-white'>
                                         <CardBody>
                                             <Form.Label className='mb-1 fs-18 d-block'>
                                                 Fabric Process Insights
@@ -319,8 +319,8 @@ const BecomeSellerForm = (props) => {
                                                 />
                                             </Form.Group>
                                         </CardBody>
-                                    </Card>
-                                    <Card className='border-white'>
+                                    </Card> */}
+                                    {/* <Card className='border-white'>
                                         <CardBody>
                                             <Form.Label className='mb-1 fs-18 d-block'>
                                                 Pricing Structure
@@ -383,8 +383,8 @@ const BecomeSellerForm = (props) => {
                                                     <Col lg="12" className="text-right">
                                                         <Button onClick={addPricingStructure} className='btn-primary mt-3' type="button">Add More</Button>
                                                     </Col>
-                                                </Row>
-                                                {/* <Form.Control
+                                                </Row> */}
+                                                 {/* <Form.Control
                                                     as="textarea"
                                                     name="pricing_structure"
                                                     rows={5} // You can adjust the number of rows as needed
@@ -392,9 +392,9 @@ const BecomeSellerForm = (props) => {
                                                     placeholder=""
                                                     onChange={handleChange}
                                                 /> */}
-                                            </Form.Group>
+                                            {/* </Form.Group>
                                         </CardBody>
-                                    </Card>
+                                    </Card> */}
         {/*                             
                                     <Card className='mb-4 border-white'>
                                         <CardBody>

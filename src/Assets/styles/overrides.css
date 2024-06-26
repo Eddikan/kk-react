@@ -2277,6 +2277,10 @@ svg.gr-status-icon {
     background-color: #cea835;
 }
 
+.badge-danger {
+    background-color: #DC3545;
+}
+
 .cta-card-color {
     border: 2px solid #002e4c !important;
     color: #000000 !important;
@@ -2303,6 +2307,8 @@ svg.gr-status-icon {
 
 .banner-completion {
     background: #551755;
+    /* background: #FF0F0F; */
+    /* background: #DC3545; */
     height: 34px;
     display: flex;
     justify-content: center;

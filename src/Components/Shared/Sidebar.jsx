@@ -129,7 +129,9 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                             
                             </>
                         )}
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/guide')}><RxRulerHorizontal size="22" className="me-2 mb-1" />Measurement Guide</div>
+                        {userDetails.is_designer == 1 && (
+                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/guide')}><RxRulerHorizontal size="22" className="me-2 mb-1" />Measurement Guide</div>
+                        )}
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/live/stream')}><RiLiveLine size="22" className="me-2 mb-1" />Live Streams</div>
                         <Card className="mt-3 text-center">
                             <Card.Body>

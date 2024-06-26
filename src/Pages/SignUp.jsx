@@ -3,7 +3,7 @@ import { Email, domains } from '@smastrom/react-email-autocomplete'
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import '../Assets/styles/SignUp/style.css';
@@ -18,7 +18,7 @@ const initialRegisterData = Object.freeze({
   email: '',
   password: '',
   password_confirmation: '',
-  event_date: ''
+  event_date: '',
 });
 
 const SignUp = () => {
@@ -27,6 +27,10 @@ const SignUp = () => {
     return new URLSearchParams(useLocation().search);
   }
   let query = useQuery();
+  const referenceUrl = query.get('reference_url');
+
+  const location = useLocation();
+
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'tempCart', 'tempFavorites']);
 
   const [signupType, setSignupType] = useState(query.get("type"));
@@ -42,7 +46,7 @@ const SignUp = () => {
   const [googleEmail, setGoogleEmail] = useState('');
   const [googleSignupProfile, setGoogleSignupProfile] = useState(null);
   const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
-      
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -53,6 +57,8 @@ const SignUp = () => {
   const token = cookies.token;
   const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
   const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
+
+  const [selectedOption, setSelectedOption] = useState('');
 
   const handleInterestChange = (value) => {
     if (interestedIn.includes(value)) {
@@ -89,10 +95,20 @@ const SignUp = () => {
         const user_details = { currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at }
         setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
         setCookie('signup_type', selectedUser.signup_type, { path: '/' });
-        if (signupOption && signupOption != "") {
-          navigate("/questionnaire?option=" + signupOption);
+        if (selectedOption === 'No') {
+          // if (referenceUrl) {
+          //   window.location.href = referenceUrl;
+          // } else {
+            navigate("/user/profile");
+          // }
         } else {
-          navigate("/questionnaire");
+          if (signupOption && signupOption != "") {
+            navigate("/questionnaire?option=" + signupOption + "&reference_url=" + referenceUrl);
+            // navigate(`/questionnaire?option=${signupOption}&reference_url=${encodeURIComponent(referenceUrl)}`);
+          } else {
+            navigate("/questionnaire");
+            // window.location.href = `/questionnaire?reference_url=${encodeURIComponent(referenceUrl)}`;
+          }
         }
 
       } else {
@@ -148,7 +164,13 @@ const SignUp = () => {
   async function registerSubmit(e) {
     e.preventDefault();
     setRegisterFormLoading(true);
-    axios.post(process.env.REACT_APP_API_ENDPOINT + 'register', { ...registerFormData, interested_in: interestedIn }).then((response) => {
+
+    var completed_questionnaire = 0
+    if (selectedOption === 'No') {
+      completed_questionnaire = 1;
+    }
+
+    axios.post(process.env.REACT_APP_API_ENDPOINT + 'register', { ...registerFormData, interested_in: interestedIn, completed_questionnaire: completed_questionnaire }).then((response) => {
       const success = response.data.status;
       if (success == 'Success') {
         const data = response.data.data;
@@ -349,6 +371,15 @@ const SignUp = () => {
     }
   }, [googleSignupProfile]);
 
+  const handleChangeSetUpShop = (event) => {
+    setSelectedOption(event.target.value);
+
+    if (event.target.value === 'Yes') {
+      setInterestedIn([]);
+      setRegisterFormData({...registerFormData, event_date: ''})
+    }
+  };
+
   useEffect(() => {
     if (googleEmail) {
       const data = {
@@ -480,72 +511,176 @@ const SignUp = () => {
                   </Form.Group>
                   <Form.Group className='mb-3'>
                     <Form.Label>Password</Form.Label>
-                      <div class="show-password">
-                        <FormControl type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} className='mr-sm-2' required />
-                        {showPassword ?
-                            <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowPassword(false); }} />
-                            :
-                            <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowPassword(true); }} />
-                        }
-                      </div>
+                    <div class="show-password">
+                      <FormControl type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} className='mr-sm-2' required />
+                      {showPassword ?
+                        <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowPassword(false); }} />
+                        :
+                        <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowPassword(true); }} />
+                      }
+                    </div>
                   </Form.Group>
                   <Form.Group className='mb-3'>
                     <Form.Label>Confirm Password</Form.Label>
                     <div class="show-password">
                       <FormControl type={showConfirmPassword ? 'text' : 'password'} name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
                       {showConfirmPassword ?
-                          <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowConfirmPassword(false); }} />
-                          :
-                          <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowConfirmPassword(true); }} />
+                        <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowConfirmPassword(false); }} />
+                        :
+                        <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowConfirmPassword(true); }} />
                       }
                     </div>
                   </Form.Group>
-                  {/* <Form.Group className='mb-3'>
-                    <Form.Label className="mb-3">I'm interested in...</Form.Label>
-                    <div className="interests">
-                      <Form.Label className="me-3" style={{minWidth: '90px'}}>
-                        <input
-                          type="checkbox"
-                          checked={interestedIn.includes('Men')}
-                          onChange={() => handleInterestChange('Men')}
-                          className="d-inline-block vertical-align-middle me-1"
-                        />
-                        <span>Men</span>
-                      </Form.Label>
-                      <Form.Label style={{minWidth: '90px'}}>
-                        <input
-                          type="checkbox"
-                          checked={interestedIn.includes('Baby/Toddlers')}
-                          onChange={() => handleInterestChange('Baby/Toddlers')}
-                          className="d-inline-block vertical-align-middle me-1"
-                        />
-                        <span>Baby/Toddlers</span>
-                      </Form.Label>
-                      <br />
-                      <Form.Label className="me-3" style={{minWidth: '90px'}}>
-                        <input
-                          type="checkbox"
-                          checked={interestedIn.includes('Women')}
-                          onChange={() => handleInterestChange('Women')}
-                          className="d-inline-block vertical-align-middle me-1"
-                        />
-                        <span>Women</span>
-                      </Form.Label>
-                      <Form.Label style={{minWidth: '90pxs'}}>
-                        <input
-                          type="checkbox"
-                          checked={interestedIn.includes('Others')}
-                          onChange={() => handleInterestChange('Others')}
-                          className="d-inline-block vertical-align-middle me-1"
-                        />
-                        <span>Others</span>
-                      </Form.Label>
-                    </div>
-                  </Form.Group>
                   <Form.Group className='mb-3'>
-                    <Form.Label>Event Date</Form.Label>
-                    <FormControl type='date' name='event_date' onChange={handleChange} className='mr-sm-2' required />
-                  </Form.Group> */}
+                    <Form.Label>Do you want to set up a shop?</Form.Label>
+                    <Row className="mt-2">
+                      <Form.Group as={Col} lg={3}>
+                        <Form.Check
+                          className="cursor-pointer"
+                          type="radio"
+                          label="Yes"
+                          name="set_up_shop"
+                          value="Yes"
+                          required
+                          checked={selectedOption === 'Yes'}
+                          onChange={handleChangeSetUpShop}
+                        />
+                      </Form.Group>
+                      <Form.Group as={Col} lg={3}>
+                        <Form.Check
+                          className="cursor-pointer"
+                          type="radio"
+                          label="No"
+                          name="set_up_shop"
+                          value="No"
+                          required
+                          checked={selectedOption === 'No'}
+                          onChange={handleChangeSetUpShop}
+                        />
+                      </Form.Group>
+                    </Row>
+                  </Form.Group>
+                  {selectedOption === 'No' && (
+                    <>
+                      <Card className='mb-4'>
+                        <Card.Body>
+                          <Form.Label className='mb-2 fs-18'>
+                            I'm interested in...
+                          </Form.Label>
+                          <Row className="align-items-center mt-1">
+                            <Col md="6">
+                              <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                <input
+                                  type="checkbox"
+                                  checked={interestedIn.includes('Men')}
+                                  onChange={() => handleInterestChange('Men')}
+                                  className="d-inline-block vertical-align-middle me-1"
+                                />
+                                <span>Men</span>
+                              </Form.Label>
+                            </Col>
+                            <Col md="6">
+                              <Form.Label style={{ minWidth: '90px' }}>
+                                <input
+                                  type="checkbox"
+                                  checked={interestedIn.includes('Baby/Toddlers')}
+                                  onChange={() => handleInterestChange('Baby/Toddlers')}
+                                  className="d-inline-block vertical-align-middle me-1"
+                                />
+                                <span>Baby/Toddlers</span>
+                              </Form.Label>
+                            </Col>
+                          </Row>
+                          <Row className="align-items-center">
+                            <Col md="6">
+                              <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                <input
+                                  type="checkbox"
+                                  checked={interestedIn.includes('Women')}
+                                  onChange={() => handleInterestChange('Women')}
+                                  className="d-inline-block vertical-align-middle me-1"
+                                />
+                                <span>Women</span>
+                              </Form.Label>
+                            </Col>
+                            <Col md="6">
+                              <Form.Label style={{ minWidth: '90px' }}>
+                                <input
+                                  type="checkbox"
+                                  checked={interestedIn.includes('Others')}
+                                  onChange={() => handleInterestChange('Others')}
+                                  className="d-inline-block vertical-align-middle me-1"
+                                />
+                                <span>Others</span>
+                              </Form.Label>
+                            </Col>
+                          </Row>
+                        </Card.Body>
+                      </Card>
+                      <Card className='mb-4'>
+                        <Card.Body>
+                          <Form.Label className='mb-2 fs-18'>
+                            Event Date
+                          </Form.Label>
+                          <Row className="align-items-center mb-3">
+                            <Col md="12">
+                              <FormControl type='date' name='event_date' onChange={handleChange} className='mr-sm-2' />
+                            </Col>
+                          </Row>
+                        </Card.Body>
+                      </Card>
+                    </>
+                  )}
+                  {/* {selectedOption === 'No' && (
+                    <>
+                      <Form.Group className='mb-3'>
+                        <Form.Label className="mb-3">I'm interested in...</Form.Label>
+                        <div className="interests">
+                          <Form.Label className="me-3" style={{minWidth: '90px'}}>
+                            <input
+                              type="checkbox"
+                              checked={interestedIn.includes('Men')}
+                              onChange={() => handleInterestChange('Men')}
+                              className="d-inline-block vertical-align-middle me-1"
+                            />
+                            <span>Men</span>
+                          </Form.Label>
+                          <Form.Label style={{minWidth: '90px'}}>
+                            <input
+                              type="checkbox"
+                              checked={interestedIn.includes('Baby/Toddlers')}
+                              onChange={() => handleInterestChange('Baby/Toddlers')}
+                              className="d-inline-block vertical-align-middle me-1"
+                            />
+                            <span>Baby/Toddlers</span>
+                          </Form.Label>
+                          <br />
+                          <Form.Label className="me-3" style={{minWidth: '90px'}}>
+                            <input
+                              type="checkbox"
+                              checked={interestedIn.includes('Women')}
+                              onChange={() => handleInterestChange('Women')}
+                              className="d-inline-block vertical-align-middle me-1"
+                            />
+                            <span>Women</span>
+                          </Form.Label>
+                          <Form.Label style={{minWidth: '90px'}}>
+                            <input
+                              type="checkbox"
+                              checked={interestedIn.includes('Others')}
+                              onChange={() => handleInterestChange('Others')}
+                              className="d-inline-block vertical-align-middle me-1"
+                            />
+                            <span>Others</span>
+                          </Form.Label>
+                        </div>
+                      </Form.Group>
+                      <Form.Group className='mb-3'>
+                        <Form.Label>Event Date</Form.Label>
+                        <FormControl type='date' name='event_date' onChange={handleChange} className='mr-sm-2' required />
+                      </Form.Group>
+                    </>
+                  )} */}
                   <div className="alert alert-primary mb-0 small lh-1-7" role="alert">
                     As part of our ongoing commitment to security and user safety, we are requiring users to provide a valid identification document for access to certain enhanced features on our platform.
                   </div>

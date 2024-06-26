@@ -355,7 +355,7 @@ const Questionnaire2 = (props) => {
                             </Card> */}
                             <Card className='mb-4 border-white'>
                                 <CardBody>
-                                    <Form.Label className='mb-1 fs-18 d-block'>
+                                    {/* <Form.Label className='mb-1 fs-18 d-block'>
                                         Lead Time and Pricing Structure
                                     </Form.Label>
                                     <Form.Label className="mb-3 mt-1 small">
@@ -373,9 +373,14 @@ const Questionnaire2 = (props) => {
                                             value={questionnaire2Data.lead_time}
                                             onChange={handleChange}
                                         />
-                                    </Form.Group>
-                                    <Form.Label className="mb-3">
+                                    </Form.Group> */}
+                                    <Form.Label className="mb-1">
                                         Pricing Structure
+                                    </Form.Label>
+                                    <Form.Label className="mb-3 mt-1 small">
+                                        Provide information about the typical lead time for designing,
+                                        creating, and delivering garments, along with transparent
+                                        pricing structures, helps set expectations.
                                     </Form.Label>
                                     <Form.Group>
                                         {pricingStructure.map((item, index) => (
@@ -383,7 +388,7 @@ const Questionnaire2 = (props) => {
                                                 {pricingStructure.length > 1 ?
                                                     <div className="position-relative pe-5">
                                                         <Row className='mb-3' key={index}>
-                                                            <Col lg="6">
+                                                            <Col lg="4">
                                                                 <Form.Control
                                                                     type="text"
                                                                     value={item.name}
@@ -391,12 +396,20 @@ const Questionnaire2 = (props) => {
                                                                     placeholder="Name"
                                                                 />
                                                             </Col>
-                                                            <Col lg="6">
+                                                            <Col lg="4">
                                                                 <Form.Control
                                                                     type="text"
                                                                     value={item.price}
                                                                     onChange={(e) => editPricingStructure(index, { ...item, price: e.target.value })}
                                                                     placeholder="Price"
+                                                                />
+                                                            </Col>
+                                                            <Col lg="4">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={item.lead_time}
+                                                                    onChange={(e) => editPricingStructure(index, { ...item, lead_time: e.target.value })}
+                                                                    placeholder="Lead Time"
                                                                 />
                                                             </Col>
                                                         </Row>
@@ -407,7 +420,7 @@ const Questionnaire2 = (props) => {
                                                     :
                                                     <div className="position-relative">
                                                         <Row className='mb-3' key={index}>
-                                                            <Col lg="6">
+                                                            <Col lg="4">
                                                                 <Form.Control
                                                                     type="text"
                                                                     value={item.name}
@@ -415,12 +428,20 @@ const Questionnaire2 = (props) => {
                                                                     placeholder="Name"
                                                                 />
                                                             </Col>
-                                                            <Col lg="6">
+                                                            <Col lg="4">
                                                                 <Form.Control
                                                                     type="text"
                                                                     value={item.price}
                                                                     onChange={(e) => editPricingStructure(index, { ...item, price: e.target.value })}
                                                                     placeholder="Price"
+                                                                />
+                                                            </Col>
+                                                            <Col lg="4">
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={item.lead_time}
+                                                                    onChange={(e) => editPricingStructure(index, { ...item, lead_time: e.target.value })}
+                                                                    placeholder="Lead Time"
                                                                 />
                                                             </Col>
                                                         </Row>

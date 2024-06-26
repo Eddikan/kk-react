@@ -25,6 +25,7 @@ const LogIn = () => {
 
   // Parse search string to get query parameters
   const searchParams = new URLSearchParams(location.search);
+  // const referenceUrl = searchParams.get('reference_url');
 
   // Access individual query parameters using get method
   const redirect_to = searchParams.get('redirect_to');
@@ -156,6 +157,7 @@ const LogIn = () => {
               navigate("/"+redirect_to);
             } else {
               navigate("/");
+              // window.location.href = referenceUrl;
             }
           }, 1000);
         }

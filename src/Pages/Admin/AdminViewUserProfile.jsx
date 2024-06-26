@@ -357,7 +357,7 @@ const AdminViewUserProfile = () => {
                                             <img src={PinIcon} alt="location pin" className='profile-icon' />
                                             {user.city || user.province || user.country ?
                                                 <p className='fs-16 color-light-blue'>
-                                                    {user.city ? user.city + ',' : user.province ? user.province + ',' : "" } {user.country ? user.country : ""}
+                                                    {user.province ? user.province + ',' : user.city ? user.city + ','  : "" } {user.country ? user.country : ""}
                                                     {/* {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""} */}
                                                 </p>
                                                 :
@@ -510,7 +510,7 @@ const AdminViewUserProfile = () => {
                                                     <p><a href="#">-</a></p>
                                                 </div>
                                             }
-                                            {user.youtube ?
+                                            {/* {user.youtube ?
                                                 <div className='icons-d-flex'>
                                                     <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
                                                     <p className='information-font ellipsis-profile'><a href={user.youtube} target="_blank">{user.youtube}</a></p>
@@ -520,7 +520,7 @@ const AdminViewUserProfile = () => {
                                                     <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
                                                     <p><a href="#">-</a></p>
                                                 </div>
-                                            }
+                                            } */}
                                         </div>
                                     </Col>
                                 </Row>

@@ -361,7 +361,7 @@ const DesignerProfile = () => {
                                             <img src={PinIcon} alt="location pin" className='mt-1' />
                                             {user.city || user.province || user.country ?
                                                 <p className='fs-16 place-family'>
-                                                    {user.city ? user.city + ',' : user.province ? user.province + ',' : "" } {user.country ? user.country : ""}
+                                                    {user.province ? user.province + ',' : user.city ? user.city + ','  : "" } {user.country ? user.country : ""}
                                                     {/* {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""} */}
                                                 </p>
                                                 :

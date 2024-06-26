@@ -548,7 +548,7 @@ const PortfolioGrid = (props) => {
                                                         <div className='fs-14 text-center mt-2'>
                                                             <img src={PinIcon} alt="location pin" className='me-2' />
                                                             {/* {singleDesign.address_line_1}{singleDesign.province}</div> */}
-                                                            {singleDesign.city ? singleDesign.city + ',' : singleDesign.province ? singleDesign.province + ',' : ""} {singleDesign.country}</div>
+                                                            {singleDesign.province ? singleDesign.province + ',' : singleDesign.city ? singleDesign.city + ',' : ""} {singleDesign.country}</div>
                                                         <div className="mb-3 text-center">
                                                             {singleDesign.tags ?
                                                                 <>
