@@ -918,7 +918,7 @@ const Designs = (props) => {
                                                         />
                                                         :
                                                         <Col lg={12} className="text-center mt-4">
-                                                            <Link to="/sign-up?type=customer&option=designs">
+                                                            <Link to="/sign-up?type=customer&option=designs&redirect_to=/designs">
                                                                 <Button type="button" className="btn-primary" variant="primary">View More</Button>
                                                             </Link>
                                                         </Col>

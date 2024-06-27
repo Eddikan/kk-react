@@ -446,7 +446,10 @@ const Designs = (props) => {
                                                 <Button className="btn-primary" variant="primary">View All</Button>
                                             </Link>
                                             :
-                                            <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_design')}>View More</Button>
+                                            // <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_design')}>View More</Button>
+                                            <Link to="/sign-up?redirect_to=/">
+                                                <Button className="btn-primary" variant="primary">View More</Button>
+                                            </Link>
                                         }
                                     </Col>
                                 </Row>

@@ -402,9 +402,18 @@ const Header = () => {
     const currentPath = location.pathname + location.search;
   }, [location]);
 
-  // const currentPath = location.pathname + location.search;
-  const fullUrl = `${window.location.protocol}//${window.location.host}${location.pathname}${location.search}`;
-  console.log('fullUrl', fullUrl);
+  const currentPath = location.pathname + location.search;
+  // console.log('currentPath', currentPath);
+
+  // const fullUrl = `${window.location.protocol}//${window.location.host}${location.pathname}${location.search}` || false;
+
+  const href = currentPath
+    ? `/sign-up?redirect_to=${encodeURIComponent(currentPath)}` 
+    : '/sign-up';
+
+  const hrefLogin = currentPath
+    ? `/login?redirect_to=${encodeURIComponent(currentPath)}` 
+    : '/login';
 
   return (
     <>
@@ -761,10 +770,10 @@ const Header = () => {
                         </div>
                       )}
                     </div>
-                    <Nav.Link href="/login">Log in</Nav.Link>
-                    {/* <Nav.Link href={`/login?reference_url=${encodeURIComponent(fullUrl)}`}>Log in</Nav.Link> */}
-                    <Nav.Link href="/sign-up"><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link>
-                    {/* <Nav.Link href={`/sign-up?reference_url=${encodeURIComponent(fullUrl)}`}><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link> */}
+                    {/* <Nav.Link href="/login">Log in</Nav.Link> */}
+                    <Nav.Link href={hrefLogin}>Log in</Nav.Link>
+                    {/* <Nav.Link href="/sign-up"><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link> */}
+                    <Nav.Link href={href}><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link>
                   </>
                 }
               </div>

@@ -34,7 +34,7 @@ const Questionnaire = () => {
     return new URLSearchParams(useLocation().search);
   }
   let query = useQuery();
-  const referenceUrl = query.get('reference_url');
+  const redirectTo = query.get('redirect_to');
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'token']);
   const [user, setUser] = useState(initialUserData);
@@ -94,15 +94,18 @@ const Questionnaire = () => {
       const success = response.data.status;
       if (success == 'Success') {
         setCookie('completed_questionnaire', 1, { path: '/' });
-        if (signupOption && signupOption != "") {
-          navigate("/" + signupOption);
+        if (redirectTo && redirectTo != "" && redirectTo != null) {
+          if (signupOption && signupOption != "") {
+            navigate("/" + signupOption);
+          } else {
+            navigate(redirectTo);
+          }
         } else {
-          navigate("/user/profile");
-          // if (referenceUrl && referenceUrl != "" && referenceUrl != null) {
-          //   window.location.href = referenceUrl;
-          // } else {
-          //   navigate("/user/profile");
-          // }
+          if (signupOption && signupOption != "") {
+            navigate("/" + signupOption);
+          } else {
+            navigate("/user/profile");
+          }
         }
 
         setFormStatus('standby');
@@ -197,8 +200,10 @@ const Questionnaire = () => {
       } else if (user.is_seller == 1) {
         setStep(3);
         setQuestionnaire3Show(true);
-      } else {
+      } else if (signupType == "designer" || signupType == "designer_seller" || signupType == "seller") {
         // setStep(0);
+        setSetupShopShow((prevStatus) => false);
+      } else {
         setSetupShopShow((prevStatus) => true);
       }
     } else {

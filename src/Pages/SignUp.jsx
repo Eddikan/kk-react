@@ -13,6 +13,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import KoutureLogo from 'Assets/images/kouture-konect-icon.png';
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { connectFirestoreEmulator } from '@firebase/firestore';
 
 const initialRegisterData = Object.freeze({
   email: '',
@@ -27,7 +28,7 @@ const SignUp = () => {
     return new URLSearchParams(useLocation().search);
   }
   let query = useQuery();
-  const referenceUrl = query.get('reference_url');
+  const redirectTo = query.get('redirect_to') || "";
 
   const location = useLocation();
 
@@ -95,19 +96,34 @@ const SignUp = () => {
         const user_details = { currentUser: selectedUser.id, id: selectedUser.id, first_name: selectedUser.first_name, last_name: selectedUser.last_name, image: selectedUser.image, email_verified_at: selectedUser.email_verified_at }
         setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
         setCookie('signup_type', selectedUser.signup_type, { path: '/' });
-        if (selectedOption === 'No') {
-          // if (referenceUrl) {
-          //   window.location.href = referenceUrl;
-          // } else {
-            navigate("/user/profile");
-          // }
-        } else {
-          if (signupOption && signupOption != "") {
-            navigate("/questionnaire?option=" + signupOption + "&reference_url=" + referenceUrl);
-            // navigate(`/questionnaire?option=${signupOption}&reference_url=${encodeURIComponent(referenceUrl)}`);
+
+        if (selectedOption === 'Yes') {
+          if (redirectTo && redirectTo != "" & redirectTo != null) {
+            if (signupOption && signupOption != "") {
+              navigate(`/questionnaire?option=${signupOption}&redirect_to=${encodeURIComponent(redirectTo)}`);
+            } else {
+              navigate(`/questionnaire?redirect_to=${encodeURIComponent(redirectTo)}`);
+            }
           } else {
-            navigate("/questionnaire");
-            // window.location.href = `/questionnaire?reference_url=${encodeURIComponent(referenceUrl)}`;
+            if (signupOption && signupOption != "") {
+              navigate("/questionnaire?option=" + signupOption);
+            } else {
+              navigate("/questionnaire");
+            }
+          }
+        } else {
+          if (redirectTo && redirectTo != "" & redirectTo != null) {
+            if (signupOption && signupOption != "") {
+              navigate("/" + signupOption);
+            } else {
+              navigate(redirectTo);
+            }
+          } else {
+            if (signupOption && signupOption != "") {
+              navigate("/" + signupOption);
+            } else {
+              navigate("/user/profile");
+            }
           }
         }
 
@@ -437,6 +453,14 @@ const SignUp = () => {
     }
   }, [googleEmail]);
 
+  useEffect(() => {
+    if (signupType == "seller" || signupType == "designer" || signupType == "designer_seller") {
+      setSelectedOption("Yes");
+    } else if (signupType == "customer") {
+      setSelectedOption("No");
+    }
+  }, [signupType])
+
   return (
     <LayoutNoFooter>
       <section id='signup' className='d-flex align-items-center'>
@@ -511,7 +535,7 @@ const SignUp = () => {
                   </Form.Group>
                   <Form.Group className='mb-3'>
                     <Form.Label>Password</Form.Label>
-                    <div class="show-password">
+                    <div className="show-password">
                       <FormControl type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} className='mr-sm-2' required />
                       {showPassword ?
                         <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowPassword(false); }} />
@@ -520,9 +544,9 @@ const SignUp = () => {
                       }
                     </div>
                   </Form.Group>
-                  <Form.Group className='mb-3'>
+                  <Form.Group className='mb-4'>
                     <Form.Label>Confirm Password</Form.Label>
-                    <div class="show-password">
+                    <div className="show-password">
                       <FormControl type={showConfirmPassword ? 'text' : 'password'} name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
                       {showConfirmPassword ?
                         <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowConfirmPassword(false); }} />
@@ -531,106 +555,116 @@ const SignUp = () => {
                       }
                     </div>
                   </Form.Group>
-                  <Form.Group className='mb-3'>
-                    <Form.Label>Do you want to set up a shop?</Form.Label>
-                    <Row className="mt-2">
-                      <Form.Group as={Col} lg={3}>
-                        <Form.Check
-                          className="cursor-pointer"
-                          type="radio"
-                          label="Yes"
-                          name="set_up_shop"
-                          value="Yes"
-                          required
-                          checked={selectedOption === 'Yes'}
-                          onChange={handleChangeSetUpShop}
-                        />
-                      </Form.Group>
-                      <Form.Group as={Col} lg={3}>
-                        <Form.Check
-                          className="cursor-pointer"
-                          type="radio"
-                          label="No"
-                          name="set_up_shop"
-                          value="No"
-                          required
-                          checked={selectedOption === 'No'}
-                          onChange={handleChangeSetUpShop}
-                        />
-                      </Form.Group>
-                    </Row>
-                  </Form.Group>
-                  {selectedOption === 'No' && (
+                  {signupType != "seller" && signupType != "designer" && signupType != "designer_seller" && signupType != "customer" && (
                     <>
-                      <Card className='mb-4'>
-                        <Card.Body>
-                          <Form.Label className='mb-2 fs-18'>
-                            I'm interested in...
-                          </Form.Label>
-                          <Row className="align-items-center mt-1">
-                            <Col md="6">
-                              <Form.Label className="me-3" style={{ minWidth: '90px' }}>
-                                <input
-                                  type="checkbox"
-                                  checked={interestedIn.includes('Men')}
-                                  onChange={() => handleInterestChange('Men')}
-                                  className="d-inline-block vertical-align-middle me-1"
+                      <Form.Group>
+                        <Card className='mb-4'>
+                          <Card.Body>
+                            <Form.Label>Do you want to set up a shop?</Form.Label>
+                            <Row className="mt-2">
+                              <Form.Group as={Col} lg={3}>
+                                <Form.Check
+                                  className="cursor-pointer"
+                                  type="radio"
+                                  label="Yes"
+                                  name="set_up_shop"
+                                  value="Yes"
+                                  required
+                                  checked={selectedOption === 'Yes'}
+                                  onChange={handleChangeSetUpShop}
                                 />
-                                <span>Men</span>
-                              </Form.Label>
-                            </Col>
-                            <Col md="6">
-                              <Form.Label style={{ minWidth: '90px' }}>
-                                <input
-                                  type="checkbox"
-                                  checked={interestedIn.includes('Baby/Toddlers')}
-                                  onChange={() => handleInterestChange('Baby/Toddlers')}
-                                  className="d-inline-block vertical-align-middle me-1"
+                              </Form.Group>
+                              <Form.Group as={Col} lg={3}>
+                                <Form.Check
+                                  className="cursor-pointer"
+                                  type="radio"
+                                  label="No"
+                                  name="set_up_shop"
+                                  value="No"
+                                  required
+                                  checked={selectedOption === 'No'}
+                                  onChange={handleChangeSetUpShop}
                                 />
-                                <span>Baby/Toddlers</span>
-                              </Form.Label>
-                            </Col>
-                          </Row>
-                          <Row className="align-items-center">
-                            <Col md="6">
-                              <Form.Label className="me-3" style={{ minWidth: '90px' }}>
-                                <input
-                                  type="checkbox"
-                                  checked={interestedIn.includes('Women')}
-                                  onChange={() => handleInterestChange('Women')}
-                                  className="d-inline-block vertical-align-middle me-1"
-                                />
-                                <span>Women</span>
-                              </Form.Label>
-                            </Col>
-                            <Col md="6">
-                              <Form.Label style={{ minWidth: '90px' }}>
-                                <input
-                                  type="checkbox"
-                                  checked={interestedIn.includes('Others')}
-                                  onChange={() => handleInterestChange('Others')}
-                                  className="d-inline-block vertical-align-middle me-1"
-                                />
-                                <span>Others</span>
-                              </Form.Label>
-                            </Col>
-                          </Row>
-                        </Card.Body>
-                      </Card>
-                      <Card className='mb-4'>
-                        <Card.Body>
-                          <Form.Label className='mb-2 fs-18'>
-                            Event Date
-                          </Form.Label>
-                          <Row className="align-items-center mb-3">
-                            <Col md="12">
-                              <FormControl type='date' name='event_date' onChange={handleChange} className='mr-sm-2' />
-                            </Col>
-                          </Row>
-                        </Card.Body>
-                      </Card>
+                              </Form.Group>
+                            </Row>
+                          </Card.Body>
+                        </Card>
+                      </Form.Group>
                     </>
                   )}
+                  {selectedOption === 'No' && (
+                      <>
+                        <Form.Group>
+                          <Card className='mb-4'>
+                            <Card.Body>
+                              <Form.Label className='mb-2 fs-18'>
+                                I'm interested in...
+                              </Form.Label>
+                              <Row className="align-items-center mt-1">
+                                <Col md="6">
+                                  <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                    <input
+                                      type="checkbox"
+                                      checked={interestedIn.includes('Men')}
+                                      onChange={() => handleInterestChange('Men')}
+                                      className="d-inline-block vertical-align-middle me-1"
+                                    />
+                                    <span>Men</span>
+                                  </Form.Label>
+                                </Col>
+                                <Col md="6">
+                                  <Form.Label style={{ minWidth: '90px' }}>
+                                    <input
+                                      type="checkbox"
+                                      checked={interestedIn.includes('Baby/Toddlers')}
+                                      onChange={() => handleInterestChange('Baby/Toddlers')}
+                                      className="d-inline-block vertical-align-middle me-1"
+                                    />
+                                    <span>Baby/Toddlers</span>
+                                  </Form.Label>
+                                </Col>
+                              </Row>
+                              <Row className="align-items-center">
+                                <Col md="6">
+                                  <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                    <input
+                                      type="checkbox"
+                                      checked={interestedIn.includes('Women')}
+                                      onChange={() => handleInterestChange('Women')}
+                                      className="d-inline-block vertical-align-middle me-1"
+                                    />
+                                    <span>Women</span>
+                                  </Form.Label>
+                                </Col>
+                                <Col md="6">
+                                  <Form.Label style={{ minWidth: '90px' }}>
+                                    <input
+                                      type="checkbox"
+                                      checked={interestedIn.includes('Others')}
+                                      onChange={() => handleInterestChange('Others')}
+                                      className="d-inline-block vertical-align-middle me-1"
+                                    />
+                                    <span>Others</span>
+                                  </Form.Label>
+                                </Col>
+                              </Row>
+                            </Card.Body>
+                          </Card>
+                          <Card className='mb-4'>
+                            <Card.Body>
+                              <Form.Label className='mb-2 fs-18'>
+                                Event Date
+                              </Form.Label>
+                              <Row className="align-items-center mb-3">
+                                <Col md="12">
+                                  <FormControl type='date' name='event_date' onChange={handleChange} className='mr-sm-2' />
+                                </Col>
+                              </Row>
+                            </Card.Body>
+                          </Card>
+                        </Form.Group>
+                      </>
+                    )}
                   {/* {selectedOption === 'No' && (
                     <>
                       <Form.Group className='mb-3'>
@@ -694,7 +728,7 @@ const SignUp = () => {
                     :
                     <Button className='w-100 mt-3' variant='secondary' type='button' onClick={login}>Sign up with Google</Button>
                   }
-                  <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to='/login'>Log In</Link></p>
+                  <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to={`/login?redirect_to=${encodeURIComponent(redirectTo)}`}>Log In</Link></p>
                 </Form>
               </div>
             </Col>

@@ -28,7 +28,7 @@ const LogIn = () => {
   // const referenceUrl = searchParams.get('reference_url');
 
   // Access individual query parameters using get method
-  const redirect_to = searchParams.get('redirect_to');
+  const redirect_to = searchParams.get('redirect_to') || "";
 
   const [loginFormData, setLoginFormData] = useState(initialLoginData);
   const [loginFormLoading, setLoginFormLoading] = useState(false);
@@ -153,11 +153,11 @@ const LogIn = () => {
           setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
           setCookie('token', data.token, { path: '/' });
           setTimeout(function () {
-            if (redirect_to && redirect_to != "") {
-              navigate("/"+redirect_to);
+            if (redirect_to && redirect_to != "" && redirect_to != null) {
+              // navigate("/"+redirect_to);
+              navigate(redirect_to);
             } else {
               navigate("/");
-              // window.location.href = referenceUrl;
             }
           }, 1000);
         }
@@ -380,7 +380,7 @@ const LogIn = () => {
                   </Form.Group>
                   <Form.Group className='mb-3' controlId='formBasicPassword'>
                     <Form.Label>Password</Form.Label>
-                    <div class="show-password">
+                    <div className="show-password">
                       <FormControl type={showPassword ? 'text' : 'password'} name='password' value={loginFormData.password} className='mr-sm-2' onChange={handleChange} required />
                         {showPassword ?
                             <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowPassword(false); }} />
@@ -401,7 +401,7 @@ const LogIn = () => {
                     <Button className='w-100 mt-3' variant='secondary' type='button' onClick={login}>Login with Google</Button>
                   }
                   
-                  <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Don't have an account? <Link className='sign-up' to='/sign-up'>Sign Up</Link></p>
+                  <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Don't have an account? <Link className='sign-up' to={`/sign-up?redirect_to=${encodeURIComponent(redirect_to)}`}>Sign Up</Link></p>
                 </Form>
               </div>
             </Col>

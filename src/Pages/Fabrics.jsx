@@ -776,7 +776,7 @@ const Fabrics = (props) => {
                                     />
                                     :
                                     <Col lg={12} className="text-center mt-4">
-                                        <Link to="/sign-up?type=customer&option=fabrics">
+                                        <Link to="/sign-up?type=customer&option=fabrics&redirect_to=/fabrics">
                                             <Button type="button" className="btn-primary" variant="primary">View More</Button>
                                         </Link>
                                     </Col>

@@ -41,7 +41,8 @@ const ThankYouPage = (props) => {
         axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/'+orderId, {needs_designer: needsDesigner, designer_id: designerID}).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
-                navigate('/orders');
+                // navigate('/orders');
+                navigate('/designer-profile?user_id='+selectedDesigner.user.id);
                 toast.error('Order updated successfully!');
                 setConnectDesignerLoading(false);
             } else {
@@ -68,7 +69,7 @@ const ThankYouPage = (props) => {
                                 </div>
                                 <div className='text-center mb-4'>
                                     <div className='fs-30 rufina-family mt-2'>
-                                        Thankyou for your purchase!
+                                        Thank you for your purchase!
                                     </div>
                                 </div>
                                 <div>
