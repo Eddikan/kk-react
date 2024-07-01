@@ -236,7 +236,7 @@ const SignUp = (props) => {
                                             <FormControl type='password' name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
                                         </Form.Group>
                                         <Form.Group className='mb-3'>
-                                            <Form.Label className="mb-3">I'm interested in...</Form.Label>
+                                            <Form.Label className="mb-3">Clothing preferences</Form.Label>
                                             <div className="interests">
                                             <Form.Label className="me-3" style={{minWidth: '90px'}}>
                                                 <input
@@ -245,7 +245,7 @@ const SignUp = (props) => {
                                                 onChange={() => handleInterestChange('Men')}
                                                 className="d-inline-block vertical-align-middle me-1"
                                                 />
-                                                <span>Men</span>
+                                                <span>Men's Clothing</span>
                                             </Form.Label>
                                             <Form.Label style={{minWidth: '90px'}}>
                                                 <input
@@ -254,7 +254,7 @@ const SignUp = (props) => {
                                                 onChange={() => handleInterestChange('Baby/Toddlers')}
                                                 className="d-inline-block vertical-align-middle me-1"
                                                 />
-                                                <span>Baby/Toddlers</span>
+                                                <span>Baby/Toddler Clothing</span>
                                             </Form.Label>
                                             <br />
                                             <Form.Label className="me-3" style={{minWidth: '90px'}}>
@@ -264,7 +264,7 @@ const SignUp = (props) => {
                                                 onChange={() => handleInterestChange('Women')}
                                                 className="d-inline-block vertical-align-middle me-1"
                                                 />
-                                                <span>Women</span>
+                                                <span>Women's Clothing</span>
                                             </Form.Label>
                                             <Form.Label style={{minWidth: '90pxs'}}>
                                                 <input

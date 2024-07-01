@@ -598,7 +598,7 @@ const SignUp = () => {
                           <Card className='mb-4'>
                             <Card.Body>
                               <Form.Label className='mb-2 fs-18'>
-                                I'm interested in...
+                                Clothing preferences
                               </Form.Label>
                               <Row className="align-items-center mt-1">
                                 <Col md="6">
@@ -609,7 +609,7 @@ const SignUp = () => {
                                       onChange={() => handleInterestChange('Men')}
                                       className="d-inline-block vertical-align-middle me-1"
                                     />
-                                    <span>Men</span>
+                                    <span>Men's Clothing</span>
                                   </Form.Label>
                                 </Col>
                                 <Col md="6">
@@ -620,7 +620,7 @@ const SignUp = () => {
                                       onChange={() => handleInterestChange('Baby/Toddlers')}
                                       className="d-inline-block vertical-align-middle me-1"
                                     />
-                                    <span>Baby/Toddlers</span>
+                                    <span>Baby/Toddler Clothing</span>
                                   </Form.Label>
                                 </Col>
                               </Row>
@@ -633,7 +633,7 @@ const SignUp = () => {
                                       onChange={() => handleInterestChange('Women')}
                                       className="d-inline-block vertical-align-middle me-1"
                                     />
-                                    <span>Women</span>
+                                    <span>Women's Clothing</span>
                                   </Form.Label>
                                 </Col>
                                 <Col md="6">

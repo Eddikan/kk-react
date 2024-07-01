@@ -17,7 +17,7 @@ const initialLoginData = Object.freeze({
     password: ''
 });
 
-const LogIn = (props) => {
+const LogIn = ({props, showSignup}) => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -387,9 +387,9 @@ const LogIn = (props) => {
                     </Form.Group>
                     <a href="/forgot-password" className='forgot-password text-dgray fs-16'>Forgot Password</a>
                     {loginFormLoading ?
-                        <Button className='w-100 mt-4 mb-4' variant='primary' type='button'>Signing in...</Button>
+                        <Button className='w-100 mt-4' variant='primary' type='button'>Signing in...</Button>
                         :
-                        <Button className='w-100 mt-4 mb-4' variant='primary' type='submit'>Sign in</Button>
+                        <Button className='w-100 mt-4' variant='primary' type='submit'>Sign in</Button>
                     }
                     {/* {googleLoginLoading ?
                         <Button className='w-100 mt-3' variant='secondary' type='button'>Logging in with Google...</Button>
@@ -398,6 +398,7 @@ const LogIn = (props) => {
                     } */}
 
                     {/* <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Don't have an account? <Link className='sign-up' to='/sign-up'>Sign Up</Link></p> */}
+                    <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Don't have an account? <span className='sign-up' style={{ cursor: 'pointer' }} onClick={() => showSignup(1)}>Sign Up</span></p>
                 </Form>
             </div>
         </div>

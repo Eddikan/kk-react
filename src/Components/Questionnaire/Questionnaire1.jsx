@@ -97,7 +97,7 @@ const Questionnaire1 = (props) => {
                             <Card className='mb-4 border-white'>
                                 <CardBody>
                                     <Form.Label className='mb-2 fs-18'>
-                                        I'm interested in...
+                                        Clothing preferences
                                     </Form.Label>
                                     <Row className="align-items-center mt-1">
                                         <Col md="6">
@@ -108,7 +108,7 @@ const Questionnaire1 = (props) => {
                                                 onChange={() => handleInterestChange('Men')}
                                                 className="d-inline-block vertical-align-middle me-1"
                                                 />
-                                                <span>Men</span>
+                                                <span>Men's Clothing</span>
                                             </Form.Label>
                                         </Col>
                                         <Col md="6">
@@ -119,7 +119,7 @@ const Questionnaire1 = (props) => {
                                                 onChange={() => handleInterestChange('Baby/Toddlers')}
                                                 className="d-inline-block vertical-align-middle me-1"
                                                 />
-                                                <span>Baby/Toddlers</span>
+                                                <span>Baby/Toddler Clothing</span>
                                             </Form.Label>
                                         </Col>
                                     </Row>
@@ -132,7 +132,7 @@ const Questionnaire1 = (props) => {
                                                 onChange={() => handleInterestChange('Women')}
                                                 className="d-inline-block vertical-align-middle me-1"
                                                 />
-                                                <span>Women</span>
+                                                <span>Women's Clothing</span>
                                             </Form.Label>
                                         </Col>
                                         <Col md="6">

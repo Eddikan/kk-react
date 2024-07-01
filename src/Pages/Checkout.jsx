@@ -52,7 +52,7 @@ const initialCheckOut = {
     needs_designer: '',
 };
 
-const Cart = (props) => {
+const Cart = ({props }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const formRef = useRef(null);
@@ -85,6 +85,16 @@ const Cart = (props) => {
     const [activeAuth, setActiveAuth] = useState('login');
     const [currentUser, setCurrentUser] = useState(cookies.currentUser ?? null);
     const [productCount, setProductCount] = useState(0);
+
+    const [showModal, setShowModal] = useState(0);
+
+    const showSignup = (e) => {
+        setShowModal(e)
+    }
+
+    const showLogin = (e) => {
+        setShowModal(e)
+    }
 
     const getTotalQuantity = (cartItems) => {
         return cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -259,6 +269,8 @@ const Cart = (props) => {
         }
 
     }, [tempCartItems, selectedCartItems, reloadCount, item]);
+
+    console.log('showModal', showModal);
 
     return (
         <LayoutNoFooter>
@@ -786,7 +798,8 @@ const Cart = (props) => {
                 <Container className="h-100">
                     <Row className="h-100">
                         <Col lg="12">
-                            <Login onLogin={handleLogin} />
+                            {/* <Login onLogin={handleLogin} /> */}
+                            {showModal === 1 ? <SignUp onSignup={handleLogin} showLogin={(e) => showLogin(e)} /> : <Login showSignup={(e) => showSignup(e)} onLogin={handleLogin} />}
                         </Col>
                     </Row>
                 </Container>

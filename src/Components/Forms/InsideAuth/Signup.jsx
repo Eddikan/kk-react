@@ -17,10 +17,10 @@ const initialRegisterData = Object.freeze({
     event_date: ''
 });
 
-const SignUp = (props) => {
+const SignUp = ({onSignup, showLogin}) => {
     const navigate = useNavigate();
     const formRef = useRef(null);
-    const signupType = props.type ?? 'normal';
+    const signupType = onSignup.type || 'normal';
     const [registerFormData, setRegisterFormData] = useState(initialRegisterData);
     const [registerFormLoading, setRegisterFormLoading] = useState(false);
     const [interestedIn, setInterestedIn] = useState([]);
@@ -45,12 +45,29 @@ const SignUp = (props) => {
         }
     };
 
+    const getUserCartItems = async (e) => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + e + '/cart');
+    };
+
     async function addTempCartToCart(data) {
         // setReorderLoading(true);
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart/bulk', { order_items: data.order_items, user_id: data.user_id }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
-                const data = response.data.data;
+                getUserCartItems(data.user_id).then((response) => {
+                    const cartItemsData = response.data.data;
+                    if (cartItemsData) {
+                        setTimeout(function(){
+                            onSignup({user_id: data.user_id, cart_items: cartItemsData});
+                        }, 1000)
+                    } else {
+                        toast.error('There has been an error getting the cart items, please try again!');
+                    }
+                })
+                .catch((error) => {
+                    toast.error('There has been an error getting the cart items, please try again!');
+                });
+
             } else {
                 const errors = response.data.errors;
                 errors.map((error, index) => {
@@ -173,13 +190,13 @@ const SignUp = (props) => {
 
     return (
         <section id='signup' className='d-flex align-items-center' ref={formRef}>
-            <Container fluid>
+            {/* <Container fluid> */}
                 {/*  style={{ minHeight: '100vh' }} */}
-                <Row>
-                    <Col lg='12' className='d-flex flex-column justify-content-center pb-4'>
+                {/* <Row>
+                    <Col lg='12' className='d-flex flex-column justify-content-center pb-4'> */}
                         <div className='sign-up-container'>
-                            <Card className="border-none">
-                                <Card.Body>
+                            {/* <Card className="border-none">
+                                <Card.Body> */}
                                     <a href="/">
                                         <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" style={{ maxWidth: '50px' }} />
                                     </a>
@@ -243,7 +260,7 @@ const SignUp = (props) => {
                                             <FormControl type='password' name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
                                         </Form.Group>
                                         <Form.Group className='mb-3'>
-                                            <Form.Label className="mb-3">I'm interested in...</Form.Label>
+                                            <Form.Label className="mb-3">Clothing preferences</Form.Label>
                                             <div className="interests">
                                                 <Form.Label className="me-3" style={{ minWidth: '90px' }}>
                                                     <input
@@ -252,7 +269,7 @@ const SignUp = (props) => {
                                                         onChange={() => handleInterestChange('Men')}
                                                         className="d-inline-block vertical-align-middle me-1"
                                                     />
-                                                    <span>Men</span>
+                                                    <span>Men's Clothing</span>
                                                 </Form.Label>
                                                 <Form.Label style={{ minWidth: '90px' }}>
                                                     <input
@@ -261,7 +278,7 @@ const SignUp = (props) => {
                                                         onChange={() => handleInterestChange('Baby/Toddlers')}
                                                         className="d-inline-block vertical-align-middle me-1"
                                                     />
-                                                    <span>Baby/Toddlers</span>
+                                                    <span>Baby/Toddler Clothing</span>
                                                 </Form.Label>
                                                 <br />
                                                 <Form.Label className="me-3" style={{ minWidth: '90px' }}>
@@ -271,7 +288,7 @@ const SignUp = (props) => {
                                                         onChange={() => handleInterestChange('Women')}
                                                         className="d-inline-block vertical-align-middle me-1"
                                                     />
-                                                    <span>Women</span>
+                                                    <span>Women's Clothing</span>
                                                 </Form.Label>
                                                 <Form.Label style={{ minWidth: '90pxs' }}>
                                                     <input
@@ -296,14 +313,15 @@ const SignUp = (props) => {
                                             :
                                             <Button className='w-100 mt-4' variant='primary' type='submit'>Sign up</Button>
                                         }
-                                        <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to='/login'>Sign In</Link></p>
+                                        {/* <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to='/login'>Sign In</Link></p> */}
+                                        <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <span className='login' style={{ cursor: 'pointer' }} onClick={() => showLogin(0)}>Sign In</span></p>
                                     </Form>
-                                </Card.Body>
-                            </Card>
+                                {/* </Card.Body>
+                            </Card> */}
                         </div>
-                    </Col>
+                    {/* </Col>
                 </Row>
-            </Container>
+            </Container> */}
         </section>
 
     );

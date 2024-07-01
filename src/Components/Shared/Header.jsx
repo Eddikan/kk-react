@@ -653,24 +653,33 @@ const Header = () => {
                           } */}
 
                           {userRole !== 'Admin' &&
-                            <Row className='mb-3'>
-                              <Col lg="3">
-                                <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
-                                  {userImage ?
-                                    <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
-                                    :
-                                    <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
-                                  }
-                                </Link>
-                              </Col>
+                            <>
+                              <Row className='mb-3'>
+                                <Col lg="3">
+                                  <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
+                                    {userImage ?
+                                      <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                      :
+                                      <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
+                                    }
+                                  </Link>
+                                </Col>
 
-                              <Col lg="9">
-                                <div className='fw-600'>Hi,&nbsp;{user.first_name}!</div>
-                                <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
-                                  <div><BsArrowLeft className="me-1" size={10} /><span className='fs-12'>See your profile</span></div>
-                                </Link>
-                              </Col>
-                            </Row>
+                                <Col lg="9">
+                                  <div className='fw-600'>Hi,&nbsp;{user.first_name}!</div>
+                                  <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
+                                    <div><BsArrowLeft className="me-1" size={10} /><span className='fs-12'>See your profile</span></div>
+                                  </Link>    
+                                </Col>
+                                <Col lg="12">                                                              
+                                  {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 || user.profile_completeness == 75) &&
+                                    <div className='mt-2' style={{ color: '#DC3545' }}>
+                                        <span>Complete Your Profile</span>
+                                    </div>
+                                  }
+                                </Col>
+                              </Row>
+                            </>
                           }
 
                           {userRole !== 'Admin' && (
