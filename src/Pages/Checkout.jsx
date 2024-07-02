@@ -799,7 +799,7 @@ const Cart = ({props }) => {
                     <Row className="h-100">
                         <Col lg="12">
                             {/* <Login onLogin={handleLogin} /> */}
-                            {showModal === 1 ? <SignUp onSignup={handleLogin} showLogin={(e) => showLogin(e)} /> : <Login showSignup={(e) => showSignup(e)} onLogin={handleLogin} />}
+                            {showModal === 1 ? <SignUp onSignup={handleLogin} showLogin={(e) => showLogin(e)} /> : <Login showSignup={(e) => showSignup(e)} onLogin={handleLogin} onCloseModal={(e) => setAuthModalShow(e)}/>}
                         </Col>
                     </Row>
                 </Container>

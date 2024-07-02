@@ -139,7 +139,8 @@ const SignUp = ({onSignup, showLogin}) => {
                     } else if (signupType == "user_design") {
                         navigate("/designs");
                     } else {
-                        navigate("/questionnaire");
+                        // navigate("/questionnaire");
+                        navigate("/checkout");
                     }
                 }, 500);
             } else {
@@ -168,7 +169,8 @@ const SignUp = ({onSignup, showLogin}) => {
             signup_type: signupType,
             is_designer: signupType == "designer" ? 1 : 0,
             is_seller: signupType == "seller" ? 1 : 0,
-            completed_questionnaire: signupType.includes("user") ? 1 : 0,
+            // completed_questionnaire: signupType.includes("user") ? 1 : 0,
+            completed_questionnaire: 1,
         });
     }, []);
 
@@ -259,52 +261,127 @@ const SignUp = ({onSignup, showLogin}) => {
                                             <Form.Label>Confirm Password</Form.Label>
                                             <FormControl type='password' name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
                                         </Form.Group>
-                                        <Form.Group className='mb-3'>
-                                            <Form.Label className="mb-3">Clothing preferences</Form.Label>
-                                            <div className="interests">
+
+
+                                        <Card className='mb-4'>
+                                            <Card.Body>
+                                            <Form.Label className='mb-2 fs-18'>
+                                                Clothing preferences
+                                            </Form.Label>
+                                            <Row className="align-items-center mt-1">
+                                                <Col md="6">
                                                 <Form.Label className="me-3" style={{ minWidth: '90px' }}>
                                                     <input
-                                                        type="checkbox"
-                                                        checked={interestedIn.includes('Men')}
-                                                        onChange={() => handleInterestChange('Men')}
-                                                        className="d-inline-block vertical-align-middle me-1"
+                                                    type="checkbox"
+                                                    checked={interestedIn.includes('Men')}
+                                                    onChange={() => handleInterestChange('Men')}
+                                                    className="d-inline-block vertical-align-middle me-1"
                                                     />
                                                     <span>Men's Clothing</span>
                                                 </Form.Label>
+                                                </Col>
+                                                <Col md="6">
                                                 <Form.Label style={{ minWidth: '90px' }}>
                                                     <input
-                                                        type="checkbox"
-                                                        checked={interestedIn.includes('Baby/Toddlers')}
-                                                        onChange={() => handleInterestChange('Baby/Toddlers')}
-                                                        className="d-inline-block vertical-align-middle me-1"
+                                                    type="checkbox"
+                                                    checked={interestedIn.includes('Baby/Toddlers')}
+                                                    onChange={() => handleInterestChange('Baby/Toddlers')}
+                                                    className="d-inline-block vertical-align-middle me-1"
                                                     />
                                                     <span>Baby/Toddler Clothing</span>
                                                 </Form.Label>
-                                                <br />
+                                                </Col>
+                                            </Row>
+                                            <Row className="align-items-center">
+                                                <Col md="6">
                                                 <Form.Label className="me-3" style={{ minWidth: '90px' }}>
                                                     <input
-                                                        type="checkbox"
-                                                        checked={interestedIn.includes('Women')}
-                                                        onChange={() => handleInterestChange('Women')}
-                                                        className="d-inline-block vertical-align-middle me-1"
+                                                    type="checkbox"
+                                                    checked={interestedIn.includes('Women')}
+                                                    onChange={() => handleInterestChange('Women')}
+                                                    className="d-inline-block vertical-align-middle me-1"
                                                     />
                                                     <span>Women's Clothing</span>
                                                 </Form.Label>
-                                                <Form.Label style={{ minWidth: '90pxs' }}>
+                                                </Col>
+                                                <Col md="6">
+                                                <Form.Label style={{ minWidth: '90px' }}>
                                                     <input
-                                                        type="checkbox"
-                                                        checked={interestedIn.includes('Others')}
-                                                        onChange={() => handleInterestChange('Others')}
-                                                        className="d-inline-block vertical-align-middle me-1"
+                                                    type="checkbox"
+                                                    checked={interestedIn.includes('Others')}
+                                                    onChange={() => handleInterestChange('Others')}
+                                                    className="d-inline-block vertical-align-middle me-1"
                                                     />
                                                     <span>Others</span>
                                                 </Form.Label>
-                                            </div>
-                                        </Form.Group>
-                                        <Form.Group className='mb-3'>
+                                                </Col>
+                                            </Row>
+                                            </Card.Body>
+                                        </Card>
+
+
+                                        {/* <Card className='mb-4'>
+                                            <Card.Body>
+                                                <Form.Group className=''>
+                                                    <Form.Label className="mb-2">Clothing preferences</Form.Label>
+                                                    <div className="interests">
+                                                        <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={interestedIn.includes('Men')}
+                                                                onChange={() => handleInterestChange('Men')}
+                                                                className="d-inline-block vertical-align-middle me-1"
+                                                            />
+                                                            <span>Men's Clothing</span>
+                                                        </Form.Label>
+                                                        <Form.Label style={{ minWidth: '90px' }}>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={interestedIn.includes('Baby/Toddlers')}
+                                                                onChange={() => handleInterestChange('Baby/Toddlers')}
+                                                                className="d-inline-block vertical-align-middle me-1"
+                                                            />
+                                                            <span>Baby/Toddler Clothing</span>
+                                                        </Form.Label>
+                                                        <br />
+                                                        <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={interestedIn.includes('Women')}
+                                                                onChange={() => handleInterestChange('Women')}
+                                                                className="d-inline-block vertical-align-middle me-1"
+                                                            />
+                                                            <span>Women's Clothing</span>
+                                                        </Form.Label>
+                                                        <Form.Label style={{ minWidth: '90pxs' }}>
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={interestedIn.includes('Others')}
+                                                                onChange={() => handleInterestChange('Others')}
+                                                                className="d-inline-block vertical-align-middle me-1"
+                                                            />
+                                                            <span>Others</span>
+                                                        </Form.Label>
+                                                    </div>
+                                                </Form.Group>
+                                            </Card.Body>
+                                        </Card> */}
+                                        {/* <Form.Group className='mb-3'>
                                             <Form.Label>Event Date</Form.Label>
                                             <FormControl type='date' name='event_date' onChange={handleChange} className='mr-sm-2' required />
-                                        </Form.Group>
+                                        </Form.Group> */}
+                                          <Card className='mb-4'>
+                                            <Card.Body>
+                                            <Form.Label className='mb-2 fs-18'>
+                                                Event Date
+                                            </Form.Label>
+                                            <Row className="align-items-center mb-2">
+                                                <Col md="12">
+                                                <FormControl type='date' name='event_date' onChange={handleChange} className='mr-sm-2' />
+                                                </Col>
+                                            </Row>
+                                            </Card.Body>
+                                        </Card>
                                         <div className="alert alert-primary mb-0 small lh-1-7" role="alert">
                                             As part of our ongoing commitment to security and user safety, we are requiring users to provide a valid identification document for access to certain enhanced features on our platform.
                                         </div>

@@ -17,7 +17,7 @@ const initialLoginData = Object.freeze({
     password: ''
 });
 
-const LogIn = ({props, showSignup}) => {
+const LogIn = ({props, showSignup, onCloseModal}) => {
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -132,6 +132,8 @@ const LogIn = ({props, showSignup}) => {
                     addTempFavoritesToFavorites({ favorites: tempFavorites, user_id: user.id });
                     removeCookie('tempFavorites', { path: '/' });
                 }
+
+                onCloseModal(false);
 
                 if (user.designer) {
                     setCookie('currentUserDesigner', JSON.stringify(user.designer.id), { path: '/' });

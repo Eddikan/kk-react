@@ -34,7 +34,7 @@ import axios from "axios";
 import GetUserWishlistsData from 'Utils/GetUserWishlistsData';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import { PiNotepadLight, PiScissorsLight } from "react-icons/pi";
+import { PiNotepadLight, PiScissorsLight, PiUserGearThin, PiUserGear } from "react-icons/pi";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -645,7 +645,10 @@ const Header = () => {
                         </div>
                       }
                       {userMenuOpen && (
-                        <div className="action-box user-menu">
+                        <div className={(user.profile_completeness === 0 || user.profile_completeness === 25 || user.profile_completeness === 50 || user.profile_completeness === 75) 
+                          ? "action-box-incomplete-profile user-menu" 
+                          : "action-box user-menu"}>
+
                           {/* {userRole !== 'Admin' &&
                             <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none d-block"><IoIosCog className='me-2' color='#000000' />
                               <span className='text-black'>Profile</span>
@@ -671,11 +674,11 @@ const Header = () => {
                                     <div><BsArrowLeft className="me-1" size={10} /><span className='fs-12'>See your profile</span></div>
                                   </Link>    
                                 </Col>
-                                <Col lg="12">                                                              
+                                <Col lg="12" className="text-center" >                                                    
                                   {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 || user.profile_completeness == 75) &&
-                                    <div className='mt-2' style={{ color: '#DC3545' }}>
-                                        <span>Complete Your Profile</span>
-                                    </div>
+                                    <Link to={`/user/complete-profile`} className="mt-2 text-decoration-none d-block d-contents d-flex">
+                                      <Button className="">Complete Your Profile</Button>
+                                    </Link>
                                   }
                                 </Col>
                               </Row>
