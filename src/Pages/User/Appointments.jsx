@@ -489,6 +489,11 @@ const Appointments = (props) => {
                                     pageSize={PageSize}
                                     onPageChange={page => handleChangePage(page)}
                                 />
+                                <Col lg={12} className="text-right mt-4">
+                                    <Link to="/">
+                                        <Button className="btn btn-primary">Back to Home</Button>
+                                    </Link>
+                                </Col>
                             </Row>
                             {chatBox ?
                                 <>

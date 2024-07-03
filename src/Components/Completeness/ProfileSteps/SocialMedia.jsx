@@ -89,10 +89,10 @@ const SocialMediaStep = ({ user, currentUser, reload, token }) => {
                         <Form.Label>Behance</Form.Label>
                         <FormControl type='text' name='behance' value={profileFormData.behance} className='mr-sm-2' onChange={handleChange} placeholder='' />
                     </Form.Group>
-                    <Form.Group className='mb-4'>
+                    {/* <Form.Group className='mb-4'>
                         <Form.Label>YouTube</Form.Label>
                         <FormControl type='text' name='youtube' value={profileFormData.youtube} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                    </Form.Group>
+                    </Form.Group> */}
                     <div className="text-right mt-4 mb-2">
                         <Button type='button' onClick={submitBack} className="btn-back mx-2">Back</Button>
                         {formStatus ?

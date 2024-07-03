@@ -497,7 +497,7 @@ const ViewSellerProfile = () => {
                                                     <p><a href="#">-</a></p>
                                                 </div>
                                             }
-                                            {user.youtube ?
+                                            {/* {user.youtube ?
                                                 <div className='icons-d-flex'>
                                                     <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
                                                     <p className='information-font ellipsis-profile'><a href={user.youtube} target="_blank">{user.youtube}</a></p>
@@ -507,7 +507,7 @@ const ViewSellerProfile = () => {
                                                     <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
                                                     <p><a href="#">-</a></p>
                                                 </div>
-                                            }
+                                            } */}
                                         </div>
                                     </Col>
                                 </Row>

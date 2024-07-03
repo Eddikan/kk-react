@@ -479,10 +479,10 @@ const EditUser = () => {
                                                             <FormControl type='text' name='behance' value={userFormData.behance} className='mr-sm-2' onChange={handleChange} placeholder='' />
                                                         </Form.Group>
 
-                                                        <Form.Group className='mb-4'>
+                                                        {/* <Form.Group className='mb-4'>
                                                             <Form.Label>YouTube</Form.Label>
                                                             <FormControl type='text' name='youtube' value={userFormData.youtube} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                        </Form.Group>
+                                                        </Form.Group> */}
 
                                                         <div className="text-right mt-4 mb-2">
                                                             {userFormLoading ?
