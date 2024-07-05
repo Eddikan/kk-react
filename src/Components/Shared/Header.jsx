@@ -119,6 +119,7 @@ const Header = () => {
     removeCookie('selectedLanguage', { path: '/' });
     removeCookie('selectedCurrency', { path: '/' });
     removeCookie('selectedCurrencyCode', { path: '/' });
+    removeCookie('cookieCheckoutDesigner', { path: '/' });
   };
 
   // Close the dropdown when clicking outside of it

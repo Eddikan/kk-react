@@ -266,7 +266,7 @@ const SignUp = ({onSignup, showLogin}) => {
                                         <Card className='mb-4'>
                                             <Card.Body>
                                             <Form.Label className='mb-2 fs-18'>
-                                                Clothing preferences
+                                                Clothing Preferences
                                             </Form.Label>
                                             <Row className="align-items-center mt-1">
                                                 <Col md="6">
@@ -323,7 +323,7 @@ const SignUp = ({onSignup, showLogin}) => {
                                         {/* <Card className='mb-4'>
                                             <Card.Body>
                                                 <Form.Group className=''>
-                                                    <Form.Label className="mb-2">Clothing preferences</Form.Label>
+                                                    <Form.Label className="mb-2">Clothing Preferences</Form.Label>
                                                     <div className="interests">
                                                         <Form.Label className="me-3" style={{ minWidth: '90px' }}>
                                                             <input

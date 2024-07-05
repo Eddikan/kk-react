@@ -598,7 +598,7 @@ const SignUp = () => {
                           <Card className='mb-4'>
                             <Card.Body>
                               <Form.Label className='mb-2 fs-18'>
-                                Clothing preferences
+                                Clothing Preferences
                               </Form.Label>
                               <Row className="align-items-center mt-1">
                                 <Col md="6">

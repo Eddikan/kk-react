@@ -236,7 +236,7 @@ const SignUp = (props) => {
                                             <FormControl type='password' name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
                                         </Form.Group>
                                         <Form.Group className='mb-3'>
-                                            <Form.Label className="mb-3">Clothing preferences</Form.Label>
+                                            <Form.Label className="mb-3">Clothing Preferences</Form.Label>
                                             <div className="interests">
                                             <Form.Label className="me-3" style={{minWidth: '90px'}}>
                                                 <input

@@ -71,8 +71,19 @@ const HeaderSeller = () => {
         removeCookie('userDetails', { path: '/' });
         removeCookie('isWelcome', { path: '/' });
         removeCookie('currentUser', { path: '/' });
+        removeCookie('currentUserDesigner', { path: '/' });
+        removeCookie('currentUserSeller', { path: '/' });
         removeCookie('isLoggedIn', { path: '/' });
         removeCookie('userRole', { path: '/' });
+        removeCookie('selectedCartItems', { path: '/' });
+        removeCookie('tempCart', { path: '/' });
+        removeCookie('tempFavorites', { path: '/' });
+        removeCookie('selectedCountry', { path: '/' });
+        removeCookie('selectedCountryCode', { path: '/' });
+        removeCookie('selectedLanguage', { path: '/' });
+        removeCookie('selectedCurrency', { path: '/' });
+        removeCookie('selectedCurrencyCode', { path: '/' });
+        removeCookie('cookieCheckoutDesigner', { path: '/' });
         removeCookie('signup_type', { path: '/' });
     };
 

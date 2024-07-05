@@ -63,7 +63,7 @@ const Cart = ({props }) => {
     // Access individual query parameters using get method
     const item = searchParams.get('item');
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole', 'selectedCartItems', 'tempCart']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole', 'selectedCartItems', 'tempCart', 'cookieCheckoutDesigner']);
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
     const [radioButtonValue, setRadioButtonValue] = useState(0);
@@ -163,6 +163,7 @@ const Cart = ({props }) => {
                 setTimeout(() => {
                     setReloadCount(prevReloadCount => prevReloadCount + 1);
                     removeCookie('setSelectedCartItems', { path: '/' });
+                    removeCookie('cookieCheckoutDesigner', { path: '/' });
                     navigate(`/thank-you?order_id=${data.order.id}`);
                 }, 1000);
             } else {

@@ -7,6 +7,7 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 import DesignersConnect from 'Components/Shared/DesignersConnect';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
+import { useCookies } from 'react-cookie';
 import { IoCloseOutline } from "react-icons/io5";
 import axios from "axios";
 import toast from 'react-hot-toast';
@@ -16,20 +17,34 @@ const ThankYouPage = (props) => {
     const navigate = useNavigate();
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
-    }
+    };
     let query = useQuery();
     const orderId = query.get('order_id');
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'cookieCheckoutDesigner']);
     const [selectedDesigner, setSelectedDesigner] = useState(null);
     const [designerID, setDesignerId] = useState('');
     const [needsDesigner, setNeedsDesigner] = useState('');
     const [selectDesignerShow, setSelectDesignerShow] = useState(false);
     const [connectDesignerLoading, setConnectDesignerLoading] = useState(false);
 
+    const cookieCheckoutDesigner = cookies.cookieCheckoutDesigner;
+
     const toggleSelectDesignerShow = (e) => {
         setSelectDesignerShow(!selectDesignerShow);
     }
 
     const handleSelectDesigner = (e) => {
+        const designer = {
+            id: e.id,
+            user: {
+                id: e.user.id,
+                image: e.user.image,
+                first_name: e.user.first_name,
+                last_name: e.user.last_name,
+                short_bio: e.user.short_bio
+            }
+        };
+        setCookie('cookieCheckoutDesigner', JSON.stringify(designer), { path: '/' });
         setSelectedDesigner(e);
         toggleSelectDesignerShow();
         setDesignerId(e.id);
@@ -43,7 +58,7 @@ const ThankYouPage = (props) => {
             if (success == 'Success') {
                 // navigate('/orders');
                 navigate('/designer-profile?user_id='+selectedDesigner.user.id);
-                toast.error('Order updated successfully!');
+                toast.success('Order updated successfully!');
                 setConnectDesignerLoading(false);
             } else {
                 toast.error('Something went wrong, please contact the administrator!');
@@ -54,6 +69,14 @@ const ThankYouPage = (props) => {
             setConnectDesignerLoading(false);
         });
     };
+
+    useEffect(() => {
+        if (cookieCheckoutDesigner) {
+            setSelectedDesigner(cookieCheckoutDesigner);
+            setDesignerId(cookieCheckoutDesigner.id);
+            setNeedsDesigner("Yes");
+        }
+    }, []);
 
     return (
         <Layout>
@@ -95,7 +118,7 @@ const ThankYouPage = (props) => {
                                         </Link>
                                     </div>
                                     <div className="d-inline-block">
-                                        <Button onClick={toggleSelectDesignerShow} className=''>Connect to a Designer</Button>
+                                        <Button onClick={function() { toggleSelectDesignerShow(); removeCookie('cookieCheckoutDesigner', { path: '/' }); }} className=''>Connect to a Designer</Button>
                                     </div>
                                 </div>
                             </Card.Body>
@@ -105,7 +128,7 @@ const ThankYouPage = (props) => {
                                 <Card.Body>
                                     <div className='d-flex align-items-center justify-content-between'>
                                         <span className="fs-22 rufina-family fw-600">Designer</span>
-                                        <Button style={{minWidth: 'auto', padding: '8px 10px'}} onClick={() => { toggleSelectDesignerShow(); }} className="btn-outline">Change Designer</Button>
+                                        <Button style={{minWidth: 'auto', padding: '8px 10px'}} onClick={function() { toggleSelectDesignerShow(); removeCookie('cookieCheckoutDesigner', { path: '/' });  }} className="btn-outline">Change Designer</Button>
                                     </div>
                                     <hr className='mt-2' />
                                     <div className='d-flex'>

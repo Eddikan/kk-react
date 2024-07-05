@@ -97,7 +97,7 @@ const Questionnaire1 = (props) => {
                             <Card className='mb-4 border-white'>
                                 <CardBody>
                                     <Form.Label className='mb-2 fs-18'>
-                                        Clothing preferences
+                                        Clothing Preferences
                                     </Form.Label>
                                     <Row className="align-items-center mt-1">
                                         <Col md="6">
