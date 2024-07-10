@@ -30,6 +30,7 @@
     --dark: #363636;
     --light: #EEEEEE;
     --gray-600: #39393A;
+    --purple-red: #E1306C; 
     --body-font: Poppins;
     --heading-font: Rufina;
 }
@@ -209,6 +210,22 @@ p {
     color: var(--white);
     background-color: var(--black);
     border-color: var(--black);
+}
+
+.btn-shop {
+    font-size: 15px;
+    padding: 10px 20px;
+    min-width: 190px;
+    border-radius: 5px;
+    border-width: 1px;
+    color: var(--white);
+    background-color: var(--purple-red);
+    border-color: var(--purple-red);
+}
+
+.btn-shop:hover {
+    border-color: var(--purple-red);
+    color: var(--purple-red);
 }
 
 .btn-secondary {
@@ -2428,3 +2445,26 @@ svg.gr-status-icon {
     margin-bottom: 0;
 }
   
+/* Custom CSS for hoverable dropdown */
+.nav-link-dropdown {
+    position: relative;
+}
+
+.nav-link-menu {
+    display: none;
+    background: #ffffff;
+    position: absolute;
+    width: 200px;
+    padding: 12px;
+    border-radius: 5px;
+    left: 0;
+    /* top: 60px; */
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
+    -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+.nav-link-dropdown:hover .nav-link-menu {
+    display: block;
+}

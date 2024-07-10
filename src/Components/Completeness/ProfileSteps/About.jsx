@@ -116,10 +116,10 @@ const AboutStep = ({ user, currentUser, reload, token }) => {
                     </Row>
                     <Row>
                         <Col lg="12">
-                            <Form.Group className='mb-4'>
+                            {/* <Form.Group className='mb-4'>
                                 <Form.Label>Occupation</Form.Label>
                                 <FormControl type='text' name='occupation' value={profileFormData.occupation} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                            </Form.Group>
+                            </Form.Group> */}
                             <Form.Group className='mb-4'>
                                 <Form.Label>Short Bio <span className='text-gray'>(title)</span></Form.Label>
                                 <FormControl type='text' name='short_bio' value={profileFormData.short_bio} className='mr-sm-2' onChange={handleChange} placeholder='' />

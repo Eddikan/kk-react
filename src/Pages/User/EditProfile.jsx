@@ -15,6 +15,8 @@ import LoadingPage from 'Components/Shared/LoadingPage';
 import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
 import Countries from 'Utils/Countries';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -114,6 +116,13 @@ const EditProfile = () => {
             ...profileFormData,
             [e.target.name]: e.target.value,
         })
+    };
+
+    const handleChangePhone = (e) => {
+        setProfileFormData({
+            ...profileFormData,
+            phone_number: e
+        });
     };
 
     async function submitProfile(e) {
@@ -313,10 +322,14 @@ const EditProfile = () => {
                                                     </Row>
                                                     <Row>
                                                         <Col lg="12">
-                                                            <Form.Group className='mb-4'>
-                                                                <Form.Label>Occupation</Form.Label>
-                                                                <FormControl type='text' name='occupation' value={profileFormData.occupation} className='mr-sm-2' onChange={handleChange} placeholder='' />
-                                                            </Form.Group>
+                                                            {/* {user && (user.is_designer || user.is_seller) ?
+                                                                <Form.Group className='mb-4'>
+                                                                    <Form.Label>Occupation</Form.Label>
+                                                                    <FormControl type='text' name='occupation' value={profileFormData.occupation} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                                                </Form.Group>
+                                                                :
+                                                                null
+                                                            } */}
                                                             <Form.Group className='mb-4'>
                                                                 <Form.Label>Short Bio <span className='text-gray'>(title)</span></Form.Label>
                                                                 <FormControl type='text' name='short_bio' value={profileFormData.short_bio} className='mr-sm-2' onChange={handleChange} placeholder='' />
@@ -412,7 +425,39 @@ const EditProfile = () => {
                                                         <Col lg="6">
                                                             <Form.Group className='mb-4'>
                                                                 <Form.Label>Phone Number</Form.Label>
-                                                                <FormControl type='number' name='phone_number' value={profileFormData.phone_number} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                                                {/* <FormControl type='number' name='phone_number' value={profileFormData.phone_number} className='mr-sm-2' onChange={handleChange} placeholder='' /> */}
+                                                                <PhoneInput
+                                                                    enableSearch={true}
+                                                                    country={'us'}
+                                                                    value={profileFormData.phone_number || ""}
+                                                                    onChange={handleChangePhone}
+                                                                    // placeholder='Phone*'
+                                                                    containerStyle={{
+                                                                        width: "100%",
+                                                                    }}
+                                                                    inputStyle={{
+                                                                        backgroundColor: 'transparent',
+                                                                        width: "100%",
+                                                                        boxShadow: "none",
+                                                                        padding: '7px 15px',
+                                                                        paddingLeft: '50px',
+                                                                        fontSize: '14px',
+                                                                        fontFamily: 'Poppins',
+                                                                        border: '1px solid #f3f3f3',
+                                                                        minHeight: '40px'
+                                                                    }}
+                                                                    buttonStyle={{ 
+                                                                        backgroundColor: 'transparent',
+                                                                        borderRight: 'none',
+                                                                        border: '1px solid #f3f3f3'
+                                                                    }}
+                                                                    searchStyle={{ 
+                                                                        width: "80%"
+                                                                    }}
+                                                                    countryListStyle={{ 
+                                                                        width: "225px"
+                                                                    }}
+                                                                />
                                                             </Form.Group>
                                                         </Col>
                                                         <Col lg="6">
@@ -482,7 +527,7 @@ const EditProfile = () => {
                                                     <Form.Label className='mb-1 fs-18'>
                                                         Areas of Specialization and Expertise
                                                     </Form.Label>
-                                                    <Form.Label className="mb-3 mt-2 small">
+                                                    <Form.Label className="mb-3 mt-2 small d-block">
                                                         Specify your areas of expertise (e.g., bridal wear, ready-to-wear women’s clothing, casual, haute couture, sustainable fashion)
                                                     </Form.Label>
                                                     <Form.Group>

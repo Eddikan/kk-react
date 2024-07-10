@@ -2,14 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import 'Assets/styles/User/Profile/style.css'
-import PinIcon from 'Assets/images/pin.png';
-import LinkIcon from 'Assets/images/link.png';
-import TelephonIcon from 'Assets/images/telephone.png';
-import BehanceIcon from 'Assets/images/behance.png';
-import FacebookIcon from 'Assets/images/facebook.png';
-import LinkedinIcon from 'Assets/images/linkedin.png';
-import SocialmediaIcon from 'Assets/images/social-media.png';
-import YoutubeIcon from 'Assets/images/youtube.png';
+import { FaLocationDot, FaPhone, FaFacebookF, FaLinkedinIn, FaInstagram } from "react-icons/fa6";
+import { FaLink, FaBehance } from "react-icons/fa";
 import UserPlaceholder from 'Assets/images/user.png';
 import Loading from 'Assets/images/loading.gif'
 import GetUserData from 'Utils/GetUserData';
@@ -348,7 +342,7 @@ const ViewSellerProfile = () => {
                                             }
                                         </h2>
                                         <div className='icons-d-flex'>
-                                            <img src={PinIcon} alt="location pin" className='profile-icon' />
+                                            <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
                                             {user.city || user.province || user.country ?
                                                 <p className='fs-16 color-light-blue'>
                                                     {user.province ? user.province + ',' : user.city ? user.city + ','  : "" } {user.country ? user.country : ""}
@@ -421,7 +415,7 @@ const ViewSellerProfile = () => {
                                     <Col lg="6">
                                         <div className='bg-lgray profile-details address mb-4'>
                                             <div className='icons-d-flex'>
-                                                <img src={PinIcon} alt="location pin" className='profile-icon' />
+                                                <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
                                                 {user.city || user.province || user.country ?
                                                     <p className='information-font'>{user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country + "," : ""}</p>
                                                     :
@@ -430,23 +424,23 @@ const ViewSellerProfile = () => {
                                             </div>
                                             {user.website ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={LinkIcon} alt="website pin" className='profile-icon' />
+                                                    <FaLink size="20px" color="#cea835" className='profile-icon' />
                                                     <p className='information-font'><a href={user.website} target="_blank">{user.website}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={LinkIcon} alt="website pin" className='profile-icon' />
+                                                    <FaLink size="20px" color="#cea835" className='profile-icon' />
                                                     <p className='information-font'><a href="#">-</a></p>
                                                 </div>
                                             }
                                             {user.phone_number ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={TelephonIcon} alt="telephone pin" className='profile-icon' />
+                                                    <FaPhone size="20px" color="#cea835" className='profile-icon' />
                                                     <p className='information-font mb-0'><a href={`tel:${user.phone_number}"`}>{user.phone_number}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={TelephonIcon} alt="telephone pin" className='profile-icon' />
+                                                    <FaPhone size="20px" color="#cea835" className='profile-icon' />
                                                     <p className='information-font mb-0'><a href="#">-</a></p>
                                                 </div>
                                             }
@@ -455,45 +449,45 @@ const ViewSellerProfile = () => {
                                             <p className='social-profile'>Social</p>
                                             {user.behance ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={BehanceIcon} alt="behance pin" className='profile-icon' />
+                                                    <FaBehance size="20px" color="#1769ff" className='profile-icon' />
                                                     <p className='information-font ellipsis-profile'><a href={user.behance} target="_blank">{user.behance}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={BehanceIcon} alt="behance pin" className='profile-icon' />
+                                                    <FaBehance size="20px" color="#1769ff" className='profile-icon' />
                                                     <p><a href="#" target="_blank">-</a></p>
                                                 </div>
                                             }
                                             {user.facebook ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={FacebookIcon} alt="facebook pin" className='profile-icon' />
+                                                    <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
                                                     <p className='information-font ellipsis-profile'><a href={user.facebook} target="_blank">{user.facebook}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={FacebookIcon} alt="facebook pin" className='profile-icon' />
+                                                    <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
                                                     <p><a href="#">-</a></p>
                                                 </div>
                                             }
                                             {user.linkedin ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={LinkedinIcon} alt="linkedin pin" className='profile-icon' />
+                                                    <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
                                                     <p className='information-font ellipsis-profile'><a href={user.linkedin} target="_blank">{user.linkedin}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={LinkedinIcon} alt="linkedin pin" className='profile-icon' />
+                                                    <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
                                                     <p><a href="#">-</a></p>
                                                 </div>
                                             }
                                             {user.instagram ?
                                                 <div className='icons-d-flex'>
-                                                    <img src={SocialmediaIcon} alt="instagram pin" className='profile-icon' />
+                                                    <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
                                                     <p className='information-font ellipsis-profile'><a href={user.instagram} target="_blank">{user.instagram}</a></p>
                                                 </div>
                                                 :
                                                 <div className='icons-d-flex'>
-                                                    <img src={SocialmediaIcon} alt="instagram pin" className='profile-icon' />
+                                                    <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
                                                     <p><a href="#">-</a></p>
                                                 </div>
                                             }

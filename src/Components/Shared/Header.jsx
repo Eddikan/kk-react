@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, Modal } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import ReactFlagsSelect from 'react-flags-select';
@@ -451,30 +452,37 @@ const Header = () => {
         <Container className="position-relative">
           <Navbar.Brand href="/"><img src={Logo} /></Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse className="justify-content-between column-gap-10" id="responsive-navbar-nav">
+          <Navbar.Collapse className="justify-content-end column-gap-70" id="responsive-navbar-nav">
             <Nav className="align-items-center column-gap-30">
               {/* <Nav.Link href="/find-designs">Find Designs</Nav.Link>
-            <Nav.Link href="/inspirations">Inspirations</Nav.Link> */}
-              <Nav.Link href="/about-kouture-konect">About Us</Nav.Link>
-              <Nav.Link href="/how-it-works" >How It Works</Nav.Link>
-              {/* <Nav.Link href="/blog">Blog</Nav.Link> */}
-            </Nav>
-            <Nav className="align-items-center d-grid-mobile">
+              <Nav.Link href="/inspirations">Inspirations</Nav.Link> */}
               <Form inline className='search d-flex column-gap-70 align-items-center'>
                 <FormControl type='text' placeholder='Search' className='mr-sm-2' />
                 <FaMagnifyingGlass />
               </Form>
+              {/* <Nav.Link href="/blog">Blog</Nav.Link> */}
+            </Nav>
+            <Nav className="align-items-center d-grid-mobile">
               <div className="d-flex column-gap-10 align-items-center">
+                <div className="nav-link-dropdown">
+                  <a className="nav-link" href="/about-kouture-konect">
+                    About Us <FaCaretDown style={{ marginLeft: '30px', marginTop: '-5px' }} />
+                  </a>
+                  <div className="nav-link-menu">
+                    <a className="nav-link" href="/how-it-works">
+                      How It Works
+                    </a>
+                  </div>
+                </div>
+                
                 {currentUser && currentUser != "" ?
                   <>
-
                     <div className="user-dropdown nav-link cursor-pointer d-block position-relative" ref={bellRef} onClick={toggleBellMenu}>
                       <div className="nav-link header-tooltip" >
                         <span className="icon-tooltiptext fs-14">Notifications</span>
                         <GoBell size={25} />
                       </div>
                       {userBellOpen && (
-
                         <div className="action-box-bell scroll-bar user-menu-bell" id="style-2">
                           {notifications.length > 0 ?
                             <>
@@ -521,7 +529,6 @@ const Header = () => {
                         </div>
                       )}
                     </div>
-
                     <div className="user-dropdown nav-link cursor-pointer d-block position-relative" ref={messageRef} onClick={toggleEnvelopMenu}>
                       <div className="nav-link header-tooltip" >
                         <span className="icon-tooltiptext fs-14">Messages</span>
@@ -554,39 +561,6 @@ const Header = () => {
                           <LiaUserTieSolid size={28} />
                         </div>
                       </a>
-                    }
-
-                    {userRole !== 'Admin' &&
-                      <>
-                        {user.shop_completed != 1 ?
-                          <>
-                            {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
-                              <>
-                                <a href={`/user/shop/setup`}>
-                                  <div className="nav-link header-tooltip cursor-pointer">
-                                    <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                                    <BsShopWindow size={23} />
-                                  </div>
-                                </a>
-                              </>
-                            }
-                          </>
-                          :
-                          <>
-                            {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
-                              <>
-                                <a href={`${userDetails.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`}>
-                                  <div className="nav-link header-tooltip cursor-pointer">
-                                    <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                                    <BsShopWindow size={23} />
-                                  </div>
-                                </a>
-                              </>
-                            }
-                          </>
-                        }
-
-                      </>
                     }
 
                     {userRole !== 'Admin' &&
@@ -628,7 +602,39 @@ const Header = () => {
                         </div>
                       )}
                     </div>
-
+                    {userRole !== 'Admin' &&
+                      <>
+                        {user.shop_completed != 1 ?
+                          <>
+                            {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
+                              <>
+                                <a href={`/user/shop/setup`}>
+                                  <button type="button" class="btn-shop btn me-2"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
+                                  {/* <div className="nav-link header-tooltip cursor-pointer">
+                                    <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                                    <BsShopWindow size={23} />
+                                  </div> */}
+                                </a>
+                              </>
+                            }
+                          </>
+                          :
+                          <>
+                            {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
+                              <>
+                                <a href={`${userDetails.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`}>
+                                  <button type="button" class="btn-shop btn me-2"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
+                                  {/* <div className="nav-link header-tooltip cursor-pointer">
+                                    <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                                    <BsShopWindow size={23} />
+                                  </div> */}
+                                </a>
+                              </>
+                            }
+                          </>
+                        }
+                      </>
+                      }
                     <div className="user-dropdown nav-link position-relative" ref={userRef}>                      
                       {userImage ?
                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}>

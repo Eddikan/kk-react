@@ -3,6 +3,8 @@ import { Row, Col, Button, Form, FormControl } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 
 const ContactStep = ({ user, currentUser, reload, token }) => {
     const [cookies, setCookie] = useCookies(['currentUser']);
@@ -18,6 +20,13 @@ const ContactStep = ({ user, currentUser, reload, token }) => {
             [name]: value
         });
     }
+
+    const handleChangePhone = (e) => {
+        setProfileFormData({
+            ...profileFormData,
+            phone_number: e
+        });
+    };
 
     async function submitProfile(e) {
         e.preventDefault();
@@ -74,7 +83,39 @@ const ContactStep = ({ user, currentUser, reload, token }) => {
                     <Col lg="6">
                         <Form.Group className='mb-4'>
                             <Form.Label>Phone Number</Form.Label>
-                            <FormControl type='number' name='phone_number' value={profileFormData.phone_number} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                            {/* <FormControl type='number' name='phone_number' value={profileFormData.phone_number} className='mr-sm-2' onChange={handleChange} placeholder='' /> */}
+                            <PhoneInput
+                                enableSearch={true}
+                                country={'us'}
+                                value={profileFormData.phone_number || ""}
+                                onChange={handleChangePhone}
+                                // placeholder='Phone*'
+                                containerStyle={{
+                                    width: "100%",
+                                }}
+                                inputStyle={{
+                                    backgroundColor: 'transparent',
+                                    width: "100%",
+                                    boxShadow: "none",
+                                    padding: '7px 15px',
+                                    paddingLeft: '50px',
+                                    fontSize: '14px',
+                                    fontFamily: 'Poppins',
+                                    border: '1px solid #f3f3f3',
+                                    minHeight: '40px'
+                                }}
+                                buttonStyle={{ 
+                                    backgroundColor: 'transparent',
+                                    borderRight: 'none',
+                                    border: '1px solid #f3f3f3'
+                                }}
+                                searchStyle={{ 
+                                    width: "80%"
+                                }}
+                                countryListStyle={{ 
+                                    width: "225px"
+                                }}
+                            />
                         </Form.Group>
                     </Col>
                     <Col lg="6">

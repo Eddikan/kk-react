@@ -80,3 +80,7 @@
     display: block;
     border-radius: 50%;
 }
+
+.profile-icon {
+    margin-top: 3px;
+}
