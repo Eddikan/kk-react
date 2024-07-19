@@ -143,7 +143,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                             return (
                                                 <>
                                                     <Col className="designs-grid text-center" lg={6}>
-                                                        <label class="radio-img">
+                                                        <label className="radio-img">
                                                             <input
                                                                 type="radio"
                                                                 name="most_like"
@@ -178,7 +178,7 @@ const WebsiteFeedBackSurvey = (props) => {
                                             return (
                                                 <>
                                                     <Col className="designs-grid text-center" lg={6}>
-                                                        <label class="radio-img">
+                                                        <label className="radio-img">
                                                             <input
                                                                 type="radio"
                                                                 name="least_like"

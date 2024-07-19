@@ -2468,3 +2468,47 @@ svg.gr-status-icon {
 .nav-link-dropdown:hover .nav-link-menu {
     display: block;
 }
+
+.categories-box {
+    margin-top: 5px;
+    position: absolute;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    -webkit-box-shadow: 0px 5px 12px 3px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
+    border-radius: 3px;
+}
+.category-pill {
+    display: inline-block;
+    margin: 0 5px 5px 0px;
+    padding: 7px 10px 8px 10px;
+    border: 0;
+    border-radius: 5px;
+    line-height: 1;
+    /* color: #fff; */
+}
+.category-remove {
+    margin-left: 10px;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -5px;
+}
+
+span.rti--tag button {
+    border: 1px solid;
+    font-size: 10px;
+    font-weight: 700 !important;
+    margin-left: 10px;
+    line-height: 1;
+    color: #dc3545;
+    padding: 2px 3px 2px 3px;
+}
+
+span.rti--tag {
+    background-color: var(--light);
+    /* color: #fff; */
+    padding: 7px 10px 8px 10px;
+    line-height: 1;
+}

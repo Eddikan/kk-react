@@ -609,7 +609,7 @@ const Header = () => {
                             {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
                               <>
                                 <a href={`/user/shop/setup`}>
-                                  <button type="button" class="btn-shop btn me-2"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
+                                  <button type="button" className="btn-shop btn me-2"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
                                   {/* <div className="nav-link header-tooltip cursor-pointer">
                                     <span className="icon-tooltiptext fs-14">Shop Manager</span>
                                     <BsShopWindow size={23} />
@@ -623,7 +623,7 @@ const Header = () => {
                             {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
                               <>
                                 <a href={`${userDetails.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`}>
-                                  <button type="button" class="btn-shop btn me-2"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
+                                  <button type="button" className="btn-shop btn me-2"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
                                   {/* <div className="nav-link header-tooltip cursor-pointer">
                                     <span className="icon-tooltiptext fs-14">Shop Manager</span>
                                     <BsShopWindow size={23} />

@@ -14,6 +14,7 @@ import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
 import VideoDragAndDrop from 'Components/Shared/VideoDragAndDrop';
 import DetailBuilder from 'Components/Shared/DetailBuilder';
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
+import { FaRegTimesCircle } from "react-icons/fa";
 
 const initialPortfolioData = Object.freeze({
     image_urls: [],
@@ -27,6 +28,11 @@ const NewPortfolio = (props) => {
     const size = props.size;
     const withDraft = props.withDraft;
 
+    // Category Search
+    const [categorySearchTerm, setCategorySearchTerm] = useState('');
+    const [categoryIds, setCategoryIds] = useState([]);
+    const [reloadCategoryCount, setReloadCategoryCount] = useState(1);
+
     const [portfolioData, setPortfolioData] = useState(initialPortfolioData);
     const [portfolioLoading, setPortfolioLoading] = useState(false);
     const [portfolioDraftLoading, setPortfolioDraftLoading] = useState(false);
@@ -35,7 +41,13 @@ const NewPortfolio = (props) => {
     const [colors, setColors] = useState([]);
     const [tags, setTags] = useState([]);
     const [materials, setMaterials] = useState([]);
-    const [categories, setCategories] = useState([]);
+    const [seasons, setSeasons] = useState([]);
+    const [genders, setGenders] = useState([]);
+    const [categories, setCategories] = useState([
+        { id: 1, name: 'Category 1' },
+        { id: 2, name: 'Category 2' },
+        { id: 3, name: 'Category 3' }
+    ]);
 
     const [guideModalShow, setGuideModalShow] = useState(false);
     const [guidePreviewModalShow, setGuidePreviewModalShow] = useState(false);
@@ -93,6 +105,7 @@ const NewPortfolio = (props) => {
         setActionType(e);
     }
 
+
     useEffect(() => {
         setPortfolioData({
             ...portfolioData,
@@ -100,18 +113,53 @@ const NewPortfolio = (props) => {
         });
     }, [reloadCount]);
 
+    async function getCategories(id) {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'design/filter/type').then((response) => {
+            const data = response.data;
+            if (data) {
+                const filters = data.data;
+                setCategories(filters.categories ?? []);
+                if (id) {
+                    setCategoryIds([...categoryIds, id]);
+                }
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+        }).catch((e) => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+        });
+    }
+
+    async function addCategory(e) {
+        e.preventDefault();
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio-item-categories?user_id=' + currentUser + '&token=' + token, { name: categorySearchTerm, user_id: currentUser }).then((response) => {
+            const success = response.data.status;
+            if(success == 'Success') {
+                const category = response.data.data;
+                getCategories(category.id);
+                setCategorySearchTerm('');
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setPortfolioDraftLoading(false);
+                formSuccess(false);
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+            setPortfolioDraftLoading(false);
+            formSuccess(false);
+        });
+    };
 
     async function PortfolioSubmit(e) {
         e.preventDefault();
-
         if (portfolioData.image_urls == ''
     ) {
         toast.error('Please upload atleast one photo!');
     } 
     else if (portfolioData.name == '' ||
             portfolioData.description == '' ||
-            categories.length == 0 ||
-            portfolioData.season == '' 
+            categoryIds.length == 0 ||
+            seasons.length == '' 
     ) {
         toast.error('Kindly complete the fields marked as required!');
     } else {
@@ -120,13 +168,13 @@ const NewPortfolio = (props) => {
             setPortfolioLoading(true);
             setTimeout(function(){
                 setPortfolioLoading(false);
-                savePortfolioItems({...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' });
+                savePortfolioItems({...portfolioData, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials,  genders: genders, status: 'Active' });
                 handleCancel();
             }, 1000);
         } else {
             if (portfolioData.image_urls) {
                 setPortfolioLoading(true);
-                axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, status: 'Active' }).then((response) => {
+                axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Active' }).then((response) => {
                     const success = response.data.status;
                     if(success == 'Success') {
                         toast.success('Design added successfully!');
@@ -153,7 +201,7 @@ const NewPortfolio = (props) => {
     async function PortfolioDraftSubmit(e) {
         e.preventDefault();
         setPortfolioDraftLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, colors: colors, tags: tags, materials: materials, measurement_guide: elements, status: 'Draft' }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio_item?user_id=' + currentUser + '&token=' + token, {...portfolioData, portfolio_item_category_ids: categoryIds, seasons: seasons, colors: colors, tags: tags, materials: materials, genders: genders, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if(success == 'Success') {
                 toast.success('Design saved as draft successfully!');
@@ -171,6 +219,35 @@ const NewPortfolio = (props) => {
             formSuccess(false);
         });
     };
+
+    const filteredCategories = categories.filter(category =>
+        category.name.toLowerCase().includes(categorySearchTerm.toLowerCase()) &&
+        !categoryIds.includes(category.id)
+    );
+
+    const handleCategoryClick = (category) => {
+        if (!categoryIds.includes(category.id)) {
+          setCategoryIds([...categoryIds, category.id]);
+        }
+        setCategorySearchTerm('');
+    };
+
+    const handleRemoveCategory = (categoryId) => {
+        setCategoryIds(categoryIds.filter(id => id !== categoryId));
+    };
+
+    const handleGenderChange = (e) => {
+        const value = e.target.value;
+        setGenders(prevState =>
+          prevState.includes(value)
+            ? prevState.filter(g => g !== value)
+            : [...prevState, value]
+        );
+    };
+
+    useEffect(() => {
+        getCategories();
+    }, [reloadCategoryCount]);
 
     return (
         <>
@@ -239,23 +316,66 @@ const NewPortfolio = (props) => {
                         <Card.Body className="bg-lgray">
                             <Form.Group className='mb-3'>
                                 <Form.Label>Categories<span className='text-danger'>*</span></Form.Label>
+                                <div className='position-relative'>
+                                    <FormControl type='text' value={categorySearchTerm} className='mr-sm-2' onChange={(e) => setCategorySearchTerm(e.target.value)} placeholder="" />
+                                    {categorySearchTerm && (
+                                        <div className="categories-box">
+                                            {filteredCategories && filteredCategories.length > 0 ?
+                                                <>
+                                                    {filteredCategories.map(category => (
+                                                        <div
+                                                            key={category.id}
+                                                            style={{ padding: '5px', cursor: 'pointer' }}
+                                                            onClick={() => handleCategoryClick(category)}
+                                                        >
+                                                        {category.name}
+                                                        </div>
+                                                    ))}
+                                                </>
+                                                :
+                                                <div onClick={addCategory} style={{ padding: '5px', cursor: 'pointer' }}>
+                                                    {categorySearchTerm}
+                                                </div>
+                                            }
+                                        </div>
+                                    )}
+                                    {categoryIds && categoryIds.length > 0 ?
+                                        <div className="mb-2 mt-2">
+                                            {categoryIds.map(categoryId => {
+                                                const category = categories.find(cat => cat.id === categoryId);
+                                                return (
+                                                    <div className="category-pill bg-light" key={categoryId}>
+                                                        {category?.name}
+                                                        <span
+                                                            className='category-remove'
+                                                            onClick={() => handleRemoveCategory(categoryId)}
+                                                        >
+                                                            <FaRegTimesCircle className="text-danger" />
+                                                        </span>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                        :
+                                        null
+                                    }
+                                </div>
+                            </Form.Group>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Season<span className='text-danger'>*</span></Form.Label>
                                 <TagsInput
-                                    value={categories}
-                                    onChange={setCategories}
-                                    name="categories"
+                                    value={seasons}
+                                    onChange={setSeasons}
+                                    name="seasons"
                                     className="form-control"
                                     onBlur={(e) => {
                                         const value = e.target.value;
-                                        if (!categories.includes(value) && value !== "") {
-                                            setCategories([...categories, value]);
+                                        if (!seasons.includes(value) && value !== "") {
+                                            setSeasons([...seasons, value]);
                                             e.target.value = "";
                                         }
                                     }}
                                 />
-                            </Form.Group>
-                            <Form.Group className='my-3'>
-                                <Form.Label>Season<span className='text-danger'>*</span></Form.Label>
-                                <FormControl type='text' name='season' value={portfolioData.season} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-3'>
                                 <Form.Label>Colors</Form.Label>
@@ -318,6 +438,44 @@ const NewPortfolio = (props) => {
                                         }
                                     }}
                                 />
+                            </Form.Group>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Gender</Form.Label>
+                                <Row className="mt-1">
+                                    <Form.Group as={Col} lg={4}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="checkbox"
+                                            label="Male"
+                                            name="genders"
+                                            value="Male"
+                                            checked={genders.includes('Male')}
+                                            onChange={handleGenderChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={4}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="checkbox"
+                                            label="Female"
+                                            name="genders"
+                                            value="Female"
+                                            checked={genders.includes('Female')}
+                                            onChange={handleGenderChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={4}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="checkbox"
+                                            label="Other"
+                                            name="genders"
+                                            value="Other"
+                                            checked={genders.includes('Other')}
+                                            onChange={handleGenderChange}
+                                        />
+                                    </Form.Group>
+                                </Row>
                             </Form.Group>
                             <Form.Group>
                                 <Form.Label>Collections</Form.Label>

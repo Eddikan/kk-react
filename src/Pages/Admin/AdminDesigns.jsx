@@ -331,7 +331,7 @@ const AdminDesigns = (props) => {
                                                                                                         <>
                                                                                                             {design.categories.slice(0, 3).map((category, index) => (
                                                                                                                 <span key={index} className="designs-tags-view-bar bg-light mb-2 fs-16 categories-color text-black">
-                                                                                                                    {category}
+                                                                                                                    {category.name}
                                                                                                                 </span>
                                                                                                             ))}
                                                                                                         </>

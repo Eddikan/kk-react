@@ -48,14 +48,24 @@ const Designs = (props) => {
     const [reloadCount, setReloadCount] = useState(0);
 
     // Filter
-    const [ecoFriendly, setEcoFriendly] = useState();
-    const [selectedCompositions, setSelectedCompositions] = useState([]);
-    const [selectedWeaves, setSelectedWeaves] = useState([]);
     const [selectedColors, setSelectedColors] = useState([]);
+    const [selectedGenders, setSelectedGenders] = useState([]);
+    const [selectedSeasons, setSelectedSeasons] = useState([]);
+    const [selectedMaterials, setSelectedMaterials] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
     const [country, setCountry] = useState('');
     const [priceRange, setPriceRange] = useState({ from: '', to: '' });
     const [search, setSearch] = useState('');
     const [searchValue, setSearchValue] = useState('');
+
+    // Filter Arrays
+    const [colors, setColors] = useState([]);
+    const [genders, setGenders] = useState([]);
+    const [seasons, setSeasons] = useState([]);
+    const [materials, setMaterials] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [categories, setCategories] = useState([]);
 
     const [portfoliosImage, setPortfolioImage] = useState(false);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
@@ -70,7 +80,6 @@ const Designs = (props) => {
     const [messageShow, setMessageShow] = useState(false);
     const [selectedSortField, setSelectedSortField] = useState(null);
     const [selectedSortOrder, setSelectedSortOrder] = useState(null);
-    const [portfolioCategories, setPortfolioCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedAllCategories, setSelectedAllCategories] = useState(false);
     const [isDesignCurrentUser, setIsDesignCurrentUser] = useState(false);
@@ -87,7 +96,7 @@ const Designs = (props) => {
     const [inWishlist, setInWishlist] = useState(false);
     const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
 
-    let PageSize = 12;
+    let PageSize = 32;
 
     const [fabricsModalShow, setFabricsModalShow] = useState(false);
     const [designsModalShow, setDesignsModalShow] = useState(false);
@@ -167,7 +176,12 @@ const Designs = (props) => {
             sortField: field, // Only the field without order
             sortOrder: null, // Reset order when changing field
             search: searchValue,
-            categories: selectedCategories,
+            portfolio_item_category_ids: selectedCategories,
+            genders: selectedGenders,
+            seasons: selectedSeasons,
+            colors: selectedColors,
+            materials: selectedMaterials,
+            tags: selectedTags,
         });
     };
 
@@ -179,7 +193,12 @@ const Designs = (props) => {
             sortField: selectedSortField,
             sortOrder: order,
             search: searchValue,
-            categories: selectedCategories,
+            portfolio_item_category_ids: selectedCategories,
+            genders: selectedGenders,
+            seasons: selectedSeasons,
+            colors: selectedColors,
+            materials: selectedMaterials,
+            tags: selectedTags,
         });
     };
 
@@ -201,42 +220,6 @@ const Designs = (props) => {
         });
     }
 
-    const handleCompositionChange = (composition) => {
-        const updatedCompositions = [...selectedCompositions];
-
-        if (updatedCompositions.includes(composition)) {
-            updatedCompositions.splice(updatedCompositions.indexOf(composition), 1);
-        } else {
-            updatedCompositions.push(composition);
-        }
-
-        setSelectedCompositions(updatedCompositions);
-    };
-
-    const handleWeaveChange = (weave) => {
-        const updatedWeaves = [...selectedWeaves];
-
-        if (updatedWeaves.includes(weave)) {
-            updatedWeaves.splice(updatedWeaves.indexOf(weave), 1);
-        } else {
-            updatedWeaves.push(weave);
-        }
-
-        setSelectedWeaves(updatedWeaves);
-    };
-
-    const handleColorChange = (color) => {
-        const updatedColors = [...selectedColors];
-
-        if (updatedColors.includes(color)) {
-            updatedColors.splice(updatedColors.indexOf(color), 1);
-        } else {
-            updatedColors.push(color);
-        }
-
-        setSelectedColors(updatedColors);
-    };
-
     // Debounce the handleChange function to fire only once after a certain delay
     const priceRangeChangeDebounce = debounce((data) => {
         setPriceRange({
@@ -252,14 +235,6 @@ const Designs = (props) => {
     const handleChangeAllCategories = (isChecked) => {
         setSelectedAllCategories(isChecked ? true : false);
         setSelectedCategories([]);
-    };
-
-    const priceRangeChange = (e) => {
-        // Clear the previous debounce timer
-        priceRangeChangeDebounce.cancel();
-
-        // Set a new debounce timer
-        priceRangeChangeDebounce(e);
     };
 
     const handleChangeSearch = (e) => {
@@ -397,24 +372,17 @@ const Designs = (props) => {
         }
     }
 
-    async function getDesign(id) {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + '/portfolio/'+id+'/details').then((response) => {
+    async function getPortfolioFilters() {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'design/filter/type').then((response) => {
             const data = response.data;
             if (data) {
-                setPortfolioCategories(data);
-            } else {
-                toast.error('An error occured. Please try again or contact the administrator.');
-            }
-        }).catch((e) => {
-            toast.error('An error occured. Please try again or contact the administrator.');
-        });
-    }
-
-    async function getPortfolioCategories() {
-        axios.get(process.env.REACT_APP_API_ENDPOINT + 'portfolio/categories').then((response) => {
-            const data = response.data;
-            if (data) {
-                setPortfolioCategories(data);
+                const filters = data.data;
+                setColors(filters.colors?? []);
+                setGenders(filters.genders ?? []);
+                setSeasons(filters.seasons ?? []);
+                setMaterials(filters.materials ?? []);
+                setTags(filters.tags ?? []);
+                setCategories(filters.categories ?? []);
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
             }
@@ -424,17 +392,62 @@ const Designs = (props) => {
     }
 
     // Handle checkbox change event
-    const handleCategoriesCheckboxChange = (event) => {
-        const category = event.target.value;
+    const handleSelectCategoryChange = (event) => {
+        const categoryId = parseInt(event.target.value, 10);
         if (event.target.checked) {
-            setSelectedCategories([...selectedCategories, category]);
-            if (selectedAllCategories.length + 1 === portfolioCategories.length) {
+            setSelectedCategories([...selectedCategories, categoryId]);
+            if (selectedAllCategories.length + 1 === categories.length) {
                 setSelectedAllCategories(true);
             } else {
                 setSelectedAllCategories(false);
             }
         } else {
-            setSelectedCategories(selectedCategories.filter(item => item !== category));
+            setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
+        }
+    };
+
+    const handleSelectGenderChange = (event) => {
+        const gender = event.target.value;
+        if (event.target.checked) {
+            setSelectedGenders([...selectedGenders, gender]);
+        } else {
+            setSelectedGenders(selectedGenders.filter(g => g !== gender));
+        }
+    };
+
+    const handleSelectSeasonChange = (event) => {
+        const season = event.target.value;
+        if (event.target.checked) {
+            setSelectedSeasons([...selectedSeasons, season]);
+        } else {
+            setSelectedSeasons(selectedGenders.filter(s => s !== season));
+        }
+    };
+
+    const handleSelectColorChange = (event) => {
+        const color = event.target.value;
+        if (event.target.checked) {
+            setSelectedColors([...selectedColors, color]);
+        } else {
+            setSelectedColors(selectedColors.filter(c => c !== color));
+        }
+    };
+
+    const handleSelectMaterialChange = (event) => {
+        const material = event.target.value;
+        if (event.target.checked) {
+            setSelectedMaterials([...selectedMaterials, material]);
+        } else {
+            setSelectedMaterials(selectedMaterials.filter(m => m !== material));
+        }
+    };
+
+    const handleSelectTagChange = (event) => {
+        const tag = event.target.value;
+        if (event.target.checked) {
+            setSelectedTags([...selectedTags, tag]);
+        } else {
+            setSelectedTags(selectedTags.filter(t => t !== tag));
         }
     };
 
@@ -474,14 +487,19 @@ const Designs = (props) => {
                 sortField: selectedSortField,
                 sortOrder: selectedSortOrder,
                 search: searchValue,
-                categories: selectedCategories,
+                portfolio_item_category_ids: selectedCategories,
+                genders: selectedGenders,
+                seasons: selectedSeasons,
+                colors: selectedColors,
+                materials: selectedMaterials,
+                tags: selectedTags,
             });
         } else {
             // Set the component as mounted
             setMounted(true);
         }
 
-    }, [mounted, searchValue, selectedCategories, selectedCountry]);
+    }, [mounted, searchValue, selectedCategories, selectedGenders, selectedSeasons, selectedColors, selectedMaterials, selectedTags, selectedCountry]);
 
     useEffect(() => {
         // Only run the filter API call after the component has mounted
@@ -489,9 +507,8 @@ const Designs = (props) => {
     }, [cookies]);
 
     useEffect(() => {
-        getPortfolioCategories();
+        getPortfolioFilters();
     }, []);
-
 
     return (
         <Layout>
@@ -549,34 +566,163 @@ const Designs = (props) => {
                                             ))}
                                         </Form.Control>
                                     </Form.Group>
+                                    {categories && categories.length > 0 ?
+                                        <>
+                                            <Form.Group className='mb-4'>
+                                                <Form.Label className="fw-600">Categories</Form.Label>
+                                                {categories && categories.length > 0 ?
+                                                    <>
+                                                        {categories.map((category, index) => (
+                                                            <Form.Check
+                                                                key={index}
+                                                                type="checkbox"
+                                                                label={category.name}
+                                                                value={category.id}
+                                                                checked={selectedCategories.includes(category.id)}
+                                                                onChange={handleSelectCategoryChange}
+                                                                className="mb-2"
+                                                            />
+                                                        ))}
+                                                    </>
+                                                    :
+                                                    null
+                                                }
+                                            </Form.Group>
+                                        </>
+                                        :
+                                        null
+                                    }
                                     <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600">Categories</Form.Label>
+                                        <Form.Label className="fw-600">Gender</Form.Label>
                                         <Form.Check
-                                            type={`checkbox`}
-                                            label={`All`}
-                                            name={`day`}
-                                            className={`mb - 2`}
-                                            onChange={(e) => handleChangeAllCategories(e.target.checked)}
-                                            checked={portfolioCategories.length == selectedCategories.length || selectedAllCategories}
+                                            type="checkbox"
+                                            label="Male"
+                                            value="Male"
+                                            checked={selectedGenders.includes("Male")}
+                                            onChange={handleSelectGenderChange}
+                                            className="mb-2"
                                         />
-                                        {portfolioCategories && portfolioCategories.length > 0 ?
-                                            <>
-                                                {portfolioCategories.map((category, index) => (
-                                                    <Form.Check
-                                                        key={index}
-                                                        type="checkbox"
-                                                        label={category.label}
-                                                        value={category.value}
-                                                        checked={selectedCategories.includes(category.value)}
-                                                        onChange={handleCategoriesCheckboxChange}
-                                                        className="mb-2"
-                                                    />
-                                                ))}
-                                            </>
-                                            :
-                                            null
-                                        }
+                                        <Form.Check
+                                            type="checkbox"
+                                            label="Female"
+                                            value="Female"
+                                            checked={selectedGenders.includes("Female")}
+                                            onChange={handleSelectGenderChange}
+                                            className="mb-2"
+                                        />
+                                        <Form.Check
+                                            type="checkbox"
+                                            label="Other"
+                                            value="Other"
+                                            checked={selectedGenders.includes("Other")}
+                                            onChange={handleSelectGenderChange}
+                                            className="mb-2"
+                                        />
                                     </Form.Group>
+                                    {seasons && seasons.length > 0 ?
+                                        <>
+                                            <Form.Group className='mb-4'>
+                                                <Form.Label className="fw-600">Season</Form.Label>
+                                                {seasons.map((season, index) => (
+                                                    <>
+                                                        {season != "" ?
+                                                            <Form.Check
+                                                                key={index}
+                                                                type="checkbox"
+                                                                label={season}
+                                                                value={season}
+                                                                checked={selectedSeasons.includes(season)}
+                                                                onChange={handleSelectSeasonChange}
+                                                                className="mb-2"
+                                                            />
+                                                            :
+                                                            null
+                                                        }
+                                                    </>
+                                                ))}
+                                            </Form.Group>
+                                        </>
+                                        :
+                                        null
+                                    }
+                                    {colors && colors.length > 0 ?
+                                        <>
+                                            <Form.Group className='mb-4'>
+                                                <Form.Label className="fw-600">Color</Form.Label>
+                                                {colors.map((color, index) => (
+                                                    <>
+                                                        {color != "" ?
+                                                            <Form.Check
+                                                                key={index}
+                                                                type="checkbox"
+                                                                label={color}
+                                                                value={color}
+                                                                checked={selectedColors.includes(color)}
+                                                                onChange={handleSelectColorChange}
+                                                                className="mb-2"
+                                                            />
+                                                            :
+                                                            null
+                                                        }
+                                                    </>
+                                                ))}
+                                            </Form.Group>
+                                        </>
+                                        :
+                                        null
+                                    }
+                                    {materials && materials.length > 0 ?
+                                        <>
+                                            <Form.Group className='mb-4'>
+                                                <Form.Label className="fw-600">Material</Form.Label>
+                                                {materials.map((material, index) => (
+                                                    <>
+                                                        {material != "" ?
+                                                            <Form.Check
+                                                                key={index}
+                                                                type="checkbox"
+                                                                label={material}
+                                                                value={material}
+                                                                checked={selectedMaterials.includes(material)}
+                                                                onChange={handleSelectMaterialChange}
+                                                                className="mb-2"
+                                                            />
+                                                            :
+                                                            null
+                                                        }
+                                                    </>
+                                                ))}
+                                            </Form.Group>
+                                        </>
+                                        :
+                                        null
+                                    }
+                                    {tags && tags.length > 0 ?
+                                        <>
+                                            <Form.Group className='mb-4'>
+                                                <Form.Label className="fw-600">Tag</Form.Label>
+                                                {tags.map((tag, index) => (
+                                                    <>
+                                                        {tag != "" ?
+                                                            <Form.Check
+                                                                key={index}
+                                                                type="checkbox"
+                                                                label={tag}
+                                                                value={tag}
+                                                                checked={selectedTags.includes(tag)}
+                                                                onChange={handleSelectTagChange}
+                                                                className="mb-2"
+                                                            />
+                                                            :
+                                                            null
+                                                        }
+                                                    </>
+                                                ))}
+                                            </Form.Group>
+                                        </>
+                                        :
+                                        null
+                                    }
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Search</Form.Label>
                                         <FormControl type='text' name='search' value={search} className='mr-sm-2' onChange={handleChangeSearch} placeholder='Enter your search term...' />

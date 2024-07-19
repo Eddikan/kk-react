@@ -1,5 +1,6 @@
 .image-design-admin {
     min-height: 50px;
+    min-width: 50px;
     border-radius: 5px;
     background-size: cover;
     background-position: center;

@@ -211,7 +211,7 @@ const AdminViewPortFolio = () => {
                                                                 <>
 
                                                                     <div className="action-button kouture-tooltip bg-smgray" onClick={() => toggleUnderConstruction("Share Portfolio")}>
-                                                                        <span class="kouture-tooltiptext fs-14">
+                                                                        <span className="kouture-tooltiptext fs-14">
                                                                             Share
                                                                         </span>
                                                                         <GoShareAndroid className="text-black" />

@@ -49,7 +49,6 @@ const initialUserData = Object.freeze({
     linkedin: '',
     pinterest: '',
     behance: '',
-    youtube: '',
 });
 
 const initialDesignerData = Object.freeze({

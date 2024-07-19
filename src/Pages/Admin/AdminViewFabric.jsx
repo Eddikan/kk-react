@@ -457,18 +457,18 @@ const AdminViewFabrics = () => {
                                                                 <>
                                                                     <div>
                                                                         <Link to={`/user/center/product/${product.id}/edit`} className="text-decoration-none">
-                                                                            <div class="kouture-tooltip">
+                                                                            <div className="kouture-tooltip">
                                                                                 <div className="action-button bg-smgray me-2">
-                                                                                    <span class="kouture-tooltiptext fs-14">Edit</span>
+                                                                                    <span className="kouture-tooltiptext fs-14">Edit</span>
                                                                                     <GoPencil className="text-black" />
                                                                                 </div>
 
                                                                             </div>
                                                                         </Link>
 
-                                                                        <div class="kouture-tooltip" onClick={toggleShareModal}>
+                                                                        <div className="kouture-tooltip" onClick={toggleShareModal}>
                                                                             <div className="action-button bg-smgray me-2">
-                                                                                <span class="kouture-tooltiptext fs-14">
+                                                                                <span className="kouture-tooltiptext fs-14">
                                                                                     Share
                                                                                 </span>
                                                                                 <GoShareAndroid className="text-black" />
@@ -477,16 +477,16 @@ const AdminViewFabrics = () => {
                                                                         </div>
 
                                                                         {userWishlist ?
-                                                                            <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
                                                                                 <div className="action-button bg-gold me-2" >
-                                                                                    <span class="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
+                                                                                    <span className="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
                                                                                     <GoHeart className="text-white" />
                                                                                 </div>
                                                                             </div>
                                                                             :
-                                                                            <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
                                                                                 <div className="action-button bg-smgray me-2">
-                                                                                    <span class="wishlist-tooltiptext fs-14">Add to Wishlist</span>
+                                                                                    <span className="wishlist-tooltiptext fs-14">Add to Wishlist</span>
                                                                                     <GoHeart className="text-black" />
                                                                                 </div>
 
@@ -499,24 +499,24 @@ const AdminViewFabrics = () => {
                                                                 <>
                                                                     <div>
 
-                                                                        <div class="kouture-tooltip" onClick={toggleShareModal}>
+                                                                        <div className="kouture-tooltip" onClick={toggleShareModal}>
                                                                             <div className="action-button bg-smgray me-2">
-                                                                                <span class="kouture-tooltiptext fs-14">  Share</span>
+                                                                                <span className="kouture-tooltiptext fs-14">  Share</span>
                                                                                 <GoShareAndroid className="text-black" />
                                                                             </div>
                                                                         </div>
 
                                                                         {userWishlist ?
-                                                                            <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
                                                                                 <div className="action-button bg-gold me-2" >
-                                                                                    <span class="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
+                                                                                    <span className="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
                                                                                     <GoHeart className="text-white" />
                                                                                 </div>
                                                                             </div>
                                                                             :
-                                                                            <div class="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
                                                                                 <div className="action-button bg-smgray me-2" >
-                                                                                    <span class="wishlist-tooltiptext fs-14">Add to Wishlist</span>
+                                                                                    <span className="wishlist-tooltiptext fs-14">Add to Wishlist</span>
                                                                                     <GoHeart className="text-black" />
                                                                                 </div>
 

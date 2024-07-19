@@ -383,7 +383,7 @@ const Orders = (props) => {
                                             </div>
 
                                             <div className='text-center'>
-                                                <a href='/vendor-feedback-survey' class='btn btn-primary text-decoration-none'>Vendor FeedBack Survey</a>
+                                                <a href='/vendor-feedback-survey' className='btn btn-primary text-decoration-none'>Vendor FeedBack Survey</a>
                                             </div>
                                         </>
                                         :

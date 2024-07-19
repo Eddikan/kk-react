@@ -137,7 +137,7 @@ const AdminViewVendorSurvey = (props) => {
                                                     {image.id == vendorFormData.most_like &&
                                                         <>
                                                             <Col className="designs-grid" lg={6}>
-                                                                <label class="radio-img">
+                                                                <label className="radio-img">
                                                                     <input
                                                                         type="radio"
                                                                         name="most_like"
@@ -188,7 +188,7 @@ const AdminViewVendorSurvey = (props) => {
                                                     {image.id == vendorFormData.least_like &&
                                                         <>
                                                             <Col className="designs-grid" lg={6}>
-                                                                <label class="radio-img">
+                                                                <label className="radio-img">
                                                                     <input
                                                                         type="radio"
                                                                         name="least_like"
