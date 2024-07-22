@@ -333,9 +333,10 @@ const NewPortfolio = (props) => {
                                                     ))}
                                                 </>
                                                 :
-                                                <div onClick={addCategory} style={{ padding: '5px', cursor: 'pointer' }}>
-                                                    {categorySearchTerm}
-                                                </div>
+                                                // <div onClick={addCategory} style={{ padding: '5px', cursor: 'pointer' }}>
+                                                //     {categorySearchTerm}
+                                                // </div>
+                                                null
                                             }
                                         </div>
                                     )}

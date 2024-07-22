@@ -697,7 +697,7 @@ const Designs = (props) => {
                                         :
                                         null
                                     }
-                                    {tags && tags.length > 0 ?
+                                    {/* {tags && tags.length > 0 ?
                                         <>
                                             <Form.Group className='mb-4'>
                                                 <Form.Label className="fw-600">Tag</Form.Label>
@@ -722,7 +722,7 @@ const Designs = (props) => {
                                         </>
                                         :
                                         null
-                                    }
+                                    } */}
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Search</Form.Label>
                                         <FormControl type='text' name='search' value={search} className='mr-sm-2' onChange={handleChangeSearch} placeholder='Enter your search term...' />
