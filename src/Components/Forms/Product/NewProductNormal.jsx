@@ -212,6 +212,8 @@ const NewProductNormal = (props) => {
 
     async function ProductSubmit(e) {
         e.preventDefault();
+        var eco_friendly = selectedSustainability.includes("Eco-friendly") ? 1 : 0;
+
         if (productData.image_urls == '') {
             toast.error('Please upload atleast one photo!');
         }
@@ -232,7 +234,7 @@ const NewProductNormal = (props) => {
                 setProductLoading(true);
                 setTimeout(function () {
                     setProductLoading(false);
-                    saveProductItems({ ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, sustainability: selectedSustainability, certifications: certifications, status: 'Active' });
+                    saveProductItems({ ...productData, eco_friendly: eco_friendly, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, sustainability: selectedSustainability, certifications: certifications, status: 'Active' });
                     handleCancel();
                 }, 1000);
             } else {
@@ -264,9 +266,11 @@ const NewProductNormal = (props) => {
     };
 
     async function ProductDraftSubmit(e) {
+        var eco_friendly = selectedSustainability.includes("Eco-friendly") ? 1 : 0;
+        
         e.preventDefault();
         setProductDraftLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, { ...productData, sustainability: selectedSustainability, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, { ...productData, eco_friendly: eco_friendly, sustainability: selectedSustainability, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
