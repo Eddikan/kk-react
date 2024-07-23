@@ -516,7 +516,7 @@ const NewProductNormal = (props) => {
                             </Form.Group> */}
                             <Form.Group className='mb-3 mt-2'>
                                 <Form.Label>Primary Fiber<span className='text-danger'>*</span></Form.Label>
-                                <Form.Control as='select' name='primary_fiber' value={productData.primary_fiber} className='mr-sm-2 mb-2' onChange={handleChange} required>
+                                <Form.Control as='select' name='composition' value={productData.composition} className='mr-sm-2 mb-2' onChange={handleChange} required>
                                     <option value=''>Select Primary Fiber</option>
                                     <option value='Cotton'>Cotton</option>
                                     <option value='Linen'>Linen</option>
@@ -539,7 +539,7 @@ const NewProductNormal = (props) => {
                                     <option value='Acetate'>Acetate</option>
                                 </Form.Control>
                             </Form.Group>
-                            <Form.Group className='mb-3 mt-2'>
+                            {/* <Form.Group className='mb-3 mt-2'>
                                 <Form.Label>Composition<span className='text-danger'>*</span></Form.Label>
                                 <Form.Control as='select' name='composition' value={composition} className='mr-sm-2 mb-2' onChange={handleChangeComposition} required>
                                     <option value=''>Select Composition</option>
@@ -556,7 +556,7 @@ const NewProductNormal = (props) => {
                                     :
                                     null
                                 }
-                            </Form.Group>
+                            </Form.Group> */}
                             <Form.Group className='mb-3 mt-2'>
                                 <Form.Label>Weave<span className='text-danger'>*</span></Form.Label>
                                 <Form.Control as='select' name='weave' value={weave} className='mr-sm-2 mb-2' onChange={handleChangeWeave} required>
@@ -591,7 +591,7 @@ const NewProductNormal = (props) => {
                             </Form.Group>
                             <Form.Group className='my-3'>
                                 <Form.Label>Ideal for what type of clothing?</Form.Label>
-                                <FormControl type='text' name='primary_color' value={productData.primary_color} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                                <FormControl type='text' name='ideal_clothing_type' value={productData.ideal_clothing_type} className='mr-sm-2' onChange={handleChange} placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-3'>
                                 <Form.Label>Cut to size</Form.Label>

@@ -924,7 +924,7 @@ const EditProductNormal = (props) => {
                                     ))}
                                 </Form.Control>
                             </Form.Group>
-                            <Form.Group className='my-3'>
+                            {/* <Form.Group className='my-3'>
                                 <Form.Label>Environmentally Conscious Options</Form.Label>
                                 <Row className="mt-1">
                                     <Form.Group>
@@ -938,8 +938,47 @@ const EditProductNormal = (props) => {
                                         />
                                     </Form.Group>
                                 </Row>
+                            </Form.Group> */}
+                            <Form.Group className='my-3'>
+                                <Form.Label>Sustainability</Form.Label>
+                                <Row className="mt-1">
+                                    <Form.Group as={Col} lg={12}>
+                                        <Form.Check
+                                            type="checkbox"
+                                            label="Eco-friendly"
+                                            value="Eco-friendly"
+                                            checked={selectedSustainability.includes("Eco-friendly")}
+                                            onChange={handleSelectSustainability}
+                                            className="cursor-pointer  mb-2"
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={12}>
+                                        <Form.Check
+                                            type="checkbox"
+                                            label="Recycled fibers"
+                                            value="Recycled fibers"
+                                            checked={selectedSustainability.includes("Recycled fibers")}
+                                            onChange={handleSelectSustainability}
+                                            className="cursor-pointer mb-2"
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={12}>
+                                        <Form.Check
+                                            type="checkbox"
+                                            label="Biodegradable fibers"
+                                            value="Biodegradable fibers"
+                                            checked={selectedSustainability.includes("Biodegradable fibers")}
+                                            onChange={handleSelectSustainability}
+                                            className="cursor-pointer"
+                                        />
+                                    </Form.Group>
+                                </Row>
                             </Form.Group>
-                            <Form.Group className='mt-2 mb-3'>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Primary Color<span className='text-danger'>*</span></Form.Label>
+                                <FormControl type='text' name='primary_color' value={productData.primary_color} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                            </Form.Group>
+                            {/* <Form.Group className='mt-2 mb-3'>
                                 <Form.Label>Colors</Form.Label>
                                 <TagsInput
                                     value={colors}
@@ -954,8 +993,33 @@ const EditProductNormal = (props) => {
                                         }
                                     }}
                                 />
-                            </Form.Group>
+                            </Form.Group> */}
                             <Form.Group className='mb-3 mt-2'>
+                                <Form.Label>Primary Fiber<span className='text-danger'>*</span></Form.Label>
+                                <Form.Control as='select' name='composition' value={productData.composition} className='mr-sm-2 mb-2' onChange={handleChange} required>
+                                    <option value=''>Select Primary Fiber</option>
+                                    <option value='Cotton'>Cotton</option>
+                                    <option value='Linen'>Linen</option>
+                                    <option value='Hemp'>Hemp</option>
+                                    <option value='Jute'>Jute</option>
+                                    <option value='Bamboo'>Bamboo</option>
+                                    <option value='Wool'>Wool</option>
+                                    <option value='Silk'>Silk</option>
+                                    <option value='Cashmere'>Cashmere</option>
+                                    <option value='Mohair'>Mohair</option>
+                                    <option value='Angora'>Angora</option>
+                                    <option value='Polyester'>Polyester</option>
+                                    <option value='Nylon'>Nylon</option>
+                                    <option value='Acrylic'>Acrylic</option>
+                                    <option value='Spandex (lycra)'>Spandex (Lycra)</option>
+                                    <option value='Polypropylene'>Polypropylene</option>
+                                    <option value='Rayon (Viscose)'>Rayon (Viscose)</option>
+                                    <option value='Lyocell (Tencel)'>Lyocell (Tencel)</option>
+                                    <option value='Modal'>Modal</option>
+                                    <option value='Acetate'>Acetate</option>
+                                </Form.Control>
+                            </Form.Group>
+                            {/* <Form.Group className='mb-3 mt-2'>
                                 <Form.Label>Composition</Form.Label>
                                 <Form.Control as='select' name='composition' value={composition} className='mr-sm-2 mb-2' onChange={handleChangeComposition} required>
                                     <option value=''>Select Composition</option>
@@ -972,7 +1036,7 @@ const EditProductNormal = (props) => {
                                     :
                                     null
                                 }
-                            </Form.Group>
+                            </Form.Group> */}
                             <Form.Group className='mb-3 mt-2'>
                                 <Form.Label>Weave</Form.Label>
                                 <Form.Control as='select' name='weave' value={weave} className='mr-sm-2 mb-2' onChange={handleChangeWeave} required>
@@ -1004,6 +1068,37 @@ const EditProductNormal = (props) => {
                             <Form.Group className='my-3'>
                                 <Form.Label>Opacity</Form.Label>
                                 <FormControl type='text' name='opacity' value={productData.opacity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                            </Form.Group>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Ideal for what type of clothing?</Form.Label>
+                                <FormControl type='text' name='ideal_clothing_type' value={productData.ideal_clothing_type} className='mr-sm-2' onChange={handleChange} placeholder='' />
+                            </Form.Group>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Cut to size</Form.Label>
+                                <Row className="mt-1">
+                                    <Form.Group as={Col} lg={3}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="Yes"
+                                            name="cut_to_size"
+                                            value="1"
+                                            checked={productData.cut_to_size == 1 && productData.cut_to_size != ""}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={2}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="No"
+                                            name="cut_to_size"
+                                            value="0"
+                                            checked={productData.cut_to_size == 0 && productData.cut_to_size != ""}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                </Row>
                             </Form.Group>
                             <Form.Group className='my-3'>
                                 <Form.Label>Stretch</Form.Label>
@@ -1054,6 +1149,71 @@ const EditProductNormal = (props) => {
                                             name="drape"
                                             value="Drapes"
                                             checked={productData.drape === 'Drapes'}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                </Row>
+                            </Form.Group>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Wrinkle resistant</Form.Label>
+                                <Row className="mt-1">
+                                    <Form.Group as={Col} lg={3}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="Yes"
+                                            name="wrinkle_resistant"
+                                            value="1"
+                                            checked={productData.wrinkle_resistant == 1 && productData.wrinkle_resistant != ""}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={2}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="No"
+                                            name="wrinkle_resistant"
+                                            value="0"
+                                            checked={productData.wrinkle_resistant == 0 && productData.wrinkle_resistant != ""}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                </Row>
+                            </Form.Group>
+                            <Form.Group className='my-3'>
+                                <Form.Label>Color fastness</Form.Label>
+                                <Row className="mt-1">
+                                    <Form.Group as={Col} lg={3}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="High"
+                                            name="color_fastness"
+                                            value="High"
+                                            checked={productData.color_fastness === "High"}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={3}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="Moderate"
+                                            name="color_fastness"
+                                            value="Moderate"
+                                            checked={productData.color_fastness === "Moderate"}
+                                            onChange={handleChange}
+                                        />
+                                    </Form.Group>
+                                    <Form.Group as={Col} lg={3}>
+                                        <Form.Check
+                                            className="cursor-pointer"
+                                            type="radio"
+                                            label="Low"
+                                            name="color_fastness"
+                                            value="Low"
+                                            checked={productData.color_fastness === "Low"}
                                             onChange={handleChange}
                                         />
                                     </Form.Group>
