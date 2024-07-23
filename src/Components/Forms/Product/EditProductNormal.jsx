@@ -56,7 +56,7 @@ const EditProductNormal = (props) => {
     const [otherWeave, setOtherWeave] = useState('');
     const [unitMeasurement, setUnitMeasurement] = useState('meter');
     const [otherUnitMeasurement, setOtherUnitMeasurement] = useState('');
-    const [selectedSustainability, setSelectedSustainability] = useState([]);
+    const [selectedSustainabilities, setSelectedSustainabilities] = useState([]);
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -319,9 +319,9 @@ const EditProductNormal = (props) => {
     const handleSelectSustainability = (event) => {
         const sustainability = event.target.value;
         if (event.target.checked) {
-            setSelectedSustainability([...selectedSustainability, sustainability]);
+            setSelectedSustainabilities([...selectedSustainabilities, sustainability]);
         } else {
-            setSelectedSustainability(selectedSustainability.filter(s => s !== sustainability));
+            setSelectedSustainabilities(selectedSustainabilities.filter(s => s !== sustainability));
         }
     };
 
@@ -329,7 +329,24 @@ const EditProductNormal = (props) => {
         if (product) {
             setProductData({ ...product, user_id: currentUser });
             if (product.composition) {
-                if ((product.composition != "Polyamide" && product.composition != "Polyester" && product.composition != "Acrylic" && product.composition != "Polyurethane" && product.composition != "Cashmere" && product.composition != "Mental" && product.composition != "") || product.composition == "Other") {
+                if ((product.composition != "Cotton" && 
+                    product.composition != "Linen" && 
+                    product.composition != "Hemp" && 
+                    product.composition != "Jute" && 
+                    product.composition != "Bamboo" && 
+                    product.composition != "Wool" && 
+                    product.composition != "Silk" && 
+                    product.composition != "Cashmere" && 
+                    product.composition != "Angora" && 
+                    product.composition != "Polyester" && 
+                    product.composition != "Nylon" && 
+                    product.composition != "Acrylic" && 
+                    product.composition != "Spandex (Lycra)" && 
+                    product.composition != "Polypropylene" && 
+                    product.composition != "Rayon (Viscose)" && 
+                    product.composition != "Lyocell (Tencel)" && 
+                    product.composition != "Modal" && 
+                    product.composition != "Acetate") || product.composition == "Other") {
                     setComposition('Other');
                     setOtherComposition(product.composition);
                 } else {
@@ -347,7 +364,7 @@ const EditProductNormal = (props) => {
                 }
             }
             if (product.unit_measurement) {
-                if ((product.unit_measurement != "centimeter" && product.unit_measurement != "meter" && product.unit_measurement != "inch" && product.unit_measurement != "feet" && product.weave != "yard" && product.unit_measurement != "") || product.unit_measurement == "Other") {
+                if ((product.unit_measurement != "millimeter" && product.unit_measurement != "centimeter" && product.unit_measurement != "meter" && product.unit_measurement != "inch" && product.unit_measurement != "feet" && product.weave != "yard" && product.unit_measurement != "") || product.unit_measurement == "Other") {
                     setUnitMeasurement('Other');
                     setOtherUnitMeasurement(product.unit_measurement);
                 } else {
@@ -363,6 +380,9 @@ const EditProductNormal = (props) => {
             }
             if (product.categories) {
                 setCategories(product.categories);
+            }
+            if (product.sustainability) {
+                setSelectedSustainabilities(product.sustainability);
             }
             if (image_urls) {
                 setImages(image_urls);
@@ -394,12 +414,13 @@ const EditProductNormal = (props) => {
         };
     }, []);
 
-
     async function ProductSubmit(e) {
+        var eco_friendly = selectedSustainabilities.includes("Eco-friendly") ? 1 : 0;
+
         e.preventDefault();
         if (images) {
             setProductLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token, { ...productData, sustainability: selectedSustainability, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages,  colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token, { ...productData, eco_friendly: eco_friendly, sustainability: selectedSustainabilities, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages,  colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     toast.success('Fabric updated successfully!');
@@ -423,9 +444,11 @@ const EditProductNormal = (props) => {
     };
 
     async function ProductDraftSubmit(e) {
+        var eco_friendly = selectedSustainabilities.includes("Eco-friendly") ? 1 : 0;
+
         e.preventDefault();
         setProductDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token, { ...productData, sustainability: selectedSustainability, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token, { ...productData, eco_friendly: eco_friendly, sustainability: selectedSustainabilities, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
@@ -809,6 +832,7 @@ const EditProductNormal = (props) => {
                                                 <Form.Label>Unit of Measurement</Form.Label>
                                                 <Form.Control as='select' name='unit_measurement' value={unitMeasurement} className='mr-sm-2 mb-2' onChange={handleChangeUnitMeasurement} required>
                                                     <option value=''>Select Unit of Measurement</option>
+                                                    <option value='millimeter'>Centimeter</option>
                                                     <option value='centimeter'>Centimeter</option>
                                                     <option value='meter'>Meter</option>
                                                     <option value='inch'>Inch</option>
@@ -816,7 +840,7 @@ const EditProductNormal = (props) => {
                                                     <option value='yard'>Yard</option>
                                                     <option value='Other'>Other</option>
                                                 </Form.Control>
-                                                {(unitMeasurement != "centimeter" && unitMeasurement != "meter" && unitMeasurement != "inch" && unitMeasurement != "feet" && unitMeasurement != "yard" || unitMeasurement == "Other") && unitMeasurement != "" ?
+                                                {(unitMeasurement != "millimeter" && unitMeasurement != "centimeter" && unitMeasurement != "meter" && unitMeasurement != "inch" && unitMeasurement != "feet" && unitMeasurement != "yard" || unitMeasurement == "Other") && unitMeasurement != "" ?
                                                     <FormControl type='text' name='unit_measurement' value={otherUnitMeasurement} className='mr-sm-2' onChange={handleChangeOtherUnitMeasurement} placeholder='' />
                                                     :
                                                     null
@@ -947,7 +971,7 @@ const EditProductNormal = (props) => {
                                             type="checkbox"
                                             label="Eco-friendly"
                                             value="Eco-friendly"
-                                            checked={selectedSustainability.includes("Eco-friendly")}
+                                            checked={selectedSustainabilities.includes("Eco-friendly")}
                                             onChange={handleSelectSustainability}
                                             className="cursor-pointer  mb-2"
                                         />
@@ -957,7 +981,7 @@ const EditProductNormal = (props) => {
                                             type="checkbox"
                                             label="Recycled fibers"
                                             value="Recycled fibers"
-                                            checked={selectedSustainability.includes("Recycled fibers")}
+                                            checked={selectedSustainabilities.includes("Recycled fibers")}
                                             onChange={handleSelectSustainability}
                                             className="cursor-pointer mb-2"
                                         />
@@ -967,7 +991,7 @@ const EditProductNormal = (props) => {
                                             type="checkbox"
                                             label="Biodegradable fibers"
                                             value="Biodegradable fibers"
-                                            checked={selectedSustainability.includes("Biodegradable fibers")}
+                                            checked={selectedSustainabilities.includes("Biodegradable fibers")}
                                             onChange={handleSelectSustainability}
                                             className="cursor-pointer"
                                         />
@@ -996,7 +1020,7 @@ const EditProductNormal = (props) => {
                             </Form.Group> */}
                             <Form.Group className='mb-3 mt-2'>
                                 <Form.Label>Primary Fiber<span className='text-danger'>*</span></Form.Label>
-                                <Form.Control as='select' name='composition' value={productData.composition} className='mr-sm-2 mb-2' onChange={handleChange} required>
+                                <Form.Control as='select' name='composition' value={composition} className='mr-sm-2 mb-2' onChange={handleChangeComposition} required>
                                     <option value=''>Select Primary Fiber</option>
                                     <option value='Cotton'>Cotton</option>
                                     <option value='Linen'>Linen</option>
@@ -1011,13 +1035,36 @@ const EditProductNormal = (props) => {
                                     <option value='Polyester'>Polyester</option>
                                     <option value='Nylon'>Nylon</option>
                                     <option value='Acrylic'>Acrylic</option>
-                                    <option value='Spandex (lycra)'>Spandex (Lycra)</option>
+                                    <option value='Spandex (Lycra)'>Spandex (Lycra)</option>
                                     <option value='Polypropylene'>Polypropylene</option>
                                     <option value='Rayon (Viscose)'>Rayon (Viscose)</option>
                                     <option value='Lyocell (Tencel)'>Lyocell (Tencel)</option>
                                     <option value='Modal'>Modal</option>
                                     <option value='Acetate'>Acetate</option>
+                                    <option value='Other'>Other</option>
                                 </Form.Control>
+                                {(composition != "Cotton" && 
+                                    composition != "Linen" && 
+                                    composition != "Hemp" && 
+                                    composition != "Jute" && 
+                                    composition != "Bamboo" && 
+                                    composition != "Wool" && 
+                                    composition != "Silk" && 
+                                    composition != "Cashmere" && 
+                                    composition != "Angora" && 
+                                    composition != "Polyester" && 
+                                    composition != "Nylon" && 
+                                    composition != "Acrylic" && 
+                                    composition != "Spandex (Lycra)" && 
+                                    composition != "Polypropylene" && 
+                                    composition != "Rayon (Viscose)" && 
+                                    composition != "Lyocell (Tencel)" && 
+                                    composition != "Modal" && 
+                                    composition != "Acetate" || composition == "Other") && composition != "" ?
+                                    <FormControl type='text' name='composition' value={otherComposition} className='mr-sm-2' onChange={handleChangeOtherComposition} placeholder='' />
+                                    :
+                                    null
+                                }
                             </Form.Group>
                             {/* <Form.Group className='mb-3 mt-2'>
                                 <Form.Label>Composition</Form.Label>

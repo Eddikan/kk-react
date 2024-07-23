@@ -613,9 +613,10 @@ const Designs = (props) => {
                                             ))}
                                         </Form.Control>
                                     </Form.Group>
+                                    <hr />
                                     {categories && categories.length > 0 ?
                                         <>
-                                            <Form.Group className='mb-4'>
+                                            <Form.Group className='mb-3'>
                                                 <Form.Label className="fw-600">Categories</Form.Label>
                                                 {categories && categories.length > 0 ?
                                                     <>
@@ -639,7 +640,8 @@ const Designs = (props) => {
                                         :
                                         null
                                     }
-                                    <Form.Group className='mb-4'>
+                                    <hr />
+                                    <Form.Group className='mb-3'>
                                         <Form.Label className="fw-600">Gender</Form.Label>
                                         <Form.Check
                                             type="checkbox"
@@ -666,15 +668,18 @@ const Designs = (props) => {
                                             className="mb-2"
                                         />
                                     </Form.Group>
-                                    <Form.Group className='mb-4'>
+                                    <hr />
+                                    <Form.Group className='mb-3'>
                                         <Form.Label className="fw-600">Season</Form.Label>
                                         <Form.Control value={seasonsValue} onChange={(e) => handleChangeSeason(e)}></Form.Control>
                                     </Form.Group>
-                                    <Form.Group className='mb-4'>
+                                    <hr />
+                                    <Form.Group className='mb-3'>
                                         <Form.Label className="fw-600">Color</Form.Label>
                                         <Form.Control value={colorsValue} onChange={(e) => handleChangeColor(e)}></Form.Control>
                                     </Form.Group>
-                                    <Form.Group className='mb-4'>
+                                    <hr />
+                                    <Form.Group className='mb-3'>
                                         <Form.Label className="fw-600">Material</Form.Label>
                                         <Form.Control value={materialsValue} onChange={(e) => handleChangeMaterial(e)}></Form.Control>
                                     </Form.Group>

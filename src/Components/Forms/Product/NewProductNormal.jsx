@@ -67,7 +67,7 @@ const NewProductNormal = (props) => {
     const [unitMeasurement, setUnitMeasurement] = useState('meter');
     const [otherUnitMeasurement, setOtherUnitMeasurement] = useState('');
     const [categories, setCategories] = useState([]);
-    const [selectedSustainability, setSelectedSustainability] = useState([]);
+    const [selectedSustainabilities, setSelectedSustainabilities] = useState([]);
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -181,9 +181,9 @@ const NewProductNormal = (props) => {
     const handleSelectSustainability = (event) => {
         const sustainability = event.target.value;
         if (event.target.checked) {
-            setSelectedSustainability([...selectedSustainability, sustainability]);
+            setSelectedSustainabilities([...selectedSustainabilities, sustainability]);
         } else {
-            setSelectedSustainability(selectedSustainability.filter(s => s !== sustainability));
+            setSelectedSustainabilities(selectedSustainabilities.filter(s => s !== sustainability));
         }
     };
 
@@ -212,7 +212,7 @@ const NewProductNormal = (props) => {
 
     async function ProductSubmit(e) {
         e.preventDefault();
-        var eco_friendly = selectedSustainability.includes("Eco-friendly") ? 1 : 0;
+        var eco_friendly = selectedSustainabilities.includes("Eco-friendly") ? 1 : 0;
 
         if (productData.image_urls == '') {
             toast.error('Please upload atleast one photo!');
@@ -234,13 +234,13 @@ const NewProductNormal = (props) => {
                 setProductLoading(true);
                 setTimeout(function () {
                     setProductLoading(false);
-                    saveProductItems({ ...productData, eco_friendly: eco_friendly, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, sustainability: selectedSustainability, certifications: certifications, status: 'Active' });
+                    saveProductItems({ ...productData, eco_friendly: eco_friendly, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, sustainability: selectedSustainabilities, certifications: certifications, status: 'Active' });
                     handleCancel();
                 }, 1000);
             } else {
                 if (productData.image_urls) {
                     setProductLoading(true);
-                    axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, sustainability: selectedSustainability, certifications: certifications, status: 'Active' }).then((response) => {
+                    axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, sustainability: selectedSustainabilities, certifications: certifications, status: 'Active' }).then((response) => {
                         const success = response.data.status;
                         if (success == 'Success') {
                             toast.success('Fabric added successfully!');
@@ -266,11 +266,11 @@ const NewProductNormal = (props) => {
     };
 
     async function ProductDraftSubmit(e) {
-        var eco_friendly = selectedSustainability.includes("Eco-friendly") ? 1 : 0;
+        var eco_friendly = selectedSustainabilities.includes("Eco-friendly") ? 1 : 0;
         
         e.preventDefault();
         setProductDraftLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, { ...productData, eco_friendly: eco_friendly, sustainability: selectedSustainability, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
+        axios.post(process.env.REACT_APP_API_ENDPOINT + 'product?user_id=' + currentUser + '&token=' + token, { ...productData, eco_friendly: eco_friendly, sustainability: selectedSustainabilities, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherWeave != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
@@ -465,7 +465,7 @@ const NewProductNormal = (props) => {
                                             type="checkbox"
                                             label="Eco-friendly"
                                             value="Eco-friendly"
-                                            checked={selectedSustainability.includes("Eco-friendly")}
+                                            checked={selectedSustainabilities.includes("Eco-friendly")}
                                             onChange={handleSelectSustainability}
                                             className="cursor-pointer  mb-2"
                                         />
@@ -475,7 +475,7 @@ const NewProductNormal = (props) => {
                                             type="checkbox"
                                             label="Recycled fibers"
                                             value="Recycled fibers"
-                                            checked={selectedSustainability.includes("Recycled fibers")}
+                                            checked={selectedSustainabilities.includes("Recycled fibers")}
                                             onChange={handleSelectSustainability}
                                             className="cursor-pointer mb-2"
                                         />
@@ -485,7 +485,7 @@ const NewProductNormal = (props) => {
                                             type="checkbox"
                                             label="Biodegradable fibers"
                                             value="Biodegradable fibers"
-                                            checked={selectedSustainability.includes("Biodegradable fibers")}
+                                            checked={selectedSustainabilities.includes("Biodegradable fibers")}
                                             onChange={handleSelectSustainability}
                                             className="cursor-pointer"
                                         />
