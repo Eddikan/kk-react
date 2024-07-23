@@ -225,11 +225,21 @@ const NewPortfolio = (props) => {
         !categoryIds.includes(category.id)
     );
 
-    const handleCategoryClick = (category) => {
-        if (!categoryIds.includes(category.id)) {
-          setCategoryIds([...categoryIds, category.id]);
+    // const handleCategoryClick = (category) => {
+    //     if (!categoryIds.includes(category.id)) {
+    //       setCategoryIds([...categoryIds, category.id]);
+    //     }
+    //     setCategorySearchTerm('');
+    // };
+
+    const handleCategoryClick = (id) => {
+        let data = categoryIds;
+        if (categoryIds.includes(id)) {
+            setCategoryIds(categoryIds.filter(categoryId => categoryId !== id));
+        } else {
+            setCategoryIds([...data, id]);
+            data = [...data, id];
         }
-        setCategorySearchTerm('');
     };
 
     const handleRemoveCategory = (categoryId) => {
@@ -316,8 +326,8 @@ const NewPortfolio = (props) => {
                         <Card.Body className="bg-lgray">
                             <Form.Group className='mb-3'>
                                 <Form.Label>Categories<span className='text-danger'>*</span></Form.Label>
-                                <div className='position-relative'>
-                                    <FormControl type='text' value={categorySearchTerm} className='mr-sm-2' onChange={(e) => setCategorySearchTerm(e.target.value)} placeholder="" />
+                                {/* <div className='position-relative'>
+                                    <FormControl type='text' value={categorySearchTerm} className='mr-sm-2' onChange={(e) => setCategorySearchTerm(e.target.value)} placeholder="" />?
                                     {categorySearchTerm && (
                                         <div className="categories-box">
                                             {filteredCategories && filteredCategories.length > 0 ?
@@ -360,7 +370,27 @@ const NewPortfolio = (props) => {
                                         :
                                         null
                                     }
-                                </div>
+                                </div> */}
+                                <Row className='position-relative'>
+                                    {categories && categories.length > 0 ?
+                                        <>          
+                                            {categories.map(({ name, id }) => (
+                                                <Form.Group as={Col} lg={6} className="d-flex mt-1">
+                                                    <Form.Check
+                                                        className="cursor-pointer me-2"
+                                                        type="checkbox"
+                                                        checked={categoryIds.includes(id)}
+                                                        onChange={() => handleCategoryClick(id)}
+                                                        required
+                                                    />
+                                                    <span>{name}</span>
+                                                </Form.Group>
+                                            ))}
+                                        </>
+                                        :
+                                        null
+                                    }
+                                </Row>
                             </Form.Group>
                             <Form.Group className='my-3'>
                                 <Form.Label>Season<span className='text-danger'>*</span></Form.Label>
