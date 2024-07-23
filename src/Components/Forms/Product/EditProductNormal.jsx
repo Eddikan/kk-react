@@ -56,6 +56,7 @@ const EditProductNormal = (props) => {
     const [otherWeave, setOtherWeave] = useState('');
     const [unitMeasurement, setUnitMeasurement] = useState('meter');
     const [otherUnitMeasurement, setOtherUnitMeasurement] = useState('');
+    const [selectedSustainability, setSelectedSustainability] = useState([]);
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -315,6 +316,15 @@ const EditProductNormal = (props) => {
         setFinalProductImages((prevImages) => prevImages.filter((img, index) => index !== e));
     };
 
+    const handleSelectSustainability = (event) => {
+        const sustainability = event.target.value;
+        if (event.target.checked) {
+            setSelectedSustainability([...selectedSustainability, sustainability]);
+        } else {
+            setSelectedSustainability(selectedSustainability.filter(s => s !== sustainability));
+        }
+    };
+
     useEffect(() => {
         if (product) {
             setProductData({ ...product, user_id: currentUser });
@@ -389,7 +399,7 @@ const EditProductNormal = (props) => {
         e.preventDefault();
         if (images) {
             setProductLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages,  colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token, { ...productData, sustainability: selectedSustainability, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages,  colors: colors, certifications: certifications, status: 'Active' }).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     toast.success('Fabric updated successfully!');
@@ -415,7 +425,7 @@ const EditProductNormal = (props) => {
     async function ProductDraftSubmit(e) {
         e.preventDefault();
         setProductDraftLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token, { ...productData, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'product/' + productId + '?user_id=' + currentUser + '&token=' + token, { ...productData, sustainability: selectedSustainability, composition: otherComposition && otherComposition != "" ? otherComposition : composition, weave: otherWeave && otherComposition != "" ? otherWeave : weave, unit_measurement: otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement, image_urls: images, final_product_image_urls: finalProductImages, colors: colors, certifications: certifications, status: 'Draft' }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 toast.success('Fabric saved as draft successfully!');
@@ -794,7 +804,7 @@ const EditProductNormal = (props) => {
                             <Card className="mb-3">
                                 <Card.Body className='bg-mdgray'>
                                     <Row>
-                                        <Col lg="4">
+                                        <Col lg="12" className="mb-2">
                                             <Form.Group className="my-1">
                                                 <Form.Label>Unit of Measurement</Form.Label>
                                                 <Form.Control as='select' name='unit_measurement' value={unitMeasurement} className='mr-sm-2 mb-2' onChange={handleChangeUnitMeasurement} required>
@@ -811,6 +821,12 @@ const EditProductNormal = (props) => {
                                                     :
                                                     null
                                                 }
+                                            </Form.Group>
+                                        </Col>
+                                        <Col lg="4">
+                                            <Form.Group className="my-1">
+                                                <Form.Label>Length ({otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
+                                                <FormControl type='number' name='length' value={productData.length} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                             </Form.Group>
                                         </Col>
                                         <Col lg="4">

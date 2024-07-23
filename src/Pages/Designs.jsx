@@ -96,7 +96,15 @@ const Designs = (props) => {
     const [inWishlist, setInWishlist] = useState(false);
     const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
 
-    let PageSize = 32;
+    // Search
+    const [seasonsSearch, setSeasonsSearch] = useState('');
+    const [seasonsValue, setSeasonsValue] = useState('');
+    const [colorsSearch, setColorsSearch] = useState('');
+    const [colorsValue, setColorsValue] = useState('');
+    const [materialsSearch, setMaterialsSearch] = useState('');
+    const [materialsValue, setMaterialsValue] = useState('');
+
+    let PageSize = 20;
 
     const [fabricsModalShow, setFabricsModalShow] = useState(false);
     const [designsModalShow, setDesignsModalShow] = useState(false);
@@ -178,10 +186,9 @@ const Designs = (props) => {
             search: searchValue,
             portfolio_item_category_ids: selectedCategories,
             genders: selectedGenders,
-            seasons: selectedSeasons,
-            colors: selectedColors,
-            materials: selectedMaterials,
-            tags: selectedTags,
+            seasons: seasonsSearch,
+            colors: colorsSearch,
+            materials: materialsSearch
         });
     };
 
@@ -195,10 +202,9 @@ const Designs = (props) => {
             search: searchValue,
             portfolio_item_category_ids: selectedCategories,
             genders: selectedGenders,
-            seasons: selectedSeasons,
-            colors: selectedColors,
-            materials: selectedMaterials,
-            tags: selectedTags,
+            seasons: seasonsSearch,
+            colors: colorsSearch,
+            materials: materialsSearch
         });
     };
 
@@ -245,6 +251,48 @@ const Designs = (props) => {
         // Set a new debounce timer
         searchChangeDebounce(value);
         setSearch(value);
+    };
+
+    const seasonChangeDebounce = debounce((e) => {
+        setSeasonsSearch(e);
+    }, 1000); // 1000 milliseconds (2 seconds) delay
+
+    const handleChangeSeason = (e) => {
+        const { name, value } = e.target;
+        // Clear the previous debounce timer
+        seasonChangeDebounce.cancel();
+
+        // Set a new debounce timer
+        searchChangeDebounce(value);
+        setSeasonsValue(value);
+    };
+
+    const colorChangeDebounce = debounce((e) => {
+        setColorsSearch(e);
+    }, 1000); // 1000 milliseconds (2 seconds) delay
+
+    const handleChangeColor = (e) => {
+        const { name, value } = e.target;
+        // Clear the previous debounce timer
+        colorChangeDebounce.cancel();
+
+        // Set a new debounce timer
+        colorChangeDebounce(value);
+        setColorsValue(value);
+    };
+
+    const materialChangeDebounce = debounce((e) => {
+        setMaterialsSearch(e);
+    }, 1000); // 1000 milliseconds (2 seconds) delay
+
+    const handleChangeMaterial = (e) => {
+        const { name, value } = e.target;
+        // Clear the previous debounce timer
+        materialChangeDebounce.cancel();
+
+        // Set a new debounce timer
+        materialChangeDebounce(value);
+        setMaterialsValue(value);
     };
 
     async function favoriteDesignUpdate(e) {
@@ -420,7 +468,7 @@ const Designs = (props) => {
         if (event.target.checked) {
             setSelectedSeasons([...selectedSeasons, season]);
         } else {
-            setSelectedSeasons(selectedGenders.filter(s => s !== season));
+            setSelectedSeasons(selectedSeasons.filter(s => s !== season));
         }
     };
 
@@ -489,17 +537,16 @@ const Designs = (props) => {
                 search: searchValue,
                 portfolio_item_category_ids: selectedCategories,
                 genders: selectedGenders,
-                seasons: selectedSeasons,
-                colors: selectedColors,
-                materials: selectedMaterials,
-                tags: selectedTags,
+                seasons: seasonsSearch,
+                colors: colorsSearch,
+                materials: materialsSearch,
             });
         } else {
             // Set the component as mounted
             setMounted(true);
         }
 
-    }, [mounted, searchValue, selectedCategories, selectedGenders, selectedSeasons, selectedColors, selectedMaterials, selectedTags, selectedCountry]);
+    }, [mounted, searchValue, selectedCategories, selectedGenders, seasonsSearch, colorsSearch, materialsSearch, selectedCountry]);
 
     useEffect(() => {
         // Only run the filter API call after the component has mounted
@@ -540,7 +587,7 @@ const Designs = (props) => {
                                         <Form.Label className="fw-600">Search</Form.Label>
                                         <Form.Control  placeholder="Enter your search term..." type="text" onChange={(e) => handleChangeSearch(e)} />
                                     </Form.Group>
-                                    <Form.Group className='mb-4'>
+                                    {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Sort</Form.Label>
                                         <Form.Control as='select' onChange={(e) => handleSortFieldChange(e.target.value)}>
                                             <option value="" disabled selected  >Sort By:</option>
@@ -548,7 +595,7 @@ const Designs = (props) => {
                                                 <option key={option.value} value={option.value} selected={option.value === selectedSortField}>{option.label}</option>
                                             ))}
                                         </Form.Control>
-                                    </Form.Group>
+                                    </Form.Group> */}
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Country</Form.Label>
                                         <Form.Control
@@ -619,7 +666,19 @@ const Designs = (props) => {
                                             className="mb-2"
                                         />
                                     </Form.Group>
-                                    {seasons && seasons.length > 0 ?
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Season</Form.Label>
+                                        <Form.Control value={seasonsValue} onChange={(e) => handleChangeSeason(e)}></Form.Control>
+                                    </Form.Group>
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Color</Form.Label>
+                                        <Form.Control value={colorsValue} onChange={(e) => handleChangeColor(e)}></Form.Control>
+                                    </Form.Group>
+                                    <Form.Group className='mb-4'>
+                                        <Form.Label className="fw-600">Material</Form.Label>
+                                        <Form.Control value={materialsValue} onChange={(e) => handleChangeMaterial(e)}></Form.Control>
+                                    </Form.Group>
+                                    {/* {seasons && seasons.length > 0 ?
                                         <>
                                             <Form.Group className='mb-4'>
                                                 <Form.Label className="fw-600">Season</Form.Label>
@@ -644,8 +703,8 @@ const Designs = (props) => {
                                         </>
                                         :
                                         null
-                                    }
-                                    {colors && colors.length > 0 ?
+                                    } */}
+                                    {/* {colors && colors.length > 0 ?
                                         <>
                                             <Form.Group className='mb-4'>
                                                 <Form.Label className="fw-600">Color</Form.Label>
@@ -696,7 +755,7 @@ const Designs = (props) => {
                                         </>
                                         :
                                         null
-                                    }
+                                    } */}
                                     {/* {tags && tags.length > 0 ?
                                         <>
                                             <Form.Group className='mb-4'>
