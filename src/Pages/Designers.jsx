@@ -31,6 +31,19 @@ const Designers = (props) => {
 
     let PageSize = 12;
 
+    // Search
+    const [specializationSearch, setSpecializationSearch] = useState('');
+    const [specializationValue, setSpecializationValue] = useState('');
+
+    // Filter Arrays
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [colors, setColors] = useState([]);
+    const [genders, setGenders] = useState([]);
+    const [seasons, setSeasons] = useState([]);
+    const [materials, setMaterials] = useState([]);
+    const [tags, setTags] = useState([]);
+    const [categories, setCategories] = useState([]);
+
     const [signupModalShow, setSignupModalShow] = useState(false);
     const [signupType, setSignupType] = useState('');
     const [search, setSearch] = useState('');
@@ -47,7 +60,7 @@ const Designers = (props) => {
     ]);
 
     const getDesigners = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?search='+searchValue+'&country='+selectedCountry+'&page=' + currentPage + '&user_id=' + currentUser);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?areas_of_specialization='+specializationSearch+'&search='+searchValue+'&country='+selectedCountry+'&categories='+selectedCategories+'&page=' + currentPage + '&user_id=' + currentUser);
     };
 
     const toggleGetUser = (e) => {
@@ -57,7 +70,6 @@ const Designers = (props) => {
         //     showSignupModal('user_designer');
         // }
         window.location.href = "/designer-profile?user_id=" + e;
-
     };
 
     const searchChangeDebounce = debounce((e) => {
@@ -77,6 +89,20 @@ const Designers = (props) => {
         // Set a new debounce timer
         searchChangeDebounce(value);
         setSearch(value);
+    };
+
+    const specializationChangeDebounce = debounce((e) => {
+        setSpecializationSearch(e);
+    }, 1000); // 1000 milliseconds (2 seconds) delay
+
+    const handleChangeSpecialization = (e) => {
+        const { name, value } = e.target;
+        // Clear the previous debounce timer
+        specializationChangeDebounce.cancel();
+
+        // Set a new debounce timer
+        specializationChangeDebounce(value);
+        setSpecializationValue(value);
     };
 
     const handleChangePage = (pageNumber) => {
@@ -133,6 +159,35 @@ const Designers = (props) => {
         setTempDesignerWishlist(updatedDesignerWishlist);
     };
 
+    async function getPortfolioFilters() {
+        axios.get(process.env.REACT_APP_API_ENDPOINT + 'design/filter/type').then((response) => {
+            const data = response.data;
+            if (data) {
+                const filters = data.data;
+                setColors(filters.colors?? []);
+                setGenders(filters.genders ?? []);
+                setSeasons(filters.seasons ?? []);
+                setMaterials(filters.materials ?? []);
+                setTags(filters.tags ?? []);
+                setCategories(filters.categories ?? []);
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+        }).catch((e) => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+        });
+    };
+
+    // Handle checkbox change event
+    const handleSelectCategoryChange = (event) => {
+        const categoryId = parseInt(event.target.value, 10);
+        if (event.target.checked) {
+            setSelectedCategories([...selectedCategories, categoryId]);
+        } else {
+            setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
+        }
+    };
+
     useEffect(() => {
         setDesignersLoading(true);
         getDesigners()
@@ -151,7 +206,7 @@ const Designers = (props) => {
                 toast.error('There has been an error getting the designers, please try again!');
                 setDesignersLoading(false);
             });
-    }, [reloadCount, selectedCountry, searchValue]);
+    }, [reloadCount, selectedCountry, selectedCategories, specializationSearch, searchValue]);
 
     const handleChangeCountry = (e) => {
         const {name, value} = e.target;
@@ -162,6 +217,10 @@ const Designers = (props) => {
         // Only run the filter API call after the component has mounted
         setSelectedCountry(cookies.selectedCountry ?? '');
     }, [cookies]);
+
+    useEffect(() => {
+        getPortfolioFilters();
+    }, []);
 
     return (
         <Layout>
@@ -183,7 +242,7 @@ const Designers = (props) => {
                                         <Form.Label className="fw-600">Search</Form.Label>
                                         <Form.Control  placeholder="Enter your search term..." type="text" onChange={(e) => handleChangeSearch(e)} />
                                     </Form.Group>
-                                    <Form.Group className='mb-4'>
+                                    {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Sort</Form.Label>
                                         <Form.Control as='select'>
                                             <option value="" disabled selected  >Sort By:</option>
@@ -191,7 +250,7 @@ const Designers = (props) => {
                                                 <option key={option.value} value={option.value}>{option.label}</option>
                                             ))}
                                         </Form.Control>
-                                    </Form.Group>
+                                    </Form.Group> */}
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Country</Form.Label>
                                         <Form.Control
@@ -209,17 +268,38 @@ const Designers = (props) => {
                                             ))}
                                         </Form.Control>
                                     </Form.Group>
+                                    <hr />
                                     <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600">Categories</Form.Label>
-                                        <Form.Check
-                                            type={`checkbox`}
-                                            label={`All`}
-                                            name={`day`}
-                                            className={`mb - 2`}
-                                            // onChange={(e) => handleChangeAllCategories(e.target.checked)}
-                                            // checked={portfolioCategories.length == selectedCategories.length || selectedAllCategories}
-                                    />
+                                        <Form.Label className="fw-600">Areas of Specialization and Expertise</Form.Label>
+                                        <Form.Control value={specializationValue} onChange={(e) => handleChangeSpecialization(e)}></Form.Control>
                                     </Form.Group>
+                                    <hr />
+                                    {categories && categories.length > 0 ?
+                                        <>
+                                            <Form.Group className='mb-3'>
+                                                <Form.Label className="fw-600">Categories</Form.Label>
+                                                {categories && categories.length > 0 ?
+                                                    <>
+                                                        {categories.map((category, index) => (
+                                                            <Form.Check
+                                                                key={index}
+                                                                type="checkbox"
+                                                                label={category.name}
+                                                                value={category.id}
+                                                                checked={selectedCategories.includes(category.id)}
+                                                                onChange={handleSelectCategoryChange}
+                                                                className="mb-2"
+                                                            />
+                                                        ))}
+                                                    </>
+                                                    :
+                                                    null
+                                                }
+                                            </Form.Group>
+                                        </>
+                                        :
+                                        null
+                                    }
                                 </div>
                             </Col>
                             <Col lg="9">

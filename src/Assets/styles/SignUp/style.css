@@ -26,10 +26,10 @@ section#signup .sign-up-container .kouture-icon {
     margin-bottom: 20px;
 }
 
-section#signup hr{
+/* section#signup hr{
     border-color: var(--dgray);
     border-width: 2px;
-}
+} */
 section#signup button.sign-in-google {
     background-color: transparent;
     border: 2px solid var(--gray);

@@ -800,11 +800,11 @@ const AdminProductEdit = (props) => {
                     <Card className="mb-3">
                         <Card.Body className='bg-lgray'>
                             <Form.Group className='mb-3 mt-2'>
-                                <Form.Label>Name</Form.Label>
+                                <Form.Label>Name<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='text' name='name' value={productData.name} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-3'>
-                                <Form.Label>Description</Form.Label>
+                                <Form.Label>Description<span className='text-danger'>*</span></Form.Label>
                                 <FormControl as="textarea"
                                     name="description"
                                     rows={3} // You can adjust the number of rows as needed
@@ -819,9 +819,9 @@ const AdminProductEdit = (props) => {
                                     rows={3} // You can adjust the number of rows as needed
                                     value={productData.care_instructions}
                                     placeholder=''
-                                    onChange={handleChange} required />
+                                    onChange={handleChange} />
                             </Form.Group>
-                            <Form.Label>Measurements</Form.Label>
+                            <Form.Label>Measurements<span className='text-danger'>*</span></Form.Label>
                             <Card className="mb-3">
                                 <Card.Body className='bg-mdgray'>
                                     <Row>
@@ -830,15 +830,15 @@ const AdminProductEdit = (props) => {
                                                 <Form.Label>Unit of Measurement</Form.Label>
                                                 <Form.Control as='select' name='unit_measurement' value={unitMeasurement} className='mr-sm-2 mb-2' onChange={handleChangeUnitMeasurement} required>
                                                     <option value=''>Select Unit of Measurement</option>
-                                                    <option value='millimeter'>Centimeter</option>
+                                                    <option value='millimeter'>Millimeter</option>
                                                     <option value='centimeter'>Centimeter</option>
                                                     <option value='meter'>Meter</option>
                                                     <option value='inch'>Inch</option>
                                                     <option value='feet'>Feet</option>
                                                     <option value='yard'>Yard</option>
-                                                    <option value='Other'>Other</option>
+                                                    <option value='other'>Other</option>
                                                 </Form.Control>
-                                                {(unitMeasurement != "millimeter" && unitMeasurement != "centimeter" && unitMeasurement != "meter" && unitMeasurement != "inch" && unitMeasurement != "feet" && unitMeasurement != "yard" || unitMeasurement == "Other") && unitMeasurement != "" ?
+                                                {(unitMeasurement != "millimeter" && unitMeasurement != "centimeter" && unitMeasurement != "meter" && unitMeasurement != "inch" && unitMeasurement != "feet" && unitMeasurement != "yard" || unitMeasurement == "other") && unitMeasurement != "" ?
                                                     <FormControl type='text' name='unit_measurement' value={otherUnitMeasurement} className='mr-sm-2' onChange={handleChangeOtherUnitMeasurement} placeholder='' />
                                                     :
                                                     null
@@ -866,7 +866,7 @@ const AdminProductEdit = (props) => {
                                     </Row>
                                 </Card.Body>
                             </Card>
-                            <Form.Label>Pricing</Form.Label>
+                            <Form.Label>Pricing<span className='text-danger'>*</span></Form.Label>
                             <Card>
                                 <Card.Body className='bg-mdgray'>
                                     <Row>
@@ -936,7 +936,7 @@ const AdminProductEdit = (props) => {
                     <Card className="mb-3 h-100">
                         <Card.Body className='bg-lgray'>
                             <Form.Group className='mb-3'>
-                                <Form.Label>Country of Origin</Form.Label>
+                                <Form.Label>Country of Origin<span className='text-danger'>*</span></Form.Label>
                                 <Form.Control as='select' name='country' value={productData.country} className='mr-sm-2' onChange={handleChange} required>
                                     <option value=''>Select Country</option>
                                     {Countries.map((country, index) => (
@@ -1083,7 +1083,7 @@ const AdminProductEdit = (props) => {
                                 }
                             </Form.Group> */}
                             <Form.Group className='mb-3 mt-2'>
-                                <Form.Label>Weave</Form.Label>
+                                <Form.Label>Weave<span className='text-danger'>*</span></Form.Label>
                                 <Form.Control as='select' name='weave' value={weave} className='mr-sm-2 mb-2' onChange={handleChangeWeave} required>
                                     <option value=''>Select Weave</option>
                                     <option value='Plain'>Plain</option>
@@ -1103,15 +1103,15 @@ const AdminProductEdit = (props) => {
                                 }
                             </Form.Group>
                             <Form.Group className='my-3'>
-                                <Form.Label>Pattern</Form.Label>
+                                <Form.Label>Pattern<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='text' name='pattern' value={productData.pattern} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-3'>
-                                <Form.Label>Texture</Form.Label>
+                                <Form.Label>Texture<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='text' name='texture' value={productData.texture} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-3'>
-                                <Form.Label>Opacity</Form.Label>
+                                <Form.Label>Opacity<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='text' name='opacity' value={productData.opacity} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-3'>

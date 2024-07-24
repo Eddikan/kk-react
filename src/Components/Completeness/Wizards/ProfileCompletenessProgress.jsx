@@ -13,7 +13,7 @@ const ProfileProgress = ({ completeness }) => {
         <>
             <div className='wizard-cont'>
                 <div className='w-100 step-container'>
-                    {completeness == 0 ?
+                    {completeness < 30 ?
                         <>
                             <div className='d-flex align-items-center active'>
                                 <div className='progress-circle progress-circle-active'>
@@ -22,7 +22,7 @@ const ProfileProgress = ({ completeness }) => {
                                 <span className='ms-2 fw-500'>Personal Information</span>
                             </div>
                         </>
-                    :completeness == 25 || completeness == 50 || completeness == 75 || completeness == 100 ?
+                    :completeness >= 30 ?
                         <>
                             <div className='d-flex align-items-center check'>
                                 <div className='progress-circle progress-circle-check'>
@@ -43,7 +43,7 @@ const ProfileProgress = ({ completeness }) => {
                     }
                 </div>
                 <div className='w-100 step-container'>
-                    {completeness == 25 ?
+                    {completeness >= 30 && completeness < 55 ?
                         <>
                             <div className='d-flex align-items-center active'>
                                 <div className='progress-circle progress-circle-active'>
@@ -52,7 +52,7 @@ const ProfileProgress = ({ completeness }) => {
                                 <span className='ms-2 fw-500'>Address Details</span>
                             </div>
                         </>
-                    :completeness == 50 || completeness == 75 || completeness == 100 ?
+                    :completeness >= 55 ?
                         <>
                             <div className='d-flex align-items-center check'>
                                 <div className='progress-circle progress-circle-check'>
@@ -73,7 +73,7 @@ const ProfileProgress = ({ completeness }) => {
                     }
                 </div>
                 <div className='w-100 step-container'>
-                    {completeness == 50 ?
+                    {completeness >= 55 && completeness < 70 ?
                         <>
                             <div className='d-flex align-items-center active'>
                                 <div className='progress-circle progress-circle-active'>
@@ -82,7 +82,7 @@ const ProfileProgress = ({ completeness }) => {
                                 <span className='ms-2 fw-500'>Contact Information</span>
                             </div>
                         </>
-                    :completeness == 75 || completeness == 100 ?
+                    : completeness >= 70 ?
                         <>
                             <div className='d-flex align-items-center check'>
                                 <div className='progress-circle progress-circle-check'>
@@ -103,7 +103,7 @@ const ProfileProgress = ({ completeness }) => {
                     }
                 </div>
                 <div className='w-100 step-container'>
-                    {completeness == 75 ?
+                    {completeness >= 70 && completeness < 100 ?
                         <>
                             <div className='d-flex align-items-center active'>
                                 <div className='progress-circle progress-circle-active'>
@@ -112,7 +112,7 @@ const ProfileProgress = ({ completeness }) => {
                                 <span className='ms-2 fw-500'>Social Media</span>
                             </div>
                         </>
-                    :completeness == 100 ?
+                    :completeness >= 100 ?
                         <>
                             <div className='d-flex align-items-center check'>
                                 <div className='progress-circle progress-circle-check'>
@@ -133,7 +133,7 @@ const ProfileProgress = ({ completeness }) => {
                     }
                 </div>
                 <div className='progress-lines'>
-                    {completeness == 25 || completeness == 50 || completeness == 75 ?
+                    {completeness >= 0 ?
                         <>
                             <div className='progress-line line-active'></div>
                         </>
@@ -142,7 +142,7 @@ const ProfileProgress = ({ completeness }) => {
                             <div className='progress-line'></div>
                         </>
                     }
-                    {completeness == 50 || completeness == 75 ?
+                    {completeness >= 55 ?
                         <>
                             <div className='progress-line line-active'></div>
                         </>
@@ -151,7 +151,7 @@ const ProfileProgress = ({ completeness }) => {
                             <div className='progress-line'></div>
                         </>
                     }
-                    {completeness == 75 ?
+                    {completeness >= 70 ?
                         <>
                             <div className='progress-line line-active'></div>
                         </>

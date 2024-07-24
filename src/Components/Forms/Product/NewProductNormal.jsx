@@ -23,7 +23,6 @@ const initialProductData = Object.freeze({
     colors: [],
     primary_color: '',
     weave: '',
-    primary_fiber: '',
     weight: 0,
     width: 0,
     length: 0,
@@ -219,11 +218,10 @@ const NewProductNormal = (props) => {
         }
         else if (productData.name == '' ||
             productData.description == '' ||
-            composition.length == 0 ||
-            weave.length == '' ||
+            composition == "" ||
+            weave == "" ||
             productData.texture == '' ||
             productData.pattern == '' ||
-            productData.care_instructions == '' ||
             productData.country == '' ||
             productData.price == ''
         ) {
@@ -323,15 +321,15 @@ const NewProductNormal = (props) => {
                                         onChange={handleChange} required />
                                 </Form.Group>
                                 <Form.Group className='my-3'>
-                                    <Form.Label>Care Instructions <span className='text-danger'>*</span></Form.Label>
+                                    <Form.Label>Care Instructions</Form.Label>
                                     <FormControl as="textarea"
                                         name="care_instructions"
                                         rows={3} // You can adjust the number of rows as needed
                                         value={productData.care_instructions}
                                         placeholder=''
-                                        onChange={handleChange} required />
+                                        onChange={handleChange} />
                                 </Form.Group>
-                                <Form.Label>Measurements</Form.Label>
+                                <Form.Label>Measurements<span className='text-danger'>*</span></Form.Label>
                                 <Card className="mb-3">
                                     <Card.Body className='bg-mdgray'>
                                         <Row>
@@ -376,13 +374,13 @@ const NewProductNormal = (props) => {
                                         </Row>
                                     </Card.Body>
                                 </Card>
-                                <Form.Label>Pricing</Form.Label>
+                                <Form.Label>Pricing<span className='text-danger'>*</span></Form.Label>
                                 <Card>
                                     <Card.Body className='bg-mdgray'>
                                         <Row>
                                             <Col lg="6">
                                                 <Form.Group className='my-1'>
-                                                    <Form.Label>Price<span className='text-danger'>*</span> (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
+                                                    <Form.Label>Price (per {otherUnitMeasurement && otherUnitMeasurement != "" ? otherUnitMeasurement : unitMeasurement})</Form.Label>
                                                     <FormControl type='number' name='price' value={productData.price} className='mr-sm-2' onChange={handleChange} placeholder='' required />
                                                 </Form.Group>
                                             </Col>
@@ -516,7 +514,7 @@ const NewProductNormal = (props) => {
                             </Form.Group> */}
                             <Form.Group className='mb-3 mt-2'>
                                 <Form.Label>Primary Fiber<span className='text-danger'>*</span></Form.Label>
-                                <Form.Control as='select' name='composition' value={productData.composition} className='mr-sm-2 mb-2' onChange={handleChange} required>
+                                <Form.Control as='select' name='composition' value={composition} className='mr-sm-2 mb-2' onChange={handleChangeComposition} required>
                                     <option value=''>Select Primary Fiber</option>
                                     <option value='Cotton'>Cotton</option>
                                     <option value='Linen'>Linen</option>
@@ -531,13 +529,36 @@ const NewProductNormal = (props) => {
                                     <option value='Polyester'>Polyester</option>
                                     <option value='Nylon'>Nylon</option>
                                     <option value='Acrylic'>Acrylic</option>
-                                    <option value='Spandex (lycra)'>Spandex (Lycra)</option>
+                                    <option value='Spandex (Lycra)'>Spandex (Lycra)</option>
                                     <option value='Polypropylene'>Polypropylene</option>
                                     <option value='Rayon (Viscose)'>Rayon (Viscose)</option>
                                     <option value='Lyocell (Tencel)'>Lyocell (Tencel)</option>
                                     <option value='Modal'>Modal</option>
                                     <option value='Acetate'>Acetate</option>
+                                    <option value='Other'>Other</option>
                                 </Form.Control>
+                                {(composition != "Cotton" && 
+                                    composition != "Linen" && 
+                                    composition != "Hemp" && 
+                                    composition != "Jute" && 
+                                    composition != "Bamboo" && 
+                                    composition != "Wool" && 
+                                    composition != "Silk" && 
+                                    composition != "Cashmere" && 
+                                    composition != "Angora" && 
+                                    composition != "Polyester" && 
+                                    composition != "Nylon" && 
+                                    composition != "Acrylic" && 
+                                    composition != "Spandex (Lycra)" && 
+                                    composition != "Polypropylene" && 
+                                    composition != "Rayon (Viscose)" && 
+                                    composition != "Lyocell (Tencel)" && 
+                                    composition != "Modal" && 
+                                    composition != "Acetate" || composition == "Other") && composition != "" ?
+                                    <FormControl type='text' name='composition' value={otherComposition} className='mr-sm-2' onChange={handleChangeOtherComposition} placeholder='' />
+                                    :
+                                    null
+                                }
                             </Form.Group>
                             {/* <Form.Group className='mb-3 mt-2'>
                                 <Form.Label>Composition<span className='text-danger'>*</span></Form.Label>

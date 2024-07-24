@@ -360,7 +360,7 @@ const Profile = () => {
                                         </div>
 
                                         <div className='mb-2 d-flex align-items-center'>
-                                            {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 || user.profile_completeness == 75) &&
+                                            {(user.profile_completeness > 0 && user.profile_completeness < 100) &&
                                                 <>
                                                     <div>
                                                         <Button href="/user/complete-profile" type='button' className='btn btn-primary'>
@@ -386,8 +386,8 @@ const Profile = () => {
                                         <div>
                                             <div className="position-relative">
                                                 <label className="progress-bar-value" htmlFor="progress-bar"></label>
-                                                <progress id="progress-bar" value="20" max="100"></progress>
-                                                <div className='fs-12'>Your profile completion is at 20%</div>
+                                                <progress id="progress-bar" value={user.profile_completeness} max="100"></progress>
+                                                <div className='fs-12'>Your profile completion is at {user.profile_completeness}%</div>
                                             </div>
                                         </div>
                                     </div>

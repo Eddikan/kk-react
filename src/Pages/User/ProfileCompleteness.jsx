@@ -68,10 +68,16 @@ const ProfileCompleteness = () => {
     const [socialMediaShow, setSocialMediaShow] = useState(false);
     const [skillShow, setSkillShow] = useState(false);
     const [userImage, setUserImage] = useState('');
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+    const [cookies, setCookie] = useCookies(['currentUser', 'aboutDone', 'addressDone', 'contactDone', 'socialDone']);
+    
     const [areasOfSpecializationData, setAreaOfSpecializationData] = useState(initialDesignerData.areas_of_specialization);
 
     const [areasOfSpecialization, setAreaOfSpecialization] = useState(initialDesignerData.areas_of_specialization);
+
+    const [aboutDone, setAboutDone] = useState(cookies.aboutDone ?? 'No');
+    const [addressDone, setAddressDone] = useState(cookies.addressDone ?? 'No');
+    const [contactDone, setContactDone] = useState(cookies.contactDone ?? 'No');
+    const [socialDone, setSocialDone] = useState(cookies.socialDone ?? 'No');
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -152,6 +158,11 @@ const ProfileCompleteness = () => {
 
     useEffect(() => {
         fetchData({ currentUser: currentUser, token: token });
+        setAboutDone(cookies.aboutDone ?? 'No');
+        setAddressDone(cookies.addressDone ?? 'No');
+        setContactDone(cookies.contactDone ?? 'No');
+        setSocialDone(cookies.socialDone ?? 'No');
+
     }, [reloadCount]);
 
     return (
@@ -211,7 +222,7 @@ const ProfileCompleteness = () => {
                             <Col md={`${completeness != 100 ? '9' : '12'}`} className='flex-grow-1 flex-shrink-0'>
                                 <Card className='h-100'>
                                     <Card.Body>
-                                        {completeness == 0 ?
+                                        {completeness <= 30 || aboutDone != "Yes" ?
                                             <>
                                                 <AboutStep
                                                     currentUser={currentUser}
@@ -220,7 +231,7 @@ const ProfileCompleteness = () => {
                                                     reload={() => setReloadCount(reloadCount + 1)}
                                                 />
                                             </>
-                                        :completeness == 25 ?
+                                        : aboutDone == "Yes" && addressDone != "Yes" ?
                                             <>
                                                 <AddressStep
                                                     currentUser={currentUser}
@@ -229,7 +240,7 @@ const ProfileCompleteness = () => {
                                                     reload={() => setReloadCount(reloadCount + 1)}
                                                 />
                                             </>
-                                        :completeness == 50 ?
+                                        : aboutDone == "Yes" && addressDone == "Yes" && contactDone != "Yes" ?
                                             <>
                                                 <ContactStep
                                                     currentUser={currentUser}
@@ -238,7 +249,7 @@ const ProfileCompleteness = () => {
                                                     reload={() => setReloadCount(reloadCount + 1)}
                                                 />
                                             </>
-                                        :completeness == 75 ?
+                                        : aboutDone == "Yes" && addressDone == "Yes" && contactDone == "Yes" && socialDone != "Yes" && completeness < 100 ?
                                             <>
                                                 <SocialMediaStep
                                                     currentUser={currentUser}
@@ -247,7 +258,7 @@ const ProfileCompleteness = () => {
                                                     reload={() => setReloadCount(reloadCount + 1)}
                                                 />
                                             </>
-                                        :
+                                        : completeness == 100 ?
                                             <>
                                                 <ThankyouStep
                                                     currentUser={currentUser}
@@ -256,6 +267,8 @@ const ProfileCompleteness = () => {
                                                     reload={() => setReloadCount(reloadCount + 1)}
                                                 />
                                             </>
+                                        :
+                                        null
                                         }
                                     </Card.Body>
                                 </Card>

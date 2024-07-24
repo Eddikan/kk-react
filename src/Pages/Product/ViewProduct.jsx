@@ -626,11 +626,15 @@ const ViewProduct = () => {
                                                     <div>
                                                         <p className="mb-2 fs-16 fw-600">Measurements:</p>
                                                         <Row>
-                                                            <Col sm={6}>
+                                                            <Col sm={4}>
+                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Length</p>
+                                                                <p className="mb-1 fs-16 fw-400 line-height-24">{Math.trunc(product.length) ?? "-"} {product.unit_measurement ?? "-"}{product.unit_measurement == 'inch' && product.length > 1 ? 'es' : product.length > 1 ? "s" : null}</p>
+                                                            </Col>
+                                                            <Col sm={4}>
                                                                 <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Width</p>
                                                                 <p className="mb-1 fs-16 fw-400 line-height-24">{Math.trunc(product.width) ?? "-"} {product.unit_measurement ?? "-"}{product.unit_measurement == 'inch' && product.width > 1 ? 'es' : product.width > 1 ? "s" : null}</p>
                                                             </Col>
-                                                            <Col sm={6}>
+                                                            <Col sm={4}>
                                                                 <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Weight</p>
                                                                 <p className="mb-1 fs-16 fw-400 line-height-24">{Math.trunc(product.weight) ?? "-"} KG per sq. {product.unit_measurement ?? "-"}</p>
                                                             </Col>
@@ -674,7 +678,7 @@ const ViewProduct = () => {
                                                         <p className="mb-2 fs-16 fw-600">Specifications:</p>
                                                         <Row>
                                                             <Col sm={6}>
-                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Composition</p>
+                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Primary Fiber</p>
                                                                 <p className="mb-2 fs-16 fw-400 line-height-24">{product.composition ?? "-"}</p>
                                                             </Col>
                                                             <Col sm={6}>

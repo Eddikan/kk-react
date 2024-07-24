@@ -43,11 +43,7 @@ const NewPortfolio = (props) => {
     const [materials, setMaterials] = useState([]);
     const [seasons, setSeasons] = useState([]);
     const [genders, setGenders] = useState([]);
-    const [categories, setCategories] = useState([
-        { id: 1, name: 'Category 1' },
-        { id: 2, name: 'Category 2' },
-        { id: 3, name: 'Category 3' }
-    ]);
+    const [categories, setCategories] = useState([]);
 
     const [guideModalShow, setGuideModalShow] = useState(false);
     const [guidePreviewModalShow, setGuidePreviewModalShow] = useState(false);
@@ -128,7 +124,7 @@ const NewPortfolio = (props) => {
         }).catch((e) => {
             toast.error('An error occured. Please try again or contact the administrator.');
         });
-    }
+    };
 
     async function addCategory(e) {
         e.preventDefault();
@@ -157,10 +153,7 @@ const NewPortfolio = (props) => {
         toast.error('Please upload atleast one photo!');
     } 
     else if (portfolioData.name == '' ||
-            portfolioData.description == '' ||
-            categoryIds.length == 0 ||
-            seasons.length == '' 
-    ) {
+            portfolioData.description == '') {
         toast.error('Kindly complete the fields marked as required!');
     } else {
 
@@ -325,7 +318,7 @@ const NewPortfolio = (props) => {
                     <Card>
                         <Card.Body className="bg-lgray">
                             <Form.Group className='mb-3'>
-                                <Form.Label>Categories<span className='text-danger'>*</span></Form.Label>
+                                <Form.Label>Categories</Form.Label>
                                 {/* <div className='position-relative'>
                                     <FormControl type='text' value={categorySearchTerm} className='mr-sm-2' onChange={(e) => setCategorySearchTerm(e.target.value)} placeholder="" />?
                                     {categorySearchTerm && (
@@ -381,7 +374,6 @@ const NewPortfolio = (props) => {
                                                         type="checkbox"
                                                         checked={categoryIds.includes(id)}
                                                         onChange={() => handleCategoryClick(id)}
-                                                        required
                                                     />
                                                     <span>{name}</span>
                                                 </Form.Group>
@@ -393,7 +385,7 @@ const NewPortfolio = (props) => {
                                 </Row>
                             </Form.Group>
                             <Form.Group className='my-3'>
-                                <Form.Label>Season<span className='text-danger'>*</span></Form.Label>
+                                <Form.Label>Season</Form.Label>
                                 <TagsInput
                                     value={seasons}
                                     onChange={setSeasons}

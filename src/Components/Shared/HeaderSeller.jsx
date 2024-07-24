@@ -222,11 +222,11 @@ const HeaderSeller = () => {
         <>
         {isLoggedIn && 
         <>
-          {(user.profile_completeness == 0 || user.profile_completeness == 25 || user.profile_completeness == 50 || user.profile_completeness == 75)  && 
+          {(user.profile_completeness >= 0 && user.profile_completeness < 100)  && 
             <>
               <div className='banner-completion text-center'>
         
-                <span className='text-white'>Your profile completion is at 20%. 
+                <span className='text-white'>Your profile completion is at {user.profile_completeness}%. 
                   <Link to="/user/complete-profile" className='text-decoration-none'>
                   <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span>
                   </Link>

@@ -135,7 +135,7 @@ const Fabrics = (props) => {
 
         // Call the API with the updated filter values and sorting parameters
         onFilterChange({
-            eco_friendly: selectedSustainabilities.includes('Eco-friendly') ? 1 : null,
+            // eco_friendly: selectedSustainabilities.includes('Eco-friendly') ? 1 : null,
             composition: selectedCompositions,
             weave: selectedWeaves,
             primary_color: primaryColorSearch,
@@ -163,7 +163,7 @@ const Fabrics = (props) => {
 
         // Call the API with the updated filter values and sorting parameters
         onFilterChange({
-            eco_friendly: selectedSustainabilities.includes('Eco-friendly') ? 1 : null,
+            // eco_friendly: selectedSustainabilities.includes('Eco-friendly') ? 1 : null,
             composition: selectedCompositions,
             weave: selectedWeaves,
             primary_color: primaryColorSearch,
@@ -336,7 +336,7 @@ const Fabrics = (props) => {
             const success = response.data.status;
             if (success == 'Success') {
                 onWishlistChange({
-                    eco_friendly: selectedSustainabilities.includes('Eco-friendly') ? 1 : null,
+                    // eco_friendly: selectedSustainabilities.includes('Eco-friendly') ? 1 : null,
                     composition: selectedCompositions,
                     weave: selectedWeaves,
                     primary_color: primaryColorSearch,
@@ -515,7 +515,7 @@ const Fabrics = (props) => {
         if (mounted) {
             // Call the API with the updated filter values
             onFilterChange({
-                eco_friendly: selectedSustainabilities.includes('Eco-friendly') ? 1 : null,
+                // eco_friendly: selectedSustainabilities.includes('Eco-friendly') ? 1 : null,
                 composition: selectedCompositions,
                 weave: selectedWeaves,
                 primary_color: primaryColorSearch,
@@ -642,7 +642,6 @@ const Fabrics = (props) => {
                                                     <option value='inch'>Inch</option>
                                                     <option value='feet'>Feet</option>
                                                     <option value='yard'>Yard</option>
-                                                    <option value='other'>Other</option>
                                                 </Form.Control>
                                             </Form.Group>
                                             <Form.Group as={Col} lg={6}>

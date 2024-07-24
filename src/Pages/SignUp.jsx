@@ -20,6 +20,7 @@ const initialRegisterData = Object.freeze({
   password: '',
   password_confirmation: '',
   event_date: '',
+  over_18: 'Yes'
 });
 
 const SignUp = () => {
@@ -392,7 +393,7 @@ const SignUp = () => {
 
     if (event.target.value === 'Yes') {
       setInterestedIn([]);
-      setRegisterFormData({...registerFormData, event_date: ''})
+      setRegisterFormData({ ...registerFormData, event_date: '' })
     }
   };
 
@@ -471,28 +472,6 @@ const SignUp = () => {
                 <Link to="/">
                   <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" />
                 </Link>
-                {/* {signupType == "designer" ?
-                  <>
-                    <h1 className='text-center'>Designer Registration</h1>
-                    <p className="text-center small mb-0">
-                      Thank you for your interest in becoming a designer with Kouture Konect.
-                    </p>
-                    <div className="divider-small mb-4 mt-3"></div>
-                  </>
-                  : signupType == "seller" ?
-                    <>
-                      <h1 className='text-center'>Fabric Vendor Registration</h1>
-                      <p className="text-center small mb-0">
-                        Thank you for your interest in becoming a vendor with Kouture Konect.
-                      </p>
-                      <div className="divider-small mb-4 mt-3"></div>
-                    </>
-                    :
-                    <>
-                      <h1 className='text-center'>Sign up to Kouture Konect</h1>
-                      <div className="divider-small mb-4 mt-4"></div>
-                    </>
-                } */}
                 <>
                   <h1 className='text-center'>Sign up to Kouture Konect</h1>
                   <p className="text-center small mb-0">
@@ -500,235 +479,240 @@ const SignUp = () => {
                   </p>
                   <div className="divider-small mb-4 mt-3"></div>
                 </>
-                {/* <button className='sign-in-google mt-3'>
-                      <img src={GoogleIcon}/>
-                      <span className='subtitle'>Sign in with Google</span>
-                  </button>
-                  <hr className='mb-0 mt-5'/>
-                  <p className='sign-up-with-email'>or create an account</p> */}
                 <Form onSubmit={registerSubmit}>
-                  {/* <Row>
-                        <Col lg="6">
-                          <Form.Group className='mb-3' controlId='formBasicFirstName'>
-                            <Form.Label>First Name</Form.Label>
-                            <FormControl type='text' name='first_name' onChange={handleChange} className='mr-sm-2' required />
-                          </Form.Group>
-                        </Col>
-                        <Col lg="6">
-                          <Form.Group className='mb-3' controlId='formBasicLastName'>
-                            <Form.Label>Last Name</Form.Label>
-                            <FormControl type='text' name='last_name' onChange={handleChange} className='mr-sm-2' required />
-                          </Form.Group>
-                        </Col>
-                      </Row> */}
-                  <Form.Group className='mb-3' controlId='formBasicEmail'>
-                    <Form.Label>Email Address</Form.Label>
-                    <Email
-                      baseList={baseList}
-                      refineList={domains}
-                      onChange={(e) => handleChangeEmail(e)} // or (newValue) => customSetter(newValue)
-                      value={registerFormData.email}
-                      className="form-control mr-sm-2 email-suggestion"
-                      required
-                    />
-                    {/* <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required /> */}
-                  </Form.Group>
-                  <Form.Group className='mb-3'>
-                    <Form.Label>Password</Form.Label>
-                    <div className="show-password">
-                      <FormControl type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} className='mr-sm-2' required />
-                      {showPassword ?
-                        <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowPassword(false); }} />
-                        :
-                        <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowPassword(true); }} />
-                      }
-                    </div>
-                  </Form.Group>
-                  <Form.Group className='mb-4'>
-                    <Form.Label>Confirm Password</Form.Label>
-                    <div className="show-password">
-                      <FormControl type={showConfirmPassword ? 'text' : 'password'} name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
-                      {showConfirmPassword ?
-                        <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowConfirmPassword(false); }} />
-                        :
-                        <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowConfirmPassword(true); }} />
-                      }
-                    </div>
-                  </Form.Group>
-                  {signupType != "seller" && signupType != "designer" && signupType != "designer_seller" && signupType != "customer" && (
+                  {registerFormData.over_18 && registerFormData.over_18 != "" ?
                     <>
-                      <Form.Group>
-                        <Card className='mb-4'>
-                          <Card.Body>
-                            <Form.Label>Do you want to set up a shop?</Form.Label>
-                            <Row className="mt-2">
-                              <Form.Group as={Col} lg={3}>
-                                <Form.Check
-                                  className="cursor-pointer"
-                                  type="radio"
-                                  label="Yes"
-                                  name="set_up_shop"
-                                  value="Yes"
-                                  required
-                                  checked={selectedOption === 'Yes'}
-                                  onChange={handleChangeSetUpShop}
-                                />
-                              </Form.Group>
-                              <Form.Group as={Col} lg={3}>
-                                <Form.Check
-                                  className="cursor-pointer"
-                                  type="radio"
-                                  label="No"
-                                  name="set_up_shop"
-                                  value="No"
-                                  required
-                                  checked={selectedOption === 'No'}
-                                  onChange={handleChangeSetUpShop}
-                                />
-                              </Form.Group>
-                            </Row>
-                          </Card.Body>
-                        </Card>
+                      {/* <Form.Group className="mb-3">
+                        <Form.Label>Are you over 18?</Form.Label>
+                        <Row className="mt-2">
+                          <Form.Group as={Col} lg={3}>
+                            <Form.Check
+                              className="cursor-pointer"
+                              type="radio"
+                              label="Yes"
+                              name="guardian"
+                              value="Yes"
+                              required
+                              checked={registerFormData.guardian === 'Yes'}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                          <Form.Group as={Col} lg={3}>
+                            <Form.Check
+                              className="cursor-pointer"
+                              type="radio"
+                              label="No"
+                              name="guardian"
+                              value="No"
+                              required
+                              checked={registerFormData.guardian === 'No'}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Row>
                       </Form.Group>
-                    </>
-                  )}
-                  {selectedOption === 'No' && (
-                      <>
-                        <Form.Group>
-                          <Card className='mb-4'>
-                            <Card.Body>
-                              <Form.Label className='mb-2 fs-18'>
-                                Clothing Preferences
-                              </Form.Label>
-                              <Row className="align-items-center mt-1">
-                                <Col md="6">
-                                  <Form.Label className="me-3" style={{ minWidth: '90px' }}>
-                                    <input
-                                      type="checkbox"
-                                      checked={interestedIn.includes('Men')}
-                                      onChange={() => handleInterestChange('Men')}
-                                      className="d-inline-block vertical-align-middle me-1"
-                                    />
-                                    <span>Men's Clothing</span>
-                                  </Form.Label>
-                                </Col>
-                                <Col md="6">
-                                  <Form.Label style={{ minWidth: '90px' }}>
-                                    <input
-                                      type="checkbox"
-                                      checked={interestedIn.includes('Baby/Toddlers')}
-                                      onChange={() => handleInterestChange('Baby/Toddlers')}
-                                      className="d-inline-block vertical-align-middle me-1"
-                                    />
-                                    <span>Baby/Toddler Clothing</span>
-                                  </Form.Label>
-                                </Col>
-                              </Row>
-                              <Row className="align-items-center">
-                                <Col md="6">
-                                  <Form.Label className="me-3" style={{ minWidth: '90px' }}>
-                                    <input
-                                      type="checkbox"
-                                      checked={interestedIn.includes('Women')}
-                                      onChange={() => handleInterestChange('Women')}
-                                      className="d-inline-block vertical-align-middle me-1"
-                                    />
-                                    <span>Women's Clothing</span>
-                                  </Form.Label>
-                                </Col>
-                                <Col md="6">
-                                  <Form.Label style={{ minWidth: '90px' }}>
-                                    <input
-                                      type="checkbox"
-                                      checked={interestedIn.includes('Others')}
-                                      onChange={() => handleInterestChange('Others')}
-                                      className="d-inline-block vertical-align-middle me-1"
-                                    />
-                                    <span>Others</span>
-                                  </Form.Label>
-                                </Col>
-                              </Row>
-                            </Card.Body>
-                          </Card>
-                          <Card className='mb-4'>
-                            <Card.Body>
-                              <Form.Label className='mb-2 fs-18'>
-                                Event Date
-                              </Form.Label>
-                              <Row className="align-items-center mb-3">
-                                <Col md="12">
-                                  <FormControl type='date' name='event_date' onChange={handleChange} className='mr-sm-2' />
-                                </Col>
-                              </Row>
-                            </Card.Body>
-                          </Card>
-                        </Form.Group>
-                      </>
-                    )}
-                  {/* {selectedOption === 'No' && (
-                    <>
+                      {registerFormData.guardian == "No" ?
+                        <>
+                          <div className="alert alert-primary small lh-1-7" role="alert">
+                            You are now creating an account as the parent/guardian of the owner. 
+                          </div>
+                          <hr />
+                        </>
+                        :
+                        null
+                      } */}
+                      
+                      <Form.Group className='mb-3' controlId='formBasicEmail'>
+                        <Form.Label>Email Address</Form.Label>
+                        <Email
+                          baseList={baseList}
+                          refineList={domains}
+                          onChange={(e) => handleChangeEmail(e)} // or (newValue) => customSetter(newValue)
+                          value={registerFormData.email}
+                          className="form-control mr-sm-2 email-suggestion"
+                          required
+                        />
+                        {/* <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required /> */}
+                      </Form.Group>
                       <Form.Group className='mb-3'>
-                        <Form.Label className="mb-3">I'm interested in...</Form.Label>
-                        <div className="interests">
-                          <Form.Label className="me-3" style={{minWidth: '90px'}}>
-                            <input
-                              type="checkbox"
-                              checked={interestedIn.includes('Men')}
-                              onChange={() => handleInterestChange('Men')}
-                              className="d-inline-block vertical-align-middle me-1"
-                            />
-                            <span>Men</span>
-                          </Form.Label>
-                          <Form.Label style={{minWidth: '90px'}}>
-                            <input
-                              type="checkbox"
-                              checked={interestedIn.includes('Baby/Toddlers')}
-                              onChange={() => handleInterestChange('Baby/Toddlers')}
-                              className="d-inline-block vertical-align-middle me-1"
-                            />
-                            <span>Baby/Toddlers</span>
-                          </Form.Label>
-                          <br />
-                          <Form.Label className="me-3" style={{minWidth: '90px'}}>
-                            <input
-                              type="checkbox"
-                              checked={interestedIn.includes('Women')}
-                              onChange={() => handleInterestChange('Women')}
-                              className="d-inline-block vertical-align-middle me-1"
-                            />
-                            <span>Women</span>
-                          </Form.Label>
-                          <Form.Label style={{minWidth: '90px'}}>
-                            <input
-                              type="checkbox"
-                              checked={interestedIn.includes('Others')}
-                              onChange={() => handleInterestChange('Others')}
-                              className="d-inline-block vertical-align-middle me-1"
-                            />
-                            <span>Others</span>
-                          </Form.Label>
+                        <Form.Label>Password</Form.Label>
+                        <div className="show-password">
+                          <FormControl type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} className='mr-sm-2' required />
+                          {showPassword ?
+                            <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowPassword(false); }} />
+                            :
+                            <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowPassword(true); }} />
+                          }
                         </div>
                       </Form.Group>
-                      <Form.Group className='mb-3'>
-                        <Form.Label>Event Date</Form.Label>
-                        <FormControl type='date' name='event_date' onChange={handleChange} className='mr-sm-2' required />
+                      <Form.Group className='mb-4'>
+                        <Form.Label>Confirm Password</Form.Label>
+                        <div className="show-password">
+                          <FormControl type={showConfirmPassword ? 'text' : 'password'} name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
+                          {showConfirmPassword ?
+                            <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowConfirmPassword(false); }} />
+                            :
+                            <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowConfirmPassword(true); }} />
+                          }
+                        </div>
                       </Form.Group>
+                      {signupType != "seller" && signupType != "designer" && signupType != "designer_seller" && signupType != "customer" && (
+                        <>
+                          <Form.Group>
+                            <Card className='mb-4'>
+                              <Card.Body>
+                                <Form.Label>Do you want to set up a shop?</Form.Label>
+                                <Row className="mt-2">
+                                  <Form.Group as={Col} lg={3}>
+                                    <Form.Check
+                                      className="cursor-pointer"
+                                      type="radio"
+                                      label="Yes"
+                                      name="set_up_shop"
+                                      value="Yes"
+                                      required
+                                      checked={selectedOption === 'Yes'}
+                                      onChange={handleChangeSetUpShop}
+                                    />
+                                  </Form.Group>
+                                  <Form.Group as={Col} lg={3}>
+                                    <Form.Check
+                                      className="cursor-pointer"
+                                      type="radio"
+                                      label="No"
+                                      name="set_up_shop"
+                                      value="No"
+                                      required
+                                      checked={selectedOption === 'No'}
+                                      onChange={handleChangeSetUpShop}
+                                    />
+                                  </Form.Group>
+                                </Row>
+                              </Card.Body>
+                            </Card>
+                          </Form.Group>
+                        </>
+                      )}
+                      {selectedOption === 'No' && (
+                        <>
+                          <Form.Group>
+                            <Card className='mb-4'>
+                              <Card.Body>
+                                <Form.Label className='mb-2 fs-18'>
+                                  Clothing Preferences
+                                </Form.Label>
+                                <Row className="align-items-center mt-1">
+                                  <Col md="6">
+                                    <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                      <input
+                                        type="checkbox"
+                                        checked={interestedIn.includes('Men')}
+                                        onChange={() => handleInterestChange('Men')}
+                                        className="d-inline-block vertical-align-middle me-1"
+                                      />
+                                      <span>Men's Clothing</span>
+                                    </Form.Label>
+                                  </Col>
+                                  <Col md="6">
+                                    <Form.Label style={{ minWidth: '90px' }}>
+                                      <input
+                                        type="checkbox"
+                                        checked={interestedIn.includes('Baby/Toddlers')}
+                                        onChange={() => handleInterestChange('Baby/Toddlers')}
+                                        className="d-inline-block vertical-align-middle me-1"
+                                      />
+                                      <span>Baby/Toddler Clothing</span>
+                                    </Form.Label>
+                                  </Col>
+                                </Row>
+                                <Row className="align-items-center">
+                                  <Col md="6">
+                                    <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                      <input
+                                        type="checkbox"
+                                        checked={interestedIn.includes('Women')}
+                                        onChange={() => handleInterestChange('Women')}
+                                        className="d-inline-block vertical-align-middle me-1"
+                                      />
+                                      <span>Women's Clothing</span>
+                                    </Form.Label>
+                                  </Col>
+                                  <Col md="6">
+                                    <Form.Label style={{ minWidth: '90px' }}>
+                                      <input
+                                        type="checkbox"
+                                        checked={interestedIn.includes('Others')}
+                                        onChange={() => handleInterestChange('Others')}
+                                        className="d-inline-block vertical-align-middle me-1"
+                                      />
+                                      <span>Others</span>
+                                    </Form.Label>
+                                  </Col>
+                                </Row>
+                              </Card.Body>
+                            </Card>
+                            <Card className='mb-4'>
+                              <Card.Body>
+                                <Form.Label className='mb-2 fs-18'>
+                                  Event Date
+                                </Form.Label>
+                                <Row className="align-items-center mb-3">
+                                  <Col md="12">
+                                    <FormControl type='date' name='event_date' onChange={handleChange} className='mr-sm-2' />
+                                  </Col>
+                                </Row>
+                              </Card.Body>
+                            </Card>
+                          </Form.Group>
+                        </>
+                      )}
+                      <div className="alert alert-primary mb-0 small lh-1-7" role="alert">
+                        As part of our ongoing commitment to security and user safety, we are requiring users to provide a valid identification document for access to certain enhanced features on our platform.
+                      </div>
+                      {registerFormLoading ?
+                        <Button className='w-100 mt-4' variant='primary' type='submit'>Signing up...</Button>
+                        :
+                        <Button className='w-100 mt-4' variant='primary' type='submit'>Sign up</Button>
+                      }
+                      {googleLoginLoading ?
+                        <Button className='w-100 mt-3' variant='secondary' type='button'>Signing up using Google...</Button>
+                        :
+                        <Button className='w-100 mt-3' variant='secondary' type='button' onClick={login}>Sign up with Google</Button>
+                      }
+                      <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to={`/login?redirect_to=${encodeURIComponent(redirectTo)}`}>Log In</Link></p>
+
                     </>
-                  )} */}
-                  <div className="alert alert-primary mb-0 small lh-1-7" role="alert">
-                    As part of our ongoing commitment to security and user safety, we are requiring users to provide a valid identification document for access to certain enhanced features on our platform.
-                  </div>
-                  {registerFormLoading ?
-                    <Button className='w-100 mt-4' variant='primary' type='submit'>Signing up...</Button>
                     :
-                    <Button className='w-100 mt-4' variant='primary' type='submit'>Sign up</Button>
+                    <Form.Group>
+                      <Form.Label>Are you over 18?</Form.Label>
+                      <Row className="mt-2">
+                        <Form.Group as={Col} lg={3}>
+                          <Form.Check
+                            className="cursor-pointer"
+                            type="radio"
+                            label="Yes"
+                            name="guardian"
+                            value="Yes"
+                            required
+                            checked={registerFormData.guardian === 'Yes'}
+                            onChange={handleChange}
+                          />
+                        </Form.Group>
+                        <Form.Group as={Col} lg={3}>
+                          <Form.Check
+                            className="cursor-pointer"
+                            type="radio"
+                            label="No"
+                            name="guardian"
+                            value="No"
+                            required
+                            checked={registerFormData.guardian === 'No'}
+                            onChange={handleChange}
+                          />
+                        </Form.Group>
+                      </Row>
+                    </Form.Group>
                   }
-                  {googleLoginLoading ?
-                    <Button className='w-100 mt-3' variant='secondary' type='button'>Signing up using Google...</Button>
-                    :
-                    <Button className='w-100 mt-3' variant='secondary' type='button' onClick={login}>Sign up with Google</Button>
-                  }
-                  <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to={`/login?redirect_to=${encodeURIComponent(redirectTo)}`}>Log In</Link></p>
                 </Form>
               </div>
             </Col>

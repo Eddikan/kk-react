@@ -263,7 +263,7 @@ const Designs = (props) => {
         seasonChangeDebounce.cancel();
 
         // Set a new debounce timer
-        searchChangeDebounce(value);
+        seasonChangeDebounce(value);
         setSeasonsValue(value);
     };
 
@@ -418,7 +418,7 @@ const Designs = (props) => {
                 toast.error('An error occured. Please try again or contact the administrator.');
             });
         }
-    }
+    };
 
     async function getPortfolioFilters() {
         axios.get(process.env.REACT_APP_API_ENDPOINT + 'design/filter/type').then((response) => {
@@ -437,7 +437,7 @@ const Designs = (props) => {
         }).catch((e) => {
             toast.error('An error occured. Please try again or contact the administrator.');
         });
-    }
+    };
 
     // Handle checkbox change event
     const handleSelectCategoryChange = (event) => {
