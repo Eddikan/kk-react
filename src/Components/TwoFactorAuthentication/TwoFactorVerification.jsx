@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Row, Col } from "react-bootstrap";
+import { Card, Button, Form, Row, Col } from "react-bootstrap";
 import { useCookies } from 'react-cookie';
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
@@ -470,120 +470,135 @@ const TwoFactorVerification = () => {
         <>
           <Row>
             <Col lg="12" className="text-center">
-              <span className="text-center">Which do you prefer to use?</span>
-              <Row className="mt-4">
-                <Col lg="6">
-                  <Button variant="primary" onClick={emailAuthenticationClick} type="button">Email Authentication</Button>
-                </Col>
-                <Col lg="6">
-                  <Button variant="primary" onClick={smsAuthenticationClick} type="button">SMS Authentication</Button>
-                </Col>
-              </Row>
+              <Form.Group className="mb-3 mt-4">
+                <Card className="text-center">
+                  <Card.Body>
+                    <div className="py-3">
+                      <Form.Label>Choose your 2FA authentication method:</Form.Label>
+                      <Row className="mt-3 justify-content-center">
+                        <Form.Group as={Col} lg={3}>
+                          <Button style={{minWidth: 'auto'}} onClick={() => emailAuthenticationClick()} className='w-100 bg-gold border-gold' variant='secondary' type='button'>Email</Button>
+                        </Form.Group>
+                        <Form.Group as={Col} lg={3}>
+                          <Button style={{minWidth: 'auto'}} onClick={() => smsAuthenticationClick()} className='w-100 bg-black border-black' variant='secondary' type='button'>SMS</Button>
+                        </Form.Group>
+                      </Row>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Form.Group>
             </Col>
           </Row>
         </>
       : twoFactor === 'email' ?
-        <Form onSubmit={loginSubmit} id="loginForm">
-          <Form.Group className="mb-2" controlId="formBasicEmail">
-            <label className="mb-4"
-            // style={{ width: '101%' }}
-            >An email containing the OTP code has been sent to your inbox. Please check your email for the code.</label>
-            <div className="row d-flex justify-content-center">
-              <div className="col-12">
-                <div className="d-flex justify-content-between">
-                  <div className="input-group border-light" style={{ width: '420px' }}>
-                    <span className="input-group-text bg-light border-none" id="basic-addon1"><FaLock color="#A0A2A5" /></span>
-                    <input
-                      type="text"
-                      name='otp'
-                      value={formDataLogin.otp}
-                      className="form-control border-none bg-light ps-0"
-                      style={{ marginRight: '1px', borderTopRightRadius: '5px', borderBottomRightRadius: '5px' }}
-                      onChange={handleChangeLogin}
-                      placeholder="One Time Password"
-                      aria-label="Username"
-                      aria-describedby="basic-addon1"
-                      required />
-                  </div>
-                  <div className="d-flex justify-content-center">
-                    {showTimer || showSendCode ? (
-                      <div className="d-flex align-items-center" style={{ cursor: 'not-allowed', opacity: '0.5' }}>
-                        <label className="mb-0 ms-1" style={{ cursor: 'not-allowed' }}>Resend&nbsp;</label>
+        <Form onSubmit={loginSubmit} style={{marginTop: '30px'}} id="loginForm">
+          <Form.Group className="mb-3 mt-4">
+            <Card>
+              <Card.Body>
+                <div className="py-3">
+                  <Form.Label>An email containing the OTP code has been sent to your inbox. Please check your email for the code.</Form.Label>
+                  <Row className="mt-3 d-flex justify-content-center">
+                    <div className="col-12">
+                      <div className="d-flex justify-content-between" style={{columnGap: '15px'}}>
+                        <div className="input-group border-light">
+                          <span className="input-group-text bg-light border-none" id="basic-addon1"><FaLock color="#A0A2A5" /></span>
+                          <input
+                            type="text"
+                            name='otp'
+                            value={formDataLogin.otp}
+                            className="form-control border-none bg-light ps-0"
+                            style={{ marginRight: '1px', borderTopRightRadius: '5px', borderBottomRightRadius: '5px' }}
+                            onChange={handleChangeLogin}
+                            placeholder="One Time Password"
+                            aria-label="Username"
+                            aria-describedby="basic-addon1"
+                            required />
+                        </div>
+                        <div className="d-flex justify-content-center" style={{columnGap: '8px'}}>
+                          {showTimer || showSendCode ? (
+                            // <div className="d-flex align-items-center" style={{ cursor: 'not-allowed', opacity: '0.5' }}>
+                            //   <label className="mb-0 ms-1" style={{ cursor: 'not-allowed' }}>Resend&nbsp;</label>
+                            // </div>
+                            <Button style={{minWidth: 'auto', cursor: 'not-allowed', opacity: '0.5'}} onClick={() => submitEmailCode()} className='w-100 bg-gold border-gold' variant='secondary' type='button'>Resend</Button>
+                          ) : (
+                            // <div className="d-flex align-items-center" style={{ cursor: 'pointer' }} onClick={submitEmailCode}>
+                            //   <label className="mb-0 ms-1" style={{ cursor: 'pointer' }}>Resend</label>
+                            // </div>
+                            <Button style={{minWidth: 'auto'}} onClick={() => submitEmailCode()} className='w-100 bg-gold border-gold' variant='secondary' type='button'>Resend</Button>
+                          )}
+                          {showTimer && (
+                            <div className="d-flex align-items-center" style={{ opacity: '0.5' }}>
+                              <span>{timer}s</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    ) : (
-                      <div className="d-flex align-items-center" style={{ cursor: 'pointer' }} onClick={submitEmailCode}>
-                        <label className="mb-0 ms-1" style={{ cursor: 'pointer' }}>Resend</label>
-                      </div>
-                    )}
-                    {showTimer && (
-                      <div className="d-flex align-items-center" style={{ opacity: '0.5' }}>
-                        <span>{timer}s</span>
-                      </div>
-                    )}
+                    </div>
+                  </Row>
+                  <div className="mt-4 d-flex justify-content-center">
+                    {formStatus !== "standby" ? 
+                      <Button variant="primary" className='' type="button"
+                        style={{ width: '-webkit-fill-available' }}
+                      >Signing in...</Button> :
+                      <Button variant="primary" className='' style={{ width: '-webkit-fill-available' }} type="submit">Sign in</Button>
+                    }
                   </div>
                 </div>
-              </div>
-            </div>
+              </Card.Body>
+            </Card>
           </Form.Group>
-          <div className="mt-4 d-flex justify-content-center">
-            {formStatus !== "standby" ? 
-              <Button variant="primary" className='' type="button"
-                style={{ width: '-webkit-fill-available' }}
-              >Signing in...</Button> :
-              <Button variant="primary" className='' style={{ width: '-webkit-fill-available' }} type="submit">Sign in</Button>
-            }
-          </div>
         </Form>
         :
-        <Form onSubmit={loginSMSSubmit} id="loginForm">
-          <Form.Group className="mb-2" controlId="formBasicEmail">
-            <label className="mb-4"
-            >A message containing the OTP code has been sent to your phone. Please check your messages for the code.</label>
-            <div className="row d-flex justify-content-center">
-              <div className="col-12">
-                <div className="d-flex justify-content-between">
-                  <div className="input-group border-light" style={{ width: '420px' }}>
-                    <span className="input-group-text bg-light border-none" id="basic-addon1"><FaLock color="#A0A2A5" /></span>
-                    <input
-                      type="text"
-                      name='otp'
-                      value={formDataLogin.otp}
-                      className="form-control border-none bg-light ps-0"
-                      style={{ marginRight: '1px', borderTopRightRadius: '5px', borderBottomRightRadius: '5px' }}
-                      onChange={handleChangeLogin}
-                      placeholder="One Time Password"
-                      aria-label="Username"
-                      aria-describedby="basic-addon1"
-                      required />
-                  </div>
-                  <div className="d-flex justify-content-center">
-                    {showTimer || showSendCode ? (
-                      <div className="d-flex align-items-center" style={{ cursor: 'not-allowed', opacity: '0.5' }}>
-                        <label className="mb-0 ms-1" style={{ cursor: 'not-allowed' }}>Resend&nbsp;</label>
+        <Form onSubmit={loginSMSSubmit} style={{marginTop: '30px'}} id="loginForm">
+          <Form.Group className="mb-3 mt-4">
+            <Card>
+              <Card.Body>
+                <div className="py-3">
+                  <Form.Label>A message containing the OTP code has been sent to your phone. Please check your messages for the code.</Form.Label>
+                  <Row className="mt-3 d-flex justify-content-center">
+                    <div className="col-12">
+                      <div className="d-flex justify-content-between" style={{columnGap: '15px'}}>
+                        <div className="input-group border-light">
+                          <span className="input-group-text bg-light border-none" id="basic-addon1"><FaLock color="#A0A2A5" /></span>
+                          <input
+                            type="text"
+                            name='otp'
+                            value={formDataLogin.otp}
+                            className="form-control border-none bg-light ps-0"
+                            style={{ marginRight: '1px', borderTopRightRadius: '5px', borderBottomRightRadius: '5px' }}
+                            onChange={handleChangeLogin}
+                            placeholder="One Time Password"
+                            aria-label="Username"
+                            aria-describedby="basic-addon1"
+                            required />
+                        </div>
+                        <div className="d-flex justify-content-center" style={{columnGap: '8px'}}>
+                          {showTimer || showSendCode ? (
+                            <Button style={{minWidth: 'auto', cursor: 'not-allowed', opacity: '0.5'}} className='w-100 bg-gold border-gold' variant='secondary' type='button'>Resend</Button>
+                          ) : (
+                            <Button style={{minWidth: 'auto'}} onClick={() => submitPhoneCode()} className='w-100 bg-gold border-gold' variant='secondary' type='button'>Resend</Button>
+                          )}
+                          {showTimer && (
+                            <div className="d-flex align-items-center" style={{ opacity: '0.5' }}>
+                              <span>{timer}s</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    ) : (
-                      <div className="d-flex align-items-center" style={{ cursor: 'pointer' }} onClick={submitPhoneCode}>
-                        <label className="mb-0 ms-1" style={{ cursor: 'pointer' }}>Resend</label>
-                      </div>
-                    )}
-                    {showTimer && (
-                      <div className="d-flex align-items-center" style={{ opacity: '0.5' }}>
-                        <span>{timer}s</span>
-                      </div>
-                    )}
+                    </div>
+                  </Row>
+                  <div className="mt-4 d-flex justify-content-center">
+                    {formStatus !== "standby" ? 
+                      <Button variant="primary" className='' type="button"
+                        style={{ width: '-webkit-fill-available' }}
+                      >Signing in...</Button> :
+                      <Button variant="primary" className='' style={{ width: '-webkit-fill-available' }} type="submit">Sign in</Button>
+                    }
                   </div>
                 </div>
-              </div>
-            </div>
+              </Card.Body>
+            </Card>
           </Form.Group>
-          <div className="mt-4 d-flex justify-content-center">
-            {formStatus !== "standby" ? 
-              <Button variant="primary" className='' type="button"
-                style={{ width: '-webkit-fill-available' }}
-              >Signing in...</Button> :
-              <Button variant="primary" className='' style={{ width: '-webkit-fill-available' }} type="submit">Sign in</Button>
-            }
-          </div>
         </Form>
       }
     </div>
