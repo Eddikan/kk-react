@@ -214,7 +214,7 @@ const ProfileCompleteness = () => {
                                 <Card className='h-100'>
                                     <Card.Body>
                                         <ProfileProgress 
-                                            completeness={completeness}
+                                            completeness={completeness} reloadCount={reloadCount}
                                         />
                                     </Card.Body>
                                 </Card>
@@ -222,7 +222,7 @@ const ProfileCompleteness = () => {
                             <Col md={`${completeness != 100 ? '9' : '12'}`} className='flex-grow-1 flex-shrink-0'>
                                 <Card className='h-100'>
                                     <Card.Body>
-                                        {completeness <= 30 || aboutDone != "Yes" ?
+                                        {completeness <= 30 && aboutDone != "Yes" ?
                                             <>
                                                 <AboutStep
                                                     currentUser={currentUser}

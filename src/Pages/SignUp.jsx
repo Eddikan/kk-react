@@ -3,7 +3,7 @@ import { Email, domains } from '@smastrom/react-email-autocomplete'
 import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
-import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import { Container, Row, Col, Button, Card, Modal } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import '../Assets/styles/SignUp/style.css';
@@ -12,7 +12,7 @@ import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import KoutureLogo from 'Assets/images/kouture-konect-icon.png';
-import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { IoEyeOutline, IoEyeOffOutline, IoInformationCircle  } from "react-icons/io5";
 import { connectFirestoreEmulator } from '@firebase/firestore';
 
 const initialRegisterData = Object.freeze({
@@ -20,7 +20,7 @@ const initialRegisterData = Object.freeze({
   password: '',
   password_confirmation: '',
   event_date: '',
-  over_18: 'Yes'
+  over_18: ''
 });
 
 const SignUp = () => {
@@ -51,6 +51,7 @@ const SignUp = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [infoModalShow, setInfoModalShow] = useState(false);
 
   const currentUser = cookies.currentUser;
   const isLoggedIn = cookies.isLoggedIn;
@@ -242,6 +243,10 @@ const SignUp = () => {
       setRegisterFormLoading(false);
       toast.error('Something went wrong, please contact the administrator!');
     });
+  }
+
+  const toggleInfoModal = (e) => {
+    setInfoModalShow(!infoModalShow);
   }
 
   useEffect(() => {
@@ -482,18 +487,18 @@ const SignUp = () => {
                 <Form onSubmit={registerSubmit}>
                   {registerFormData.over_18 && registerFormData.over_18 != "" ?
                     <>
-                      {/* <Form.Group className="mb-3">
-                        <Form.Label>Are you over 18?</Form.Label>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Are you over 18? <IoInformationCircle className="cursor-pointer" onClick={toggleInfoModal} /></Form.Label>
                         <Row className="mt-2">
                           <Form.Group as={Col} lg={3}>
                             <Form.Check
                               className="cursor-pointer"
                               type="radio"
                               label="Yes"
-                              name="guardian"
+                              name="over_18"
                               value="Yes"
                               required
-                              checked={registerFormData.guardian === 'Yes'}
+                              checked={registerFormData.over_18 === 'Yes'}
                               onChange={handleChange}
                             />
                           </Form.Group>
@@ -502,26 +507,26 @@ const SignUp = () => {
                               className="cursor-pointer"
                               type="radio"
                               label="No"
-                              name="guardian"
+                              name="over_18"
                               value="No"
                               required
-                              checked={registerFormData.guardian === 'No'}
+                              checked={registerFormData.over_18 === 'No'}
                               onChange={handleChange}
                             />
                           </Form.Group>
                         </Row>
                       </Form.Group>
-                      {registerFormData.guardian == "No" ?
+                      {registerFormData.over_18 == "No" ?
                         <>
                           <div className="alert alert-primary small lh-1-7" role="alert">
-                            You are now creating an account as the parent/guardian of the owner. 
+                            You are now creating an account as the parent/guardian of the owner.
                           </div>
                           <hr />
                         </>
                         :
                         null
-                      } */}
-                      
+                      }
+
                       <Form.Group className='mb-3' controlId='formBasicEmail'>
                         <Form.Label>Email Address</Form.Label>
                         <Email
@@ -684,17 +689,17 @@ const SignUp = () => {
                     </>
                     :
                     <Form.Group>
-                      <Form.Label>Are you over 18?</Form.Label>
+                      <Form.Label>Are you over 18? <IoInformationCircle className="cursor-pointer" onClick={toggleInfoModal} /></Form.Label>
                       <Row className="mt-2">
                         <Form.Group as={Col} lg={3}>
                           <Form.Check
                             className="cursor-pointer"
                             type="radio"
                             label="Yes"
-                            name="guardian"
+                            name="over_18"
                             value="Yes"
                             required
-                            checked={registerFormData.guardian === 'Yes'}
+                            checked={registerFormData.over_18 === 'Yes'}
                             onChange={handleChange}
                           />
                         </Form.Group>
@@ -703,10 +708,10 @@ const SignUp = () => {
                             className="cursor-pointer"
                             type="radio"
                             label="No"
-                            name="guardian"
+                            name="over_18"
                             value="No"
                             required
-                            checked={registerFormData.guardian === 'No'}
+                            checked={registerFormData.over_18 === 'No'}
                             onChange={handleChange}
                           />
                         </Form.Group>
@@ -721,6 +726,34 @@ const SignUp = () => {
           </Row>
         </Container>
       </section>
+      <Modal show={infoModalShow} fullscreen={false} onHide={() => setInfoModalShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title><h5 className='modal-title text-left rufina-family fs-22'>Can Minors Sell on Kouture Konect?</h5></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row className="h-100">
+            <Col lg="12">
+              <p>Kouture Konect welcomes minors between the ages of 13 and 17 to buy and sell on Kouture Konect as long as you have the permission and direct supervision of your parent or legal guardian. </p>
+              <p>Your parent or legal guardian must register for the account with their information, and they're responsible for any and all of your activity on the account. All Kouture Konect account owners must be at least 18 years of age, as stated in Kouture Konect's <a href="/about-kouture-konect">Terms of Use</a>. </p>
+              <p>The account you use must meet the following criteria:</p>
+              <ul>
+                <li className="mb-2">
+                  All financial information on the account must be under the parent or legal guardian's name. 
+                </li>
+                <li className="mb-2">
+                  The preferred name on the account must be the parent or legal guardian's name. 
+                </li>
+                <li className="mb-2">
+                  All shop members must be listed in the shop's <a href="/about-kouture-konect">About section</a>, and your parent or legal guardian must be the shop owner.
+                </li>
+                <li className="mb-2">
+                  The email address on the account must belong to the parent or legal guardian. 
+                </li>
+              </ul>
+            </Col>
+          </Row>
+        </Modal.Body>
+      </Modal>
     </LayoutNoFooter>
   );
 };

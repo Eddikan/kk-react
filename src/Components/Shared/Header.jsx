@@ -638,21 +638,21 @@ const Header = () => {
                     <div className="user-dropdown nav-link position-relative" ref={userRef}>                      
                       {userImage ?
                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}>
-                          {(user.profile_completeness > 0 && user.profile_completeness < 100) &&
+                          {/* {(user.profile_completeness >= 0 && user.profile_completeness < 100) &&
                             <div className='profile-alert position-absolute badge-danger text-white text-center'>!
                             </div>
-                          }
+                          } */}
                         </div>
                         :
                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}>
-                          {(user.profile_completeness > 0 && user.profile_completeness < 100) &&
+                          {/* {(user.profile_completeness >= 0 && user.profile_completeness < 100) &&
                             <div className='profile-alert position-absolute badge-danger text-white text-center'>!
                             </div>
-                          }
+                          } */}
                         </div>
                       }
                       {userMenuOpen && (
-                        <div className={(user.profile_completeness > 0 && user.profile_completeness < 100) 
+                        <div className={(user.profile_completeness >= 0 && user.profile_completeness < 100) 
                           ? "action-box-incomplete-profile user-menu" 
                           : "action-box user-menu"}>
 
@@ -682,7 +682,7 @@ const Header = () => {
                                   </Link>    
                                 </Col>
                                 <Col lg="12" className="text-center" >                                                    
-                                  {(user.profile_completeness > 0 && user.profile_completeness < 100) &&
+                                  {(user.profile_completeness >= 0 && user.profile_completeness < 100) &&
                                     <Link to={`/user/complete-profile`} className="mt-2 text-decoration-none d-block d-contents d-flex">
                                       <Button className="">Complete Your Profile</Button>
                                     </Link>

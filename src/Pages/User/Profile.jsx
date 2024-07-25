@@ -466,10 +466,16 @@ const Profile = () => {
                                         <p className='short-bio-designer mb-4'>
                                             {user.short_bio && user.short_bio != "" ? user.short_bio : "-"}
                                         </p>
-                                        <p className='long-bio-title mb-1'>Long Bio</p>
-                                        <p className='long-bio-designer mb-0 scroll-body'>
-                                            {user.long_bio && user.long_bio != "" ? user.long_bio : "-"}
-                                        </p>
+                                        {user.is_designer && user.is_seller ?
+                                            <>
+                                                <p className='long-bio-title mb-1'>Long Bio</p>
+                                                <p className='long-bio-designer mb-0 scroll-body'>
+                                                    {user.long_bio && user.long_bio != "" ? user.long_bio : "-"}
+                                                </p>
+                                            </>
+                                            :
+                                            null
+                                        }
                                         {user.is_designer ?
                                             <>
                                                 <p className='areas-specialization mt-3 mb-3'>Areas of Specialization and Expertise</p>

@@ -1,19 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import 'Assets/styles/Completeness/progress.css';
 import { FaCheck } from "react-icons/fa";
+import { useCookies } from 'react-cookie';
 
-const ProfileProgress = ({ completeness }) => {
+const ProfileProgress = ({ completeness, reloadCount }) => {
+    const [cookies, setCookie] = useCookies(['currentUser', 'aboutDone', 'addressDone', 'contactDone', 'socialDone']);
+
+    const [aboutDone, setAboutDone] = useState(cookies.aboutDone ?? 'No');
+    const [addressDone, setAddressDone] = useState(cookies.addressDone ?? 'No');
+    const [contactDone, setContactDone] = useState(cookies.contactDone ?? 'No');
+    const [socialDone, setSocialDone] = useState(cookies.socialDone ?? 'No');
 
     // const step1 = [0];
     // const step2 = [0, 25];
     // const step3 = [0, 25, 50];
     // const step4 = [0, 25, 50, 75];
 
+    useEffect(() => {
+        setAboutDone(cookies.aboutDone ?? 'No');
+        setAddressDone(cookies.addressDone ?? 'No');
+        setContactDone(cookies.contactDone ?? 'No');
+        setSocialDone(cookies.socialDone ?? 'No');
+
+    }, [reloadCount]);
+
     return (
         <>
             <div className='wizard-cont'>
                 <div className='w-100 step-container'>
-                    {completeness < 30 ?
+                    { aboutDone != "Yes" ?
                         <>
                             <div className='d-flex align-items-center active'>
                                 <div className='progress-circle progress-circle-active'>
@@ -22,7 +37,7 @@ const ProfileProgress = ({ completeness }) => {
                                 <span className='ms-2 fw-500'>Personal Information</span>
                             </div>
                         </>
-                    :completeness >= 30 ?
+                    : aboutDone == "Yes" ?
                         <>
                             <div className='d-flex align-items-center check'>
                                 <div className='progress-circle progress-circle-check'>
@@ -43,7 +58,7 @@ const ProfileProgress = ({ completeness }) => {
                     }
                 </div>
                 <div className='w-100 step-container'>
-                    {completeness >= 30 && completeness < 55 ?
+                    {aboutDone == "Yes" && addressDone != "Yes" ?
                         <>
                             <div className='d-flex align-items-center active'>
                                 <div className='progress-circle progress-circle-active'>
@@ -52,7 +67,7 @@ const ProfileProgress = ({ completeness }) => {
                                 <span className='ms-2 fw-500'>Address Details</span>
                             </div>
                         </>
-                    :completeness >= 55 ?
+                    : aboutDone == "Yes" && addressDone == "Yes" ?
                         <>
                             <div className='d-flex align-items-center check'>
                                 <div className='progress-circle progress-circle-check'>
@@ -73,7 +88,7 @@ const ProfileProgress = ({ completeness }) => {
                     }
                 </div>
                 <div className='w-100 step-container'>
-                    {completeness >= 55 && completeness < 70 ?
+                    {aboutDone == "Yes" && addressDone == "Yes" && contactDone != "Yes" ?
                         <>
                             <div className='d-flex align-items-center active'>
                                 <div className='progress-circle progress-circle-active'>
@@ -82,7 +97,7 @@ const ProfileProgress = ({ completeness }) => {
                                 <span className='ms-2 fw-500'>Contact Information</span>
                             </div>
                         </>
-                    : completeness >= 70 ?
+                    : aboutDone == "Yes" && addressDone == "Yes" && contactDone == "Yes" ?
                         <>
                             <div className='d-flex align-items-center check'>
                                 <div className='progress-circle progress-circle-check'>
@@ -103,7 +118,7 @@ const ProfileProgress = ({ completeness }) => {
                     }
                 </div>
                 <div className='w-100 step-container'>
-                    {completeness >= 70 && completeness < 100 ?
+                    {aboutDone == "Yes" && addressDone == "Yes" && contactDone == "Yes" && socialDone != "Yes" && completeness < 100 ?
                         <>
                             <div className='d-flex align-items-center active'>
                                 <div className='progress-circle progress-circle-active'>
@@ -133,7 +148,7 @@ const ProfileProgress = ({ completeness }) => {
                     }
                 </div>
                 <div className='progress-lines'>
-                    {completeness >= 0 ?
+                    {aboutDone == "Yes" ?
                         <>
                             <div className='progress-line line-active'></div>
                         </>
@@ -142,7 +157,7 @@ const ProfileProgress = ({ completeness }) => {
                             <div className='progress-line'></div>
                         </>
                     }
-                    {completeness >= 55 ?
+                    {addressDone == "Yes" ?
                         <>
                             <div className='progress-line line-active'></div>
                         </>
@@ -151,7 +166,7 @@ const ProfileProgress = ({ completeness }) => {
                             <div className='progress-line'></div>
                         </>
                     }
-                    {completeness >= 70 ?
+                    {contactDone == "Yes" ?
                         <>
                             <div className='progress-line line-active'></div>
                         </>

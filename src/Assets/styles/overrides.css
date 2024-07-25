@@ -2512,3 +2512,7 @@ span.rti--tag {
     padding: 7px 10px 8px 10px;
     line-height: 1;
 }
+
+.modal-header .btn-close {
+    margin-top: -15px;
+}
