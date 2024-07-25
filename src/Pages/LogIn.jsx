@@ -54,6 +54,10 @@ const LogIn = () => {
     return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'email-2fa', data);
   };
 
+  const postSMSCode = async (data) => {
+    return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'sms-2fa', data);
+  };
+
   const handleChange = (e) => {
     setLoginFormData({
       ...loginFormData,
@@ -155,6 +159,44 @@ const LogIn = () => {
     });
   }
 
+  const submitSMSCode = async (email) => {
+
+    let uniqueId = deviceId;
+
+    if (deviceId === undefined) {
+      uniqueId = await generateUniqueId();
+      setCookie('device_id', uniqueId, { path: '/' });
+    }
+
+    postSMSCode({ email: email, device_id: uniqueId }).then(response => {
+      const success = response.data.status;
+      if (success == "Success") {
+        window.location.href = '/two-factor-authentication?redirect_to=' + redirect_to;
+        setLoginFormLoading(false);
+      } else {
+        window.location.href = '/two-factor-authentication?redirect_to=' + redirect_to;
+        setLoginFormLoading(false);
+      }
+    }).catch((error) => {
+      alert(error);
+      window.location.href = '/two-factor-authentication?redirect_to=' + redirect_to;
+      setLoginFormLoading(false);
+    });
+  }
+
+  const submitTwoFactor = async (email) => {
+
+    let uniqueId = deviceId;
+
+    if (deviceId === undefined) {
+      uniqueId = await generateUniqueId();
+      setCookie('device_id', uniqueId, { path: '/' });
+    }
+
+    window.location.href = '/two-factor-authentication?redirect_to=' + redirect_to;
+    setLoginFormLoading(false);
+  }
+
   async function loginSubmit(e) {
     e.preventDefault();
     setLoginFormLoading(true);
@@ -163,10 +205,21 @@ const LogIn = () => {
       if (success == 'Success') {
         const data = response.data.data;
         const user = data.user;
-        if (data?.two_factor_authentication == 'email') {
+        if (data?.two_factor_authentication == 'Both' ) {
+          setCookie('email', data.user.email, { path: '/' });
+          setCookie('two_factor', "both", { path: '/' });
+          submitTwoFactor(data.user.email);
+
+        } else if (data?.two_factor_authentication == 'Email') { 
           setCookie('email', data.user.email, { path: '/' });
           setCookie('two_factor', "email", { path: '/' });
           submitEmailCode(data.user.email);
+
+        } else if (data?.two_factor_authentication == 'SMS') {
+          setCookie('email', data.user.email, { path: '/' });
+          setCookie('two_factor', "sms", { path: '/' });
+          submitSMSCode(data.user.email);
+
         } else {
           if (tempCart && tempCart.length > 0) {
             addTempCartToCart({ order_items: tempCart, user_id: user.id });
@@ -236,8 +289,8 @@ const LogIn = () => {
         }
 
         setLoginFormLoading(false);
-      }
-      // setLoginFormLoading(false);
+        }
+        // setLoginFormLoading(false);
     }).catch((error) => {
       setLoginFormLoading(false);
       toast.error('Something went wrong, please contact the administrator!');
@@ -250,48 +303,42 @@ const LogIn = () => {
       if (success == 'Success') {
         const data = response.data.data;
         const user = data.user;
-        if (data?.two_factor_authentication == 'email') {
-          setCookie('email', data.user.email, { path: '/' });
-          setCookie('two_factor', "email", { path: '/' });
-          submitEmailCode(data.user.email);
+        if (user.designer) {
+          setCookie('currentUserDesigner', JSON.stringify(user.designer.id), { path: '/' });
+        }
+        if (user.seller) {
+          setCookie('currentUserSeller', JSON.stringify(user.seller.id), { path: '/' });
+        }
+        if (user.role == 'Admin') {
+          toast.success('Successfully signed in!');
+          setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
+          setCookie('userRole', JSON.stringify(user.role), { path: '/' });
+          const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer }
+          setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+          setCookie('isLoggedIn', true, { path: '/' });
+          setCookie('token', data.token, { path: '/' });
+          setCookie('signup_type', user.signup_type, { path: '/' });
+          setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
+          setCookie('token', data.token, { path: '/' });
+          setTimeout(function () {
+            navigate("/admin/users");
+            setGoogleLoginLoading(false);
+          }, 1000);
         } else {
-          if (user.designer) {
-            setCookie('currentUserDesigner', JSON.stringify(user.designer.id), { path: '/' });
-          }
-          if (user.seller) {
-            setCookie('currentUserSeller', JSON.stringify(user.seller.id), { path: '/' });
-          }
-          if (user.role == 'Admin') {
-            toast.success('Successfully signed in!');
-            setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
-            setCookie('userRole', JSON.stringify(user.role), { path: '/' });
-            const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer }
-            setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-            setCookie('isLoggedIn', true, { path: '/' });
-            setCookie('token', data.token, { path: '/' });
-            setCookie('signup_type', user.signup_type, { path: '/' });
-            setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
-            setCookie('token', data.token, { path: '/' });
-            setTimeout(function () {
-              navigate("/admin/users");
-              setGoogleLoginLoading(false);
-            }, 1000);
-          } else {
-            toast.success('Successfully signed in!');
-            setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
-            setCookie('userRole', JSON.stringify(user.role), { path: '/' });
-            const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer, shop_completed: user.shop_completed, profile_completeness: user.profile_completeness }
-            setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-            setCookie('isLoggedIn', true, { path: '/' });
-            setCookie('token', data.token, { path: '/' });
-            setCookie('signup_type', user.signup_type, { path: '/' });
-            setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
-            setCookie('token', data.token, { path: '/' });
-            setTimeout(function () {
-              navigate("/");
-              setGoogleLoginLoading(false);
-            }, 1000);
-          }
+          toast.success('Successfully signed in!');
+          setCookie('currentUser', JSON.stringify(user.id), { path: '/' });
+          setCookie('userRole', JSON.stringify(user.role), { path: '/' });
+          const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer, shop_completed: user.shop_completed, profile_completeness: user.profile_completeness }
+          setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+          setCookie('isLoggedIn', true, { path: '/' });
+          setCookie('token', data.token, { path: '/' });
+          setCookie('signup_type', user.signup_type, { path: '/' });
+          setCookie('completed_questionnaire', user.completed_questionnaire, { path: '/' });
+          setCookie('token', data.token, { path: '/' });
+          setTimeout(function () {
+            navigate("/");
+            setGoogleLoginLoading(false);
+          }, 1000);
         }
 
       } else {
@@ -360,10 +407,21 @@ const LogIn = () => {
           const data = response.data.data;
           if (data) {
             const user = data.user;
-            if (data?.two_factor_authentication == 'email') {
+            if (data?.two_factor_authentication == 'Both' ) {
+              setCookie('email', data.user.email, { path: '/' });
+              setCookie('two_factor', "both", { path: '/' });
+              submitTwoFactor(data.user.email);
+
+            } else if (data?.two_factor_authentication == 'Email') {
               setCookie('email', data.user.email, { path: '/' });
               setCookie('two_factor', "email", { path: '/' });
               submitEmailCode(data.user.email);
+
+            } else if (data?.two_factor_authentication == 'SMS') {
+              setCookie('email', data.user.email, { path: '/' });
+              setCookie('two_factor', "sms", { path: '/' });
+              submitSMSCode(data.user.email);
+
             } else {
               if (user.designer) {
                 setCookie('currentUserDesigner', JSON.stringify(user.designer.id), { path: '/' });

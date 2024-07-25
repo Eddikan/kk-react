@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
-import { Container, Row, Col, Button, Modal, Card } from 'react-bootstrap';
+import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import 'Assets/styles/User/Profile/style.css'
 import UserPlaceholder from 'Assets/images/user.png';
 import Loading from 'Assets/images/loading.gif'
@@ -76,6 +76,7 @@ const Profile = () => {
     const [processShow, setProcessShow] = useState(false);
     const [limitedDesignShow, setLimitedDesignShow] = useState(false);
     const [myCalendarShow, setMyCalendarShow] = useState(false);
+    const [securityShow, setSecurityShow] = useState(false);
     const [formStatus, setFormStatus] = useState('standby');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'activeProfileTab', 'userDetails']);
     const [areasOfSpecialization, setAreaOfSpecialization] = useState([]);
@@ -176,6 +177,36 @@ const Profile = () => {
         });
     }
 
+    async function handleEmailAuthChange(event) {
+        const newValue = event.target.checked ? 1 : 0; 
+        updateSecurity('email_two_factor_authentication', newValue );
+    }
+    
+    async function handleSMSAuthChange(event) {
+        const newValue = event.target.checked ? 1 : 0; 
+        updateSecurity('sms_two_factor_authentication', newValue );
+    }
+
+    async function updateSecurity(fieldName, value) {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {
+            [fieldName]: value
+        }).then((response) => {
+            const success = response.data.status;
+            const data = response.data.data;
+            if (success === 'Success') {
+                setUser((prevUser) => ({
+                    ...prevUser,
+                    [fieldName]: value,
+                }));
+                toast.success('Updated successfully!');
+            } else {
+                toast.error('An error occured. Please try again or contact the administrator.');
+            }
+        }).catch(() => {
+            toast.error('An error occured. Please try again or contact the administrator.');
+        });
+    }
+
     const showTab = (tab) => {
         if (tab === "about") {
             setAboutShow(true);
@@ -184,6 +215,7 @@ const Profile = () => {
             setProcessShow(false);
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
+            setSecurityShow(false);
 
         } else if (tab == "portfolio") {
             setPortfolioShow(true);
@@ -192,6 +224,7 @@ const Profile = () => {
             setProcessShow(false);
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
+            setSecurityShow(false);
 
         } else if (tab == "fabric") {
             setFabricShow(true);
@@ -200,6 +233,7 @@ const Profile = () => {
             setProcessShow(false);
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
+            setSecurityShow(false);
 
         } else if (tab == "process") {
             setProcessShow(true);
@@ -208,6 +242,7 @@ const Profile = () => {
             setFabricShow(false);
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
+            setSecurityShow(false);
 
         } else if (tab == "calendar") {
             setLimitedDesignShow(true);
@@ -216,6 +251,7 @@ const Profile = () => {
             setAboutShow(false);
             setFabricShow(false);
             setMyCalendarShow(false);
+            setSecurityShow(false);
 
         } else if (tab == "my_calendar") {
             setLimitedDesignShow(false);
@@ -224,6 +260,16 @@ const Profile = () => {
             setAboutShow(false);
             setFabricShow(false);
             setMyCalendarShow(true);
+            setSecurityShow(false);
+
+        } else if (tab == "security") {
+            setLimitedDesignShow(false);
+            setProcessShow(false);
+            setPortfolioShow(false);
+            setAboutShow(false);
+            setFabricShow(false);
+            setMyCalendarShow(false);
+            setSecurityShow(true);
         }
     }
 
@@ -452,6 +498,7 @@ const Profile = () => {
                                 {user.is_designer == 1 && (
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${myCalendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("my_calendar") }}>Calendar</span>
                                 )}
+                                <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${securityShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("security"); }}>Security</span>
                                 {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${processShow ? 'fw-600' : ''}`} onClick={function () { showTab("process") }}>Process</span>
                                 <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${limitedDesignShow ? 'fw-600' : ''}`} onClick={function () { showTab("limited_design"); }}>Limited Design</span> */}
                                 <hr className='mt-2' />
@@ -644,6 +691,39 @@ const Profile = () => {
                             </div>
                             :
                             null
+                        }
+
+                        {securityShow ?
+                            <div id="about-portfolio">
+                            <Row>
+                                <Col lg="6">
+                                    <p className='title-designer mb-2'>Two Factor Authentication</p>
+                                    <p className='short-bio-designer mb-4'>
+                                        <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                            <input
+                                            type="checkbox"
+                                            checked={user.email_two_factor_authentication}
+                                            onChange={handleEmailAuthChange}
+                                            className="d-inline-block vertical-align-middle me-1"
+                                            />
+                                            <span>Enable Email Authentication</span>
+                                        </Form.Label>
+                                        <br />
+                                        <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                            <input
+                                            type="checkbox"
+                                            checked={user.sms_two_factor_authentication}
+                                            onChange={handleSMSAuthChange}
+                                            className="d-inline-block vertical-align-middle me-1"
+                                            />
+                                            <span>Enable SMS Authentication</span>
+                                        </Form.Label>
+                                    </p>
+                                </Col>
+                            </Row>
+                        </div>
+                        :
+                        null
                         }
                     </Container>
                 </section >

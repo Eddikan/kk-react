@@ -1,20 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Row, Col } from "react-bootstrap";
 import { useCookies } from 'react-cookie';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import { FaLock } from "react-icons/fa6";
 import toast from 'react-hot-toast';
-
-const ToastCss = {
-  position: 'top-right',
-  autoClose: 1500,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-};
+import GoBack from 'Components/Shared/GoBack';
 
 const initialFormDataLogin = Object.freeze({
   email: '', password: '',
@@ -42,7 +33,7 @@ const TwoFactorVerification = () => {
   const roleLink = siteCookies.roleLink;
   const email = siteCookies.email;
   const deviceId = siteCookies.device_id;
-  const twoFactor = siteCookies.two_factor;
+  const [twoFactor, setTwoFactor] = useState(siteCookies.two_factor);
   const userRole = siteCookies.userRole;
 
   const navigate = useNavigate();  
@@ -79,7 +70,7 @@ const TwoFactorVerification = () => {
 
   useEffect(() => {
     // ComponentDidMount logic goes here
-    // This will be executed after the component is mounted
+    // This will be executed after the component is mounted 
     // You can keep your other useEffect hooks below this one
 
     return () => {
@@ -365,15 +356,18 @@ const TwoFactorVerification = () => {
         toast.success('Send Code Successfully!');
         startTimer();
       } else {
+        setShowSendCode(false);
         toast.error('Something went wrong, please contact the administrator!');
       }
     }).catch((error) => {
       alert(error);
+      setShowSendCode(false);
       toast.error('Something went wrong, please contact the administrator!');
     });
   }
 
   const submitPhoneCode = async () => {
+    setShowSendCode(true);
 
     let uniqueId = deviceId;
 
@@ -389,14 +383,18 @@ const TwoFactorVerification = () => {
         toast.success('Send Code Successfully!');
         startTimer();
       } else if (errors === "Phone number does not exist") {
+        setShowSendCode(false);
         toast.error('Phone number does not exist!');
       } else if (errors === "Failed to send SMS") {
-        toast.error('Failed to send SMS!');
+        setShowSendCode(false);
+        toast.error('Failed to send SMS!'); 
       } else {
+        setShowSendCode(false);
         toast.error('Something went wrong, please contact the administrator!');
       }
     }).catch((error) => {
       alert(error);
+      setShowSendCode(false);
       toast.error('Something went wrong, please contact the administrator!');
     });
   }
@@ -418,9 +416,73 @@ const TwoFactorVerification = () => {
     setShowSendCode(false);
   };
 
+  const emailAuthenticationClick = () => {
+    setTwoFactor('email');
+
+    let uniqueId = deviceId;
+
+    if (deviceId === undefined) {
+      uniqueId = generateUniqueId();
+      setCookies('device_id', uniqueId, { path: '/' });
+    }
+
+    postEmailCode({ email: email, device_id: uniqueId }).then(response => {
+      const success = response.data.status;
+      if (success === "Success") {
+      } else {
+        toast.error('Something went wrong, please contact the administrator!');
+      }
+    }).catch((error) => {
+      alert(error);
+      toast.error('Something went wrong, please contact the administrator!');
+    });
+  }
+
+  const smsAuthenticationClick = () => {
+    setTwoFactor('SMS');
+        let uniqueId = deviceId;
+
+      if (deviceId === undefined) {
+        uniqueId = generateUniqueId();
+        setCookies('device_id', uniqueId, { path: '/' });
+      }
+
+    postSMSCode({ email: email, device_id: uniqueId }).then(response => {
+      const success = response.data.status;
+      const errors = response.data.errors;
+      if (success === "Success") {
+      } else if (errors === "Phone number does not exist") {
+        toast.error('Phone number does not exist!');
+      } else if (errors === "Failed to send SMS") {
+        toast.error('Failed to send SMS!'); 
+      } else {
+        toast.error('Something went wrong, please contact the administrator!');
+      }
+    }).catch((error) => {
+      alert(error);
+      toast.error('Something went wrong, please contact the administrator!');
+    });
+  }
+
   return (
     <div>
-      {twoFactor === 'email' ?
+      { twoFactor === 'both' ?
+        <>
+          <Row>
+            <Col lg="12" className="text-center">
+              <span className="text-center">Which do you prefer to use?</span>
+              <Row className="mt-4">
+                <Col lg="6">
+                  <Button variant="primary" onClick={emailAuthenticationClick} type="button">Email Authentication</Button>
+                </Col>
+                <Col lg="6">
+                  <Button variant="primary" onClick={smsAuthenticationClick} type="button">SMS Authentication</Button>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </>
+      : twoFactor === 'email' ?
         <Form onSubmit={loginSubmit} id="loginForm">
           <Form.Group className="mb-2" controlId="formBasicEmail">
             <label className="mb-4"
@@ -446,11 +508,11 @@ const TwoFactorVerification = () => {
                   <div className="d-flex justify-content-center">
                     {showTimer || showSendCode ? (
                       <div className="d-flex align-items-center" style={{ cursor: 'not-allowed', opacity: '0.5' }}>
-                        <label className="mb-0 ms-1" style={{ cursor: 'not-allowed' }}>Send Code&nbsp;</label>
+                        <label className="mb-0 ms-1" style={{ cursor: 'not-allowed' }}>Resend&nbsp;</label>
                       </div>
                     ) : (
                       <div className="d-flex align-items-center" style={{ cursor: 'pointer' }} onClick={submitEmailCode}>
-                        <label className="mb-0 ms-1" style={{ cursor: 'pointer' }}>Send Code</label>
+                        <label className="mb-0 ms-1" style={{ cursor: 'pointer' }}>Resend</label>
                       </div>
                     )}
                     {showTimer && (
@@ -497,11 +559,11 @@ const TwoFactorVerification = () => {
                   <div className="d-flex justify-content-center">
                     {showTimer || showSendCode ? (
                       <div className="d-flex align-items-center" style={{ cursor: 'not-allowed', opacity: '0.5' }}>
-                        <label className="mb-0 ms-1" style={{ cursor: 'not-allowed' }}>Send Code&nbsp;</label>
+                        <label className="mb-0 ms-1" style={{ cursor: 'not-allowed' }}>Resend&nbsp;</label>
                       </div>
                     ) : (
                       <div className="d-flex align-items-center" style={{ cursor: 'pointer' }} onClick={submitPhoneCode}>
-                        <label className="mb-0 ms-1" style={{ cursor: 'pointer' }}>Send Code</label>
+                        <label className="mb-0 ms-1" style={{ cursor: 'pointer' }}>Resend</label>
                       </div>
                     )}
                     {showTimer && (
