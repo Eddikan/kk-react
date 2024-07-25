@@ -80,6 +80,13 @@ const SignUp = () => {
     })
   };
 
+  const handleChangeOver18 = (e) => {
+    setRegisterFormData({
+      ...registerFormData,
+      over_18: e,
+    })
+  }
+
   const handleChangeEmail = (e) => {
     setRegisterFormData({
       ...registerFormData,
@@ -484,37 +491,33 @@ const SignUp = () => {
                   </p>
                   <div className="divider-small mb-4 mt-3"></div>
                 </>
-                <Form onSubmit={registerSubmit}>
+                <Form style={{marginTop: '30px' }}onSubmit={registerSubmit}>
                   {registerFormData.over_18 && registerFormData.over_18 != "" ?
                     <>
-                      <Form.Group className="mb-3">
-                        <Form.Label>Are you over 18? <IoInformationCircle className="cursor-pointer" onClick={toggleInfoModal} /></Form.Label>
-                        <Row className="mt-2">
-                          <Form.Group as={Col} lg={3}>
-                            <Form.Check
-                              className="cursor-pointer"
-                              type="radio"
-                              label="Yes"
-                              name="over_18"
-                              value="Yes"
-                              required
-                              checked={registerFormData.over_18 === 'Yes'}
-                              onChange={handleChange}
-                            />
-                          </Form.Group>
-                          <Form.Group as={Col} lg={3}>
-                            <Form.Check
-                              className="cursor-pointer"
-                              type="radio"
-                              label="No"
-                              name="over_18"
-                              value="No"
-                              required
-                              checked={registerFormData.over_18 === 'No'}
-                              onChange={handleChange}
-                            />
-                          </Form.Group>
-                        </Row>
+                      <Form.Group className="mb-3 mt-4">
+                        <Card className="text-center">
+                          <Card.Body>
+                            <div className="py-3">
+                              <Form.Label>Are you over 18? <IoInformationCircle className="cursor-pointer" onClick={toggleInfoModal} /></Form.Label>
+                              <Row className="mt-3 justify-content-center">
+                                <Form.Group as={Col} lg={3}>
+                                  {registerFormData.over_18 == "Yes" ?
+                                    <Button style={{minWidth: 'auto'}} onClick={() => handleChangeOver18("Yes")} className='w-100 bg-white text-gold border-gold' variant='secondary' type='button'>Yes</Button>
+                                    :
+                                    <Button style={{minWidth: 'auto'}} onClick={() => handleChangeOver18("Yes")} className='w-100 bg-gold border-gold' variant='secondary' type='button'>Yes</Button>
+                                  }
+                                </Form.Group>
+                                <Form.Group as={Col} lg={3}>
+                                  {registerFormData.over_18 == "No" ?
+                                    <Button style={{minWidth: 'auto'}} onClick={() => handleChangeOver18("No")} className='w-100 bg-white text-black' variant='secondary' type='button'>No</Button>
+                                    :
+                                    <Button style={{minWidth: 'auto'}} onClick={() => handleChangeOver18("No")} className='w-100 bg-black border-black' variant='secondary' type='button'>No</Button>
+                                  }
+                                </Form.Group>
+                              </Row>
+                            </div>
+                          </Card.Body>
+                        </Card>
                       </Form.Group>
                       {registerFormData.over_18 == "No" ?
                         <>
@@ -526,7 +529,6 @@ const SignUp = () => {
                         :
                         null
                       }
-
                       <Form.Group className='mb-3' controlId='formBasicEmail'>
                         <Form.Label>Email Address</Form.Label>
                         <Email
@@ -684,40 +686,35 @@ const SignUp = () => {
                         :
                         <Button className='w-100 mt-3' variant='secondary' type='button' onClick={login}>Sign up with Google</Button>
                       }
-                      <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to={`/login?redirect_to=${encodeURIComponent(redirectTo)}`}>Log In</Link></p>
-
                     </>
                     :
-                    <Form.Group>
-                      <Form.Label>Are you over 18? <IoInformationCircle className="cursor-pointer" onClick={toggleInfoModal} /></Form.Label>
-                      <Row className="mt-2">
-                        <Form.Group as={Col} lg={3}>
-                          <Form.Check
-                            className="cursor-pointer"
-                            type="radio"
-                            label="Yes"
-                            name="over_18"
-                            value="Yes"
-                            required
-                            checked={registerFormData.over_18 === 'Yes'}
-                            onChange={handleChange}
-                          />
-                        </Form.Group>
-                        <Form.Group as={Col} lg={3}>
-                          <Form.Check
-                            className="cursor-pointer"
-                            type="radio"
-                            label="No"
-                            name="over_18"
-                            value="No"
-                            required
-                            checked={registerFormData.over_18 === 'No'}
-                            onChange={handleChange}
-                          />
-                        </Form.Group>
-                      </Row>
+                    <Form.Group className="mb-3 mt-4">
+                      <Card className="text-center">
+                        <Card.Body>
+                          <div className="py-3">
+                            <Form.Label>Are you over 18 years of age? <IoInformationCircle className="cursor-pointer" onClick={toggleInfoModal} /></Form.Label>
+                            <Row className="mt-3 justify-content-center">
+                              <Form.Group as={Col} lg={3}>
+                                {registerFormData.over_18 == "Yes" ?
+                                  <Button style={{minWidth: 'auto'}} onClick={() => handleChangeOver18("Yes")} className='w-100 bg-white text-gold border-gold' variant='secondary' type='button'>Yes</Button>
+                                  :
+                                  <Button style={{minWidth: 'auto'}} onClick={() => handleChangeOver18("Yes")} className='w-100 bg-gold border-gold' variant='secondary' type='button'>Yes</Button>
+                                }
+                              </Form.Group>
+                              <Form.Group as={Col} lg={3}>
+                                {registerFormData.over_18 == "No" ?
+                                  <Button style={{minWidth: 'auto'}} onClick={() => handleChangeOver18("No")} className='w-100 bg-white text-black' variant='secondary' type='button'>No</Button>
+                                  :
+                                  <Button style={{minWidth: 'auto'}} onClick={() => handleChangeOver18("No")} className='w-100 bg-black border-black' variant='secondary' type='button'>No</Button>
+                                }
+                              </Form.Group>
+                            </Row>
+                          </div>
+                        </Card.Body>
+                      </Card>
                     </Form.Group>
                   }
+                  <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to={`/login?redirect_to=${encodeURIComponent(redirectTo)}`}>Log In</Link></p>
                 </Form>
               </div>
             </Col>
@@ -731,27 +728,29 @@ const SignUp = () => {
           <Modal.Title><h5 className='modal-title text-left rufina-family fs-22'>Can Minors Sell on Kouture Konect?</h5></Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Row className="h-100">
-            <Col lg="12">
-              <p>Kouture Konect welcomes minors between the ages of 13 and 17 to buy and sell on Kouture Konect as long as you have the permission and direct supervision of your parent or legal guardian. </p>
-              <p>Your parent or legal guardian must register for the account with their information, and they're responsible for any and all of your activity on the account. All Kouture Konect account owners must be at least 18 years of age, as stated in Kouture Konect's <a href="/about-kouture-konect">Terms of Use</a>. </p>
-              <p>The account you use must meet the following criteria:</p>
-              <ul>
-                <li className="mb-2">
-                  All financial information on the account must be under the parent or legal guardian's name. 
-                </li>
-                <li className="mb-2">
-                  The preferred name on the account must be the parent or legal guardian's name. 
-                </li>
-                <li className="mb-2">
-                  All shop members must be listed in the shop's <a href="/about-kouture-konect">About section</a>, and your parent or legal guardian must be the shop owner.
-                </li>
-                <li className="mb-2">
-                  The email address on the account must belong to the parent or legal guardian. 
-                </li>
-              </ul>
-            </Col>
-          </Row>
+          <Card>
+            <Row className="h-100">
+              <Col lg="12">
+                <p>Kouture Konect welcomes minors between the ages of 13 and 17 to buy and sell on Kouture Konect as long as you have the permission and direct supervision of your parent or legal guardian. </p>
+                <p>Your parent or legal guardian must register for the account with their information, and they're responsible for any and all of your activity on the account. All Kouture Konect account owners must be at least 18 years of age, as stated in Kouture Konect's <a href="/about-kouture-konect">Terms of Use</a>. </p>
+                <p>The account you use must meet the following criteria:</p>
+                <ul>
+                  <li className="mb-2">
+                    All financial information on the account must be under the parent or legal guardian's name. 
+                  </li>
+                  <li className="mb-2">
+                    The preferred name on the account must be the parent or legal guardian's name. 
+                  </li>
+                  <li className="mb-2">
+                    All shop members must be listed in the shop's <a href="/about-kouture-konect">About section</a>, and your parent or legal guardian must be the shop owner.
+                  </li>
+                  <li className="mb-2">
+                    The email address on the account must belong to the parent or legal guardian. 
+                  </li>
+                </ul>
+              </Col>
+            </Row>
+          </Card>
         </Modal.Body>
       </Modal>
     </LayoutNoFooter>
