@@ -237,8 +237,8 @@ const TwoFactorVerification = () => {
       const errors = response.data.errors;
       setFormStatus('standby');
       setReloadCount(reloadCount + 1);
-      setFormDataLogin(initialFormDataLogin);
-      if (success == "Success") {
+      if (success == "Success") {        
+        setFormDataLogin(initialFormDataLogin);
         const result = response.data.data;
         const user = result.user;
 
@@ -305,11 +305,12 @@ const TwoFactorVerification = () => {
             }
           }, 1000);
         }
-      } else if (errors == 'OTP expired') {
-        toast.error('OTP expired!');
+      
+      } else if (errors == "OTP authentication failed") {
+        toast.error('OTP authentication failed!');
       } else {
         setFormStatus('standby');
-        toast.error('OTP does not exist!');
+        toast.error('OTP does not exist!')
       }
     }).catch((error) => {
       alert(error);
@@ -387,7 +388,7 @@ const TwoFactorVerification = () => {
         toast.error('Phone number does not exist!');
       } else if (errors === "Failed to send SMS") {
         setShowSendCode(false);
-        toast.error('Failed to send SMS!'); 
+        toast.error('Failed to send SMS!');
       } else {
         setShowSendCode(false);
         toast.error('Something went wrong, please contact the administrator!');
