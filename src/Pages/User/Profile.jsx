@@ -451,12 +451,12 @@ const Profile = () => {
                                             :
                                             null
                                         }
-                                        {user.profile_completeness == 100 && (
-                                            <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className=''>
-                                                <GoPencil />
-                                                <span className='ms-1'>Edit Profile</span>
-                                            </Button>
-                                         )}
+                                        
+                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className=''>
+                                            <GoPencil />
+                                            <span className='ms-1'>Edit Profile</span>
+                                        </Button>
+                                         
                                     </Col>
 
                                     {/* {user.is_designer == 1 && (
@@ -709,15 +709,29 @@ const Profile = () => {
                                             <span>Enable Email Authentication</span>
                                         </Form.Label>
                                         <br />
-                                        <Form.Label className="me-3" style={{ minWidth: '90px' }}>
-                                            <input
-                                            type="checkbox"
-                                            checked={user.sms_two_factor_authentication}
-                                            onChange={handleSMSAuthChange}
-                                            className="d-inline-block vertical-align-middle me-1"
-                                            />
-                                            <span>Enable SMS Authentication</span>
-                                        </Form.Label>
+                                        {user.phone_number && user.phone_number != "" ?
+                                            <Form.Label className="me-3" style={{ minWidth: '90px' }}>
+                                                <input
+                                                type="checkbox"
+                                                checked={user.sms_two_factor_authentication}
+                                                onChange={handleSMSAuthChange}
+                                                className="d-inline-block vertical-align-middle me-1"
+                                                />
+                                                <span>Enable SMS Authentication</span>
+                                            </Form.Label>
+                                            :
+                                            <>
+                                                <Form.Label className="me-3 text-muted mb-0" style={{ minWidth: '90px', cursor: 'not-allowed', pointerEvents: 'none' }} >
+                                                    <input
+                                                        type="checkbox"
+                                                        className="d-inline-block vertical-align-middle me-1"
+                                                    />
+                                                    <span>Enable SMS Authentication</span>
+                                                </Form.Label>
+                                                <p className="small text-danger mb-0" style={{fontSize: '10px'}}>Please add your phone number to enabel SMS authentication</p>
+                                            </>
+                                        }
+                                        
                                     </p>
                                 </Col>
                             </Row>

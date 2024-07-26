@@ -118,7 +118,7 @@ const ProfileProgress = ({ completeness, reloadCount }) => {
                     }
                 </div>
                 <div className='w-100 step-container'>
-                    {aboutDone == "Yes" && addressDone == "Yes" && contactDone == "Yes" && socialDone != "Yes" && completeness < 100 ?
+                    {aboutDone == "Yes" && addressDone == "Yes" && contactDone == "Yes" && socialDone != "Yes"?
                         <>
                             <div className='d-flex align-items-center active'>
                                 <div className='progress-circle progress-circle-active'>
@@ -127,7 +127,7 @@ const ProfileProgress = ({ completeness, reloadCount }) => {
                                 <span className='ms-2 fw-500'>Social Media</span>
                             </div>
                         </>
-                    :completeness >= 100 ?
+                    : aboutDone == "Yes" && addressDone == "Yes" && contactDone == "Yes" && socialDone == "Yes"?
                         <>
                             <div className='d-flex align-items-center check'>
                                 <div className='progress-circle progress-circle-check'>

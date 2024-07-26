@@ -30,7 +30,7 @@ const SocialMediaStep = ({ user, currentUser, reload, token }) => {
                 const user_details = { currentUser: userData.id, id: userData.id, first_name: userData.first_name, last_name: userData.last_name, image: userData.image, email_verified_at: userData.email_verified_at, signup_type: userData.signup_type, email: userData.email, is_seller: userData.is_seller, is_designer: userData.is_designer, shop_completed: userData.shop_completed, profile_completeness: userData.profile_completeness  }
                 setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
                 setCookie('socialDone', "Yes", { path: '/' });
-                toast.success('Social media links added successfully!');
+                toast.success('Social media links updated successfully!');
                 window.location.href='/user/complete-profile';
             } else {
                 const errors = response.data.errors;
