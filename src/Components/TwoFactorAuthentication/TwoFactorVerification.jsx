@@ -219,6 +219,8 @@ const TwoFactorVerification = () => {
         }
       } else if (errors == 'OTP expired') {
         toast.error('OTP expired!');
+      } else if (errors == 'OTP does not exist') {
+        toast.error('OTP authentication failed!');
       } else {
         setFormStatus('standby');
         toast.error('OTP does not exist!');
