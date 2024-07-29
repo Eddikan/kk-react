@@ -376,31 +376,37 @@ const SignUp = ({ onSignup, showLogin }) => {
                 </div>
             </section>
             <Modal show={infoModalShow} fullscreen={false} onHide={() => setInfoModalShow(false)}>
-                <Modal.Header closeButton>
-                    <Modal.Title><h5 className='modal-title text-left rufina-family fs-22'>Can Minors Sell on Kouture Konect?</h5></Modal.Title>
+                <Modal.Header closeButton className="pb-0">
+                    &nbsp;
+                    {/* <Modal.Title><h5 className='modal-title text-left rufina-family fs-22'>Can Minors Sell on Kouture Konect?</h5></Modal.Title> */}
                 </Modal.Header>
-                <Modal.Body>
-                    <Row className="h-100">
-                        <Col lg="12">
-                            <p>Kouture Konect welcomes minors between the ages of 13 and 17 to buy and sell on Kouture Konect as long as you have the permission and direct supervision of your parent or legal guardian. </p>
-                            <p>Your parent or legal guardian must register for the account with their information, and they're responsible for any and all of your activity on the account. All Kouture Konect account owners must be at least 18 years of age, as stated in Kouture Konect's <a href="/about-kouture-konect">Terms of Use</a>. </p>
-                            <p>The account you use must meet the following criteria:</p>
-                            <ul>
-                                <li className="mb-2">
-                                    All financial information on the account must be under the parent or legal guardian's name.
-                                </li>
-                                <li className="mb-2">
-                                    The preferred name on the account must be the parent or legal guardian's name.
-                                </li>
-                                <li className="mb-2">
-                                    All shop members must be listed in the shop's <a href="/about-kouture-konect">About section</a>, and your parent or legal guardian must be the shop owner.
-                                </li>
-                                <li className="mb-2">
-                                    The email address on the account must belong to the parent or legal guardian.
-                                </li>
-                            </ul>
-                        </Col>
-                    </Row>
+                <Modal.Body className="pt-0">
+                    <h2 className='modal-title fs-25 fw-600 pb-2 text-center'>Can Minors Sell on Kouture Konect?</h2>
+                    <Card>
+                        <Card.Body className='bg-lgray'>
+                            <Row className="h-100">
+                                <Col lg="12">
+                                    <p>Kouture Konect welcomes minors between the ages of 13 and 17 to buy and sell on Kouture Konect as long as you have the permission and direct supervision of your parent or legal guardian. </p>
+                                    <p>Your parent or legal guardian must register for the account with their information, and they're responsible for any and all of your activity on the account. All Kouture Konect account owners must be at least 18 years of age, as stated in Kouture Konect's <a href="/about-kouture-konect">Terms of Use</a>. </p>
+                                    <p>The account you use must meet the following criteria:</p>
+                                    <ul className="mb-0">
+                                        <li className="mb-2">
+                                            All financial information on the account must be under the parent or legal guardian's name.
+                                        </li>
+                                        <li className="mb-2">
+                                            The preferred name on the account must be the parent or legal guardian's name.
+                                        </li>
+                                        <li className="mb-2">
+                                            All shop members must be listed in the shop's <a href="/about-kouture-konect">About section</a>, and your parent or legal guardian must be the shop owner.
+                                        </li>
+                                        <li className="mb-1">
+                                            The email address on the account must belong to the parent or legal guardian.
+                                        </li>
+                                    </ul>
+                                </Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
                 </Modal.Body>
             </Modal>
         </>
