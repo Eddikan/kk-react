@@ -5,7 +5,7 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import { FaLock } from "react-icons/fa6";
 import toast from 'react-hot-toast';
-import GoBack from 'Components/Shared/GoBack';
+import { IoIosArrowRoundBack } from "react-icons/io";
 
 const initialFormDataLogin = Object.freeze({
   email: '', password: '',
@@ -34,6 +34,7 @@ const TwoFactorVerification = () => {
   const email = siteCookies.email;
   const deviceId = siteCookies.device_id;
   const [twoFactor, setTwoFactor] = useState(siteCookies.two_factor);
+  const [cloneTwoFactor, setCloneTwoFactor] = useState(siteCookies.two_factor);
   const userRole = siteCookies.userRole;
 
   const navigate = useNavigate();  
@@ -64,7 +65,6 @@ const TwoFactorVerification = () => {
       window.history.back();
     }
     
-    console.log('userRole', userRole);
 
   }, []);  
 
@@ -477,7 +477,7 @@ const TwoFactorVerification = () => {
                 <Card className="text-center">
                   <Card.Body>
                     <div className="py-3">
-                      <Form.Label>Choose your 2FA authentication method:</Form.Label>
+                      <Form.Label>Choose your 2FA method:</Form.Label>
                       <Row className="mt-3 justify-content-center">
                         <Form.Group as={Col} lg={3}>
                           <Button style={{minWidth: 'auto'}} onClick={() => emailAuthenticationClick()} className='w-100 bg-gold border-gold' variant='secondary' type='button'>Email</Button>
@@ -547,6 +547,9 @@ const TwoFactorVerification = () => {
                     }
                   </div>
                 </div>
+                {cloneTwoFactor === 'both' &&
+                  <p className='mb-0 mt-3 text-center fs-14 text-dgray' style={{ cursor: 'pointer' }} onClick={() => setTwoFactor('both')}><IoIosArrowRoundBack /> Go back to 2FA method</p>
+                }
               </Card.Body>
             </Card>
           </Form.Group>
@@ -599,6 +602,9 @@ const TwoFactorVerification = () => {
                     }
                   </div>
                 </div>
+                {cloneTwoFactor === 'both' &&
+                  <p className='mb-0 mt-3 text-center fs-14 text-dgray' style={{ cursor: 'pointer' }} onClick={() => setTwoFactor('both')}><IoIosArrowRoundBack /> Go back to 2FA method</p>
+                }
               </Card.Body>
             </Card>
           </Form.Group>
