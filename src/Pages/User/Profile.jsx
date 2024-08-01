@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import 'Assets/styles/User/Profile/style.css'
@@ -8,6 +8,8 @@ import GetUserData from 'Utils/GetUserData';
 import { FaArrowRightLong } from "react-icons/fa6";
 import { CiShop } from "react-icons/ci";
 import { FaLocationDot, FaPhone, FaFacebookF, FaLinkedinIn, FaInstagram } from "react-icons/fa6";
+import { PiTrashThin } from "react-icons/pi";
+import { AiOutlineClose } from 'react-icons/ai';
 import { FaLink, FaBehance } from "react-icons/fa";
 import GoBack from 'Components/Shared/GoBack';
 import DesignIcon from 'Assets/images/user-box/dress.png';
@@ -26,6 +28,10 @@ import MyCalendar from 'Components/Shared/MyCalendar';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import BecomeSeller from 'Components/CallToActions/Seller';
 import BecomeDesigner from 'Components/CallToActions/Designer';
+import ReactFlagsSelect from "react-flags-select";
+import Webcam from "react-webcam";
+import { GoDotFill } from "react-icons/go";
+import { FaCamera } from "react-icons/fa";
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -82,10 +88,90 @@ const Profile = () => {
     const [areasOfSpecialization, setAreaOfSpecialization] = useState([]);
     const [setupShopShow, setSetupShopShow] = useState(false);
 
+    const [selected, setSelected] = useState("");
+
+    const [capturePhotoModalShow, setCapturePhotoModalShow] = useState(false);
+    const [capturePhoto, setCapturePhoto] = useState(null);
+    const [viewCapture, setViewCapture] = useState(null);
+    const [webcamLoaded, setWebcamLoaded] = useState(false);
+    const [showCaptureImage, setShowCaptureImage] = useState(false);
+
+    const [governmentIDShow, setGovernmentIDShow] = useState(false);
+    const [governmentFormData, setGovernmentFormData] = useState([]);
+
     const currentUser = cookies.currentUser;
     const token = cookies.token;
     const activeProfileTab = cookies.activeProfileTab;
     const userDetails = cookies.userDetails;
+
+    // Capture using camera
+    const handleWebcamLoad = () => {
+        setWebcamLoaded(true);
+    };
+
+    const webRef = useRef(null);
+    const showImage = async () => {
+        console.log(webRef.current.getScreenshot());
+        const screenshot = webRef.current.getScreenshot();
+        if (screenshot) {
+            setViewCapture(screenshot);
+            const blob = dataURItoBlob(screenshot);
+            const file = new File([blob], "webcam-image.png", { type: "image/png" });
+            console.log(file);
+            setCapturePhoto(file);
+        }
+    }
+
+    const dataURItoBlob = (dataURI) => {
+        const byteString = atob(dataURI.split(",")[1]);
+        const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        const blob = new Blob([ab], { type: mimeString });
+        return blob;
+    };
+
+    const toggleCapturePhoto = () => {
+        setCapturePhotoModalShow(!capturePhotoModalShow);
+        setCapturePhoto(null);
+        setViewCapture(null);
+        setWebcamLoaded(false);
+        setShowCaptureImage(false);
+    }
+
+    const toggleShowCaptureImage = () => {
+        setShowCaptureImage(!showCaptureImage);
+    }
+
+    const selectedCountry = (code) => {
+        setSelected(code);
+
+        if (selected !== code) {
+            setGovernmentFormData([]);
+            setCapturePhoto(null);
+            setViewCapture(null);
+            setWebcamLoaded(false);
+            setShowCaptureImage(false);
+        }
+    }
+
+    const captureFrontSubmit = (e) => {
+        setCapturePhotoModalShow(false);
+        setWebcamLoaded(false);
+    }
+
+    const toggleGovernmentIDShow = () => {
+        setGovernmentIDShow(!governmentIDShow);
+        setGovernmentFormData([]);
+        setCapturePhoto(null);
+        setViewCapture(null);
+        setWebcamLoaded(false);
+        setShowCaptureImage(false);
+        setSelected("");
+    }
 
     // User Image
     const [userImage, setUserImage] = useState();
@@ -95,6 +181,25 @@ const Profile = () => {
     const handleClickImg = event => {
         hiddenFileInputImg.current.click();
     };
+
+    const handleChangeGovernemnt = (e) => {
+        const { name, value } = e.target;
+
+        setGovernmentFormData({
+            ...governmentFormData
+            , [name]: value
+        });
+
+        if (name === "primary_id") {
+            if (governmentFormData?.primary_id !== value) {
+                setCapturePhoto(null);
+                setViewCapture(null);
+                setWebcamLoaded(false);
+                setShowCaptureImage(false);
+            }
+        }
+    }
+
 
     const navigate = useNavigate();
 
@@ -178,13 +283,13 @@ const Profile = () => {
     }
 
     async function handleEmailAuthChange(event) {
-        const newValue = event.target.checked ? 1 : 0; 
-        updateSecurity('email_two_factor_authentication', newValue );
+        const newValue = event.target.checked ? 1 : 0;
+        updateSecurity('email_two_factor_authentication', newValue);
     }
-    
+
     async function handleSMSAuthChange(event) {
-        const newValue = event.target.checked ? 1 : 0; 
-        updateSecurity('sms_two_factor_authentication', newValue );
+        const newValue = event.target.checked ? 1 : 0;
+        updateSecurity('sms_two_factor_authentication', newValue);
     }
 
     async function updateSecurity(fieldName, value) {
@@ -397,7 +502,7 @@ const Profile = () => {
                                             <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
                                             {user.city || user.province || user.country ?
                                                 <p className='fs-16 color-light-blue mb-2'>
-                                                    {user.province ? user.province + ',' : user.city ? user.city + ','  : "" } {user.country ? user.country : ""}
+                                                    {user.province ? user.province + ',' : user.city ? user.city + ',' : ""} {user.country ? user.country : ""}
                                                     {/* {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""} */}
                                                 </p>
                                                 :
@@ -451,12 +556,12 @@ const Profile = () => {
                                             :
                                             null
                                         }
-                                        
+
                                         <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className=''>
                                             <GoPencil />
                                             <span className='ms-1'>Edit Profile</span>
                                         </Button>
-                                         
+
                                     </Col>
 
                                     {/* {user.is_designer == 1 && (
@@ -695,49 +800,57 @@ const Profile = () => {
 
                         {securityShow ?
                             <div id="about-portfolio">
-                            <Row>
-                                <Col lg="6">
-                                    <p className='title-designer mb-2'>Two Factor Authentication</p>
-                                    <p className='short-bio-designer mb-4'>
-                                        <Form.Label className="me-3" style={{ minWidth: '90px' }}>
-                                            <input
-                                            type="checkbox"
-                                            checked={user.email_two_factor_authentication}
-                                            onChange={handleEmailAuthChange}
-                                            className="d-inline-block vertical-align-middle me-1"
-                                            />
-                                            <span>Enable Email Authentication</span>
-                                        </Form.Label>
-                                        <br />
-                                        {user.phone_number && user.phone_number != "" ?
+                                <Row>
+                                    <Col lg="6">
+                                        <p className='title-designer mb-2'>Two Factor Authentication</p>
+                                        <p className='short-bio-designer mb-4'>
                                             <Form.Label className="me-3" style={{ minWidth: '90px' }}>
                                                 <input
-                                                type="checkbox"
-                                                checked={user.sms_two_factor_authentication}
-                                                onChange={handleSMSAuthChange}
-                                                className="d-inline-block vertical-align-middle me-1"
+                                                    type="checkbox"
+                                                    checked={user.email_two_factor_authentication}
+                                                    onChange={handleEmailAuthChange}
+                                                    className="d-inline-block vertical-align-middle me-1"
                                                 />
-                                                <span>Enable SMS Authentication</span>
+                                                <span>Enable Email Authentication</span>
                                             </Form.Label>
-                                            :
-                                            <>
-                                                <Form.Label className="me-3 text-muted mb-0" style={{ minWidth: '90px', cursor: 'not-allowed', pointerEvents: 'none' }} >
+                                            <br />
+                                            {user.phone_number && user.phone_number != "" ?
+                                                <Form.Label className="me-3" style={{ minWidth: '90px' }}>
                                                     <input
                                                         type="checkbox"
+                                                        checked={user.sms_two_factor_authentication}
+                                                        onChange={handleSMSAuthChange}
                                                         className="d-inline-block vertical-align-middle me-1"
                                                     />
                                                     <span>Enable SMS Authentication</span>
                                                 </Form.Label>
-                                                <p className="small text-danger mb-0" style={{fontSize: '10px'}}>Please add your phone number to enabel SMS authentication</p>
-                                            </>
-                                        }
-                                        
-                                    </p>
-                                </Col>
-                            </Row>
-                        </div>
-                        :
-                        null
+                                                :
+                                                <>
+                                                    <Form.Label className="me-3 text-muted mb-0" style={{ minWidth: '90px', cursor: 'not-allowed', pointerEvents: 'none' }} >
+                                                        <input
+                                                            type="checkbox"
+                                                            className="d-inline-block vertical-align-middle me-1"
+                                                        />
+                                                        <span>Enable SMS Authentication</span>
+                                                    </Form.Label>
+                                                    <p className="small text-danger mb-0" style={{ fontSize: '10px' }}>Please add your phone number to enabel SMS authentication</p>
+                                                </>
+                                            }
+
+                                        </p>
+                                    </Col>
+                                </Row>
+                                <Row className="mb-2">
+                                    <Col lg="6">
+                                        <p className='title-designer mb-2'>Identity Verification</p>
+                                        <Button onClick={toggleGovernmentIDShow}>
+                                            <span>Add Government ID</span>
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </div>
+                            :
+                            null
                         }
                     </Container>
                 </section >
@@ -797,6 +910,256 @@ const Profile = () => {
                         </Row>
                     </Container>
                 </Modal.Body>
+            </Modal>
+
+            <Modal
+                show={capturePhotoModalShow}
+                size='lg'
+                onHide={toggleCapturePhoto}
+                onCloseButton
+            >
+                <Modal.Header className="pb-0">
+                    <button type='button' className='close react-modal-close' onClick={toggleCapturePhoto} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card className="bg-light">
+                        <Card.Body className="p-3">
+                            <Row>
+                                {showCaptureImage ?
+                                    <Col lg="12" >
+                                        <img
+                                            src={viewCapture}
+                                            alt='profile'
+                                            style={{ width: "100%", height: "auto", border: '1px solid #ffffff', position: 'relative' }}
+                                        />
+                                    </Col>
+                                    : <>
+                                        <Col lg="12" className="webcam-container">
+                                            <h2 className="text-center fw-600">Front of the ID</h2>
+                                            <p className="text-center">Ensuring the front side is fully visible</p>
+                                            <Webcam ref={webRef} onUserMedia={() => handleWebcamLoad()} style={{ width: "100%", height: "auto" }} />
+                                            <div className="overlay-box"></div>
+                                        </Col>
+                                        <Col lg="12"
+                                        >
+                                            <Row style={{ position: 'absolute', bottom: '35px', width: '100%' }}>
+                                                <div className="d-flex justify-content-right align-items-end col-3" style={{ position: 'relative' }}>
+                                                    &nbsp;
+                                                </div>
+                                                {webcamLoaded && (
+                                                    <div className="d-flex justify-content-center align-items-end col-6">
+                                                        <button
+                                                            className='camera-button'
+                                                            type='button'
+                                                            onClick={() => { showImage(); toggleShowCaptureImage(); }}
+                                                            style={{ position: 'relative', color: '#FFFFFF' }}
+                                                        >
+                                                            <FaCamera
+                                                                size="30px"
+                                                                className="cancel-button me-1 dot-icon"
+                                                            />
+                                                        </button>
+                                                    </div>
+                                                )}
+                                                <div className="col-3">
+                                                    &nbsp;
+                                                </div>
+                                            </Row>
+                                        </Col>
+                                    </>
+                                }
+                            </Row>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+                {showCaptureImage &&
+                    <Modal.Footer className='text-right modal-footer-border'>
+
+                        <Button
+                            type="button"
+                            className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                            onClick={() => { toggleShowCaptureImage(); setCapturePhoto(null); setViewCapture(null); }}>
+                            Take Another Photo
+                        </Button>
+
+                        {formStatus !== "standby" ?
+                            <Button
+                                className='className="btn-save'
+                                type='button'
+                                disabled
+                                style={{ cursor: 'not-allowed', opacity: "0.5" }}
+                            >
+                                Saving...
+                            </Button>
+                            :
+                            <Button
+                                className='className="btn-save'
+                                type='submit'
+                                onClick={captureFrontSubmit}
+                            >
+                                SAVE
+                            </Button>
+                        }
+                    </Modal.Footer>
+                }
+            </Modal>
+
+            <Modal
+                show={governmentIDShow}
+                size='lg'
+            >
+                <Modal.Header className="pb-0">
+                    <button type='button' className='close react-modal-close' onClick={toggleGovernmentIDShow} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                {/* <Form onSubmit={captureFrontSubmit}> */}
+                <Modal.Body>
+                    <h2 className='modal-title fs-25 fw-600 text-center mb-2'>Identity Verification</h2>
+                    <Card className="bg-lgray">
+                        <Card.Body className="p-3">
+                            <Row className="mb-3">
+                                <Col lg="12">
+                                    <Form.Label>Country</Form.Label>
+                                    <ReactFlagsSelect
+                                        selected={selected}
+                                        onSelect={(code) => selectedCountry(code)}
+                                        placeholder="Select Country"
+                                        searchable
+                                        searchPlaceholder="Search countries"
+                                        className="menu-flags bg-white"
+                                        required
+                                    />
+                                </Col>
+                            </Row>
+                            {selected &&
+                                <Form.Group>
+                                    <Form.Label>List of Primary IDs</Form.Label>
+                                    <Row>
+                                        <Col>
+                                            <select
+                                                className="form-control mb-3 cursor-pointer"
+                                                name="primary_id"
+                                                defaultValue=""
+                                                onChange={handleChangeGovernemnt}
+                                                value={governmentFormData.primary_id}
+                                                required
+                                            >
+                                                <option value="">Select Primary IDs</option>
+
+                                                <option value="Driver's License">Driver's License</option>
+                                                <option value="Passport">Passport</option>
+                                                {selected === "PH" &&
+                                                    <>
+                                                        <option value="SSS">SSS Unified Multi-Purpose ID (UMID)</option>
+                                                        <option value="PhilID">Philippine Identification (PhilID / ePhilID)</option>
+                                                        <option value="PhilHealth ID">PhilHealth ID</option>
+                                                        <option value="Postal ID">Postal ID</option>
+                                                        <option value="Voter's ID">Voter's ID</option>
+                                                        <option value="Professional Regulation (PRC) ID">Professional Regulation (PRC) ID</option>
+                                                    </>
+                                                }
+                                            </select>
+                                        </Col>
+                                    </Row>
+                                </Form.Group>
+                            }
+                            {governmentFormData?.primary_id &&
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Capture or Attach the Government ID</Form.Label>
+                                    <Row>
+                                        <Col lg="12">
+                                            {viewCapture && !capturePhotoModalShow ?
+                                                <>
+                                                    <Card className="mb-3">
+                                                        <Card.Body>
+                                                            <Col lg={4} className="text-center">
+                                                                <img
+                                                                    src={viewCapture}
+                                                                    alt='profile'
+                                                                    style={{ width: "100%", height: "auto", border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                    onClick={toggleShowCaptureImage}
+                                                                    className="mb-2"
+                                                                />
+                                                                <span>Front ID</span>
+                                                            </Col>
+                                                        </Card.Body>
+                                                    </Card>
+                                                </>
+                                            : null}
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Form.Group as={Col}>
+                                            <Form.Check
+                                                className="cursor-pointer"
+                                                type="radio"
+                                                label="Camera"
+                                                name="document_method"
+                                                value="Camera"
+                                                checked={governmentFormData.document_method === "Camera"}
+                                                onChange={handleChangeGovernemnt}
+                                                required
+                                            />
+                                        </Form.Group>
+                                        <Form.Group as={Col}>
+                                            <Form.Check
+                                                className="cursor-pointer"
+                                                type="radio"
+                                                label="Upload Document"
+                                                name="document_method"
+                                                value="Upload Document"
+                                                checked={governmentFormData.document_method === "Upload Document"}
+                                                onChange={handleChangeGovernemnt}
+                                                required
+                                            />
+                                        </Form.Group>
+                                    </Row>
+                                </Form.Group>
+                            }
+                            {governmentFormData.document_method === "Camera" &&
+                                <Button onClick={toggleCapturePhoto} >
+                                    <span>Start Capturing</span>
+                                </Button>
+                            }
+                            {governmentFormData.document_method === "Upload Document" &&
+                                <Button onClick={toggleCapturePhoto} >
+                                    <span>Upload Document</span>
+                                </Button>
+                            }
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+                <Modal.Footer className='text-right modal-footer-border'>
+
+                    <Button
+                        type="button"
+                        className="btn-back me-3 btn btn-primary"
+                        onClick={() => { toggleGovernmentIDShow(); }}
+                    >
+                        Cancel
+                    </Button>
+
+                    {formStatus !== "standby" ?
+                        <Button
+                            className='btn-save btn btn btn-primary'
+                            type='button'
+                            disabled
+                            style={{ cursor: 'not-allowed', opacity: "0.5" }}
+                        >
+                            Saving...
+                        </Button>
+                        :
+                        <Button
+                            className='btn-save btn btn btn-primary'
+                            type='submit'
+                        // onClick={captureFrontSubmit}
+                        >
+                            SAVE
+                        </Button>
+                    }
+                </Modal.Footer>
+                {/* </Form> */}
             </Modal>
         </Layout >
     );
