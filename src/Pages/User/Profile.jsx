@@ -32,6 +32,7 @@ import ReactFlagsSelect from "react-flags-select";
 import Webcam from "react-webcam";
 import { GoDotFill } from "react-icons/go";
 import { FaCamera } from "react-icons/fa";
+import { MdVerified } from "react-icons/md";
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -83,6 +84,7 @@ const Profile = () => {
     const [limitedDesignShow, setLimitedDesignShow] = useState(false);
     const [myCalendarShow, setMyCalendarShow] = useState(false);
     const [securityShow, setSecurityShow] = useState(false);
+    const [verificationShow, setVerificationShow] = useState(false);
     const [formStatus, setFormStatus] = useState('standby');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'activeProfileTab', 'userDetails']);
     const [areasOfSpecialization, setAreaOfSpecialization] = useState([]);
@@ -90,14 +92,21 @@ const Profile = () => {
 
     const [selected, setSelected] = useState("");
 
-    const [capturePhotoModalShow, setCapturePhotoModalShow] = useState(false);
-    const [capturePhoto, setCapturePhoto] = useState(null);
+    const [captureBothPhotoModalShow, setCaptureBothPhotoModalShow] = useState(false);
     const [viewCapture, setViewCapture] = useState(null);
     const [webcamLoaded, setWebcamLoaded] = useState(false);
     const [showCaptureImage, setShowCaptureImage] = useState(false);
 
     const [governmentIDShow, setGovernmentIDShow] = useState(false);
     const [governmentFormData, setGovernmentFormData] = useState([]);
+
+    const [captureFrontPhotoModalShow, setCaptureFrontPhotoModalShow] = useState(false);
+    const [frontPhoto, setFrontPhoto] = useState(null);
+    const [backPhoto, setBackPhoto] = useState(null);
+
+    const [captureBackPhotoModalShow, setCaptureBackPhotoModalShow] = useState(false);
+    const [viewBackCapture, setViewBackCapture] = useState(null);
+    const [showCaptureBackImage, setShowCaptureBackImage] = useState(false);
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -115,30 +124,50 @@ const Profile = () => {
         const screenshot = webRef.current.getScreenshot();
         if (screenshot) {
             setViewCapture(screenshot);
-            const blob = dataURItoBlob(screenshot);
-            const file = new File([blob], "webcam-image.png", { type: "image/png" });
-            console.log(file);
-            setCapturePhoto(file);
         }
     }
 
-    const dataURItoBlob = (dataURI) => {
-        const byteString = atob(dataURI.split(",")[1]);
-        const mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
-        const ab = new ArrayBuffer(byteString.length);
-        const ia = new Uint8Array(ab);
-        for (let i = 0; i < byteString.length; i++) {
-            ia[i] = byteString.charCodeAt(i);
-        }
-        const blob = new Blob([ab], { type: mimeString });
-        return blob;
-    };
+    // const showImage = async () => {
+    //     const screenshot = webRef.current.getScreenshot();
+    //     if (screenshot) {
+    //         // Create an image element
+    //         const img = new Image();
+    //         img.src = screenshot;
+    //         img.onload = () => {
+    //             // Create canvas and context
+    //             const canvas = document.createElement('canvas');
+    //             const ctx = canvas.getContext('2d');
+                
+    //             // Set the canvas dimensions to match the cropping box dimensions
+    //             const overlayBoxWidth = 600;  // Replace with actual width
+    //             const overlayBoxHeight = 350; // Replace with actual height
+    
+    //             canvas.width = overlayBoxWidth;
+    //             canvas.height = overlayBoxHeight;
+                
+    //             // Draw the image on the canvas
+    //             ctx.drawImage(
+    //                 img,
+    //                 0, // Source X
+    //                 0, // Source Y
+    //                 overlayBoxWidth, // Source Width
+    //                 overlayBoxHeight, // Source Height
+    //                 0, // Destination X
+    //                 0, // Destination Y
+    //                 overlayBoxWidth, // Destination Width
+    //                 overlayBoxHeight // Destination Height
+    //             );
+                
+    //             // Get the cropped image data
+    //             const croppedImage = canvas.toDataURL();
+    //             setViewCapture(croppedImage);
+    //         };
+    //     }
+    // };
 
-    const toggleCapturePhoto = () => {
-        setCapturePhotoModalShow(!capturePhotoModalShow);
-        setCapturePhoto(null);
+    const toggleCaptureBothPhoto = () => {
+        setCaptureBothPhotoModalShow(!captureBothPhotoModalShow);
         setViewCapture(null);
-        setWebcamLoaded(false);
         setShowCaptureImage(false);
     }
 
@@ -151,27 +180,121 @@ const Profile = () => {
 
         if (selected !== code) {
             setGovernmentFormData([]);
-            setCapturePhoto(null);
             setViewCapture(null);
-            setWebcamLoaded(false);
-            setShowCaptureImage(false);
+            setViewBackCapture(null);
+            setFrontPhoto(null);
+            setBackPhoto(null);
         }
     }
 
-    const captureFrontSubmit = (e) => {
-        setCapturePhotoModalShow(false);
+    const captureBothSubmit = (e) => {
+        setCaptureBothPhotoModalShow(false);
         setWebcamLoaded(false);
+        setFrontPhoto(viewCapture);
+    }
+
+    const captureFrontSubmit = (e) => {
+        setCaptureFrontPhotoModalShow(false);
+        setWebcamLoaded(false);
+        setFrontPhoto(viewCapture);
     }
 
     const toggleGovernmentIDShow = () => {
+        setReloadCount(count => reloadCount + 1);
         setGovernmentIDShow(!governmentIDShow);
-        setGovernmentFormData([]);
-        setCapturePhoto(null);
+        setWebcamLoaded(false);
+    }
+
+    
+    const toggleCloseGovernmentIDShow = () => {
+        setGovernmentIDShow(false);
+        setWebcamLoaded(false);
         setViewCapture(null);
+        setViewBackCapture(null);
+        setFrontPhoto(null);
+        setBackPhoto(null);
+    }
+
+    const governmentIDSubmit = (e) => {
+        setFormStatus('loading');
+        e.preventDefault();
+
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {...governmentFormData, id_country: selected, id_front_img: frontPhoto, id_back_img: backPhoto }).then((response) => {
+            const success = response.data.status;
+            if (success === 'Success') {
+                setGovernmentIDShow(false);
+                toast.success('Government ID updated successfully!');
+                setFormStatus('standby');
+                setGovernmentFormData([]);
+                setViewCapture(null);
+                setViewBackCapture(null);
+                setFrontPhoto(null);
+                setBackPhoto(null);
+                setWebcamLoaded(false);
+                setReloadCount(count => reloadCount + 1);
+            } else {
+                setFormStatus('standby');
+                toast.error('There has been an error saving the government ID, please try again!');
+            }
+        }).catch((error) => {
+            setFormStatus('standby');
+            toast.error('There has been an error saving the government ID, please try again!');
+        });
+    }
+
+    const handleChangeFrontID = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFrontPhoto(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    // Front
+    const toggleCaptureFrontPhoto = () => {
+        setCaptureFrontPhotoModalShow(!captureFrontPhotoModalShow);
         setWebcamLoaded(false);
         setShowCaptureImage(false);
-        setSelected("");
     }
+
+    // Back
+    const showBackImage = async () => {
+        console.log(webRef.current.getScreenshot());
+        const screenshot = webRef.current.getScreenshot();
+        if (screenshot) {
+            setViewBackCapture(screenshot);
+        }
+    }
+
+    const toggleCaptureBackPhoto = () => {
+        setCaptureBackPhotoModalShow(!captureBackPhotoModalShow);
+        setShowCaptureBackImage(false);
+        setWebcamLoaded(false);
+    }
+
+    const toggleShowCaptureBackImage = () => {
+        setShowCaptureBackImage(!showCaptureBackImage);
+    }
+
+    const captureBackSubmit = (e) => {
+        setCaptureBackPhotoModalShow(false);
+        setWebcamLoaded(false);
+        setBackPhoto(viewBackCapture);
+    }
+
+    const handleChangeBackID = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setBackPhoto(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     // User Image
     const [userImage, setUserImage] = useState();
@@ -190,12 +313,19 @@ const Profile = () => {
             , [name]: value
         });
 
-        if (name === "primary_id") {
-            if (governmentFormData?.primary_id !== value) {
-                setCapturePhoto(null);
-                setViewCapture(null);
+        if (name === "id_name") {
+            if (governmentFormData?.id_name !== value) {
                 setWebcamLoaded(false);
                 setShowCaptureImage(false);
+                setFrontPhoto(null);
+                setBackPhoto(null);
+                setViewCapture(null);
+                setViewBackCapture(null);
+                setGovernmentFormData(prevState => ({
+                    ...prevState,
+                    id_front_img: "",
+                    id_back_img: "",
+                }));
             }
         }
     }
@@ -321,6 +451,7 @@ const Profile = () => {
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
             setSecurityShow(false);
+            setVerificationShow(false);
 
         } else if (tab == "portfolio") {
             setPortfolioShow(true);
@@ -330,6 +461,7 @@ const Profile = () => {
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
             setSecurityShow(false);
+            setVerificationShow(false);
 
         } else if (tab == "fabric") {
             setFabricShow(true);
@@ -339,6 +471,7 @@ const Profile = () => {
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
             setSecurityShow(false);
+            setVerificationShow(false);
 
         } else if (tab == "process") {
             setProcessShow(true);
@@ -348,6 +481,7 @@ const Profile = () => {
             setLimitedDesignShow(false);
             setMyCalendarShow(false);
             setSecurityShow(false);
+            setVerificationShow(false);
 
         } else if (tab == "calendar") {
             setLimitedDesignShow(true);
@@ -357,6 +491,7 @@ const Profile = () => {
             setFabricShow(false);
             setMyCalendarShow(false);
             setSecurityShow(false);
+            setVerificationShow(false);
 
         } else if (tab == "my_calendar") {
             setLimitedDesignShow(false);
@@ -366,6 +501,7 @@ const Profile = () => {
             setFabricShow(false);
             setMyCalendarShow(true);
             setSecurityShow(false);
+            setVerificationShow(false);
 
         } else if (tab == "security") {
             setLimitedDesignShow(false);
@@ -375,6 +511,17 @@ const Profile = () => {
             setFabricShow(false);
             setMyCalendarShow(false);
             setSecurityShow(true);
+            setVerificationShow(false);
+
+        } else if (tab == "verification") {
+            setLimitedDesignShow(false);
+            setProcessShow(false);
+            setPortfolioShow(false);
+            setAboutShow(false);
+            setFabricShow(false);
+            setMyCalendarShow(false);
+            setSecurityShow(false);
+            setVerificationShow(true);
         }
     }
 
@@ -383,6 +530,10 @@ const Profile = () => {
             const userData = await GetUserData(e);
             if (userData.id) {
                 setUser(userData);
+                setGovernmentFormData(userData);
+                setSelected(userData.id_country);
+                setFrontPhoto(userData.id_front_img);
+                setBackPhoto(userData.id_back_img);
                 setUserImage(userData.image);
                 setCookie('userDetails', JSON.stringify(userData), { path: '/' });
                 if (userData.designer) {
@@ -497,6 +648,9 @@ const Profile = () => {
                                                 :
                                                 <span>-</span>
                                             }
+                                            {user.id_country && user.id_name && user.id_front_img ?
+                                                <MdVerified color="16f11e" className="ms-2"/>
+                                            : null}
                                         </h2>
                                         <div className='icons-d-flex'>
                                             <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
@@ -604,6 +758,7 @@ const Profile = () => {
                                     <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${myCalendarShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("my_calendar") }}>Calendar</span>
                                 )}
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${securityShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("security"); }}>Security</span>
+                                <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${verificationShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("verification"); }}>Verification</span>
                                 {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${processShow ? 'fw-600' : ''}`} onClick={function () { showTab("process") }}>Process</span>
                                 <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${limitedDesignShow ? 'fw-600' : ''}`} onClick={function () { showTab("limited_design"); }}>Limited Design</span> */}
                                 <hr className='mt-2' />
@@ -840,18 +995,60 @@ const Profile = () => {
                                         </p>
                                     </Col>
                                 </Row>
-                                <Row className="mb-2">
-                                    <Col lg="6">
-                                        <p className='title-designer mb-2'>Identity Verification</p>
-                                        <Button onClick={toggleGovernmentIDShow}>
-                                            <span>Add Government ID</span>
-                                        </Button>
-                                    </Col>
-                                </Row>
                             </div>
                             :
                             null
                         }
+
+                        {verificationShow ?
+                            <div id="profile-portfolio">
+                                <Row>
+                                    <Col lg="6">
+                                        <p>Upload a government-issued ID to verify your identity.</p>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col lg="6">
+                                        {user.id_name && user.id_front_img ?
+                                            <>
+                                                <Card className="bg-lgray mb-4" style={{ width: '721px' }}>
+                                                    <Card.Body className="pt-3 px-4 pb-4">
+                                                        <p className='title-designer mb-2'>{user.id_name}</p>
+                                                        <img
+                                                            src={user.id_front_img }
+                                                            alt='Front ID'
+                                                            style={{ width: "335px", height: "251px", cursor: 'pointer', paddingRight: '11px' }}
+                                                        />
+                                                        {user.id_back_img &&
+                                                            <>
+                                                                <img
+                                                                    src={user.id_back_img }
+                                                                    alt='Back ID'
+                                                                    style={{ width: "335px", height: "251px", cursor: 'pointer', paddingLeft: '11px' }}
+                                                                />
+                                                            </>
+                                                        }
+                                                    </Card.Body>
+                                                </Card>
+                                            </>
+                                        : null }
+                                    </Col>
+                                </Row>
+                                <Row className="mb-2">
+                                    <Col lg="6">
+                                        {user.id_name && user.id_front_img ?
+                                            <Button onClick={toggleGovernmentIDShow}>
+                                                <span>Replace Document</span>
+                                            </Button>
+                                        : 
+                                            <Button onClick={toggleGovernmentIDShow}>
+                                                <span>Upload Document</span>
+                                            </Button>
+                                        }
+                                    </Col>
+                                </Row>
+                            </div>
+                        : null}
                     </Container>
                 </section >
             }
@@ -913,17 +1110,111 @@ const Profile = () => {
             </Modal>
 
             <Modal
-                show={capturePhotoModalShow}
+                show={captureBothPhotoModalShow}
                 size='lg'
-                onHide={toggleCapturePhoto}
-                onCloseButton
+                // onHide={toggleCaptureBothPhoto}
             >
                 <Modal.Header className="pb-0">
-                    <button type='button' className='close react-modal-close' onClick={toggleCapturePhoto} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={toggleCaptureBothPhoto} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>
                 <Modal.Body>
-                    <Card className="bg-light">
+                    <Card className="bg-lgray">
+                        <Card.Body className="p-3">
+                            <Row>
+                                {showCaptureImage ?
+                                    <Col lg="12" >
+                                        <img
+                                            src={viewCapture}
+                                            alt='profile'
+                                            style={{ width: "100%", height: "auto", border: '1px solid #ffffff', position: 'relative' }}
+                                        />
+                                    </Col>
+                                    : 
+                                        <>
+                                            <Col lg="12" className="webcam-container">
+                                                <h2 className="text-center fw-600">Front of the ID</h2>
+                                                <p className="text-center">Ensuring the front side is fully visible</p>
+                                                <Webcam ref={webRef} onUserMedia={() => handleWebcamLoad()} style={{ width: "100%", height: "auto" }} />
+                                                <div className="overlay-box"></div>
+                                            </Col>
+                                            <Col lg="12" >
+                                                <Row style={{ position: 'absolute', bottom: '35px', width: '100%' }}>
+                                                    <div className="d-flex justify-content-right align-items-end col-3" style={{ position: 'relative' }}>
+                                                        &nbsp;
+                                                    </div>
+                                                    {webcamLoaded && (
+                                                        <div className="d-flex justify-content-center align-items-end col-6">
+                                                            <button
+                                                                className='camera-button'
+                                                                type='button'
+                                                                onClick={() => { showImage(); toggleShowCaptureImage(); }}
+                                                                style={{ position: 'relative', color: '#FFFFFF' }}
+                                                            >
+                                                                <FaCamera
+                                                                    size="30px"
+                                                                    className="cancel-button me-1 dot-icon"
+                                                                />
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                    <div className="col-3">
+                                                        &nbsp;
+                                                    </div>
+                                                </Row>
+                                            </Col>
+                                        </>
+                                }
+                            </Row>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+                {showCaptureImage &&
+                    <Modal.Footer className='text-right modal-footer-border'>
+
+                        <Button
+                            type="button"
+                            className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                            onClick={() => { toggleShowCaptureImage(); setViewCapture(null); }}>
+                            Take Another Photo
+                        </Button>
+
+                        {formStatus !== "standby" ?
+                            <Button
+                                className='className="btn-save'
+                                type='button'
+                                disabled
+                                style={{ cursor: 'not-allowed' }}
+                            >
+                                Saving...
+                            </Button>
+                            :
+                            <Button
+                                className='className="btn-save'
+                                type='submit'
+                                onClick={governmentFormData?.id_name !== "Passport" && governmentFormData?.id_name !== "Philippine Identification (PhilID / ePhilID)" && governmentFormData?.id_name !== "PhilHealth ID" ?
+                                    () => { captureBothSubmit(); toggleCaptureBackPhoto(); } :
+                                    captureBothSubmit
+                                  }
+                            >
+                                SAVE
+                            </Button>
+                        }
+                    </Modal.Footer>
+                }
+            </Modal>
+
+            <Modal
+                show={captureFrontPhotoModalShow}
+                size='lg'
+                // onHide={toggleCaptureFrontPhoto}
+            >
+                <Modal.Header className="pb-0">
+                    <button type='button' className='close react-modal-close' onClick={toggleCaptureFrontPhoto} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card className="bg-lgray">
                         <Card.Body className="p-3">
                             <Row>
                                 {showCaptureImage ?
@@ -941,8 +1232,7 @@ const Profile = () => {
                                             <Webcam ref={webRef} onUserMedia={() => handleWebcamLoad()} style={{ width: "100%", height: "auto" }} />
                                             <div className="overlay-box"></div>
                                         </Col>
-                                        <Col lg="12"
-                                        >
+                                        <Col lg="12">
                                             <Row style={{ position: 'absolute', bottom: '35px', width: '100%' }}>
                                                 <div className="d-flex justify-content-right align-items-end col-3" style={{ position: 'relative' }}>
                                                     &nbsp;
@@ -979,7 +1269,7 @@ const Profile = () => {
                         <Button
                             type="button"
                             className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
-                            onClick={() => { toggleShowCaptureImage(); setCapturePhoto(null); setViewCapture(null); }}>
+                            onClick={() => { toggleShowCaptureImage(); setViewCapture(null); }}>
                             Take Another Photo
                         </Button>
 
@@ -988,7 +1278,7 @@ const Profile = () => {
                                 className='className="btn-save'
                                 type='button'
                                 disabled
-                                style={{ cursor: 'not-allowed', opacity: "0.5" }}
+                                style={{ cursor: 'not-allowed' }}
                             >
                                 Saving...
                             </Button>
@@ -996,7 +1286,98 @@ const Profile = () => {
                             <Button
                                 className='className="btn-save'
                                 type='submit'
-                                onClick={captureFrontSubmit}
+                                onClick={() => {captureFrontSubmit();} }
+                            >
+                                SAVE
+                            </Button>
+                        }
+                    </Modal.Footer>
+                }
+            </Modal>
+
+            <Modal
+                show={captureBackPhotoModalShow}
+                size='lg'
+                // onHide={toggleCaptureBackPhoto}
+            >
+                <Modal.Header className="pb-0">
+                    <button type='button' className='close react-modal-close' onClick={toggleCaptureBackPhoto} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Modal.Body>
+                    <Card className="bg-lgray">
+                        <Card.Body className="p-3">
+                            <Row>
+                                {showCaptureBackImage ?
+                                    <Col lg="12" >
+                                        <img
+                                            src={viewBackCapture}
+                                            alt='profile'
+                                            style={{ width: "100%", height: "auto", border: '1px solid #ffffff', position: 'relative' }}
+                                        />
+                                    </Col>
+                                    : <>
+                                        <Col lg="12" className="webcam-container">
+                                            <h2 className="text-center fw-600">Back of the ID</h2>
+                                            <p className="text-center">Ensuring the back side is fully visible</p>
+                                            <Webcam ref={webRef} onUserMedia={() => handleWebcamLoad()} style={{ width: "100%", height: "auto" }} />
+                                            <div className="overlay-box"></div>
+                                        </Col>
+                                        <Col lg="12">
+                                            <Row style={{ position: 'absolute', bottom: '35px', width: '100%' }}>
+                                                <div className="d-flex justify-content-right align-items-end col-3" style={{ position: 'relative' }}>
+                                                    &nbsp;
+                                                </div>
+                                                {webcamLoaded && (
+                                                    <div className="d-flex justify-content-center align-items-end col-6">
+                                                        <button
+                                                            className='camera-button'
+                                                            type='button'
+                                                            onClick={() => { showBackImage(); toggleShowCaptureBackImage(); }}
+                                                            style={{ position: 'relative', color: '#FFFFFF' }}
+                                                        >
+                                                            <FaCamera
+                                                                size="30px"
+                                                                className="cancel-button me-1 dot-icon"
+                                                            />
+                                                        </button>
+                                                    </div>
+                                                )}
+                                                <div className="col-3">
+                                                    &nbsp;
+                                                </div>
+                                            </Row>
+                                        </Col>
+                                    </>
+                                }
+                            </Row>
+                        </Card.Body>
+                    </Card>
+                </Modal.Body>
+                {showCaptureBackImage &&
+                    <Modal.Footer className='text-right modal-footer-border'>
+
+                        <Button
+                            type="button"
+                            className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
+                            onClick={() => { toggleShowCaptureBackImage(); setViewBackCapture(null); }}>
+                            Take Another Photo
+                        </Button>
+
+                        {formStatus !== "standby" ?
+                            <Button
+                                className='className="btn-save'
+                                type='button'
+                                disabled
+                                style={{ cursor: 'not-allowed' }}
+                            >
+                                Saving...
+                            </Button>
+                            :
+                            <Button
+                                className='className="btn-save'
+                                type='submit'
+                                onClick={() => {captureBackSubmit();}}
                             >
                                 SAVE
                             </Button>
@@ -1010,156 +1391,197 @@ const Profile = () => {
                 size='lg'
             >
                 <Modal.Header className="pb-0">
-                    <button type='button' className='close react-modal-close' onClick={toggleGovernmentIDShow} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={toggleCloseGovernmentIDShow} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>
-                {/* <Form onSubmit={captureFrontSubmit}> */}
-                <Modal.Body>
-                    <h2 className='modal-title fs-25 fw-600 text-center mb-2'>Identity Verification</h2>
-                    <Card className="bg-lgray">
-                        <Card.Body className="p-3">
-                            <Row className="mb-3">
-                                <Col lg="12">
-                                    <Form.Label>Country</Form.Label>
-                                    <ReactFlagsSelect
-                                        selected={selected}
-                                        onSelect={(code) => selectedCountry(code)}
-                                        placeholder="Select Country"
-                                        searchable
-                                        searchPlaceholder="Search countries"
-                                        className="menu-flags bg-white"
-                                        required
-                                    />
-                                </Col>
-                            </Row>
-                            {selected &&
-                                <Form.Group>
-                                    <Form.Label>List of Primary IDs</Form.Label>
-                                    <Row>
-                                        <Col>
-                                            <select
-                                                className="form-control mb-3 cursor-pointer"
-                                                name="primary_id"
-                                                defaultValue=""
-                                                onChange={handleChangeGovernemnt}
-                                                value={governmentFormData.primary_id}
-                                                required
-                                            >
-                                                <option value="">Select Primary IDs</option>
+                <Form onSubmit={governmentIDSubmit}>
+                    <Modal.Body>
+                        <h2 className='modal-title fs-25 fw-600 text-center mb-2'>Identity Verification</h2>
+                        <Card className="bg-lgray">
+                            <Card.Body className="p-3">
+                                <Row className="mb-3">
+                                    <Col lg="12">
+                                        <Form.Label>Country</Form.Label>
+                                        <ReactFlagsSelect
+                                            selected={selected}
+                                            onSelect={(code) => selectedCountry(code)}
+                                            placeholder="Select Country"
+                                            searchable
+                                            searchPlaceholder="Search countries"
+                                            className="menu-flags bg-white"
+                                            required
+                                        />
+                                    </Col>
+                                </Row>
+                                {selected &&
+                                    <Form.Group>
+                                        <Form.Label>List of Primary IDs</Form.Label>
+                                        <Row>
+                                            <Col>
+                                                <select
+                                                    className="form-control mb-3 cursor-pointer"
+                                                    name="id_name"
+                                                    defaultValue=""
+                                                    onChange={handleChangeGovernemnt}
+                                                    value={governmentFormData.id_name}
+                                                    required
+                                                >
+                                                    <option value="">Select Primary IDs</option>
 
-                                                <option value="Driver's License">Driver's License</option>
-                                                <option value="Passport">Passport</option>
-                                                {selected === "PH" &&
-                                                    <>
-                                                        <option value="SSS">SSS Unified Multi-Purpose ID (UMID)</option>
-                                                        <option value="PhilID">Philippine Identification (PhilID / ePhilID)</option>
-                                                        <option value="PhilHealth ID">PhilHealth ID</option>
-                                                        <option value="Postal ID">Postal ID</option>
-                                                        <option value="Voter's ID">Voter's ID</option>
-                                                        <option value="Professional Regulation (PRC) ID">Professional Regulation (PRC) ID</option>
-                                                    </>
-                                                }
-                                            </select>
-                                        </Col>
-                                    </Row>
-                                </Form.Group>
-                            }
-                            {governmentFormData?.primary_id &&
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Capture or Attach the Government ID</Form.Label>
-                                    <Row>
-                                        <Col lg="12">
-                                            {viewCapture && !capturePhotoModalShow ?
-                                                <>
-                                                    <Card className="mb-3">
-                                                        <Card.Body>
-                                                            <Col lg={4} className="text-center">
-                                                                <img
-                                                                    src={viewCapture}
-                                                                    alt='profile'
-                                                                    style={{ width: "100%", height: "auto", border: '1px solid #ffffff', cursor: 'pointer' }}
-                                                                    onClick={toggleShowCaptureImage}
-                                                                    className="mb-2"
-                                                                />
+                                                    <option value="Driver's License">Driver's License</option>
+                                                    <option value="Passport">Passport</option>
+                                                    {selected === "PH" &&
+                                                        <>
+                                                            <option value="SSS Unified Multi-Purpose ID (UMID)">SSS Unified Multi-Purpose ID (UMID)</option>
+                                                            <option value="Philippine Identification (PhilID / ePhilID)">Philippine Identification (PhilID / ePhilID)</option>
+                                                            <option value="PhilHealth ID">PhilHealth ID</option>
+                                                            <option value="Postal ID">Postal ID</option>
+                                                            <option value="Voter's ID">Voter's ID</option>
+                                                            <option value="Professional Regulation (PRC) ID">Professional Regulation (PRC) ID</option>
+                                                        </>
+                                                    }
+                                                </select>
+                                            </Col>
+                                        </Row>
+                                    </Form.Group>
+                                }
+                                {governmentFormData?.id_name &&
+                                    <Form.Group>
+                                        {/* <Form.Label>Capture or Attach the Government ID</Form.Label> */}
+                                        <Row>
+                                            <Col lg="12">
+                                                {frontPhoto && !captureBothPhotoModalShow && !captureBackPhotoModalShow?
+                                                    <Card>
+                                                        <Card.Body className="d-flex">
+                                                            <Col lg={6} className="text-center" style={{ paddingRight: '9px' }}>
+                                                                {frontPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
+                                                                    <>
+                                                                        <img
+                                                                            src={frontPhoto}
+                                                                            alt='profile'
+                                                                            style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                            className="mb-2"
+                                                                        />
+                                                                    </>
+                                                                : null}
                                                                 <span>Front ID</span>
+                                                                <br />
+                                                                <div className="d-flex justify-content-center mt-2">
+                                                                    <Button className="btn-back me-3 btn btn-primary w-100" onClick={toggleCaptureFrontPhoto} >
+                                                                        <span>Capture Photo</span>
+                                                                    </Button>
+                                                                    <input
+                                                                        type="file"
+                                                                        onChange={handleChangeFrontID}
+                                                                        style={{ display: 'none' }}
+                                                                        accept="image/*"
+                                                                        id="fileFrontID"
+                                                                    />
+                                                                    <Button className='btn-save btn btn btn-primary w-100' onClick={() => document.getElementById('fileFrontID').click()}
+                                                                     >
+                                                                        <span>Upload</span>
+                                                                    </Button>
+                                                                </div>
+                                                            </Col>
+                                                            <Col lg={6} className="text-center" style={{ paddingLeft: '9px' }}>
+                                                                {governmentFormData?.id_name !== "Passport" && governmentFormData?.id_name !== "Philippine Identification (PhilID / ePhilID)" && governmentFormData?.id_name !== "PhilHealth ID" ?
+                                                                    <>
+                                                                        {backPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
+                                                                            <>
+                                                                                <img
+                                                                                    src={backPhoto}
+                                                                                    alt='profile'
+                                                                                    style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                    className="mb-2"
+                                                                                />
+                                                                            </>
+                                                                        : 
+                                                                            <>
+                                                                                {frontPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
+                                                                                    <div 
+                                                                                        style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                        className="mb-2">
+                                                                                    </div>
+                                                                                : null }
+                                                                            </>
+                                                                        }
+                                                                        <span>Back ID</span>
+                                                                        <br />
+                                                                        <div className="d-flex justify-content-center mt-2">
+                                                                            <Button className="btn-back me-3 btn btn-primary w-100" onClick={toggleCaptureBackPhoto} >
+                                                                                <span>Capture Photo</span>
+                                                                            </Button>
+                                                                            <input
+                                                                                type="file"
+                                                                                onChange={handleChangeBackID}
+                                                                                style={{ display: 'none' }}
+                                                                                accept="image/*"
+                                                                                id="fileBackID"
+                                                                            />
+                                                                            <Button className='btn-save btn btn btn-primary w-100' onClick={() => document.getElementById('fileBackID').click()}
+                                                                            >
+                                                                                <span>Upload</span>
+                                                                            </Button>
+                                                                        </div>
+                                                                    </>
+                                                                : null }
                                                             </Col>
                                                         </Card.Body>
                                                     </Card>
-                                                </>
-                                            : null}
-                                        </Col>
-                                    </Row>
-                                    <Row>
-                                        <Form.Group as={Col}>
-                                            <Form.Check
-                                                className="cursor-pointer"
-                                                type="radio"
-                                                label="Camera"
-                                                name="document_method"
-                                                value="Camera"
-                                                checked={governmentFormData.document_method === "Camera"}
-                                                onChange={handleChangeGovernemnt}
-                                                required
-                                            />
-                                        </Form.Group>
-                                        <Form.Group as={Col}>
-                                            <Form.Check
-                                                className="cursor-pointer"
-                                                type="radio"
-                                                label="Upload Document"
-                                                name="document_method"
-                                                value="Upload Document"
-                                                checked={governmentFormData.document_method === "Upload Document"}
-                                                onChange={handleChangeGovernemnt}
-                                                required
-                                            />
-                                        </Form.Group>
-                                    </Row>
-                                </Form.Group>
-                            }
-                            {governmentFormData.document_method === "Camera" &&
-                                <Button onClick={toggleCapturePhoto} >
-                                    <span>Start Capturing</span>
-                                </Button>
-                            }
-                            {governmentFormData.document_method === "Upload Document" &&
-                                <Button onClick={toggleCapturePhoto} >
-                                    <span>Upload Document</span>
-                                </Button>
-                            }
-                        </Card.Body>
-                    </Card>
-                </Modal.Body>
-                <Modal.Footer className='text-right modal-footer-border'>
+                                                : 
+                                                    <>
+                                                        <Button className="btn-back me-3 btn btn-primary" onClick={toggleCaptureBothPhoto} >
+                                                            <span>Capture Photo</span>
+                                                        </Button>
+                                                        <input
+                                                            type="file"
+                                                            onChange={handleChangeFrontID}
+                                                            style={{ display: 'none' }}
+                                                            accept="image/*"
+                                                            id="fileFrontID"
+                                                        />
+                                                        <Button className='btn-save btn btn btn-primary' onClick={() => document.getElementById('fileFrontID').click()}
+                                                            >
+                                                            <span>Upload</span>
+                                                        </Button>
+                                                    </>
+                                                }
+                                            </Col>
+                                        </Row>
+                                    </Form.Group>
+                                }
+                            </Card.Body>
+                        </Card>
+                    </Modal.Body>
+                    <Modal.Footer className='text-right modal-footer-border'>
 
-                    <Button
-                        type="button"
-                        className="btn-back me-3 btn btn-primary"
-                        onClick={() => { toggleGovernmentIDShow(); }}
-                    >
-                        Cancel
-                    </Button>
+                        <Button
+                            type="button"
+                            className="btn-back me-3 btn btn-primary"
+                            onClick={() => { toggleCloseGovernmentIDShow(); }}
+                        >
+                            Cancel
+                        </Button>
 
-                    {formStatus !== "standby" ?
-                        <Button
-                            className='btn-save btn btn btn-primary'
-                            type='button'
-                            disabled
-                            style={{ cursor: 'not-allowed', opacity: "0.5" }}
-                        >
-                            Saving...
-                        </Button>
-                        :
-                        <Button
-                            className='btn-save btn btn btn-primary'
-                            type='submit'
-                        // onClick={captureFrontSubmit}
-                        >
-                            SAVE
-                        </Button>
-                    }
-                </Modal.Footer>
-                {/* </Form> */}
+                        {formStatus !== "standby" ?
+                            <Button
+                                className='btn-save btn btn btn-primary'
+                                type='button'
+                                disabled
+                                style={{ cursor: 'not-allowed' }}
+                            >
+                                Saving...
+                            </Button>
+                            :
+                            <Button
+                                className='btn-save btn btn btn-primary'
+                                type='submit'
+                            >
+                                SAVE
+                            </Button>
+                        }
+                    </Modal.Footer>
+                </Form>
             </Modal>
         </Layout >
     );
