@@ -148,8 +148,8 @@ const Profile = () => {
     //             // Draw the image on the canvas
     //             ctx.drawImage(
     //                 img,
-    //                 0, // Source X
-    //                 0, // Source Y
+    //                 80, // Source X
+    //                 90, // Source Y
     //                 overlayBoxWidth, // Source Width
     //                 overlayBoxHeight, // Source Height
     //                 0, // Destination X
@@ -268,6 +268,44 @@ const Profile = () => {
             setViewBackCapture(screenshot);
         }
     }
+
+    // const showBackImage = async () => {
+    //     const screenshot = webRef.current.getScreenshot();
+    //     if (screenshot) {
+    //         // Create an image element
+    //         const img = new Image();
+    //         img.src = screenshot;
+    //         img.onload = () => {
+    //             // Create canvas and context
+    //             const canvas = document.createElement('canvas');
+    //             const ctx = canvas.getContext('2d');
+                
+    //             // Set the canvas dimensions to match the cropping box dimensions
+    //             const overlayBoxWidth = 600;  // Replace with actual width
+    //             const overlayBoxHeight = 350; // Replace with actual height
+    
+    //             canvas.width = overlayBoxWidth;
+    //             canvas.height = overlayBoxHeight;
+                
+    //             // Draw the image on the canvas
+    //             ctx.drawImage(
+    //                 img,
+    //                 80, // Source X
+    //                 90, // Source Y
+    //                 overlayBoxWidth, // Source Width
+    //                 overlayBoxHeight, // Source Height
+    //                 0, // Destination X
+    //                 0, // Destination Y
+    //                 overlayBoxWidth, // Destination Width
+    //                 overlayBoxHeight // Destination Height
+    //             );
+                
+    //             // Get the cropped image data
+    //             const croppedImage = canvas.toDataURL();
+    //             setViewBackCapture(croppedImage);
+    //         };
+    //     }
+    // };
 
     const toggleCaptureBackPhoto = () => {
         setCaptureBackPhotoModalShow(!captureBackPhotoModalShow);
@@ -1183,7 +1221,6 @@ const Profile = () => {
                             <Button
                                 className='className="btn-save'
                                 type='button'
-                                disabled
                                 style={{ cursor: 'not-allowed' }}
                             >
                                 Saving...
@@ -1277,7 +1314,6 @@ const Profile = () => {
                             <Button
                                 className='className="btn-save'
                                 type='button'
-                                disabled
                                 style={{ cursor: 'not-allowed' }}
                             >
                                 Saving...
@@ -1368,7 +1404,6 @@ const Profile = () => {
                             <Button
                                 className='className="btn-save'
                                 type='button'
-                                disabled
                                 style={{ cursor: 'not-allowed' }}
                             >
                                 Saving...
@@ -1567,7 +1602,6 @@ const Profile = () => {
                             <Button
                                 className='btn-save btn btn btn-primary'
                                 type='button'
-                                disabled
                                 style={{ cursor: 'not-allowed' }}
                             >
                                 Saving...
