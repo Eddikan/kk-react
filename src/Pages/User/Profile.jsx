@@ -93,25 +93,46 @@ const Profile = () => {
     const [selected, setSelected] = useState("");
 
     const [captureBothPhotoModalShow, setCaptureBothPhotoModalShow] = useState(false);
-    const [viewCapture, setViewCapture] = useState(null);
+    const [viewFrontCapture, setViewFrontCapture] = useState(null);
     const [webcamLoaded, setWebcamLoaded] = useState(false);
-    const [showCaptureImage, setShowCaptureImage] = useState(false);
+    const [showCaptureFrontImage, setShowCaptureFrontImage] = useState(false);
 
-    const [governmentIDShow, setGovernmentIDShow] = useState(false);
-    const [governmentFormData, setGovernmentFormData] = useState([]);
+    const [verificationIDShow, setVerificationIDShow] = useState(false);
+    const [verificationFormData, setVerificationFormData] = useState([]);
 
     const [captureFrontPhotoModalShow, setCaptureFrontPhotoModalShow] = useState(false);
-    const [frontPhoto, setFrontPhoto] = useState(null);
-    const [backPhoto, setBackPhoto] = useState(null);
+    const [primaryFrontPhoto, setPrimaryFrontPhoto] = useState(null);
+    const [primaryBackPhoto, setPrimaryBackPhoto] = useState(null);
+
+    const [firstSecondaryFrontPhoto, setFirstSecondaryFrontPhoto] = useState(null);
+    const [secondSecondaryFrontPhoto, setSecondSecondaryFrontPhoto] = useState(null);
+
+    const [firstSecondaryBackPhoto, setFirstSecondaryBackPhoto] = useState(null);
+    const [secondSecondaryBackPhoto, setSecondSecondaryBackPhoto] = useState(null);
 
     const [captureBackPhotoModalShow, setCaptureBackPhotoModalShow] = useState(false);
     const [viewBackCapture, setViewBackCapture] = useState(null);
     const [showCaptureBackImage, setShowCaptureBackImage] = useState(false);
 
+    const [iDName, setIDName] = useState('');
+
     const currentUser = cookies.currentUser;
     const token = cookies.token;
     const activeProfileTab = cookies.activeProfileTab;
     const userDetails = cookies.userDetails;
+
+    const secondaryIdOptions = [
+        'Birth Certificate',
+        'Barangay Certificate',
+        'NBI Clearance',
+        'TIN ID',
+        'Government Service Insurance System (GSIS) e-Card',
+        'Seaman\'s Book',
+        'Company ID',
+        'Cedula or Community Tax Certificate',
+        'Student ID',
+        'Police Clearance',
+    ];
 
     // Capture using camera
     const handleWebcamLoad = () => {
@@ -123,7 +144,7 @@ const Profile = () => {
         console.log(webRef.current.getScreenshot());
         const screenshot = webRef.current.getScreenshot();
         if (screenshot) {
-            setViewCapture(screenshot);
+            setViewFrontCapture(screenshot);
         }
     }
 
@@ -137,14 +158,14 @@ const Profile = () => {
     //             // Create canvas and context
     //             const canvas = document.createElement('canvas');
     //             const ctx = canvas.getContext('2d');
-                
+
     //             // Set the canvas dimensions to match the cropping box dimensions
     //             const overlayBoxWidth = 600;  // Replace with actual width
     //             const overlayBoxHeight = 350; // Replace with actual height
-    
+
     //             canvas.width = overlayBoxWidth;
     //             canvas.height = overlayBoxHeight;
-                
+
     //             // Draw the image on the canvas
     //             ctx.drawImage(
     //                 img,
@@ -157,79 +178,100 @@ const Profile = () => {
     //                 overlayBoxWidth, // Destination Width
     //                 overlayBoxHeight // Destination Height
     //             );
-                
+
     //             // Get the cropped image data
     //             const croppedImage = canvas.toDataURL();
-    //             setViewCapture(croppedImage);
+    //             setViewFrontCapture(croppedImage);
     //         };
     //     }
     // };
 
     const toggleCaptureBothPhoto = () => {
         setCaptureBothPhotoModalShow(!captureBothPhotoModalShow);
-        setViewCapture(null);
-        setShowCaptureImage(false);
+        setViewFrontCapture(null);
+        setShowCaptureFrontImage(false);
     }
 
-    const toggleShowCaptureImage = () => {
-        setShowCaptureImage(!showCaptureImage);
+    const toggleshowCaptureFrontImage = () => {
+        setShowCaptureFrontImage(!showCaptureFrontImage);
     }
 
     const selectedCountry = (code) => {
         setSelected(code);
 
         if (selected !== code) {
-            setGovernmentFormData([]);
-            setViewCapture(null);
+            setVerificationFormData([]);
+            setViewFrontCapture(null);
             setViewBackCapture(null);
-            setFrontPhoto(null);
-            setBackPhoto(null);
+
+            setPrimaryFrontPhoto(null);
+            setPrimaryBackPhoto(null);
+
+            setFirstSecondaryFrontPhoto(null);
+            setFirstSecondaryBackPhoto(null);
+
+            setSecondSecondaryFrontPhoto(null);
+            setSecondSecondaryBackPhoto(null);
         }
     }
 
     const captureBothSubmit = (e) => {
         setCaptureBothPhotoModalShow(false);
         setWebcamLoaded(false);
-        setFrontPhoto(viewCapture);
+
+        if (iDName === "primary") {
+            setPrimaryFrontPhoto(viewFrontCapture);
+        } else if (iDName === "first_secondary") {
+            setFirstSecondaryFrontPhoto(viewFrontCapture);
+        } else if (iDName === "second_secondary") {
+            setSecondSecondaryFrontPhoto(viewFrontCapture);
+        }
     }
 
     const captureFrontSubmit = (e) => {
         setCaptureFrontPhotoModalShow(false);
         setWebcamLoaded(false);
-        setFrontPhoto(viewCapture);
+
+        if (iDName === "primary") {
+            setPrimaryFrontPhoto(viewFrontCapture);
+        } else if (iDName === "first_secondary") {
+            setFirstSecondaryFrontPhoto(viewFrontCapture);
+        } else if (iDName === "second_secondary") {
+            setSecondSecondaryFrontPhoto(viewFrontCapture);
+        }
     }
 
-    const toggleGovernmentIDShow = () => {
+    const toggleverificationIDShow = () => {
         setReloadCount(count => reloadCount + 1);
-        setGovernmentIDShow(!governmentIDShow);
+        setVerificationIDShow(!verificationIDShow);
         setWebcamLoaded(false);
     }
 
-    
-    const toggleCloseGovernmentIDShow = () => {
-        setGovernmentIDShow(false);
+
+    const toggleCloseverificationIDShow = () => {
+        setVerificationIDShow(false);
         setWebcamLoaded(false);
-        setViewCapture(null);
+        setViewFrontCapture(null);
         setViewBackCapture(null);
-        setFrontPhoto(null);
-        setBackPhoto(null);
+        setPrimaryFrontPhoto(null);
+        setPrimaryBackPhoto(null);
     }
 
-    const governmentIDSubmit = (e) => {
+    const verificationIDSubmit = (e) => {
         setFormStatus('loading');
         e.preventDefault();
 
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {...governmentFormData, id_country: selected, id_front_img: frontPhoto, id_back_img: backPhoto }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...verificationFormData, id_country: selected, primary_id_front_img: primaryFrontPhoto, primary_id_back_img: primaryBackPhoto, first_secondary_id_front_img: firstSecondaryFrontPhoto, first_secondary_id_back_img: firstSecondaryBackPhoto, second_secondary_id_front_img: secondSecondaryFrontPhoto, second_secondary_id_back_img: secondSecondaryBackPhoto }).then((response) => {
             const success = response.data.status;
             if (success === 'Success') {
-                setGovernmentIDShow(false);
+                setVerificationIDShow(false);
                 toast.success('Government ID updated successfully!');
                 setFormStatus('standby');
-                setGovernmentFormData([]);
-                setViewCapture(null);
+                setVerificationFormData([]);
+                setViewFrontCapture(null);
                 setViewBackCapture(null);
-                setFrontPhoto(null);
-                setBackPhoto(null);
+                setPrimaryFrontPhoto(null);
+                setPrimaryBackPhoto(null);
                 setWebcamLoaded(false);
                 setReloadCount(count => reloadCount + 1);
             } else {
@@ -247,17 +289,25 @@ const Profile = () => {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setFrontPhoto(reader.result);
+
+                if (iDName === "primary") {
+                    setPrimaryFrontPhoto(reader.result);
+                } else if (iDName === "first_secondary") {
+                    setFirstSecondaryFrontPhoto(reader.result);
+                } else if (iDName === "second_secondary") {
+                    setSecondSecondaryFrontPhoto(reader.result);
+                }
+
             };
             reader.readAsDataURL(file);
         }
     };
 
     // Front
-    const toggleCaptureFrontPhoto = () => {
+    const toggleCapturePrimaryFrontPhoto = () => {
         setCaptureFrontPhotoModalShow(!captureFrontPhotoModalShow);
         setWebcamLoaded(false);
-        setShowCaptureImage(false);
+        setShowCaptureFrontImage(false);
     }
 
     // Back
@@ -279,14 +329,14 @@ const Profile = () => {
     //             // Create canvas and context
     //             const canvas = document.createElement('canvas');
     //             const ctx = canvas.getContext('2d');
-                
+
     //             // Set the canvas dimensions to match the cropping box dimensions
     //             const overlayBoxWidth = 600;  // Replace with actual width
     //             const overlayBoxHeight = 350; // Replace with actual height
-    
+
     //             canvas.width = overlayBoxWidth;
     //             canvas.height = overlayBoxHeight;
-                
+
     //             // Draw the image on the canvas
     //             ctx.drawImage(
     //                 img,
@@ -299,7 +349,7 @@ const Profile = () => {
     //                 overlayBoxWidth, // Destination Width
     //                 overlayBoxHeight // Destination Height
     //             );
-                
+
     //             // Get the cropped image data
     //             const croppedImage = canvas.toDataURL();
     //             setViewBackCapture(croppedImage);
@@ -307,7 +357,7 @@ const Profile = () => {
     //     }
     // };
 
-    const toggleCaptureBackPhoto = () => {
+    const toggleCapturePrimaryBackPhoto = () => {
         setCaptureBackPhotoModalShow(!captureBackPhotoModalShow);
         setShowCaptureBackImage(false);
         setWebcamLoaded(false);
@@ -320,7 +370,14 @@ const Profile = () => {
     const captureBackSubmit = (e) => {
         setCaptureBackPhotoModalShow(false);
         setWebcamLoaded(false);
-        setBackPhoto(viewBackCapture);
+
+        if (iDName === "primary") {
+            setPrimaryBackPhoto(viewBackCapture);
+        } else if (iDName === "first_secondary") {
+            setFirstSecondaryBackPhoto(viewBackCapture);
+        } else if (iDName === "second_secondary") {
+            setSecondSecondaryBackPhoto(viewBackCapture);
+        }
     }
 
     const handleChangeBackID = (event) => {
@@ -328,11 +385,22 @@ const Profile = () => {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setBackPhoto(reader.result);
+
+                if (iDName === "primary") {
+                    setPrimaryBackPhoto(reader.result);
+                } else if (iDName === "first_secondary") {
+                    setFirstSecondaryBackPhoto(reader.result);
+                } else if (iDName === "second_secondary") {
+                    setSecondSecondaryBackPhoto(reader.result);
+                }
+
             };
             reader.readAsDataURL(file);
         }
     };
+
+    const isFirstSecondaryPhotoUploaded = firstSecondaryFrontPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow && verificationFormData.first_secondary_id_name;
+    const isSecondSecondaryPhotoUploaded = verificationFormData.second_secondary_id_name && secondSecondaryFrontPhoto;
 
     // User Image
     const [userImage, setUserImage] = useState();
@@ -343,26 +411,94 @@ const Profile = () => {
         hiddenFileInputImg.current.click();
     };
 
-    const handleChangeGovernemnt = (e) => {
+    const handleChangeVerification = (e) => {
         const { name, value } = e.target;
 
-        setGovernmentFormData({
-            ...governmentFormData
+        setVerificationFormData({
+            ...verificationFormData
             , [name]: value
         });
 
-        if (name === "id_name") {
-            if (governmentFormData?.id_name !== value) {
+        if (name === "primary_id_name") {
+            if (verificationFormData?.primary_id_name !== value) {
                 setWebcamLoaded(false);
-                setShowCaptureImage(false);
-                setFrontPhoto(null);
-                setBackPhoto(null);
-                setViewCapture(null);
+                setShowCaptureFrontImage(false);
+
+                setPrimaryFrontPhoto(null);
+                setPrimaryBackPhoto(null);
+
+                setFirstSecondaryFrontPhoto(null);
+                setFirstSecondaryBackPhoto(null);
+
+                setSecondSecondaryFrontPhoto(null);
+                setSecondSecondaryBackPhoto(null);
+
+                setViewFrontCapture(null);
                 setViewBackCapture(null);
-                setGovernmentFormData(prevState => ({
+
+                setVerificationFormData(prevState => ({
                     ...prevState,
-                    id_front_img: "",
-                    id_back_img: "",
+                    primary_id_front_img: "",
+                    primary_id_back_img: "",
+
+                    first_secondary_id_front_img: "",
+                    first_secondary_id_back_img: "",
+
+                    second_secondary_id_front_img: "",
+                    second_secondary_id_back_img: "",
+
+                    first_secondary_id_name: "",
+                    second_secondary_id_name: "",
+                }));
+            }
+        }
+
+        if (name === "first_secondary_id_name") {
+            if (verificationFormData?.primary_id_name !== value) {
+                setWebcamLoaded(false);
+                setShowCaptureFrontImage(false);
+
+                setPrimaryFrontPhoto(null);
+                setPrimaryBackPhoto(null);
+
+                setFirstSecondaryFrontPhoto(null);
+                setFirstSecondaryBackPhoto(null);
+
+                setViewFrontCapture(null);
+                setViewBackCapture(null);
+
+                setVerificationFormData(prevState => ({
+                    ...prevState,
+                    primary_id_front_img: "",
+                    primary_id_back_img: "",
+
+                    first_secondary_id_front_img: "",
+                    first_secondary_id_back_img: "",
+                }));
+            }
+        }
+
+        if (name === "second_secondary_id_name") {
+            if (verificationFormData?.primary_id_name !== value) {
+                setWebcamLoaded(false);
+                setShowCaptureFrontImage(false);
+
+                setPrimaryFrontPhoto(null);
+                setPrimaryBackPhoto(null);
+
+                setSecondSecondaryFrontPhoto(null);
+                setSecondSecondaryBackPhoto(null);
+
+                setViewFrontCapture(null);
+                setViewBackCapture(null);
+
+                setVerificationFormData(prevState => ({
+                    ...prevState,
+                    primary_id_front_img: "",
+                    primary_id_back_img: "",
+
+                    second_secondary_id_front_img: "",
+                    second_secondary_id_back_img: "",
                 }));
             }
         }
@@ -568,10 +704,18 @@ const Profile = () => {
             const userData = await GetUserData(e);
             if (userData.id) {
                 setUser(userData);
-                setGovernmentFormData(userData);
+                setVerificationFormData(userData);
                 setSelected(userData.id_country);
-                setFrontPhoto(userData.id_front_img);
-                setBackPhoto(userData.id_back_img);
+
+                setPrimaryFrontPhoto(userData.primary_id_front_img);
+                setPrimaryBackPhoto(userData.primary_id_back_img);
+
+                setFirstSecondaryFrontPhoto(userData.first_secondary_id_front_img);
+                setFirstSecondaryBackPhoto(userData.first_secondary_id_back_img);
+
+                setSecondSecondaryFrontPhoto(userData.second_secondary_id_front_img);
+                setSecondSecondaryBackPhoto(userData.second_secondary_id_back_img);
+
                 setUserImage(userData.image);
                 setCookie('userDetails', JSON.stringify(userData), { path: '/' });
                 if (userData.designer) {
@@ -686,9 +830,9 @@ const Profile = () => {
                                                 :
                                                 <span>-</span>
                                             }
-                                            {user.id_country && user.id_name && user.id_front_img ?
-                                                <MdVerified color="16f11e" className="ms-2"/>
-                                            : null}
+                                            {(user.id_country && user.primary_id_name && user.primary_id_front_img) || (user.id_country && user.first_secondary_id_name && user.second_secondary_id_name && user.first_secondary_id_front_img && user.second_secondary_id_front_img) ? 
+                                                <MdVerified color="16f11e" className="ms-2" />
+                                                : null}
                                         </h2>
                                         <div className='icons-d-flex'>
                                             <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
@@ -1047,20 +1191,20 @@ const Profile = () => {
                                 </Row>
                                 <Row>
                                     <Col lg="6">
-                                        {user.id_name && user.id_front_img ?
+                                        {user.primary_id_name && user.primary_id_front_img ?
                                             <>
                                                 <Card className="bg-lgray mb-4" style={{ width: '721px' }}>
                                                     <Card.Body className="pt-3 px-4 pb-4">
-                                                        <p className='title-designer mb-2'>{user.id_name}</p>
+                                                        <p className='title-designer mb-2'>{user.primary_id_name}</p>
                                                         <img
-                                                            src={user.id_front_img }
+                                                            src={user.primary_id_front_img}
                                                             alt='Front ID'
                                                             style={{ width: "335px", height: "251px", cursor: 'pointer', paddingRight: '11px' }}
                                                         />
-                                                        {user.id_back_img &&
+                                                        {user.primary_id_back_img &&
                                                             <>
                                                                 <img
-                                                                    src={user.id_back_img }
+                                                                    src={user.primary_id_back_img}
                                                                     alt='Back ID'
                                                                     style={{ width: "335px", height: "251px", cursor: 'pointer', paddingLeft: '11px' }}
                                                                 />
@@ -1069,24 +1213,44 @@ const Profile = () => {
                                                     </Card.Body>
                                                 </Card>
                                             </>
-                                        : null }
+                                        : user.first_secondary_id_name && user.second_secondary_id_name && user.first_secondary_id_front_img && user.second_secondary_id_front_img ?
+                                            <>
+                                                <Card className="bg-lgray mb-4" style={{ width: '374px' }}>
+                                                    <Card.Body className="pt-3 px-4 pb-4">
+                                                        <p className='title-designer mb-2'>{user.first_secondary_id_name}</p>
+                                                        <img
+                                                            src={user.first_secondary_id_front_img}
+                                                            alt='Front ID'
+                                                            style={{ width: "335px", height: "251px", cursor: 'pointer', paddingRight: '11px' }}
+                                                        />
+                                                        <br />
+                                                        <p className='title-designer mb-2 mt-3'>{user.second_secondary_id_name}</p>
+                                                        <img
+                                                            src={user.second_secondary_id_front_img}
+                                                            alt='Front ID'
+                                                            style={{ width: "335px", height: "251px", cursor: 'pointer', paddingRight: '11px' }}
+                                                        />
+                                                    </Card.Body>
+                                                </Card>
+                                            </>
+                                        : null}
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
                                     <Col lg="6">
-                                        {user.id_name && user.id_front_img ?
-                                            <Button onClick={toggleGovernmentIDShow}>
+                                        {(user.primary_id_name && user.primary_id_front_img) || (user.first_secondary_id_name && user.second_secondary_id_name && user.first_secondary_id_front_img && user.second_secondary_id_front_img) ?
+                                            <Button onClick={toggleverificationIDShow}>
                                                 <span>Replace Document</span>
                                             </Button>
-                                        : 
-                                            <Button onClick={toggleGovernmentIDShow}>
+                                            :
+                                            <Button onClick={toggleverificationIDShow}>
                                                 <span>Upload Document</span>
                                             </Button>
                                         }
                                     </Col>
                                 </Row>
                             </div>
-                        : null}
+                            : null}
                     </Container>
                 </section >
             }
@@ -1150,7 +1314,7 @@ const Profile = () => {
             <Modal
                 show={captureBothPhotoModalShow}
                 size='lg'
-                // onHide={toggleCaptureBothPhoto}
+            // onHide={toggleCaptureBothPhoto}
             >
                 <Modal.Header className="pb-0">
                     <button type='button' className='close react-modal-close' onClick={toggleCaptureBothPhoto} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
@@ -1160,60 +1324,60 @@ const Profile = () => {
                     <Card className="bg-lgray">
                         <Card.Body className="p-3">
                             <Row>
-                                {showCaptureImage ?
+                                {showCaptureFrontImage ?
                                     <Col lg="12" >
                                         <img
-                                            src={viewCapture}
+                                            src={viewFrontCapture}
                                             alt='profile'
                                             style={{ width: "100%", height: "auto", border: '1px solid #ffffff', position: 'relative' }}
                                         />
                                     </Col>
-                                    : 
-                                        <>
-                                            <Col lg="12" className="webcam-container">
-                                                <h2 className="text-center fw-600">Front of the ID</h2>
-                                                <p className="text-center">Ensuring the front side is fully visible</p>
-                                                <Webcam ref={webRef} onUserMedia={() => handleWebcamLoad()} style={{ width: "100%", height: "auto" }} />
-                                                <div className="overlay-box"></div>
-                                            </Col>
-                                            <Col lg="12" >
-                                                <Row style={{ position: 'absolute', bottom: '35px', width: '100%' }}>
-                                                    <div className="d-flex justify-content-right align-items-end col-3" style={{ position: 'relative' }}>
-                                                        &nbsp;
+                                    :
+                                    <>
+                                        <Col lg="12" className="webcam-container">
+                                            <h2 className="text-center fw-600">Front of the ID</h2>
+                                            <p className="text-center">Ensuring the front side is fully visible</p>
+                                            <Webcam ref={webRef} onUserMedia={() => handleWebcamLoad()} style={{ width: "100%", height: "auto" }} />
+                                            <div className="overlay-box"></div>
+                                        </Col>
+                                        <Col lg="12" >
+                                            <Row style={{ position: 'absolute', bottom: '35px', width: '100%' }}>
+                                                <div className="d-flex justify-content-right align-items-end col-3" style={{ position: 'relative' }}>
+                                                    &nbsp;
+                                                </div>
+                                                {webcamLoaded && (
+                                                    <div className="d-flex justify-content-center align-items-end col-6">
+                                                        <button
+                                                            className='camera-button'
+                                                            type='button'
+                                                            onClick={() => { showImage(); toggleshowCaptureFrontImage(); }}
+                                                            style={{ position: 'relative', color: '#FFFFFF' }}
+                                                        >
+                                                            <FaCamera
+                                                                size="30px"
+                                                                className="cancel-button me-1 dot-icon"
+                                                            />
+                                                        </button>
                                                     </div>
-                                                    {webcamLoaded && (
-                                                        <div className="d-flex justify-content-center align-items-end col-6">
-                                                            <button
-                                                                className='camera-button'
-                                                                type='button'
-                                                                onClick={() => { showImage(); toggleShowCaptureImage(); }}
-                                                                style={{ position: 'relative', color: '#FFFFFF' }}
-                                                            >
-                                                                <FaCamera
-                                                                    size="30px"
-                                                                    className="cancel-button me-1 dot-icon"
-                                                                />
-                                                            </button>
-                                                        </div>
-                                                    )}
-                                                    <div className="col-3">
-                                                        &nbsp;
-                                                    </div>
-                                                </Row>
-                                            </Col>
-                                        </>
+                                                )}
+                                                <div className="col-3">
+                                                    &nbsp;
+                                                </div>
+                                            </Row>
+                                        </Col>
+                                    </>
                                 }
                             </Row>
                         </Card.Body>
                     </Card>
                 </Modal.Body>
-                {showCaptureImage &&
+                {showCaptureFrontImage &&
                     <Modal.Footer className='text-right modal-footer-border'>
 
                         <Button
                             type="button"
                             className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
-                            onClick={() => { toggleShowCaptureImage(); setViewCapture(null); }}>
+                            onClick={() => { toggleshowCaptureFrontImage(); setViewFrontCapture(null); }}>
                             Take Another Photo
                         </Button>
 
@@ -1229,10 +1393,12 @@ const Profile = () => {
                             <Button
                                 className='className="btn-save'
                                 type='submit'
-                                onClick={governmentFormData?.id_name !== "Passport" && governmentFormData?.id_name !== "Philippine Identification (PhilID / ePhilID)" && governmentFormData?.id_name !== "PhilHealth ID" ?
-                                    () => { captureBothSubmit(); toggleCaptureBackPhoto(); } :
+                                onClick={verificationFormData?.primary_id_name !== "Passport" && verificationFormData?.primary_id_name !== "SSS Unified Multi-Purpose ID (UMID)" && verificationFormData?.primary_id_name !== "PhilHealth ID" && verificationFormData?.primary_id_name !== "Postal ID" && verificationFormData?.primary_id_name !== "Voter's ID" && verificationFormData?.primary_id_name !== "Professional Regulation (PRC) ID"
+                                    && verificationFormData?.first_secondary_id_name !== "Birth Certificate" && verificationFormData?.first_secondary_id_name !== "Barangay Certificate" && verificationFormData?.first_secondary_id_name !== "NBI Clearance" && verificationFormData?.first_secondary_id_name !== "TIN ID" && verificationFormData?.first_secondary_id_name !== "Government Service Insurance System (GSIS) e-Card" && verificationFormData?.first_secondary_id_name !== "Seaman's Book" && verificationFormData?.first_secondary_id_name !== "Company ID" && verificationFormData?.first_secondary_id_name !== "Cedula or Community Tax Certificate" && verificationFormData?.first_secondary_id_name !== "Student ID" && verificationFormData?.first_secondary_id_name !== "Police Clearance"
+                                    && verificationFormData?.second_secondary_id_name !== "Birth Certificate" && verificationFormData?.second_secondary_id_name !== "Barangay Certificate" && verificationFormData?.second_secondary_id_name !== "NBI Clearance" && verificationFormData?.second_secondary_id_name !== "TIN ID" && verificationFormData?.second_secondary_id_name !== "Government Service Insurance System (GSIS) e-Card" && verificationFormData?.second_secondary_id_name !== "Seaman's Book" && verificationFormData?.second_secondary_id_name !== "Company ID" && verificationFormData?.second_secondary_id_name !== "Cedula or Community Tax Certificate" && verificationFormData?.second_secondary_id_name !== "Student ID" && verificationFormData?.second_secondary_id_name !== "Police Clearance" ?
+                                    () => { captureBothSubmit(); toggleCapturePrimaryBackPhoto(); } :
                                     captureBothSubmit
-                                  }
+                                }
                             >
                                 SAVE
                             </Button>
@@ -1244,20 +1410,20 @@ const Profile = () => {
             <Modal
                 show={captureFrontPhotoModalShow}
                 size='lg'
-                // onHide={toggleCaptureFrontPhoto}
+            // onHide={toggleCapturePrimaryFrontPhoto}
             >
                 <Modal.Header className="pb-0">
-                    <button type='button' className='close react-modal-close' onClick={toggleCaptureFrontPhoto} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={toggleCapturePrimaryFrontPhoto} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>
                 <Modal.Body>
                     <Card className="bg-lgray">
                         <Card.Body className="p-3">
                             <Row>
-                                {showCaptureImage ?
+                                {showCaptureFrontImage ?
                                     <Col lg="12" >
                                         <img
-                                            src={viewCapture}
+                                            src={viewFrontCapture}
                                             alt='profile'
                                             style={{ width: "100%", height: "auto", border: '1px solid #ffffff', position: 'relative' }}
                                         />
@@ -1279,7 +1445,7 @@ const Profile = () => {
                                                         <button
                                                             className='camera-button'
                                                             type='button'
-                                                            onClick={() => { showImage(); toggleShowCaptureImage(); }}
+                                                            onClick={() => { showImage(); toggleshowCaptureFrontImage(); }}
                                                             style={{ position: 'relative', color: '#FFFFFF' }}
                                                         >
                                                             <FaCamera
@@ -1300,13 +1466,13 @@ const Profile = () => {
                         </Card.Body>
                     </Card>
                 </Modal.Body>
-                {showCaptureImage &&
+                {showCaptureFrontImage &&
                     <Modal.Footer className='text-right modal-footer-border'>
 
                         <Button
                             type="button"
                             className="btn btn-secondary border-black bg-white text-black me-3 btn-style"
-                            onClick={() => { toggleShowCaptureImage(); setViewCapture(null); }}>
+                            onClick={() => { toggleshowCaptureFrontImage(); setViewFrontCapture(null); }}>
                             Take Another Photo
                         </Button>
 
@@ -1322,7 +1488,7 @@ const Profile = () => {
                             <Button
                                 className='className="btn-save'
                                 type='submit'
-                                onClick={() => {captureFrontSubmit();} }
+                                onClick={() => { captureFrontSubmit(); }}
                             >
                                 SAVE
                             </Button>
@@ -1334,10 +1500,10 @@ const Profile = () => {
             <Modal
                 show={captureBackPhotoModalShow}
                 size='lg'
-                // onHide={toggleCaptureBackPhoto}
+            // onHide={toggleCapturePrimaryBackPhoto}
             >
                 <Modal.Header className="pb-0">
-                    <button type='button' className='close react-modal-close' onClick={toggleCaptureBackPhoto} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={toggleCapturePrimaryBackPhoto} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>
                 <Modal.Body>
@@ -1412,7 +1578,7 @@ const Profile = () => {
                             <Button
                                 className='className="btn-save'
                                 type='submit'
-                                onClick={() => {captureBackSubmit();}}
+                                onClick={() => { captureBackSubmit(); }}
                             >
                                 SAVE
                             </Button>
@@ -1422,14 +1588,14 @@ const Profile = () => {
             </Modal>
 
             <Modal
-                show={governmentIDShow}
+                show={verificationIDShow}
                 size='lg'
             >
                 <Modal.Header className="pb-0">
-                    <button type='button' className='close react-modal-close' onClick={toggleCloseGovernmentIDShow} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    <button type='button' className='close react-modal-close' onClick={toggleCloseverificationIDShow} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
                     </button>
                 </Modal.Header>
-                <Form onSubmit={governmentIDSubmit}>
+                <Form onSubmit={verificationIDSubmit}>
                     <Modal.Body>
                         <h2 className='modal-title fs-25 fw-600 text-center mb-2'>Identity Verification</h2>
                         <Card className="bg-lgray">
@@ -1449,141 +1615,411 @@ const Profile = () => {
                                     </Col>
                                 </Row>
                                 {selected &&
-                                    <Form.Group>
-                                        <Form.Label>List of Primary IDs</Form.Label>
-                                        <Row>
-                                            <Col>
-                                                <select
-                                                    className="form-control mb-3 cursor-pointer"
-                                                    name="id_name"
-                                                    defaultValue=""
-                                                    onChange={handleChangeGovernemnt}
-                                                    value={governmentFormData.id_name}
-                                                    required
-                                                >
-                                                    <option value="">Select Primary IDs</option>
+                                    <>
+                                        <Form.Group>
+                                            <Form.Label>List of Primary IDs</Form.Label>
+                                            <Row>
+                                                <Col>
+                                                    <select
+                                                        className="form-control mb-3 cursor-pointer"
+                                                        name="primary_id_name"
+                                                        defaultValue=""
+                                                        onChange={handleChangeVerification}
+                                                        value={verificationFormData.primary_id_name}
+                                                        required
+                                                    >
+                                                        <option value="">Select Primary IDs</option>
 
-                                                    <option value="Driver's License">Driver's License</option>
-                                                    <option value="Passport">Passport</option>
-                                                    {selected === "PH" &&
-                                                        <>
-                                                            <option value="SSS Unified Multi-Purpose ID (UMID)">SSS Unified Multi-Purpose ID (UMID)</option>
-                                                            <option value="Philippine Identification (PhilID / ePhilID)">Philippine Identification (PhilID / ePhilID)</option>
-                                                            <option value="PhilHealth ID">PhilHealth ID</option>
-                                                            <option value="Postal ID">Postal ID</option>
-                                                            <option value="Voter's ID">Voter's ID</option>
-                                                            <option value="Professional Regulation (PRC) ID">Professional Regulation (PRC) ID</option>
-                                                        </>
-                                                    }
-                                                </select>
-                                            </Col>
-                                        </Row>
-                                    </Form.Group>
+                                                        <option value="Driver's License">Driver's License</option>
+                                                        <option value="Passport">Passport</option>
+                                                        {selected === "PH" &&
+                                                            <>
+                                                                <option value="SSS Unified Multi-Purpose ID (UMID)">SSS Unified Multi-Purpose ID (UMID)</option>
+                                                                <option value="Philippine Identification (PhilID / ePhilID)">Philippine Identification (PhilID / ePhilID)</option>
+                                                                <option value="PhilHealth ID">PhilHealth ID</option>
+                                                                <option value="Postal ID">Postal ID</option>
+                                                                <option value="Voter's ID">Voter's ID</option>
+                                                                <option value="Professional Regulation (PRC) ID">Professional Regulation (PRC) ID</option>
+                                                            </>
+                                                        }
+                                                        <option value="Other IDs">Other IDs</option>
+                                                    </select>
+                                                </Col>
+                                            </Row>
+                                        </Form.Group>
+                                    </>
                                 }
-                                {governmentFormData?.id_name &&
-                                    <Form.Group>
-                                        {/* <Form.Label>Capture or Attach the Government ID</Form.Label> */}
-                                        <Row>
-                                            <Col lg="12">
-                                                {frontPhoto && !captureBothPhotoModalShow && !captureBackPhotoModalShow?
-                                                    <Card>
-                                                        <Card.Body className="d-flex">
-                                                            <Col lg={6} className="text-center" style={{ paddingRight: '9px' }}>
-                                                                {frontPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
-                                                                    <>
-                                                                        <img
-                                                                            src={frontPhoto}
-                                                                            alt='profile'
-                                                                            style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
-                                                                            className="mb-2"
-                                                                        />
-                                                                    </>
-                                                                : null}
-                                                                <span>Front ID</span>
-                                                                <br />
-                                                                <div className="d-flex justify-content-center mt-2">
-                                                                    <Button className="btn-back me-3 btn btn-primary w-100" onClick={toggleCaptureFrontPhoto} >
-                                                                        <span>Capture Photo</span>
-                                                                    </Button>
-                                                                    <input
-                                                                        type="file"
-                                                                        onChange={handleChangeFrontID}
-                                                                        style={{ display: 'none' }}
-                                                                        accept="image/*"
-                                                                        id="fileFrontID"
-                                                                    />
-                                                                    <Button className='btn-save btn btn btn-primary w-100' onClick={() => document.getElementById('fileFrontID').click()}
-                                                                     >
-                                                                        <span>Upload</span>
-                                                                    </Button>
-                                                                </div>
-                                                            </Col>
-                                                            <Col lg={6} className="text-center" style={{ paddingLeft: '9px' }}>
-                                                                {governmentFormData?.id_name !== "Passport" && governmentFormData?.id_name !== "Philippine Identification (PhilID / ePhilID)" && governmentFormData?.id_name !== "PhilHealth ID" ?
-                                                                    <>
-                                                                        {backPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
+                                {verificationFormData?.primary_id_name &&
+                                    <>
+                                        {verificationFormData?.primary_id_name !== "Other IDs" ?
+                                            <Form.Group>
+                                                <Row>
+                                                    <Col lg="12">
+                                                        {primaryFrontPhoto && !captureBothPhotoModalShow && !captureBackPhotoModalShow ?
+                                                            <Card>
+                                                                <Card.Body className="d-flex">
+                                                                    <Col lg={6} className="text-center" style={{ paddingRight: '9px' }}>
+                                                                        {primaryFrontPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
                                                                             <>
                                                                                 <img
-                                                                                    src={backPhoto}
+                                                                                    src={primaryFrontPhoto}
                                                                                     alt='profile'
                                                                                     style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
                                                                                     className="mb-2"
                                                                                 />
                                                                             </>
-                                                                        : 
-                                                                            <>
-                                                                                {frontPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
-                                                                                    <div 
-                                                                                        style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
-                                                                                        className="mb-2">
-                                                                                    </div>
-                                                                                : null }
-                                                                            </>
-                                                                        }
-                                                                        <span>Back ID</span>
+                                                                            : null}
+                                                                        <span>Front ID</span>
                                                                         <br />
                                                                         <div className="d-flex justify-content-center mt-2">
-                                                                            <Button className="btn-back me-3 btn btn-primary w-100" onClick={toggleCaptureBackPhoto} >
+                                                                            <Button className="btn-back me-3 btn btn-primary w-100" onClick={() => { toggleCapturePrimaryFrontPhoto(); setIDName('primary'); }} >
                                                                                 <span>Capture Photo</span>
                                                                             </Button>
                                                                             <input
                                                                                 type="file"
-                                                                                onChange={handleChangeBackID}
+                                                                                onChange={handleChangeFrontID}
                                                                                 style={{ display: 'none' }}
                                                                                 accept="image/*"
-                                                                                id="fileBackID"
+                                                                                id="fileFrontID"
                                                                             />
-                                                                            <Button className='btn-save btn btn btn-primary w-100' onClick={() => document.getElementById('fileBackID').click()}
+                                                                            <Button className='btn-save btn btn btn-primary w-100' onClick={() => { document.getElementById('fileFrontID').click(); setIDName('primary') }}
                                                                             >
                                                                                 <span>Upload</span>
                                                                             </Button>
                                                                         </div>
-                                                                    </>
-                                                                : null }
-                                                            </Col>
-                                                        </Card.Body>
-                                                    </Card>
-                                                : 
+                                                                    </Col>
+                                                                    <Col lg={6} className="text-center" style={{ paddingLeft: '9px' }}>
+                                                                        {verificationFormData?.primary_id_name !== "Passport" && verificationFormData?.primary_id_name !== "SSS Unified Multi-Purpose ID (UMID)" && verificationFormData?.primary_id_name !== "PhilHealth ID" && verificationFormData?.primary_id_name !== "Postal ID" && verificationFormData?.primary_id_name !== "Voter's ID" && verificationFormData?.primary_id_name !== "Professional Regulation (PRC) ID" ?
+                                                                            <>
+                                                                                {primaryBackPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
+                                                                                    <>
+                                                                                        <img
+                                                                                            src={primaryBackPhoto}
+                                                                                            alt='profile'
+                                                                                            style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                            className="mb-2"
+                                                                                        />
+                                                                                    </>
+                                                                                    :
+                                                                                    <>
+                                                                                        {primaryFrontPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
+                                                                                            <div
+                                                                                                style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                                className="mb-2">
+                                                                                            </div>
+                                                                                            : null}
+                                                                                    </>
+                                                                                }
+                                                                                <span>Back ID</span>
+                                                                                <br />
+                                                                                <div className="d-flex justify-content-center mt-2">
+                                                                                    <Button className="btn-back me-3 btn btn-primary w-100" onClick={() => { toggleCapturePrimaryBackPhoto(); setIDName('primary') }} >
+                                                                                        <span>Capture Photo</span>
+                                                                                    </Button>
+                                                                                    <input
+                                                                                        type="file"
+                                                                                        onChange={handleChangeBackID}
+                                                                                        style={{ display: 'none' }}
+                                                                                        accept="image/*"
+                                                                                        id="fileBackID"
+                                                                                    />
+                                                                                    <Button className='btn-save btn btn btn-primary w-100' onClick={() => { document.getElementById('fileBackID').click(); setIDName('primary') }}
+                                                                                    >
+                                                                                        <span>Upload</span>
+                                                                                    </Button>
+                                                                                </div>
+                                                                            </>
+                                                                            : null}
+                                                                    </Col>
+                                                                </Card.Body>
+                                                            </Card>
+                                                            :
+                                                            <>
+                                                                <Button className="btn-back me-3 btn btn-primary" onClick={() => { toggleCaptureBothPhoto(); setIDName('primary') }} >
+                                                                    <span>Capture Photo</span>
+                                                                </Button>
+                                                                <input
+                                                                    type="file"
+                                                                    onChange={handleChangeFrontID}
+                                                                    style={{ display: 'none' }}
+                                                                    accept="image/*"
+                                                                    id="fileFrontID"
+                                                                />
+                                                                <Button className='btn-save btn btn btn-primary' onClick={() => { document.getElementById('fileFrontID').click(); setIDName('primary') }}
+                                                                >
+                                                                    <span>Upload</span>
+                                                                </Button>
+                                                            </>
+                                                        }
+                                                    </Col>
+                                                </Row>
+                                            </Form.Group>
+                                            :
+                                            <>
+                                                <Row>
+                                                    <Col>
+                                                        <Form.Label>List of Secondary IDs</Form.Label>
+                                                        <select
+                                                            className="form-control mb-3 cursor-pointer" waza
+                                                            name="first_secondary_id_name"
+                                                            defaultValue=""
+                                                            onChange={handleChangeVerification}
+                                                            value={verificationFormData.first_secondary_id_name}
+                                                            required
+                                                        >
+                                                            <option value="">Select Secondary IDs</option>
+                                                            {selected === "PH" &&
+                                                                <>
+                                                                    {secondaryIdOptions.map((id) => (
+                                                                        <option
+                                                                            key={id}
+                                                                            value={id}
+                                                                            disabled={verificationFormData.second_secondary_id_name === id}
+                                                                        >
+                                                                            {id}
+                                                                        </option>
+                                                                    ))}
+                                                                </>
+                                                            }
+                                                        </select>
+                                                    </Col>
+                                                </Row>
+                                                {verificationFormData.first_secondary_id_name && 
                                                     <>
-                                                        <Button className="btn-back me-3 btn btn-primary" onClick={toggleCaptureBothPhoto} >
-                                                            <span>Capture Photo</span>
-                                                        </Button>
-                                                        <input
-                                                            type="file"
-                                                            onChange={handleChangeFrontID}
-                                                            style={{ display: 'none' }}
-                                                            accept="image/*"
-                                                            id="fileFrontID"
-                                                        />
-                                                        <Button className='btn-save btn btn btn-primary' onClick={() => document.getElementById('fileFrontID').click()}
-                                                            >
-                                                            <span>Upload</span>
-                                                        </Button>
+                                                        <Form.Group>
+                                                            <Row className="mb-3">
+                                                                <Col lg="12">
+                                                                    {firstSecondaryFrontPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
+                                                                        <Card>
+                                                                            <Card.Body className="d-flex">
+                                                                                <Col lg={6} className="text-center" style={{ paddingRight: '9px' }}>
+                                                                                    {firstSecondaryFrontPhoto ?
+                                                                                        <>
+                                                                                            <img
+                                                                                                src={firstSecondaryFrontPhoto}
+                                                                                                alt='profile'
+                                                                                                style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                                className="mb-2"
+                                                                                            />
+                                                                                        </>
+                                                                                    : null}
+                                                                                    <span>Front ID</span>
+                                                                                    <br />
+                                                                                    <div className="d-flex justify-content-center mt-2">
+                                                                                        <Button className="btn-back me-3 btn btn-primary w-100" onClick={() => { toggleCapturePrimaryFrontPhoto(); setIDName('first_secondary') }} >
+                                                                                            <span>Capture Photo</span>
+                                                                                        </Button>
+                                                                                        <input
+                                                                                            type="file"
+                                                                                            onChange={handleChangeFrontID}
+                                                                                            style={{ display: 'none' }}
+                                                                                            accept="image/*"
+                                                                                            id="secondaryFileFrontID"
+                                                                                        />
+                                                                                        <Button className='btn-save btn btn btn-primary w-100' onClick={() => { document.getElementById('secondaryFileFrontID').click(); setIDName('first_secondary') }}
+                                                                                        >
+                                                                                            <span>Upload</span>
+                                                                                        </Button>
+                                                                                    </div>
+                                                                                </Col>
+                                                                                <Col lg={6} className="text-center" style={{ paddingLeft: '9px' }}>
+                                                                                    {/* {firstSecondaryBackPhoto ?
+                                                                                        <>
+                                                                                            <img
+                                                                                                src={firstSecondaryBackPhoto}
+                                                                                                alt='profile'
+                                                                                                style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                                className="mb-2"
+                                                                                            />
+                                                                                        </>
+                                                                                        :
+                                                                                        <div
+                                                                                            style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                            className="mb-2">
+                                                                                        </div>
+                                                                                    }
+                                                                                    <span>Back ID</span>
+                                                                                    <br />
+                                                                                    <div className="d-flex justify-content-center mt-2">
+                                                                                        <Button className="btn-back me-3 btn btn-primary w-100" onClick={() => { toggleCapturePrimaryBackPhoto(); setIDName('first_secondary') }} >
+                                                                                            <span>Capture Photo</span>
+                                                                                        </Button>
+                                                                                        <input
+                                                                                            type="file"
+                                                                                            onChange={handleChangeBackID}
+                                                                                            style={{ display: 'none' }}
+                                                                                            accept="image/*"
+                                                                                            id="secondaryFileBackID"
+                                                                                        />
+                                                                                        <Button className='btn-save btn btn btn-primary w-100' onClick={() => { document.getElementById('secondaryFileBackID').click(); setIDName('first_secondary') }}
+                                                                                        >
+                                                                                            <span>Upload</span>
+                                                                                        </Button>
+                                                                                    </div> */}
+                                                                                </Col>
+                                                                            </Card.Body>
+                                                                        </Card>
+                                                                        :
+                                                                        <>
+                                                                            <Button className="btn-back me-3 btn btn-primary" onClick={() => { toggleCaptureBothPhoto(); setIDName('first_secondary') }} >
+                                                                                <span>Capture Photo</span>
+                                                                            </Button>
+                                                                            <input
+                                                                                type="file"
+                                                                                onChange={handleChangeFrontID}
+                                                                                style={{ display: 'none' }}
+                                                                                accept="image/*"
+                                                                                id="secondaryFileFrontID"
+                                                                            />
+                                                                            <Button className='btn-save btn btn btn-primary' onClick={() => { document.getElementById('secondaryFileFrontID').click(); setIDName('first_secondary') }}
+                                                                            >
+                                                                                <span>Upload</span>
+                                                                            </Button>
+                                                                        </>
+                                                                    }
+                                                                </Col>
+                                                            </Row>
+                                                        </Form.Group>
                                                     </>
                                                 }
-                                            </Col>
-                                        </Row>
-                                    </Form.Group>
+                                                {(isFirstSecondaryPhotoUploaded || isSecondSecondaryPhotoUploaded) ?
+                                                    <>
+                                                        <Row>
+                                                            <Col>
+                                                                {verificationFormData.first_secondary_id_name || verificationFormData.second_secondary_id_name ?
+                                                                    <>
+                                                                        <select
+                                                                            className="form-control mb-3 cursor-pointer"
+                                                                            name="second_secondary_id_name"
+                                                                            defaultValue=""
+                                                                            onChange={handleChangeVerification}
+                                                                            value={verificationFormData.second_secondary_id_name}
+                                                                            required
+                                                                        >
+
+                                                                            <option value="">Select Secondary IDs</option>
+                                                                            {selected === "PH" &&
+                                                                                <>
+                                                                                    {secondaryIdOptions.map((id) => (
+                                                                                        <option
+                                                                                            key={id}
+                                                                                            value={id}
+                                                                                            disabled={verificationFormData.first_secondary_id_name === id}
+                                                                                        >
+                                                                                            {id}
+                                                                                        </option>
+                                                                                    ))}
+                                                                                </>
+                                                                            }
+                                                                        </select>
+                                                                    </>
+                                                                    : null}
+                                                            </Col>
+                                                        </Row>
+                                                        {verificationFormData.second_secondary_id_name &&
+                                                            <>
+                                                                <Form.Group>
+                                                                    <Row>
+                                                                        <Col lg="12">
+                                                                            {secondSecondaryFrontPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
+                                                                                <Card>
+                                                                                    <Card.Body className="d-flex">
+                                                                                        <Col lg={6} className="text-center" style={{ paddingRight: '9px' }}>
+                                                                                            {secondSecondaryFrontPhoto ?
+                                                                                                <>
+                                                                                                    <img
+                                                                                                        src={secondSecondaryFrontPhoto}
+                                                                                                        alt='profile'
+                                                                                                        style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                                        className="mb-2"
+                                                                                                    />
+                                                                                                </>
+                                                                                                : null}
+                                                                                            <span>Front ID</span>
+                                                                                            <br />
+                                                                                            <div className="d-flex justify-content-center mt-2">
+                                                                                                <Button className="btn-back me-3 btn btn-primary w-100" onClick={() => { toggleCapturePrimaryFrontPhoto(); setIDName('second_secondary') }} >
+                                                                                                    <span>Capture Photo</span>
+                                                                                                </Button>
+                                                                                                <input
+                                                                                                    type="file"
+                                                                                                    onChange={handleChangeFrontID}
+                                                                                                    style={{ display: 'none' }}
+                                                                                                    accept="image/*"
+                                                                                                    id="secondSecondaryFileFrontID"
+                                                                                                />
+                                                                                                <Button className='btn-save btn btn btn-primary w-100' onClick={() => { document.getElementById('secondSecondaryFileFrontID').click(); setIDName('second_secondary') }}
+                                                                                                >
+                                                                                                    <span>Upload</span>
+                                                                                                </Button>
+                                                                                            </div>
+                                                                                        </Col>
+                                                                                        <Col lg={6} className="text-center" style={{ paddingLeft: '9px' }}>
+                                                                                            {/* {secondSecondaryBackPhoto ?
+                                                                                                <>
+                                                                                                    <img
+                                                                                                        src={secondSecondaryBackPhoto}
+                                                                                                        alt='profile'
+                                                                                                        style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                                        className="mb-2"
+                                                                                                    />
+                                                                                                </>
+                                                                                                :
+                                                                                                <div
+                                                                                                    style={{ width: "335px", height: "251px", border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                                    className="mb-2">
+                                                                                                </div>
+                                                                                            }
+                                                                                            <span>Back ID</span>
+                                                                                            <br />
+                                                                                            <div className="d-flex justify-content-center mt-2">
+                                                                                                <Button className="btn-back me-3 btn btn-primary w-100" onClick={() => { toggleCapturePrimaryBackPhoto(); setIDName('second_secondary') }} >
+                                                                                                    <span>Capture Photo</span>
+                                                                                                </Button>
+                                                                                                <input
+                                                                                                    type="file"
+                                                                                                    onChange={handleChangeBackID}
+                                                                                                    style={{ display: 'none' }}
+                                                                                                    accept="image/*"
+                                                                                                    id="secondSecondaryFileBackID"
+                                                                                                />
+                                                                                                <Button className='btn-save btn btn btn-primary w-100' onClick={() => { document.getElementById('secondSecondaryFileBackID').click(); setIDName('second_secondary') }}
+                                                                                                >
+                                                                                                    <span>Upload</span>
+                                                                                                </Button>
+                                                                                            </div> */}
+                                                                                        </Col>
+                                                                                    </Card.Body>
+                                                                                </Card>
+                                                                                :
+                                                                                <>
+                                                                                    <Button className="btn-back me-3 btn btn-primary" onClick={() => { toggleCaptureBothPhoto(); setIDName('second_secondary') }} >
+                                                                                        <span>Capture Photo</span>
+                                                                                    </Button>
+                                                                                    <input
+                                                                                        type="file"
+                                                                                        onChange={handleChangeFrontID}
+                                                                                        style={{ display: 'none' }}
+                                                                                        accept="image/*"
+                                                                                        id="secondSecondaryFileFrontID"
+                                                                                    />
+                                                                                    <Button className='btn-save btn btn btn-primary' onClick={() => { document.getElementById('secondSecondaryFileFrontID').click(); setIDName('second_secondary') }}
+                                                                                    >
+                                                                                        <span>Upload</span>
+                                                                                    </Button>
+                                                                                </>
+                                                                            }
+                                                                        </Col>
+                                                                    </Row>
+                                                                </Form.Group>
+                                                            </>
+                                                        }
+                                                    </>
+
+                                                    : null}
+                                            </>
+                                        }
+                                    </>
                                 }
                             </Card.Body>
                         </Card>
@@ -1593,7 +2029,7 @@ const Profile = () => {
                         <Button
                             type="button"
                             className="btn-back me-3 btn btn-primary"
-                            onClick={() => { toggleCloseGovernmentIDShow(); }}
+                            onClick={() => { toggleCloseverificationIDShow(); }}
                         >
                             Cancel
                         </Button>
