@@ -261,6 +261,35 @@ const Profile = () => {
         setFormStatus('loading');
         e.preventDefault();
 
+        if (verificationFormData?.primary_id_name !== "Other IDs") {
+            if (primaryFrontPhoto === null || primaryFrontPhoto === "") {
+                toast.error('Please upload the front image of your ID for verification!');
+                setFormStatus('standby');
+                return;
+            } else if (verificationFormData?.primary_id_name !== "Passport" && verificationFormData?.primary_id_name !== "SSS Unified Multi-Purpose ID (UMID)" && verificationFormData?.primary_id_name !== "PhilHealth ID" && verificationFormData?.primary_id_name !== "Postal ID" && verificationFormData?.primary_id_name !== "Voter's ID" && verificationFormData?.primary_id_name !== "Professional Regulation (PRC) ID") {
+                if (primaryBackPhoto === null || primaryBackPhoto === "") {
+                    toast.error('Please upload the back image of your ID for verification!');
+                    setFormStatus('standby');
+                    return;
+                }
+            }
+        }
+
+        if (verificationFormData?.first_secondary_id_name) {
+            if (firstSecondaryFrontPhoto === null || firstSecondaryFrontPhoto === "") {
+                toast.error('Please upload an image of your first secondary ID for verification!');
+                setFormStatus('standby');
+                return;
+            }
+            if (verificationFormData?.second_secondary_id_name) {
+                if (secondSecondaryFrontPhoto === null || secondSecondaryFrontPhoto === "") {
+                    toast.error('Please upload an image of your second secondary ID for verification!');
+                    setFormStatus('standby');
+                    return;
+                }
+            }
+        }
+
         axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...verificationFormData, id_country: selected, primary_id_front_img: primaryFrontPhoto, primary_id_back_img: primaryBackPhoto, first_secondary_id_front_img: firstSecondaryFrontPhoto, first_secondary_id_back_img: firstSecondaryBackPhoto, second_secondary_id_front_img: secondSecondaryFrontPhoto, second_secondary_id_back_img: secondSecondaryBackPhoto }).then((response) => {
             const success = response.data.status;
             if (success === 'Success') {
@@ -1193,7 +1222,18 @@ const Profile = () => {
                                     <Col lg="6">
                                         {user.primary_id_name && user.primary_id_front_img ?
                                             <>
-                                                <Card className="bg-lgray mb-4" style={{ width: '721px' }}>
+                                                <Card className="bg-lgray mb-4" 
+                                                    style={{
+                                                        width: (user?.primary_id_name !== "Passport" &&
+                                                                user?.primary_id_name !== "SSS Unified Multi-Purpose ID (UMID)" &&
+                                                                user?.primary_id_name !== "PhilHealth ID" &&
+                                                                user?.primary_id_name !== "Postal ID" &&
+                                                                user?.primary_id_name !== "Voter's ID" &&
+                                                                user?.primary_id_name !== "Professional Regulation (PRC) ID")
+                                                            ? '721px'
+                                                            : '374px'
+                                                    }}
+                                                >
                                                     <Card.Body className="pt-3 px-4 pb-4">
                                                         <p className='title-designer mb-2'>{user.primary_id_name}</p>
                                                         <img
