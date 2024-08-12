@@ -311,90 +311,79 @@ const Questionnaire = () => {
                 </Col>
               </Row> */}
             </Container>
-            :
-            null
-          }
-          {/* {step == 1 && !questionnaire1Show ?
-          <>
-            <Container className='q1 narrow-600 py-5 px-3 mt-5 text-dgray'>
-              <Row>
-                <Col lg='12' className='text-center'>
-                  <h2 className='form-title pb-2'>Are you looking to shop for ready-to-wear, couture, or fabrics?</h2>
-                </Col>
-              </Row>
-              <Row className='narrow-400 mt-3'>
-                <Col lg='6' className='text-right'>
-                  <Button className='btn-outline' onClick={function () { setStep((prevStep) => prevStep + 1); }}>No</Button>
-                </Col>
-                <Col lg='6' className='text-left'>
-                  <Button className='btn-primary' onClick={function () { setQuestionnaire1Show((prevStatus) => true); }} >Yes</Button>
-                </Col>
-              </Row>
-            </Container>
-          </>
-          :
-          null
-        } */}
-          {step == 1 ?
+        //   {/* {step == 1 && !questionnaire1Show ?
+        //   <>
+        //     <Container className='q1 narrow-600 py-5 px-3 mt-5 text-dgray'>
+        //       <Row>
+        //         <Col lg='12' className='text-center'>
+        //           <h2 className='form-title pb-2'>Are you looking to shop for ready-to-wear, couture, or fabrics?</h2>
+        //         </Col>
+        //       </Row>
+        //       <Row className='narrow-400 mt-3'>
+        //         <Col lg='6' className='text-right'>
+        //           <Button className='btn-outline' onClick={function () { setStep((prevStep) => prevStep + 1); }}>No</Button>
+        //         </Col>
+        //         <Col lg='6' className='text-left'>
+        //           <Button className='btn-primary' onClick={function () { setQuestionnaire1Show((prevStatus) => true); }} >Yes</Button>
+        //         </Col>
+        //       </Row>
+        //     </Container>
+        //   </>
+        //   :
+        //   null
+        // } */}
+          : step == 1 ?
             <Questionnaire1 currentUser={currentUser} user={user} onReloadPage={reloadPage} onHideAll={hideAll} step={step} signupType={signupType} />
-            :
-            null
-          }
-          {/* {step == 2 && !questionnaire2Show ?
-          <>
-            <Container className='q1 narrow-600 py-5 px-3 mt-5 text-dgray'>
-              <Row>
-                <Col lg='12' className='text-center'>
-                  <h2 className='form-title pb-2'>Are you a fashion designer?</h2>
-                </Col>
-              </Row>
-              <Row className='narrow-400 mt-3'>
-                <Col lg='6' className='text-right'>
-                  <Button className='btn-outline' onClick={function () { setStep((prevStep) => prevStep + 1); }}>No</Button>
-                </Col>
-                <Col lg='6' className='text-left'>
-                  <Button className='btn-primary' onClick={function () { setQuestionnaire2Show((prevStatus) => true); toggleSetValueOne('is_designer', 1); }} >Yes</Button>
-                </Col>
-              </Row>
-            </Container>
-          </>
-          :
-          null
-        } */}
-          {step == 2 ?
+        //   {/* {step == 2 && !questionnaire2Show ?
+        //   <>
+        //     <Container className='q1 narrow-600 py-5 px-3 mt-5 text-dgray'>
+        //       <Row>
+        //         <Col lg='12' className='text-center'>
+        //           <h2 className='form-title pb-2'>Are you a fashion designer?</h2>
+        //         </Col>
+        //       </Row>
+        //       <Row className='narrow-400 mt-3'>
+        //         <Col lg='6' className='text-right'>
+        //           <Button className='btn-outline' onClick={function () { setStep((prevStep) => prevStep + 1); }}>No</Button>
+        //         </Col>
+        //         <Col lg='6' className='text-left'>
+        //           <Button className='btn-primary' onClick={function () { setQuestionnaire2Show((prevStatus) => true); toggleSetValueOne('is_designer', 1); }} >Yes</Button>
+        //         </Col>
+        //       </Row>
+        //     </Container>
+        //   </>
+        //   :
+        //   null
+        // } */}
+          : step == 2 ?
             <Questionnaire2 currentUser={currentUser} user={user} onReloadPage={reloadPage} onHideAll={hideAll} step={step} signupType={signupType} />
-            :
-            null
-          }
 
-          {/* {step == 3 && !questionnaire3Show ?
-          <>
-            <Container className='q3 q2-no narrow-600 py-5 px-3 mt-5 text-dgray'>
-              <Row>
-                <Col lg='12' className='text-center'>
-                  <h2 className='form-title pb-2'>Do you sell fabrics?</h2>
-                </Col>
-              </Row>
-              <Row className='narrow-400 mt-3'>
-                <Col lg='6' className='text-right'>
-                  <Button className='btn-outline' onClick={function () { setStep((prevStep) => prevStep + 1); }}>No</Button>
-                </Col>
-                <Col lg='6' className='text-left'>
-                  <Button className='btn-primary' onClick={function () { setQuestionnaire3Show((prevStatus) => true); toggleSetValueOne('is_seller', 1); }} >Yes</Button>
-                </Col>
-              </Row>
-            </Container>
-          </>
-          :
-          null
-        } */}
-          {step == 3 ?
+        //   {/* {step == 3 && !questionnaire3Show ?
+        //   <>
+        //     <Container className='q3 q2-no narrow-600 py-5 px-3 mt-5 text-dgray'>
+        //       <Row>
+        //         <Col lg='12' className='text-center'>
+        //           <h2 className='form-title pb-2'>Do you sell fabrics?</h2>
+        //         </Col>
+        //       </Row>
+        //       <Row className='narrow-400 mt-3'>
+        //         <Col lg='6' className='text-right'>
+        //           <Button className='btn-outline' onClick={function () { setStep((prevStep) => prevStep + 1); }}>No</Button>
+        //         </Col>
+        //         <Col lg='6' className='text-left'>
+        //           <Button className='btn-primary' onClick={function () { setQuestionnaire3Show((prevStatus) => true); toggleSetValueOne('is_seller', 1); }} >Yes</Button>
+        //         </Col>
+        //       </Row>
+        //     </Container>
+        //   </>
+        //   :
+        //   null
+        // } */}
+          : step == 3 ?
             <Questionnaire3 currentUser={currentUser} user={user} onReloadPage={reloadPage} onHideAll={hideAll} step={step} signupType={signupType} />
-            :
-            null
-          }
-          {/* {step == 4 ? */}
-          {step == 5 ?
+            
+          // {/* {step == 4 ? */}
+          : step == 5 ?
             <>
               <Container className='q1 narrow-850 mt-5 px-0 d-flex'>
                 <div className='step4-first-cont p-5 '>

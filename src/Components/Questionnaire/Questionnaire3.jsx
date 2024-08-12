@@ -469,13 +469,13 @@ const Questionnaire3 = (props) => {
                                 :
                                 <Button className='btn-outline me-3' type="button" onClick={function () { hideAll(0); }}>Back</Button>
                             } */}
-                            {signupType !== "seller" && (
-                                signupType === "designer_seller" && selectedSignupType === "designer_seller" ? (
+                            {/* {signupType !== "seller" && ( */}
+                                {signupType === "designer_seller" || selectedSignupType === "designer_seller" ? (
                                     <Button className='btn-outline me-3' type="button" onClick={() => hideAll(2)}>Back</Button>
                                 ) : (
                                     <Button className='btn-outline me-3' type="button" onClick={() => hideAll(0)}>Back</Button>
-                                )
-                            )}
+                                )}
+                            {/* // )} */}
                             {questionnaire3Loading ?
                                 <Button className='btn-primary me-3' type="button">Saving...</Button>
                                 :
