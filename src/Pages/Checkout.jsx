@@ -2,13 +2,14 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import LayoutNoFooter from 'Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Modal, Card, FormGroup, FormControl } from 'react-bootstrap';
+import { PayPalButtons } from "@paypal/react-paypal-js";
 import Form from 'react-bootstrap/Form';
 import 'Assets/styles/DesignerCalendar/style.css';
 import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import SignUp from 'Components/Forms/InsideAuth/Signup';
 import Login from 'Components/Forms/InsideAuth/Login';
-import { FaCcVisa, FaCcMastercard, FaTruck  } from "react-icons/fa";
+import { FaCcVisa, FaCcMastercard, FaCcPaypal, FaTruck  } from "react-icons/fa";
 import LoadingPage from 'Components/Shared/LoadingPage';
 import 'Assets/styles/Cart/style.css';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
@@ -19,6 +20,7 @@ import { useParams } from 'react-router-dom';
 import Countries from 'Utils/Countries';
 import axios from "axios";
 import toast from 'react-hot-toast';
+
 
 const initialCheckOut = {
     card_name: '',
@@ -174,7 +176,35 @@ const Cart = ({props }) => {
         });
     }
 
-    
+    const checkOutSubmitPaypal = (e) => {
+        setFormStatus('loading');
+        const uniqueSelectedCartItems = [
+            ...new Set(
+              cartItems
+                .filter(item => selectedCartItems.includes(item.product.id))
+                .map(item => item.id)
+            )
+        ];
+
+        postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount }).then(response => {
+            const success = response.data.status;
+            const data = response.data.data;
+            if (success == success) {
+                toast.success('Order added successfully!');
+                console.log("data", data);
+                setTimeout(() => {
+                    setReloadCount(prevReloadCount => prevReloadCount + 1);
+                    removeCookie('setSelectedCartItems', { path: '/' });
+                    removeCookie('cookieCheckoutDesigner', { path: '/' });
+                    navigate(`/thank-you?order_id=${data.order.id}`);
+                }, 1000);
+            } else {
+                toast.error('There has been an error adding the order, please try again!');
+            }
+        }).catch(() => {
+            toast.error('There has been an error adding the order, please try again!');
+        });
+    }
 
     useEffect(() => {
         const resizeObserver = new ResizeObserver(() => {
@@ -270,8 +300,6 @@ const Cart = ({props }) => {
         }
 
     }, [tempCartItems, selectedCartItems, reloadCount, item]);
-
-    console.log('showModal', showModal);
 
     return (
         <LayoutNoFooter>
@@ -502,7 +530,7 @@ const Cart = ({props }) => {
                                                                     <Row>
                                                                         <Col lg="6">
                                                                             <Form.Label htmlFor="first_name" className='mb-2'>
-                                                                                First Name
+                                                                                First Name <span className="text-danger">*</span>
                                                                             </Form.Label>
                                                                             <FormControl
                                                                                 type="text"
@@ -532,7 +560,7 @@ const Cart = ({props }) => {
                                                                     <Row>
                                                                         <Col lg="6">
                                                                             <Form.Label htmlFor="email" className='mb-2'>
-                                                                                Email
+                                                                                Email <span className="text-danger">*</span>
                                                                             </Form.Label>
                                                                             <FormControl
                                                                                 type="email"
@@ -545,7 +573,7 @@ const Cart = ({props }) => {
                                                                         </Col>
                                                                         <Col lg="6">
                                                                             <Form.Label htmlFor="phone" className='mb-2'>
-                                                                                Phone Number
+                                                                                Phone Number <span className="text-danger">*</span>
                                                                             </Form.Label>
                                                                             <FormControl
                                                                                 type="text"
@@ -560,7 +588,7 @@ const Cart = ({props }) => {
                                                                 </FormGroup>
                                                                 <FormGroup className="mb-3">
                                                                     <Form.Label htmlFor="address_line_1" className='mb-2'>
-                                                                        Address Line 1
+                                                                        Address Line 1 <span className="text-danger">*</span>
                                                                     </Form.Label>
                                                                     <FormControl
                                                                         type="text"
@@ -587,7 +615,7 @@ const Cart = ({props }) => {
                                                                     <Row>
                                                                         <Col lg="6">
                                                                             <Form.Label htmlFor="city" className='mb-2'>
-                                                                                City
+                                                                                City <span className="text-danger">*</span>
                                                                             </Form.Label>
                                                                             <FormControl
                                                                                 type="text"
@@ -600,7 +628,7 @@ const Cart = ({props }) => {
                                                                         </Col>
                                                                         <Col lg="6">
                                                                             <Form.Label htmlFor="province" className='mb-2'>
-                                                                                Province/State
+                                                                                Province/State <span className="text-danger">*</span>
                                                                             </Form.Label>
                                                                             <FormControl
                                                                                 type="text"
@@ -617,7 +645,7 @@ const Cart = ({props }) => {
                                                                     <Row>
                                                                         <Col lg="6">
                                                                             <Form.Label htmlFor="postal_code" className='mb-2'>
-                                                                                ZIP/Postal Code
+                                                                                ZIP/Postal Code <span className="text-danger">*</span>
                                                                             </Form.Label>
                                                                             <FormControl
                                                                                 type="text"
@@ -630,7 +658,7 @@ const Cart = ({props }) => {
                                                                         </Col>
                                                                         <Col lg="6">
                                                                             <Form.Label htmlFor="province" className='mb-2'>
-                                                                                Country
+                                                                                Country <span className="text-danger">*</span>
                                                                             </Form.Label>
                                                                             <Form.Control as='select' name='delivery_country' value={checkOutFormData.delivery_country} className='' onChange={handleChangePaymentInfo} required>
                                                                                 <option value=''>Select Country</option>
@@ -654,13 +682,13 @@ const Cart = ({props }) => {
                                                 }
                                             </Card.Body>
                                         </Card>
-                                        {checkOutFormData.ship_to != "" ?
+                                        {checkOutFormData.ship_to != "" && checkOutFormData.delivery_first_name != "" && checkOutFormData.delivery_email != "" && checkOutFormData.delivery_phone != "" && checkOutFormData.delivery_address_line_1 != "" && checkOutFormData.delivery_city != "" && checkOutFormData.delivery_province != "" && checkOutFormData.delivery_postal_code != "" && checkOutFormData.delivery_country != "" ?
                                             <Card>
                                                 <Card.Body>
                                                     <div className='fs-22 rufina-family fw-600'>Payment Info</div>
                                                     <hr className='mt-2' />
                                                     <div>Payment Method</div>
-                                                    <div className='mt-3 d-flex'>
+                                                    {/* <div className='mt-3 d-flex'>
                                                         <div className='d-flex'>
                                                             <input
                                                                 type="radio"
@@ -677,9 +705,28 @@ const Cart = ({props }) => {
                                                         <div className='ms-2'>
                                                             VISA
                                                         </div>
+                                                    </div> */}
+
+                                                    <div className='mt-3 d-flex'>
+                                                        <div className='d-flex'>
+                                                            <input
+                                                                type="radio"
+                                                                name="payment_method"
+                                                                value="Paypal"
+                                                                onChange={(e) => { setRadioButtonValue("Paypal"); handleChangePaymentInfo(e); }}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div className='ms-3'>
+                                                            <FaCcPaypal size={20} />
+                                                        </div>
+
+                                                        <div className='ms-2'>
+                                                            Paypal
+                                                        </div>
                                                     </div>
 
-                                                    <div className='mt-2 d-flex'>
+                                                    {/* <div className='mt-2 d-flex'>
                                                         <div className='d-flex'>
                                                             <input
                                                                 type="radio"
@@ -696,7 +743,7 @@ const Cart = ({props }) => {
                                                         <div className='ms-2'>
                                                             MasterCard
                                                         </div>
-                                                    </div>
+                                                    </div> */}
                                                     <div className='mt-2 d-flex'>
                                                         <div className='d-flex'>
                                                             <input
@@ -716,7 +763,7 @@ const Cart = ({props }) => {
                                                         </div>
                                                     </div>
 
-                                                    {radioButtonValue != "" && radioButtonValue != "Cash on Delivery" ?
+                                                    {radioButtonValue != "" && radioButtonValue != "Cash on Delivery" && radioButtonValue != "Paypal" ?
                                                         <div>
                                                             <hr />
                                                             <div className='mb-4'>
@@ -762,15 +809,52 @@ const Cart = ({props }) => {
                                                     <div className='mt-4'>
                                                         <Row>
                                                             <Col lg="12">
-                                                                {totalAmount < 0 ?
+                                                                {totalAmount < 1 ?
                                                                     <button type="button" className='btn btn-primary' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
                                                                     :
                                                                     <>
-                                                                        {currentUser ?
-                                                                            <button type="submit" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                                        {radioButtonValue != "" ?
+                                                                            <>
+                                                                                {radioButtonValue == "Paypal" ?
+                                                                                    <>
+                                                                                        {currentUser ?
+                                                                                            <PayPalButtons
+                                                                                                fundingSource="paypal"
+                                                                                                createOrder={(data, actions) => {
+                                                                                                    return actions.order.create({
+                                                                                                        purchase_units: [{
+                                                                                                            amount: {
+                                                                                                                value: totalAmount // Replace with the actual amount
+                                                                                                            },
+                                                                                                        }],
+                                                                                                    });
+                                                                                                }}
+                                                                                                onApprove={(data, actions) => {
+                                                                                                    return actions.order.capture().then((details) => {
+                                                                                                        // alert("Transaction completed by " + details.payer.name.given_name);
+                                                                                                        checkOutSubmitPaypal({status: 'Paid'});
+                                                                                                        // Call your backend API to save the transaction details
+                                                                                                    });
+                                                                                                }}
+                                                                                            />
+                                                                                            :
+                                                                                            <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                        }
+                                                                                    </>
+                                                                                    :
+                                                                                    <>
+                                                                                    {currentUser ?
+                                                                                            <button type="submit" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                                                            :
+                                                                                            <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                        }
+                                                                                    </>
+                                                                                }
+                                                                            </>
                                                                             :
-                                                                            <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                            null
                                                                         }
+                                                                        
                                                                     </>
                                                                     
                                                                 }
