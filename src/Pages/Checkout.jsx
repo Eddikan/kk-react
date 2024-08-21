@@ -176,7 +176,7 @@ const Cart = ({props }) => {
         });
     }
 
-    const checkOutSubmitPaypal = (e) => {
+    const checkOutSubmitPaypal = (details, data) => {
         setFormStatus('loading');
         const uniqueSelectedCartItems = [
             ...new Set(
@@ -186,7 +186,7 @@ const Cart = ({props }) => {
             )
         ];
 
-        postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount }).then(response => {
+        postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Paid', payment_details: details}).then(response => {
             const success = response.data.status;
             const data = response.data.data;
             if (success == success) {
@@ -707,7 +707,7 @@ const Cart = ({props }) => {
                                                         </div>
                                                     </div> */}
 
-                                                    <div className='mt-3 d-flex'>
+                                                    <label className='mt-3 d-flex cursor-pointer'>
                                                         <div className='d-flex'>
                                                             <input
                                                                 type="radio"
@@ -724,7 +724,7 @@ const Cart = ({props }) => {
                                                         <div className='ms-2'>
                                                             Paypal
                                                         </div>
-                                                    </div>
+                                                    </label>
 
                                                     {/* <div className='mt-2 d-flex'>
                                                         <div className='d-flex'>
@@ -744,7 +744,7 @@ const Cart = ({props }) => {
                                                             MasterCard
                                                         </div>
                                                     </div> */}
-                                                    <div className='mt-2 d-flex'>
+                                                    <label className='mt-2 d-flex cursor-pointer'>
                                                         <div className='d-flex'>
                                                             <input
                                                                 type="radio"
@@ -761,7 +761,7 @@ const Cart = ({props }) => {
                                                         <div className='ms-2'>
                                                             Cash on Delivery
                                                         </div>
-                                                    </div>
+                                                    </label>
 
                                                     {radioButtonValue != "" && radioButtonValue != "Cash on Delivery" && radioButtonValue != "Paypal" ?
                                                         <div>
@@ -832,7 +832,7 @@ const Cart = ({props }) => {
                                                                                                 onApprove={(data, actions) => {
                                                                                                     return actions.order.capture().then((details) => {
                                                                                                         // alert("Transaction completed by " + details.payer.name.given_name);
-                                                                                                        checkOutSubmitPaypal({status: 'Paid'});
+                                                                                                        checkOutSubmitPaypal(details, data);
                                                                                                         // Call your backend API to save the transaction details
                                                                                                     });
                                                                                                 }}
