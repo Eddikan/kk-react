@@ -108,3 +108,7 @@ span.hover-sidebar {
     position: absolute;
     z-index: 1;
 }
+
+.rotate-icon {
+    transform: rotate(180deg);
+}

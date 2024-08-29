@@ -58,14 +58,14 @@ import BodyLength from 'Assets/images/body-length.png';
 
 
 
-const BodyMeasurementDescriptions = (props) => {
+const BodyMeasurementDescriptionWomen = (props) => {
    
 
     return (
             <Row>
                 
                 <Col lg={12} className='mb-4'>
-                    <div className='fs-30 fw-600 rufina-family'>Body Measurement Descriptions</div>
+                    <div className='fs-30 fw-600 rufina-family'>Body Measurement Descriptions - Women</div>
                 </Col>
 
                 <Col lg={12} className='mb-4'>
@@ -598,4 +598,4 @@ const BodyMeasurementDescriptions = (props) => {
             );  
         };
 
-export default BodyMeasurementDescriptions;
+export default BodyMeasurementDescriptionWomen;

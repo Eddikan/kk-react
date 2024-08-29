@@ -27,6 +27,9 @@ import { MdOutlineDescription } from "react-icons/md";
 
 
 const SidebarMeasurementGuide = ({ onChangeTab }) => {
+    const [showBodyMeasurementSubMenu, setShowBodyMeasurementSubMenu] = useState(false);
+    const [showComprehensiveGuideSubMenu, setShowComprehensiveGuideSubMenu] = useState(false);
+    const [showBodyMeasurementDescriptionSubMenu, setShowBodyMeasurementDescriptionSubMenu] = useState(false);
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
     const userDetails = cookies.userDetails;
@@ -38,6 +41,24 @@ const SidebarMeasurementGuide = ({ onChangeTab }) => {
         onChangeTab(1);
     }, []);
 
+    const toggleBodyMeasurementSubMenu = () => {
+        setShowBodyMeasurementSubMenu(!showBodyMeasurementSubMenu);
+        setShowComprehensiveGuideSubMenu(false);
+        setShowBodyMeasurementDescriptionSubMenu(false);
+    };
+
+    const toggleComprehensiveGuideSubMenu = () => {
+        setShowComprehensiveGuideSubMenu(!showComprehensiveGuideSubMenu);
+        setShowBodyMeasurementSubMenu(false);
+        setShowBodyMeasurementDescriptionSubMenu(false);
+    };
+
+    const toggleBodyMeasurementDescriptionSubMenu = () => {
+        setShowBodyMeasurementDescriptionSubMenu(!showBodyMeasurementDescriptionSubMenu);
+        setShowBodyMeasurementSubMenu(false);
+        setShowComprehensiveGuideSubMenu(false);
+    };
+
     return (
         <>
             <div id="sidebar-measurement-guide" className="pe-3">
@@ -46,33 +67,74 @@ const SidebarMeasurementGuide = ({ onChangeTab }) => {
                         <p className="fs-20 text-black"><strong>Measurement Guide</strong></p>
 
                         <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => onChangeTab(1)}>
-                            <TfiRulerAlt  size="22" className="me-2 mb-1" />How to Measure Yourself</div>
-                  
-                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => onChangeTab(2)}>
-                                <LiaFemaleSolid size="22" className="me-2 mb-1" />
-                                Female Body Types
-                            </div>
+                            <TfiRulerAlt size="22" className="me-2 mb-1" />How to Measure Yourself</div>
 
-                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => onChangeTab(3)} >
-                                <LiaRulerVerticalSolid size="22" className="me-2 mb-1" />
-                                Body Measurement Table
-                            </div>
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => onChangeTab(2)}>
+                            <LiaFemaleSolid size="22" className="me-2 mb-1" />
+                            Female Body Types
+                        </div>
 
-                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => onChangeTab(4)} >
-                                <RiGuideLine size="22" className="me-2 mb-1" />
-                                Comprehensive Guide
-                            </div>
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" >
+                            <LiaRulerVerticalSolid size="22" className="me-2 mb-1" />
+                            Body Measurement Table
+                            <IoIosArrowDown onClick={toggleBodyMeasurementSubMenu} size="20px" className={`ms-2 ${showBodyMeasurementSubMenu ? 'rotate-icon' : ''}`} />
+                        </div>
+                        {showBodyMeasurementSubMenu && (
+                            <div className="submenu" style={{ marginLeft: '28px' }}>
+                                <div className="p-1 px-3">
+                                    <p className='cursor-pointer mb-0 yellow-hover' onClick={() => onChangeTab(3)}>Men</p>
+                                </div>
 
-                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => onChangeTab(5)} >
-                                <MdOutlineDescription size="22" className="me-2 mb-1" />
-                                Body Measurement Descriptions
-                            </div>
+                                <div className="p-1 px-3">
+                                    <p className='cursor-pointer mb-0 yellow-hover' onClick={() => onChangeTab(4)}>Women</p>
+                                </div>
 
-                    
-                                
-                        
+                                <div className="p-1 px-3">
+                                    <p className='cursor-pointer mb-0 yellow-hover' onClick={() => onChangeTab(5)}>Male Child</p>
+                                </div>
+
+                                <div className="p-1 px-3">
+                                    <p className='cursor-pointer mb-0 yellow-hover' onClick={() => onChangeTab(6)}>Female Child</p>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" >
+                            <RiGuideLine size="22" className="me-2 mb-1" />
+                            Comprehensive Guide
+                            <IoIosArrowDown onClick={toggleComprehensiveGuideSubMenu} size="20px" className={`ms-2 ${showComprehensiveGuideSubMenu ? 'rotate-icon' : ''}`} />
+                        </div>
+                        {showComprehensiveGuideSubMenu && (
+                            <div className="submenu" style={{ marginLeft: '28px' }}>
+                                <div className="p-1 px-3">
+                                    <p className='cursor-pointer mb-0 yellow-hover' onClick={() => onChangeTab(7)}>Men</p>
+                                </div>
+
+                                <div className="p-1 px-3">
+                                    <p className='cursor-pointer mb-0 yellow-hover' onClick={() => onChangeTab(8)}>Women</p>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3">
+                            <MdOutlineDescription size="22" className="me-2 mb-1" />
+                            Body Measurement Descriptions
+                            <IoIosArrowDown onClick={toggleBodyMeasurementDescriptionSubMenu} size="20px" className={`ms-2 ${showBodyMeasurementDescriptionSubMenu ? 'rotate-icon' : ''}`} />
+                        </div>
+                        {showBodyMeasurementDescriptionSubMenu && (
+                            <div className="submenu" style={{ marginLeft: '28px' }}>
+                                <div className="p-1 px-3">
+                                    <p className='cursor-pointer mb-0 yellow-hover' onClick={() => onChangeTab(9)}>Men</p>
+                                </div>
+
+                                <div className="p-1 px-3">
+                                    <p className='cursor-pointer mb-0 yellow-hover' onClick={() => onChangeTab(10)}>Women</p>
+                                </div>
+                            </div>
+                        )}
+
                     </AccordionItem>
-                
+
                 </UncontrolledAccordion>
             </div >
         </>
