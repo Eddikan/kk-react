@@ -65,7 +65,7 @@ const BodyMeasurementDescriptionWomen = (props) => {
             <Row>
                 
                 <Col lg={12} className='mb-4'>
-                    <div className='fs-30 fw-600 rufina-family'>Body Measurement Descriptions - Women</div>
+                    <div className='fs-30 fw-600 rufina-family'>Body Measurement Descriptions for Women</div>
                 </Col>
 
                 <Col lg={12} className='mb-4'>

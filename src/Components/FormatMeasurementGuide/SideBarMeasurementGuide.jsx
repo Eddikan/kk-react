@@ -74,10 +74,12 @@ const SidebarMeasurementGuide = ({ onChangeTab }) => {
                             Female Body Types
                         </div>
 
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" >
-                            <LiaRulerVerticalSolid size="22" className="me-2 mb-1" />
-                            Body Measurement Table
-                            <IoIosArrowDown onClick={toggleBodyMeasurementSubMenu} size="20px" className={`ms-2 ${showBodyMeasurementSubMenu ? 'rotate-icon' : ''}`} />
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3 d-flex justify-content-between" onClick={toggleBodyMeasurementSubMenu} >
+                            <div>
+                                <LiaRulerVerticalSolid size="22" className="me-2 mb-1" />
+                                Body Measurement Table
+                            </div>
+                            <IoIosArrowDown size="20px" className={`ms-2 ${showBodyMeasurementSubMenu ? 'rotate-icon' : ''}`} />
                         </div>
                         {showBodyMeasurementSubMenu && (
                             <div className="submenu" style={{ marginLeft: '28px' }}>
@@ -99,10 +101,12 @@ const SidebarMeasurementGuide = ({ onChangeTab }) => {
                             </div>
                         )}
 
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" >
-                            <RiGuideLine size="22" className="me-2 mb-1" />
-                            Comprehensive Guide
-                            <IoIosArrowDown onClick={toggleComprehensiveGuideSubMenu} size="20px" className={`ms-2 ${showComprehensiveGuideSubMenu ? 'rotate-icon' : ''}`} />
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3 d-flex justify-content-between" onClick={toggleComprehensiveGuideSubMenu}>
+                            <div>
+                                <RiGuideLine size="22" className="me-2 mb-1" />
+                                Comprehensive Guide
+                            </div>
+                            <IoIosArrowDown size="20px" className={`ms-2 ${showComprehensiveGuideSubMenu ? 'rotate-icon' : ''}`} />
                         </div>
                         {showComprehensiveGuideSubMenu && (
                             <div className="submenu" style={{ marginLeft: '28px' }}>
@@ -116,10 +120,12 @@ const SidebarMeasurementGuide = ({ onChangeTab }) => {
                             </div>
                         )}
 
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3">
-                            <MdOutlineDescription size="22" className="me-2 mb-1" />
-                            Body Measurement Descriptions
-                            <IoIosArrowDown onClick={toggleBodyMeasurementDescriptionSubMenu} size="20px" className={`ms-2 ${showBodyMeasurementDescriptionSubMenu ? 'rotate-icon' : ''}`} />
+                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3 d-flex justify-content-between" onClick={toggleBodyMeasurementDescriptionSubMenu}>
+                            <div>
+                                <MdOutlineDescription size="22" className="me-2 mb-1" />
+                                Body Measurement Descriptions
+                            </div>
+                            <IoIosArrowDown size="20px" className={`ms-2 ${showBodyMeasurementDescriptionSubMenu ? 'rotate-icon' : ''}`} />
                         </div>
                         {showBodyMeasurementDescriptionSubMenu && (
                             <div className="submenu" style={{ marginLeft: '28px' }}>

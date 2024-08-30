@@ -13,7 +13,7 @@ const BodyMeasurementTableFemaleChild = (props) => {
         <Row>
             <Col lg={12} className='mb-4'>
                 <div>
-                    <div className='rufina-family fs-30 fw-600 mb-3'>Body Measurement Table - Female Child</div>
+                    <div className='rufina-family fs-30 fw-600 mb-3'>Body Measurement Table for Female Child</div>
                 </div>
 
                 <div className='mb-4'>

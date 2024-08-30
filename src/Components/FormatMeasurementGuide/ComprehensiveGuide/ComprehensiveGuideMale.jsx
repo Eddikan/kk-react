@@ -28,7 +28,7 @@ const ComprehensiveGuideMen = (props) => {
             <Row>
                 
                 <Col lg={12} className='mb-4'>
-                    <div className='fs-30 fw-600 rufina-family'>Comprehensive Guide for Female Body Measurements - Men</div>
+                    <div className='fs-30 fw-600 rufina-family'>Comprehensive Guide for Male Body Measurements</div>
                 </Col>
 
                 <Col lg={6}>
