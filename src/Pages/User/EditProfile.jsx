@@ -48,6 +48,59 @@ const initialUserData = Object.freeze({
     youtube: '',
 });
 
+const initialChecklistData = {
+    measurement_checklist: 1,
+    upper_neck_circumference: '',
+    lower_neck_circumference: '',
+    chest_circumference: '',
+    bust_circumference: '',
+    under_bust_circumference: '',
+    waist_circumference: '',
+    mid_hip_circumference: '',
+    hip_circumference: '',
+    bust_distance: '',
+    front_chest_width: '',
+    back_chest_width: '',
+    front_waist_length: '',
+    back_waist_length: '',
+    center_front_length: '',
+    center_back_length: '',
+    front_neck_depth: '',
+    back_neck_depth: '',
+    bust_depth: '',
+    armhole_depth: '',
+    bust_height: '',
+    front_shoulder_width: '',
+    back_shoulder_width: '',
+    shoulder_length: '',
+    shoulder_depth: '',
+    elbow_circumference: '',
+    underarm_length: '',
+    sleeve_length: '',
+    arm_circumference: '',
+    wrist_circumference: '',
+    elbow_length: '',
+    armhole_circumference: '',
+    sleeve_cap_height: '',
+    hip_depth: '',
+    crotch_depth: '',
+    crotch_length: '',
+    pants_length: '',
+    knee_length: '',
+    in_seam_length: '',
+    thigh_circumference: '',
+    mid_thigh_circumference: '',
+    knee_circumference: '',
+    calf_circumference: '',
+    ankle_circumference: '',
+    ankle_heel_circumference: '',
+    body_height: '',
+    body_length: '',
+    side_seam: '',
+    pants_trouser_length: '',
+
+}
+
 const initialDesignerData = Object.freeze({
     areas_of_specialization: [""],
 });
@@ -57,6 +110,8 @@ const EditProfile = () => {
     const [designer, setDesigner] = useState()
     const [userLoading, setUserLoading] = useState(true);
     const [profileFormData, setProfileFormData] = useState(initialUserData);
+    const [checklistData, setChecklistData] = useState(initialChecklistData);
+    const [bodyMeasurement, setBodyMeasurement] = useState([]);
     const [profileFormLoading, setProfileFormLoading] = useState(false);
     const [reloadCount, setReloadCount] = useState(0);
     const [profileShow, setProfileShow] = useState(true);
@@ -64,6 +119,7 @@ const EditProfile = () => {
     const [contactShow, setContactShow] = useState(false);
     const [socialMediaShow, setSocialMediaShow] = useState(false);
     const [skillShow, setSkillShow] = useState(false);
+    const [bodyMeasurementShow, setBodyMeasurementShow] = useState(false);
     const [userImage, setUserImage] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
     const [areasOfSpecializationData, setAreaOfSpecializationData] = useState(initialDesignerData.areas_of_specialization);
@@ -84,30 +140,48 @@ const EditProfile = () => {
             setContactShow(false);
             setSocialMediaShow(false);
             setSkillShow(false);
+            setBodyMeasurementShow(false);
+            setChecklistData(() => bodyMeasurement);
         } else if (tab === "address") {
             setAddressShow(true);
             setProfileShow(false);
             setContactShow(false);
             setSocialMediaShow(false);
             setSkillShow(false);
+            setBodyMeasurementShow(false);
+            setChecklistData(() => bodyMeasurement);
         } else if (tab === "contact") {
             setContactShow(true);
             setAddressShow(false);
             setProfileShow(false);
             setSocialMediaShow(false);
             setSkillShow(false);
+            setBodyMeasurementShow(false);
+            setChecklistData(() => bodyMeasurement);
         } else if (tab === "social_media") {
             setSocialMediaShow(true);
             setAddressShow(false);
             setProfileShow(false);
             setContactShow(false);
             setSkillShow(false);
+            setBodyMeasurementShow(false);
+            setChecklistData(() => bodyMeasurement);
         } else if (tab === "skill") {
             setSkillShow(true);
             setSocialMediaShow(false);
             setAddressShow(false);
             setProfileShow(false);
             setContactShow(false);
+            setBodyMeasurementShow(false);
+            setChecklistData(() => bodyMeasurement);
+        } else if (tab === "body_measurement") {
+            setSkillShow(false);
+            setSocialMediaShow(false);
+            setAddressShow(false);
+            setProfileShow(false);
+            setContactShow(false);
+            setBodyMeasurementShow(true);
+            setChecklistData(() => bodyMeasurement);
         }
     }
 
@@ -116,6 +190,41 @@ const EditProfile = () => {
             ...profileFormData,
             [e.target.name]: e.target.value,
         })
+    };
+
+    const handleChangeBodyMeasurement = (e) => {
+        setChecklistData({
+            ...checklistData,
+            [e.target.name]: e.target.value,
+        })
+    };
+
+    const handleChangeGender = (e) => {
+        const { value } = e.target;
+        setProfileFormData({
+            ...profileFormData,
+            gender: value
+        });
+
+        e.preventDefault();
+            setProfileFormLoading(true);
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token + '&gender=' + value).then((response) => {
+                const success = response.data.status;
+                if (success == 'Success') {
+                    const data = response.data.data;
+                    const user = data.user;
+                    const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
+                    setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+                    toast.success('Profile updated successfully!');
+                    setReloadCount((prevReloadCount) => prevReloadCount + 1);
+                } else {
+                    const errors = response.data.errors;
+                }
+                setProfileFormLoading(false);
+            }).catch((error) => {
+                setProfileFormLoading(false);
+                toast.error('Something went wrong, please contact the administrator!');
+            });
     };
 
     const handleChangePhone = (e) => {
@@ -128,7 +237,14 @@ const EditProfile = () => {
     async function submitProfile(e) {
         e.preventDefault();
         setProfileFormLoading(true);
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, profileFormData).then((response) => {
+
+        const updatedProfileFormData = {
+            ...profileFormData,
+            body_measurement: JSON.stringify(checklistData)
+            // ...(bodyMeasurementShow && { body_measurement: JSON.stringify(checklistData) }),
+        };
+
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, updatedProfileFormData).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -180,6 +296,7 @@ const EditProfile = () => {
                 setUser(userData);
                 setProfileFormData(userData);
                 setUserImage(userData.image);
+                setBodyMeasurement(userData.body_measurement);
                 setCookie('userDetails', JSON.stringify(userData), { path: '/' });
                 setUserLoading(false);
                 if (userData.designer) {
@@ -258,10 +375,11 @@ const EditProfile = () => {
                                             <p className={`cursor-pointer me-5 mb-3 fs-16 ${contactShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("contact") }}>Contact</p>
                                             <p className={`cursor-pointer me-5 mb-3 fs-16 ${socialMediaShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("social_media") }}>Social Media</p>
                                             {user && user.is_designer ?
-                                                <p className={`cursor-pointer me-5 mb-0 fs-16 ${skillShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("skill"); }}>Skills</p>
+                                                <p className={`cursor-pointer me-5 mb-3 fs-16 ${skillShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("skill"); }}>Skills</p>
                                                 :
                                                 null
                                             }
+                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${bodyMeasurementShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("body_measurement") }}>Body Measurement</p>
                                         </Card.Body>
                                     </Card>
                                 </Col>
@@ -555,6 +673,732 @@ const EditProfile = () => {
                                                     </div>
                                                 </div>
                                                 :
+                                                null
+                                            }
+                                            {bodyMeasurementShow ?
+                                                <div className="mt-3">
+                                                    <Row>
+                                                        {user.gender === "Male" ?
+                                                            <>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Upper Neck Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="upper_neck_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.upper_neck_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Lower Neck Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="lower_neck_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.lower_neck_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Chest Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="chest_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.chest_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Waist Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="waist_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.waist_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Mid Hip Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="mid_hip_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.mid_hip_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Hip Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="hip_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.hip_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Front Waist Length </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="front_waist_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.front_waist_length} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Back Waist Length </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="back_waist_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.back_waist_length} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Center Front Length </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="center_front_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.center_front_length} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Center Back Length </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="center_back_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.center_back_length} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Front Neck Depth </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="front_neck_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.front_neck_depth} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Back Neck Depth </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="back_neck_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.back_neck_depth} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Armhole Depth </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="armhole_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.armhole_depth} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Front Shoulder Width </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="front_shoulder_width" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.front_shoulder_width} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Back Shoulder Width </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="back_shoulder_width" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.back_shoulder_width} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Shoulder Depth </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="shoulder_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.shoulder_depth} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Elbow Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="elbow_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.elbow_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Underarm Length </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="underarm_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.underarm_length} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Side Seam </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="side_seam" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.side_seam} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Sleeve Length </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="sleeve_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.sleeve_length} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Arm Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="arm_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.arm_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Wrist Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="wrist_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.wrist_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Elbow Length </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="elbow_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.elbow_length} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Armhole Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="armhole_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.armhole_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Sleeve Cap Height </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="sleeve_cap_height" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.sleeve_cap_height} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Hip Depth </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="hip_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.hip_depth} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Crotch Depth </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="crotch_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.crotch_depth} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Pants/Trouser Length </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="pants_trouser_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.pants_trouser_length} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Knee Length </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="knee_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.knee_length} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>In Seam Length </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="in_seam_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.in_seam_length} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Thigh Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="thigh_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.thigh_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Mid-thigh Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="mid_thigh_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.mid_thigh_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Knee Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="knee_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.knee_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Calf Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="calf_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.calf_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Ankle Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="ankle_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.ankle_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Ankle-Heel Circumference </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="ankle_heel_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.ankle_heel_circumference} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Body Height </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="body_height" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.body_height} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <Col lg="6">
+                                                                    <Form.Group className="mb-3">
+                                                                        <Form.Group>
+                                                                            <Form.Label>Body Length </Form.Label>
+                                                                        </Form.Group>
+                                                                        <Form.Control name="body_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.body_length} />
+                                                                    </Form.Group>
+                                                                </Col>
+                                                                <div className="text-right mt-4 mb-2">
+                                                                    {profileFormLoading ?
+                                                                        <Button type='button' className="btn-save">Saving...</Button>
+                                                                        :
+                                                                        <Button type='submit' className="btn-save">Save</Button>
+                                                                    }
+                                                                </div>
+                                                            </>
+                                                            : user.gender === "Female" ?
+                                                                <>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Upper Neck Circumference </Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="upper_neck_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.upper_neck_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Lower Neck Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="lower_neck_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.lower_neck_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Chest Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="chest_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.chest_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Bust Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="bust_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.bust_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Under Bust Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="under_bust_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.under_bust_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Waist Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="waist_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.waist_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Mid Hip Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="mid_hip_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.mid_hip_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Hip Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="hip_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.hip_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Bust Distance</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="bust_distance" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.bust_distance} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Front Chest Width</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="front_chest_width" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.front_chest_width} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Back Chest Width</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="back_chest_width" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.back_chest_width} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Front Waist Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="front_waist_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.front_waist_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Back Waist Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="back_waist_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.back_waist_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Center Front Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="center_front_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.center_front_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Center Back Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="center_back_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.center_back_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Front Neck Depth</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="front_neck_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.front_neck_depth} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Back Neck Depth</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="back_neck_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.back_neck_depth} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Bust Depth</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="bust_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.bust_depth} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Armhole Depth</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="armhole_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.armhole_depth} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Bust Height</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="bust_height" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.bust_height} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Front Shoulder Width</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="front_shoulder_width" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.front_shoulder_width} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Back Shoulder Width</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="back_shoulder_width" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.back_shoulder_width} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Shoulder Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="shoulder_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.shoulder_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Shoulder Depth</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="shoulder_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.shoulder_depth} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Elbow Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="elbow_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.elbow_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Underarm Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="underarm_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.underarm_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Sleeve Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="sleeve_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.sleeve_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Arm Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="arm_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.arm_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Wrist Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="wrist_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.wrist_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Elbow Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="elbow_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.elbow_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Armhole Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="armhole_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.armhole_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Sleeve Cap Height</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="sleeve_cap_height" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.sleeve_cap_height} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Hip Depth</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="hip_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.hip_depth} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Crotch Depth</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="crotch_depth" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.crotch_depth} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Crotch Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="crotch_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.crotch_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Pants Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="pants_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.pants_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Knee Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="knee_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.knee_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>In seam Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="in_seam_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.in_seam_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Thigh Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="thigh_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.thigh_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Mid Thigh Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="mid_thigh_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.mid_thigh_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Knee Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="knee_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.knee_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Calf Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="calf_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.calf_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Ankle Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="ankle_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.ankle_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Ankle Heel Circumference</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="ankle_heel_circumference" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.ankle_heel_circumference} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Body Height</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="body_height" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.body_height} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <Col lg="6">
+                                                                        <Form.Group className="mb-3">
+                                                                            <Form.Group>
+                                                                                <Form.Label>Body Length</Form.Label>
+                                                                            </Form.Group>
+                                                                            <Form.Control name="body_length" onChange={handleChangeBodyMeasurement} placeholder="" value={checklistData.body_length} />
+                                                                        </Form.Group>
+                                                                    </Col>
+                                                                    <div className="text-right mt-4 mb-2">
+                                                                        {profileFormLoading ?
+                                                                            <Button type='button' className="btn-save">Saving...</Button>
+                                                                            :
+                                                                            <Button type='submit' className="btn-save">Save</Button>
+                                                                        }
+                                                                    </div>
+                                                                </>
+                                                                :
+                                                                <>
+                                                                    <Form.Group as={Col} lg={1} md={1} sm={1}>
+                                                                        <Form.Check
+                                                                            className="cursor-pointer"
+                                                                            type="radio"
+                                                                            label="Male"
+                                                                            name="gender"
+                                                                            value="Male"
+                                                                            checked={profileFormData.gender === 'Male'}
+                                                                            onChange={handleChangeGender}
+                                                                        />
+                                                                    </Form.Group>
+                                                                    <Form.Group as={Col} lg={1} md={1} sm={1}>
+                                                                        <Form.Check
+                                                                            className="cursor-pointer"
+                                                                            type="radio"
+                                                                            label="Female"
+                                                                            name="gender"
+                                                                            value="Female"
+                                                                            checked={profileFormData.gender === 'Female'}
+                                                                            onChange={handleChangeGender}
+                                                                        />
+                                                                    </Form.Group>
+                                                                </>
+                                                        }
+                                                    </Row>
+                                                </div>
+                                            : 
                                                 null
                                             }
                                         </Card.Body>
