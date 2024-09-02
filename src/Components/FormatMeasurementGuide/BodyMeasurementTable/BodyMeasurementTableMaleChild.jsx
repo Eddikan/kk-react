@@ -71,28 +71,28 @@ const BodyMeasurementTableMaleChild = (props) => {
                     <tr>
                         <td className='text-center'>7</td>
                         <td>Front Waist Length</td>
-                        <td>Front M-D</td>
+                        <td>Front M - D</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>8</td>
                         <td>Back Waist Length</td>
-                        <td>Back M-D</td>
+                        <td>Back M - D</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>9</td>
                         <td>Center Front Length</td>
-                        <td>Front A-D</td>
+                        <td>Front A - D</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>10</td>
                         <td>Center Back Length</td>
-                        <td>Back A-D</td>
+                        <td>Back A - D</td>
                         <td></td>
                     </tr>
 
@@ -113,42 +113,42 @@ const BodyMeasurementTableMaleChild = (props) => {
                     <tr>
                         <td className='text-center'>13</td>
                         <td>Armhole Depth</td>
-                        <td>N-C Line</td>
+                        <td>N - C Line</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>14</td>
                         <td>Back Shoulder Width</td>
-                        <td>Back N-N</td>
+                        <td>Back N - N</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>15</td>
                         <td>Front Shoulder Width</td>
-                        <td>Front N-N</td>
+                        <td>Front N - N</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>16</td>
                         <td>Back Width</td>
-                        <td>Back C-C</td>
+                        <td>Back C - C</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>17</td>
                         <td>Shoulder Length</td>
-                        <td>M-N</td>
+                        <td>M - N</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>18</td>
                         <td>Shoulder Depth</td>
-                        <td>A-N</td>
+                        <td>A - N</td>
                         <td></td>
                     </tr>
 
@@ -162,21 +162,21 @@ const BodyMeasurementTableMaleChild = (props) => {
                     <tr>
                         <td className='text-center'>20</td>
                         <td>Under Arm Length</td>
-                        <td>C-P-Q</td>
+                        <td>C - P - Q</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>21</td>
                         <td>Side Seam Length</td>
-                        <td>C-D</td>
+                        <td>C - D</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>22</td>
                         <td>Sleeve Length</td>
-                        <td>N-P-Q</td>
+                        <td>N - P - Q</td>
                         <td></td>
                     </tr>
 
@@ -197,7 +197,7 @@ const BodyMeasurementTableMaleChild = (props) => {
                     <tr>
                         <td className='text-center'>25</td>
                         <td>Elbow Length</td>
-                        <td>N-P</td>
+                        <td>N - P</td>
                         <td></td>
                     </tr>
 
@@ -211,49 +211,49 @@ const BodyMeasurementTableMaleChild = (props) => {
                     <tr>
                         <td className='text-center'>27</td>
                         <td>Sleeve Cap Height </td>
-                        <td>N -O</td>
+                        <td>N - O</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>28</td>
                         <td>Hip Depth</td>
-                        <td>Side D-F</td>
+                        <td>Side D - F</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>29</td>
                         <td>Crotch Depth</td>
-                        <td>Front D-F</td>
+                        <td>Front D - F</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>30</td>
                         <td>Crotch Length</td>
-                        <td>Front D-D Back</td>
+                        <td>Front D - D Back</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>31</td>
                         <td>Trouser Length</td>
-                        <td>Side D-L</td>
+                        <td>Side D - L</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>32</td>
                         <td>Knee Length</td>
-                        <td>Side D-I</td>
+                        <td>Side D - I</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>33</td>
                         <td>Inner Trouser Length</td>
-                        <td>F-L</td>
+                        <td>F - L</td>
                         <td></td>
                     </tr>
 
@@ -295,7 +295,7 @@ const BodyMeasurementTableMaleChild = (props) => {
                     <tr>
                         <td className='text-center'>39</td>
                         <td>Head Length</td>
-                        <td>Forehead A3-A1</td>
+                        <td>Forehead A3 - A1</td>
                         <td></td>
                     </tr>
 
@@ -309,21 +309,21 @@ const BodyMeasurementTableMaleChild = (props) => {
                     <tr>
                         <td className='text-center'>41</td>
                         <td>Head Height</td>
-                        <td>A2-A1</td>
+                        <td>A2 - A1</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>42</td>
                         <td>Body Height</td>
-                        <td>A2-L</td>
+                        <td>A2 - L</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td className='text-center'>43</td>
                         <td>Body Length</td>
-                        <td>A1-L</td>
+                        <td>A1 - L</td>
                         <td></td>
                     </tr>
 

@@ -440,7 +440,7 @@ const BodyMeasurementDescriptionMen = (props) => {
 
                     <tr>
                         <td className='text-center'>
-                            {/* <img src={AnkleCircumference} /> */}
+                            <img src={AnkleHeelCircumference} />
                         </td>
                         <td className='text-center'>
                             <strong>Ankle Circumference*** (Line K)</strong>

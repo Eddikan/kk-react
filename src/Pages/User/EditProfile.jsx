@@ -297,6 +297,7 @@ const EditProfile = () => {
                 setProfileFormData(userData);
                 setUserImage(userData.image);
                 setBodyMeasurement(userData.body_measurement);
+                setChecklistData(userData.body_measurement);
                 setCookie('userDetails', JSON.stringify(userData), { path: '/' });
                 setUserLoading(false);
                 if (userData.designer) {
