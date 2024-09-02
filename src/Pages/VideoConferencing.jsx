@@ -2026,7 +2026,7 @@ const VideoConferencing = (props) => {
                                         </>
                                         :
                                         <>
-                                            <Form.Group as={Col}>
+                                            <Form.Group as={Col} lg={2} md={2} sm={2}>
                                                 <Form.Check
                                                     className="cursor-pointer"
                                                     type="radio"
@@ -2037,7 +2037,7 @@ const VideoConferencing = (props) => {
                                                     onChange={handleChangeGender}
                                                 />
                                             </Form.Group>
-                                            <Form.Group as={Col}>
+                                            <Form.Group as={Col} lg={2} md={2} sm={2}>
                                                 <Form.Check
                                                     className="cursor-pointer"
                                                     type="radio"
