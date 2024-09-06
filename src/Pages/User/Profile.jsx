@@ -25,6 +25,7 @@ import LoadingPage from 'Components/Shared/LoadingPage';
 import { GoPencil } from "react-icons/go";
 import axios from 'axios';
 import MyCalendar from 'Components/Shared/MyCalendar';
+import BodyMeasurement from 'Components/Shared/BodyMeasurement';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import BecomeSeller from 'Components/CallToActions/Seller';
 import BecomeDesigner from 'Components/CallToActions/Designer';
@@ -85,6 +86,7 @@ const Profile = () => {
     const [myCalendarShow, setMyCalendarShow] = useState(false);
     const [securityShow, setSecurityShow] = useState(false);
     const [verificationShow, setVerificationShow] = useState(false);
+    const [bodyMeasurementShow, setBodyMeasurementShow] = useState(false);
     const [formStatus, setFormStatus] = useState('standby');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'activeProfileTab', 'userDetails']);
     const [areasOfSpecialization, setAreaOfSpecialization] = useState([]);
@@ -655,6 +657,7 @@ const Profile = () => {
             setMyCalendarShow(false);
             setSecurityShow(false);
             setVerificationShow(false);
+            setBodyMeasurementShow(false);
 
         } else if (tab == "portfolio") {
             setPortfolioShow(true);
@@ -665,6 +668,7 @@ const Profile = () => {
             setMyCalendarShow(false);
             setSecurityShow(false);
             setVerificationShow(false);
+            setBodyMeasurementShow(false);
 
         } else if (tab == "fabric") {
             setFabricShow(true);
@@ -675,6 +679,7 @@ const Profile = () => {
             setMyCalendarShow(false);
             setSecurityShow(false);
             setVerificationShow(false);
+            setBodyMeasurementShow(false);
 
         } else if (tab == "process") {
             setProcessShow(true);
@@ -685,6 +690,7 @@ const Profile = () => {
             setMyCalendarShow(false);
             setSecurityShow(false);
             setVerificationShow(false);
+            setBodyMeasurementShow(false);
 
         } else if (tab == "calendar") {
             setLimitedDesignShow(true);
@@ -695,6 +701,7 @@ const Profile = () => {
             setMyCalendarShow(false);
             setSecurityShow(false);
             setVerificationShow(false);
+            setBodyMeasurementShow(false);
 
         } else if (tab == "my_calendar") {
             setLimitedDesignShow(false);
@@ -705,6 +712,7 @@ const Profile = () => {
             setMyCalendarShow(true);
             setSecurityShow(false);
             setVerificationShow(false);
+            setBodyMeasurementShow(false);
 
         } else if (tab == "security") {
             setLimitedDesignShow(false);
@@ -715,6 +723,7 @@ const Profile = () => {
             setMyCalendarShow(false);
             setSecurityShow(true);
             setVerificationShow(false);
+            setBodyMeasurementShow(false);
 
         } else if (tab == "verification") {
             setLimitedDesignShow(false);
@@ -725,7 +734,20 @@ const Profile = () => {
             setMyCalendarShow(false);
             setSecurityShow(false);
             setVerificationShow(true);
+            setBodyMeasurementShow(false);
+
+        } else if (tab == "body_measurement") {
+            setLimitedDesignShow(false);
+            setProcessShow(false);
+            setPortfolioShow(false);
+            setAboutShow(false);
+            setFabricShow(false);
+            setMyCalendarShow(false);
+            setSecurityShow(false);
+            setVerificationShow(false);
+            setBodyMeasurementShow(true);
         }
+        
     }
 
     const fetchData = async (e) => {
@@ -970,6 +992,7 @@ const Profile = () => {
                                 )}
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${securityShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("security"); }}>Security</span>
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${verificationShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("verification"); }}>Verification</span>
+                                <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${bodyMeasurementShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("body_measurement"); }}>Body Measurement</span>
                                 {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${processShow ? 'fw-600' : ''}`} onClick={function () { showTab("process") }}>Process</span>
                                 <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${limitedDesignShow ? 'fw-600' : ''}`} onClick={function () { showTab("limited_design"); }}>Limited Design</span> */}
                                 <hr className='mt-2' />
@@ -1289,6 +1312,11 @@ const Profile = () => {
                                         }
                                     </Col>
                                 </Row>
+                            </div>
+                            : null}
+                        {bodyMeasurementShow ?
+                            <div id="profile-portfolio">
+                                <BodyMeasurement userData={user} />
                             </div>
                             : null}
                     </Container>

@@ -124,3 +124,24 @@ progress[value]::-webkit-progress-value {
   background-color: transparent !important;
   border: none;
 }
+
+.question-btn {
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.measurement-guide-modal {
+  max-width: 450px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+
+.measurement-image {
+  width: 150px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

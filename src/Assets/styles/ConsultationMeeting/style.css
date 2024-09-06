@@ -119,14 +119,13 @@ span.icon-tooltiptext.call-icons {
 
 .measurement-guide-modal {
     max-width: 450px;
-    padding-left: 0px !important;
-    position: absolute;
-    left: 48%;
-    right: 50%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
-    top: 484px;
-
+    overflow: hidden;
 }
+
 .measurement-image {
     width: 150px;
     display: block;
