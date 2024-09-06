@@ -36,6 +36,7 @@ import GetUserWishlistsData from 'Utils/GetUserWishlistsData';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { PiNotepadLight, PiScissorsLight, PiUserGearThin, PiUserGear } from "react-icons/pi";
+import { RiQuestionMark } from "react-icons/ri";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -529,6 +530,12 @@ const Header = () => {
                         </div>
                       )}
                     </div>
+                    <a href={`/measurement-guide-format`}>
+                      <div className="nav-link header-tooltip">
+                        <span className="icon-tooltiptext fs-14">Measurement Guide</span>
+                        <RiQuestionMark  size={26} />
+                      </div>
+                    </a>
                     <div className="user-dropdown nav-link cursor-pointer d-block position-relative" ref={messageRef} onClick={toggleEnvelopMenu}>
                       <div className="nav-link header-tooltip" >
                         <span className="icon-tooltiptext fs-14">Messages</span>
@@ -756,6 +763,12 @@ const Header = () => {
                   </>
                   :
                   <>
+                    <a href={`/measurement-guide-format`}>
+                      <div className="nav-link header-tooltip">
+                        <span className="icon-tooltiptext fs-14">Measurement Guide</span>
+                        <RiQuestionMark  size={26} />
+                      </div>
+                    </a>
                     <a href={`/favorites`}>
                       <div className="nav-link header-tooltip">
                         <span className="icon-tooltiptext fs-14">Favorites</span>

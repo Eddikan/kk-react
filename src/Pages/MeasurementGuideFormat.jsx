@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import LayoutSellerCenter from 'Components/Layout/LayoutSellerCenter';
+import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import SidebarMeasurementGuide from 'Components/FormatMeasurementGuide/SideBarMeasurementGuide';
 import HowToMeasureYourSelf from 'Components/FormatMeasurementGuide/HowToMeasureYourSelf';
@@ -18,10 +18,10 @@ import 'Assets/styles/FormatMeasurementGuide/style.css';
 
 const MeasurementGuideFormat = (props) => {
   const [currentTab, setCurrentTab] = useState('All');
-
+  
   return (
     <>
-      <LayoutSellerCenter>
+      <Layout>
         <Row className='bg-measurement-guide'>
           <Col lg={3}>
             <SidebarMeasurementGuide currentTab={currentTab} onChangeTab={(e) => setCurrentTab(e)} />
@@ -87,7 +87,7 @@ const MeasurementGuideFormat = (props) => {
             </Col>
           }
         </Row>
-      </LayoutSellerCenter>
+      </Layout>
     </>
   );
 };
