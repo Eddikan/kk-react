@@ -4,11 +4,11 @@ import { IoShirtSharp } from "react-icons/io5";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "Assets/styles/overrides.css";
 
-// import { loadStripe } from "@stripe/stripe-js";
-// import { Elements } from "@stripe/react-stripe-js";
+import {Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
 import PortfolioGrid from "Components/Shared/PortfolioGrid";
 import EcoFriendly from "Components/Shared/EcoFriendly";
-// const stripePromise = loadStripe("pk_test_NuJ5XLTawKbspF46LKSgwDbk");
+const stripePromise = loadStripe("pk_test_51KH5FQEHRDNky8yNuVaslaQXG2zhzUjBuooEw7vp8LKMwMd5eEd5xt5RAL0UdiuVJf7dMAwllXdSiDkvvSp9qzT700fhQD4wrQ");
 
 const Home = lazy(() => import("./Pages/Home"));
 const LogIn = lazy(() => import("./Pages/LogIn"));
@@ -21,7 +21,7 @@ const Questionnaire = lazy(() => import("./Pages/Questionnaire"));
 const About = lazy(() => import("./Pages/About"));
 const Buttons = lazy(() => import("./Pages/Elements/Buttons"));
 const Forms = lazy(() => import("./Pages/Forms"));
-// const Stripe = lazy(() => import("./Pages/Stripe"));
+const Stripe = lazy(() => import("./Pages/Stripe"));
 const CustomerPage = lazy(() => import("./Pages/CustomerPage"));
 const Cart = lazy(() => import("./Pages/Cart"));
 const Checkout = lazy(() => import("./Pages/Checkout"));
@@ -434,7 +434,12 @@ const App = () => {
           <Route path="/designs" exact element={<Designs />} />
           <Route path="/eco-friendly" exact element={<EcoFriendlyFabrics />} />
           <Route path="/cart" exact element={<Cart />} />
-          <Route path="/checkout" exact element={<Checkout />} />
+          {/* <Route path="/checkout" exact element={<Checkout />} /> */}
+          <Route path="/checkout" exact element={
+            <Elements stripe={stripePromise}>
+              <Checkout />
+            </Elements>
+          } />
           
           <Route
             path="/view-design/:portfolioId"

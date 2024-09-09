@@ -74,7 +74,7 @@ const SplitForm = () => {
     {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': 'Bearer sk_test_Ioq6U5Lc68dEZcR9298yQF8o'
+        'Authorization': 'Bearer sk_test_51KH5FQEHRDNky8yNhRC5uPHYTMyvOWVoQbXYN9feNaJER79TCoQS3vjqieSxzkRJtEdzoRftMQ3Hw2MkNUZRZUaQ00XAa3UUKA'
       }
     });
 

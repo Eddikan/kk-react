@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import LayoutNoFooter from 'Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Button, Modal, Card, FormGroup, FormControl } from 'react-bootstrap';
@@ -9,7 +9,7 @@ import { useCookies } from 'react-cookie';
 import GoBack from 'Components/Shared/GoBack';
 import SignUp from 'Components/Forms/InsideAuth/Signup';
 import Login from 'Components/Forms/InsideAuth/Login';
-import { FaCcVisa, FaCcMastercard, FaCcPaypal, FaTruck  } from "react-icons/fa";
+import { FaCcVisa, FaCcMastercard, FaCcPaypal, FaTruck, FaCcStripe } from "react-icons/fa";
 import LoadingPage from 'Components/Shared/LoadingPage';
 import 'Assets/styles/Cart/style.css';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
@@ -20,6 +20,32 @@ import { useParams } from 'react-router-dom';
 import Countries from 'Utils/Countries';
 import axios from "axios";
 import toast from 'react-hot-toast';
+import { CardCvcElement, CardExpiryElement, CardNumberElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import '../Assets/styles/Stripe/stripe.css'
+import useResponsiveFontSize from "../useResponsiveFontSize";
+
+const useOptions = () => {
+    const fontSize = useResponsiveFontSize();
+    return useMemo(
+        () => ({
+            style: {
+                base: {
+                    fontSize,
+                    color: "#424770",
+                    letterSpacing: "0.025em",
+                    fontFamily: "Source Code Pro, monospace",
+                    "::placeholder": {
+                        color: "#aab7c4"
+                    }
+                },
+                invalid: {
+                    color: "#9e2146"
+                }
+            }
+        }),
+        [fontSize]
+    );
+};
 
 
 const initialCheckOut = {
@@ -27,7 +53,7 @@ const initialCheckOut = {
     card_number: '',
     date: '',
     ship_to: '',
-    
+
     first_name: '',
     last_name: '',
     address_line_1: '',
@@ -54,7 +80,7 @@ const initialCheckOut = {
     needs_designer: '',
 };
 
-const Cart = ({props }) => {
+const Cart = ({ props }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const formRef = useRef(null);
@@ -87,8 +113,13 @@ const Cart = ({props }) => {
     const [activeAuth, setActiveAuth] = useState('login');
     const [currentUser, setCurrentUser] = useState(cookies.currentUser ?? null);
     const [productCount, setProductCount] = useState(0);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const [showModal, setShowModal] = useState(0);
+    const stripe = useStripe();
+    const stripeElements = useElements();
+    const stripeOptions = useOptions();
 
     const showSignup = (e) => {
         setShowModal(e)
@@ -137,6 +168,8 @@ const Cart = ({props }) => {
         return await axios.delete(process.env.REACT_APP_API_ENDPOINT + 'cart/' + cartItemId);
     };
 
+    const postIntent = async (data) => await axios.post(process.env.REACT_APP_API_ENDPOINT + 'create-intent', data);
+
     const handleChangePaymentInfo = (e) => {
         const { name, value } = e.target;
         setCheckOutFormData({
@@ -150,9 +183,9 @@ const Cart = ({props }) => {
         setFormStatus('loading');
         const uniqueSelectedCartItems = [
             ...new Set(
-              cartItems
-                .filter(item => selectedCartItems.includes(item.product.id))
-                .map(item => item.id)
+                cartItems
+                    .filter(item => selectedCartItems.includes(item.product.id))
+                    .map(item => item.id)
             )
         ];
 
@@ -180,13 +213,13 @@ const Cart = ({props }) => {
         setFormStatus('loading');
         const uniqueSelectedCartItems = [
             ...new Set(
-              cartItems
-                .filter(item => selectedCartItems.includes(item.product.id))
-                .map(item => item.id)
+                cartItems
+                    .filter(item => selectedCartItems.includes(item.product.id))
+                    .map(item => item.id)
             )
         ];
 
-        postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Paid', payment_details: details}).then(response => {
+        postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
             const success = response.data.status;
             const data = response.data.data;
             if (success == success) {
@@ -205,6 +238,249 @@ const Cart = ({props }) => {
             toast.error('There has been an error adding the order, please try again!');
         });
     }
+
+    // const checkOutSubmitStripe = async (e) => {
+    //     e.preventDefault();
+
+    //     const uniqueSelectedCartItems = [
+    //         ...new Set(
+    //             cartItems
+    //                 .filter(item => selectedCartItems.includes(item.product.id))
+    //                 .map(item => item.id)
+    //         )
+    //     ];
+
+    //     if (!stripe || !stripeElements) {
+    //         // return;
+    //     }
+
+    //     const { error: submitError } = await stripeElements.submit();
+    //     if (submitError) {
+    //         // Show error to your customer
+    //         console.log(submitError);
+    //         return;
+    //     }
+
+    //     const payload = await stripe.createPaymentMethod({
+    //         type: "card",
+    //         card: stripeElements.getElement(CardNumberElement)
+    //     });
+
+    //     const res = await axios.post('https://api.stripe.com/v1/payment_intents', {
+    //         amount: totalAmount,
+    //         currency: 'USD',
+    //         payment_method_types: [
+    //             'card'
+    //         ],
+    //         payment_method: payload.paymentMethod.id,
+    //         description: 'test',
+    //         confirm: 'true',
+    //         capture_method: 'automatic',
+    //         return_url: 'http://localhost:3000/profile',
+    //         payment_method_options: {
+    //             card: {
+    //                 request_three_d_secure: 'automatic'
+    //             }
+    //         }
+    //     },
+    //         {
+    //             headers: {
+    //                 'Content-Type': 'application/x-www-form-urlencoded',
+    //                 'Authorization': 'Bearer sk_test_51KH5FQEHRDNky8yNhRC5uPHYTMyvOWVoQbXYN9feNaJER79TCoQS3vjqieSxzkRJtEdzoRftMQ3Hw2MkNUZRZUaQ00XAa3UUKA'
+    //             }
+    //         });
+
+    //     console.log("[PaymentIntent]", res);
+    // };
+
+    const checkOutSubmitStripe = async (event) => {
+        event.preventDefault();
+        setIsSubmitting(true);
+        const uniqueSelectedCartItems = [
+            ...new Set(
+                cartItems
+                    .filter(item => selectedCartItems.includes(item.product.id))
+                    .map(item => item.id)
+            )
+        ];
+
+        if (!stripe || !stripeElements) {
+            setIsSubmitting(false);
+            return;
+        }
+
+        // Create payment method using the card element
+        const { error, paymentMethod } = await stripe.createPaymentMethod({
+            type: 'card',
+            card: stripeElements.getElement(CardNumberElement),
+        });
+
+        if (error) {
+            setErrorMessage(error.message);
+            setIsSubmitting(false);
+            return;
+        }
+
+        // Send payment method to your backend to create a payment intent
+        try {
+            const response = await axios.post('http://localhost:3001/api/payment-intent', {
+                paymentMethodId: paymentMethod.id,
+                totalAmount: 5000, // Example amount in cents (e.g., $50.00)
+                currency: 'USD',
+            });
+
+            if (response.data.error) {
+                setErrorMessage(response.data.error);
+            } else {
+                const details = response.data.paymentIntent;
+                postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
+                    const success = response.data.status;
+                    const data = response.data.data;
+                    if (success == success) {
+                        toast.success('Order added successfully!');
+                        console.log("data", data);
+                        setTimeout(() => {
+                            setReloadCount(prevReloadCount => prevReloadCount + 1);
+                            removeCookie('setSelectedCartItems', { path: '/' });
+                            removeCookie('cookieCheckoutDesigner', { path: '/' });
+                            navigate(`/thank-you?order_id=${data.order.id}`);
+                        }, 1000);
+                    } else {
+                        toast.error('There has been an error adding the order, please try again!');
+                    }
+                }).catch(() => {
+                    toast.error('There has been an error adding the order, please try again!');
+                });
+                console.log("Payment Intent:", response.data.paymentIntent);
+            }
+        } catch (err) {
+            setErrorMessage('Payment failed. Please try aga in.');
+        }
+
+        setIsSubmitting(false);
+    };
+    // const checkOutSubmitStripe = async event => {
+    //     event.preventDefault();
+    
+    //     setFormStatus('loading');
+    //     const uniqueSelectedCartItems = [
+    //         ...new Set(
+    //             cartItems
+    //                 .filter(item => selectedCartItems.includes(item.product.id))
+    //                 .map(item => item.id)
+    //         )
+    //     ];
+    
+    //     if (!stripe || !stripeElements) {
+    //       return;
+    //     }
+    
+    //     const cardElementContainer = document.querySelectorAll('.text-dark');
+    //     let cardElementEmpty = Array.from(cardElementContainer).map(x => x.firstElementChild.className.includes('--empty'));
+    
+    //     if (cardElementEmpty.includes(true)) {
+    //       setIsSubmitting(false);
+    //       toast.error('Please fill up empty fields!');
+    //       return;
+    //     }
+
+    //     const test = true;
+    //     let data = {
+    //         amount: 100,
+    //         currency: 'EUR',
+    //         payment_method_types: [
+    //           'card'
+    //         ],
+    //         payment_method: payload.paymentMethod.id,
+    //         description: 'test',
+    //         confirm: 'true',
+    //         capture_method: 'automatic',
+    //         return_url: 'http://localhost:3000/',
+    //         payment_method_options: {
+    //           card: {
+    //             request_three_d_secure: 'automatic'
+    //           }
+    //         }
+    //     }
+    //     if (test) {
+    //       data.test = 'sandbox';
+    //     }
+    
+    //     const res = await postIntent(data).then(async response => {
+    //       if (response.data.client_secret) {
+    //         return response.data;
+    //       } else {
+    //         setIsSubmitting(false)
+    //         toast.error('There has been an error adding the order, please try again!');
+    //       }
+    //     }).catch(() => {
+    //       setIsSubmitting(false)
+    //       toast.error('There has been an error adding the order, please try again!');
+    //     });
+    
+    //     if (res.errors) {
+    //       setIsSubmitting(false);
+    //       toast.error(res.errors[0]);
+    //       return;
+    //     }
+    //     const id = 'abc123456789';
+    //     try {
+    //       const {
+    //         client_secret: clientSecret,
+    //         id: id,
+    //         name: name
+    //       } = await res;
+    
+    //       await stripe.confirmCardPayment(clientSecret, {
+    //         payment_method: {
+    //           card: stripeElements.getElement(CardNumberElement),
+    //           billing_details: {
+    //             name: name
+    //           }
+    //         },
+    //       })
+    //         .then(async (response) => {
+    //           if (!response.error) {
+    //             // setCreateInvoiceLoading(true);
+    //             postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
+    //                 const success = response.data.status;
+    //                 const data = response.data.data;
+    //                 if (success == success) {
+    //                     toast.success('Order added successfully!');
+    //                     console.log("data", data);
+    //                     setTimeout(() => {
+    //                         setReloadCount(prevReloadCount => prevReloadCount + 1);
+    //                         removeCookie('setSelectedCartItems', { path: '/' });
+    //                         removeCookie('cookieCheckoutDesigner', { path: '/' });
+    //                         navigate(`/thank-you?order_id=${data.order.id}`);
+    //                     }, 1000);
+    //                 } else {
+    //                     toast.error('There has been an error adding the order, please try again!');
+    //                 }
+    //             }).catch(() => {
+    //                 toast.error('There has been an error adding the order, please try again!');
+    //             });
+    
+    //           } else {
+    //             if (response.error) {
+    //             //   setPaymentError(response.error.message);
+    //               setIsSubmitting(false);
+    //             } else if (response.last_payment_error) {
+    //             //   setPaymentError(response.last_payment_error.message);
+    //               setIsSubmitting(false);
+    //             }
+    //           }
+    //         })
+    //         .catch((e) => {
+    //           console.log(e);
+    //           setIsSubmitting(false);
+    //           toast.defaultError();
+    //         });
+    //     } catch (e) {
+    //       setIsSubmitting(false);
+    //       toast.defaultError();
+    //     }
+    //   };
 
     useEffect(() => {
         const resizeObserver = new ResizeObserver(() => {
@@ -243,7 +519,7 @@ const Cart = ({props }) => {
                 setSubtotalAmount(cart_total.toFixed(2));
             }
         }
-        
+
     }, [selectedCartItems, item, reloadCount, cartItems]);
 
     useEffect(() => {
@@ -355,7 +631,7 @@ const Cart = ({props }) => {
 
                                                                     return (
                                                                         <Card className='mt-2'>
-                                                                            
+
                                                                             <Card.Body>
                                                                                 <Row className="align-items-center">
                                                                                     <Col lg={8}>
@@ -414,7 +690,7 @@ const Cart = ({props }) => {
                                                     {tempCartItems.length > 0 && selectedCartItems.length > 0 ?
                                                         <>
                                                             {tempCartItems.map((cartItem) => {
-                                                                
+
                                                                 if (selectedCartItems.includes(cartItem.id)) {
                                                                     var cart_product = cartItem;
                                                                     if (cart_product.images) {
@@ -499,7 +775,7 @@ const Cart = ({props }) => {
                                             </Card.Body>
                                         </Card>
                                     }
-                                    
+
                                 </Col>
 
                                 <Col lg={6}>
@@ -675,7 +951,7 @@ const Cart = ({props }) => {
                                                             :
                                                             null
                                                         }
-                                                        
+
                                                     </>
                                                     :
                                                     null
@@ -726,6 +1002,25 @@ const Cart = ({props }) => {
                                                         </div>
                                                     </label>
 
+                                                    <label className='mt-3 d-flex cursor-pointer'>
+                                                        <div className='d-flex'>
+                                                            <input
+                                                                type="radio"
+                                                                name="payment_method"
+                                                                value="Paypal"
+                                                                onChange={(e) => { setRadioButtonValue("Stripe"); handleChangePaymentInfo(e); }}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div className='ms-3'>
+                                                            <FaCcStripe size={20}/>
+                                                        </div>
+
+                                                        <div className='ms-2'>
+                                                            Stripe
+                                                        </div>
+                                                    </label>
+
                                                     {/* <div className='mt-2 d-flex'>
                                                         <div className='d-flex'>
                                                             <input
@@ -763,7 +1058,7 @@ const Cart = ({props }) => {
                                                         </div>
                                                     </label>
 
-                                                    {radioButtonValue != "" && radioButtonValue != "Cash on Delivery" && radioButtonValue != "Paypal" ?
+                                                    {radioButtonValue != "" && radioButtonValue != "Cash on Delivery" && radioButtonValue != "Paypal" && radioButtonValue != "Stripe" ?
                                                         <div>
                                                             <hr />
                                                             <div className='mb-4'>
@@ -841,22 +1136,59 @@ const Cart = ({props }) => {
                                                                                             <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
                                                                                         }
                                                                                     </>
-                                                                                    :
-                                                                                    <>
-                                                                                    {currentUser ?
-                                                                                            <button type="submit" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
-                                                                                            :
-                                                                                            <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
-                                                                                        }
-                                                                                    </>
+                                                                                    : radioButtonValue == "Stripe" ?
+                                                                                        // <div className='DemoWrapper'>
+                                                                                        //     <div className="Demo">
+                                                                                                <Form onSubmit={checkOutSubmitStripe}>
+                                                                                                    <Row>
+                                                                                                        <Col lg='12'>
+                                                                                                            <label className='w-100'>
+                                                                                                                Card number
+                                                                                                                <CardNumberElement
+                                                                                                                    options={stripeOptions}
+                                                                                                                />
+                                                                                                            </label>
+                                                                                                        </Col>
+                                                                                                        <Col lg='8'>
+                                                                                                            <label className='w-100'>
+                                                                                                                Expiration date
+                                                                                                                <CardExpiryElement
+                                                                                                                    options={stripeOptions}
+                                                                                                                />
+                                                                                                            </label>
+                                                                                                        </Col>
+                                                                                                        <Col lg='4'>
+                                                                                                            <label className='w-100'>
+                                                                                                                CVC
+                                                                                                                <CardCvcElement
+                                                                                                                    options={stripeOptions}
+                                                                                                                />
+                                                                                                            </label>
+                                                                                                        </Col>
+                                                                                                    </Row>
+                                                                                                    <button type="submit" className="w-100" disabled={!stripe}>
+                                                                                                        Pay
+                                                                                                    </button>
+                                                                                                </Form>
+                                                                                        //     </div>
+                                                                                        // </div>
+                                                                                        :
+
+                                                                                        <>
+                                                                                            {currentUser ?
+                                                                                                <button type="submit" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                                                                :
+                                                                                                <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                            }
+                                                                                        </>
                                                                                 }
                                                                             </>
                                                                             :
                                                                             null
                                                                         }
-                                                                        
+
                                                                     </>
-                                                                    
+
                                                                 }
                                                             </Col>
                                                         </Row>
@@ -877,17 +1209,17 @@ const Cart = ({props }) => {
             {/* Login */}
             <Modal show={authModalShow} fullscreen={false} onHide={() => setAuthModalShow(false)}>
                 <Modal.Header closeButton>
-                <Modal.Title></Modal.Title>
+                    <Modal.Title></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <Container className="h-100">
-                    <Row className="h-100">
-                        <Col lg="12">
-                            {/* <Login onLogin={handleLogin} /> */}
-                            {showModal === 1 ? <SignUp onSignup={handleLogin} showLogin={(e) => showLogin(e)} /> : <Login showSignup={(e) => showSignup(e)} onLogin={handleLogin} onCloseModal={(e) => setAuthModalShow(e)}/>}
-                        </Col>
-                    </Row>
-                </Container>
+                    <Container className="h-100">
+                        <Row className="h-100">
+                            <Col lg="12">
+                                {/* <Login onLogin={handleLogin} /> */}
+                                {showModal === 1 ? <SignUp onSignup={handleLogin} showLogin={(e) => showLogin(e)} /> : <Login showSignup={(e) => showSignup(e)} onLogin={handleLogin} onCloseModal={(e) => setAuthModalShow(e)} />}
+                            </Col>
+                        </Row>
+                    </Container>
                 </Modal.Body>
             </Modal>
         </LayoutNoFooter >
