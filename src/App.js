@@ -193,11 +193,11 @@ const LoadingPage = () => {
 const App = () => {
   return (
     <Router>
-      {/* <Elements stripe={stripePromise}>
+      <Elements stripe={stripePromise}>
         <Routes>
           <Route path="/stripe" element={<Stripe />} />
         </Routes>
-      </Elements> */}
+      </Elements>
       <Suspense fallback={<LoadingPage />}>
         <Routes>
           <Route path="/" exact element={<Home />} />
@@ -434,12 +434,12 @@ const App = () => {
           <Route path="/designs" exact element={<Designs />} />
           <Route path="/eco-friendly" exact element={<EcoFriendlyFabrics />} />
           <Route path="/cart" exact element={<Cart />} />
-          {/* <Route path="/checkout" exact element={<Checkout />} /> */}
-          <Route path="/checkout" exact element={
+          <Route path="/checkout" exact element={<Checkout />} />
+          {/* <Route path="/checkout" exact element={
             <Elements stripe={stripePromise}>
               <Checkout />
             </Elements>
-          } />
+          } /> */}
           
           <Route
             path="/view-design/:portfolioId"

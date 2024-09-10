@@ -78,3 +78,11 @@ input:focus,
     -webkit-transition: all 150ms ease;
     transition: all 150ms ease;
 }
+
+.Demo .kouture-icon {
+    max-width: 70px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom: 20px;
+}

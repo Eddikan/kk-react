@@ -20,32 +20,6 @@ import { useParams } from 'react-router-dom';
 import Countries from 'Utils/Countries';
 import axios from "axios";
 import toast from 'react-hot-toast';
-import { CardCvcElement, CardExpiryElement, CardNumberElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import '../Assets/styles/Stripe/stripe.css'
-import useResponsiveFontSize from "../useResponsiveFontSize";
-
-const useOptions = () => {
-    const fontSize = useResponsiveFontSize();
-    return useMemo(
-        () => ({
-            style: {
-                base: {
-                    fontSize,
-                    color: "#424770",
-                    letterSpacing: "0.025em",
-                    fontFamily: "Source Code Pro, monospace",
-                    "::placeholder": {
-                        color: "#aab7c4"
-                    }
-                },
-                invalid: {
-                    color: "#9e2146"
-                }
-            }
-        }),
-        [fontSize]
-    );
-};
 
 
 const initialCheckOut = {
@@ -117,9 +91,6 @@ const Cart = ({ props }) => {
     const [errorMessage, setErrorMessage] = useState('');
 
     const [showModal, setShowModal] = useState(0);
-    const stripe = useStripe();
-    const stripeElements = useElements();
-    const stripeOptions = useOptions();
 
     const showSignup = (e) => {
         setShowModal(e)
@@ -239,63 +210,10 @@ const Cart = ({ props }) => {
         });
     }
 
-    // const checkOutSubmitStripe = async (e) => {
-    //     e.preventDefault();
+   
+    const checkOutSubmitStripe = async event => {
 
-    //     const uniqueSelectedCartItems = [
-    //         ...new Set(
-    //             cartItems
-    //                 .filter(item => selectedCartItems.includes(item.product.id))
-    //                 .map(item => item.id)
-    //         )
-    //     ];
-
-    //     if (!stripe || !stripeElements) {
-    //         // return;
-    //     }
-
-    //     const { error: submitError } = await stripeElements.submit();
-    //     if (submitError) {
-    //         // Show error to your customer
-    //         console.log(submitError);
-    //         return;
-    //     }
-
-    //     const payload = await stripe.createPaymentMethod({
-    //         type: "card",
-    //         card: stripeElements.getElement(CardNumberElement)
-    //     });
-
-    //     const res = await axios.post('https://api.stripe.com/v1/payment_intents', {
-    //         amount: totalAmount,
-    //         currency: 'USD',
-    //         payment_method_types: [
-    //             'card'
-    //         ],
-    //         payment_method: payload.paymentMethod.id,
-    //         description: 'test',
-    //         confirm: 'true',
-    //         capture_method: 'automatic',
-    //         return_url: 'http://localhost:3000/profile',
-    //         payment_method_options: {
-    //             card: {
-    //                 request_three_d_secure: 'automatic'
-    //             }
-    //         }
-    //     },
-    //         {
-    //             headers: {
-    //                 'Content-Type': 'application/x-www-form-urlencoded',
-    //                 'Authorization': 'Bearer sk_test_51KH5FQEHRDNky8yNhRC5uPHYTMyvOWVoQbXYN9feNaJER79TCoQS3vjqieSxzkRJtEdzoRftMQ3Hw2MkNUZRZUaQ00XAa3UUKA'
-    //             }
-    //         });
-
-    //     console.log("[PaymentIntent]", res);
-    // };
-
-    const checkOutSubmitStripe = async (event) => {
-        event.preventDefault();
-        setIsSubmitting(true);
+        setFormStatus('loading');
         const uniqueSelectedCartItems = [
             ...new Set(
                 cartItems
@@ -304,183 +222,24 @@ const Cart = ({ props }) => {
             )
         ];
 
-        if (!stripe || !stripeElements) {
-            setIsSubmitting(false);
-            return;
-        }
-
-        // Create payment method using the card element
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
-            type: 'card',
-            card: stripeElements.getElement(CardNumberElement),
-        });
-
-        if (error) {
-            setErrorMessage(error.message);
-            setIsSubmitting(false);
-            return;
-        }
-
-        // Send payment method to your backend to create a payment intent
-        try {
-            const response = await axios.post('http://localhost:3001/api/payment-intent', {
-                paymentMethodId: paymentMethod.id,
-                totalAmount: 5000, // Example amount in cents (e.g., $50.00)
-                currency: 'USD',
-            });
-
-            if (response.data.error) {
-                setErrorMessage(response.data.error);
+        postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Processing' }).then(response => {
+            const success = response.data.status;
+            const data = response.data.data;
+            if (success == success) {
+                // toast.success('Order added successfully!');
+                // console.log("data", data);
+                setTimeout(() => {
+                    setReloadCount(prevReloadCount => prevReloadCount + 1);
+                    navigate(`/stripe?order_id=${data.order.id}`);
+                }, 1000);
             } else {
-                const details = response.data.paymentIntent;
-                postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
-                    const success = response.data.status;
-                    const data = response.data.data;
-                    if (success == success) {
-                        toast.success('Order added successfully!');
-                        console.log("data", data);
-                        setTimeout(() => {
-                            setReloadCount(prevReloadCount => prevReloadCount + 1);
-                            removeCookie('setSelectedCartItems', { path: '/' });
-                            removeCookie('cookieCheckoutDesigner', { path: '/' });
-                            navigate(`/thank-you?order_id=${data.order.id}`);
-                        }, 1000);
-                    } else {
-                        toast.error('There has been an error adding the order, please try again!');
-                    }
-                }).catch(() => {
-                    toast.error('There has been an error adding the order, please try again!');
-                });
-                console.log("Payment Intent:", response.data.paymentIntent);
+                toast.error('There has been an error adding the order, please try again!');
             }
-        } catch (err) {
-            setErrorMessage('Payment failed. Please try aga in.');
-        }
-
-        setIsSubmitting(false);
-    };
-    // const checkOutSubmitStripe = async event => {
-    //     event.preventDefault();
-    
-    //     setFormStatus('loading');
-    //     const uniqueSelectedCartItems = [
-    //         ...new Set(
-    //             cartItems
-    //                 .filter(item => selectedCartItems.includes(item.product.id))
-    //                 .map(item => item.id)
-    //         )
-    //     ];
-    
-    //     if (!stripe || !stripeElements) {
-    //       return;
-    //     }
-    
-    //     const cardElementContainer = document.querySelectorAll('.text-dark');
-    //     let cardElementEmpty = Array.from(cardElementContainer).map(x => x.firstElementChild.className.includes('--empty'));
-    
-    //     if (cardElementEmpty.includes(true)) {
-    //       setIsSubmitting(false);
-    //       toast.error('Please fill up empty fields!');
-    //       return;
-    //     }
-
-    //     const test = true;
-    //     let data = {
-    //         amount: 100,
-    //         currency: 'EUR',
-    //         payment_method_types: [
-    //           'card'
-    //         ],
-    //         payment_method: payload.paymentMethod.id,
-    //         description: 'test',
-    //         confirm: 'true',
-    //         capture_method: 'automatic',
-    //         return_url: 'http://localhost:3000/',
-    //         payment_method_options: {
-    //           card: {
-    //             request_three_d_secure: 'automatic'
-    //           }
-    //         }
-    //     }
-    //     if (test) {
-    //       data.test = 'sandbox';
-    //     }
-    
-    //     const res = await postIntent(data).then(async response => {
-    //       if (response.data.client_secret) {
-    //         return response.data;
-    //       } else {
-    //         setIsSubmitting(false)
-    //         toast.error('There has been an error adding the order, please try again!');
-    //       }
-    //     }).catch(() => {
-    //       setIsSubmitting(false)
-    //       toast.error('There has been an error adding the order, please try again!');
-    //     });
-    
-    //     if (res.errors) {
-    //       setIsSubmitting(false);
-    //       toast.error(res.errors[0]);
-    //       return;
-    //     }
-    //     const id = 'abc123456789';
-    //     try {
-    //       const {
-    //         client_secret: clientSecret,
-    //         id: id,
-    //         name: name
-    //       } = await res;
-    
-    //       await stripe.confirmCardPayment(clientSecret, {
-    //         payment_method: {
-    //           card: stripeElements.getElement(CardNumberElement),
-    //           billing_details: {
-    //             name: name
-    //           }
-    //         },
-    //       })
-    //         .then(async (response) => {
-    //           if (!response.error) {
-    //             // setCreateInvoiceLoading(true);
-    //             postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
-    //                 const success = response.data.status;
-    //                 const data = response.data.data;
-    //                 if (success == success) {
-    //                     toast.success('Order added successfully!');
-    //                     console.log("data", data);
-    //                     setTimeout(() => {
-    //                         setReloadCount(prevReloadCount => prevReloadCount + 1);
-    //                         removeCookie('setSelectedCartItems', { path: '/' });
-    //                         removeCookie('cookieCheckoutDesigner', { path: '/' });
-    //                         navigate(`/thank-you?order_id=${data.order.id}`);
-    //                     }, 1000);
-    //                 } else {
-    //                     toast.error('There has been an error adding the order, please try again!');
-    //                 }
-    //             }).catch(() => {
-    //                 toast.error('There has been an error adding the order, please try again!');
-    //             });
-    
-    //           } else {
-    //             if (response.error) {
-    //             //   setPaymentError(response.error.message);
-    //               setIsSubmitting(false);
-    //             } else if (response.last_payment_error) {
-    //             //   setPaymentError(response.last_payment_error.message);
-    //               setIsSubmitting(false);
-    //             }
-    //           }
-    //         })
-    //         .catch((e) => {
-    //           console.log(e);
-    //           setIsSubmitting(false);
-    //           toast.defaultError();
-    //         });
-    //     } catch (e) {
-    //       setIsSubmitting(false);
-    //       toast.defaultError();
-    //     }
-    //   };
+        }).catch(() => {
+            toast.error('There has been an error adding the order, please try again!');
+        });
+        
+      };
 
     useEffect(() => {
         const resizeObserver = new ResizeObserver(() => {
@@ -1007,13 +766,13 @@ const Cart = ({ props }) => {
                                                             <input
                                                                 type="radio"
                                                                 name="payment_method"
-                                                                value="Paypal"
+                                                                value="Stripe"
                                                                 onChange={(e) => { setRadioButtonValue("Stripe"); handleChangePaymentInfo(e); }}
                                                                 required
                                                             />
                                                         </div>
                                                         <div className='ms-3'>
-                                                            <FaCcStripe size={20}/>
+                                                            <FaCcStripe size={20} />
                                                         </div>
 
                                                         <div className='ms-2'>
@@ -1137,41 +896,13 @@ const Cart = ({ props }) => {
                                                                                         }
                                                                                     </>
                                                                                     : radioButtonValue == "Stripe" ?
-                                                                                        // <div className='DemoWrapper'>
-                                                                                        //     <div className="Demo">
-                                                                                                <Form onSubmit={checkOutSubmitStripe}>
-                                                                                                    <Row>
-                                                                                                        <Col lg='12'>
-                                                                                                            <label className='w-100'>
-                                                                                                                Card number
-                                                                                                                <CardNumberElement
-                                                                                                                    options={stripeOptions}
-                                                                                                                />
-                                                                                                            </label>
-                                                                                                        </Col>
-                                                                                                        <Col lg='8'>
-                                                                                                            <label className='w-100'>
-                                                                                                                Expiration date
-                                                                                                                <CardExpiryElement
-                                                                                                                    options={stripeOptions}
-                                                                                                                />
-                                                                                                            </label>
-                                                                                                        </Col>
-                                                                                                        <Col lg='4'>
-                                                                                                            <label className='w-100'>
-                                                                                                                CVC
-                                                                                                                <CardCvcElement
-                                                                                                                    options={stripeOptions}
-                                                                                                                />
-                                                                                                            </label>
-                                                                                                        </Col>
-                                                                                                    </Row>
-                                                                                                    <button type="submit" className="w-100" disabled={!stripe}>
-                                                                                                        Pay
-                                                                                                    </button>
-                                                                                                </Form>
-                                                                                        //     </div>
-                                                                                        // </div>
+                                                                                        <>
+                                                                                            {currentUser ?
+                                                                                                <button type="button" className='btn btn-primary' onClick={()=>checkOutSubmitStripe()}>{formStatus != "standby" ? "Loading..." : "Stripe"}</button>
+                                                                                                :
+                                                                                                <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                            }
+                                                                                        </>
                                                                                         :
 
                                                                                         <>
