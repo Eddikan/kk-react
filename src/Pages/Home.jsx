@@ -19,6 +19,9 @@ import DesignsPreview from 'Components/Grids/DesignsPreview';
 import FabricsPreview from 'Components/Grids/FabricsPreview';
 import Signup from 'Components/Forms/User/Signup'
 import HeroLoggedIn from 'Components/Pages/Home/HeroLoggedIn';
+import HeroImg from 'Assets/images/hero-img.png';
+import ShopIcon from 'Assets/images/icons/shop.png';
+import { IoIosSearch } from "react-icons/io";
 
 const Home = (props) => {
   const navigate = useNavigate();
@@ -80,12 +83,37 @@ const Home = (props) => {
         <HeroLoggedIn />
         :
         <section id='home' className='py-5 px-2 d-flex align-items-center mh650'>
-          <video id="home-video" autoPlay muted loop>
-            <source src={HomeVideo} type="video/mp4" />
-            {/* Add additional source elements for other formats if needed */}
-            Your browser does not support the video tag.
-          </video>
-          <Container className='text-center'>
+          <Container>
+            <Row className="px-5">
+              <Col lg='7'>
+                <div className="narrow-750 mt-5 align-text-center">
+                  <h1 className="mb-3 fw-bold">Fashion Redefined</h1>
+                  <h2 className="fw-bold">Your Unique Look Starts Here</h2>
+                  <p className='ms-0 mt-5 text-justify subtitle narrow-510'>Discover premium fabrics, connect with top fashion designers, 
+                    and get personalized style consultations all in one place.</p>
+                </div>
+                <div className='narrow-750 my-5'>
+                  {currentUser ?
+                    null
+                    :
+                    <>
+                      <Button className='btn me-3 text-white bg-black bg-gray-dark-hover px-5' variant='secondary' onClick={() => handleShowUser()}><IoIosSearch size={25}/>Explore Marketplace</Button>
+                      <Button className='btn-outline me-3 border-secondary border-gold-hover bg-transparent-hover text-black-hover px-5' variant='secondary' onClick={() => toggleSetupShopShow()}> <img src={ShopIcon} className="mx-1" height="29px" alt="shop-icon"></img> Create Shop </Button>
+                    </>
+                    // <>
+                    //   <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>I'm Just Browsing</Button>
+                    //   <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('designer')} >I'm a Designer</Button>
+                    //   <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('seller')} >I'm a Fabric Vendor</Button>
+                    // </>
+                  }
+                </div>
+              </Col>
+              <Col lg='5' className="text-center">
+                <img className="img-fluid"src={HeroImg} alt="" />
+              </Col>
+            </Row>
+          </Container>
+          {/* <Container className='text-center'>
             <Row>
               <Col lg='12'>
                 <h1 className="text-white mb-3">Fashion Redefined <br />Your Unique Look Starts Here</h1>
@@ -107,7 +135,7 @@ const Home = (props) => {
                 // </>
               }
             </div>
-          </Container>
+          </Container> */}
         </section>
       }
       {/* <section id="designers" className="pt-5 pb-3">
@@ -119,7 +147,7 @@ const Home = (props) => {
           </Row>
         </Container>
       </section> */}
-      <section id="fabrics" className="pt-5 mb-5 mt-xl-5 px-2">
+      <section id="fabrics" className="mb-5 mt-xl-5 px-2">
         <Container>
           <Row>
             <Col lg="12">

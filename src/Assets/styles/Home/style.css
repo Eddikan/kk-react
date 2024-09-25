@@ -1,6 +1,5 @@
 /*Home*/
 section#home {
-    background: transparent linear-gradient(180deg, #000000CC 0%, #00000096 100%) 0% 0% no-repeat padding-box;
     position: relative;
     overflow: hidden;
 }
@@ -52,12 +51,16 @@ section#home {
 }
 
 section#home h1 {
-    font-size: 55px;
+    color: #551855;
+    font-size: 60px;
     line-height: 60px;
+}
+section#home h2 {
+    font-size: 35px;
 }
 
 section#home p.subtitle {
-    font-size: 18px;
+    font-size: 19px;
 }
 
 @media screen and (max-width:991px){

@@ -124,7 +124,7 @@ const Fabrics = (props) => {
                     <>
                         {fabrics && fabrics.length > 0 ?
                             <>
-                                <Row className="designs-row">
+                                <Row className="designs-row px-3">
                                     {/* {currentUser ?
                                         <Col lg="12" className='d-flex justify-content-end mb-3'>
                                             <div style={{ position: "relative" }}>
