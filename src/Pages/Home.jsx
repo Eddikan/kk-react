@@ -22,11 +22,16 @@ import HeroLoggedIn from 'Components/Pages/Home/HeroLoggedIn';
 import HeroImg from 'Assets/images/hero-img.png';
 import ShopIcon from 'Assets/images/icons/shop.png';
 import { IoIosSearch } from "react-icons/io";
+import BrowseDesigners from "Assets/images/home-modal/browse-designers.png";
+import ShopFabrics from "Assets/images/home-modal/shop-fabrics.png";
+import ExploreDesigns from "Assets/images/home-modal/explore-designs.png";
 
 const Home = (props) => {
   const navigate = useNavigate();
   const [fullscreen, setFullscreen] = useState(true);
+  const [userModalShowold, setUserModalShowold] = useState(false);
   const [userModalShow, setUserModalShow] = useState(false);
+
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
   const [reloadCount, setReloadCount] = useState(0);
   const [userDesignerLink, setUserDesignerLink] = useState("/sign-up?type=user&option=designers");
@@ -82,22 +87,22 @@ const Home = (props) => {
       {currentUser ?
         <HeroLoggedIn />
         :
-        <section id='home' className='py-5 px-2 d-flex align-items-center mh650'>
+        <section id='home' className='py-5 px-5 d-flex align-items-center mh650'>
           <Container>
-            <Row className="px-5">
-              <Col lg='7'>
-                <div className="narrow-750 mt-5 align-text-center">
+            <Row>
+              <Col lg='6' className="my-auto" >
+                <div className="mt-5 align-text-center">
                   <h1 className="mb-3 fw-bold">Fashion Redefined</h1>
                   <h2 className="fw-bold">Your Unique Look Starts Here</h2>
-                  <p className='ms-0 mt-5 text-justify subtitle narrow-510'>Discover premium fabrics, connect with top fashion designers, 
+                  <p className='mx-0 mt-5 pb-5 text-justify subtitle'>Discover premium fabrics, connect with top fashion designers, 
                     and get personalized style consultations all in one place.</p>
                 </div>
-                <div className='narrow-750 my-5'>
+                <div className='my-5'>
                   {currentUser ?
                     null
                     :
                     <>
-                      <Button className='btn me-3 text-white bg-black bg-gray-dark-hover px-5' variant='secondary' onClick={() => handleShowUser()}><IoIosSearch size={25}/>Explore Marketplace</Button>
+                      <Button className='explore-button btn me-3 text-white bg-black bg-gray-hover px-5' variant='secondary' onClick={() => handleShowUser()}><IoIosSearch size={25}/>Explore Marketplace</Button>
                       <Button className='btn-outline me-3 border-secondary border-gold-hover bg-transparent-hover text-black-hover px-5' variant='secondary' onClick={() => toggleSetupShopShow()}> <img src={ShopIcon} className="mx-1" height="29px" alt="shop-icon"></img> Create Shop </Button>
                     </>
                     // <>
@@ -108,34 +113,11 @@ const Home = (props) => {
                   }
                 </div>
               </Col>
-              <Col lg='5' className="text-center">
-                <img className="img-fluid"src={HeroImg} alt="" />
+              <Col lg='6' className="text-end">
+                <img className="hero-img img-fluid"  src={HeroImg} alt="hero-img" />
               </Col>
             </Row>
           </Container>
-          {/* <Container className='text-center'>
-            <Row>
-              <Col lg='12'>
-                <h1 className="text-white mb-3">Fashion Redefined <br />Your Unique Look Starts Here</h1>
-                <p className='subtitle text-white'>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.</p>
-              </Col>
-            </Row>
-            <div className='narrow-750 mt-4'>
-              {currentUser ?
-                null
-                :
-                <>
-                  <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>Explore Marketplace</Button>
-                  <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => toggleSetupShopShow()}>Set Up Shop </Button>
-                </>
-                // <>
-                //   <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>I'm Just Browsing</Button>
-                //   <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('designer')} >I'm a Designer</Button>
-                //   <Button className='btn-outline me-3 text-white border-white border-gold-hover bg-gold-hover text-white-hover px-5' variant='secondary' onClick={() => showSignupModal('seller')} >I'm a Fabric Vendor</Button>
-                // </>
-              }
-            </div>
-          </Container> */}
         </section>
       }
       {/* <section id="designers" className="pt-5 pb-3">
@@ -147,10 +129,10 @@ const Home = (props) => {
           </Row>
         </Container>
       </section> */}
-      <section id="fabrics" className="mb-5 mt-xl-5 px-2">
+      <section id="fabrics" className="mb-5 mt-xl-2 px-5">
         <Container>
           <Row>
-            <Col lg="12">
+            <Col>
               <Fabrics currentUser={currentUser} onSignup={showSignupModal} />
             </Col>
           </Row>
@@ -161,7 +143,7 @@ const Home = (props) => {
         <EcoFriendly currentUser={currentUser} onSignup={showSignupModal} />
       </section>
 
-      <section id="designs" className="py-5 px-2">
+      <section id="designs" className="py-5 px-5">
         <Container>
           <Row>
             <Col lg="12">
@@ -187,10 +169,61 @@ const Home = (props) => {
           </Row>
         </Container>
       </section>
-
+      <Modal show={userModalShow} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setUserModalShow(false)}>
+        <Modal.Body className="py-5">
+          <button type="button" className="btn-close no-header-close" onClick={() => setUserModalShow(false)} aria-label="Close"></button>
+          <Container className="narrow-850 h-100">
+            <Row className=" align-items-center h-100">
+              <Col lg="12">
+                {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
+                <h3 className="modal-title text-center fw-bold mb-3">Select an option to get started</h3>
+                <p className="modal-subtitle text-center mb-5">Welcome to our fashion marketplace! Please select one of the options below to explore our offerings. Whether you're looking for talented designers, unique patterns, or quality fabrics, you're in the right place</p>
+                <Row>
+                  <Col lg="4">
+                    <Link to="/designers" onClick={() => setUserModalShow(false) } className="text-decoration-none">
+                      {/* onClick={() => showSignupModal('user_designer')} */}
+                      <Card className="modal-card cursor-pointer bg-white border-solid-2">
+                        <Card.Body className="rounded d-flex align-items-center justify-content-center fashion-card" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${BrowseDesigners})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                          <div className="modal-box text-center align-items-center">
+                              <h3 className="text-white">Browse Designers</h3>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    </Link>
+                  </Col>
+                  <Col lg="4">
+                    <Link to="/fabrics" onClick={() => setUserModalShow(false)} className="text-decoration-none">
+                      {/* onClick={() => handleShowFabrics()} */}
+                      <Card className="modal-card cursor-pointer bg-white border-solid-2">
+                      <Card.Body className="rounded d-flex align-items-center justify-content-center fashion-card" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${ShopFabrics})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                          <div className="modal-box">
+                              <h3 className="text-white">Shop Fabrics</h3>
+                          </div>
+                      </Card.Body>
+                  </Card>
+                    </Link>
+                  </Col>
+                  <Col lg="4">
+                    <Link to="/designs" onClick={() => setUserModalShow(false)} className="text-decoration-none">
+                      {/* onClick={() => handleShowDesigns()} */}
+                      <Card className="modal-card cursor-pointer bg-white bg-black-hover border-solid-2">
+                        <Card.Body className="rounded d-flex align-items-center justify-content-center fashion-card" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${ExploreDesigns})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                          <div className="modal-box">
+                              <h3 className="text-white">Explore Designs</h3>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    </Link>
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
       
       {/* User Box */}
-      <Modal show={userModalShow} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setUserModalShow(false)}>
+      <Modal show={userModalShowold} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setUserModalShow(false)}>
         <Modal.Body className="py-5">
           <button type="button" className="btn-close no-header-close" onClick={() => setUserModalShow(false)} aria-label="Close"></button>
           <Container className="narrow-850 h-100">

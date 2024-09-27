@@ -15,7 +15,7 @@ import { Container, Button, Col, Row } from 'react-bootstrap';
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { BsCartCheck } from "react-icons/bs";
-import { IoCalendarClearOutline, IoCartOutline, IoCloseOutline, IoShirtOutline } from "react-icons/io5";
+import { IoCalendarClearOutline, IoCartOutline, IoCloseOutline, IoShirtOutline, IoPersonOutline } from "react-icons/io5";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { GoBell, GoHeart, GoAlertFill, GoStar, GoGlobe } from "react-icons/go";
 import { BsEnvelope, BsShopWindow } from "react-icons/bs";
@@ -23,12 +23,13 @@ import { useCookies } from 'react-cookie';
 import { LiaUserTieSolid } from "react-icons/lia";
 import { Link } from 'react-router-dom';
 import { FaArrowRightLong } from "react-icons/fa6";
+import { FaRegBookmark } from "react-icons/fa";
 import NewAppointment from 'Assets/images/new-appointment-icon.png';
 import { HiOutlineBuildingStorefront } from "react-icons/hi2";
 import User from 'Assets/images/user.png';
 import PlaceholderSquare from 'Assets/images/square-placeholder.jpg';
 import UserPlaceholder from 'Assets/images/user.png';
-import Logo from 'Assets/images/kouture-konect-logo.png';
+import Logo from 'Assets/images/logos/koutor konect 2.png';
 import 'Assets/styles/Headers/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
@@ -37,6 +38,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { PiNotepadLight, PiScissorsLight, PiUserGearThin, PiUserGear } from "react-icons/pi";
 import { RiQuestionMark } from "react-icons/ri";
+import { LuBellRing } from "react-icons/lu"
+
 
 const Header = () => {
   const navigate = useNavigate();
@@ -61,6 +64,8 @@ const Header = () => {
   const [cartItemCount, setCartItemCount] = useState(cookies.cartItemCount ?? 0);
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [favorites, setFavorites] = useState([]);
+  const [registerModalShow, setRegisterModalShow] = useState(false);
+
 
   const [userType, setUserType] = useState('user');
   const userRef = useRef(null);
@@ -169,6 +174,10 @@ const Header = () => {
   const toggleWishlistMenu = () => {
     setUserWishlistOpen(!userWishlistOpen);
   };
+  
+  const viewRegisterModal = () => {
+    setRegisterModalShow(!registerModalShow);
+  }; 
 
   const logOut = () => {
     removeCookies();
@@ -449,23 +458,56 @@ const Header = () => {
           }
         </>
       }
-      <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
+      <div className="banner-home w-100 p-3 px-5">
+        <Container>
+            <div className="banner-menu d-flex justify-content-end">
+              <a className="banner-item px-4" href="/">About Us</a>
+              <a className="banner-item px-4" href="/">Feedback</a>
+              <a className="banner-item px-4" href="/">Contact Us</a>
+              <p className="mb-0 text-white">|</p>
+              <a  className="banner-item ps-4 pe-2" href="/">
+                <GoGlobe size={20} style={{ color: 'white' }}  />
+              </a>
+            </div>
+        </Container>
+      </div>
+      <Navbar collapseOnSelect expand="lg" className="bg-body-primary px-5">
         <Container className="position-relative">
           <Navbar.Brand href="/"><img src={Logo} /></Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse className="justify-content-end column-gap-70" id="responsive-navbar-nav">
-            <Nav className="align-items-center column-gap-30">
+          <Navbar.Collapse className="justify-content-between column-gap-70" id="responsive-navbar-nav">
+            <Nav className="align-items-center">
               {/* <Nav.Link href="/find-designs">Find Designs</Nav.Link>
               <Nav.Link href="/inspirations">Inspirations</Nav.Link> */}
-              <Form inline className='search d-flex column-gap-70 align-items-center'>
-                <FormControl type='text' placeholder='Search' className='mr-sm-2' />
-                <FaMagnifyingGlass />
-              </Form>
+                  <Form inline className='search-header d-flex align-items-center'>
+                    <FaMagnifyingGlass />
+                    <FormControl type='text' placeholder='Search' className='search-bar-header ms-2' />
+                    <div className="nav-link-dropdown bg-white border border-2 border-black border-gold-hover">
+                      <a className="nav-link d-flex" href="/about-kouture-konect">
+                        Designers <FaCaretDown />
+                      </a>
+                      <div className="nav-link-menu">
+                        <a className="nav-link" href="/">
+                          <FaCaretDown />
+                          Designers
+                        </a>
+                        <a className="nav-link" href="/">
+                          <FaCaretDown />
+                          Fabrics
+                        </a>                        
+                        <a className="nav-link" href="/">
+                          <FaCaretDown />
+                          Designs
+                        </a>
+                      </div>
+                    </div>
+                  </Form>
+
               {/* <Nav.Link href="/blog">Blog</Nav.Link> */}
             </Nav>
             <Nav className="align-items-center d-grid-mobile">
               <div className="d-flex column-gap-10 align-items-center">
-                <div className="nav-link-dropdown">
+                {/* <div className="nav-link-dropdown">
                   <a className="nav-link" href="/about-kouture-konect">
                     About Us <FaCaretDown style={{ marginLeft: '30px', marginTop: '-5px' }} />
                   </a>
@@ -474,7 +516,7 @@ const Header = () => {
                       How It Works
                     </a>
                   </div>
-                </div>
+                </div> */}
                 
                 {currentUser && currentUser != "" ?
                   <>
@@ -763,16 +805,28 @@ const Header = () => {
                   </>
                   :
                   <>
-                    <a href={`/measurement-guide-format`}>
+                    {/* <a href={`/measurement-guide-format`}>
                       <div className="nav-link header-tooltip">
                         <span className="icon-tooltiptext fs-14">Measurement Guide</span>
                         <RiQuestionMark  size={26} />
                       </div>
-                    </a>
+                    </a> */}
+                    <div className="nav-link-dropdown border-left-rounded border-black ms-2">
+                      <div className="nav-link d-flex">
+                        <IoPersonOutline size={26}/>
+                      </div>
+                      <div className="nav-link-menu">
+                        <a className="nav-link fw-bold" href="/login">Sign In</a>
+                        <a className="nav-link fw-bold cursor-pointer text-decoration-none border-bottom"  onClick={viewRegisterModal}>Register</a>
+                        <a className="nav-link" href="/">My Orders</a>
+                        <a className="nav-link" href="/">My Wishlist</a>
+                        <a className="nav-link" href="/">My Orders</a>
+                      </div>
+                    </div>
                     <a href={`/favorites`}>
                       <div className="nav-link header-tooltip">
                         <span className="icon-tooltiptext fs-14">Favorites</span>
-                        <GoStar size={26} />
+                        <FaRegBookmark size={26} />
                         <div>
                           <div className='cart-added position-absolute badge-primary text-white'>
                             <span className='cart-count'>{favoritesCount}</span>
@@ -791,7 +845,12 @@ const Header = () => {
                         </div>
                       </div>
                     </a>
-                    <div className="country-dropdown nav-link position-relative" ref={countryRef}>
+                    <a href='/'>
+                      <div className="nav-link header-tooltip">
+                        <LuBellRing size={26} />
+                      </div>
+                    </a>
+                    {/* <div className="country-dropdown nav-link position-relative" ref={countryRef}>
                       <div className="nav-link header-tooltip cursor-pointer" onClick={toggleCountryMenu}>
                         <span className="icon-tooltiptext fs-14">Country</span>
                         <GoGlobe size={26} />
@@ -801,11 +860,11 @@ const Header = () => {
                           <CountryCurrencyLanguageSelector />
                         </div>
                       )}
-                    </div>
+                    </div> */}
                     {/* <Nav.Link href="/login">Log in</Nav.Link> */}
-                    <Nav.Link href={hrefLogin}>Log in</Nav.Link>
+                    {/* <Nav.Link href={hrefLogin}>Log in</Nav.Link> */}
                     {/* <Nav.Link href="/sign-up"><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link> */}
-                    <Nav.Link href={href}><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link>
+                    {/* <Nav.Link href={href}><Button className="btn-primary" variant="primary">Sign Up</Button></Nav.Link> */}
                   </>
                 }
               </div>
@@ -837,6 +896,30 @@ const Header = () => {
           </Card>
         </Modal.Body>
       </Modal>
+      
+      <Modal show={registerModalShow} fullscreen={false} onHide={() => setRegisterModalShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title></Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Container className="h-100">
+            <Row className="h-100">
+              <Col lg="12">
+                <h2 className="mb-4 fw-600">Featured Fabrics</h2>
+                <Col lg={12} className="text-right mt-4 mb-4">
+                        <a href="/sign-up">
+                          <button >Sign up</button>  
+                        </a>
+                        <a href="/sign-up">
+                          <button >Sign up</button>  
+                        </a>
+                </Col>
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+      </Modal>
+
     </>
   );
 }

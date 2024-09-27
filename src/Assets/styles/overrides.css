@@ -705,11 +705,28 @@ a {
     background: var(--black) !important;
     color: var(--white) !important;
 }
+/*Banner*/
+.banner-home{
+    background-color: #000000;
+}
+.banner-home .banner-item{
+    font-size: 12px;
+    margin: auto 0;
+}
+.banner-home .banner-item{
+    color: white;
+    text-decoration: none;
 
+}
+.banner-home .banner-item:hover{
+    color: #CEA836;
+    text-decoration: underline;
+}
 /*Header*/
 a.navbar-brand img {
-    max-width: 160px;
+    max-width: 200px;
     width: 100%;
+    margin-right: 50px;
 }
 
 nav.bg-body-primary {
@@ -743,6 +760,17 @@ form.search {
     padding: 0px 20px;
     border-radius: 5px !important;
 }
+.search-bar-header{
+    height: 30px !important;
+}
+form.search-header {
+    padding-left: 10px;
+    border-radius: 5px !important;
+    border: solid 1px;
+    width: 560px;
+    height: 36px;
+    border-right: none;
+}
 
 form.search svg {
     color: var(--dgray);
@@ -763,6 +791,14 @@ form.search input:active {
     border-color: transparent !important;
     outline: 0;
     box-shadow: none !important;
+}
+.search-dropdown{
+    height: 35px;
+    border-radius: 5px;
+    padding: 0 10px
+}
+.search-dropdown:hover{
+    border-color: #CEA836;
 }
 
 .rti--container {

@@ -231,7 +231,7 @@ const Designs = (props) => {
                     <>
                         {designs && designs.length > 0 ?
                             <>
-                                <Row className="designs-row px-3">
+                                <Row className="designs-row">
                                     {/* {currentUser ?
                                         <Col lg="12" className='d-flex justify-content-end'>
                                             <div style={{ position: "relative" }}>

@@ -61,10 +61,49 @@ section#home h2 {
 
 section#home p.subtitle {
     font-size: 19px;
+    width: 510px;
+    line-height: 23px;
+}
+.hero-img{
+    width: 650px;
+}
+.explore-button:hover{
+    opacity: 80%;
+}
+.modal-title{
+    font-weight: bold;
+    color: #551855;
+    font-size: 25px;
+}
+.modal-subtitle{
+    font-size: 14px;
+}
+.modal-card{
+    height: 325px;
 }
 
+.fashion-card {
+    transition: .5s;
+}
+
+.fashion-card:hover {
+    box-shadow: inset 0 0 0 100vw rgba(0,0,0,0.7);
+}
+
+.modal-card:hover .modal-img{
+    background-color: rgba(0, 0, 0, 0.7);
+}
+.modal-box h3{
+    font-size: 22px;
+    margin: auto;
+}
+@media screen and (max-width:1024px){
+    section#home {
+        text-align: center;
+    }
+}
 @media screen and (max-width:991px){
-    section#home h1{
-        font-size: 35px;
+    section#home p.subtitle {
+        width: auto;
     }
 }
