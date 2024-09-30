@@ -14,6 +14,8 @@ import toast from 'react-hot-toast';
 import KoutureLogo from 'Assets/images/kouture-konect-icon.png';
 import { IoEyeOutline, IoEyeOffOutline, IoInformationCircle  } from "react-icons/io5";
 import { connectFirestoreEmulator } from '@firebase/firestore';
+import { FcGoogle } from "react-icons/fc";
+import Layout from '../Components/Layout/Layout';
 
 const initialRegisterData = Object.freeze({
   email: '',
@@ -33,7 +35,7 @@ const SignUp = () => {
 
   const location = useLocation();
 
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'tempCart', 'tempFavorites']);
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'tempCart', 'tempFavorites', 'over_18']);
 
   const [signupType, setSignupType] = useState(query.get("type"));
   const [signupOption, setSignupOption] = useState(query.get("option"));
@@ -60,6 +62,7 @@ const SignUp = () => {
   const token = cookies.token;
   const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
   const [tempFavorites, setTempFavorites] = useState(cookies.tempFavorites ?? []);
+  const over_18 = cookies.over_18;
 
   const [selectedOption, setSelectedOption] = useState('');
 
@@ -479,22 +482,42 @@ const SignUp = () => {
       <section id='signup' className='d-flex align-items-center'>
         <Container fluid>
           <Row style={{ minHeight: '100vh' }}>
-            <Col lg='8' className='d-flex flex-column justify-content-center py-4'>
+            <Col lg='12' className='d-flex flex-column justify-content-center py-4'>
               <div className='sign-up-container'>
-                <Link to="/">
+                {/* <Link to="/">
                   <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" />
-                </Link>
+                </Link> */}
                 <>
+                  {over_18 == "No" ?
+                    <>
+                      <div className="alert small lh-1-7" role="alert">
+                        You are now creating an account as the parent/guardian of the owner.
+                      </div>
+                      <hr />
+                    </>
+                    :
+                    null
+                  }
                   <h1 className='text-center'>Sign up to Kouture Konect</h1>
-                  <p className="text-center small mb-0">
+                  <p className="text-center small fs-16 mb-0">
                     Join Kouture Konect to view more Designers, Designs and Fabrics!
                   </p>
-                  <div className="divider-small mb-4 mt-3"></div>
+                  {googleLoginLoading ?
+                    <Button className='w-100 mt-3' variant='secondary' type='button'>Signing up using Google...</Button>
+                    :
+                    <Button className='custom-hover-btn-google w-100 mt-5 px-5 ' type='button' onClick={login}>
+                      <FcGoogle  size={30}/>
+                        Continue with Google
+                    </Button>
+                  }
+                  <p className="text-muted fs-13">By clicking Continue with Google, you agree to Kouture Konect’s Terms of Use and Privacy Policy.</p>
+                  {/* <div className="divider-small mb-4 mt-3"></div> */}
+                  <div className="custom-divider">or</div>
                 </>
                 <Form style={{marginTop: '30px' }}onSubmit={registerSubmit}>
-                  {registerFormData.over_18 && registerFormData.over_18 != "" ?
-                    <>
-                      <Form.Group className="mb-3 mt-4">
+                  {/* {registerFormData.over_18 && registerFormData.over_18 != "" ? */}
+                    {/* <> */}
+                      {/* <Form.Group className="mb-3 mt-4">
                         <Card className="text-center">
                           <Card.Body>
                             <div className="py-3">
@@ -518,8 +541,8 @@ const SignUp = () => {
                             </div>
                           </Card.Body>
                         </Card>
-                      </Form.Group>
-                      {registerFormData.over_18 == "No" ?
+                      </Form.Group> */}
+                      {/* {over_18 == "No" ?
                         <>
                           <div className="alert alert-primary small lh-1-7" role="alert">
                             You are now creating an account as the parent/guardian of the owner.
@@ -528,7 +551,7 @@ const SignUp = () => {
                         </>
                         :
                         null
-                      }
+                      } */}
                       <Form.Group className='mb-3' controlId='formBasicEmail'>
                         <Form.Label>Email Address</Form.Label>
                         <Email
@@ -681,14 +704,14 @@ const SignUp = () => {
                         :
                         <Button className='w-100 mt-4' variant='primary' type='submit'>Sign up</Button>
                       }
-                      {googleLoginLoading ?
+                      {/* {googleLoginLoading ?
                         <Button className='w-100 mt-3' variant='secondary' type='button'>Signing up using Google...</Button>
                         :
                         <Button className='w-100 mt-3' variant='secondary' type='button' onClick={login}>Sign up with Google</Button>
-                      }
-                    </>
-                    :
-                    <Form.Group className="mb-3 mt-4">
+                      } */}
+                    {/* </> */}
+                    {/* : */}
+                    {/* <Form.Group className="mb-3 mt-4">
                       <Card className="text-center">
                         <Card.Body>
                           <div className="py-3">
@@ -713,13 +736,13 @@ const SignUp = () => {
                         </Card.Body>
                       </Card>
                     </Form.Group>
-                  }
+                  } */}
                   <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to={`/login?redirect_to=${encodeURIComponent(redirectTo)}`}>Log In</Link></p>
                 </Form>
               </div>
             </Col>
-            <Col lg="4" className='with-bg'>
-            </Col>
+            {/* <Col lg="4" className='with-bg'>
+            </Col> */}
           </Row>
         </Container>
       </section>

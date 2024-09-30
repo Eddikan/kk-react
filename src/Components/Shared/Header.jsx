@@ -38,13 +38,16 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { PiNotepadLight, PiScissorsLight, PiUserGearThin, PiUserGear } from "react-icons/pi";
 import { RiQuestionMark } from "react-icons/ri";
-import { LuBellRing } from "react-icons/lu"
-
+import { LuBellRing } from "react-icons/lu";
+import KoutureIcon from 'Assets/images/kouture-konect-icon.png';
+import DesignIcon from 'Assets/images/icons/design-icon.png';
+import DesignerIcon from 'Assets/images/icons/designer-icon.png';
+import FabricIcon from 'Assets/images/icons/fabric-icon.png';
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'selectedCartItems', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode', 'selectedLanguage', 'selectedCurrency', 'selectedCurrencyCode', 'cartItemCount', 'favoriteItemCount']);
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'selectedCartItems', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode', 'selectedLanguage', 'selectedCurrency', 'selectedCurrencyCode', 'cartItemCount', 'favoriteItemCount','over_18']);
   const currentUrl = window.location.href;
 
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -88,6 +91,7 @@ const Header = () => {
   const completedQuestionnaire = cookies.completed_questionnaire;
   const tempCart = cookies.tempCart;
   const tempFavorites = cookies.tempFavorites;
+  const over_18 = cookies.over_18;
 
   const getUser = async () => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
@@ -127,6 +131,7 @@ const Header = () => {
     removeCookie('selectedCurrency', { path: '/' });
     removeCookie('selectedCurrencyCode', { path: '/' });
     removeCookie('cookieCheckoutDesigner', { path: '/' });
+    removeCookie('over_18', { path: '/' });
   };
 
   // Close the dropdown when clicking outside of it
@@ -482,22 +487,37 @@ const Header = () => {
                   <Form inline className='search-header d-flex align-items-center'>
                     <FaMagnifyingGlass />
                     <FormControl type='text' placeholder='Search' className='search-bar-header ms-2' />
-                    <div className="nav-link-dropdown bg-white border border-2 border-black border-gold-hover">
-                      <a className="nav-link d-flex" href="/about-kouture-konect">
+                    <div className="nav-link-dropdown bg-white border border-1 border-black border-gold-hover rounded">
+                      <a className="nav-link d-flex" href="/">
                         Designers <FaCaretDown />
                       </a>
                       <div className="nav-link-menu">
-                        <a className="nav-link" href="/">
-                          <FaCaretDown />
-                          Designers
+                        <a className="nav-link pe-0" href="/">
+                          <div className="d-flex align-items-center">                          
+                            <img className="mx-auto" src={DesignerIcon} width="25px"/>
+                            <div className="ms-2">
+                              <p className="search-dropdown-title mb-0">Designers</p>
+                              <span className="subtitle fs-10">Find top fashion designers</span>
+                            </div>
+                          </div>
                         </a>
-                        <a className="nav-link" href="/">
-                          <FaCaretDown />
-                          Fabrics
+                        <a className="nav-link pe-0" href="/">
+                          <div className="d-flex align-items-center">                          
+                            <img className="mx-auto" src={FabricIcon} width="23px"/>
+                            <div className="ms-2">
+                              <p className="search-dropdown-title mb-0">Fabrics</p>
+                              <span className="subtitle fs-10">Find top fashion designers</span>
+                            </div>
+                          </div>
                         </a>                        
-                        <a className="nav-link" href="/">
-                          <FaCaretDown />
-                          Designs
+                        <a className="nav-link pe-0" href="/">
+                          <div className="d-flex align-items-center">                          
+                            <img className="mx-auto" src={DesignIcon} width="20px"/>
+                            <div className="ms-2">
+                              <p className="search-dropdown-title mb-0">Designs</p>
+                              <span className="subtitle fs-10">Find top fashion designers</span>
+                            </div>
+                          </div>
                         </a>
                       </div>
                     </div>
@@ -897,22 +917,29 @@ const Header = () => {
         </Modal.Body>
       </Modal>
       
-      <Modal show={registerModalShow} fullscreen={false} onHide={() => setRegisterModalShow(false)}>
+      <Modal show={registerModalShow} centered fullscreen={false} onHide={() => setRegisterModalShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title></Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Container className="h-100">
             <Row className="h-100">
-              <Col lg="12">
-                <h2 className="mb-4 fw-600">Featured Fabrics</h2>
-                <Col lg={12} className="text-right mt-4 mb-4">
-                        <a href="/sign-up">
-                          <button >Sign up</button>  
-                        </a>
-                        <a href="/sign-up">
-                          <button >Sign up</button>  
-                        </a>
+              <Col lg="12" className="text-center header-register-modal">
+                <img src={KoutureIcon} alt="kouture-icon" width="38px"/>
+                <h2 className="my-4">Are you over 18 years old?</h2>
+                <p className="fs-14">Welcome to Kouture Konect! If you’re under 18, please have a parent or guardian ready to supervise your account as you continue.</p>
+                <Col lg={12} className="text-center my-4">
+                  <a href="/sign-up">
+                    <button className="mx-5 px-4  py-2 rounded border border-secondary border-gold-hover" onClick={() => setCookie('over_18', "No", { path: '/' })}>
+                      <strong>No</strong>  <br />I am under 18
+                    </button>  
+                  </a>
+                  <a href="/sign-up">
+                    <button className="mx-5 px-4 py-2 rounded border border-secondary border-gold-hover" onClick={() => setCookie('over_18', "Yes", { path: '/' })}>
+                      <strong>Yes</strong> <br />I am over 18
+                    </button>  
+                  </a>
+                  <p className="my-4" >Already have an account? <a href="/login" className="modal-login-btn text-gold ">Login</a> </p>
                 </Col>
               </Col>
             </Row>

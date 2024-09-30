@@ -288,7 +288,12 @@ p {
 .text-gray {
     color: var(--gray) !important;
 }
-
+.fs-10 {
+    font-size: 10px;
+}
+.fs-11 {
+    font-size: 11px;
+}
 .fs-12 {
     font-size: 12px;
 }
@@ -426,7 +431,9 @@ a {
     border: 0;
     border-radius: 0;
 }
-
+.header-register-modal h2{
+    color: #551855;
+}
 .remove-pricing-structure.remove-btn {
     position: absolute;
     right: 0;
@@ -2551,4 +2558,28 @@ span.rti--tag {
 
 .modal-header .btn-close {
     margin-top: -15px;
+}
+.modal-login-btn{
+    text-decoration: none;
+}
+.modal-login-btn:hover{
+    text-decoration: underline;
+}
+.search-dropdown-title{
+    line-height: 1;
+}
+.custom-hover-btn{
+    border: solid 1px var(--secondary);
+    background-color: white;
+    color: black;
+}
+.custom-hover-btn:hover{
+    border-color: gold !important;
+    background-color: white !important;
+    color: black !important;
+}
+.custom-hover-btn:focus{
+    border-color: gold !important;
+    background-color: white !important;
+    color: black !important;
 }

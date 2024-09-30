@@ -103,7 +103,7 @@ const Home = (props) => {
                     :
                     <>
                       <Button className='explore-button btn me-3 text-white bg-black bg-gray-hover px-5' variant='secondary' onClick={() => handleShowUser()}><IoIosSearch size={25}/>Explore Marketplace</Button>
-                      <Button className='btn-outline me-3 border-secondary border-gold-hover bg-transparent-hover text-black-hover px-5' variant='secondary' onClick={() => toggleSetupShopShow()}> <img src={ShopIcon} className="mx-1" height="29px" alt="shop-icon"></img> Create Shop </Button>
+                      <Button className='custom-hover-btn me-3 px-5' onClick={() => toggleSetupShopShow()}> <img src={ShopIcon} className="mx-1" height="29px" alt="shop-icon"></img> Create Shop </Button>
                     </>
                     // <>
                     //   <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>I'm Just Browsing</Button>

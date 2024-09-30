@@ -1,9 +1,11 @@
 /*Sign Up*/
-body:has(section#signup) #navigation {
+/* body:has(section#signup) #navigation {
     display: none!important;
-}
+} */
 section#signup h1{
-    font-size: 35px;
+    /* font-size: 35px; */
+    font-size: 25px;
+    color: #551855;
     font-weight: 600;
 }
 section#signup .with-bg{
@@ -25,7 +27,12 @@ section#signup .sign-up-container .kouture-icon {
     display: block;
     margin-bottom: 20px;
 }
+section#signup .sign-up-container .alert{
+    background-color: #FFFBF0;
+    border: solid 1px #393939;
+}
 
+sign-up-container
 /* section#signup hr{
     border-color: var(--dgray);
     border-width: 2px;
@@ -85,4 +92,38 @@ section#signup .sign-up-with-email {
 .off-eye {
     top: 14px;
     right: 10px;
+}
+.custom-hover-btn-google{
+    border: solid #EEEEEE 1px !important;
+    background-color: white;
+    color: black;
+}
+.custom-hover-btn-google:hover{
+    border-color: gold !important;
+    background-color: white !important;
+    color: black !important;
+}
+.custom-hover-btn-google:focus{
+    border: solid 1px !important;
+    border-color: gold !important;
+    background-color: white !important;
+    color: black !important;
+}
+.custom-divider{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+}
+.custom-divider::before,
+.custom-divider::after{
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+}
+.custom-divider::before{
+    margin-right: 30px;
+}
+.custom-divider::after{
+    margin-left: 30px;
 }
