@@ -595,7 +595,7 @@ const SignUp = () => {
                                 <Row className="mt-2">
                                   <Form.Group as={Col} lg={3}>
                                     <Form.Check
-                                      className="custom-radio cursor-pointer"
+                                      className="cursor-pointer"
                                       type="radio"
                                       label="Yes"
                                       name="set_up_shop"

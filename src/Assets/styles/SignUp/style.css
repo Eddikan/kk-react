@@ -63,8 +63,9 @@ section#signup .sign-up-with-email {
     padding-left: 20px;
     padding-right: 20px;
 }
-.custom-radio:{
-    background-color: gold;
+.custom-radio input[type='radio']:checked {
+    background-color: black; 
+    border-color: gold;
 }
 @media screen and (min-width:1200px){
     form.search input{
@@ -97,7 +98,7 @@ section#signup .sign-up-with-email {
     right: 10px;
 }
 .custom-hover-btn-google{
-    border: solid #EEEEEE 1px !important;
+    border: solid #e1dcdc 1px !important;
     background-color: white;
     color: black;
 }

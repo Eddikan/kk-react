@@ -97,6 +97,33 @@ section#home p.subtitle {
     font-size: 22px;
     margin: auto;
 }
+
+.marquee {
+    overflow: hidden;
+}
+    
+.marquee-content {
+    display: flex;
+    animation: scrolling 50s linear infinite;
+}
+
+.marquee-item {
+    flex: 0 0 16vw;
+    margin: 0 1vw;
+}
+
+.marquee-item img {
+    display: block;
+    width: 301px;
+    height: 324px;
+    border-radius: 5px;
+}
+
+@keyframes scrolling {
+    0% { transform: translateX(0); }
+    100% { transform: translatex(-144vw); }
+}
+
 @media screen and (max-width:1024px){
     section#home {
         text-align: center;
