@@ -490,7 +490,7 @@ const SignUp = () => {
                 <>
                   {over_18 == "No" ?
                     <>
-                      <div className="alert small lh-1-7" role="alert">
+                      <div className="top-alert alert small lh-1-7" role="alert">
                         You are now creating an account as the parent/guardian of the owner.
                       </div>
                       <hr />
@@ -506,7 +506,7 @@ const SignUp = () => {
                     <Button className='w-100 mt-3' variant='secondary' type='button'>Signing up using Google...</Button>
                     :
                     <Button className='custom-hover-btn-google w-100 mt-5 px-5 ' type='button' onClick={login}>
-                      <FcGoogle  size={30}/>
+                      <FcGoogle  size={30} className='mx-2'/>
                         Continue with Google
                     </Button>
                   }
@@ -595,7 +595,7 @@ const SignUp = () => {
                                 <Row className="mt-2">
                                   <Form.Group as={Col} lg={3}>
                                     <Form.Check
-                                      className="cursor-pointer"
+                                      className="custom-radio cursor-pointer"
                                       type="radio"
                                       label="Yes"
                                       name="set_up_shop"
@@ -607,7 +607,7 @@ const SignUp = () => {
                                   </Form.Group>
                                   <Form.Group as={Col} lg={3}>
                                     <Form.Check
-                                      className="cursor-pointer"
+                                      className="custom-radio cursor-pointer"
                                       type="radio"
                                       label="No"
                                       name="set_up_shop"
@@ -696,7 +696,7 @@ const SignUp = () => {
                           </Form.Group>
                         </>
                       )}
-                      <div className="alert alert-primary mb-0 small lh-1-7" role="alert">
+                      <div className="alert alert-primary bg-white text-black mb-0 small lh-1-7" role="alert">
                         As part of our ongoing commitment to security and user safety, we are requiring users to provide a valid identification document for access to certain enhanced features on our platform.
                       </div>
                       {registerFormLoading ?
