@@ -63,10 +63,6 @@ section#signup .sign-up-with-email {
     padding-left: 20px;
     padding-right: 20px;
 }
-.custom-radio input[type='radio']:checked {
-    background-color: black; 
-    border-color: gold;
-}
 @media screen and (min-width:1200px){
     form.search input{
         min-width: 350px;
@@ -130,4 +126,9 @@ section#signup .sign-up-with-email {
 }
 .custom-divider::after{
     margin-left: 30px;
+}
+.custom-radio input[type='radio']:checked {
+    background-color: #000000; 
+    border-color: #CEA835;
+    background-image: none !important;
 }

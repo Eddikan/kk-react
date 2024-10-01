@@ -490,10 +490,9 @@ const SignUp = () => {
                 <>
                   {over_18 == "No" ?
                     <>
-                      <div className="top-alert alert small lh-1-7" role="alert">
+                      <div className="top-alert alert ps-4 py-2 small lh-1-7" role="alert">
                         You are now creating an account as the parent/guardian of the owner.
                       </div>
-                      <hr />
                     </>
                     :
                     null
@@ -503,9 +502,9 @@ const SignUp = () => {
                     Join Kouture Konect to view more Designers, Designs and Fabrics!
                   </p>
                   {googleLoginLoading ?
-                    <Button className='w-100 mt-3' variant='secondary' type='button'>Signing up using Google...</Button>
+                    <Button className='custom-hover-btn-google w-100 mt-4' variant='secondary' type='button'>Signing up using Google...</Button>
                     :
-                    <Button className='custom-hover-btn-google w-100 mt-5 px-5 ' type='button' onClick={login}>
+                    <Button className='custom-hover-btn-google w-100 mt-4 px-5 ' type='button' onClick={login}>
                       <FcGoogle  size={30} className='mx-2'/>
                         Continue with Google
                     </Button>
@@ -559,7 +558,7 @@ const SignUp = () => {
                           refineList={domains}
                           onChange={(e) => handleChangeEmail(e)} // or (newValue) => customSetter(newValue)
                           value={registerFormData.email}
-                          className="form-control mr-sm-2 email-suggestion"
+                          className="form-control mr-sm-2 email-suggestion custom-form"
                           required
                         />
                         {/* <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required /> */}
@@ -567,7 +566,7 @@ const SignUp = () => {
                       <Form.Group className='mb-3'>
                         <Form.Label>Password</Form.Label>
                         <div className="show-password">
-                          <FormControl type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} className='mr-sm-2' required />
+                          <FormControl type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} className='mr-sm-2 custom-form' required />
                           {showPassword ?
                             <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowPassword(false); }} />
                             :
@@ -578,7 +577,7 @@ const SignUp = () => {
                       <Form.Group className='mb-4'>
                         <Form.Label>Confirm Password</Form.Label>
                         <div className="show-password">
-                          <FormControl type={showConfirmPassword ? 'text' : 'password'} name='password_confirmation' onChange={handleChange} className='mr-sm-2' required />
+                          <FormControl type={showConfirmPassword ? 'text' : 'password'} name='password_confirmation' onChange={handleChange} className='mr-sm-2 custom-form' required />
                           {showConfirmPassword ?
                             <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowConfirmPassword(false); }} />
                             :
@@ -595,7 +594,7 @@ const SignUp = () => {
                                 <Row className="mt-2">
                                   <Form.Group as={Col} lg={3}>
                                     <Form.Check
-                                      className="cursor-pointer"
+                                      className="custom-radio cursor-pointer"
                                       type="radio"
                                       label="Yes"
                                       name="set_up_shop"
@@ -696,7 +695,7 @@ const SignUp = () => {
                           </Form.Group>
                         </>
                       )}
-                      <div className="alert alert-primary bg-white text-black mb-0 small lh-1-7" role="alert">
+                      <div className="alert alert-primary bg-white text-black mb-0 ps-4 small lh-1-7" role="alert">
                         As part of our ongoing commitment to security and user safety, we are requiring users to provide a valid identification document for access to certain enhanced features on our platform.
                       </div>
                       {registerFormLoading ?
@@ -737,7 +736,7 @@ const SignUp = () => {
                       </Card>
                     </Form.Group>
                   } */}
-                  <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Already have an account? <Link className='login' to={`/login?redirect_to=${encodeURIComponent(redirectTo)}`}>Log In</Link></p>
+                  <p className='mb-0 mt-4 text-center fs-14 text-black'>Already have an account? <Link className='login' to={`/login?redirect_to=${encodeURIComponent(redirectTo)}`}>Log In</Link></p>
                 </Form>
               </div>
             </Col>

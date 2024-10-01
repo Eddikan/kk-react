@@ -199,8 +199,7 @@ const Home = (props) => {
       <section id="customer-satisfaction-cta" className="py-5 mb-0">
         <CustomerSatisfactionCta />
       </section>
-
-      <section id="recent-designs" className="py-5 mb-5 px-2">
+      {/* <section id="recent-designs" className="py-5 mb-5 px-2">
         <Container>
           <Row>
             <Col lg="12">
@@ -211,7 +210,7 @@ const Home = (props) => {
             </Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
       <Modal show={userModalShow} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setUserModalShow(false)}>
         <Modal.Body className="py-5">
           <button type="button" className="btn-close no-header-close" onClick={() => setUserModalShow(false)} aria-label="Close"></button>

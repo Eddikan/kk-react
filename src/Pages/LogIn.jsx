@@ -13,6 +13,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import KoutureLogo from 'Assets/images/kouture-konect-icon.png';
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
+import { FcGoogle } from "react-icons/fc";
 
 const initialLoginData = Object.freeze({
   email: '',
@@ -481,69 +482,133 @@ const LogIn = () => {
 
   return (
     <LayoutNoFooter>
-      <section id='login' className='d-flex align-items-center'>
-        <Container fluid>
-          <Row style={{ minHeight: '100vh' }}>
-            <Col id="login-column" lg='8' className='d-flex flex-column justify-content-center'>
-              <div className='login-container'>
-                <Link to="/">
-                  <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" />
-                </Link>
-                <h1 className='text-center'>Sign in to Kouture Konect</h1>
-                <div className="divider-small mb-3 mt-4"></div>
-                {/* <button className='login-google mt-3'>
-                  <img src={GoogleIcon} />
-                  <span className='subtitle'>Sign in with Google</span>
-                </button>
-                <hr className='mb-0 mt-5' />
-                <p className='login-with-email'>or sign in with email</p> */}
-                <Form onSubmit={loginSubmit}>
-                  <Form.Group className='mb-3' controlId='formBasicEmail'>
-                    <Form.Label>Email Address</Form.Label>
-                    <Email
-                      baseList={baseList}
-                      refineList={domains}
-                      onChange={(e) => handleChangeEmail(e)} // or (newValue) => customSetter(newValue)
-                      value={loginFormData.email}
-                      className="form-control mr-sm-2 email-suggestion"
-                      required
-                    />
-                    {/* <FormControl type='email' name='email' value={loginFormData.email} className='mr-sm-2' onChange={handleChange} required /> */}
-                  </Form.Group>
-                  <Form.Group className='mb-3' controlId='formBasicPassword'>
-                    <Form.Label>Password</Form.Label>
-                    <div className="show-password">
-                      <FormControl type={showPassword ? 'text' : 'password'} name='password' value={loginFormData.password} className='mr-sm-2' onChange={handleChange} required />
-                      {showPassword ?
-                        <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowPassword(false); }} />
-                        :
-                        <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowPassword(true); }} />
-                      }
-                    </div>
-                  </Form.Group>
-                  <a href="/forgot-password" className='forgot-password text-dgray fs-16'>Forgot Password</a>
-                  {loginFormLoading ?
-                    <Button className='w-100 mt-4' variant='primary' type='button'>Signing in...</Button>
-                    :
-                    <Button className='w-100 mt-4' variant='primary' type='submit'>Sign in</Button>
-                  }
-                  {googleLoginLoading ?
-                    <Button className='w-100 mt-3' variant='secondary' type='button'>Logging in with Google...</Button>
-                    :
-                    <Button className='w-100 mt-3' variant='secondary' type='button' onClick={login}>Login with Google</Button>
-                  }
+    <section id='login' className='d-flex align-items-center'>
+      <Container fluid>
+        <Row style={{ minHeight: '100vh' }}>
+          <Col id="login-column" lg='12' className='d-flex flex-column justify-content-center'>
+            <div className='login-container'>
+              <h1 className='text-center'>Sign in to Kouture Konect</h1>
+              <p className="text-center small fs-16 mb-0">
+                Join Kouture Konect to view more Designers, Designs and Fabrics!
+              </p>
+              {googleLoginLoading ?
+                <Button className='custom-hover-btn-google w-100 mt-4 mb-1' variant='secondary' type='button'>Logging in with Google...</Button>
+                :
+                <Button className='custom-hover-btn-google w-100 mt-4 mb-1' variant='secondary' type='button' onClick={login}>
+                  <FcGoogle  size={30} className='mx-2'/>
+                  Continue with Google
+                </Button>
+              }
+              <div className="custom-divider">or</div>
+              {/* <button className='login-google mt-3'>
+                <img src={GoogleIcon} />
+                <span className='subtitle'>Sign in with Google</span>
+              </button>
+              <hr className='mb-0 mt-5' />
+              <p className='login-with-email'>or sign in with email</p> */}
+              <Form onSubmit={loginSubmit}>
+                <Form.Group className='mb-3' controlId='formBasicEmail'>
+                  <Form.Label>Email Address</Form.Label>
+                  <Email
+                    baseList={baseList}
+                    refineList={domains}
+                    onChange={(e) => handleChangeEmail(e)} // or (newValue) => customSetter(newValue)
+                    value={loginFormData.email}
+                    className="form-control mr-sm-2 email-suggestion custom-form"
+                    required
+                  />
+                  {/* <FormControl type='email' name='email' value={loginFormData.email} className='mr-sm-2' onChange={handleChange} required /> */}
+                </Form.Group>
+                <Form.Group className='mb-3' controlId='formBasicPassword'>
+                  <Form.Label>Password</Form.Label>
+                  <div className="show-password">
+                    <FormControl type={showPassword ? 'text' : 'password'} name='password' value={loginFormData.password} className='mr-sm-2 custom-form' onChange={handleChange} required />
+                    {showPassword ?
+                      <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowPassword(false); }} />
+                      :
+                      <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowPassword(true); }} />
+                    }
+                  </div>
+                </Form.Group>
+                <a href="/forgot-password" className='forgot-password fs-16'>Forgot your password?</a>
+                {loginFormLoading ?
+                  <Button className='w-100 mt-4' variant='primary' type='button'>Signing in...</Button>
+                  :
+                  <Button className='w-100 mt-4' variant='primary' type='submit'>Sign in</Button>
+                }
+                <p className='mb-0 mt-4 text-center fs-14'>Don't have an account? <Link className='sign-up' to={`/sign-up?redirect_to=${encodeURIComponent(redirect_to)}`}>Sign Up</Link></p>
+              </Form>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </section>
 
-                  <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Don't have an account? <Link className='sign-up' to={`/sign-up?redirect_to=${encodeURIComponent(redirect_to)}`}>Sign Up</Link></p>
-                </Form>
-              </div>
-            </Col>
-            <Col lg="4" className='with-bg'>
-            </Col>
-          </Row>
-        </Container>
-      </section>
+  </LayoutNoFooter>
+    // <LayoutNoFooter>
+    //   <section id='login' className='d-flex align-items-center'>
+    //     <Container fluid>
+    //       <Row style={{ minHeight: '100vh' }}>
+    //         <Col id="login-column" lg='8' className='d-flex flex-column justify-content-center'>
+    //           <div className='login-container'>
+    //             <Link to="/">
+    //               <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" />
+    //             </Link>
+    //             <h1 className='text-center'>Sign in to Kouture Konect</h1>
+    //             <div className="divider-small mb-3 mt-4"></div>
+    //             {/* <button className='login-google mt-3'>
+    //               <img src={GoogleIcon} />
+    //               <span className='subtitle'>Sign in with Google</span>
+    //             </button>
+    //             <hr className='mb-0 mt-5' />
+    //             <p className='login-with-email'>or sign in with email</p> */}
+    //             <Form onSubmit={loginSubmit}>
+    //               <Form.Group className='mb-3' controlId='formBasicEmail'>
+    //                 <Form.Label>Email Address</Form.Label>
+    //                 <Email
+    //                   baseList={baseList}
+    //                   refineList={domains}
+    //                   onChange={(e) => handleChangeEmail(e)} // or (newValue) => customSetter(newValue)
+    //                   value={loginFormData.email}
+    //                   className="form-control mr-sm-2 email-suggestion"
+    //                   required
+    //                 />
+    //                 {/* <FormControl type='email' name='email' value={loginFormData.email} className='mr-sm-2' onChange={handleChange} required /> */}
+    //               </Form.Group>
+    //               <Form.Group className='mb-3' controlId='formBasicPassword'>
+    //                 <Form.Label>Password</Form.Label>
+    //                 <div className="show-password">
+    //                   <FormControl type={showPassword ? 'text' : 'password'} name='password' value={loginFormData.password} className='mr-sm-2' onChange={handleChange} required />
+    //                   {showPassword ?
+    //                     <IoEyeOutline className="form-input-icon cursor-pointer hi-eye off-eye" onClick={function () { setShowPassword(false); }} />
+    //                     :
+    //                     <IoEyeOffOutline className="form-input-icon cursor-pointer hi-eye-off off-eye" onClick={function () { setShowPassword(true); }} />
+    //                   }
+    //                 </div>
+    //               </Form.Group>
+    //               <a href="/forgot-password" className='forgot-password text-dgray fs-16'>Forgot Password</a>
+    //               {loginFormLoading ?
+    //                 <Button className='w-100 mt-4' variant='primary' type='button'>Signing in...</Button>
+    //                 :
+    //                 <Button className='w-100 mt-4' variant='primary' type='submit'>Sign in</Button>
+    //               }
+    //               {googleLoginLoading ?
+    //                 <Button className='w-100 mt-3' variant='secondary' type='button'>Logging in with Google...</Button>
+    //                 :
+    //                 <Button className='w-100 mt-3' variant='secondary' type='button' onClick={login}>Login with Google</Button>
+    //               }
 
-    </LayoutNoFooter>
+    //               <p className='mb-0 mt-4 text-center fs-14 text-dgray'>Don't have an account? <Link className='sign-up' to={`/sign-up?redirect_to=${encodeURIComponent(redirect_to)}`}>Sign Up</Link></p>
+    //             </Form>
+    //           </div>
+    //         </Col>
+    //         <Col lg="4" className='with-bg'>
+    //         </Col>
+    //       </Row>
+    //     </Container>
+    //   </section>
+
+    // </LayoutNoFooter>
   );
 };
 

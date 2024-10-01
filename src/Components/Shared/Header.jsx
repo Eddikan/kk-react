@@ -481,10 +481,10 @@ const Header = () => {
           <Navbar.Brand href="/"><img src={Logo} /></Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse className="justify-content-between column-gap-70" id="responsive-navbar-nav">
-            <Nav className="align-items-center">
+            <Nav className="align-items-center w-100">
               {/* <Nav.Link href="/find-designs">Find Designs</Nav.Link>
               <Nav.Link href="/inspirations">Inspirations</Nav.Link> */}
-                  <Form inline className='search-header d-flex align-items-center'>
+                  <Form inline className='search-header w-100 d-flex align-items-center'>
                     <FaMagnifyingGlass />
                     <FormControl type='text' placeholder='Search' className='search-bar-header ms-2' />
                     <div className="nav-link-dropdown bg-white border border-1 border-black border-gold-hover rounded">
@@ -492,28 +492,28 @@ const Header = () => {
                         Designers <FaCaretDown />
                       </a>
                       <div className="nav-link-menu">
-                        <a className="nav-link pe-0" href="/">
+                        <a className="nav-link ps-0 pe-0" href="/">
                           <div className="d-flex align-items-center">                          
-                            <img className="mx-auto" src={DesignerIcon} width="25px"/>
-                            <div className="ms-2">
+                            <img className="mx-2" src={DesignerIcon} width="25px"/>
+                            <div>
                               <p className="search-dropdown-title mb-0">Designers</p>
                               <span className="subtitle fs-10">Find top fashion designers</span>
                             </div>
                           </div>
                         </a>
-                        <a className="nav-link pe-0" href="/">
+                        <a className="nav-link ps-0 pe-0" href="/">
                           <div className="d-flex align-items-center">                          
-                            <img className="mx-auto" src={FabricIcon} width="23px"/>
-                            <div className="ms-2">
+                            <img className="mx-2" src={FabricIcon} width="23px"/>
+                            <div>
                               <p className="search-dropdown-title mb-0">Fabrics</p>
                               <span className="subtitle fs-10">Find top fashion designers</span>
                             </div>
                           </div>
                         </a>                        
-                        <a className="nav-link pe-0" href="/">
+                        <a className="nav-link ps-0 pe-0" href="/">
                           <div className="d-flex align-items-center">                          
-                            <img className="mx-auto" src={DesignIcon} width="20px"/>
-                            <div className="ms-2">
+                            <img className="mx-2" src={DesignIcon} width="20px"/>
+                            <div>
                               <p className="search-dropdown-title mb-0">Designs</p>
                               <span className="subtitle fs-10">Find top fashion designers</span>
                             </div>
@@ -854,7 +854,7 @@ const Header = () => {
                         </div>
                       </div>
                     </a>
-                    <a href={`/cart`}>
+                    {/* <a href={`/cart`}>
                       <div className="nav-link header-tooltip">
                         <span className="icon-tooltiptext fs-14">Cart</span>
                         <IoCartOutline size={26} />
@@ -864,7 +864,23 @@ const Header = () => {
                           </div>
                         </div>
                       </div>
-                    </a>
+                    </a> */}
+                    <div className="nav-link header-tooltip">
+                      <span className="icon-tooltiptext fs-14">Cart</span>
+                      <IoCartOutline size={26} />
+                      <div>
+                        <div className="cart-added position-absolute badge-primary text-white">
+                          <span className="cart-count">{cartItemCount}</span>
+                        </div>
+                      </div>
+
+                      <div className="cart-dropdown text-center">
+                        <IoCartOutline className="my-3" size={54} style={{ opacity: 0.2 }} />
+                        <h3 className="fs-14 mb-3 fw-bolder">Your Cart is Empty, Shop Now!</h3>
+                        <p className="fs-13">Good to have you back! The items in your cart are saved. Sign in when you're ready to review or purchase them.</p>
+                        <Button href="/login" className="cart-dropdown-btn btn">Sign In</Button>
+                      </div>
+                    </div>
                     <a href='/'>
                       <div className="nav-link header-tooltip">
                         <LuBellRing size={26} />

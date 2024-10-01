@@ -34,11 +34,18 @@ const EcoFriendly = (props) => {
 
     return ( 
         <>
-            <div style={{ backgroundImage: `url(${Ecofriendly})`, height: `350px` }}>
+            {/* <div style={{ backgroundImage: `url(${Ecofriendly})`, height: `350px` }}> */}
+            <div    style={{ 
+                        backgroundImage: `linear-gradient(rgba(0, 128, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${Ecofriendly})`, 
+                        height: `350px`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center'
+                    }}
+            >
                 <Container>
                     <Row>
                         <Col className='eco-col'>
-                            <div className='text-center text-white mb-3 fs-40 rufina-family'>Embrace Eco-Friendly Fabrics!</div>
+                            <div className='text-center text-gold mb-3 fs-40 rufina-family'>Embrace Eco-Friendly Fabrics!</div>
 
                             <div className='text-center text-white'>Elevate your fashion with fabrics that care for both you and the Earth. Embrace eco-friendly fashion today!</div>
                           

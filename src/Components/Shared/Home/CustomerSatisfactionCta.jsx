@@ -14,6 +14,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { GoAlertFill } from 'react-icons/go';
 import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoDocumentOutline } from "react-icons/io5";
+import { FaArrowRight } from "react-icons/fa6";
 
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
@@ -42,17 +43,29 @@ const CustomerSatisfactionCta = (props) => {
 
     return (
         <>
-            <div style={{ backgroundImage: `url(${CustomerSatisfactionCtaBg})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} className="py-5 text-center">
+            {/* <div style={{ backgroundImage: `url(${CustomerSatisfactionCtaBg})`, backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }} className="py-5 text-center"> */}
+            <div className="py-5 text-center">
                 <Container>
                     <Row>
                         <Col lg="12" className="text-center">
+                            <div className='text-center mb-3 rufina-family'>
+                                <h2 className="customer-satisfaction-title fs-40 ">Help Us Improve – Share Your Experience!</h2>
+                                <p className="customer-satisfaction-p text-center">Your experience means the world to us, and we're always looking to improve. Take a few moments to share your thoughts in our Customer Satisfaction Survey. Your insights not only help us serve you better but also shape the future of our offerings.</p>
+                                <p className="customer-satisfaction-p text-center">Click below to make your voice heard.</p>
+                                <p className="customer-satisfaction-p text-center mt-5 mb-4">Thank you for helping us enhance your experience!</p>
+                            </div>
+                            <Link to="/customer-satisfaction-survey">
+                                <Button className="btn-start-survey fs-15 mt-2">Start Survey <FaArrowRight style={{ color: 'white'}}/></Button>
+                            </Link>
+                        </Col>
+                        {/* <Col lg="12" className="text-center">
                             <div className='text-center text-white mb-3 fs-40 rufina-family'>Help Us Improve – Share Your Experience!</div>
 
                             <p className='text-center text-white'>Your experience means the world to us, and we're always looking to improve. Take a few moments to share your thoughts in our Customer Satisfaction Survey. Your insights not only help us serve you better but also shape the future of our offerings. Click below to make your voice heard. Thank you for helping us enhance your experience!</p>
                             <Link to="/customer-satisfaction-survey">
                                 <Button className="btn-explore-now fs-15 explore-now mt-2" variant="primary">Start Survey</Button>
                             </Link>
-                        </Col>
+                        </Col> */}
                     </Row>
                 </Container>
             </div>

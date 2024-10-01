@@ -1,9 +1,10 @@
 /*Login*/
-body:has(section#login) #navigation {
+/* body:has(section#login) #navigation {
     display: none!important;
-}
+} */
 section#login h1 {
-    font-size: 30px;
+    font-size: 25px;
+    color: #551855;
     font-weight: 600;
 }
 section#login .with-bg {
@@ -57,13 +58,13 @@ section#login .login-with-email {
     padding-right: 20px;
 }
 section#login a.forgot-password {
-    text-align: right;
+    text-align: left;
     display: block;
-    text-decoration: none;
+    text-decoration: underline;
     font-size: 14px;
 }
 section#login #login-column {
-    padding-top: 120px;
+    padding-top: 60px;
     padding-bottom: 120px;
 }
 @media screen and (min-width:1200px) {
@@ -95,4 +96,22 @@ section#login #login-column {
 .off-eye {
     top: 14px;
     right: 10px;
+}
+.custom-divider{
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+}
+.custom-divider::before,
+.custom-divider::after{
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+}
+.custom-divider::before{
+    margin-right: 30px;
+}
+.custom-divider::after{
+    margin-left: 30px;
 }

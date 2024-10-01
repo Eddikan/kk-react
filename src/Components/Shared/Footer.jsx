@@ -10,19 +10,129 @@ import { GoPencil, GoTrash, GoHeart, GoBookmark, GoPlus } from "react-icons/go";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoEyeOutline, IoHeartOutline } from "react-icons/io5";
 import KKLogoLight from 'Assets/images/kouture-konect-logo-light.png';
-import { FaFacebookF, FaLinkedinIn, FaYoutube } from "react-icons/fa";
-import { FaXTwitter, FaInstagram, FaPhone } from "react-icons/fa6";
+import { FaFacebookF, FaLinkedinIn, FaYoutube, FaLinkedin, FaPhoneAlt, FaFacebookSquare, FaInstagramSquare, FaYoutubeSquare } from "react-icons/fa";
+import { FaXTwitter, FaInstagram, FaPhone, FaSquareXTwitter  } from "react-icons/fa6";
 import { IoIosMail } from "react-icons/io";
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
+import FooterLogo from 'Assets/images/logos/koutor konect 2.png';
+import AmericanExpressLogo from 'Assets/images/icons/American-Express-logo.png';
+import DinersClubLogo from 'Assets/images/icons/diners-club-logo.png';
+import JCBLogo from 'Assets/images/icons/jcb-logo.png';
+import MaestroLogo from 'Assets/images/icons/maestro-logo.png';
+import MasterCardLogo from 'Assets/images/icons/Mastercard-logo.png';
+import PayPalLogo from 'Assets/images/icons/PayPal-Logo.png';
+import VisaLogo from 'Assets/images/icons/visa-logo.png';
+
+
 
 const Footer = (props) => {
     return (
         <>
-            <section className="bg-black text-white py-3">
+            <section className="bg-white text-white py-3 border-top">
                 <Container>
                     <Row>
-                        <Col lg="12" className="text-center">
+                        <Col lg="3" className="pt-4 ps-5">
+                            <Link href="/">
+                                <img src={FooterLogo} alt="Kouture Konect"  className="footer-logo ps-1" />
+                            </Link>
+                        </Col>
+                        <Col lg="6" className="pt-4">
+                            <div className="footer-link-container d-flex justify-content-center">
+                                <div className="footer-link">
+                                    <Link href="/" className="text-decoration-none fs-13">
+                                        About Us
+                                    </Link>
+                                </div>
+                                <div className="footer-link">
+                                    <Link href="/" className="text-decoration-none fs-13">
+                                        Designers
+                                    </Link>
+                                </div>
+                                <div className="footer-link">
+                                    <Link href="/" className="text-decoration-none fs-13">
+                                        Fabrics
+                                    </Link>
+                                </div>
+                                <div className="footer-link">
+                                    <Link href="/" className="text-decoration-none fs-13">
+                                        Designs
+                                    </Link>
+                                </div>
+                                <div className="footer-link">
+                                    <Link href="mailto:kouturekonnect@gmail.com" className="text-decoration-none fs-13">
+                                        Create a Shop
+                                    </Link>
+                                </div>
+                            </div>
+                            <div className="payment-options-container d-flex justify-content-center mt-3 mb-4">
+                                <div className="footer-payment bg-white">
+                                    <Link href="/">
+                                        <img src={PayPalLogo} className="footer-payment-img"  alt="" />                                                                      
+                                    </Link>
+                                </div>
+                                <div className="footer-payment bg-white">
+                                    <Link href="/">
+                                        <img src={VisaLogo} className="footer-payment-img"  alt="" />                                                                    
+                                    </Link>
+                                </div>
+                                <div className="footer-payment bg-white">
+                                    <Link href="/">
+                                        <img src={MaestroLogo} className="footer-payment-img"  alt="" />                                    
+                                    </Link>
+                                </div>
+                                <div className="footer-payment bg-white">
+                                    <Link href="/">
+                                        <img src={AmericanExpressLogo} className="footer-payment-img"  alt="" />                                      
+                                    </Link>
+                                </div>
+                                <div className="footer-payment bg-white">
+                                    <Link href="/">
+                                        <img src={DinersClubLogo} className="footer-payment-img"  alt="" />    
+                                    </Link>
+                                </div>
+                                <div className="footer-payment bg-white">
+                                    <Link href="/">
+                                        <img src={MasterCardLogo} className="footer-payment-img"  alt="" />
+                                    </Link>
+                                </div>
+                                <div className="footer-payment bg-white">
+                                    <Link href="/">
+                                        <img src={JCBLogo} className="footer-payment-img"  alt="" />  
+                                    </Link>
+                                </div>
+                            </div>
+                        </Col>
+                        <Col lg="3" className="pt-3 text-center">
+                            <div className="footer-social-container mb-4">
+                                <div className="footer-social bg-white">
+                                    <Link href="/">
+                                        <FaFacebookSquare size="25px"/>
+                                    </Link>
+                                </div>
+                                <div className="footer-social bg-white">
+                                    <Link href="/">
+                                        <FaInstagramSquare size="25px"/>
+                                    </Link>
+                                </div>
+                                <div className="footer-social bg-white">
+                                    <Link href="/">
+                                        <FaSquareXTwitter size="25px"/>
+                                    </Link>
+                                </div>
+                                <div className="footer-social bg-white">
+                                    <Link href="/">
+                                        <FaLinkedin size="25px"/>
+                                    </Link>
+                                </div>
+                                <div className="footer-social bg-white">
+                                    <Link href="/">
+                                        <FaYoutubeSquare  size="25px"/>
+                                    </Link>
+                                </div>
+                            </div>
+                        </Col>
+                        {/* <Col lg="12" className="text-center">
                             <Link href="/">
                                 <img src={KKLogoLight} alt="Kouture Konect" className="footer-logo" />
                             </Link>
@@ -82,10 +192,36 @@ const Footer = (props) => {
                             </div>
                             <hr className="border-white" />
                             <p className="fs-13">© 2023 Kouture Konect</p>
-                        </Col>
+                        </Col> */}
                     </Row>
                 </Container>
                 
+            </section>
+            <section className="bg-white text-gray pt-3 border-top">
+                <Container>
+                    <Row>
+                        <Col lg="12" className="d-flex ps-5 justify-content-between">
+                            <p className="fs-13">© 2023 Kouture Konect</p>
+                            <div className="footer-link-container d-flex">
+                                <div className="footer-link">
+                                    <Link href="/" className="text-decoration-none text-gray fs-13">
+                                        Terms of Use
+                                    </Link>
+                                </div>
+                                <div className="footer-link">
+                                    <Link href="/" className="text-decoration-none text-gray fs-13">
+                                        Privacy Policy
+                                    </Link>
+                                </div>
+                                <div className="footer-link">
+                                    <Link href="/" className="text-decoration-none text-gray fs-13">
+                                        FAQs
+                                    </Link>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
             </section>
         </>
     );
