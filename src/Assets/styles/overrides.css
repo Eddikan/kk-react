@@ -13,6 +13,42 @@
         url('../fonts/Rufina.ttf') format('truetype');
 }
 
+@font-face {
+    font-family: 'TheSeasons';
+    src: local('TheSeasons'),
+         url('../fonts/TheSeasons/TheSeasons-Regular.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'TheSeasons Bold';
+    src: local('TheSeasons Bold'),
+         url('../fonts/TheSeasons/TheSeasons-Bold.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'TheSeasons BoldItalic';
+    src: local('TheSeasons BoldItalic'),
+         url('../fonts/TheSeasons/TheSeasons-BoldItalic.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'TheSeasons Light';
+    src: local('TheSeasons Light'),
+         url('../fonts/TheSeasons/TheSeasons-Light.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'TheSeasons LightItalic';
+    src: local('TheSeasons LightItalic'),
+         url('../fonts/TheSeasons/TheSeasons-LightItalic.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'TheSeasons Italic';
+    src: local('TheSeasons Italic'),
+         url('../fonts/TheSeasons/TheSeasons-Italic.otf') format('opentype');
+}
+
 :root {
     --primary: #202A44;
     --gold: #CEA835;
@@ -32,7 +68,7 @@
     --gray-600: #39393A;
     --purple-red: #E1306C; 
     --body-font: Poppins;
-    --heading-font: Rufina;
+    --heading-font: 'TheSeasons Bold';
 }
 
 body {
@@ -74,6 +110,7 @@ h5 {
     font-family: var(--heading-font);
     color: var(--black);
     line-height: 1;
+    font-weight: inherit;
 }
 
 #root {
