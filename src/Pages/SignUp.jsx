@@ -482,7 +482,7 @@ const SignUp = () => {
       <section id='signup' className='d-flex align-items-center'>
         <Container fluid>
           <Row style={{ minHeight: '100vh' }}>
-            <Col lg='12' className='d-flex flex-column justify-content-center py-4'>
+            <Col lg='12' className='d-flex flex-column justify-content-center py-4 mt-5 mb-5'>
               <div className='sign-up-container'>
                 {/* <Link to="/">
                   <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect" />
@@ -498,7 +498,7 @@ const SignUp = () => {
                     null
                   }
                   <h1 className='text-center'>Sign up to Kouture Konect</h1>
-                  <p className="text-center small fs-16 mb-0">
+                  <p className="text-center small fs-15 mb-0">
                     Join Kouture Konect to view more Designers, Designs and Fabrics!
                   </p>
                   {googleLoginLoading ?
@@ -509,7 +509,7 @@ const SignUp = () => {
                         Continue with Google
                     </Button>
                   }
-                  <p className="text-muted fs-13">By clicking Continue with Google, you agree to Kouture Konect’s Terms of Use and Privacy Policy.</p>
+                  <p className="text-muted fs-12 mt-2" style={{lineHeight: 1.2, fontFamily: 'ProximaNova'}}>By clicking Continue with Google, you agree to Kouture Konect’s Terms of Use and Privacy Policy.</p>
                   {/* <div className="divider-small mb-4 mt-3"></div> */}
                   <div className="custom-divider">or</div>
                 </>
@@ -585,117 +585,7 @@ const SignUp = () => {
                           }
                         </div>
                       </Form.Group>
-                      {signupType != "seller" && signupType != "designer" && signupType != "designer_seller" && signupType != "customer" && (
-                        <>
-                          <Form.Group>
-                            <Card className='mb-4'>
-                              <Card.Body>
-                                <Form.Label>Do you want to set up a shop?</Form.Label>
-                                <Row className="mt-2">
-                                  <Form.Group as={Col} lg={3}>
-                                    <Form.Check
-                                      className="custom-radio cursor-pointer"
-                                      type="radio"
-                                      label="Yes"
-                                      name="set_up_shop"
-                                      value="Yes"
-                                      required
-                                      checked={selectedOption === 'Yes'}
-                                      onChange={handleChangeSetUpShop}
-                                    />
-                                  </Form.Group>
-                                  <Form.Group as={Col} lg={3}>
-                                    <Form.Check
-                                      className="custom-radio cursor-pointer"
-                                      type="radio"
-                                      label="No"
-                                      name="set_up_shop"
-                                      value="No"
-                                      required
-                                      checked={selectedOption === 'No'}
-                                      onChange={handleChangeSetUpShop}
-                                    />
-                                  </Form.Group>
-                                </Row>
-                              </Card.Body>
-                            </Card>
-                          </Form.Group>
-                        </>
-                      )}
-                      {selectedOption === 'No' && (
-                        <>
-                          <Form.Group>
-                            <Card className='mb-4'>
-                              <Card.Body>
-                                <Form.Label className='mb-2 fs-18'>
-                                  Clothing Preferences
-                                </Form.Label>
-                                <Row className="align-items-center mt-1">
-                                  <Col md="6">
-                                    <Form.Label className="me-3" style={{ minWidth: '90px' }}>
-                                      <input
-                                        type="checkbox"
-                                        checked={interestedIn.includes('Men')}
-                                        onChange={() => handleInterestChange('Men')}
-                                        className="d-inline-block vertical-align-middle me-1"
-                                      />
-                                      <span>Men's Clothing</span>
-                                    </Form.Label>
-                                  </Col>
-                                  <Col md="6">
-                                    <Form.Label style={{ minWidth: '90px' }}>
-                                      <input
-                                        type="checkbox"
-                                        checked={interestedIn.includes('Baby/Toddlers')}
-                                        onChange={() => handleInterestChange('Baby/Toddlers')}
-                                        className="d-inline-block vertical-align-middle me-1"
-                                      />
-                                      <span>Baby/Toddler Clothing</span>
-                                    </Form.Label>
-                                  </Col>
-                                </Row>
-                                <Row className="align-items-center">
-                                  <Col md="6">
-                                    <Form.Label className="me-3" style={{ minWidth: '90px' }}>
-                                      <input
-                                        type="checkbox"
-                                        checked={interestedIn.includes('Women')}
-                                        onChange={() => handleInterestChange('Women')}
-                                        className="d-inline-block vertical-align-middle me-1"
-                                      />
-                                      <span>Women's Clothing</span>
-                                    </Form.Label>
-                                  </Col>
-                                  <Col md="6">
-                                    <Form.Label style={{ minWidth: '90px' }}>
-                                      <input
-                                        type="checkbox"
-                                        checked={interestedIn.includes('Others')}
-                                        onChange={() => handleInterestChange('Others')}
-                                        className="d-inline-block vertical-align-middle me-1"
-                                      />
-                                      <span>Others</span>
-                                    </Form.Label>
-                                  </Col>
-                                </Row>
-                              </Card.Body>
-                            </Card>
-                            <Card className='mb-4'>
-                              <Card.Body>
-                                <Form.Label className='mb-2 fs-18'>
-                                  Event Date
-                                </Form.Label>
-                                <Row className="align-items-center mb-3">
-                                  <Col md="12">
-                                    <FormControl type='date' name='event_date' onChange={handleChange} className='mr-sm-2' />
-                                  </Col>
-                                </Row>
-                              </Card.Body>
-                            </Card>
-                          </Form.Group>
-                        </>
-                      )}
-                      <div className="alert alert-primary bg-white text-black mb-0 ps-4 small lh-1-7" role="alert">
+                      <div className="alert alert-primary bg-white text-black mb-0 small lh-1-7 fs-12" style={{lineHeight: 1.3}} role="alert">
                         As part of our ongoing commitment to security and user safety, we are requiring users to provide a valid identification document for access to certain enhanced features on our platform.
                       </div>
                       {registerFormLoading ?

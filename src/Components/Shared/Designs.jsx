@@ -445,10 +445,9 @@ const Designs = (props) => {
                                     <Col lg={12} className="text-center mt-4">
                                         {currentUser ?
                                             <Link to="/designs">
-                                                <Button className="btn-primary" variant="primary">View All</Button>
+                                                <Button className="btn-primary" variant="primary">View More Designs <FaArrowRight style={{ color: 'white'}}/></Button>
                                             </Link>
                                             :
-                                            // <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_design')}>View More</Button>
                                             <Link to="/sign-up?redirect_to=/">
                                                 <Button className="btn-primary" variant="primary">View More Designs <FaArrowRight style={{ color: 'white'}}/></Button>
                                             </Link>

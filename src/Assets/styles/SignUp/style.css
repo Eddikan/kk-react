@@ -82,7 +82,7 @@ section#signup .sign-up-with-email {
     }
 }
 
-.show-password{
+.show-password {
     position: relative;
 }
 .hi-eye-off, .hi-eye {
@@ -93,23 +93,28 @@ section#signup .sign-up-with-email {
     top: 14px;
     right: 10px;
 }
-.custom-hover-btn-google{
+
+.custom-hover-btn-google  {
+    padding: 5px 20px;
+}
+
+.custom-hover-btn-google {
     border: solid #e1dcdc 1px !important;
     background-color: white;
     color: black;
 }
-.custom-hover-btn-google:hover{
+.custom-hover-btn-google:hover {
     border-color: gold !important;
     background-color: white !important;
     color: black !important;
 }
-.custom-hover-btn-google:focus{
+.custom-hover-btn-google:focus {
     border: solid 1px !important;
     border-color: gold !important;
     background-color: white !important;
     color: black !important;
 }
-.custom-divider{
+.custom-divider {
     display: flex;
     align-items: center;
     text-align: center;
