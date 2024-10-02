@@ -26,6 +26,7 @@ import BrowseDesigners from "Assets/images/home-modal/browse-designers.png";
 import ShopFabrics from "Assets/images/home-modal/shop-fabrics.png";
 import ExploreDesigns from "Assets/images/home-modal/explore-designs.png";
 import Marquee from "react-fast-marquee";
+import JoinKoutureBG from "Assets/images/join-kouture.png";
 
 const Home = (props) => {
   const navigate = useNavigate();
@@ -192,6 +193,27 @@ const Home = (props) => {
             <Col lg="12">
               <Designs currentUser={currentUser} onSignup={showSignupModal} />
             </Col>
+          </Row>
+        </Container>
+      </section>
+
+      <section id="join-kouture-section" className="mb-5 mt-xl-2 p-5" 
+        style={{ 
+            backgroundImage: `url(${JoinKoutureBG})`, 
+            height: `350px`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+        }}>
+        <Container>
+          <Row>
+              <Col>
+                <div className="join-kouture-content text-left mb-1 rufina-family">
+                  <h3 className="text-gold">Join the Kouture Konect Community</h3>
+                  <p className="text-white">Showcase Your Designs and Sell Fabrics</p>
+                </div>
+                <p className="join-section-p text-white">Showcase your unique creations and connect with fashion enthusiasts eager to discover fresh talent</p>
+                  <Button variant="primary">Get Started Now</Button>
+              </Col>
           </Row>
         </Container>
       </section>

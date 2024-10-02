@@ -2020,7 +2020,7 @@ a.schedule-consultation {
 }
 
 .btn-explore-now:hover {
-    background-color: var(--gold) !important;
+    background-color: rgba(0, 0, 0, 0.075) !important;
     border-color: var(--gold) !important;
 }
 
@@ -2655,8 +2655,8 @@ span.rti--tag {
     background-color: black;
 }
 .footer-payment-img{
-    width: 52px;
-    height: 68px;
-    margin: 0 7px;
+    width: 68px;
+    height: 31px;
+    margin: 10px 3px;
     object-fit: contain; 
 }

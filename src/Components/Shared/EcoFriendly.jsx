@@ -45,7 +45,7 @@ const EcoFriendly = (props) => {
                 <Container>
                     <Row>
                         <Col className='eco-col'>
-                            <div className='text-center text-gold mb-3 fs-40 rufina-family'>Embrace Eco-Friendly Fabrics!</div>
+                            <div className='text-center text-gold mb-1 fs-40 rufina-family'>Embrace Eco-Friendly Fabrics!</div>
 
                             <div className='text-center text-white'>Elevate your fashion with fabrics that care for both you and the Earth. Embrace eco-friendly fashion today!</div>
                           

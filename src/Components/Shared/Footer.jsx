@@ -107,27 +107,27 @@ const Footer = (props) => {
                             <div className="footer-social-container mb-4">
                                 <div className="footer-social bg-white">
                                     <Link href="/">
-                                        <FaFacebookSquare size="25px"/>
+                                        <FaFacebookSquare size="25px" color='black'/>
                                     </Link>
                                 </div>
                                 <div className="footer-social bg-white">
                                     <Link href="/">
-                                        <FaInstagramSquare size="25px"/>
+                                        <FaInstagramSquare size="25px" color='black'/>
                                     </Link>
                                 </div>
                                 <div className="footer-social bg-white">
                                     <Link href="/">
-                                        <FaSquareXTwitter size="25px"/>
+                                        <FaSquareXTwitter size="25px" color='black'/>
                                     </Link>
                                 </div>
                                 <div className="footer-social bg-white">
                                     <Link href="/">
-                                        <FaLinkedin size="25px"/>
+                                        <FaLinkedin size="25px" color='black'/>
                                     </Link>
                                 </div>
                                 <div className="footer-social bg-white">
                                     <Link href="/">
-                                        <FaYoutubeSquare  size="25px"/>
+                                        <FaYoutubeSquare  size="25px" color='black'/>
                                     </Link>
                                 </div>
                             </div>
@@ -194,35 +194,34 @@ const Footer = (props) => {
                             <p className="fs-13">© 2023 Kouture Konect</p>
                         </Col> */}
                     </Row>
+                    <section className="bg-white text-gray pt-3 border-top">
+                        <Row>
+                            <Col lg="12" className="d-flex px-5 justify-content-between">
+                                <p className="fs-13">© 2023 Kouture Konect</p>
+                                <div className="footer-link-container d-flex">
+                                    <div className="footer-link">
+                                        <Link href="/" className="text-decoration-none text-gray fs-13">
+                                            Terms of Use
+                                        </Link>
+                                    </div>
+                                    <div className="footer-link">
+                                        <Link href="/" className="text-decoration-none text-gray fs-13">
+                                            Privacy Policy
+                                        </Link>
+                                    </div>
+                                    <div className="footer-link">
+                                        <Link href="/" className="text-decoration-none text-gray fs-13">
+                                            FAQs
+                                        </Link>
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
+                    </section>
                 </Container>
                 
             </section>
-            <section className="bg-white text-gray pt-3 border-top">
-                <Container>
-                    <Row>
-                        <Col lg="12" className="d-flex ps-5 justify-content-between">
-                            <p className="fs-13">© 2023 Kouture Konect</p>
-                            <div className="footer-link-container d-flex">
-                                <div className="footer-link">
-                                    <Link href="/" className="text-decoration-none text-gray fs-13">
-                                        Terms of Use
-                                    </Link>
-                                </div>
-                                <div className="footer-link">
-                                    <Link href="/" className="text-decoration-none text-gray fs-13">
-                                        Privacy Policy
-                                    </Link>
-                                </div>
-                                <div className="footer-link">
-                                    <Link href="/" className="text-decoration-none text-gray fs-13">
-                                        FAQs
-                                    </Link>
-                                </div>
-                            </div>
-                        </Col>
-                    </Row>
-                </Container>
-            </section>
+
         </>
     );
 };

@@ -118,6 +118,12 @@ section#home p.subtitle {
     height: 324px;
     border-radius: 5px;
 }
+.join-kouture-content h3{
+    font-size: 25px;
+}
+.join-kouture-content p{
+    font-size: 20px;
+}
 
 @keyframes scrolling {
     0% { transform: translateX(0); }

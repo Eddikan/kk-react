@@ -291,7 +291,7 @@ const Fabrics = (props) => {
                                             </Link>
                                             :
                                             <Link to="/fabrics">
-                                                <Button className="btn-primary" variant="primary">View More</Button>
+                                                <Button className="btn-primary" variant="primary">View More Fabrics</Button>
                                             </Link>
                                             // <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_fabric')}>View More</Button>
                                         }
