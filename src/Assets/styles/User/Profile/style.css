@@ -25,7 +25,9 @@
 .profile-icon {
   margin-top: 3px;
 }
-
+.profile-completed-p{
+  max-width: 200px;
+}
 .ellipsis-profile {
   white-space: nowrap;
   overflow: hidden;
@@ -53,7 +55,8 @@
 }
 
 progress {
-  width: 100%;
+  /* width: 100%; */
+  max-width: 350px;
   height: 13px;
   border-radius: 50px;
   background-color: #ddd;
@@ -144,4 +147,7 @@ progress[value]::-webkit-progress-value {
   display: block;
   margin-left: auto;
   margin-right: auto;
+}
+.profile-side-dropdown{
+  text-decoration: none;
 }

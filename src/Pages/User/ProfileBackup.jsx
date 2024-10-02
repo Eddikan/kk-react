@@ -921,34 +921,17 @@ const Profile = () => {
                                             }
 
                                         </div>
-                                        <div className="completion-profile-section">
-                                            <Row>
-                                                <Col lg="3">
-                                                    <div className='fs-35 ms-4'>{user.profile_completeness}% <p className='fs-16 profile-completed-p'>of your profile is complete</p></div>
-                                                </Col>
-                                                <Col lg="9">
-                                                    <div className="mx-2">
-                                                        <label className="progress-bar-value" htmlFor="progress-bar"></label>
-                                                        <progress id="progress-bar" className="w-50" value={user.profile_completeness} max="100"></progress>
-                                                        <div className='fs-16 fw-bold'>Your profile completion is at {user.profile_completeness}%</div>
-                                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className='mt-2'>
-                                                            <span className='ms-1'>Edit Profile</span>
-                                                        </Button>
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                        </div>
-                                        {/* <div className="d-flex">
-                                            <div className='fs-35 w-25 ms-3 me-2'>{user.profile_completeness}% <p className='profile-completed-p fs-16'>of your profile is complete</p></div>
+                                        <div className="d-flex">
+                                            <div className='fs-30 w-25 ms-3 me-2'>{user.profile_completeness}% <p className='fs-16'>of your profile is complete</p></div>
                                             <div className="position-relative mx-2 w-50">
                                                 <label className="progress-bar-value" htmlFor="progress-bar"></label>
                                                 <progress id="progress-bar" value={user.profile_completeness} max="100"></progress>
-                                                <div className='fs-16 fw-bold'>Your profile completion is at {user.profile_completeness}%</div>
+                                                <div className='fs-12 fw-bold'>Your profile completion is at {user.profile_completeness}%</div>
                                                 <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className='mt-2'>
                                                     <span className='ms-1'>Edit Profile</span>
                                                 </Button>
                                             </div>
-                                        </div> */}
+                                        </div>
                                     </div>
                                 </div>
                             </Col>
@@ -999,7 +982,7 @@ const Profile = () => {
                             )} */}
 
 
-                            {/* <Col lg="12" className='mt-4'>
+                            <Col lg="12" className='mt-4'>
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${aboutShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("about"); }}>About</span>
 
                                 {user.is_designer == 1 && (
@@ -1013,180 +996,319 @@ const Profile = () => {
                                 )}
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${securityShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("security"); }}>Security</span>
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${verificationShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("verification"); }}>Verification</span>
-                                <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${bodyMeasurementShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("body_measurement"); }}>Body Measurement</span> */}
+                                <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${bodyMeasurementShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("body_measurement"); }}>Body Measurement</span>
                                 {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${processShow ? 'fw-600' : ''}`} onClick={function () { showTab("process") }}>Process</span>
                                 <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${limitedDesignShow ? 'fw-600' : ''}`} onClick={function () { showTab("limited_design"); }}>Limited Design</span> */}
-                                {/* <hr className='mt-2' />
-                            </Col> */}
+                                <hr className='mt-2' />
+                            </Col>
                         </Row>
                         <Row>
                             <hr />
                             <Col lg="3">
                                 <div className="profile-side-dropdown">
-                                    <a href="/" className="profile-side-dropdown fw-bold fs-16"><p>My Account</p></a>
+                                    <a href="/" className="profile-side-dropdown fw-600"><p>My Accounts</p></a>
                                     <div className="ms-3">
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>My Profile</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>My Measurements</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>Manage my Account</p></a>
+                                        <a href="/" className="profile-side-dropdown"><p>My Profile</p></a>
+                                        <a href="/" className="profile-side-dropdown"><p>My Measurements</p></a>
+                                        <a href="/" className="profile-side-dropdown"><p>Manage my Accounts</p></a>
                                     </div>
-                                    <a href="/" className="profile-side-dropdown fw-bold fs-16"><p>My Orders</p></a>
+                                    <a href="/" className="profile-side-dropdown fw-600"><p>My Orders</p></a>
                                     <div className="ms-3">
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>All</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>Pending</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>Processing</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>Shipped</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>Delivered</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>Completed</p></a>
+                                        <a href="/" className="profile-side-dropdown"><p>All</p></a>
+                                        <a href="/" className="profile-side-dropdown"><p>Pending</p></a>
+                                        <a href="/" className="profile-side-dropdown"><p>Processing</p></a>
+                                        <a href="/" className="profile-side-dropdown"><p>Shipped</p></a>
+                                        <a href="/" className="profile-side-dropdown"><p>Delivered</p></a>
+                                        <a href="/" className="profile-side-dropdown"><p>Completed</p></a>
                                     </div>
-                                    <a href="/" className="profile-side-dropdown fw-bold fs-16"><p>My Wishlist</p></a>                                    
-                                    <a href="/" className="profile-side-dropdown fw-bold fs-16"><p>My Appointments</p></a>                                    
-                                    <a href="/" className="profile-side-dropdown fw-bold fs-16"><p>My Messages</p></a>
+                                    <a href="/" className="profile-side-dropdown fw-600"><p>My Wishlist</p></a>                                    
+                                    <a href="/" className="profile-side-dropdown fw-600"><p>My Appointments</p></a>                                    
+                                    <a href="/" className="profile-side-dropdown fw-600"><p>My Messages</p></a>
                                 </div>
                             </Col>
-                            <Col lg='9' className="pt-4">
-                                <div className="profile-container">
-                                    <Row>
-                                        <Col lg="6">
-                                            <p className='title-designer mb-2'>Title</p>
-                                            <p className='short-bio-designer fs-14 mb-4'>
-                                                {user.short_bio && user.short_bio != "" ? user.short_bio : "-"}
-                                            </p>
-                                            {user.is_designer && user.is_seller ?
-                                                <>
-                                                    <p className='long-bio-title mb-1'>Long Bio</p>
-                                                    <p className='long-bio-designer fs-14 mb-0 scroll-body'>
-                                                        {user.long_bio && user.long_bio != "" ? user.long_bio : "-"}
-                                                    </p>
-                                                </>
-                                                :
-                                                null
-                                            }
-                                            {user.is_designer ?
-                                                <>
-                                                    <p className='areas-specialization mt-3 mb-3'>Areas of Specialization and Expertise</p>
-                                                    <div className='mb-4'>
-                                                        {areasOfSpecialization && areasOfSpecialization.length > 0 ?
-                                                            <>
-                                                                {areasOfSpecialization.map((item, index) => (
-                                                                    <span className='text-gray600 fs-14 pill-span bg-light item-designer'>{item}</span>
-                                                                ))}
-                                                            </>
-                                                            :
-                                                            null
-
-                                                        }
-                                                    </div>
-                                                </>
-                                                :
-                                                null
-                                            }
-                                            <hr className='mt-2' />
-                                            {/* <div className='d-flex'>
-                                                <p className='text-gray'>0 Followers</p>
-                                                <p className='text-gray'>0 Following</p>
-                                            </div> */}
-                                        </Col>
-                                        <Col lg="6">
-                                            <div className='bg-lgray profile-details address mb-4 pt-0'>
-                                                <p className='profile-details-title fw-bold'>Contact Information</p>
-                                                <div className='icons-d-flex'>
-                                                    <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
-                                                    {user.city || user.province || user.country ?
-                                                        <p className='information-font fs-14'>{user.city ? user.city + ',' : "-"} {user.province ? user.province + "," : "-"} {user.country ? user.country + "," : "-"}</p>
+                            <Col lg="6">
+                                        <p className='title-designer mb-2'>Title</p>
+                                        <p className='short-bio-designer mb-4'>
+                                            {user.short_bio && user.short_bio != "" ? user.short_bio : "-"}
+                                        </p>
+                                        {user.is_designer && user.is_seller ?
+                                            <>
+                                                <p className='long-bio-title mb-1'>Long Bio</p>
+                                                <p className='long-bio-designer mb-0 scroll-body'>
+                                                    {user.long_bio && user.long_bio != "" ? user.long_bio : "-"}
+                                                </p>
+                                            </>
+                                            :
+                                            null
+                                        }
+                                        {user.is_designer ?
+                                            <>
+                                                <p className='areas-specialization mt-3 mb-3'>Areas of Specialization and Expertise</p>
+                                                <div className='mb-4'>
+                                                    {areasOfSpecialization && areasOfSpecialization.length > 0 ?
+                                                        <>
+                                                            {areasOfSpecialization.map((item, index) => (
+                                                                <span className='text-gray600 fs-14 pill-span bg-light item-designer'>{item}</span>
+                                                            ))}
+                                                        </>
                                                         :
-                                                        <p>-</p>
+                                                        null
+
                                                     }
                                                 </div>
-                                                {user.website ?
-                                                    <div className='icons-d-flex'>
-                                                        <FaLink size="20px" color="#cea835" className='profile-icon' />
-                                                        <p className='information-font fs-14'><a href={user.website} target="_blank">{user.website}</a></p>
-                                                    </div>
+                                            </>
+                                            :
+                                            null
+                                        }
+                                        <hr className='mt-2' />
+                                        {/* <div className='d-flex'>
+                                            <p className='text-gray'>0 Followers</p>
+                                            <p className='text-gray'>0 Following</p>
+                                        </div> */}
+                                    </Col>
+                                    <Col lg="3">
+                                        <div className='bg-lgray profile-details address mb-4'>
+                                            <p className='profile-details-title'>Contact Information</p>
+                                            <div className='icons-d-flex'>
+                                                <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
+                                                {user.city || user.province || user.country ?
+                                                    <p className='information-font'>{user.city ? user.city + ',' : "-"} {user.province ? user.province + "," : "-"} {user.country ? user.country + "," : "-"}</p>
                                                     :
-                                                    <div className='icons-d-flex'>
-                                                        <FaLink size="20px" color="#cea835" className='profile-icon' />
-                                                        <p className='information-font fs-14'><a href="#">-</a></p>
-                                                    </div>
-                                                }
-                                                {user.phone_number ?
-                                                    <div className='icons-d-flex'>
-                                                        <FaPhone size="20px" color="#cea835" className='profile-icon' />
-                                                        <p className='information-font mb-0 fs-14'><a href={`tel:${user.phone_number}"`}>{user.phone_number}</a></p>
-                                                    </div>
-                                                    :
-                                                    <div className='icons-d-flex'>
-                                                        <FaPhone size="20px" color="#cea835" className='profile-icon' />
-                                                        <p className='information-font mb-0 fs-14'><a href="#">-</a></p>
-                                                    </div>
+                                                    <p>-</p>
                                                 }
                                             </div>
-                                            {user.is_designer || user.is_seller ?
-                                                <div className='bg-lgray profile-details social'>
-                                                    <p className='social-profile'>Social</p>
-                                                    {user.behance ?
-                                                        <div className='icons-d-flex'>
-                                                            <FaBehance size="20px" color="#1769ff" className='profile-icon' />
-                                                            <p className='information-font ellipsis-profile fs-14'><a href={user.behance} target="_blank">{user.behance}</a></p>
-                                                        </div>
-                                                        :
-                                                        <div className='icons-d-flex'>
-                                                            <FaBehance size="20px" color="#1769ff" className='profile-icon' />
-                                                            <p><a href="#" target="_blank">-</a></p>
-                                                        </div>
-                                                    }
-                                                    {user.facebook ?
-                                                        <div className='icons-d-flex'>
-                                                            <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
-                                                            <p className='information-font ellipsis-profile fs-14'><a href={user.facebook} target="_blank">{user.facebook}</a></p>
-                                                        </div>
-                                                        :
-                                                        <div className='icons-d-flex'>
-                                                            <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
-                                                            <p><a href="#">-</a></p>
-                                                        </div>
-                                                    }
-                                                    {user.linkedin ?
-                                                        <div className='icons-d-flex'>
-                                                            <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
-                                                            <p className='information-font ellipsis-profile fs-14'><a href={user.linkedin} target="_blank">{user.linkedin}</a></p>
-                                                        </div>
-                                                        :
-                                                        <div className='icons-d-flex'>
-                                                            <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
-                                                            <p><a href="#">-</a></p>
-                                                        </div>
-                                                    }
-                                                    {user.instagram ?
-                                                        <div className='icons-d-flex'>
-                                                            <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
-                                                            <p className='information-font ellipsis-profile fs-14'><a href={user.instagram} target="_blank">{user.instagram}</a></p>
-                                                        </div>
-                                                        :
-                                                        <div className='icons-d-flex'>
-                                                            <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
-                                                            <p><a href="#">-</a></p>
-                                                        </div>
-                                                    }
-                                                    {/* {user.youtube ?
-                                                        <div className='icons-d-flex'>
-                                                            <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
-                                                            <p className='information-font ellipsis-profile'><a href={user.youtube} target="_blank">{user.youtube}</a></p>
-                                                        </div>
-                                                        :
-                                                        <div className='icons-d-flex'>
-                                                            <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
-                                                            <p><a href="#">-</a></p>
-                                                        </div>
-                                                    } */}
+                                            {user.website ?
+                                                <div className='icons-d-flex'>
+                                                    <FaLink size="20px" color="#cea835" className='profile-icon' />
+                                                    <p className='information-font'><a href={user.website} target="_blank">{user.website}</a></p>
                                                 </div>
                                                 :
-                                                null
+                                                <div className='icons-d-flex'>
+                                                    <FaLink size="20px" color="#cea835" className='profile-icon' />
+                                                    <p className='information-font'><a href="#">-</a></p>
+                                                </div>
                                             }
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </Col>
+                                            {user.phone_number ?
+                                                <div className='icons-d-flex'>
+                                                    <FaPhone size="20px" color="#cea835" className='profile-icon' />
+                                                    <p className='information-font mb-0'><a href={`tel:${user.phone_number}"`}>{user.phone_number}</a></p>
+                                                </div>
+                                                :
+                                                <div className='icons-d-flex'>
+                                                    <FaPhone size="20px" color="#cea835" className='profile-icon' />
+                                                    <p className='information-font mb-0'><a href="#">-</a></p>
+                                                </div>
+                                            }
+                                        </div>
+                                        {user.is_designer || user.is_seller ?
+                                            <div className='bg-lgray profile-details social'>
+                                                <p className='social-profile'>Social</p>
+                                                {user.behance ?
+                                                    <div className='icons-d-flex'>
+                                                        <FaBehance size="20px" color="#1769ff" className='profile-icon' />
+                                                        <p className='information-font ellipsis-profile'><a href={user.behance} target="_blank">{user.behance}</a></p>
+                                                    </div>
+                                                    :
+                                                    <div className='icons-d-flex'>
+                                                        <FaBehance size="20px" color="#1769ff" className='profile-icon' />
+                                                        <p><a href="#" target="_blank">-</a></p>
+                                                    </div>
+                                                }
+                                                {user.facebook ?
+                                                    <div className='icons-d-flex'>
+                                                        <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
+                                                        <p className='information-font ellipsis-profile'><a href={user.facebook} target="_blank">{user.facebook}</a></p>
+                                                    </div>
+                                                    :
+                                                    <div className='icons-d-flex'>
+                                                        <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
+                                                        <p><a href="#">-</a></p>
+                                                    </div>
+                                                }
+                                                {user.linkedin ?
+                                                    <div className='icons-d-flex'>
+                                                        <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
+                                                        <p className='information-font ellipsis-profile'><a href={user.linkedin} target="_blank">{user.linkedin}</a></p>
+                                                    </div>
+                                                    :
+                                                    <div className='icons-d-flex'>
+                                                        <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
+                                                        <p><a href="#">-</a></p>
+                                                    </div>
+                                                }
+                                                {user.instagram ?
+                                                    <div className='icons-d-flex'>
+                                                        <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
+                                                        <p className='information-font ellipsis-profile'><a href={user.instagram} target="_blank">{user.instagram}</a></p>
+                                                    </div>
+                                                    :
+                                                    <div className='icons-d-flex'>
+                                                        <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
+                                                        <p><a href="#">-</a></p>
+                                                    </div>
+                                                }
+                                                {/* {user.youtube ?
+                                                    <div className='icons-d-flex'>
+                                                        <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
+                                                        <p className='information-font ellipsis-profile'><a href={user.youtube} target="_blank">{user.youtube}</a></p>
+                                                    </div>
+                                                    :
+                                                    <div className='icons-d-flex'>
+                                                        <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
+                                                        <p><a href="#">-</a></p>
+                                                    </div>
+                                                } */}
+                                            </div>
+                                            :
+                                            null
+                                        }
+                                    </Col>
                         </Row>
+                        {aboutShow ?
+                            <div id="about-portfolio">
+                                <Row>
+                                    <Col lg="6">
+                                        <p className='title-designer mb-2'>Title</p>
+                                        <p className='short-bio-designer mb-4'>
+                                            {user.short_bio && user.short_bio != "" ? user.short_bio : "-"}
+                                        </p>
+                                        {user.is_designer && user.is_seller ?
+                                            <>
+                                                <p className='long-bio-title mb-1'>Long Bio</p>
+                                                <p className='long-bio-designer mb-0 scroll-body'>
+                                                    {user.long_bio && user.long_bio != "" ? user.long_bio : "-"}
+                                                </p>
+                                            </>
+                                            :
+                                            null
+                                        }
+                                        {user.is_designer ?
+                                            <>
+                                                <p className='areas-specialization mt-3 mb-3'>Areas of Specialization and Expertise</p>
+                                                <div className='mb-4'>
+                                                    {areasOfSpecialization && areasOfSpecialization.length > 0 ?
+                                                        <>
+                                                            {areasOfSpecialization.map((item, index) => (
+                                                                <span className='text-gray600 fs-14 pill-span bg-light item-designer'>{item}</span>
+                                                            ))}
+                                                        </>
+                                                        :
+                                                        null
+
+                                                    }
+                                                </div>
+                                            </>
+                                            :
+                                            null
+                                        }
+                                        <hr className='mt-2' />
+                                        {/* <div className='d-flex'>
+                                            <p className='text-gray'>0 Followers</p>
+                                            <p className='text-gray'>0 Following</p>
+                                        </div> */}
+                                    </Col>
+                                    <Col lg="6">
+                                        <div className='bg-lgray profile-details address mb-4'>
+                                            <div className='icons-d-flex'>
+                                                <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
+                                                {user.city || user.province || user.country ?
+                                                    <p className='information-font'>{user.city ? user.city + ',' : "-"} {user.province ? user.province + "," : "-"} {user.country ? user.country + "," : "-"}</p>
+                                                    :
+                                                    <p>-</p>
+                                                }
+                                            </div>
+                                            {user.website ?
+                                                <div className='icons-d-flex'>
+                                                    <FaLink size="20px" color="#cea835" className='profile-icon' />
+                                                    <p className='information-font'><a href={user.website} target="_blank">{user.website}</a></p>
+                                                </div>
+                                                :
+                                                <div className='icons-d-flex'>
+                                                    <FaLink size="20px" color="#cea835" className='profile-icon' />
+                                                    <p className='information-font'><a href="#">-</a></p>
+                                                </div>
+                                            }
+                                            {user.phone_number ?
+                                                <div className='icons-d-flex'>
+                                                    <FaPhone size="20px" color="#cea835" className='profile-icon' />
+                                                    <p className='information-font mb-0'><a href={`tel:${user.phone_number}"`}>{user.phone_number}</a></p>
+                                                </div>
+                                                :
+                                                <div className='icons-d-flex'>
+                                                    <FaPhone size="20px" color="#cea835" className='profile-icon' />
+                                                    <p className='information-font mb-0'><a href="#">-</a></p>
+                                                </div>
+                                            }
+                                        </div>
+                                        {user.is_designer || user.is_seller ?
+                                            <div className='bg-lgray profile-details social'>
+                                                <p className='social-profile'>Social</p>
+                                                {user.behance ?
+                                                    <div className='icons-d-flex'>
+                                                        <FaBehance size="20px" color="#1769ff" className='profile-icon' />
+                                                        <p className='information-font ellipsis-profile'><a href={user.behance} target="_blank">{user.behance}</a></p>
+                                                    </div>
+                                                    :
+                                                    <div className='icons-d-flex'>
+                                                        <FaBehance size="20px" color="#1769ff" className='profile-icon' />
+                                                        <p><a href="#" target="_blank">-</a></p>
+                                                    </div>
+                                                }
+                                                {user.facebook ?
+                                                    <div className='icons-d-flex'>
+                                                        <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
+                                                        <p className='information-font ellipsis-profile'><a href={user.facebook} target="_blank">{user.facebook}</a></p>
+                                                    </div>
+                                                    :
+                                                    <div className='icons-d-flex'>
+                                                        <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
+                                                        <p><a href="#">-</a></p>
+                                                    </div>
+                                                }
+                                                {user.linkedin ?
+                                                    <div className='icons-d-flex'>
+                                                        <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
+                                                        <p className='information-font ellipsis-profile'><a href={user.linkedin} target="_blank">{user.linkedin}</a></p>
+                                                    </div>
+                                                    :
+                                                    <div className='icons-d-flex'>
+                                                        <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
+                                                        <p><a href="#">-</a></p>
+                                                    </div>
+                                                }
+                                                {user.instagram ?
+                                                    <div className='icons-d-flex'>
+                                                        <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
+                                                        <p className='information-font ellipsis-profile'><a href={user.instagram} target="_blank">{user.instagram}</a></p>
+                                                    </div>
+                                                    :
+                                                    <div className='icons-d-flex'>
+                                                        <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
+                                                        <p><a href="#">-</a></p>
+                                                    </div>
+                                                }
+                                                {/* {user.youtube ?
+                                                    <div className='icons-d-flex'>
+                                                        <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
+                                                        <p className='information-font ellipsis-profile'><a href={user.youtube} target="_blank">{user.youtube}</a></p>
+                                                    </div>
+                                                    :
+                                                    <div className='icons-d-flex'>
+                                                        <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
+                                                        <p><a href="#">-</a></p>
+                                                    </div>
+                                                } */}
+                                            </div>
+                                            :
+                                            null
+                                        }
+                                    </Col>
+                                </Row>
+                            </div>
+                            :
+                            null
+                        }
+
                         {user.is_designer == 1 &&
                             <>
                                 {portfolioShow ?
