@@ -464,26 +464,37 @@ const Header = () => {
           }
         </>
       }
-      <div className="banner-home w-100 p-3 px-5">
+      <div className="banner-home w-100 p-2 px-5">
         <Container>
-          <div className="banner-menu d-flex justify-content-end">
-            <a className="banner-item px-3" href="/about-kouture-konect">About Us</a>
-            <a className="banner-item px-3" href="/customer-satisfaction-survey">Feedback</a>
-            <a className="banner-item px-3" href="/">Contact Us</a>
-            <p className="mb-0 text-white">|</p>
-            <div className="ps-4 pe-2 mt-auto mb-auto">
-              <div className="country-dropdown nav-link position-relative" ref={countryRef}>
-                <div className="nav-link cursor-pointer" onClick={toggleCountryMenu}>
-                  <GoGlobe className="text-white" size={20} />
-                </div>
-                {userCountryOpen && (
-                  <div className="action-box user-menu country-box">
-                    <CountryCurrencyLanguageSelector />
-                  </div>
-                )}
+          <Row>
+            <Col lg="6">
+              <div className="banner-menu d-flex justify-content-start">
+                <a className="banner-item px-3" href="/">Set Up Shop</a>
+                <p className="mb-0 text-white">|</p>
+                <a className="banner-item px-3" href="/">Download the App</a>
               </div>
-            </div>
-          </div>
+            </Col>
+            <Col lg="6">
+              <div className="banner-menu d-flex justify-content-end">
+                <a className="banner-item px-3" href="/about-kouture-konect">About Us</a>
+                <a className="banner-item px-3" href="/customer-satisfaction-survey">Feedback</a>
+                <a className="banner-item px-3" href="/">Contact Us</a>
+                <p className="mb-0 text-white">|</p>
+                <div className="ps-4 pe-2 mt-auto mb-auto">
+                  <div className="country-dropdown nav-link position-relative" ref={countryRef}>
+                    <div className="nav-link cursor-pointer" onClick={toggleCountryMenu}>
+                      <GoGlobe className="text-white" size={20} />
+                    </div>
+                    {userCountryOpen && (
+                      <div className="action-box user-menu country-box">
+                        <CountryCurrencyLanguageSelector />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Col>
+          </Row>
         </Container>
       </div>
       <Navbar collapseOnSelect expand="lg" className="bg-body-primary px-5">

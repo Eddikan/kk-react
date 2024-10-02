@@ -435,6 +435,18 @@ p {
     margin-top: 50px !important;
 }
 
+.lh-27 {
+    line-height: 27px;
+}
+
+.lh-45 {
+    line-height: 45px;
+}
+
+.lh-77 {
+    line-height: 77px;
+}
+
 .text-right {
     text-align: right;
 }

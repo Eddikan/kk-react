@@ -98,7 +98,7 @@ const Home = (props) => {
             <Row>
               <Col lg='6' className="my-auto" >
                 <div className="mt-5 align-text-center">
-                  <h1 className="mb-3 fw-bold">Fashion Redefined</h1>
+                  <h1 className="mb-0 fw-bold">Fashion Redefined</h1>
                   <h2 className="fw-bold">Your Unique Look Starts Here</h2>
                   <p className='mx-0 mt-40 pb-5 text-justify subtitle'>Discover premium fabrics, connect with top fashion designers,
                     and get personalized style consultations all in one place.</p>
@@ -108,8 +108,8 @@ const Home = (props) => {
                     null
                     :
                     <>
-                      <Button className='explore-button btn me-3 text-white bg-black bg-gray-hover px-5' variant='secondary' onClick={() => handleShowUser()}><IoIosSearch size={25} />Explore Marketplace</Button>
-                      <Button className='custom-hover-btn me-3 px-5' onClick={() => toggleSetupShopShow()}> <img src={ShopIcon} className="mx-1" height="29px" alt="shop-icon"></img> Create Shop </Button>
+                      <Button className='explore-button btn me-3 text-white bg-black bg-gray-hover px-3' style={{ width:'250px', height: '50px' }} variant='secondary' onClick={() => handleShowUser()}><IoIosSearch size={25} /> Explore Marketplace</Button>
+                      <Button className='custom-hover-btn me-3 px-3' style={{ width:'250px' }} onClick={() => toggleSetupShopShow()}> <img src={ShopIcon} className="mx-1" height="29px" alt="shop-icon"></img> Create Shop </Button>
                     </>
                     // <>
                     //   <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>I'm Just Browsing</Button>
@@ -139,17 +139,17 @@ const Home = (props) => {
         <Container>
           <Row>
             <Col className="text-center">
-              <h2 className="fw-bold mb-40">Our Top Rated Designers</h2>
+              <h2 className="fw-bold fs-35 lh-45 mb-30">Our Top Rated Designers</h2>
               <DesignersMarquee currentUser={currentUser} onSignup={showSignupModal} />
-              <Col lg={12} className="text-center mt-50">
-                {currentUser ?
-                  <Link to="/designers">
-                    <Button className="btn-primary" variant="primary">View All Designers <FaArrowRight style={{ color: 'white' }} /></Button>
-                  </Link>
-                  :
-                  null
-                }
-              </Col>
+              {currentUser ?
+                <Col lg={12} className="text-center mt-50">
+                    <Link to="/designers">
+                      <Button className="btn-primary" variant="primary">View All Designers <FaArrowRight style={{ color: 'white' }} /></Button>
+                    </Link>
+                </Col>
+                :
+                null
+              }
             </Col>
           </Row>
         </Container>
