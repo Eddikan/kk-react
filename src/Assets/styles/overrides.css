@@ -2697,3 +2697,13 @@ span.rti--tag {
     margin: 10px 3px;
     object-fit: contain; 
 }
+
+
+/* Designer Marquee */
+
+.designer-marquee {
+    background-size: cover;
+    background-position: top center;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+}
