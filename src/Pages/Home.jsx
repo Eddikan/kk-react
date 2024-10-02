@@ -21,12 +21,13 @@ import Signup from 'Components/Forms/User/Signup'
 import HeroLoggedIn from 'Components/Pages/Home/HeroLoggedIn';
 import HeroImg from 'Assets/images/hero-img.png';
 import ShopIcon from 'Assets/images/icons/shop.png';
-import { IoIosSearch } from "react-icons/io";
-import BrowseDesigners from "Assets/images/home-modal/browse-designers.png";
-import ShopFabrics from "Assets/images/home-modal/shop-fabrics.png";
-import ExploreDesigns from "Assets/images/home-modal/explore-designs.png";
-import Marquee from "react-fast-marquee";
-import JoinKoutureBG from "Assets/images/join-kouture.png";
+import { IoIosSearch } from 'react-icons/io';
+import BrowseDesigners from 'Assets/images/home-modal/browse-designers.png';
+import ShopFabrics from 'Assets/images/home-modal/shop-fabrics.png';
+import ExploreDesigns from 'Assets/images/home-modal/explore-designs.png';
+import Marquee from 'react-fast-marquee';
+import JoinKoutureBG from 'Assets/images/join-kouture.png';
+import DesignersMarquee from 'Components/Grids/DesignersMarquee';
 
 
 const Home = (props) => {
@@ -132,44 +133,12 @@ const Home = (props) => {
           </Row>
         </Container>
       </section> */}
-      <section id="toprateddesigners" >
+      <section id="toprateddesigners" className='px-5' >
         <Container>
           <Row>
             <Col className="text-center">
               <h2 h2 className="fw-bold">Our Top Rated Designers</h2>
-              <Marquee className='my-5'>
-                <div class="marquee-item">
-                  <img src="https://via.placeholder.com/600/000000/FFFFFF/?text=01" alt=""/>
-                </div>
-                
-                <div class="marquee-item">
-                  <img src="https://via.placeholder.com/600/000000/FFFFFF/?text=02" alt=""/>
-                </div>
-                
-                <div class="marquee-item">
-                  <img src="https://via.placeholder.com/600/000000/FFFFFF/?text=03" alt=""/>
-                </div>
-                
-                <div class="marquee-item">
-                  <img src="https://via.placeholder.com/600/000000/FFFFFF/?text=04" alt=""/>
-                </div>
-                
-                <div class="marquee-item">
-                  <img src="https://via.placeholder.com/600/000000/FFFFFF/?text=05" alt=""/>
-                </div>
-                
-                <div class="marquee-item">
-                  <img src="https://via.placeholder.com/600/000000/FFFFFF/?text=06" alt=""/>
-                </div>
-                
-                <div class="marquee-item">
-                  <img src="https://via.placeholder.com/600/000000/FFFFFF/?text=07" alt=""/>
-                </div>
-                
-                <div class="marquee-item">
-                  <img src="https://via.placeholder.com/600/000000/FFFFFF/?text=08" alt=""/>
-                </div>
-              </Marquee>
+              <DesignersMarquee />
             </Col>
           </Row>
         </Container>
