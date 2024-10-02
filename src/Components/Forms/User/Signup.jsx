@@ -202,7 +202,7 @@ const SignUp = (props) => {
                                             :
                                             <>
                                                 <h1 className='text-center'>Sign up to Kouture Konect</h1>
-                                                <p className="text-center small mb-0">
+                                                <p className="text-center small mb-0  fs-15">
                                                     Join Kouture Konect to view more Designers, Designs and Fabrics!
                                                 </p>
                                                 <div className="divider-small mb-4 mt-3"></div>

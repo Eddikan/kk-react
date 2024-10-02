@@ -69,7 +69,7 @@ const DesignersMarquee = (props) => {
                     <>
                         {designers && designers.length > 0 ? (
                             <>
-                                <Marquee className='my-5'>
+                                <Marquee>
                                     {designers.map((designer, index) => {
                                         var wishlist_user_ids = designer.wishlist_user_ids ?? [];
                                         const userWishlist = wishlist_user_ids.includes(currentUser);
@@ -77,7 +77,7 @@ const DesignersMarquee = (props) => {
                                             <>
                                                 {designer.user.image && designer.user.image != "" ?
                                                     <div className="marquee-item">
-                                                        <div onClick={() => toggleGetUser(designer.user.id)} className="designer-marquee cursor-pointer" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})`, width: '300px', height: '300px' }}>
+                                                        <div onClick={() => toggleGetUser(designer.user.id)} className="designer-marquee cursor-pointer" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})`}}>
                                                             
                                                         </div>
                                                     </div>

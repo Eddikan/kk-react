@@ -419,6 +419,22 @@ p {
     margin-bottom: 40px !important;
 }
 
+.mt-20 {
+    margin-top: 20px !important;
+}
+
+.mt-30 {
+    margin-top: 30px !important;
+}
+
+.mt-40 {
+    margin-top: 40px !important;
+}
+
+.mt-50 {
+    margin-top: 50px !important;
+}
+
 .text-right {
     text-align: right;
 }
@@ -549,8 +565,8 @@ a {
     /* width: 350px; */
     padding: 12px;
     border-radius: 5px;
-    right: 5px;
-    top: 60px;
+    right: 0px;
+    top: 55px;
     box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     -webkit-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     -moz-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
@@ -768,7 +784,7 @@ a {
 }
 /*Header*/
 a.navbar-brand img {
-    max-width: 200px;
+    max-width: 250px;
     width: 100%;
     margin-right: 50px;
 }
@@ -806,14 +822,16 @@ form.search {
 }
 .search-bar-header{
     height: 30px !important;
+    border: 0 !important;
+    padding-left: 0 !important;
 }
 form.search-header {
     padding-left: 10px;
     border-radius: 5px !important;
     border: solid 1px;
-    height: 36px;
+    height: 37px;
     border-right: none;
-    max-width: 800px;
+    max-width: 600px;
 }
 
 form.search svg {
@@ -1055,7 +1073,7 @@ form select::placeholder {
 
 #btn-edit-profile {
     font-size: 14px !important;
-    padding: 10px 0px !important;
+    padding: 5px 0px !important;
     min-width: 130px !important;
     color: #000000 !important;
     background: #ffffff;
@@ -1071,7 +1089,7 @@ form select::placeholder {
 
 #btn-edit-profile:hover {
     font-size: 14px !important;
-    padding: 10px 0px !important;
+    padding: 5px 0px !important;
     min-width: 130px !important;
     color: #ffffff !important;
     background: #000000;
@@ -1440,7 +1458,7 @@ form select::placeholder {
 
 .designs-grid-div {
     min-height: 300px;
-    border-radius: 10px;
+    border-radius: 5px;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1867,11 +1885,11 @@ button.schedule-consultation {
 }
 
 video#home-video {
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 .hero-cards {
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 .react-appointment-close {
@@ -2387,6 +2405,10 @@ svg.gr-status-icon {
     align-items: center;
 }
 
+.badge-purple {
+    background-color: #551855;
+}
+
 .badge-primary {
     background-color: #cea835;
 }
@@ -2532,19 +2554,24 @@ svg.gr-status-icon {
     position: relative;
 }
 
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
 .nav-link-menu {
     display: none;
     background: #ffffff;
     position: absolute;
-    width: 200px;
-    padding: 12px;
-    border-radius: 5px;
+    width: 170px;
+    padding: 7px;
+    border-radius: 2px;
     left: 0;
     /* top: 60px; */
     box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
     -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
-    z-index: 2;
+    z-index: 3;
 }
 
 .nav-link-dropdown:hover .nav-link-menu {
@@ -2674,16 +2701,14 @@ span.rti--tag {
 .custom-form:hover{
     border: solid 1px #CEA835 !important;
 }
-.customer-satisfaction-title{
+.customer-satisfaction-title {
     color: #551855;
-    font-size: 40px;
+    font-size: 30px;
 }
-.customer-satisfaction-p{
-    padding: 0px 18%;
+.customer-satisfaction-p {
     margin: 0 auto;
-    font-size: 20px ;
 }
-.btn-start-survey{
+.btn-start-survey {
     font-size: 15px;
     padding: 10px 20px;
     min-width: 190px;
@@ -2691,7 +2716,7 @@ span.rti--tag {
     color: var(--white);
     background-color: black;
 }
-.footer-payment-img{
+.footer-payment-img {
     width: 68px;
     height: 31px;
     margin: 10px 3px;
@@ -2705,5 +2730,11 @@ span.rti--tag {
     background-size: cover;
     background-position: top center;
     background-repeat: no-repeat;
-    border-radius: 10px;
+    border-radius: 5px;
+    height: 320px;
+    width: 320px;
+}
+
+#designers-marquee .rfm-marquee-container {
+    border-radius: 5px;
 }

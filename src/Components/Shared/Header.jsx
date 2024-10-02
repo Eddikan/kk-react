@@ -23,7 +23,9 @@ import { useCookies } from 'react-cookie';
 import { LiaUserTieSolid } from "react-icons/lia";
 import { Link } from 'react-router-dom';
 import { FaArrowRightLong } from "react-icons/fa6";
-import { FaRegBookmark } from "react-icons/fa";
+import { IoBookmarkOutline } from "react-icons/io5";
+import { VscBell } from "react-icons/vsc";
+
 import NewAppointment from 'Assets/images/new-appointment-icon.png';
 import { HiOutlineBuildingStorefront } from "react-icons/hi2";
 import User from 'Assets/images/user.png';
@@ -38,7 +40,6 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import { PiNotepadLight, PiScissorsLight, PiUserGearThin, PiUserGear } from "react-icons/pi";
 import { RiQuestionMark } from "react-icons/ri";
-import { LuBellRing } from "react-icons/lu";
 import KoutureIcon from 'Assets/images/kouture-konect-icon.png';
 import DesignIcon from 'Assets/images/icons/design-icon.png';
 import DesignerIcon from 'Assets/images/icons/designer-icon.png';
@@ -47,7 +48,7 @@ import FabricIcon from 'Assets/images/icons/fabric-icon.png';
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'selectedCartItems', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode', 'selectedLanguage', 'selectedCurrency', 'selectedCurrencyCode', 'cartItemCount', 'favoriteItemCount','over_18']);
+  const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'selectedCartItems', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode', 'selectedLanguage', 'selectedCurrency', 'selectedCurrencyCode', 'cartItemCount', 'favoriteItemCount', 'over_18']);
   const currentUrl = window.location.href;
 
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -179,10 +180,10 @@ const Header = () => {
   const toggleWishlistMenu = () => {
     setUserWishlistOpen(!userWishlistOpen);
   };
-  
+
   const viewRegisterModal = () => {
     setRegisterModalShow(!registerModalShow);
-  }; 
+  };
 
   const logOut = () => {
     removeCookies();
@@ -425,18 +426,18 @@ const Header = () => {
   // const fullUrl = `${window.location.protocol}//${window.location.host}${location.pathname}${location.search}` || false;
 
   const href = currentPath
-    ? `/sign-up?redirect_to=${encodeURIComponent(currentPath)}` 
+    ? `/sign-up?redirect_to=${encodeURIComponent(currentPath)}`
     : '/sign-up';
 
   const hrefLogin = currentPath
-    ? `/login?redirect_to=${encodeURIComponent(currentPath)}` 
+    ? `/login?redirect_to=${encodeURIComponent(currentPath)}`
     : '/login';
 
   return (
     <>
       {isLoggedIn &&
         <>
-          {(user.profile_completeness >= 0 && user.profile_completeness < 100 ) &&
+          {(user.profile_completeness >= 0 && user.profile_completeness < 100) &&
             <>
               <div className='banner-completion text-center'>
 
@@ -465,15 +466,24 @@ const Header = () => {
       }
       <div className="banner-home w-100 p-3 px-5">
         <Container>
-            <div className="banner-menu d-flex justify-content-end">
-              <a className="banner-item px-4" href="/">About Us</a>
-              <a className="banner-item px-4" href="/">Feedback</a>
-              <a className="banner-item px-4" href="/">Contact Us</a>
-              <p className="mb-0 text-white">|</p>
-              <a  className="banner-item ps-4 pe-2" href="/">
-                <GoGlobe size={20} style={{ color: 'white' }}  />
-              </a>
+          <div className="banner-menu d-flex justify-content-end">
+            <a className="banner-item px-3" href="/about-kouture-konect">About Us</a>
+            <a className="banner-item px-3" href="/customer-satisfaction-survey">Feedback</a>
+            <a className="banner-item px-3" href="/">Contact Us</a>
+            <p className="mb-0 text-white">|</p>
+            <div className="ps-4 pe-2 mt-auto mb-auto">
+              <div className="country-dropdown nav-link position-relative" ref={countryRef}>
+                <div className="nav-link cursor-pointer" onClick={toggleCountryMenu}>
+                  <GoGlobe className="text-white" size={20} />
+                </div>
+                {userCountryOpen && (
+                  <div className="action-box user-menu country-box">
+                    <CountryCurrencyLanguageSelector />
+                  </div>
+                )}
+              </div>
             </div>
+          </div>
         </Container>
       </div>
       <Navbar collapseOnSelect expand="lg" className="bg-body-primary px-5">
@@ -484,44 +494,44 @@ const Header = () => {
             <Nav className="align-items-center w-100">
               {/* <Nav.Link href="/find-designs">Find Designs</Nav.Link>
               <Nav.Link href="/inspirations">Inspirations</Nav.Link> */}
-                  <Form inline className='search-header w-100 d-flex align-items-center'>
-                    <FaMagnifyingGlass />
-                    <FormControl type='text' placeholder='Search' className='search-bar-header ms-2' />
-                    <div className="nav-link-dropdown bg-white border border-1 border-black border-gold-hover rounded">
-                      <a className="nav-link d-flex" href="/">
-                        Designers <FaCaretDown />
-                      </a>
-                      <div className="nav-link-menu">
-                        <a className="nav-link ps-0 pe-0" href="/">
-                          <div className="d-flex align-items-center">                          
-                            <img className="mx-2" src={DesignerIcon} width="25px"/>
-                            <div>
-                              <p className="search-dropdown-title mb-0">Designers</p>
-                              <span className="subtitle fs-10">Find top fashion designers</span>
-                            </div>
-                          </div>
-                        </a>
-                        <a className="nav-link ps-0 pe-0" href="/">
-                          <div className="d-flex align-items-center">                          
-                            <img className="mx-2" src={FabricIcon} width="23px"/>
-                            <div>
-                              <p className="search-dropdown-title mb-0">Fabrics</p>
-                              <span className="subtitle fs-10">Find top fashion designers</span>
-                            </div>
-                          </div>
-                        </a>                        
-                        <a className="nav-link ps-0 pe-0" href="/">
-                          <div className="d-flex align-items-center">                          
-                            <img className="mx-2" src={DesignIcon} width="20px"/>
-                            <div>
-                              <p className="search-dropdown-title mb-0">Designs</p>
-                              <span className="subtitle fs-10">Find top fashion designers</span>
-                            </div>
-                          </div>
-                        </a>
+              <Form inline className='search-header w-100 d-flex align-items-center'>
+                <FaMagnifyingGlass />
+                <FormControl type='text' placeholder='Search' className='search-bar-header ms-2' />
+                <div className="nav-link-dropdown bg-white border border-1 border-black border-gold-hover rounded">
+                  <a className="nav-link d-flex" href="/">
+                    Designers <FaCaretDown />
+                  </a>
+                  <div className="nav-link-menu">
+                    <a className="nav-link ps-0 pe-0" href="/">
+                      <div className="d-flex align-items-center">
+                        <img className="mx-2" src={DesignerIcon} width="25px" />
+                        <div>
+                          <p className="search-dropdown-title mb-0">Designers</p>
+                          <span className="subtitle fs-10">Find top fashion designers</span>
+                        </div>
                       </div>
-                    </div>
-                  </Form>
+                    </a>
+                    <a className="nav-link ps-0 pe-0" href="/">
+                      <div className="d-flex align-items-center">
+                        <img className="mx-2" src={FabricIcon} width="23px" />
+                        <div>
+                          <p className="search-dropdown-title mb-0">Fabrics</p>
+                          <span className="subtitle fs-10">Find top fashion designers</span>
+                        </div>
+                      </div>
+                    </a>
+                    <a className="nav-link ps-0 pe-0" href="/">
+                      <div className="d-flex align-items-center">
+                        <img className="mx-2" src={DesignIcon} width="20px" />
+                        <div>
+                          <p className="search-dropdown-title mb-0">Designs</p>
+                          <span className="subtitle fs-10">Find top fashion designers</span>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </Form>
 
               {/* <Nav.Link href="/blog">Blog</Nav.Link> */}
             </Nav>
@@ -537,13 +547,118 @@ const Header = () => {
                     </a>
                   </div>
                 </div> */}
-                
+
                 {currentUser && currentUser != "" ?
                   <>
+                    <div className="nav-link-dropdown border-left-rounded border-black ms-2">
+                      <div className="nav-link d-flex cursor-pointer">
+                        <IoPersonOutline size={26} />
+                        {/* {userImage ?
+                          <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}>
+
+                          </div>
+                          :
+                          <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}>
+
+                          </div>
+                        } */}
+                      </div>
+                      <div className="nav-link-menu">
+                        <a className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2" style={{ pointerEvents: 'none' }}>Hi,&nbsp;{user.first_name}!</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile`}>My Profile</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/orders">My Orders</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/wishlist">My Wishlist</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/messages">My Messages</a>
+                        <a className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2" href={`/appointments/${currentUser}`}>My Appointments</a>
+                        <a className="nav-link cursor-pointer text-decoration-none" onClick={logOut}>Sign Out</a>
+                        {/* <a className="nav-link" href="/">My Orders</a>
+                        <a className="nav-link" href="/">My Wishlist</a>
+                        <a className="nav-link" href="/">My Orders</a> */}
+                      </div>
+                    </div>
+                    {/* <a href={`/measurement-guide-format`}>
+                      <div className="nav-link header-tooltip">
+                        <span className="icon-tooltiptext fs-14">Measurement Guide</span>
+                        <IoShirtOutline size={26} />
+                      </div>
+                    </a> */}
+                    {/* <div className="user-dropdown nav-link cursor-pointer d-block position-relative" ref={messageRef} onClick={toggleEnvelopMenu}>
+                      <div className="nav-link header-tooltip" >
+                        <span className="icon-tooltiptext fs-14">Messages</span>
+                        <BsEnvelope size={25} />
+                      </div>
+                      {userEnvelopOpen && (
+                        <>
+                          <div className="action-box-envelop user-menu-envelop">
+                            <div className='d-flex'>
+                              <div style={{ maxWidth: 100 }}><img src={User} className='user-placeholder-header' /></div>
+                              <div className='fs-14 body-text-bell'>Admin
+                                <div className='mt-1'>Thank you for signing up to Kouture Konect!</div>
+                                <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
+                              </div>
+                            </div>
+                            <hr className='mt-2 ' />
+
+                            <div className='text-right' onClick={() => toggleUnderConstruction("Messages")}>
+                              <a className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All</a>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                    </div> */}
+
+                    {userRole == 'Admin' &&
+                      <a href={`/admin/users`}>
+                        <div className="nav-link header-tooltip cursor-pointer">
+                          <span className="icon-tooltiptext fs-14">Administration</span>
+                          <LiaUserTieSolid size={28} />
+                        </div>
+                      </a>
+                    }
+
+                    {userRole !== 'Admin' &&
+                      <a href={`/favorites`}>
+                        <div className="nav-link header-tooltip">
+                          <span className="icon-tooltiptext fs-14">Favorites</span>
+                          <IoBookmarkOutline size={26} />
+                          <div>
+                            <div className='cart-added position-absolute badge-purple text-white'>
+                              <span className='cart-count'>{favoritesCount}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    }
+
+                    {userRole !== 'Admin' &&
+                      <a href={`/cart/`}>
+                        <div className="nav-link header-tooltip">
+                          <span className="icon-tooltiptext fs-14">Cart</span>
+                          <IoCartOutline size={26} />
+                          <div>
+                            <div className='cart-added position-absolute badge-purple text-white'>
+                              <span className='cart-count'>{cartItemCount}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </a>
+                    }
+
+                    {/* <div className="country-dropdown nav-link position-relative" ref={countryRef}>
+                      <div className="nav-link header-tooltip cursor-pointer" onClick={toggleCountryMenu}>
+                        <span className="icon-tooltiptext fs-14">Country</span>
+                        <GoGlobe size={26} />
+                      </div>
+                      {userCountryOpen && (
+                        <div className="action-box user-menu country-box">
+                          <CountryCurrencyLanguageSelector />
+                        </div>
+                      )}
+                    </div> */}
                     <div className="user-dropdown nav-link cursor-pointer d-block position-relative" ref={bellRef} onClick={toggleBellMenu}>
                       <div className="nav-link header-tooltip" >
                         <span className="icon-tooltiptext fs-14">Notifications</span>
-                        <GoBell size={25} />
+                        <VscBell size={25} />
                       </div>
                       {userBellOpen && (
                         <div className="action-box-bell scroll-bar user-menu-bell" id="style-2">
@@ -592,85 +707,6 @@ const Header = () => {
                         </div>
                       )}
                     </div>
-                    <a href={`/measurement-guide-format`}>
-                      <div className="nav-link header-tooltip">
-                        <span className="icon-tooltiptext fs-14">Measurement Guide</span>
-                        <RiQuestionMark  size={26} />
-                      </div>
-                    </a>
-                    <div className="user-dropdown nav-link cursor-pointer d-block position-relative" ref={messageRef} onClick={toggleEnvelopMenu}>
-                      <div className="nav-link header-tooltip" >
-                        <span className="icon-tooltiptext fs-14">Messages</span>
-                        <BsEnvelope size={25} />
-                      </div>
-                      {userEnvelopOpen && (
-                        <>
-                          <div className="action-box-envelop user-menu-envelop">
-                            <div className='d-flex'>
-                              <div style={{ maxWidth: 100 }}><img src={User} className='user-placeholder-header' /></div>
-                              <div className='fs-14 body-text-bell'>Admin
-                                <div className='mt-1'>Thank you for signing up to Kouture Konect!</div>
-                                <div className='hours-bell mt-1'>3hrs ago - 3:25 PM</div>
-                              </div>
-                            </div>
-                            <hr className='mt-2 ' />
-
-                            <div className='text-right' onClick={() => toggleUnderConstruction("Messages")}>
-                              <a className='text-right text-gold fs-14 cursor-pointer view-all-orders'>View All</a>
-                            </div>
-                          </div>
-                        </>
-                      )}
-                    </div>
-
-                    {userRole == 'Admin' &&
-                      <a href={`/admin/users`}>
-                        <div className="nav-link header-tooltip cursor-pointer">
-                          <span className="icon-tooltiptext fs-14">Administration</span>
-                          <LiaUserTieSolid size={28} />
-                        </div>
-                      </a>
-                    }
-
-                    {userRole !== 'Admin' &&
-                      <a href={`/favorites`}>
-                        <div className="nav-link header-tooltip">
-                          <span className="icon-tooltiptext fs-14">Favorites</span>
-                          <GoStar size={26} />
-                          <div>
-                            <div className='cart-added position-absolute badge-primary text-white'>
-                              <span className='cart-count'>{favoritesCount}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </a>
-                    }
-
-                    {userRole !== 'Admin' &&
-                      <a href={`/cart/`}>
-                        <div className="nav-link header-tooltip">
-                          <span className="icon-tooltiptext fs-14">Cart</span>
-                          <IoCartOutline size={26} />
-                          <div>
-                            <div className='cart-added position-absolute badge-primary text-white'>
-                              <span className='cart-count'>{cartItemCount}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </a>
-                    }
-
-                    <div className="country-dropdown nav-link position-relative" ref={countryRef}>
-                      <div className="nav-link header-tooltip cursor-pointer" onClick={toggleCountryMenu}>
-                        <span className="icon-tooltiptext fs-14">Country</span>
-                        <GoGlobe size={26} />
-                      </div>
-                      {userCountryOpen && (
-                        <div className="action-box user-menu country-box">
-                          <CountryCurrencyLanguageSelector />
-                        </div>
-                      )}
-                    </div>
                     {userRole !== 'Admin' &&
                       <>
                         {user.shop_completed != 1 ?
@@ -678,7 +714,7 @@ const Header = () => {
                             {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
                               <>
                                 <a href={`/user/shop/setup`}>
-                                  <button type="button" className="btn-shop btn me-2"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
+                                  <button type="button" className="btn-shop btn"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
                                   {/* <div className="nav-link header-tooltip cursor-pointer">
                                     <span className="icon-tooltiptext fs-14">Shop Manager</span>
                                     <BsShopWindow size={23} />
@@ -692,7 +728,7 @@ const Header = () => {
                             {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
                               <>
                                 <a href={`${userDetails.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`}>
-                                  <button type="button" className="btn-shop btn me-2"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
+                                  <button type="button" className="btn-shop btn"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
                                   {/* <div className="nav-link header-tooltip cursor-pointer">
                                     <span className="icon-tooltiptext fs-14">Shop Manager</span>
                                     <BsShopWindow size={23} />
@@ -703,26 +739,20 @@ const Header = () => {
                           </>
                         }
                       </>
-                      }
-                    <div className="user-dropdown nav-link position-relative" ref={userRef}>                      
+                    }
+                    <div className="user-dropdown nav-link position-relative d-none" ref={userRef}>
                       {userImage ?
                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}>
-                          {/* {(user.profile_completeness >= 0 && user.profile_completeness < 100) &&
-                            <div className='profile-alert position-absolute badge-danger text-white text-center'>!
-                            </div>
-                          } */}
+
                         </div>
                         :
                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}>
-                          {/* {(user.profile_completeness >= 0 && user.profile_completeness < 100) &&
-                            <div className='profile-alert position-absolute badge-danger text-white text-center'>!
-                            </div>
-                          } */}
+
                         </div>
                       }
                       {userMenuOpen && (
-                        <div className={(user.profile_completeness >= 0 && user.profile_completeness < 100) 
-                          ? "action-box-incomplete-profile user-menu" 
+                        <div className={(user.profile_completeness >= 0 && user.profile_completeness < 100)
+                          ? "action-box-incomplete-profile user-menu"
                           : "action-box user-menu"}>
 
                           {/* {userRole !== 'Admin' &&
@@ -748,9 +778,9 @@ const Header = () => {
                                   <div className='fw-600'>Hi,&nbsp;{user.first_name}!</div>
                                   <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
                                     <div><BsArrowLeft className="me-1" size={10} /><span className='fs-12'>See your profile</span></div>
-                                  </Link>    
+                                  </Link>
                                 </Col>
-                                <Col lg="12" className="text-center" >                                                    
+                                <Col lg="12" className="text-center" >
                                   {(user.profile_completeness >= 0 && user.profile_completeness < 100) &&
                                     <Link to={`/user/complete-profile`} className="mt-2 text-decoration-none d-block d-contents d-flex">
                                       <Button className="">Complete Your Profile</Button>
@@ -825,30 +855,24 @@ const Header = () => {
                   </>
                   :
                   <>
-                    {/* <a href={`/measurement-guide-format`}>
-                      <div className="nav-link header-tooltip">
-                        <span className="icon-tooltiptext fs-14">Measurement Guide</span>
-                        <RiQuestionMark  size={26} />
-                      </div>
-                    </a> */}
                     <div className="nav-link-dropdown border-left-rounded border-black ms-2">
-                      <div className="nav-link d-flex">
-                        <IoPersonOutline size={26}/>
+                      <div className="nav-link d-flex cursor-pointer">
+                        <IoPersonOutline size={26} />
                       </div>
                       <div className="nav-link-menu">
-                        <a className="nav-link fw-bold" href="/login">Sign In</a>
-                        <a className="nav-link fw-bold cursor-pointer text-decoration-none border-bottom"  onClick={viewRegisterModal}>Register</a>
-                        <a className="nav-link" href="/">My Orders</a>
+                        <a className="nav-link pb-0" href="/login">Sign In</a>
+                        <a className="nav-link cursor-pointer text-decoration-none" onClick={viewRegisterModal}>Register</a>
+                        {/* <a className="nav-link" href="/">My Orders</a>
                         <a className="nav-link" href="/">My Wishlist</a>
-                        <a className="nav-link" href="/">My Orders</a>
+                        <a className="nav-link" href="/">My Orders</a> */}
                       </div>
                     </div>
                     <a href={`/favorites`}>
                       <div className="nav-link header-tooltip">
                         <span className="icon-tooltiptext fs-14">Favorites</span>
-                        <FaRegBookmark size={26} />
+                        <IoBookmarkOutline size={26} />
                         <div>
-                          <div className='cart-added position-absolute badge-primary text-white'>
+                          <div className='cart-added position-absolute badge-purple text-white'>
                             <span className='cart-count'>{favoritesCount}</span>
                           </div>
                         </div>
@@ -859,7 +883,7 @@ const Header = () => {
                         <span className="icon-tooltiptext fs-14">Cart</span>
                         <IoCartOutline size={26} />
                         <div>
-                          <div className='cart-added position-absolute badge-primary text-white'>
+                          <div className='cart-added position-absolute badge-purple text-white'>
                             <span className='cart-count'>{cartItemCount}</span>
                           </div>
                         </div>
@@ -869,7 +893,7 @@ const Header = () => {
                       <span className="icon-tooltiptext fs-14">Cart</span>
                       <IoCartOutline size={26} />
                       <div>
-                        <div className="cart-added position-absolute badge-primary text-white">
+                        <div className="cart-added position-absolute badge-purple text-white">
                           <span className="cart-count">{cartItemCount}</span>
                         </div>
                       </div>
@@ -881,11 +905,6 @@ const Header = () => {
                         <Button href="/login" className="cart-dropdown-btn btn">Sign In</Button>
                       </div>
                     </div>
-                    <a href='/'>
-                      <div className="nav-link header-tooltip">
-                        <LuBellRing size={26} />
-                      </div>
-                    </a>
                     {/* <div className="country-dropdown nav-link position-relative" ref={countryRef}>
                       <div className="nav-link header-tooltip cursor-pointer" onClick={toggleCountryMenu}>
                         <span className="icon-tooltiptext fs-14">Country</span>
@@ -932,7 +951,7 @@ const Header = () => {
           </Card>
         </Modal.Body>
       </Modal>
-      
+
       <Modal show={registerModalShow} centered fullscreen={false} onHide={() => setRegisterModalShow(false)}>
         <Modal.Header closeButton>
           <Modal.Title></Modal.Title>
@@ -941,19 +960,19 @@ const Header = () => {
           <Container className="h-100">
             <Row className="h-100">
               <Col lg="12" className="text-center header-register-modal">
-                <img src={KoutureIcon} alt="kouture-icon" width="38px"/>
+                <img src={KoutureIcon} alt="kouture-icon" width="38px" />
                 <h2 className="my-4">Are you over 18 years old?</h2>
                 <p className="fs-14">Welcome to Kouture Konect! If you’re under 18, please have a parent or guardian ready to supervise your account as you continue.</p>
                 <Col lg={12} className="text-center my-4">
                   <a href="/sign-up">
                     <button className="mx-5 px-4  py-2 rounded border border-secondary border-gold-hover" onClick={() => setCookie('over_18', "No", { path: '/' })}>
                       <strong>No</strong>  <br />I am under 18
-                    </button>  
+                    </button>
                   </a>
                   <a href="/sign-up">
                     <button className="mx-5 px-4 py-2 rounded border border-secondary border-gold-hover" onClick={() => setCookie('over_18', "Yes", { path: '/' })}>
                       <strong>Yes</strong> <br />I am over 18
-                    </button>  
+                    </button>
                   </a>
                   <p className="my-4" >Already have an account? <a href="/login" className="modal-login-btn text-gold ">Login</a> </p>
                 </Col>
@@ -962,7 +981,6 @@ const Header = () => {
           </Container>
         </Modal.Body>
       </Modal>
-
     </>
   );
 }

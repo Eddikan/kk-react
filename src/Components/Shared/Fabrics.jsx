@@ -286,16 +286,9 @@ const Fabrics = (props) => {
                                         )
                                     })}
                                     <Col lg={12} className="text-center mt-4">
-                                        {currentUser ?
-                                            <Link to="/fabrics">
-                                                <Button className="btn-primary" variant="primary">View All</Button>
-                                            </Link>
-                                            :
-                                            <Link to="/fabrics">
-                                                <Button className="btn-primary" variant="primary">View More Fabrics <FaArrowRight style={{ color: 'white'}}/></Button>
-                                            </Link>
-                                            // <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_fabric')}>View More</Button>
-                                        }
+                                        <Link to="/fabrics">
+                                            <Button className="btn-primary" variant="primary">View More Fabrics <FaArrowRight style={{ color: 'white'}}/></Button>
+                                        </Link>
                                     </Col>
                                 </Row>
                             </>

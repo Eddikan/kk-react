@@ -488,7 +488,7 @@ const LogIn = () => {
           <Col id="login-column" lg='12' className='d-flex flex-column justify-content-center'>
             <div className='login-container'>
               <h1 className='text-center'>Sign in to Kouture Konect</h1>
-              <p className="text-center small fs-16 mb-0">
+              <p className="text-center small fs-15 mb-0">
                 Join Kouture Konect to view more Designers, Designs and Fabrics!
               </p>
               {googleLoginLoading ?

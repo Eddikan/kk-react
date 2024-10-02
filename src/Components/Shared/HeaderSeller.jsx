@@ -7,7 +7,7 @@ import { Row, Col, Button, Modal, Card } from 'react-bootstrap';
 import Logo from 'Assets/images/kouture-konect-logo.png';
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { GoBell, GoHeart } from "react-icons/go";
-import { BsEnvelope,BsArrowLeft,BsCartCheck } from "react-icons/bs";
+import { BsEnvelope, BsArrowLeft, BsCartCheck } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
 import { IoCloseOutline, IoCalendarClearOutline } from "react-icons/io5";
 import UserPlaceholder from 'Assets/images/user.png';
@@ -39,7 +39,7 @@ const HeaderSeller = () => {
     const [notifications, setNotifications] = useState([]);
     const [notificationsLoading, setNotificationsLoading] = useState(true);
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole','isLoggedIn']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn']);
     const isLoggedIn = cookies.isLoggedIn;
     const [userType, setUserType] = useState('user');
 
@@ -216,26 +216,26 @@ const HeaderSeller = () => {
                     setNotificationsLoading(false);
                 });
         }
-    }, [reloadCount]); 
+    }, [reloadCount]);
 
     return (
         <>
-        {isLoggedIn && 
-        <>
-          {(user.profile_completeness >= 0 && user.profile_completeness < 100)  && 
-            <>
-              <div className='banner-completion text-center'>
-        
-                <span className='text-white'>Your profile completion is at {user.profile_completeness}%. 
-                  <Link to="/user/complete-profile" className='text-decoration-none'>
-                  <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span>
-                  </Link>
-                </span>
-              </div>
-            </>
-          }
+            {isLoggedIn &&
+                <>
+                    {(user.profile_completeness >= 0 && user.profile_completeness < 100) &&
+                        <>
+                            <div className='banner-completion text-center'>
 
-          {/* {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) && 
+                                <span className='text-white'>Your profile completion is at {user.profile_completeness}%.
+                                    <Link to="/user/complete-profile" className='text-decoration-none'>
+                                        <span className='text-gold ms-1 cursor-pointer'>Click here to continue.</span>
+                                    </Link>
+                                </span>
+                            </div>
+                        </>
+                    }
+
+                    {/* {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) && 
             <>
               <div className='bg-dark py-2 text-center'>
                 <span className='text-white cursor-pointer'>
@@ -247,8 +247,8 @@ const HeaderSeller = () => {
             </div>
             </>
           } */}
-        </>
-      }
+                </>
+            }
             <Navbar collapseOnSelect expand="lg" className="bg-body-primary">
                 <Container fluid className='d-block'>
                     <Row>
@@ -351,7 +351,7 @@ const HeaderSeller = () => {
 
                                                     )}
                                                 </div>
- 
+
                                                 <div className="user-dropdown nav-link" ref={userRef}>
                                                     {userImage ?
                                                         <div className="header-user-photo cursor-pointer" onClick={toggleUserMenu} style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
@@ -366,26 +366,26 @@ const HeaderSeller = () => {
                                                                 </Link>
                                                             } */}
 
-                                                    {userRole !== 'Admin' &&
-                                                        <Row className='mb-3'>
-                                                            <Col lg="3">
-                                                                <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
-                                                                    {userImage ?
-                                                                        <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
-                                                                        :
-                                                                        <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
-                                                                    }
-                                                                </Link>
-                                                            </Col>
+                                                            {userRole !== 'Admin' &&
+                                                                <Row className='mb-3'>
+                                                                    <Col lg="3">
+                                                                        <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
+                                                                            {userImage ?
+                                                                                <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}></div>
+                                                                                :
+                                                                                <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
+                                                                            }
+                                                                        </Link>
+                                                                    </Col>
 
-                                                            <Col lg="9">
-                                                                <div className='fw-600'>Hi,&nbsp;{user.first_name}!</div>
-                                                                <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
-                                                                <div><BsArrowLeft className="me-1" size={10}/><span className='fs-12'>See your profile</span></div>
-                                                                </Link>
-                                                            </Col>
-                                                        </Row>
-                                                    }
+                                                                    <Col lg="9">
+                                                                        <div className='fw-600'>Hi,&nbsp;{user.first_name}!</div>
+                                                                        <Link to={`/${userType}/profile`} className="mb-3 text-decoration-none">
+                                                                            <div><BsArrowLeft className="me-1" size={10} /><span className='fs-12'>See your profile</span></div>
+                                                                        </Link>
+                                                                    </Col>
+                                                                </Row>
+                                                            }
 
                                                             {userRole !== 'Admin' &&
                                                                 <Link to={`/wishlist`} className="mb-3 text-decoration-none d-block"><GoHeart className='me-2' color='#000000' />
@@ -401,7 +401,7 @@ const HeaderSeller = () => {
 
                                                             {userRole !== 'Admin' &&
                                                                 <Link to={`/orders`} className="mb-3 text-decoration-none d-block"><BsCartCheck className='me-2 mb-1' color='#000000' />
-                                                                <span className='text-black'>Orders</span>
+                                                                    <span className='text-black'>Orders</span>
                                                                 </Link>
                                                             }
 

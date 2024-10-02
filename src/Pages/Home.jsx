@@ -28,6 +28,8 @@ import ExploreDesigns from 'Assets/images/home-modal/explore-designs.png';
 import Marquee from 'react-fast-marquee';
 import JoinKoutureBG from 'Assets/images/join-kouture.png';
 import DesignersMarquee from 'Components/Grids/DesignersMarquee';
+import { FaArrowRightLong } from "react-icons/fa6";
+import { FaArrowRight } from 'react-icons/fa';
 
 
 const Home = (props) => {
@@ -56,7 +58,7 @@ const Home = (props) => {
   const handleShowUser = () => {
     setUserModalShow(true);
   }
-  
+
   const handleShowFabrics = () => {
     setFabricsModalShow(true);
   }
@@ -98,7 +100,7 @@ const Home = (props) => {
                 <div className="mt-5 align-text-center">
                   <h1 className="mb-3 fw-bold">Fashion Redefined</h1>
                   <h2 className="fw-bold">Your Unique Look Starts Here</h2>
-                  <p className='mx-0 mt-5 pb-5 text-justify subtitle'>Discover premium fabrics, connect with top fashion designers, 
+                  <p className='mx-0 mt-40 pb-5 text-justify subtitle'>Discover premium fabrics, connect with top fashion designers,
                     and get personalized style consultations all in one place.</p>
                 </div>
                 <div className='my-5'>
@@ -106,7 +108,7 @@ const Home = (props) => {
                     null
                     :
                     <>
-                      <Button className='explore-button btn me-3 text-white bg-black bg-gray-hover px-5' variant='secondary' onClick={() => handleShowUser()}><IoIosSearch size={25}/>Explore Marketplace</Button>
+                      <Button className='explore-button btn me-3 text-white bg-black bg-gray-hover px-5' variant='secondary' onClick={() => handleShowUser()}><IoIosSearch size={25} />Explore Marketplace</Button>
                       <Button className='custom-hover-btn me-3 px-5' onClick={() => toggleSetupShopShow()}> <img src={ShopIcon} className="mx-1" height="29px" alt="shop-icon"></img> Create Shop </Button>
                     </>
                     // <>
@@ -118,7 +120,7 @@ const Home = (props) => {
                 </div>
               </Col>
               <Col lg='6' className="text-end">
-                <img className="hero-img img-fluid"  src={HeroImg} alt="hero-img" />
+                <img className="hero-img img-fluid" src={HeroImg} alt="hero-img" />
               </Col>
             </Row>
           </Container>
@@ -133,12 +135,21 @@ const Home = (props) => {
           </Row>
         </Container>
       </section> */}
-      <section id="toprateddesigners" className='px-5' >
+      <section id="toprateddesigners" className='mb-5 mt-xl-4 px-5' >
         <Container>
           <Row>
             <Col className="text-center">
-              <h2 h2 className="fw-bold">Our Top Rated Designers</h2>
-              <DesignersMarquee />
+              <h2 className="fw-bold mb-40">Our Top Rated Designers</h2>
+              <DesignersMarquee currentUser={currentUser} onSignup={showSignupModal} />
+              <Col lg={12} className="text-center mt-50">
+                {currentUser ?
+                  <Link to="/designers">
+                    <Button className="btn-primary" variant="primary">View All Designers <FaArrowRight style={{ color: 'white' }} /></Button>
+                  </Link>
+                  :
+                  null
+                }
+              </Col>
             </Col>
           </Row>
         </Container>
@@ -152,11 +163,9 @@ const Home = (props) => {
           </Row>
         </Container>
       </section>
-
-      <section id="eco" className="py-5 mb-0">
+      <section id="eco" className="mb-0">
         <EcoFriendly currentUser={currentUser} onSignup={showSignupModal} />
       </section>
-
       <section id="designs" className="py-5 px-5">
         <Container>
           <Row>
@@ -167,25 +176,27 @@ const Home = (props) => {
         </Container>
       </section>
 
-      <section id="join-kouture-section" className="mb-5 mt-xl-2 p-5" 
-        style={{ 
-            backgroundImage: `url(${JoinKoutureBG})`, 
-            height: `350px`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
+      <section id="join-kouture-section" className="mt-xl-2 p-5"
+        style={{
+          backgroundImage: `url(${JoinKoutureBG})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
         }}>
-        <Container>
+        <Container className="py-3">
           <Row>
-              <Col>
-                <div className="join-kouture-content text-left mb-1 rufina-family">
-                  <h3 className="text-gold">Join the Kouture Konect Community</h3>
-                  <p className="text-white">Showcase Your Designs and Sell Fabrics</p>
-                </div>
-                <div>
-                  <p className="join-section-p text-white">Showcase your unique creations and connect with fashion enthusiasts eager to discover fresh talent</p>
-                  <a href="/"><p>Get Started</p></a>
-                </div>
-              </Col>
+            <Col lg="5">
+              <div className="join-kouture-content text-left mb-40">
+                <h3 className="text-gold mb-2">Join the Kouture Konect Community</h3>
+                <h5 className="text-white">Showcase Your Designs and Sell Fabrics</h5>
+              </div>
+              <div>
+                <p className="join-section-p text-white fw-400 mb-40">Showcase your unique creations and connect with fashion enthusiasts eager to discover fresh talent</p>
+                <a href="/" className='text-decoration-none text-white'>Get Started Now <FaArrowRightLong style={{ color: 'white' }} /></a>
+              </div>
+            </Col>
+            <Col lg="7">
+
+            </Col>
           </Row>
         </Container>
       </section>
@@ -216,12 +227,12 @@ const Home = (props) => {
                 <p className="modal-subtitle text-center mb-5">Welcome to our fashion marketplace! Please select one of the options below to explore our offerings. Whether you're looking for talented designers, unique patterns, or quality fabrics, you're in the right place</p>
                 <Row>
                   <Col lg="4">
-                    <Link to="/designers" onClick={() => setUserModalShow(false) } className="text-decoration-none">
+                    <Link to="/designers" onClick={() => setUserModalShow(false)} className="text-decoration-none">
                       {/* onClick={() => showSignupModal('user_designer')} */}
                       <Card className="modal-card cursor-pointer bg-white border-solid-2">
-                        <Card.Body className="rounded d-flex align-items-center justify-content-center fashion-card" style={{backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${BrowseDesigners})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                        <Card.Body className="rounded d-flex align-items-center justify-content-center fashion-card" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${BrowseDesigners})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                           <div className="modal-box text-center align-items-center">
-                              <h3 className="text-white">Browse Designers</h3>
+                            <h3 className="text-white">Browse Designers</h3>
                           </div>
                         </Card.Body>
                       </Card>
@@ -231,12 +242,12 @@ const Home = (props) => {
                     <Link to="/fabrics" onClick={() => setUserModalShow(false)} className="text-decoration-none">
                       {/* onClick={() => handleShowFabrics()} */}
                       <Card className="modal-card cursor-pointer bg-white border-solid-2">
-                      <Card.Body className="rounded d-flex align-items-center justify-content-center fashion-card" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${ShopFabrics})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                        <Card.Body className="rounded d-flex align-items-center justify-content-center fashion-card" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${ShopFabrics})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                           <div className="modal-box">
-                              <h3 className="text-white">Shop Fabrics</h3>
+                            <h3 className="text-white">Shop Fabrics</h3>
                           </div>
-                      </Card.Body>
-                  </Card>
+                        </Card.Body>
+                      </Card>
                     </Link>
                   </Col>
                   <Col lg="4">
@@ -245,7 +256,7 @@ const Home = (props) => {
                       <Card className="modal-card cursor-pointer bg-white bg-black-hover border-solid-2">
                         <Card.Body className="rounded d-flex align-items-center justify-content-center fashion-card" style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${ExploreDesigns})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
                           <div className="modal-box">
-                              <h3 className="text-white">Explore Designs</h3>
+                            <h3 className="text-white">Explore Designs</h3>
                           </div>
                         </Card.Body>
                       </Card>
@@ -257,7 +268,7 @@ const Home = (props) => {
           </Container>
         </Modal.Body>
       </Modal>
-      
+
       {/* User Box */}
       <Modal show={userModalShowold} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setUserModalShow(false)}>
         <Modal.Body className="py-5">
@@ -269,7 +280,7 @@ const Home = (props) => {
                 <h3 className="text-center fw-600 mb-5">I am interested in...</h3>
                 <Row>
                   <Col lg="4">
-                    <Link to="/designers" onClick={() => setUserModalShow(false) } className="text-decoration-none">
+                    <Link to="/designers" onClick={() => setUserModalShow(false)} className="text-decoration-none">
                       {/* onClick={() => showSignupModal('user_designer')} */}
                       <Card className="cursor-pointer bg-white border-gold-hover border-solid-2">
                         <Card.Body>
@@ -396,7 +407,7 @@ const Home = (props) => {
                 <Row>
                   <Col lg="12" className="mb-3">
                     {/* onClick={() => showSignupModal('user_designer')} */}
-                    <Card onClick={() => navigate('/sign-up?type=designer') } className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                    <Card onClick={() => navigate('/sign-up?type=designer')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
                       <Card.Body>
                         <div className="user-box">
                           <div>
@@ -409,7 +420,7 @@ const Home = (props) => {
                   </Col>
                   <Col lg="12" className="mb-3">
                     {/* onClick={() => handleShowFabrics()} */}
-                    <Card onClick={() => navigate('/sign-up?type=seller') } className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                    <Card onClick={() => navigate('/sign-up?type=seller')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
                       <Card.Body>
                         <div className="user-box">
                           <div>
@@ -422,7 +433,7 @@ const Home = (props) => {
                   </Col>
                   <Col lg="12">
                     {/* onClick={() => handleShowDesigns()} */}
-                    <Card onClick={() => navigate('/sign-up?type=designer_seller') } className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                    <Card onClick={() => navigate('/sign-up?type=designer_seller')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
                       <Card.Body>
                         <div className="user-box">
                           <div>
