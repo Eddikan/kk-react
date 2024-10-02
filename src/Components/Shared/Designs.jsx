@@ -21,6 +21,8 @@ import Carousel from 'react-multi-carousel';
 import CopyTo from 'Utils/CopyLink';
 import MeetingChat from 'Components/Chat/MeetingChat';
 import axios from 'axios';
+import { FaArrowRight } from "react-icons/fa6";
+
 
 const Designs = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'favoriteItemCount']);
@@ -448,7 +450,7 @@ const Designs = (props) => {
                                             :
                                             // <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_design')}>View More</Button>
                                             <Link to="/sign-up?redirect_to=/">
-                                                <Button className="btn-primary" variant="primary">View More Designs</Button>
+                                                <Button className="btn-primary" variant="primary">View More Designs <FaArrowRight style={{ color: 'white'}}/></Button>
                                             </Link>
                                         }
                                     </Col>

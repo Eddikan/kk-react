@@ -28,6 +28,7 @@ import ExploreDesigns from "Assets/images/home-modal/explore-designs.png";
 import Marquee from "react-fast-marquee";
 import JoinKoutureBG from "Assets/images/join-kouture.png";
 
+
 const Home = (props) => {
   const navigate = useNavigate();
   const [fullscreen, setFullscreen] = useState(true);
@@ -211,8 +212,10 @@ const Home = (props) => {
                   <h3 className="text-gold">Join the Kouture Konect Community</h3>
                   <p className="text-white">Showcase Your Designs and Sell Fabrics</p>
                 </div>
-                <p className="join-section-p text-white">Showcase your unique creations and connect with fashion enthusiasts eager to discover fresh talent</p>
-                  <Button variant="primary">Get Started Now</Button>
+                <div>
+                  <p className="join-section-p text-white">Showcase your unique creations and connect with fashion enthusiasts eager to discover fresh talent</p>
+                  <a href="/"><p>Get Started</p></a>
+                </div>
               </Col>
           </Row>
         </Container>

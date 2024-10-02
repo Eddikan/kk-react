@@ -49,10 +49,10 @@ const CustomerSatisfactionCta = (props) => {
                     <Row>
                         <Col lg="12" className="text-center">
                             <div className='text-center mb-3 rufina-family'>
-                                <h2 className="customer-satisfaction-title fs-40 ">Help Us Improve – Share Your Experience!</h2>
+                                <h2 className="customer-satisfaction-title fs-40 mb-5">Help Us Improve – Share Your Experience!</h2>
                                 <p className="customer-satisfaction-p text-center">Your experience means the world to us, and we're always looking to improve. Take a few moments to share your thoughts in our Customer Satisfaction Survey. Your insights not only help us serve you better but also shape the future of our offerings.</p>
                                 <p className="customer-satisfaction-p text-center">Click below to make your voice heard.</p>
-                                <p className="customer-satisfaction-p text-center mt-5 mb-4">Thank you for helping us enhance your experience!</p>
+                                <p className="customer-satisfaction-p text-center mt-5 mb-4 fw-bold">Thank you for helping us enhance your experience!</p>
                             </div>
                             <Link to="/customer-satisfaction-survey">
                                 <Button className="btn-start-survey fs-15 mt-2">Start Survey <FaArrowRight style={{ color: 'white'}}/></Button>

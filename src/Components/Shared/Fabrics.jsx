@@ -14,6 +14,7 @@ import 'Assets/styles/FabricsHomePage/style.css';
 import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import { Rating } from 'react-simple-star-rating';
+import { FaArrowRight } from "react-icons/fa6";
 
 const Fabrics = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole']);
@@ -291,7 +292,7 @@ const Fabrics = (props) => {
                                             </Link>
                                             :
                                             <Link to="/fabrics">
-                                                <Button className="btn-primary" variant="primary">View More Fabrics</Button>
+                                                <Button className="btn-primary" variant="primary">View More Fabrics <FaArrowRight style={{ color: 'white'}}/></Button>
                                             </Link>
                                             // <Button className="btn-primary" variant="primary" onClick={() => showSignupModal('user_fabric')}>View More</Button>
                                         }
