@@ -3169,6 +3169,12 @@ span.rti--tag {
     color: var(--white);
     background-color: black;
 }
+.btn-start-survey:hover{
+    opacity: 80%;
+}
+.button-opacity-hover:hover{
+    opacity: 80%;
+}
 .footer-payment-img {
     width: 51px;
     height: 31px;

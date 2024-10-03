@@ -231,7 +231,7 @@ const Fabrics = (props) => {
                                                         </div>
                                                         <div className="design-details">
                                                             <div className='d-flex align-items-center justify-content-between'>
-                                                                <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis mt-2 pb-1">{fabric.name ?? '-'}</h4>
+                                                                <h4 className="text-black cursor-pointer fs-18 fw-600 mb-0 text-ellipsis mt-2 pb-1 fabric-name">{fabric.name ?? '-'}</h4>
                                                                 {/* {currentUser ?
                                                                     <div className='d-flex align-items-center'>
                                                                         <span className='fs-14 text-no-wrap mx-2'>
@@ -262,7 +262,7 @@ const Fabrics = (props) => {
                                                                 /* Available Props */
                                                                 />
                                                             </div>
-                                                            <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
+                                                            <p className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</p>
                                                             {/* {currentUser ?
                                                                 <div className='d-flex align-items-center mt-1'>
                                                                     {fabric.user.image ?
@@ -287,7 +287,7 @@ const Fabrics = (props) => {
                                     })}
                                     <Col lg={12} className="text-center mt-4">
                                         <Link to="/fabrics">
-                                            <Button className="btn-primary" variant="primary">View More Fabrics <FaArrowRight style={{ color: 'white'}}/></Button>
+                                            <Button className="btn-primary button-opacity-hover" variant="primary">View More Fabrics <FaArrowRight style={{ color: 'white'}}/></Button>
                                         </Link>
                                     </Col>
                                 </Row>

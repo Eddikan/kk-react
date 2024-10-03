@@ -513,4 +513,6 @@ color:#F6D46D;
     max-width: 400px !important;
     left: 48px;
 }
-
+.designs-grid:hover .design-name{
+    text-decoration: underline;
+}

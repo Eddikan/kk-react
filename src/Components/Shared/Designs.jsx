@@ -389,7 +389,7 @@ const Designs = (props) => {
                                                         }
                                                         <div className="design-details">
                                                             <div className='d-flex align-items-center justify-content-between'>
-                                                                <p className="text-black fs-18 fw-600 mb-0 text-ellipsis rufina-family">{design.name ?? '-'}</p>
+                                                                <p className="text-black cursor-pointer fs-18 fw-600 mb-0 text-ellipsis rufina-family design-name">{design.name ?? '-'}</p>
                                                                 {/* {currentUser ?
                                                                     <div className='d-flex align-items-center'>
                                                                         <span className='fs-14 text-no-wrap mx-2'>
@@ -445,11 +445,11 @@ const Designs = (props) => {
                                     <Col lg={12} className="text-center mt-4">
                                         {currentUser ?
                                             <Link to="/designs">
-                                                <Button className="btn-primary" variant="primary">View More Designs <FaArrowRight style={{ color: 'white'}}/></Button>
+                                                <Button className="btn-primary button-opacity-hover" variant="primary">View More Designs <FaArrowRight style={{ color: 'white'}}/></Button>
                                             </Link>
                                             :
                                             <Link to="/sign-up?redirect_to=/">
-                                                <Button className="btn-primary" variant="primary">View More Designs <FaArrowRight style={{ color: 'white'}}/></Button>
+                                                <Button className="btn-primary button-opacity-hover" variant="primary">View More Designs <FaArrowRight style={{ color: 'white'}}/></Button>
                                             </Link>
                                         }
                                     </Col>

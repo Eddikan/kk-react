@@ -16,6 +16,7 @@ import { IoIosMail } from "react-icons/io";
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import FooterLogo from 'Assets/images/logos/koutor konect 2.png';
+import TextLogo from 'Assets/images/logos/kouture-text-logo.png';
 import AmericanExpressLogo from 'Assets/images/icons/American-Express-logo.png';
 import DinersClubLogo from 'Assets/images/icons/diners-club-logo.png';
 import JCBLogo from 'Assets/images/icons/jcb-logo.png';
@@ -34,7 +35,8 @@ const Footer = (props) => {
                     <Row>
                         <Col lg="3" className="pt-4 ps-5">
                             <Link href="/">
-                                <img src={FooterLogo} alt="Kouture Konect"  className="footer-logo ps-1" />
+                                {/* <img src={FooterLogo} alt="Kouture Konect"  className="footer-logo ps-1" /> */}
+                                <img src={TextLogo} alt="Kouture Konect"  className="footer-logo ps-1" />
                             </Link>
                         </Col>
                         <Col lg="6" className="pt-4">

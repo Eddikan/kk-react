@@ -32,6 +32,7 @@ import User from 'Assets/images/user.png';
 import PlaceholderSquare from 'Assets/images/square-placeholder.jpg';
 import UserPlaceholder from 'Assets/images/user.png';
 import Logo from 'Assets/images/logos/koutor konect 2.png';
+import TextLogo from 'Assets/images/logos/kouture-text-logo.png';
 import 'Assets/styles/Headers/style.css';
 import toast from 'react-hot-toast';
 import axios from "axios";
@@ -499,7 +500,8 @@ const Header = () => {
       </div>
       <Navbar collapseOnSelect expand="lg" className="bg-body-primary px-5">
         <Container className="position-relative">
-          <Navbar.Brand href="/"><img src={Logo} /></Navbar.Brand>
+          {/* <Navbar.Brand href="/"><img src={Logo} /></Navbar.Brand> */}
+          <Navbar.Brand href="/"><img src={TextLogo} /></Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse className="justify-content-between column-gap-70" id="responsive-navbar-nav">
             <Nav className="align-items-center w-100">
@@ -910,7 +912,7 @@ const Header = () => {
                       </div>
 
                       <div className="cart-dropdown text-center">
-                        <IoCartOutline className="my-3" size={54} style={{ opacity: 0.2 }} />
+                        <IoCartOutline className="my-2" size={54} style={{ opacity: 0.2 }} />
                         <p className="fs-14 mb-3 fw-bolder">Your Cart is Empty, Shop Now!</p>
                         <p className="fs-13">Good to have you back! The items in your cart are saved. Sign in when you're ready to review or purchase them.</p>
                         <Button href="/login" className="cart-dropdown-btn btn">Sign In</Button>
