@@ -1783,7 +1783,9 @@ const Profile = () => {
                             <div id="profile-portfolio">
                                 <BodyMeasurement userData={user} />
                             </div>
-                            : null}
+                            : 
+                            null
+                        }
                     </Container>
                 </section >
             }
