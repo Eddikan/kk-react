@@ -1,7 +1,62 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Modal, ModalFooter, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Modal, ModalFooter, Form, Button } from 'react-bootstrap';
 import { IoCloseOutline } from "react-icons/io5";
 import { IoIosHelpCircleOutline } from "react-icons/io";
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { useCookies } from 'react-cookie';
+import { IoSaveOutline } from 'react-icons/io5';
+
+const initialBodyMeasurementData = {
+    upper_neck_circumference: '',
+    lower_neck_circumference: '',
+    chest_circumference: '',
+    bust_circumference: '',
+    under_bust_circumference: '',
+    waist_circumference: '',
+    mid_hip_circumference: '',
+    hip_circumference: '',
+    bust_distance: '',
+    front_chest_width: '',
+    back_chest_width: '',
+    front_waist_length: '',
+    back_waist_length: '',
+    center_front_length: '',
+    center_back_length: '',
+    front_neck_depth: '',
+    back_neck_depth: '',
+    bust_depth: '',
+    armhole_depth: '',
+    bust_height: '',
+    front_shoulder_width: '',
+    back_shoulder_width: '',
+    shoulder_length: '',
+    shoulder_depth: '',
+    elbow_circumference: '',
+    underarm_length: '',
+    sleeve_length: '',
+    arm_circumference: '',
+    wrist_circumference: '',
+    elbow_length: '',
+    armhole_circumference: '',
+    sleeve_cap_height: '',
+    hip_depth: '',
+    crotch_depth: '',
+    crotch_length: '',
+    pants_length: '',
+    knee_length: '',
+    in_seam_length: '',
+    thigh_circumference: '',
+    mid_thigh_circumference: '',
+    knee_circumference: '',
+    calf_circumference: '',
+    ankle_circumference: '',
+    ankle_heel_circumference: '',
+    body_height: '',
+    body_length: '',
+    side_seam: '',
+    pants_trouser_length: '',
+};
 
 
 const measurementGuideData = [
@@ -521,8 +576,13 @@ const BodyMeasurement = ({ userData }) => {
     const [measurementGuideImage, setModalMeasurementGuideImage] = useState('');
     const [measurementGuideModalShow, setMeasurementGuideModalShow] = useState(false);
     const [measurementGuidedataLookup, setMeasurementGuideDataLookup] = useState({});
-
+    const [bodyMeasurementFormData, setBodyMeasurementFormData] = useState(initialBodyMeasurementData);
+    const [formLoading, setFormLoading] = useState(false);
     const [user, setUser] = useState(userData);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
+
+    const currentUser = cookies.currentUser;
+    const token = cookies.token;
 
     const toggleMeasurementGuideModal = (id) => {
         // setModalHeadingMeasurementGuide(heading);
@@ -539,6 +599,13 @@ const BodyMeasurement = ({ userData }) => {
         setMeasurementGuideModalShow(!measurementGuideModalShow);
     };
 
+    const handleChangeBodyMeasurement = (e) => {
+        setBodyMeasurementFormData({
+            ...bodyMeasurementFormData,
+            [e.target.name]: e.target.value,
+        })
+    };
+
     useEffect(() => {
         // Create lookup object
         const lookup = measurementGuideData.reduce((acc, item) => {
@@ -546,784 +613,944 @@ const BodyMeasurement = ({ userData }) => {
             return acc;
         }, {});
         setMeasurementGuideDataLookup(lookup);
+        if (user.body_measurement) {
+            setBodyMeasurementFormData(user.body_measurement);
+        }
     }, []);
+
+    async function submitBodyMeasurements(e) {
+        e.preventDefault();
+        setFormLoading(true);
+
+        const updatedProfileFormData = {body_measurement: JSON.stringify(bodyMeasurementFormData)};
+
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, updatedProfileFormData).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                const data = response.data.data;
+                toast.success('Body measurements updated successfully!');
+            } else {
+                const errors = response.data.errors;
+            }
+            setFormLoading(false);
+        }).catch((error) => {
+            setFormLoading(false);
+            toast.error('Something went wrong, please contact the administrator!');
+        });
+    }
 
     const hasEmptyMeasurement = Object.values(user.body_measurement).some(value => value !== "");
 
     return (
         <>
-            <div className='px-2 consulatation-top-bottom'>
-                <section>
-                    <Container>
-                        <Row>
-                            {user.gender === "Male" && hasEmptyMeasurement ?
-                                <>
+            {user.gender === "Male" ?
+                <>
+                    <div className="neck-container">
+                        <p className='title-designer mb-1 lh-25'>Neck </p>
+                        <div className="ms-60">
+                            <Row className="mb-4">
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Upper Neck Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(47)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="upper_neck_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.upper_neck_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Lower Neck Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(48)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="lower_neck_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.lower_neck_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Front Neck Depth </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(57)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="front_neck_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.front_neck_depth} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Back Neck Depth </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(58)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="back_neck_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.back_neck_depth} />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <hr />
+                        </div>
+                    </div>
+                    <div className="chest-container">
+                        <p className='title-designer mb-1 lh-25 mt-4'>Chest </p>
+                        <div className="ms-60">
+                            <Row className="mb-4">
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Chest Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(49)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="chest_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.chest_circumference} />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <hr />
+                        </div>
+                    </div>
+                    <div className="waist-container">
+                        <p className='title-designer mb-1 lh-25 mt-4'>Waist </p>
+                        <div className="ms-60">
+                            <Row className="mb-4">
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Waist Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(50)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="waist_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.waist_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Mid Hip Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(51)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="mid_hip_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.mid_hip_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Hip Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(52)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="hip_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.hip_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Back Waist Length </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(54)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="back_waist_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.back_waist_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Front Waist Length </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(53)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="front_waist_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.front_waist_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Center Front Length </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(55)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="center_front_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.center_front_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Center Back Length </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(56)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="center_back_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.center_back_length} />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <hr />
+                        </div>
+                    </div>
+                    <div className="arm-container">
+                        <p className='title-designer mb-1 lh-25 mt-4'>Arm </p>
+                        <div className="ms-60">
+                            <Row className="mb-4">
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Armhole Depth </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(59)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="armhole_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.armhole_depth} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Front Shoulder Width </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(60)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="front_shoulder_width" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.front_shoulder_width} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Back Shoulder Width </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(61)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="back_shoulder_width" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.back_shoulder_width} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Shoulder Depth </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(62)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="shoulder_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.shoulder_depth} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Elbow Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(63)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="elbow_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.elbow_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Underarm Length </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(64)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="underarm_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.underarm_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Sleeve Length </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(66)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="sleeve_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.sleeve_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Arm Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(67)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="arm_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.arm_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Armhole Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(70)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="armhole_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.armhole_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Sleeve Cap Height </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(71)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="sleeve_cap_height" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.sleeve_cap_height} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Wrist Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(68)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="wrist_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.wrist_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Elbow Length </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(69)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="elbow_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.elbow_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Side Seam </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(65)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="side_seam" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.side_seam} />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <hr />
+                        </div>
+                    </div>
+                    <div className="lower-body-container">
+                        <p className='title-designer mb-1 lh-25 mt-4'>Lower Body </p>
+                        <div className="ms-60">
+                            <Row className="mb-4">
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Hip Depth </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(72)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="hip_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.hip_depth} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Crotch Depth </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(73)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="crotch_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.crotch_depth} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Pants/Trouser Length </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(74)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="pants_trouser_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.pants_trouser_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Knee Length </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(75)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="knee_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.knee_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">In Seam Length </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(76)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="in_seam_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.in_seam_length} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Thigh Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(77)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="thigh_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.thigh_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Mid-thigh Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(78)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="mid_thigh_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.mid_thigh_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Knee Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(79)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="knee_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.knee_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Calf Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(80)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="calf_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.calf_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Ankle Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(81)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="ankle_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.ankle_circumference} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Ankle-Heel Circumference </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(82)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="ankle_heel_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.ankle_heel_circumference} />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <hr />
+                        </div>
+                    </div>
+                    <div className="body-height-length-container">
+                        <p className='title-designer mb-1 lh-25 mt-4'>Body Height & Length </p>
+                        <div className="ms-60">
+                            <Row className="mb-4">
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Body Height </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(83)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="body_height" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.body_height} />
+                                    </Form.Group>
+                                </Col>
+                                <Col lg="4">
+                                    <Form.Group className="mb-3">
+                                        <Form.Group>
+                                            <Form.Label className="lh-25">Body Length </Form.Label>
+                                            <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(84)} />
+                                        </Form.Group>
+                                        <Form.Control type="number" name="body_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.body_length} />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <hr />
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="text-right mt-30">
+                        {formLoading ?
+                            <Button
+                                className='btn-save btn btn btn-primary fs-14'
+                                type='button'
+                                style={{ cursor: 'not-allowed' }}
+                            >
+                                <IoSaveOutline size="20px"/> Saving...
+                            </Button>
+                            :
+                            <Button
+                                className='btn-save btn btn btn-primary fs-14'
+                                type='button'
+                                onClick={submitBodyMeasurements}
+                            >
+                                <IoSaveOutline size="20px"/> Save
+                            </Button>
+                        }
+                    </div>
+                </>
+                : user.gender === "Female" ?
+                    <>
+                        <div className="neck-container">
+                            <p className='title-designer mb-1 lh-25'>Neck </p>
+                            <div className="ms-60">
+                                <Row className="mb-4">
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Upper Neck Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(47)} />
+                                                <Form.Label className="lh-25">Upper Neck Circumference </Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(1)} />
                                             </Form.Group>
-                                            <Form.Control name="upper_neck_circumference" placeholder="" disabled value={user.body_measurement.upper_neck_circumference} />
+                                            <Form.Control type="number" name="upper_neck_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.upper_neck_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Lower Neck Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(48)} />
+                                                <Form.Label className="lh-25">Lower Neck Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(2)} />
                                             </Form.Group>
-                                            <Form.Control name="lower_neck_circumference" placeholder="" disabled value={user.body_measurement.lower_neck_circumference} />
+                                            <Form.Control type="number" name="lower_neck_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.lower_neck_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Chest Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(49)} />
+                                                <Form.Label className="lh-25">Front Neck Depth</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(16)} />
                                             </Form.Group>
-                                            <Form.Control name="chest_circumference" placeholder="" disabled value={user.body_measurement.chest_circumference} />
+                                            <Form.Control type="number" name="front_neck_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.front_neck_depth} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Waist Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(50)} />
+                                                <Form.Label className="lh-25">Back Neck Depth</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(17)} />
                                             </Form.Group>
-                                            <Form.Control name="waist_circumference" placeholder="" disabled value={user.body_measurement.waist_circumference} />
+                                            <Form.Control type="number" name="back_neck_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.back_neck_depth} />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <hr />
+                            </div>
+                        </div>
+
+                        <div className="chest-container">
+                            <p className='title-designer mb-1 lh-25 mt-4'>Chest </p>
+                            <div className="ms-60">
+                                <Row className="mb-4">
+                                    <Col lg="4">
+                                        <Form.Group className="mb-3">
+                                            <Form.Group>
+                                                <Form.Label className="lh-25">Chest Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(3)} />
+                                            </Form.Group>
+                                            <Form.Control type="number" name="chest_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.chest_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Mid Hip Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(51)} />
+                                                <Form.Label className="lh-25">Back Chest Width</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(11)} />
                                             </Form.Group>
-                                            <Form.Control name="mid_hip_circumference" placeholder="" disabled value={user.body_measurement.mid_hip_circumference} />
+                                            <Form.Control type="number" name="back_chest_width" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.back_chest_width} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Hip Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(52)} />
+                                                <Form.Label className="lh-25">Front Chest Width</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(10)} />
                                             </Form.Group>
-                                            <Form.Control name="hip_circumference" placeholder="" disabled value={user.body_measurement.hip_circumference} />
+                                            <Form.Control type="number" name="front_chest_width" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.front_chest_width} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Front Waist Length </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(53)} />
+                                                <Form.Label className="lh-25">Bust Distance</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(9)} />
                                             </Form.Group>
-                                            <Form.Control name="front_waist_length" placeholder="" disabled value={user.body_measurement.front_waist_length} />
+                                            <Form.Control type="number" name="bust_distance" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.bust_distance} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Back Waist Length </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(54)} />
+                                                <Form.Label className="lh-25">Bust Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(4)} />
                                             </Form.Group>
-                                            <Form.Control name="back_waist_length" placeholder="" disabled value={user.body_measurement.back_waist_length} />
+                                            <Form.Control type="number" name="bust_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.bust_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Center Front Length </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(55)} />
+                                                <Form.Label className="lh-25">Under Bust Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(5)} />
                                             </Form.Group>
-                                            <Form.Control name="center_front_length" placeholder="" disabled value={user.body_measurement.center_front_length} />
+                                            <Form.Control type="number" name="under_bust_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.under_bust_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Center Back Length </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(56)} />
+                                                <Form.Label className="lh-25">Bust Depth</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(18)} />
                                             </Form.Group>
-                                            <Form.Control name="center_back_length" placeholder="" disabled value={user.body_measurement.center_back_length} />
+                                            <Form.Control type="number" name="bust_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.bust_depth} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Front Neck Depth </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(57)} />
+                                                <Form.Label className="lh-25">Bust Height</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(20)} />
                                             </Form.Group>
-                                            <Form.Control name="front_neck_depth" placeholder="" disabled value={user.body_measurement.front_neck_depth} />
+                                            <Form.Control type="number" name="bust_height" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.bust_height} />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <hr />
+                            </div>
+                        </div>
+                        
+                        <div className="waist-container">
+                            <p className='title-designer mb-1 lh-25 mt-4'>Waist </p>
+                            <div className="ms-60">
+                                <Row className="mb-4">
+                                    <Col lg="4">
+                                        <Form.Group className="mb-3">
+                                            <Form.Group>
+                                                <Form.Label className="lh-25">Waist Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(6)} />
+                                            </Form.Group>
+                                            <Form.Control type="number" name="waist_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.waist_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Back Neck Depth </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(58)} />
+                                                <Form.Label className="lh-25">Mid Hip Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(7)} />
                                             </Form.Group>
-                                            <Form.Control name="back_neck_depth" placeholder="" disabled value={user.body_measurement.back_neck_depth} />
+                                            <Form.Control type="number" name="mid_hip_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.mid_hip_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Armhole Depth </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(59)} />
+                                                <Form.Label className="lh-25">Hip Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(8)} />
                                             </Form.Group>
-                                            <Form.Control name="armhole_depth" placeholder="" disabled value={user.body_measurement.armhole_depth} />
+                                            <Form.Control type="number" name="hip_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.hip_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Front Shoulder Width </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(60)} />
+                                                <Form.Label className="lh-25">Back Waist Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(13)} />
                                             </Form.Group>
-                                            <Form.Control name="front_shoulder_width" placeholder="" disabled value={user.body_measurement.front_shoulder_width} />
+                                            <Form.Control type="number" name="back_waist_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.back_waist_length} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Back Shoulder Width </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(61)} />
+                                                <Form.Label className="lh-25">Front Waist Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(12)} />
                                             </Form.Group>
-                                            <Form.Control name="back_shoulder_width" placeholder="" disabled value={user.body_measurement.back_shoulder_width} />
+                                            <Form.Control type="number" name="front_waist_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.front_waist_length} />
+                                        </Form.Group>
+                                    </Col>
+                                    
+                                    <Col lg="4">
+                                        <Form.Group className="mb-3">
+                                            <Form.Group>
+                                                <Form.Label className="lh-25">Center Front Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(14)} />
+                                            </Form.Group>
+                                            <Form.Control type="number" name="center_front_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.center_front_length} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Shoulder Depth </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(62)} />
+                                                <Form.Label className="lh-25">Center Back Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(15)} />
                                             </Form.Group>
-                                            <Form.Control name="shoulder_depth" placeholder="" disabled value={user.body_measurement.shoulder_depth} />
+                                            <Form.Control type="number" name="center_back_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.center_back_length} />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <hr />
+                            </div>
+                        </div>
+                        
+                        <div className="arm-container">
+                            <p className='title-designer mb-1 lh-25 mt-4'>Arm </p>
+                            <div className="ms-60">
+                                <Row className="mb-4">
+                                    <Col lg="4">
+                                        <Form.Group className="mb-3">
+                                            <Form.Group>
+                                                <Form.Label className="lh-25">Armhole Depth</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(19)} />
+                                            </Form.Group>
+                                            <Form.Control type="number" name="armhole_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.armhole_depth} />
+                                        </Form.Group>
+                                    </Col>
+                                    
+                                    <Col lg="4">
+                                        <Form.Group className="mb-3">
+                                            <Form.Group>
+                                                <Form.Label className="lh-25">Front Shoulder Width</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(21)} />
+                                            </Form.Group>
+                                            <Form.Control type="number" name="front_shoulder_width" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.front_shoulder_width} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Elbow Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(63)} />
+                                                <Form.Label className="lh-25">Back Shoulder Width</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(22)} />
                                             </Form.Group>
-                                            <Form.Control name="elbow_circumference" placeholder="" disabled value={user.body_measurement.elbow_circumference} />
+                                            <Form.Control type="number" name="back_shoulder_width" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.back_shoulder_width} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Underarm Length </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(64)} />
+                                                <Form.Label className="lh-25">Shoulder Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(23)} />
                                             </Form.Group>
-                                            <Form.Control name="underarm_length" placeholder="" disabled value={user.body_measurement.underarm_length} />
+                                            <Form.Control type="number" name="shoulder_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.shoulder_length} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Side Seam </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(65)} />
+                                                <Form.Label className="lh-25">Shoulder Depth</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(24)} />
                                             </Form.Group>
-                                            <Form.Control name="side_seam" placeholder="" disabled value={user.body_measurement.side_seam} />
+                                            <Form.Control type="number" name="shoulder_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.shoulder_depth} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Sleeve Length </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(66)} />
+                                                <Form.Label className="lh-25">Elbow Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(25)} />
                                             </Form.Group>
-                                            <Form.Control name="sleeve_length" placeholder="" disabled value={user.body_measurement.sleeve_length} />
+                                            <Form.Control type="number" name="elbow_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.elbow_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Arm Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(67)} />
+                                                <Form.Label className="lh-25">Underarm Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(26)} />
                                             </Form.Group>
-                                            <Form.Control name="arm_circumference" placeholder="" disabled value={user.body_measurement.arm_circumference} />
+                                            <Form.Control type="number" name="underarm_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.underarm_length} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Wrist Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(68)} />
+                                                <Form.Label className="lh-25">Sleeve Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(27)} />
                                             </Form.Group>
-                                            <Form.Control name="wrist_circumference" placeholder="" disabled value={user.body_measurement.wrist_circumference} />
+                                            <Form.Control type="number" name="sleeve_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.sleeve_length} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Elbow Length </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(69)} />
+                                                <Form.Label className="lh-25">Arm Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(28)} />
                                             </Form.Group>
-                                            <Form.Control name="elbow_length" placeholder="" disabled value={user.body_measurement.elbow_length} />
+                                            <Form.Control type="number" name="arm_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.arm_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Armhole Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(70)} />
+                                                <Form.Label className="lh-25">Armhole Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(31)} />
                                             </Form.Group>
-                                            <Form.Control name="armhole_circumference" placeholder="" disabled value={user.body_measurement.armhole_circumference} />
+                                            <Form.Control type="number" name="armhole_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.armhole_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Sleeve Cap Height </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(71)} />
+                                                <Form.Label className="lh-25">Sleeve Cap Height</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(32)} />
                                             </Form.Group>
-                                            <Form.Control name="sleeve_cap_height" placeholder="" disabled value={user.body_measurement.sleeve_cap_height} />
+                                            <Form.Control type="number" name="sleeve_cap_height" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.sleeve_cap_height} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Hip Depth </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(72)} />
+                                                <Form.Label className="lh-25">Wrist Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(29)} />
                                             </Form.Group>
-                                            <Form.Control name="hip_depth" placeholder="" disabled value={user.body_measurement.hip_depth} />
+                                            <Form.Control type="number" name="wrist_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.wrist_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Crotch Depth </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(73)} />
+                                                <Form.Label className="lh-25">Elbow Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(30)} />
                                             </Form.Group>
-                                            <Form.Control name="crotch_depth" placeholder="" disabled value={user.body_measurement.crotch_depth} />
+                                            <Form.Control type="number" name="elbow_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.elbow_length} />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <hr />
+                            </div>
+                        </div>
+                        
+                        <div className="lower-body-container">
+                            <p className='title-designer mb-1 lh-25 mt-4'>Lower Body </p>
+                            <div className="ms-60">
+                                <Row className="mb-4">
+                                    <Col lg="4">
+                                        <Form.Group className="mb-3">
+                                            <Form.Group>
+                                                <Form.Label className="lh-25">Hip Depth</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(33)} />
+                                            </Form.Group>
+                                            <Form.Control type="number" name="hip_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.hip_depth} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Pants/Trouser Length </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(74)} />
+                                                <Form.Label className="lh-25">Crotch Depth</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(34)} />
                                             </Form.Group>
-                                            <Form.Control name="pants_trouser_length" placeholder="" disabled value={user.body_measurement.pants_trouser_length} />
+                                            <Form.Control type="number" name="crotch_depth" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.crotch_depth} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Knee Length </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(75)} />
+                                                <Form.Label className="lh-25">Crotch Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(35)} />
                                             </Form.Group>
-                                            <Form.Control name="knee_length" placeholder="" disabled value={user.body_measurement.knee_length} />
+                                            <Form.Control type="number" name="crotch_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.crotch_length} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>In Seam Length </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(76)} />
+                                                <Form.Label className="lh-25">Pants Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(36)} />
                                             </Form.Group>
-                                            <Form.Control name="in_seam_length" placeholder="" disabled value={user.body_measurement.in_seam_length} />
+                                            <Form.Control type="number" name="pants_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.pants_length} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Thigh Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(77)} />
+                                                <Form.Label className="lh-25">Knee Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(37)} />
                                             </Form.Group>
-                                            <Form.Control name="thigh_circumference" placeholder="" disabled value={user.body_measurement.thigh_circumference} />
+                                            <Form.Control type="number" name="knee_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.knee_length} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Mid-thigh Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(78)} />
+                                                <Form.Label className="lh-25">In seam Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(38)} />
                                             </Form.Group>
-                                            <Form.Control name="mid_thigh_circumference" placeholder="" disabled value={user.body_measurement.mid_thigh_circumference} />
+                                            <Form.Control type="number" name="in_seam_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.in_seam_length} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Knee Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(79)} />
+                                                <Form.Label className="lh-25">Thigh Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(39)} />
                                             </Form.Group>
-                                            <Form.Control name="knee_circumference" placeholder="" disabled value={user.body_measurement.knee_circumference} />
+                                            <Form.Control type="number" name="thigh_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.thigh_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Calf Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(80)} />
+                                                <Form.Label className="lh-25">Mid Thigh Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(40)} />
                                             </Form.Group>
-                                            <Form.Control name="calf_circumference" placeholder="" disabled value={user.body_measurement.calf_circumference} />
+                                            <Form.Control type="number" name="mid_thigh_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.mid_thigh_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Ankle Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(81)} />
+                                                <Form.Label className="lh-25">Knee Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(41)} />
                                             </Form.Group>
-                                            <Form.Control name="ankle_circumference" placeholder="" disabled value={user.body_measurement.ankle_circumference} />
+                                            <Form.Control type="number" name="knee_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.knee_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Ankle-Heel Circumference </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(82)} />
+                                                <Form.Label className="lh-25">Calf Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(42)} />
                                             </Form.Group>
-                                            <Form.Control name="ankle_heel_circumference" placeholder="" disabled value={user.body_measurement.ankle_heel_circumference} />
+                                            <Form.Control type="number" name="calf_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.calf_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Body Height </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(83)} />
+                                                <Form.Label className="lh-25">Ankle Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(43)} />
                                             </Form.Group>
-                                            <Form.Control name="body_height" placeholder="" disabled value={user.body_measurement.body_height} />
+                                            <Form.Control type="number" name="ankle_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.ankle_circumference} />
                                         </Form.Group>
                                     </Col>
                                     <Col lg="4">
                                         <Form.Group className="mb-3">
                                             <Form.Group>
-                                                <Form.Label>Body Length </Form.Label>
-                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(84)} />
+                                                <Form.Label className="lh-25">Ankle Heel Circumference</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(44)} />
                                             </Form.Group>
-                                            <Form.Control name="body_length" placeholder="" disabled value={user.body_measurement.body_length} />
+                                            <Form.Control type="number" name="ankle_heel_circumference" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.ankle_heel_circumference} />
                                         </Form.Group>
                                     </Col>
-                                </>
-                                : user.gender === "Female" && hasEmptyMeasurement ?
-                                    <>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Upper Neck Circumference </Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(1)} />
-                                                </Form.Group>
-                                                <Form.Control name="upper_neck_circumference" placeholder="" disabled value={user.body_measurement.upper_neck_circumference} />
+                                </Row>
+                                <hr />
+                            </div>
+                        </div>
+
+                        <div className="body-height-length-container">
+                            <p className='title-designer mb-1 lh-25 mt-4'>Body Height & Length </p>
+                            <div className="ms-60">
+                                <Row className="mb-4">
+                                    <Col lg="4">
+                                        <Form.Group className="mb-3">
+                                            <Form.Group>
+                                                <Form.Label className="lh-25">Body Height</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(45)} />
                                             </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Lower Neck Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(2)} />
-                                                </Form.Group>
-                                                <Form.Control name="lower_neck_circumference" placeholder="" disabled value={user.body_measurement.lower_neck_circumference} />
+                                            <Form.Control type="number" name="body_height" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.body_height} />
+                                        </Form.Group>
+                                    </Col>
+                                    <Col lg="4">
+                                        <Form.Group className="mb-3">
+                                            <Form.Group>
+                                                <Form.Label className="lh-25">Body Length</Form.Label>
+                                                <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(46)} />
                                             </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Chest Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(3)} />
-                                                </Form.Group>
-                                                <Form.Control name="chest_circumference" placeholder="" disabled value={user.body_measurement.chest_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Bust Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(4)} />
-                                                </Form.Group>
-                                                <Form.Control name="bust_circumference" placeholder="" disabled value={user.body_measurement.bust_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Under Bust Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(5)} />
-                                                </Form.Group>
-                                                <Form.Control name="under_bust_circumference" placeholder="" disabled value={user.body_measurement.under_bust_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Waist Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(6)} />
-                                                </Form.Group>
-                                                <Form.Control name="waist_circumference" placeholder="" disabled value={user.body_measurement.waist_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Mid Hip Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(7)} />
-                                                </Form.Group>
-                                                <Form.Control name="mid_hip_circumference" placeholder="" disabled value={user.body_measurement.mid_hip_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Hip Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(8)} />
-                                                </Form.Group>
-                                                <Form.Control name="hip_circumference" placeholder="" disabled value={user.body_measurement.hip_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Bust Distance</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(9)} />
-                                                </Form.Group>
-                                                <Form.Control name="bust_distance" placeholder="" disabled value={user.body_measurement.bust_distance} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Front Chest Width</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(10)} />
-                                                </Form.Group>
-                                                <Form.Control name="front_chest_width" placeholder="" disabled value={user.body_measurement.front_chest_width} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Back Chest Width</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(11)} />
-                                                </Form.Group>
-                                                <Form.Control name="back_chest_width" placeholder="" disabled value={user.body_measurement.back_chest_width} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Front Waist Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(12)} />
-                                                </Form.Group>
-                                                <Form.Control name="front_waist_length" placeholder="" disabled value={user.body_measurement.front_waist_length} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Back Waist Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(13)} />
-                                                </Form.Group>
-                                                <Form.Control name="back_waist_length" placeholder="" disabled value={user.body_measurement.back_waist_length} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Center Front Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(14)} />
-                                                </Form.Group>
-                                                <Form.Control name="center_front_length" placeholder="" disabled value={user.body_measurement.center_front_length} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Center Back Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(15)} />
-                                                </Form.Group>
-                                                <Form.Control name="center_back_length" placeholder="" disabled value={user.body_measurement.center_back_length} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Front Neck Depth</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(16)} />
-                                                </Form.Group>
-                                                <Form.Control name="front_neck_depth" placeholder="" disabled value={user.body_measurement.front_neck_depth} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Back Neck Depth</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(17)} />
-                                                </Form.Group>
-                                                <Form.Control name="back_neck_depth" placeholder="" disabled value={user.body_measurement.back_neck_depth} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Bust Depth</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(18)} />
-                                                </Form.Group>
-                                                <Form.Control name="bust_depth" placeholder="" disabled value={user.body_measurement.bust_depth} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Armhole Depth</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(19)} />
-                                                </Form.Group>
-                                                <Form.Control name="armhole_depth" placeholder="" disabled value={user.body_measurement.armhole_depth} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Bust Height</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(20)} />
-                                                </Form.Group>
-                                                <Form.Control name="bust_height" placeholder="" disabled value={user.body_measurement.bust_height} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Front Shoulder Width</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(21)} />
-                                                </Form.Group>
-                                                <Form.Control name="front_shoulder_width" placeholder="" disabled value={user.body_measurement.front_shoulder_width} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Back Shoulder Width</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(22)} />
-                                                </Form.Group>
-                                                <Form.Control name="back_shoulder_width" placeholder="" disabled value={user.body_measurement.back_shoulder_width} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Shoulder Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(23)} />
-                                                </Form.Group>
-                                                <Form.Control name="shoulder_length" placeholder="" disabled value={user.body_measurement.shoulder_length} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Shoulder Depth</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(24)} />
-                                                </Form.Group>
-                                                <Form.Control name="shoulder_depth" placeholder="" disabled value={user.body_measurement.shoulder_depth} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Elbow Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(25)} />
-                                                </Form.Group>
-                                                <Form.Control name="elbow_circumference" placeholder="" disabled value={user.body_measurement.elbow_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Underarm Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(26)} />
-                                                </Form.Group>
-                                                <Form.Control name="underarm_length" placeholder="" disabled value={user.body_measurement.underarm_length} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Sleeve Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(27)} />
-                                                </Form.Group>
-                                                <Form.Control name="sleeve_length" placeholder="" disabled value={user.body_measurement.sleeve_length} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Arm Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(28)} />
-                                                </Form.Group>
-                                                <Form.Control name="arm_circumference" placeholder="" disabled value={user.body_measurement.arm_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Wrist Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(29)} />
-                                                </Form.Group>
-                                                <Form.Control name="wrist_circumference" placeholder="" disabled value={user.body_measurement.wrist_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Elbow Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(30)} />
-                                                </Form.Group>
-                                                <Form.Control name="elbow_length" placeholder="" disabled value={user.body_measurement.elbow_length} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Armhole Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(31)} />
-                                                </Form.Group>
-                                                <Form.Control name="armhole_circumference" placeholder="" disabled value={user.body_measurement.armhole_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Sleeve Cap Height</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(32)} />
-                                                </Form.Group>
-                                                <Form.Control name="sleeve_cap_height" placeholder="" disabled value={user.body_measurement.sleeve_cap_height} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Hip Depth</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(33)} />
-                                                </Form.Group>
-                                                <Form.Control name="hip_depth" placeholder="" disabled value={user.body_measurement.hip_depth} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Crotch Depth</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(34)} />
-                                                </Form.Group>
-                                                <Form.Control name="crotch_depth" placeholder="" disabled value={user.body_measurement.crotch_depth} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Crotch Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(35)} />
-                                                </Form.Group>
-                                                <Form.Control name="crotch_length" placeholder="" disabled value={user.body_measurement.crotch_length} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Pants Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(36)} />
-                                                </Form.Group>
-                                                <Form.Control name="pants_length" placeholder="" disabled value={user.body_measurement.pants_length} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Knee Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(37)} />
-                                                </Form.Group>
-                                                <Form.Control name="knee_length" placeholder="" disabled value={user.body_measurement.knee_length} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>In seam Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(38)} />
-                                                </Form.Group>
-                                                <Form.Control name="in_seam_length" placeholder="" disabled value={user.body_measurement.in_seam_length} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Thigh Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(39)} />
-                                                </Form.Group>
-                                                <Form.Control name="thigh_circumference" placeholder="" disabled value={user.body_measurement.thigh_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Mid Thigh Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(40)} />
-                                                </Form.Group>
-                                                <Form.Control name="mid_thigh_circumference" placeholder="" disabled value={user.body_measurement.mid_thigh_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Knee Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(41)} />
-                                                </Form.Group>
-                                                <Form.Control name="knee_circumference" placeholder="" disabled value={user.body_measurement.knee_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Calf Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(42)} />
-                                                </Form.Group>
-                                                <Form.Control name="calf_circumference" placeholder="" disabled value={user.body_measurement.calf_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Ankle Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(43)} />
-                                                </Form.Group>
-                                                <Form.Control name="ankle_circumference" placeholder="" disabled value={user.body_measurement.ankle_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Ankle Heel Circumference</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(44)} />
-                                                </Form.Group>
-                                                <Form.Control name="ankle_heel_circumference" placeholder="" disabled value={user.body_measurement.ankle_heel_circumference} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Body Height</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(45)} />
-                                                </Form.Group>
-                                                <Form.Control name="body_height" placeholder="" disabled value={user.body_measurement.body_height} />
-                                            </Form.Group>
-                                        </Col>
-                                        <Col lg="4">
-                                            <Form.Group className="mb-3">
-                                                <Form.Group>
-                                                    <Form.Label>Body Length</Form.Label>
-                                                    <IoIosHelpCircleOutline size={20} className="question-btn" onClick={() => toggleMeasurementGuideModal(46)} />
-                                                </Form.Group>
-                                                <Form.Control name="body_length" placeholder="" disabled value={user.body_measurement.body_length} />
-                                            </Form.Group>
-                                        </Col>
-                                    </>
-                                    : <p className="text-center mb-3 mt-3">No records found.</p>
+                                            <Form.Control type="number" name="body_length" placeholder="" onChange={handleChangeBodyMeasurement} value={user.body_measurement.body_length} />
+                                        </Form.Group>
+                                    </Col>
+                                </Row>
+                                <hr />
+                            </div>
+                        </div>
+                        <hr />
+                        <div className="text-right mt-30">
+                            {formLoading ?
+                                <Button
+                                    className='btn-save btn btn btn-primary fs-14'
+                                    type='button'
+                                    style={{ cursor: 'not-allowed' }}
+                                >
+                                    <IoSaveOutline size="20px"/> Saving...
+                                </Button>
+                                :
+                                <Button
+                                    className='btn-save btn btn btn-primary fs-14'
+                                    type='button'
+                                    onClick={submitBodyMeasurements}
+                                >
+                                    <IoSaveOutline size="20px"/> Save
+                                </Button>
                             }
-                        </Row>
-                    </Container>
-                </section>
-            </div >
+                        </div>
+                    </>
+                : 
+                <p className="text-center mb-3 mt-3">No records found.</p>
+            }
 
             <Modal
                 show={measurementGuideModalShow}
