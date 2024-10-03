@@ -1209,7 +1209,7 @@ const Profile = () => {
                                         null
                                     }
                                     {activeTab == "account" ?
-                                        <div id="about-portfolio">
+                                        <div id="manage-account">
                                             <Row>
                                                 <Col lg="12">
                                                     <div className="manage-account-container">
@@ -1650,6 +1650,19 @@ const Profile = () => {
                                         :
                                         null
                                     }
+                                    {activeTab == "measurement" ?
+                            
+                                        <Row>
+                                            <Col lg="12">
+                                                <div className="measurement-container">
+                                                    <BodyMeasurement userData={user} />
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        
+                                        :
+                                        null
+                                    }
                                 </div>
                             </Col>
                         </Row>
@@ -1780,7 +1793,7 @@ const Profile = () => {
                             </div>
                             : null}
                         {bodyMeasurementShow ?
-                            <div id="profile-portfolio">
+                            <div>
                                 <BodyMeasurement userData={user} />
                             </div>
                             : 

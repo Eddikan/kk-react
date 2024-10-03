@@ -194,3 +194,7 @@ progress[value]::-webkit-progress-value {
 .btn-save {
   padding: 8px 15px !important;
 }
+
+.measurement-container input {
+  padding: 5px 15px;
+}
