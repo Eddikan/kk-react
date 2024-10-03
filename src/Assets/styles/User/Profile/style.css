@@ -175,3 +175,22 @@ progress[value]::-webkit-progress-value {
   max-height: 500px; /* Set this to a value that can accommodate the content */
   opacity: 1;
 }
+
+.accordion-icon {
+  position: absolute;
+  right: 0;
+  top: 8px;
+}
+
+#rfs-btn > span {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.verification-photo {
+  max-height: 285px;
+}
+
+.btn-save {
+  padding: 8px 15px !important;
+}

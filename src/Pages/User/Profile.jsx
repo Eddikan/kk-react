@@ -24,7 +24,7 @@ import AdminPortfolio from 'Components/Shared/Admin/AdminPortfolioGrid';
 import AdminFabrics from 'Components/Shared/Admin/AdminFabricsGrid';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { GoPencil } from "react-icons/go";
-import { IoStorefrontOutline } from "react-icons/io5";
+import { IoStorefrontOutline, IoSaveOutline  } from "react-icons/io5";
 import axios from 'axios';
 import MyCalendar from 'Components/Shared/MyCalendar';
 import BodyMeasurement from 'Components/Shared/BodyMeasurement';
@@ -37,6 +37,7 @@ import { GoDotFill } from "react-icons/go";
 import { FaCamera } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import ShopIcon from 'Assets/images/icons/shop.png';
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -758,7 +759,7 @@ const Profile = () => {
             setVerificationShow(false);
             setBodyMeasurementShow(true);
         }
-        
+
     }
 
     const fetchData = async (e) => {
@@ -897,7 +898,7 @@ const Profile = () => {
                                                         :
                                                         <span>-</span>
                                                     }
-                                                    {(user.id_country && user.primary_id_name && user.primary_id_front_img) || (user.id_country && user.first_secondary_id_name && user.second_secondary_id_name && user.first_secondary_id_front_img && user.second_secondary_id_front_img) ? 
+                                                    {(user.id_country && user.primary_id_name && user.primary_id_front_img) || (user.id_country && user.first_secondary_id_name && user.second_secondary_id_name && user.first_secondary_id_front_img && user.second_secondary_id_front_img) ?
                                                         <MdVerified color="16f11e" className="ms-2" />
                                                         : null}
                                                 </h2>
@@ -951,7 +952,7 @@ const Profile = () => {
                                                 <Row>
                                                     <Col lg="3">
                                                         <div>
-                                                            <span className="fs-35 fw-500">{user.profile_completeness}%</span> 
+                                                            <span className="fs-35 fw-500">{user.profile_completeness}%</span>
                                                             <p className='fs-16 lh-22 fw-500 mb-0 profile-completed-p'>of your profile is complete</p>
                                                         </div>
                                                     </Col>
@@ -966,7 +967,7 @@ const Profile = () => {
                                                                 null
                                                             }
                                                             <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className='mt-2'>
-                                                                <span className='ms-1'>Edit Profile</span>
+                                                                <GoPencil size="20px" /><span className='ms-1'>Edit Profile</span>
                                                             </Button>
                                                         </div>
                                                     </Col>
@@ -974,7 +975,7 @@ const Profile = () => {
                                             </div>
                                             :
                                             <Button href="/user/profile/edit" type='button' id="profile-edit-profile" className="bg-white bg-white-hover text-black-hover border-gold-hover text-black" >
-                                                <GoPencil size="20px"/>
+                                                <GoPencil size="20px" />
                                                 <span className='ms-1'>Edit Profile</span>
                                             </Button>
                                         }
@@ -1009,175 +1010,646 @@ const Profile = () => {
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${securityShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("security"); }}>Security</span>
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${verificationShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("verification"); }}>Verification</span>
                                 <span className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${bodyMeasurementShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("body_measurement"); }}>Body Measurement</span> */}
-                                {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${processShow ? 'fw-600' : ''}`} onClick={function () { showTab("process") }}>Process</span>
+                            {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${processShow ? 'fw-600' : ''}`} onClick={function () { showTab("process") }}>Process</span>
                                 <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${limitedDesignShow ? 'fw-600' : ''}`} onClick={function () { showTab("limited_design"); }}>Limited Design</span> */}
-                                {/* <hr className='mt-2' />
+                            {/* <hr className='mt-2' />
                             </Col> */}
                         </Row>
                         <Row>
                             <hr />
-                            <Col lg="3">
+                            <Col lg="2">
                                 <div>
-                                    <p className="profile-side-dropdown fw-600 fs-16 mb-12" onClick={function(){ setActiveTabGroub((prevActiveGroup) => prevActiveGroup == "account" ? "" : activeTabGroup != "account" ? "account" : "" )}}>My Account</p>
+                                    <p className="profile-side-dropdown fw-600 fs-16 mb-12 position-relative" onClick={function () { setActiveTabGroub((prevActiveGroup) => prevActiveGroup == "account" ? "" : activeTabGroup != "account" ? "account" : "") }}>
+                                        My Account
+                                        {activeTabGroup != "account" ?
+                                            <>
+                                                <AiOutlinePlus size="10px" className="accordion-icon" />
+                                            </>
+                                            :
+                                            <>
+                                                <AiOutlineMinus size="10px" className="accordion-icon" />
+                                            </>
+                                        }
+                                    </p>
+
                                     <div className={`ms-3 profile-accordion-content ${activeTabGroup == "account" ? 'open' : ''}`}>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "profile" ? "text-gold" : ""} `} onClick={function() { setActiveTab('profile') }}>My Profile</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "measurement" ? "text-gold" : ""} `} onClick={function() { setActiveTab('measurement') }}>My Measurements</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "account" ? "text-gold" : ""} `} onClick={function() { setActiveTab('account') }}>Manage my Account</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "profile" ? "text-gold" : ""} `} onClick={function () { setActiveTab('profile') }}>My Profile</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "measurement" ? "text-gold" : ""} `} onClick={function () { setActiveTab('measurement') }}>My Measurements</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "account" ? "text-gold" : ""} `} onClick={function () { setActiveTab('account') }}>Manage my Account</p>
                                     </div>
-                                    <p className="profile-side-dropdown fw-600 fs-16 mb-12" onClick={function(){ setActiveTabGroub((prevActiveGroup) => prevActiveGroup == "orders" ? "" : activeTabGroup != "orders" ? "orders" : "" )}}>My Orders</p>
+                                    <p className="profile-side-dropdown fw-600 fs-16 mb-12 position-relative" onClick={function () { setActiveTabGroub((prevActiveGroup) => prevActiveGroup == "orders" ? "" : activeTabGroup != "orders" ? "orders" : "") }}>
+                                        My Orders
+                                        {activeTabGroup != "orders" ?
+                                            <>
+                                                <AiOutlinePlus size="10px" className="accordion-icon" />
+                                            </>
+                                            :
+                                            <>
+                                                <AiOutlineMinus size="10px" className="accordion-icon" />
+                                            </>
+                                        }
+                                    </p>
                                     <div className={`ms-3 profile-accordion-content ${activeTabGroup == "orders" ? 'open' : ''}`}>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "all" ? "text-gold" : ""} `} onClick={function() { setActiveTab('all') }}>All</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "pending" ? "text-gold" : ""} `} onClick={function() { setActiveTab('pending') }}>Pending</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "processing" ? "text-gold" : ""} `} onClick={function() { setActiveTab('processing') }}>Processing</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "shipped" ? "text-gold" : ""} `} onClick={function() { setActiveTab('shipped') }}>Shipped</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "delivered" ? "text-gold" : ""} `} onClick={function() { setActiveTab('delivered') }}>Delivered</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "completed" ? "text-gold" : ""} `} onClick={function() { setActiveTab('completed') }}>Completed</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "all" ? "text-gold" : ""} `} onClick={function () { setActiveTab('all') }}>All</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "pending" ? "text-gold" : ""} `} onClick={function () { setActiveTab('pending') }}>Pending</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "processing" ? "text-gold" : ""} `} onClick={function () { setActiveTab('processing') }}>Processing</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "shipped" ? "text-gold" : ""} `} onClick={function () { setActiveTab('shipped') }}>Shipped</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "delivered" ? "text-gold" : ""} `} onClick={function () { setActiveTab('delivered') }}>Delivered</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "completed" ? "text-gold" : ""} `} onClick={function () { setActiveTab('completed') }}>Completed</p>
                                     </div>
-                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "wishlist" ? "text-gold" : ""} `} onClick={function() { setActiveTab('wishlist') }}>My Wishlist</p>                                
-                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "appointments" ? "text-gold" : ""} `} onClick={function() { setActiveTab('appointments') }}>My Appointments</p>                                
-                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "messages" ? "text-gold" : ""} `} onClick={function() { setActiveTab('messages') }}>My Messages</p>
+                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "wishlist" ? "text-gold" : ""} `} onClick={function () { setActiveTab('wishlist') }}>My Wishlist</p>
+                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "appointments" ? "text-gold" : ""} `} onClick={function () { setActiveTab('appointments') }}>My Appointments</p>
+                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "messages" ? "text-gold" : ""} `} onClick={function () { setActiveTab('messages') }}>My Messages</p>
                                 </div>
                             </Col>
-                            <Col lg='9' className="pt-4">
-                                <div className="profile-container">
-                                    <Row>
-                                        <Col lg="6">
-                                            <p className='title-designer mb-2'>Title</p>
-                                            <p className='short-bio-designer fs-14 mb-4'>
-                                                {user.short_bio && user.short_bio != "" ? user.short_bio : "-"}
-                                            </p>
-                                            {user.is_designer && user.is_seller ?
-                                                <>
-                                                    <p className='long-bio-title mb-1'>Long Bio</p>
-                                                    <p className='long-bio-designer fs-14 mb-0 scroll-body'>
-                                                        {user.long_bio && user.long_bio != "" ? user.long_bio : "-"}
+                            <Col lg='10' className="pt-4">
+                                <div className="ps-4">
+                                    {activeTab == "profile" ?
+                                        <div className="profile-container">
+                                            <Row>
+                                                <Col lg="6">
+                                                    <p className='title-designer mb-2'>Title</p>
+                                                    <p className='short-bio-designer fs-14 mb-4'>
+                                                        {user.short_bio && user.short_bio != "" ? user.short_bio : "-"}
                                                     </p>
-                                                </>
-                                                :
-                                                null
-                                            }
-                                            {user.is_designer ?
-                                                <>
-                                                    <p className='areas-specialization mt-3 mb-3'>Areas of Specialization and Expertise</p>
-                                                    <div className='mb-4'>
-                                                        {areasOfSpecialization && areasOfSpecialization.length > 0 ?
-                                                            <>
-                                                                {areasOfSpecialization.map((item, index) => (
-                                                                    <span className='text-gray600 fs-14 pill-span bg-light item-designer'>{item}</span>
-                                                                ))}
-                                                            </>
-                                                            :
-                                                            null
+                                                    {user.is_designer && user.is_seller ?
+                                                        <>
+                                                            <p className='long-bio-title mb-1'>Long Bio</p>
+                                                            <p className='long-bio-designer fs-14 mb-0 scroll-body'>
+                                                                {user.long_bio && user.long_bio != "" ? user.long_bio : "-"}
+                                                            </p>
+                                                        </>
+                                                        :
+                                                        null
+                                                    }
+                                                    {user.is_designer ?
+                                                        <>
+                                                            <p className='areas-specialization mt-3 mb-3'>Areas of Specialization and Expertise</p>
+                                                            <div className='mb-4'>
+                                                                {areasOfSpecialization && areasOfSpecialization.length > 0 ?
+                                                                    <>
+                                                                        {areasOfSpecialization.map((item, index) => (
+                                                                            <span className='text-gray600 fs-14 pill-span bg-light item-designer'>{item}</span>
+                                                                        ))}
+                                                                    </>
+                                                                    :
+                                                                    null
 
+                                                                }
+                                                            </div>
+                                                        </>
+                                                        :
+                                                        null
+                                                    }
+                                                    {/* <div className='d-flex'>
+                                                        <p className='text-gray'>0 Followers</p>
+                                                        <p className='text-gray'>0 Following</p>
+                                                    </div> */}
+                                                </Col>
+                                                <Col lg="6">
+                                                    <div className='profile-details address mb-4 pt-0'>
+                                                        <p className='profile-details-title fw-bold'>Contact Information</p>
+                                                        <div className='icons-d-flex'>
+                                                            <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
+                                                            {user.city || user.province || user.country ?
+                                                                <p className='information-font fs-14'>{user.city ? user.city + ',' : "-"} {user.province ? user.province + "," : "-"} {user.country ? user.country + "," : "-"}</p>
+                                                                :
+                                                                <p>-</p>
+                                                            }
+                                                        </div>
+                                                        {user.website ?
+                                                            <div className='icons-d-flex'>
+                                                                <FaLink size="20px" color="#cea835" className='profile-icon' />
+                                                                <p className='information-font fs-14'><a href={user.website} target="_blank">{user.website}</a></p>
+                                                            </div>
+                                                            :
+                                                            <div className='icons-d-flex'>
+                                                                <FaLink size="20px" color="#cea835" className='profile-icon' />
+                                                                <p className='information-font fs-14'><a href="#">-</a></p>
+                                                            </div>
+                                                        }
+                                                        {user.phone_number ?
+                                                            <div className='icons-d-flex'>
+                                                                <FaPhone size="20px" color="#cea835" className='profile-icon' />
+                                                                <p className='information-font mb-0 fs-14'><a href={`tel:${user.phone_number}"`}>{user.phone_number}</a></p>
+                                                            </div>
+                                                            :
+                                                            <div className='icons-d-flex'>
+                                                                <FaPhone size="20px" color="#cea835" className='profile-icon' />
+                                                                <p className='information-font mb-0 fs-14'><a href="#">-</a></p>
+                                                            </div>
                                                         }
                                                     </div>
-                                                </>
-                                                :
-                                                null
-                                            }
-                                            {/* <div className='d-flex'>
-                                                <p className='text-gray'>0 Followers</p>
-                                                <p className='text-gray'>0 Following</p>
-                                            </div> */}
-                                        </Col>
-                                        <Col lg="6">
-                                            <div className='profile-details address mb-4 pt-0'>
-                                                <p className='profile-details-title fw-bold'>Contact Information</p>
-                                                <div className='icons-d-flex'>
-                                                    <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
-                                                    {user.city || user.province || user.country ?
-                                                        <p className='information-font fs-14'>{user.city ? user.city + ',' : "-"} {user.province ? user.province + "," : "-"} {user.country ? user.country + "," : "-"}</p>
+                                                    {user.is_designer || user.is_seller ?
+                                                        <div className='profile-details social'>
+                                                            <p className='social-profile'>Social</p>
+                                                            {user.behance ?
+                                                                <div className='icons-d-flex'>
+                                                                    <FaBehance size="20px" color="#1769ff" className='profile-icon' />
+                                                                    <p className='information-font ellipsis-profile fs-14'><a href={user.behance} target="_blank">{user.behance}</a></p>
+                                                                </div>
+                                                                :
+                                                                <div className='icons-d-flex'>
+                                                                    <FaBehance size="20px" color="#1769ff" className='profile-icon' />
+                                                                    <p><a href="#" target="_blank">-</a></p>
+                                                                </div>
+                                                            }
+                                                            {user.facebook ?
+                                                                <div className='icons-d-flex'>
+                                                                    <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
+                                                                    <p className='information-font ellipsis-profile fs-14'><a href={user.facebook} target="_blank">{user.facebook}</a></p>
+                                                                </div>
+                                                                :
+                                                                <div className='icons-d-flex'>
+                                                                    <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
+                                                                    <p><a href="#">-</a></p>
+                                                                </div>
+                                                            }
+                                                            {user.linkedin ?
+                                                                <div className='icons-d-flex'>
+                                                                    <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
+                                                                    <p className='information-font ellipsis-profile fs-14'><a href={user.linkedin} target="_blank">{user.linkedin}</a></p>
+                                                                </div>
+                                                                :
+                                                                <div className='icons-d-flex'>
+                                                                    <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
+                                                                    <p><a href="#">-</a></p>
+                                                                </div>
+                                                            }
+                                                            {user.instagram ?
+                                                                <div className='icons-d-flex'>
+                                                                    <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
+                                                                    <p className='information-font ellipsis-profile fs-14'><a href={user.instagram} target="_blank">{user.instagram}</a></p>
+                                                                </div>
+                                                                :
+                                                                <div className='icons-d-flex'>
+                                                                    <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
+                                                                    <p><a href="#">-</a></p>
+                                                                </div>
+                                                            }
+                                                            {/* {user.youtube ?
+                                                                <div className='icons-d-flex'>
+                                                                    <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
+                                                                    <p className='information-font ellipsis-profile'><a href={user.youtube} target="_blank">{user.youtube}</a></p>
+                                                                </div>
+                                                                :
+                                                                <div className='icons-d-flex'>
+                                                                    <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
+                                                                    <p><a href="#">-</a></p>
+                                                                </div>
+                                                            } */}
+                                                        </div>
                                                         :
-                                                        <p>-</p>
+                                                        null
                                                     }
-                                                </div>
-                                                {user.website ?
-                                                    <div className='icons-d-flex'>
-                                                        <FaLink size="20px" color="#cea835" className='profile-icon' />
-                                                        <p className='information-font fs-14'><a href={user.website} target="_blank">{user.website}</a></p>
+                                                </Col>
+                                            </Row>
+                                        </div>
+                                        :
+                                        null
+                                    }
+                                    {activeTab == "account" ?
+                                        <div id="about-portfolio">
+                                            <Row>
+                                                <Col lg="12">
+                                                    <div className="manage-account-container">
+                                                        <p className='title-designer mb-1 lh-25'>Security</p>
+                                                        <div className="ms-60">
+                                                            <p className='title-designer mb-1 fs-14'>Two Factor Authentication</p>
+                                                            <div className='short-bio-designer mb-4'>
+                                                                <Form.Label className={`me-3 ${user.phone_number && user.phone_number != "" ? '' : 'mb-0'}`} style={{ minWidth: '90px' }}>
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        checked={user.email_two_factor_authentication}
+                                                                        onChange={handleEmailAuthChange}
+                                                                        className="d-inline-block vertical-align-middle me-1"
+                                                                    />
+                                                                    <span className="fs-14">Enable Email Authentication</span>
+                                                                </Form.Label>
+                                                                <br />
+                                                                {user.phone_number && user.phone_number != "" ?
+                                                                    <Form.Label className="me-3 mb-0" style={{ minWidth: '90px' }}>
+                                                                        <input
+                                                                            type="checkbox"
+                                                                            checked={user.sms_two_factor_authentication}
+                                                                            onChange={handleSMSAuthChange}
+                                                                            className="d-inline-block vertical-align-middle me-1"
+                                                                        />
+                                                                        <span className="fs-14">Enable SMS Authentication</span>
+                                                                    </Form.Label>
+                                                                    :
+                                                                    <>
+                                                                        <Form.Label className="me-3 text-muted mb-0" style={{ minWidth: '90px', cursor: 'not-allowed', pointerEvents: 'none' }} >
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                className="d-inline-block vertical-align-middle me-1"
+                                                                            />
+                                                                            <span className="fs-14">Enable SMS Authentication</span>
+                                                                        </Form.Label>
+                                                                        <p className="small text-danger mb-0" style={{ fontSize: '10px' }}>Please add your phone number to enabel SMS authentication</p>
+                                                                    </>
+                                                                }
+
+                                                            </div>
+                                                            <hr />
+                                                        </div>
                                                     </div>
-                                                    :
-                                                    <div className='icons-d-flex'>
-                                                        <FaLink size="20px" color="#cea835" className='profile-icon' />
-                                                        <p className='information-font fs-14'><a href="#">-</a></p>
+                                                    <div className="manage-account-container">
+                                                        <p className='title-designer mb-1 lh-25'>Verification</p>
+                                                        <div className="ms-60">
+                                                            <div className='mb-35'>
+                                                                <Row className="mb-3">
+                                                                    <Col lg="12">
+                                                                        <Form.Label>Country</Form.Label>
+                                                                        <ReactFlagsSelect
+                                                                            selected={selected}
+                                                                            onSelect={(code) => selectedCountry(code)}
+                                                                            placeholder="Select Country"
+                                                                            searchable
+                                                                            searchPlaceholder="Search countries"
+                                                                            className="menu-flags bg-white"
+                                                                            required
+                                                                        />
+                                                                    </Col>
+                                                                </Row>
+                                                                {selected &&
+                                                                    <>
+                                                                        <Form.Group>
+                                                                            <Form.Label>List of Primary IDs</Form.Label>
+                                                                            <Row>
+                                                                                <Col>
+                                                                                    <select
+                                                                                        className="form-control mb-3 cursor-pointer"
+                                                                                        name="primary_id_name"
+                                                                                        defaultValue=""
+                                                                                        onChange={handleChangeVerification}
+                                                                                        value={verificationFormData.primary_id_name}
+                                                                                        required
+                                                                                    >
+                                                                                        <option value="">Select Primary IDs</option>
+
+                                                                                        <option value="Driver's License">Driver's License</option>
+                                                                                        <option value="Passport">Passport</option>
+                                                                                        {selected === "PH" &&
+                                                                                            <>
+                                                                                                <option value="SSS Unified Multi-Purpose ID (UMID)">SSS Unified Multi-Purpose ID (UMID)</option>
+                                                                                                <option value="Philippine Identification (PhilID / ePhilID)">Philippine Identification (PhilID / ePhilID)</option>
+                                                                                                <option value="PhilHealth ID">PhilHealth ID</option>
+                                                                                                <option value="Postal ID">Postal ID</option>
+                                                                                                <option value="Voter's ID">Voter's ID</option>
+                                                                                                <option value="Professional Regulation (PRC) ID">Professional Regulation (PRC) ID</option>
+                                                                                            </>
+                                                                                        }
+                                                                                        <option value="Other IDs">Other IDs</option>
+                                                                                    </select>
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Form.Group>
+                                                                    </>
+                                                                }
+                                                                {verificationFormData?.primary_id_name &&
+                                                                    <>
+                                                                        {verificationFormData?.primary_id_name !== "Other IDs" ?
+                                                                            <Form.Group>
+                                                                                <Row>
+                                                                                    <Col lg="12">
+                                                                                        {primaryFrontPhoto && !captureBothPhotoModalShow && !captureBackPhotoModalShow ?
+                                                                                            <Card>
+                                                                                                <Card.Body>
+                                                                                                    <Row>
+                                                                                                        <Col lg={6} className="text-center">
+                                                                                                            {primaryFrontPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
+                                                                                                                <>
+                                                                                                                    <img
+                                                                                                                        src={primaryFrontPhoto}
+                                                                                                                        alt='profile'
+                                                                                                                        style={{ border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                                                        className="mb-2 w-100 verification-photo"
+                                                                                                                    />
+                                                                                                                </>
+                                                                                                                : null
+                                                                                                            }
+                                                                                                            <p className="mb-0">Front ID</p>
+                                                                                                            <br />
+                                                                                                            <div className="d-flex justify-content-center mt-2">
+                                                                                                                <Button className="btn-back me-3 btn btn-primary w-100 fs-14" onClick={() => { toggleCapturePrimaryFrontPhoto(); setIDName('primary'); }} >
+                                                                                                                    <span>Capture Photo</span>
+                                                                                                                </Button>
+                                                                                                                <input
+                                                                                                                    type="file"
+                                                                                                                    onChange={handleChangeFrontID}
+                                                                                                                    style={{ display: 'none' }}
+                                                                                                                    accept="image/*"
+                                                                                                                    id="fileFrontID"
+                                                                                                                />
+                                                                                                                <Button className='btn-save btn btn btn-primary w-100 fs-14' onClick={() => { document.getElementById('fileFrontID').click(); setIDName('primary') }}
+                                                                                                                >
+                                                                                                                    <span>Upload</span>
+                                                                                                                </Button>
+                                                                                                            </div>
+                                                                                                        </Col>
+                                                                                                        <Col lg={6} className="text-center">
+                                                                                                            {verificationFormData?.primary_id_name !== "Passport" && verificationFormData?.primary_id_name !== "SSS Unified Multi-Purpose ID (UMID)" && verificationFormData?.primary_id_name !== "PhilHealth ID" && verificationFormData?.primary_id_name !== "Postal ID" && verificationFormData?.primary_id_name !== "Voter's ID" && verificationFormData?.primary_id_name !== "Professional Regulation (PRC) ID" ?
+                                                                                                                <>
+                                                                                                                    {primaryBackPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
+                                                                                                                        <>
+                                                                                                                            <img
+                                                                                                                                src={primaryBackPhoto}
+                                                                                                                                alt='profile'
+                                                                                                                                style={{ border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                                                                className="mb-2 w-100 verification-photo"
+                                                                                                                            />
+                                                                                                                        </>
+                                                                                                                        :
+                                                                                                                        null
+                                                                                                                    }
+                                                                                                                    <p className="mb-0">Back ID</p>
+                                                                                                                    <br />
+                                                                                                                    <div className="d-flex justify-content-center mt-2">
+                                                                                                                        <Button className="btn-back me-3 btn btn-primary w-100 fs-14" onClick={() => { toggleCapturePrimaryBackPhoto(); setIDName('primary') }} >
+                                                                                                                            <span>Capture Photo</span>
+                                                                                                                        </Button>
+                                                                                                                        <input
+                                                                                                                            type="file"
+                                                                                                                            onChange={handleChangeBackID}
+                                                                                                                            style={{ display: 'none' }}
+                                                                                                                            accept="image/*"
+                                                                                                                            id="fileBackID"
+                                                                                                                        />
+                                                                                                                        <Button className='btn-save btn btn btn-primary w-100 fs-14' onClick={() => { document.getElementById('fileBackID').click(); setIDName('primary') }}
+                                                                                                                        >
+                                                                                                                            <span>Upload</span>
+                                                                                                                        </Button>
+                                                                                                                    </div>
+                                                                                                                </>
+                                                                                                                : null
+                                                                                                            }
+                                                                                                        </Col>
+                                                                                                    </Row>
+                                                                                                </Card.Body>
+                                                                                            </Card>
+                                                                                            :
+                                                                                            <>
+                                                                                                <Button className="btn-back me-3 btn btn-primary fs-14" onClick={() => { toggleCaptureBothPhoto(); setIDName('primary') }} >
+                                                                                                    <span>Capture Photo</span>
+                                                                                                </Button>
+                                                                                                <input
+                                                                                                    type="file"
+                                                                                                    onChange={handleChangeFrontID}
+                                                                                                    style={{ display: 'none' }}
+                                                                                                    accept="image/*"
+                                                                                                    id="fileFrontID"
+                                                                                                />
+                                                                                                <Button className='btn-save btn btn btn-primary fs-14' onClick={() => { document.getElementById('fileFrontID').click(); setIDName('primary') }}
+                                                                                                >
+                                                                                                    <span>Upload</span>
+                                                                                                </Button>
+                                                                                            </>
+                                                                                        }
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            </Form.Group>
+                                                                            :
+                                                                            <>
+                                                                                <Row>
+                                                                                    <Col>
+                                                                                        <Form.Label>List of Secondary IDs</Form.Label>
+                                                                                        <select
+                                                                                            className="form-control mb-3 cursor-pointer" waza
+                                                                                            name="first_secondary_id_name"
+                                                                                            defaultValue=""
+                                                                                            onChange={handleChangeVerification}
+                                                                                            value={verificationFormData.first_secondary_id_name}
+                                                                                            required
+                                                                                        >
+                                                                                            <option value="">Select Secondary IDs</option>
+                                                                                            {selected === "PH" &&
+                                                                                                <>
+                                                                                                    {secondaryIdOptions.map((id) => (
+                                                                                                        <option
+                                                                                                            key={id}
+                                                                                                            value={id}
+                                                                                                            disabled={verificationFormData.second_secondary_id_name === id}
+                                                                                                        >
+                                                                                                            {id}
+                                                                                                        </option>
+                                                                                                    ))}
+                                                                                                </>
+                                                                                            }
+                                                                                        </select>
+                                                                                    </Col>
+                                                                                </Row>
+                                                                                {verificationFormData.first_secondary_id_name &&
+                                                                                    <>
+                                                                                        <Form.Group>
+                                                                                            <Row className="mb-3">
+                                                                                                <Col lg="12">
+                                                                                                    {firstSecondaryFrontPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
+                                                                                                        <Card>
+                                                                                                            <Card.Body className="d-flex">
+                                                                                                                <Col lg={6} className="text-center" style={{ paddingRight: '9px' }}>
+                                                                                                                    {firstSecondaryFrontPhoto ?
+                                                                                                                        <>
+                                                                                                                            <img
+                                                                                                                                src={firstSecondaryFrontPhoto}
+                                                                                                                                alt='profile'
+                                                                                                                                style={{ border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                                                                className="w-100 mb-2 verification-photo"
+                                                                                                                            />
+                                                                                                                        </>
+                                                                                                                        : null
+                                                                                                                    }
+                                                                                                                    <p className="mb-0">Front ID</p>
+                                                                                                                    <br />
+                                                                                                                    <div className="d-flex justify-content-center mt-2">
+                                                                                                                        <Button className="btn-back me-3 btn btn-primary w-100 fs-14" onClick={() => { toggleCapturePrimaryFrontPhoto(); setIDName('first_secondary') }} >
+                                                                                                                            <span>Capture Photo</span>
+                                                                                                                        </Button>
+                                                                                                                        <input
+                                                                                                                            type="file"
+                                                                                                                            onChange={handleChangeFrontID}
+                                                                                                                            style={{ display: 'none' }}
+                                                                                                                            accept="image/*"
+                                                                                                                            id="secondaryFileFrontID"
+                                                                                                                        />
+                                                                                                                        <Button className='btn-save btn btn btn-primary w-100 fs-14' onClick={() => { document.getElementById('secondaryFileFrontID').click(); setIDName('first_secondary') }}
+                                                                                                                        >
+                                                                                                                            <span>Upload</span>
+                                                                                                                        </Button>
+                                                                                                                    </div>
+                                                                                                                </Col>
+                                                                                                                <Col lg={6} className="text-center" style={{ paddingLeft: '9px' }}>
+                                                                                                                    
+                                                                                                                </Col>
+                                                                                                            </Card.Body>
+                                                                                                        </Card>
+                                                                                                        :
+                                                                                                        <>
+                                                                                                            <Button className="btn-back me-3 btn btn-primary fs-14" onClick={() => { toggleCaptureBothPhoto(); setIDName('first_secondary') }} >
+                                                                                                                <span>Capture Photo</span>
+                                                                                                            </Button>
+                                                                                                            <input
+                                                                                                                type="file"
+                                                                                                                onChange={handleChangeFrontID}
+                                                                                                                style={{ display: 'none' }}
+                                                                                                                accept="image/*"
+                                                                                                                id="secondaryFileFrontID"
+                                                                                                            />
+                                                                                                            <Button className='btn-save btn btn btn-primary fs-14' onClick={() => { document.getElementById('secondaryFileFrontID').click(); setIDName('first_secondary') }}
+                                                                                                            >
+                                                                                                                <span>Upload</span>
+                                                                                                            </Button>
+                                                                                                        </>
+                                                                                                    }
+                                                                                                </Col>
+                                                                                            </Row>
+                                                                                        </Form.Group>
+                                                                                    </>
+                                                                                }
+                                                                                {(isFirstSecondaryPhotoUploaded || isSecondSecondaryPhotoUploaded) ?
+                                                                                    <>
+                                                                                        <Row>
+                                                                                            <Col>
+                                                                                                {verificationFormData.first_secondary_id_name || verificationFormData.second_secondary_id_name ?
+                                                                                                    <>
+                                                                                                        <select
+                                                                                                            className="form-control mb-3 cursor-pointer"
+                                                                                                            name="second_secondary_id_name"
+                                                                                                            defaultValue=""
+                                                                                                            onChange={handleChangeVerification}
+                                                                                                            value={verificationFormData.second_secondary_id_name}
+                                                                                                            required
+                                                                                                        >
+
+                                                                                                            <option value="">Select Secondary IDs</option>
+                                                                                                            {selected === "PH" &&
+                                                                                                                <>
+                                                                                                                    {secondaryIdOptions.map((id) => (
+                                                                                                                        <option
+                                                                                                                            key={id}
+                                                                                                                            value={id}
+                                                                                                                            disabled={verificationFormData.first_secondary_id_name === id}
+                                                                                                                        >
+                                                                                                                            {id}
+                                                                                                                        </option>
+                                                                                                                    ))}
+                                                                                                                </>
+                                                                                                            }
+                                                                                                        </select>
+                                                                                                    </>
+                                                                                                    : null}
+                                                                                            </Col>
+                                                                                        </Row>
+                                                                                        {verificationFormData.second_secondary_id_name &&
+                                                                                            <>
+                                                                                                <Form.Group>
+                                                                                                    <Row>
+                                                                                                        <Col lg="12">
+                                                                                                            {secondSecondaryFrontPhoto && !captureBothPhotoModalShow && !captureFrontPhotoModalShow && !captureBackPhotoModalShow ?
+                                                                                                                <Card>
+                                                                                                                    <Card.Body className="d-flex">
+                                                                                                                        <Col lg={6} className="text-center">
+                                                                                                                            {secondSecondaryFrontPhoto ?
+                                                                                                                                <>
+                                                                                                                                    <img
+                                                                                                                                        src={secondSecondaryFrontPhoto}
+                                                                                                                                        alt='profile'
+                                                                                                                                        style={{ border: '1px solid #ffffff', cursor: 'pointer' }}
+                                                                                                                                        className="mb-2 w-100 verification-photo"
+                                                                                                                                    />
+                                                                                                                                </>
+                                                                                                                                : null}
+                                                                                                                            <p className="mb-0">Front ID</p>
+                                                                                                                            <br />
+                                                                                                                            <div className="d-flex justify-content-center mt-2">
+                                                                                                                                <Button className="btn-back me-3 btn btn-primary w-100" onClick={() => { toggleCapturePrimaryFrontPhoto(); setIDName('second_secondary') }} >
+                                                                                                                                    <span>Capture Photo</span>
+                                                                                                                                </Button>
+                                                                                                                                <input
+                                                                                                                                    type="file"
+                                                                                                                                    onChange={handleChangeFrontID}
+                                                                                                                                    style={{ display: 'none' }}
+                                                                                                                                    accept="image/*"
+                                                                                                                                    id="secondSecondaryFileFrontID"
+                                                                                                                                />
+                                                                                                                                <Button className='btn-save btn btn btn-primary w-100' onClick={() => { document.getElementById('secondSecondaryFileFrontID').click(); setIDName('second_secondary') }}
+                                                                                                                                >
+                                                                                                                                    <span>Upload</span>
+                                                                                                                                </Button>
+                                                                                                                            </div>
+                                                                                                                        </Col>
+                                                                                                                        <Col lg={6} className="text-center">
+                                                                                                                            
+                                                                                                                        </Col>
+                                                                                                                    </Card.Body>
+                                                                                                                </Card>
+                                                                                                                :
+                                                                                                                <>
+                                                                                                                    <Button className="btn-back me-3 btn btn-primary" onClick={() => { toggleCaptureBothPhoto(); setIDName('second_secondary') }} >
+                                                                                                                        <span>Capture Photo</span>
+                                                                                                                    </Button>
+                                                                                                                    <input
+                                                                                                                        type="file"
+                                                                                                                        onChange={handleChangeFrontID}
+                                                                                                                        style={{ display: 'none' }}
+                                                                                                                        accept="image/*"
+                                                                                                                        id="secondSecondaryFileFrontID"
+                                                                                                                    />
+                                                                                                                    <Button className='btn-save btn btn btn-primary' onClick={() => { document.getElementById('secondSecondaryFileFrontID').click(); setIDName('second_secondary') }}
+                                                                                                                    >
+                                                                                                                        <span>Upload</span>
+                                                                                                                    </Button>
+                                                                                                                </>
+                                                                                                            }
+                                                                                                        </Col>
+                                                                                                    </Row>
+                                                                                                </Form.Group>
+                                                                                            </>
+                                                                                        }
+                                                                                    </>
+
+                                                                                    : null
+                                                                                }
+                                                                            </>
+                                                                        }
+                                                                    </>
+                                                                }
+                                                            </div>
+                                                            <hr />
+                                                        </div>
                                                     </div>
-                                                }
-                                                {user.phone_number ?
-                                                    <div className='icons-d-flex'>
-                                                        <FaPhone size="20px" color="#cea835" className='profile-icon' />
-                                                        <p className='information-font mb-0 fs-14'><a href={`tel:${user.phone_number}"`}>{user.phone_number}</a></p>
+                                                    <div className="manage-account-container">
+                                                        <p className='title-designer mb-1 lh-25'>Change Password</p>
+                                                        <div className="ms-60">
+                                                            <p className="mb-3">********</p>
+                                                        </div>
                                                     </div>
-                                                    :
-                                                    <div className='icons-d-flex'>
-                                                        <FaPhone size="20px" color="#cea835" className='profile-icon' />
-                                                        <p className='information-font mb-0 fs-14'><a href="#">-</a></p>
+                                                    <hr />
+                                                    <div className="text-right mt-30">
+                                                        {formStatus !== "standby" ?
+                                                            <Button
+                                                                className='btn-save btn btn btn-primary fs-14'
+                                                                type='button'
+                                                                style={{ cursor: 'not-allowed' }}
+                                                            >
+                                                                <IoSaveOutline size="20px"/> Saving...
+                                                            </Button>
+                                                            :
+                                                            <Button
+                                                                className='btn-save btn btn btn-primary fs-14'
+                                                                type='button'
+                                                                onClick={verificationIDSubmit}
+                                                            >
+                                                                <IoSaveOutline size="20px"/> Save
+                                                            </Button>
+                                                        }
                                                     </div>
-                                                }
-                                            </div>
-                                            {user.is_designer || user.is_seller ?
-                                                <div className='profile-details social'>
-                                                    <p className='social-profile'>Social</p>
-                                                    {user.behance ?
-                                                        <div className='icons-d-flex'>
-                                                            <FaBehance size="20px" color="#1769ff" className='profile-icon' />
-                                                            <p className='information-font ellipsis-profile fs-14'><a href={user.behance} target="_blank">{user.behance}</a></p>
-                                                        </div>
-                                                        :
-                                                        <div className='icons-d-flex'>
-                                                            <FaBehance size="20px" color="#1769ff" className='profile-icon' />
-                                                            <p><a href="#" target="_blank">-</a></p>
-                                                        </div>
-                                                    }
-                                                    {user.facebook ?
-                                                        <div className='icons-d-flex'>
-                                                            <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
-                                                            <p className='information-font ellipsis-profile fs-14'><a href={user.facebook} target="_blank">{user.facebook}</a></p>
-                                                        </div>
-                                                        :
-                                                        <div className='icons-d-flex'>
-                                                            <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
-                                                            <p><a href="#">-</a></p>
-                                                        </div>
-                                                    }
-                                                    {user.linkedin ?
-                                                        <div className='icons-d-flex'>
-                                                            <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
-                                                            <p className='information-font ellipsis-profile fs-14'><a href={user.linkedin} target="_blank">{user.linkedin}</a></p>
-                                                        </div>
-                                                        :
-                                                        <div className='icons-d-flex'>
-                                                            <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
-                                                            <p><a href="#">-</a></p>
-                                                        </div>
-                                                    }
-                                                    {user.instagram ?
-                                                        <div className='icons-d-flex'>
-                                                            <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
-                                                            <p className='information-font ellipsis-profile fs-14'><a href={user.instagram} target="_blank">{user.instagram}</a></p>
-                                                        </div>
-                                                        :
-                                                        <div className='icons-d-flex'>
-                                                            <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
-                                                            <p><a href="#">-</a></p>
-                                                        </div>
-                                                    }
-                                                    {/* {user.youtube ?
-                                                        <div className='icons-d-flex'>
-                                                            <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
-                                                            <p className='information-font ellipsis-profile'><a href={user.youtube} target="_blank">{user.youtube}</a></p>
-                                                        </div>
-                                                        :
-                                                        <div className='icons-d-flex'>
-                                                            <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
-                                                            <p><a href="#">-</a></p>
-                                                        </div>
-                                                    } */}
-                                                </div>
-                                                :
-                                                null
-                                            }
-                                        </Col>
-                                    </Row>
+                                                </Col>
+                                            </Row>
+                                        </div>
+                                        :
+                                        null
+                                    }
                                 </div>
                             </Col>
                         </Row>
@@ -1224,52 +1696,7 @@ const Profile = () => {
                             null
                         }
 
-                        {securityShow ?
-                            <div id="about-portfolio">
-                                <Row>
-                                    <Col lg="6">
-                                        <p className='title-designer mb-2'>Two Factor Authentication</p>
-                                        <p className='short-bio-designer mb-4'>
-                                            <Form.Label className="me-3" style={{ minWidth: '90px' }}>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={user.email_two_factor_authentication}
-                                                    onChange={handleEmailAuthChange}
-                                                    className="d-inline-block vertical-align-middle me-1"
-                                                />
-                                                <span>Enable Email Authentication</span>
-                                            </Form.Label>
-                                            <br />
-                                            {user.phone_number && user.phone_number != "" ?
-                                                <Form.Label className="me-3" style={{ minWidth: '90px' }}>
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={user.sms_two_factor_authentication}
-                                                        onChange={handleSMSAuthChange}
-                                                        className="d-inline-block vertical-align-middle me-1"
-                                                    />
-                                                    <span>Enable SMS Authentication</span>
-                                                </Form.Label>
-                                                :
-                                                <>
-                                                    <Form.Label className="me-3 text-muted mb-0" style={{ minWidth: '90px', cursor: 'not-allowed', pointerEvents: 'none' }} >
-                                                        <input
-                                                            type="checkbox"
-                                                            className="d-inline-block vertical-align-middle me-1"
-                                                        />
-                                                        <span>Enable SMS Authentication</span>
-                                                    </Form.Label>
-                                                    <p className="small text-danger mb-0" style={{ fontSize: '10px' }}>Please add your phone number to enabel SMS authentication</p>
-                                                </>
-                                            }
 
-                                        </p>
-                                    </Col>
-                                </Row>
-                            </div>
-                            :
-                            null
-                        }
 
                         {verificationShow ?
                             <div id="profile-portfolio">
@@ -1282,14 +1709,14 @@ const Profile = () => {
                                     <Col lg="6">
                                         {user.primary_id_name && user.primary_id_front_img ?
                                             <>
-                                                <Card className="bg-lgray mb-4" 
+                                                <Card className="bg-lgray mb-4"
                                                     style={{
                                                         width: (user?.primary_id_name !== "Passport" &&
-                                                                user?.primary_id_name !== "SSS Unified Multi-Purpose ID (UMID)" &&
-                                                                user?.primary_id_name !== "PhilHealth ID" &&
-                                                                user?.primary_id_name !== "Postal ID" &&
-                                                                user?.primary_id_name !== "Voter's ID" &&
-                                                                user?.primary_id_name !== "Professional Regulation (PRC) ID")
+                                                            user?.primary_id_name !== "SSS Unified Multi-Purpose ID (UMID)" &&
+                                                            user?.primary_id_name !== "PhilHealth ID" &&
+                                                            user?.primary_id_name !== "Postal ID" &&
+                                                            user?.primary_id_name !== "Voter's ID" &&
+                                                            user?.primary_id_name !== "Professional Regulation (PRC) ID")
                                                             ? '721px'
                                                             : '374px'
                                                     }}
@@ -1313,27 +1740,28 @@ const Profile = () => {
                                                     </Card.Body>
                                                 </Card>
                                             </>
-                                        : user.first_secondary_id_name && user.second_secondary_id_name && user.first_secondary_id_front_img && user.second_secondary_id_front_img ?
-                                            <>
-                                                <Card className="bg-lgray mb-4" style={{ width: '374px' }}>
-                                                    <Card.Body className="pt-3 px-4 pb-4">
-                                                        <p className='title-designer mb-2'>{user.first_secondary_id_name}</p>
-                                                        <img
-                                                            src={user.first_secondary_id_front_img}
-                                                            alt='Front ID'
-                                                            style={{ width: "335px", height: "251px", cursor: 'pointer', paddingRight: '11px' }}
-                                                        />
-                                                        <br />
-                                                        <p className='title-designer mb-2 mt-3'>{user.second_secondary_id_name}</p>
-                                                        <img
-                                                            src={user.second_secondary_id_front_img}
-                                                            alt='Front ID'
-                                                            style={{ width: "335px", height: "251px", cursor: 'pointer', paddingRight: '11px' }}
-                                                        />
-                                                    </Card.Body>
-                                                </Card>
-                                            </>
-                                        : null}
+                                            : user.first_secondary_id_name && user.second_secondary_id_name && user.first_secondary_id_front_img && user.second_secondary_id_front_img ?
+                                                <>
+                                                    <Card className="bg-lgray mb-4" style={{ width: '374px' }}>
+                                                        <Card.Body className="pt-3 px-4 pb-4">
+                                                            <p className='title-designer mb-2'>{user.first_secondary_id_name}</p>
+                                                            <img
+                                                                src={user.first_secondary_id_front_img}
+                                                                alt='Front ID'
+                                                                style={{ width: "335px", height: "251px", cursor: 'pointer', paddingRight: '11px' }}
+                                                            />
+                                                            <br />
+                                                            <p className='title-designer mb-2 mt-3'>{user.second_secondary_id_name}</p>
+                                                            <img
+                                                                src={user.second_secondary_id_front_img}
+                                                                alt='Front ID'
+                                                                style={{ width: "335px", height: "251px", cursor: 'pointer', paddingRight: '11px' }}
+                                                            />
+                                                        </Card.Body>
+                                                    </Card>
+                                                </>
+                                                : null
+                                            }
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
@@ -1889,7 +2317,7 @@ const Profile = () => {
                                                         </select>
                                                     </Col>
                                                 </Row>
-                                                {verificationFormData.first_secondary_id_name && 
+                                                {verificationFormData.first_secondary_id_name &&
                                                     <>
                                                         <Form.Group>
                                                             <Row className="mb-3">
@@ -1907,7 +2335,7 @@ const Profile = () => {
                                                                                                 className="mb-2"
                                                                                             />
                                                                                         </>
-                                                                                    : null}
+                                                                                        : null}
                                                                                     <span>Front ID</span>
                                                                                     <br />
                                                                                     <div className="d-flex justify-content-center mt-2">
