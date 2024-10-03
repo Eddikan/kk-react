@@ -221,8 +221,8 @@ const Designs = (props) => {
     return (
         <>
             <div id="profile-designs">
-                <p className="fs-20 text-center text-dark mb-2 proximanova-family"> Looking for Designs? <span className="text-dark">Explore now </span></p >
-                <h2 className="fs-35 fw-500 text-center text-black discover-design">Discover Captivating Designs</h2>
+                <p className="fs-20 text-center text-dark mb-2 proximanova-family"> Looking for Designs?</p >
+                <h2 className="fs-40 fw-500 text-center text-black discover-design">Discover Captivating Designs</h2>
                 {designsLoading ?
                     <>
                         <p className='text-center mb-3 mt-3'>

@@ -3,7 +3,9 @@ section#home {
     position: relative;
     overflow: hidden;
 }
-
+.the-seasons{
+    font-family: 'TheSeasons';
+}
 #home-video {
     position: absolute;
     top: 0;
@@ -122,10 +124,18 @@ section#home p.subtitle {
     border-radius: 5px;
 }
 .join-kouture-content h3{
-    font-size: 25px;
+    font-size: 35px;
 }
 .join-kouture-content p{
     font-size: 20px;
+}
+.join-section-get-started-btn{
+    color: white;
+    text-decoration: none;
+}
+.join-section-get-started-btn:hover{
+    color: #cea835;
+    text-decoration: underline;
 }
 
 @keyframes scrolling {

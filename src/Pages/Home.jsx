@@ -93,7 +93,7 @@ const Home = (props) => {
       {currentUser ?
         <HeroLoggedIn />
         :
-        <section id='home' className='py-5 px-5 d-flex align-items-center mh650'>
+        <section id='home' className='py-2 px-5 d-flex align-items-center mh650'>
           <Container>
             <Row>
               <Col lg='6' className="my-auto" >
@@ -184,17 +184,18 @@ const Home = (props) => {
         }}>
         <Container className="py-3">
           <Row>
-            <Col lg="5">
+            <Col lg="6">
               <div className="join-kouture-content text-left mb-40">
-                <h3 className="text-gold mb-2">Join the Kouture Konect Community</h3>
-                <h5 className="text-white">Showcase Your Designs and Sell Fabrics</h5>
+                <h3 className="text-gold the-seasons fs-35 mb-2">Join the Kouture Konect Community</h3>
+                <h5 className="text-white the-seasons fs-25 ">Showcase Your Designs and Sell Fabrics</h5>
               </div>
               <div>
-                <p className="join-section-p text-white fw-400 mb-40">Showcase your unique creations and connect with fashion enthusiasts eager to discover fresh talent</p>
-                <a href="/" className='text-decoration-none text-white'>Get Started Now <FaArrowRightLong style={{ color: 'white' }} /></a>
+                <p className="join-section-p text-white fs-20 fw-400 mb-0">Showcase your unique creations and connect with fashion</p>
+                <p className="join-section-p text-white fs-20 fw-400 mb-40">enthusiasts eager to discover fresh talent</p>
+                <a href="/" className='join-section-get-started-btn fs-20'>Get Started Now <FaArrowRightLong className="ms-2" style={{ color: 'white'}} /></a>
               </div>
             </Col>
-            <Col lg="7">
+            <Col lg="6">
 
             </Col>
           </Row>
