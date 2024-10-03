@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
 import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import 'Assets/styles/User/Profile/style.css'
@@ -23,6 +24,7 @@ import AdminPortfolio from 'Components/Shared/Admin/AdminPortfolioGrid';
 import AdminFabrics from 'Components/Shared/Admin/AdminFabricsGrid';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { GoPencil } from "react-icons/go";
+import { IoStorefrontOutline } from "react-icons/io5";
 import axios from 'axios';
 import MyCalendar from 'Components/Shared/MyCalendar';
 import BodyMeasurement from 'Components/Shared/BodyMeasurement';
@@ -75,6 +77,13 @@ const initialDesignerData = Object.freeze({
 });
 
 const Profile = () => {
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    }
+    let query = useQuery();
+    const tab = query.get('tab');
+    const tab_group = query.get('tab_group');
+
     const [user, setUser] = useState(initialUserData);
     const [designer, setDesigner] = useState(initialDesignerData);
     const [userLoading, setUserLoading] = useState(true);
@@ -92,6 +101,8 @@ const Profile = () => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'activeProfileTab', 'userDetails']);
     const [areasOfSpecialization, setAreaOfSpecialization] = useState([]);
     const [setupShopShow, setSetupShopShow] = useState(false);
+    const [activeTab, setActiveTab] = useState(tab ? tab : 'profile');
+    const [activeTabGroup, setActiveTabGroub] = useState(tab_group ? tab_group : 'account');
 
     const [selected, setSelected] = useState("");
 
@@ -536,7 +547,6 @@ const Profile = () => {
         }
     }
 
-
     const navigate = useNavigate();
 
     const toggleSetupShopShow = () => {
@@ -839,6 +849,10 @@ const Profile = () => {
                 setMyCalendarShow(true);
             }
         }
+
+        if (activeTab && (activeTab == "" || activeTab == "" || activeTab == "")) {
+
+        }
     }, [reloadCount]);
 
     return (
@@ -849,8 +863,7 @@ const Profile = () => {
                 <section id='profile' className='py-5 px-5'>
                     <Container>
                         <Row>
-
-                            <Col lg="9" className='mb-5'>
+                            <Col lg="12" className='mb-5'>
                                 <div className='d-flex column-gap-20'>
                                     <div className='text-left position-relative user-profile-picture'>
                                         {uploadStatus != "standby" ?
@@ -876,30 +889,43 @@ const Profile = () => {
                                         />
                                     </div>
                                     <div class="w-100">
-                                        <h2 className='fs-30 mb-2'>
-                                            {user.first_name || user.last_name ?
-                                                <span>{user.first_name} {user.last_name}</span>
-                                                :
-                                                <span>-</span>
-                                            }
-                                            {(user.id_country && user.primary_id_name && user.primary_id_front_img) || (user.id_country && user.first_secondary_id_name && user.second_secondary_id_name && user.first_secondary_id_front_img && user.second_secondary_id_front_img) ? 
-                                                <MdVerified color="16f11e" className="ms-2" />
-                                                : null}
-                                        </h2>
-                                        <div className='icons-d-flex'>
-                                            <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
-                                            {user.city || user.province || user.country ?
-                                                <p className='fs-16 color-light-blue mb-2'>
-                                                    {user.province ? user.province + ',' : user.city ? user.city + ',' : ""} {user.country ? user.country : ""}
-                                                    {/* {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""} */}
-                                                </p>
-                                                :
-                                                <p className='fs-16 color-light-blue mb-2'>-</p>
-                                            }
-                                        </div>
-
+                                        <Row>
+                                            <Col lg="9">
+                                                <h2 className='fs-30 mb-0'>
+                                                    {user.first_name || user.last_name ?
+                                                        <span>{user.first_name} {user.last_name}</span>
+                                                        :
+                                                        <span>-</span>
+                                                    }
+                                                    {(user.id_country && user.primary_id_name && user.primary_id_front_img) || (user.id_country && user.first_secondary_id_name && user.second_secondary_id_name && user.first_secondary_id_front_img && user.second_secondary_id_front_img) ? 
+                                                        <MdVerified color="16f11e" className="ms-2" />
+                                                        : null}
+                                                </h2>
+                                                <div className='icons-d-flex'>
+                                                    <FaLocationDot size="18px" color="#cea835" className='profile-icon' />
+                                                    {user.city || user.province || user.country ?
+                                                        <p className='fs-16 color-light-blue mb-2 lh-25'>
+                                                            {user.province ? user.province + ',' : user.city ? user.city + ',' : ""} {user.country ? user.country : ""}
+                                                            {/* {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""} */}
+                                                        </p>
+                                                        :
+                                                        <p className='fs-16 color-light-blue mb-2'>-</p>
+                                                    }
+                                                </div>
+                                            </Col>
+                                            <Col lg="3" className="text-right">
+                                                {user.is_designer == 0 && user.is_seller == 0 ?
+                                                    <Button id="profile-setup-shop" onClick={toggleSetupShopShow} className="bg-white bg-white-hover text-black-hover border-gold-hover text-black" type='button'>
+                                                        <IoStorefrontOutline size="20px" />
+                                                        <span className='ms-1'>Set Up Shop</span>
+                                                    </Button>
+                                                    :
+                                                    null
+                                                }
+                                            </Col>
+                                        </Row>
                                         <div className='mb-2 d-flex align-items-center'>
-                                            {(user.profile_completeness > 0 && user.profile_completeness < 100) &&
+                                            {/* {(user.profile_completeness > 0 && user.profile_completeness < 100) &&
                                                 <>
                                                     <div>
                                                         <Button href="/user/complete-profile" type='button' className='btn btn-primary'>
@@ -907,8 +933,7 @@ const Profile = () => {
                                                         </Button>
                                                     </div>
                                                 </>
-                                            }
-
+                                            } */}
                                             {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) &&
                                                 <>
                                                     <a href='/user/shop/setup' className='text-decoration-none'>
@@ -921,70 +946,40 @@ const Profile = () => {
                                             }
 
                                         </div>
-                                        <div className="completion-profile-section">
-                                            <Row>
-                                                <Col lg="3">
-                                                    <div className='fs-35 ms-4'>{user.profile_completeness}% <p className='fs-16 profile-completed-p'>of your profile is complete</p></div>
-                                                </Col>
-                                                <Col lg="9">
-                                                    <div className="mx-2">
-                                                        <label className="progress-bar-value" htmlFor="progress-bar"></label>
-                                                        <progress id="progress-bar" className="w-50" value={user.profile_completeness} max="100"></progress>
-                                                        <div className='fs-16 fw-bold'>Your profile completion is at {user.profile_completeness}%</div>
-                                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className='mt-2'>
-                                                            <span className='ms-1'>Edit Profile</span>
-                                                        </Button>
-                                                    </div>
-                                                </Col>
-                                            </Row>
-                                        </div>
-                                        {/* <div className="d-flex">
-                                            <div className='fs-35 w-25 ms-3 me-2'>{user.profile_completeness}% <p className='profile-completed-p fs-16'>of your profile is complete</p></div>
-                                            <div className="position-relative mx-2 w-50">
-                                                <label className="progress-bar-value" htmlFor="progress-bar"></label>
-                                                <progress id="progress-bar" value={user.profile_completeness} max="100"></progress>
-                                                <div className='fs-16 fw-bold'>Your profile completion is at {user.profile_completeness}%</div>
-                                                <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className='mt-2'>
-                                                    <span className='ms-1'>Edit Profile</span>
-                                                </Button>
+                                        {user.profile_completeness < 100 ?
+                                            <div className="completion-profile-section">
+                                                <Row>
+                                                    <Col lg="3">
+                                                        <div>
+                                                            <span className="fs-35 fw-500">{user.profile_completeness}%</span> 
+                                                            <p className='fs-16 lh-22 fw-500 mb-0 profile-completed-p'>of your profile is complete</p>
+                                                        </div>
+                                                    </Col>
+                                                    <Col lg="9">
+                                                        <div className="mt-11 mb-11">
+                                                            <label className="progress-bar-value" htmlFor="progress-bar"></label>
+                                                            <progress id="progress-bar" className="w-50" value={user.profile_completeness} max="100"></progress>
+                                                            {user.profile_completeness < 100 ?
+                                                                // <p className='fs-16 lh-22 fw-500 mb-0 profile-completed-p'>Your profile completion is at {user.profile_completeness}%</p>
+                                                                <p className='fs-16 lh-22 fw-500 mb-0 profile-completed-p'>To enhance your shopping experience, please complete your profile.</p>
+                                                                :
+                                                                null
+                                                            }
+                                                            <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className='mt-2'>
+                                                                <span className='ms-1'>Edit Profile</span>
+                                                            </Button>
+                                                        </div>
+                                                    </Col>
+                                                </Row>
                                             </div>
-                                        </div> */}
+                                            :
+                                            <Button href="/user/profile/edit" type='button' id="profile-edit-profile" className="bg-white bg-white-hover text-black-hover border-gold-hover text-black" >
+                                                <GoPencil size="20px"/>
+                                                <span className='ms-1'>Edit Profile</span>
+                                            </Button>
+                                        }
                                     </div>
                                 </div>
-                            </Col>
-
-                            <Col lg="3" className='mb-5'>
-                                <Row className="justify-content-end">
-                                    <Col lg="12" className="text-right">
-                                        {user.is_designer == 0 && user.is_seller == 0 ?
-                                            <Button onClick={toggleSetupShopShow} className="bg-white-hover text-black-hover me-3" type='button'>
-                                                <CiShop />
-                                                <span className='ms-1'>Set Up Shop</span>
-                                            </Button>
-                                            :
-                                            null
-                                        }
-
-                                        <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className=''>
-                                            <GoPencil />
-                                            <span className='ms-1'>Edit Profile</span>
-                                        </Button>
-
-                                    </Col>
-
-                                    {/* {user.is_designer == 1 && (
-                                        <Col md="2" className="text-left me-4">
-                                            <Button href={`/user/center/calendar`} type='button' id="btn-seller-profile" className='w-100 ms-2'>
-                                                <GoArrowUpRight />
-                                                <span className='ms-1'>Seller Center</span>
-                                            </Button>
-                                        </Col>
-                                    )} */}
-
-                                    {/* <Col lg="2" className="text-right">
-                                        <GoBack fallBack="/" />
-                                    </Col> */}
-                                </Row>
                             </Col>
 
                             {/* {user.is_seller == 0 && (
@@ -1022,25 +1017,25 @@ const Profile = () => {
                         <Row>
                             <hr />
                             <Col lg="3">
-                                <div className="profile-side-dropdown">
-                                    <a href="/" className="profile-side-dropdown fw-bold fs-16"><p>My Account</p></a>
-                                    <div className="ms-3">
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>My Profile</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>My Measurements</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>Manage my Account</p></a>
+                                <div>
+                                    <p className="profile-side-dropdown fw-600 fs-16 mb-12" onClick={function(){ setActiveTabGroub((prevActiveGroup) => prevActiveGroup == "account" ? "" : activeTabGroup != "account" ? "account" : "" )}}>My Account</p>
+                                    <div className={`ms-3 profile-accordion-content ${activeTabGroup == "account" ? 'open' : ''}`}>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "profile" ? "text-gold" : ""} `} onClick={function() { setActiveTab('profile') }}>My Profile</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "measurement" ? "text-gold" : ""} `} onClick={function() { setActiveTab('measurement') }}>My Measurements</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "account" ? "text-gold" : ""} `} onClick={function() { setActiveTab('account') }}>Manage my Account</p>
                                     </div>
-                                    <a href="/" className="profile-side-dropdown fw-bold fs-16"><p>My Orders</p></a>
-                                    <div className="ms-3">
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>All</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>Pending</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>Processing</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>Shipped</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>Delivered</p></a>
-                                        <a href="/" className="profile-side-dropdown fs-16"><p>Completed</p></a>
+                                    <p className="profile-side-dropdown fw-600 fs-16 mb-12" onClick={function(){ setActiveTabGroub((prevActiveGroup) => prevActiveGroup == "orders" ? "" : activeTabGroup != "orders" ? "orders" : "" )}}>My Orders</p>
+                                    <div className={`ms-3 profile-accordion-content ${activeTabGroup == "orders" ? 'open' : ''}`}>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "all" ? "text-gold" : ""} `} onClick={function() { setActiveTab('all') }}>All</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "pending" ? "text-gold" : ""} `} onClick={function() { setActiveTab('pending') }}>Pending</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "processing" ? "text-gold" : ""} `} onClick={function() { setActiveTab('processing') }}>Processing</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "shipped" ? "text-gold" : ""} `} onClick={function() { setActiveTab('shipped') }}>Shipped</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "delivered" ? "text-gold" : ""} `} onClick={function() { setActiveTab('delivered') }}>Delivered</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "completed" ? "text-gold" : ""} `} onClick={function() { setActiveTab('completed') }}>Completed</p>
                                     </div>
-                                    <a href="/" className="profile-side-dropdown fw-bold fs-16"><p>My Wishlist</p></a>                                    
-                                    <a href="/" className="profile-side-dropdown fw-bold fs-16"><p>My Appointments</p></a>                                    
-                                    <a href="/" className="profile-side-dropdown fw-bold fs-16"><p>My Messages</p></a>
+                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "wishlist" ? "text-gold" : ""} `} onClick={function() { setActiveTab('wishlist') }}>My Wishlist</p>                                
+                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "appointments" ? "text-gold" : ""} `} onClick={function() { setActiveTab('appointments') }}>My Appointments</p>                                
+                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "messages" ? "text-gold" : ""} `} onClick={function() { setActiveTab('messages') }}>My Messages</p>
                                 </div>
                             </Col>
                             <Col lg='9' className="pt-4">
@@ -1080,14 +1075,13 @@ const Profile = () => {
                                                 :
                                                 null
                                             }
-                                            <hr className='mt-2' />
                                             {/* <div className='d-flex'>
                                                 <p className='text-gray'>0 Followers</p>
                                                 <p className='text-gray'>0 Following</p>
                                             </div> */}
                                         </Col>
                                         <Col lg="6">
-                                            <div className='bg-lgray profile-details address mb-4 pt-0'>
+                                            <div className='profile-details address mb-4 pt-0'>
                                                 <p className='profile-details-title fw-bold'>Contact Information</p>
                                                 <div className='icons-d-flex'>
                                                     <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
@@ -1121,7 +1115,7 @@ const Profile = () => {
                                                 }
                                             </div>
                                             {user.is_designer || user.is_seller ?
-                                                <div className='bg-lgray profile-details social'>
+                                                <div className='profile-details social'>
                                                     <p className='social-profile'>Social</p>
                                                     {user.behance ?
                                                         <div className='icons-d-flex'>

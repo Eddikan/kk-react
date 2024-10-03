@@ -1,8 +1,8 @@
 .user-image-edit {
   position: absolute;
   background: #fff;
-  bottom: -5px;
-  right: 15px;
+  bottom: 2px;
+  right: 0px;
   width: 30px;
   height: 30px;
   text-align: center;
@@ -13,8 +13,8 @@
 }
 
 .profile-image {
-  width: 120px;
-  height: 120px;
+  width: 110px;
+  height: 110px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -25,9 +25,8 @@
 .profile-icon {
   margin-top: 3px;
 }
-.profile-completed-p{
-  max-width: 200px;
-}
+
+
 .ellipsis-profile {
   white-space: nowrap;
   overflow: hidden;
@@ -74,7 +73,7 @@ progress[value]::-webkit-progress-bar {
 progress[value]::-webkit-progress-value {
   width: 0;
   border-radius: 50px;
-  background-color: #16f11e;
+  background-color: #FFD37A;
   transition: width 300ms ease;
 }
 
@@ -148,6 +147,31 @@ progress[value]::-webkit-progress-value {
   margin-left: auto;
   margin-right: auto;
 }
-.profile-side-dropdown{
-  text-decoration: none;
+
+.completion-profile-section {
+  background-color: #F7F7F7;
+  border-radius: 3px;
+  padding: 10px 20px;
+}
+
+#profile-setup-shop, #profile-edit-profile {
+  min-width: 150px;
+  font-size: 14px;
+  padding: 8px 15px;
+}
+
+.profile-side-dropdown {
+  cursor: pointer;
+}
+
+.profile-accordion-content {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+.profile-accordion-content.open {
+  max-height: 500px; /* Set this to a value that can accommodate the content */
+  opacity: 1;
 }

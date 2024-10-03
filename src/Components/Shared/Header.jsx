@@ -507,8 +507,8 @@ const Header = () => {
               <Nav.Link href="/inspirations">Inspirations</Nav.Link> */}
               <Form inline className='search-header w-100 d-flex align-items-center'>
                 <FaMagnifyingGlass />
-                <FormControl type='text' placeholder='Search' className='search-bar-header ms-2' />
-                <div className="nav-link-dropdown bg-white border border-1 border-black border-gold-hover rounded">
+                <FormControl type='text' placeholder='Search' className='fs-14 search-bar-header ms-2' />
+                <div className="nav-link-dropdown bg-white border border-1 border-black border-gold-hover rounded px-3">
                   <a className="nav-link d-flex" href="/">
                     Designers <FaCaretDown />
                   </a>
