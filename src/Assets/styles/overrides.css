@@ -1124,14 +1124,16 @@ form.search input:active {
     box-shadow: none !important;
 }
 .search-dropdown{
-    height: 35px;
     border-radius: 5px;
-    padding: 0 10px
+    padding: 0 10px;
+    width: 193px !important;
 }
 .search-dropdown:hover{
     border-color: #CEA836;
 }
-
+.search-dropdown-toggle{
+    height: 20px;
+}
 .rti--container {
     box-shadow: none !important;
 }
@@ -1824,8 +1826,8 @@ form select::placeholder {
 .footer-link {
     /* margin-left: 10px;
     margin-right: 10px; */
-    margin-left: 30px;
-    margin-right: 30px;
+    margin-left: 25px;
+    margin-right: 25px;
 }
 
 /* Icons */
@@ -2969,7 +2971,6 @@ span.rti--tag {
 }
 .customer-satisfaction-title {
     color: #551855;
-    font-size: 30px;
 }
 .customer-satisfaction-p {
     margin: 0 auto;
@@ -2983,9 +2984,9 @@ span.rti--tag {
     background-color: black;
 }
 .footer-payment-img {
-    width: 68px;
+    width: 51px;
     height: 31px;
-    margin: 10px 3px;
+    margin: 10px 10px;
     object-fit: contain; 
 }
 

@@ -502,9 +502,9 @@ const SignUp = () => {
                     Join Kouture Konect to view more Designers, Designs and Fabrics!
                   </p>
                   {googleLoginLoading ?
-                    <Button className='custom-hover-btn-google w-100 mt-4' variant='secondary' type='button'>Signing up using Google...</Button>
+                    <Button className='custom-hover-btn-google w-100 mt-5' variant='secondary' type='button'>Signing up using Google...</Button>
                     :
-                    <Button className='custom-hover-btn-google w-100 mt-4 px-5 ' type='button' onClick={login}>
+                    <Button className='custom-hover-btn-google w-100 mt-5 px-5 ' type='button' onClick={login}>
                       <FcGoogle  size={30} className='mx-2'/>
                         Continue with Google
                     </Button>

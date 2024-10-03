@@ -512,10 +512,10 @@ const Header = () => {
                   <a className="nav-link d-flex" href="/">
                     Designers <FaCaretDown />
                   </a>
-                  <div className="nav-link-menu">
+                  <div className="nav-link-menu search-dropdown">
                     <a className="nav-link ps-0 pe-0" href="/">
                       <div className="d-flex align-items-center">
-                        <img className="mx-2" src={DesignerIcon} width="25px" />
+                        <img className="mx-2" src={DesignerIcon} width="22px" />
                         <div>
                           <p className="search-dropdown-title mb-0">Designers</p>
                           <span className="subtitle fs-10">Find top fashion designers</span>
@@ -533,7 +533,7 @@ const Header = () => {
                     </a>
                     <a className="nav-link ps-0 pe-0" href="/">
                       <div className="d-flex align-items-center">
-                        <img className="mx-2" src={DesignIcon} width="20px" />
+                        <img className="mx-2" src={DesignIcon} width="22px" />
                         <div>
                           <p className="search-dropdown-title mb-0">Designs</p>
                           <span className="subtitle fs-10">Find top fashion designers</span>
@@ -976,12 +976,12 @@ const Header = () => {
                 <p className="fs-14">Welcome to Kouture Konect! If you’re under 18, please have a parent or guardian ready to supervise your account as you continue.</p>
                 <Col lg={12} className="text-center my-4">
                   <a href="/sign-up">
-                    <button className="mx-5 px-4  py-2 rounded border border-secondary border-gold-hover" onClick={() => setCookie('over_18', "No", { path: '/' })}>
+                    <button className="mx-5 px-4 py-2 rounded bg-white border border-secondary border-gold-hover" onClick={() => setCookie('over_18', "No", { path: '/' })}>
                       <strong>No</strong>  <br />I am under 18
                     </button>
                   </a>
                   <a href="/sign-up">
-                    <button className="mx-5 px-4 py-2 rounded border border-secondary border-gold-hover" onClick={() => setCookie('over_18', "Yes", { path: '/' })}>
+                    <button className="mx-5 px-4 py-2 rounded bg-white border border-secondary border-gold-hover" onClick={() => setCookie('over_18', "Yes", { path: '/' })}>
                       <strong>Yes</strong> <br />I am over 18
                     </button>
                   </a>

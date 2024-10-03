@@ -176,7 +176,7 @@ const Home = (props) => {
         </Container>
       </section>
 
-      <section id="join-kouture-section" className="mt-xl-2 p-5"
+      <section id="join-kouture-section" className="mt-xl-2 mb-4 p-5"
         style={{
           backgroundImage: `url(${JoinKoutureBG})`,
           backgroundSize: 'cover',
