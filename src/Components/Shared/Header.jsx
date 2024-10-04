@@ -42,9 +42,12 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import { PiNotepadLight, PiScissorsLight, PiUserGearThin, PiUserGear } from "react-icons/pi";
 import { RiQuestionMark } from "react-icons/ri";
 import KoutureIcon from 'Assets/images/kouture-konect-icon.png';
-import DesignIcon from 'Assets/images/icons/design-icon.png';
-import DesignerIcon from 'Assets/images/icons/designer-icon.png';
-import FabricIcon from 'Assets/images/icons/fabric-icon.png';
+// import DesignIcon from 'Assets/images/icons/design-icon.png';
+// import DesignerIcon from 'Assets/images/icons/designer-icon.png';
+// import FabricIcon from 'Assets/images/icons/fabric-icon.png';
+import DesignIcon from 'Assets/images/user-box/dress.png';
+import FabricIcon from 'Assets/images/user-box/fabric.png';
+import DesignerIcon from 'Assets/images/user-box/edit-tools.png';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -81,6 +84,7 @@ const Header = () => {
   const countryRef = useRef(null);
   const orderRef = useRef(null);
   const [underConstructionShow, setUnderConstructionShow] = useState(false);
+  const [setupShopShow, setSetupShopShow] = useState(false);
   const [modalHeading, setModalHeading] = useState();
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCountryCode, setSelectedCountryCode] = useState('US');
@@ -157,6 +161,10 @@ const Header = () => {
       setUserWishlistOpen(false);
     }
   };
+
+  const toggleSetupShopShow = () => {
+    setSetupShopShow(!setupShopShow);
+  }
 
   const toggleUserMenu = () => {
     setUserMenuOpen(!userMenuOpen);
@@ -451,7 +459,7 @@ const Header = () => {
             </>
           }
 
-          {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) &&
+          {/* {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) &&
             <>
               <div className='bg-dark py-2 text-center'>
                 <span className='text-white cursor-pointer'>
@@ -462,7 +470,7 @@ const Header = () => {
                 </span>
               </div>
             </>
-          }
+          } */}
         </>
       }
       <div className="banner-home w-100 p-2 px-5">
@@ -470,7 +478,7 @@ const Header = () => {
           <Row>
             <Col lg="6">
               <div className="banner-menu d-flex justify-content-start">
-                <a className="banner-item px-3" href="/">Set Up Shop</a>
+                <a className="banner-item px-3" href="javascript:void(0)" onClick={() => setSetupShopShow(!setupShopShow)}>Set Up Shop</a>
                 <p className="mb-0 text-white">|</p>
                 <a className="banner-item px-3" href="/">Download the App</a>
               </div>
@@ -880,7 +888,7 @@ const Header = () => {
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Wishlist</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Appointments</a>
                         <a className="nav-link cursor-pointer text-decoration-none" href="/login">My Messages</a>
-                        
+
                       </div>
                     </div>
                     <a href={`/favorites`}>
@@ -1003,6 +1011,119 @@ const Header = () => {
           </Container>
         </Modal.Body>
       </Modal>
+
+      {/* Setup Shop  */}
+      <Modal show={setupShopShow} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setSetupShopShow(false)}>
+        {currentUser ?
+          <Modal.Body className="py-5">
+            <button type="button" className="btn-close no-header-close" onClick={() => setSetupShopShow(false)} aria-label="Close"></button>
+            <Container className="narrow-850 h-100">
+              <Row className=" align-items-center h-100">
+                <Col lg="12">
+                  {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
+                  <h3 className="text-left fw-600 mb-5">Set Up Shop</h3>
+                  <Row>
+                    <Col lg="12" className="mb-3">
+                      {/* onClick={() => showSignupModal('user_designer')} */}
+                      <Card onClick={() => navigate('/user/designer-form')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                        <Card.Body>
+                          <div className="user-box">
+                            <div>
+                              <img src={DesignerIcon} alt="Designers" />
+                              <h3 className="fw-600">I am a designer</h3>
+                            </div>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                    <Col lg="12" className="mb-3">
+                      {/* onClick={() => handleShowFabrics()} */}
+                      <Card onClick={() => navigate('/user/seller-form')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                        <Card.Body>
+                          <div className="user-box">
+                            <div>
+                              <img src={FabricIcon} alt="Fabrics" />
+                              <h3 className="fw-600">I am a fabric vendor</h3>
+                            </div>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                    <Col lg="12">
+                      {/* onClick={() => handleShowDesigns()} */}
+                      <Card onClick={() => navigate('/user/designer-form?type=designer_seller')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                        <Card.Body>
+                          <div className="user-box">
+                            <div>
+                              <img src={DesignIcon} alt="Designs" />
+                              <h3 className="fw-600">I am both a designer and a fabric vendor</h3>
+                            </div>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Container>
+          </Modal.Body>
+          :
+          <Modal.Body className="py-5">
+            <button type="button" className="btn-close no-header-close" onClick={() => setSetupShopShow(false)} aria-label="Close"></button>
+            <Container className="narrow-850 h-100">
+              <Row className=" align-items-center h-100">
+                <Col lg="12">
+                  {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
+                  <h3 className="text-left fw-600 mb-5">Set Up Shop</h3>
+                  <Row>
+                    <Col lg="12" className="mb-3">
+                      {/* onClick={() => showSignupModal('user_designer')} */}
+                      <Card onClick={() => navigate('/sign-up?type=designer')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                        <Card.Body>
+                          <div className="user-box">
+                            <div>
+                              <img src={DesignerIcon} alt="Designers" />
+                              <h3 className="fw-600">I am a designer</h3>
+                            </div>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                    <Col lg="12" className="mb-3">
+                      {/* onClick={() => handleShowFabrics()} */}
+                      <Card onClick={() => navigate('/sign-up?type=seller')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                        <Card.Body>
+                          <div className="user-box">
+                            <div>
+                              <img src={FabricIcon} alt="Fabrics" />
+                              <h3 className="fw-600">I am a fabric vendor</h3>
+                            </div>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                    <Col lg="12">
+                      {/* onClick={() => handleShowDesigns()} */}
+                      <Card onClick={() => navigate('/sign-up?type=designer_seller')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                        <Card.Body>
+                          <div className="user-box">
+                            <div>
+                              <img src={DesignIcon} alt="Designs" />
+                              <h3 className="fw-600">I am both a designer and a fabric vendor</h3>
+                            </div>
+                          </div>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </Container>
+          </Modal.Body>
+        }
+
+      </Modal>
+
     </>
   );
 }

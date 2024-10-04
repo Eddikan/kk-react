@@ -1078,14 +1078,25 @@ const Profile = () => {
                                         <p className={`profile-side-dropdown fs-16 ${activeTab == "fabrics_wishlist" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('wishlist'); setActiveTab('fabrics_wishlist'); }}>Fabrics</p>
                                         <p className={`profile-side-dropdown fs-16 ${activeTab == "designers_wishlist" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('wishlist'); setActiveTab('designers_wishlist'); }}>Designers</p>
                                     </div>
-                                    <p className={`profile-side-dropdown fw-600 fs-16 `} onClick={function () { setActiveTabGroup('appointments'); setActiveTab('upcoming'); }}>My Appointments</p>
+                                    <p className={`profile-side-dropdown fw-600 fs-16 `} onClick={function () { setActiveTabGroup('appointments'); setActiveTab('upcoming'); }}>
+                                        My Appointments
+                                        {activeTabGroup != "appointments" ?
+                                            <>
+                                                <AiOutlinePlus size="10px" className="accordion-icon" />
+                                            </>
+                                            :
+                                            <>
+                                                <AiOutlineMinus size="10px" className="accordion-icon" />
+                                            </>
+                                        }
+                                    </p>
                                     <div className={`ms-3 profile-accordion-content ${activeTabGroup == "appointments" ? 'open' : ''}`}>
                                         <p className={`profile-side-dropdown fs-16 ${activeTab == "upcoming" ? "text-gold" : ""} `} onClick={function () { setActiveTab('upcoming'); }}>Upcoming</p>
                                         <p className={`profile-side-dropdown fs-16 ${activeTab == "in progress" ? "text-gold" : ""} `} onClick={function () { setActiveTab('in progress'); }}>In Progress</p>
                                         <p className={`profile-side-dropdown fs-16 ${activeTab == "cancelled" ? "text-gold" : ""} `} onClick={function () { setActiveTab('cancelled'); }}>Cancelled</p>
                                         <p className={`profile-side-dropdown fs-16 ${activeTab == "completed" ? "text-gold" : ""} `} onClick={function () { setActiveTab('completed'); }}>Completed</p>
                                     </div>
-                                    <p className={`profile-side-dropdown fw-600 fs-16 `} onClick={function () { setActiveTabGroup('messages'); setActiveTab('messages'); }}>My Messages</p>
+                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "completed" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('messages'); setActiveTab('messages'); }}>My Messages</p>
                                 </div>
                             </Col>
                             <Col lg='10' className="pt-4">
@@ -1732,6 +1743,27 @@ const Profile = () => {
                                             </Col>
                                         </Row>
                                         
+                                        :
+                                        null
+                                    }
+
+                                    {activeTabGroup == "messages" ?
+                                        <Row>
+                                            <Col lg="12">
+                                                <div className="wishlist-container">
+                                                    <p className='title-designer mb-1 lh-25'>Messages </p>
+                                                    <div className="mt-15">
+                                                        <div className="mb-4">
+                                                            <Card className="mt-3 mb-3">
+                                                                <Card.Body>
+                                                                    <p className="mb-0 text-center">Under Construction</p>
+                                                                </Card.Body>
+                                                            </Card>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </Col>
+                                        </Row>
                                         :
                                         null
                                     }

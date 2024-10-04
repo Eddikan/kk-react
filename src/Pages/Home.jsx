@@ -108,8 +108,8 @@ const Home = (props) => {
                     null
                     :
                     <>
-                      <Button className='explore-button btn me-3 text-white bg-black bg-gray-hover px-3' style={{ width:'250px', height: '50px' }} variant='secondary' onClick={() => handleShowUser()}><IoIosSearch size={25} /> Explore Marketplace</Button>
-                      <Button className='custom-hover-btn me-3 px-3' style={{ width:'250px' }} onClick={() => toggleSetupShopShow()}> <img src={ShopIcon} className="mx-1" height="29px" alt="shop-icon"></img> Create Shop </Button>
+                      <Button className='explore-button btn me-3 text-white bg-black bg-gray-hover px-3' style={{ width: '250px', height: '50px' }} variant='secondary' onClick={() => handleShowUser()}><IoIosSearch size={25} /> Explore Marketplace</Button>
+                      <Button className='custom-hover-btn me-3 px-3' style={{ width: '250px' }} onClick={() => toggleSetupShopShow()}> <img src={ShopIcon} className="mx-1" height="29px" alt="shop-icon"></img> Create Shop </Button>
                     </>
                     // <>
                     //   <Button className='btn-outline me-3 text-white border-gold border-white-hover bg-gold bg-transparent-hover text-white-hover px-5' variant='secondary' onClick={() => handleShowUser()}>I'm Just Browsing</Button>
@@ -143,9 +143,9 @@ const Home = (props) => {
               <DesignersMarquee currentUser={currentUser} onSignup={showSignupModal} />
               {currentUser ?
                 <Col lg={12} className="text-center mt-50">
-                    <Link to="/designers">
-                      <Button className="btn-primary" variant="primary">View All Designers <FaArrowRight style={{ color: 'white' }} /></Button>
-                    </Link>
+                  <Link to="/designers">
+                    <Button className="btn-primary" variant="primary">View All Designers <FaArrowRight style={{ color: 'white' }} /></Button>
+                  </Link>
                 </Col>
                 :
                 null
@@ -192,7 +192,7 @@ const Home = (props) => {
               <div>
                 <p className="join-section-p text-white fs-20 fw-400 mb-0">Showcase your unique creations and connect with fashion</p>
                 <p className="join-section-p text-white fs-20 fw-400 mb-40">enthusiasts eager to discover fresh talent</p>
-                <a href="/" className='join-section-get-started-btn fs-20'>Get Started Now <FaArrowRightLong className="ms-2" style={{ color: 'white'}} /></a>
+                <a href="/" className='join-section-get-started-btn fs-20'>Get Started Now <FaArrowRightLong className="ms-2" style={{ color: 'white' }} /></a>
               </div>
             </Col>
             <Col lg="6">
@@ -404,44 +404,42 @@ const Home = (props) => {
             <Row className=" align-items-center h-100">
               <Col lg="12">
                 {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
-                <h3 className="modal-title text-center fw-bold mb-3">Please start setting up your shop</h3>
-                <p className="modal-subtitle text-center mb-4">We are excited to welcome you to the Kouture Konect community! You’re now one step closer to sharing your exceptional designs and fabrics with fashion enthusiasts worldwide.</p>
-                <p className="modal-subtitle text-center">To get started, please select one of the options:</p>
+                <h3 className="text-left fw-600 mb-5">Set Up Shop</h3>
                 <Row>
-                  <Col lg="4" className="mb-3">
+                  <Col lg="12" className="mb-3">
                     {/* onClick={() => showSignupModal('user_designer')} */}
-                    <Card onClick={() => navigate('/sign-up?type=designer')} className="modal-card text-center cursor-pointer bg-white border-gold-hover border-solid-2">
-                      <Card.Body className="d-flex p-0">
-                        <div className="user-box justify-content-center p-4 align-items-center">
-                          <div className="text-center">
+                    <Card onClick={() => navigate('/sign-up?type=designer')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                      <Card.Body>
+                        <div className="user-box">
+                          <div>
                             <img src={DesignerIcon} alt="Designers" />
-                            <h3 className="fw-600 fs-20">I am a Designer</h3>
+                            <h3 className="fw-600">I am a designer</h3>
                           </div>
                         </div>
                       </Card.Body>
                     </Card>
                   </Col>
-                  <Col lg="4" className="mb-3">
+                  <Col lg="12" className="mb-3">
                     {/* onClick={() => handleShowFabrics()} */}
-                    <Card onClick={() => navigate('/sign-up?type=seller')} className="modal-card text-center cursor-pointer bg-white border-gold-hover border-solid-2">
-                      <Card.Body className="modal-card-hover d-flex  p-0">
-                      <div className="modal-card-show user-box justify-content-center p-4 align-items-center">
-                        <div className="text-center">
-                          <img src={FabricIcon} alt="Fabrics" />
-                          <h3 className="fw-600 fs-20">I am a Fabric Vendor</h3>
+                    <Card onClick={() => navigate('/sign-up?type=seller')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                      <Card.Body>
+                        <div className="user-box">
+                          <div>
+                            <img src={FabricIcon} alt="Fabrics" />
+                            <h3 className="fw-600">I am a fabric vendor</h3>
+                          </div>
                         </div>
-                      </div>
                       </Card.Body>
                     </Card>
                   </Col>
-                  <Col lg="4">
+                  <Col lg="12">
                     {/* onClick={() => handleShowDesigns()} */}
-                    <Card onClick={() => navigate('/sign-up?type=designer_seller')} className="modal-card text-center cursor-pointer bg-white border-gold-hover border-solid-2">
-                      <Card.Body className="d-flex p-0">
-                        <div className="user-box justify-content-center p-4 align-items-center">
-                          <div className="text-center">
+                    <Card onClick={() => navigate('/sign-up?type=designer_seller')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
+                      <Card.Body>
+                        <div className="user-box">
+                          <div>
                             <img src={DesignIcon} alt="Designs" />
-                            <h3 className="fw-600 fs-20">I am both a Designer & Fabric Vendor</h3>
+                            <h3 className="fw-600">I am both a designer and a fabric vendor</h3>
                           </div>
                         </div>
                       </Card.Body>
