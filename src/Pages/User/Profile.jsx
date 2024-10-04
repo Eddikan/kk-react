@@ -1114,7 +1114,7 @@ const Profile = () => {
                                                             {user.city || user.province || user.country ?
                                                                 <p className='information-font fs-14'>{user.city ? user.city + ',' : "-"} {user.province ? user.province + "," : "-"} {user.country ? user.country + "," : "-"}</p>
                                                                 :
-                                                                <p>-</p>
+                                                                <p className='information-font fs-14'>-</p>
                                                             }
                                                         </div>
                                                         {user.website ?
@@ -1140,68 +1140,64 @@ const Profile = () => {
                                                             </div>
                                                         }
                                                     </div>
-                                                    {user.is_designer || user.is_seller ?
-                                                        <div className='profile-details social'>
-                                                            <p className='social-profile'>Social</p>
-                                                            {user.behance ?
-                                                                <div className='icons-d-flex'>
-                                                                    <FaBehance size="20px" color="#1769ff" className='profile-icon' />
-                                                                    <p className='information-font ellipsis-profile fs-14'><a href={user.behance} target="_blank">{user.behance}</a></p>
-                                                                </div>
-                                                                :
-                                                                <div className='icons-d-flex'>
-                                                                    <FaBehance size="20px" color="#1769ff" className='profile-icon' />
-                                                                    <p><a href="#" target="_blank">-</a></p>
-                                                                </div>
-                                                            }
-                                                            {user.facebook ?
-                                                                <div className='icons-d-flex'>
-                                                                    <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
-                                                                    <p className='information-font ellipsis-profile fs-14'><a href={user.facebook} target="_blank">{user.facebook}</a></p>
-                                                                </div>
-                                                                :
-                                                                <div className='icons-d-flex'>
-                                                                    <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
-                                                                    <p><a href="#">-</a></p>
-                                                                </div>
-                                                            }
-                                                            {user.linkedin ?
-                                                                <div className='icons-d-flex'>
-                                                                    <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
-                                                                    <p className='information-font ellipsis-profile fs-14'><a href={user.linkedin} target="_blank">{user.linkedin}</a></p>
-                                                                </div>
-                                                                :
-                                                                <div className='icons-d-flex'>
-                                                                    <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
-                                                                    <p><a href="#">-</a></p>
-                                                                </div>
-                                                            }
-                                                            {user.instagram ?
-                                                                <div className='icons-d-flex'>
-                                                                    <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
-                                                                    <p className='information-font ellipsis-profile fs-14'><a href={user.instagram} target="_blank">{user.instagram}</a></p>
-                                                                </div>
-                                                                :
-                                                                <div className='icons-d-flex'>
-                                                                    <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
-                                                                    <p><a href="#">-</a></p>
-                                                                </div>
-                                                            }
-                                                            {/* {user.youtube ?
-                                                                <div className='icons-d-flex'>
-                                                                    <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
-                                                                    <p className='information-font ellipsis-profile'><a href={user.youtube} target="_blank">{user.youtube}</a></p>
-                                                                </div>
-                                                                :
-                                                                <div className='icons-d-flex'>
-                                                                    <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
-                                                                    <p><a href="#">-</a></p>
-                                                                </div>
-                                                            } */}
-                                                        </div>
-                                                        :
-                                                        null
-                                                    }
+                                                    <div className='profile-details social'>
+                                                        <p className='social-profile'>Social</p>
+                                                        {user.behance ?
+                                                            <div className='icons-d-flex'>
+                                                                <FaBehance size="20px" color="#1769ff" className='profile-icon' />
+                                                                <p className='information-font ellipsis-profile fs-14'><a href={user.behance} target="_blank">{user.behance}</a></p>
+                                                            </div>
+                                                            :
+                                                            <div className='icons-d-flex'>
+                                                                <FaBehance size="20px" color="#1769ff" className='profile-icon' />
+                                                                <p><a href="#" target="_blank">-</a></p>
+                                                            </div>
+                                                        }
+                                                        {user.facebook ?
+                                                            <div className='icons-d-flex'>
+                                                                <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
+                                                                <p className='information-font ellipsis-profile fs-14'><a href={user.facebook} target="_blank">{user.facebook}</a></p>
+                                                            </div>
+                                                            :
+                                                            <div className='icons-d-flex'>
+                                                                <FaFacebookF size="20px" color="#3b5998" className='profile-icon' />
+                                                                <p><a href="#">-</a></p>
+                                                            </div>
+                                                        }
+                                                        {user.linkedin ?
+                                                            <div className='icons-d-flex'>
+                                                                <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
+                                                                <p className='information-font ellipsis-profile fs-14'><a href={user.linkedin} target="_blank">{user.linkedin}</a></p>
+                                                            </div>
+                                                            :
+                                                            <div className='icons-d-flex'>
+                                                                <FaLinkedinIn size="20px" color="#0a66c2" className='profile-icon' />
+                                                                <p><a href="#">-</a></p>
+                                                            </div>
+                                                        }
+                                                        {user.instagram ?
+                                                            <div className='icons-d-flex'>
+                                                                <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
+                                                                <p className='information-font ellipsis-profile fs-14'><a href={user.instagram} target="_blank">{user.instagram}</a></p>
+                                                            </div>
+                                                            :
+                                                            <div className='icons-d-flex'>
+                                                                <FaInstagram size="20px" color="#E1306C" className='profile-icon' />
+                                                                <p><a href="#">-</a></p>
+                                                            </div>
+                                                        }
+                                                        {/* {user.youtube ?
+                                                            <div className='icons-d-flex'>
+                                                                <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
+                                                                <p className='information-font ellipsis-profile'><a href={user.youtube} target="_blank">{user.youtube}</a></p>
+                                                            </div>
+                                                            :
+                                                            <div className='icons-d-flex'>
+                                                                <img src={YoutubeIcon} alt="youtube pin" className='profile-icon' />
+                                                                <p><a href="#">-</a></p>
+                                                            </div>
+                                                        } */}
+                                                    </div>
                                                 </Col>
                                             </Row>
                                         </div>

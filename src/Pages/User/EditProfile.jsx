@@ -923,7 +923,7 @@ const EditProfile = () => {
                                                 :
                                                 null
                                             }
-                                            <p className={`cursor-pointer me-5 mb-3 fs-16 ${bodyMeasurementShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("body_measurement") }}>Body Measurement</p>
+                                            {/* <p className={`cursor-pointer me-5 mb-3 fs-16 ${bodyMeasurementShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("body_measurement") }}>Body Measurement</p> */}
                                         </Card.Body>
                                     </Card>
                                 </Col>
@@ -931,7 +931,7 @@ const EditProfile = () => {
                                     <Card className='h-100'>
                                         <Card.Body>
                                             {profileShow ?
-                                                <div className="edit-profile mt-3">
+                                                <div className="edit-profile">
                                                     <Row>
                                                         <Col lg="6">
                                                             <Form.Group className='mb-3'>
@@ -1019,7 +1019,7 @@ const EditProfile = () => {
                                                 null
                                             }
                                             {addressShow ?
-                                                <div className='edit-address mt-3'>
+                                                <div className='edit-address'>
                                                     <Col lg="12">
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Address Line 1</Form.Label>
@@ -1076,7 +1076,7 @@ const EditProfile = () => {
                                                 null
                                             }
                                             {contactShow ?
-                                                <div className="edit-contact mt-3">
+                                                <div className="edit-contact">
                                                     <Col lg="12">
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Website</Form.Label>
@@ -1142,7 +1142,7 @@ const EditProfile = () => {
                                             }
 
                                             {socialMediaShow ?
-                                                <div className="edit-social-media mt-3">
+                                                <div className="edit-social-media">
                                                     <Col lg="12">
                                                         <Form.Group className='mb-4'>
                                                             <Form.Label>Facebook</Form.Label>
@@ -1185,7 +1185,7 @@ const EditProfile = () => {
                                                 null
                                             }
                                             {skillShow ?
-                                                <div className="edit-skills mt-3">
+                                                <div className="edit-skills">
                                                     <Form.Label className='mb-1 fs-18'>
                                                         Areas of Specialization and Expertise
                                                     </Form.Label>
