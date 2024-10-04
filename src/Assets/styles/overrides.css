@@ -1289,6 +1289,10 @@ form.search-header {
     color: #8F8F8F; /* Set your desired placeholder color here */
 }
 
+input::placeholder {
+    color: #8F8F8F; /* Set your desired placeholder color here */
+}
+
 form.search svg {
     color: var(--dgray);
 }
