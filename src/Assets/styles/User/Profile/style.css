@@ -198,3 +198,8 @@ progress[value]::-webkit-progress-value {
 .measurement-container input {
   padding: 5px 15px;
 }
+
+.btn-primary {
+  padding: 7px 15px;
+  min-width: 150px;
+}

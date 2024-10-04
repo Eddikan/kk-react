@@ -3201,3 +3201,11 @@ span.rti--tag {
 #designers-marquee .rfm-marquee-container {
     border-radius: 5px;
 }
+
+.verify-email-notification {
+    background: #FFF0C3;
+    padding: 4px 15px;
+    z-index: 2;
+    position: relative;
+    width: 100%;
+}
