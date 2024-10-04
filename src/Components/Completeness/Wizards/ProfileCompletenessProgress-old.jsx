@@ -4,13 +4,12 @@ import { FaCheck } from "react-icons/fa";
 import { useCookies } from 'react-cookie';
 
 const ProfileProgress = ({ completeness, reloadCount }) => {
-    const [cookies, setCookie] = useCookies(['currentUser', 'aboutDone', 'addressDone', 'contactDone', 'socialDone','measurementDone']);
+    const [cookies, setCookie] = useCookies(['currentUser', 'aboutDone', 'addressDone', 'contactDone', 'socialDone']);
 
     const [aboutDone, setAboutDone] = useState(cookies.aboutDone ?? 'No');
     const [addressDone, setAddressDone] = useState(cookies.addressDone ?? 'No');
     const [contactDone, setContactDone] = useState(cookies.contactDone ?? 'No');
     const [socialDone, setSocialDone] = useState(cookies.socialDone ?? 'No');
-    const [bodyMeasurementDone, setBodyMeasurementDone] = useState(cookies.measurementDone ?? 'No');
 
     // const step1 = [0];
     // const step2 = [0, 25];
@@ -22,7 +21,6 @@ const ProfileProgress = ({ completeness, reloadCount }) => {
         setAddressDone(cookies.addressDone ?? 'No');
         setContactDone(cookies.contactDone ?? 'No');
         setSocialDone(cookies.socialDone ?? 'No');
-        setBodyMeasurementDone(cookies.measurementDone ?? 'No');
 
     }, [reloadCount]);
 
@@ -119,7 +117,7 @@ const ProfileProgress = ({ completeness, reloadCount }) => {
                         </>
                     }
                 </div>
-                {/* <div className='w-100 step-container'>
+                <div className='w-100 step-container'>
                     {aboutDone == "Yes" && addressDone == "Yes" && contactDone == "Yes" && socialDone != "Yes"?
                         <>
                             <div className='d-flex align-items-center active'>
@@ -145,36 +143,6 @@ const ProfileProgress = ({ completeness, reloadCount }) => {
                                     <span className='fs-12 fw-500'>4</span>
                                 </div>
                                 <span className='ms-2'>Social Media</span>
-                            </div>
-                        </>
-                    }
-                </div> */}
-                <div className='w-100 step-container'>
-                    {aboutDone == "Yes" && addressDone == "Yes" && contactDone == "Yes" && bodyMeasurementDone != "Yes"?
-                        <>
-                            <div className='d-flex align-items-center active'>
-                                <div className='progress-circle progress-circle-active'>
-                                    <div className='full-active-circle'></div>
-                                </div>
-                                <span className='ms-2 fw-500'>Body Measurement</span>
-                            </div>
-                        </>
-                    : aboutDone == "Yes" && addressDone == "Yes" && contactDone == "Yes" && bodyMeasurementDone == "Yes"?
-                        <>
-                            <div className='d-flex align-items-center check'>
-                                <div className='progress-circle progress-circle-check'>
-                                    <FaCheck color='#ffffff' />
-                                </div>
-                                <span className='ms-2 fw-500'>Body Measurement</span>
-                            </div>
-                        </>
-                    :
-                        <>
-                            <div className='d-flex align-items-center inactive'>
-                                <div className='progress-circle progress-circle-inactive'>
-                                    <span className='fs-12 fw-500'>4</span>
-                                </div>
-                                <span className='ms-2'>Body Measurement</span>
                             </div>
                         </>
                     }

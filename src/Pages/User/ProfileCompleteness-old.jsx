@@ -21,7 +21,6 @@ import ContactStep from 'Components/Completeness/ProfileSteps/Contact';
 import SocialMediaStep from 'Components/Completeness/ProfileSteps/SocialMedia';
 import ThankyouStep from 'Components/Completeness/ProfileSteps/Thankyou';
 import ProfileProgress from 'Components/Completeness/Wizards/ProfileCompletenessProgress';
-import BodyMeasurementStep from 'Components/Completeness/ProfileSteps/BodyMeasurement';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -69,7 +68,7 @@ const ProfileCompleteness = () => {
     const [socialMediaShow, setSocialMediaShow] = useState(false);
     const [skillShow, setSkillShow] = useState(false);
     const [userImage, setUserImage] = useState('');
-    const [cookies, setCookie] = useCookies(['currentUser', 'aboutDone', 'addressDone', 'contactDone', 'socialDone','measurementDone']);
+    const [cookies, setCookie] = useCookies(['currentUser', 'aboutDone', 'addressDone', 'contactDone', 'socialDone']);
     
     const [areasOfSpecializationData, setAreaOfSpecializationData] = useState(initialDesignerData.areas_of_specialization);
 
@@ -84,7 +83,6 @@ const ProfileCompleteness = () => {
     const [addressDone, setAddressDone] = useState('No');
     const [contactDone, setContactDone] = useState('No');
     const [socialDone, setSocialDone] = useState('No');
-    const [bodyMeasurementDone, setBodyMeasurementDone] = useState('No');
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -162,26 +160,15 @@ const ProfileCompleteness = () => {
             // Handle the error, if needed
         }
     };
-   
+
     useEffect(() => {
         fetchData({ currentUser: currentUser, token: token });
-        if(reloadCount == 0) {
-            setCookie('aboutDone', "No", { path: '/' });
-            setCookie('addressDone', "No", { path: '/' });
-            setCookie('contactDone', "No", { path: '/' });
-            setCookie('socialDone', "No", { path: '/' });
-            setCookie('measurementDone', "No", { path: '/' });
-        } else {
-            setAboutDone(cookies.aboutDone ?? 'No');
-            setAddressDone(cookies.addressDone ?? 'No');
-            setContactDone(cookies.contactDone ?? 'No');
-            setSocialDone(cookies.socialDone ?? 'No');
-            setBodyMeasurementDone(cookies.measurementDone ?? 'No');
-        }
-       
+        setAboutDone(cookies.aboutDone ?? 'No');
+        // setAddressDone(cookies.addressDone ?? 'No');
+        // setContactDone(cookies.contactDone ?? 'No');
+        // setSocialDone(cookies.socialDone ?? 'No');
 
     }, [reloadCount]);
-    
 
     return (
         <Layout>
@@ -228,7 +215,7 @@ const ProfileCompleteness = () => {
                             </Col>
                         </Row> */}
                         <Row className='d-flex'>
-                            <Col md="3" className={`flex-grow-1 flex-shrink-0`}>
+                            <Col md="3" className={`flex-grow-1 flex-shrink-0 ${completeness == 100 && 'd-none'}`}>
                                 <Card className='h-100'>
                                     <Card.Body>
                                         <ProfileProgress 
@@ -237,10 +224,10 @@ const ProfileCompleteness = () => {
                                     </Card.Body>
                                 </Card>
                             </Col>
-                            <Col md={'9'} className='flex-grow-1 flex-shrink-0'>
+                            <Col md={`${completeness != 100 ? '9' : '12'}`} className='flex-grow-1 flex-shrink-0'>
                                 <Card className='h-100'>
                                     <Card.Body>
-                                        {aboutDone == "No" && addressDone == "No" && contactDone == "No" && socialDone == "No" &&
+                                        {completeness < 30 ?
                                             <>
                                                 <AboutStep
                                                     currentUser={currentUser}
@@ -249,8 +236,7 @@ const ProfileCompleteness = () => {
                                                     reload={() => setReloadCount(reloadCount + 1)}
                                                 />
                                             </>
-                                        }
-                                        { aboutDone == "Yes" && addressDone == "No" &&
+                                        : completeness >= 30 && completeness < 55 ?
                                             <>
                                                 <AddressStep
                                                     currentUser={currentUser}
@@ -259,9 +245,7 @@ const ProfileCompleteness = () => {
                                                     reload={() => setReloadCount(reloadCount + 1)}
                                                 />
                                             </>
-                                        }
-
-                                        {addressDone == "Yes" && contactDone == "No" && 
+                                        : completeness >= 55 && completeness < 70 ?
                                             <>
                                                 <ContactStep
                                                     currentUser={currentUser}
@@ -270,8 +254,7 @@ const ProfileCompleteness = () => {
                                                     reload={() => setReloadCount(reloadCount + 1)}
                                                 />
                                             </>
-                                        }
-                                        {/* {contactDone == "Yes" && socialDone == "No" && 
+                                        : completeness >= 70 && completeness < 100 ?
                                             <>
                                                 <SocialMediaStep
                                                     currentUser={currentUser}
@@ -280,18 +263,7 @@ const ProfileCompleteness = () => {
                                                     reload={() => setReloadCount(reloadCount + 1)}
                                                 />
                                             </>
-                                        }  */}
-                                        {contactDone == "Yes" && bodyMeasurementDone == "No" && 
-                                            <>
-                                                <BodyMeasurementStep
-                                                    currentUser={currentUser}
-                                                    token={token}
-                                                    user={profileFormData}
-                                                    reload={() => setReloadCount(reloadCount + 1)}
-                                                />
-                                            </>
-                                        }
-                                        {contactDone == "Yes" && addressDone == "Yes"  && aboutDone == "Yes" && bodyMeasurementDone == "Yes" ?
+                                        : completeness >= 100 ?
                                             <>
                                                 <ThankyouStep
                                                     currentUser={currentUser}

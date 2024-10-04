@@ -31,7 +31,7 @@ const SocialMediaStep = ({ user, currentUser, reload, token }) => {
                 setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
                 setCookie('socialDone', "Yes", { path: '/' });
                 toast.success('Social media links updated successfully!');
-                window.location.href='/user/complete-profile';
+                reload();
             } else {
                 const errors = response.data.errors;
             }
@@ -101,7 +101,7 @@ const SocialMediaStep = ({ user, currentUser, reload, token }) => {
                         {formStatus ?
                             <Button type='button' className="btn-save">Saving...</Button>
                             :
-                            <Button type='button' onClick={submitProfile} className="btn-save">Finish</Button>
+                            <Button type='button' onClick={submitProfile} className="btn-save">Next</Button>
                         }
                     </div>
                 </Col>
