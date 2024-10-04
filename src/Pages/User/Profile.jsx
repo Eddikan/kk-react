@@ -38,6 +38,10 @@ import { FaCamera } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import ShopIcon from 'Assets/images/icons/shop.png';
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import Orders from 'Components/Shared/User/Orders';
+import FabricsWishlist from 'Components/Shared/User/FabricsWishlist';
+import DesignersWishlist from 'Components/Shared/User/DesignersWishlist';
+import UserAppointments from 'Components/Shared/User/Appointments';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -103,7 +107,7 @@ const Profile = () => {
     const [areasOfSpecialization, setAreaOfSpecialization] = useState([]);
     const [setupShopShow, setSetupShopShow] = useState(false);
     const [activeTab, setActiveTab] = useState(tab ? tab : 'profile');
-    const [activeTabGroup, setActiveTabGroub] = useState(tab_group ? tab_group : 'account');
+    const [activeTabGroup, setActiveTabGroup] = useState(tab_group ? tab_group : 'account');
 
     const [selected, setSelected] = useState("");
 
@@ -892,7 +896,7 @@ const Profile = () => {
                                     <div class="w-100">
                                         <Row>
                                             <Col lg="9">
-                                                <h2 className='fs-30 mb-0'>
+                                                <h2 className='fs-30 mb-1'>
                                                     {user.first_name || user.last_name ?
                                                         <span>{user.first_name} {user.last_name}</span>
                                                         :
@@ -935,7 +939,7 @@ const Profile = () => {
                                                     </div>
                                                 </>
                                             } */}
-                                            {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) &&
+                                            {/* {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) &&
                                                 <>
                                                     <a href='/user/shop/setup' className='text-decoration-none'>
                                                         <span><HiOutlineBuildingStorefront size={30} className={`text-gold me-2 ${user.profile_completeness != 100 && 'ms-4'}`} />
@@ -944,7 +948,7 @@ const Profile = () => {
                                                         </span>
                                                     </a>
                                                 </>
-                                            }
+                                            } */}
 
                                         </div>
                                         {user.profile_completeness < 100 ?
@@ -1019,7 +1023,7 @@ const Profile = () => {
                             <hr />
                             <Col lg="2">
                                 <div>
-                                    <p className="profile-side-dropdown fw-600 fs-16 mb-12 position-relative" onClick={function () { setActiveTabGroub((prevActiveGroup) => prevActiveGroup == "account" ? "" : activeTabGroup != "account" ? "account" : "") }}>
+                                    <p className="profile-side-dropdown fw-600 fs-16 mb-12 position-relative" onClick={function () { setActiveTabGroup((prevActiveGroup) => prevActiveGroup == "account" ? "" : activeTabGroup != "account" ? "account" : ""); setActiveTab('profile') }}>
                                         My Account
                                         {activeTabGroup != "account" ?
                                             <>
@@ -1037,7 +1041,7 @@ const Profile = () => {
                                         <p className={`profile-side-dropdown fs-16 ${activeTab == "measurement" ? "text-gold" : ""} `} onClick={function () { setActiveTab('measurement') }}>My Measurements</p>
                                         <p className={`profile-side-dropdown fs-16 ${activeTab == "account" ? "text-gold" : ""} `} onClick={function () { setActiveTab('account') }}>Manage my Account</p>
                                     </div>
-                                    <p className="profile-side-dropdown fw-600 fs-16 mb-12 position-relative" onClick={function () { setActiveTabGroub((prevActiveGroup) => prevActiveGroup == "orders" ? "" : activeTabGroup != "orders" ? "orders" : "") }}>
+                                    <p className="profile-side-dropdown fw-600 fs-16 mb-12 position-relative" onClick={function () { setActiveTabGroup((prevActiveGroup) => prevActiveGroup == "orders" ? "" : activeTabGroup != "orders" ? "orders" : ""); setActiveTab('all'); }}>
                                         My Orders
                                         {activeTabGroup != "orders" ?
                                             <>
@@ -1057,9 +1061,31 @@ const Profile = () => {
                                         <p className={`profile-side-dropdown fs-16 ${activeTab == "delivered" ? "text-gold" : ""} `} onClick={function () { setActiveTab('delivered') }}>Delivered</p>
                                         <p className={`profile-side-dropdown fs-16 ${activeTab == "completed" ? "text-gold" : ""} `} onClick={function () { setActiveTab('completed') }}>Completed</p>
                                     </div>
-                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "wishlist" ? "text-gold" : ""} `} onClick={function () { setActiveTab('wishlist') }}>My Wishlist</p>
-                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "appointments" ? "text-gold" : ""} `} onClick={function () { setActiveTab('appointments') }}>My Appointments</p>
-                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "messages" ? "text-gold" : ""} `} onClick={function () { setActiveTab('messages') }}>My Messages</p>
+                                    <p className="profile-side-dropdown fw-600 fs-16 mb-12 position-relative" onClick={function () { setActiveTabGroup((prevActiveGroup) => prevActiveGroup == "wishlist" ? "" : activeTabGroup != "wishlist" ? "wishlist" : ""); setActiveTab('fabrics_wishlist') }}>
+                                        My Wishlist
+                                        {activeTabGroup != "wishlist" ?
+                                            <>
+                                                <AiOutlinePlus size="10px" className="accordion-icon" />
+                                            </>
+                                            :
+                                            <>
+                                                <AiOutlineMinus size="10px" className="accordion-icon" />
+                                            </>
+                                        }
+                                    </p>
+
+                                    <div className={`ms-3 profile-accordion-content ${activeTabGroup == "wishlist" ? 'open' : ''}`}>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "fabrics_wishlist" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('wishlist'); setActiveTab('fabrics_wishlist'); }}>Fabrics</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "designers_wishlist" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('wishlist'); setActiveTab('designers_wishlist'); }}>Designers</p>
+                                    </div>
+                                    <p className={`profile-side-dropdown fw-600 fs-16 `} onClick={function () { setActiveTabGroup('appointments'); setActiveTab('upcoming'); }}>My Appointments</p>
+                                    <div className={`ms-3 profile-accordion-content ${activeTabGroup == "appointments" ? 'open' : ''}`}>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "upcoming" ? "text-gold" : ""} `} onClick={function () { setActiveTab('upcoming'); }}>Upcoming</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "in progress" ? "text-gold" : ""} `} onClick={function () { setActiveTab('in progress'); }}>In Progress</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "cancelled" ? "text-gold" : ""} `} onClick={function () { setActiveTab('cancelled'); }}>Cancelled</p>
+                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "completed" ? "text-gold" : ""} `} onClick={function () { setActiveTab('completed'); }}>Completed</p>
+                                    </div>
+                                    <p className={`profile-side-dropdown fw-600 fs-16 `} onClick={function () { setActiveTabGroup('messages'); setActiveTab('messages'); }}>My Messages</p>
                                 </div>
                             </Col>
                             <Col lg='10' className="pt-4">
@@ -1110,7 +1136,7 @@ const Profile = () => {
                                                     <div className='profile-details address mb-4 pt-0'>
                                                         <p className='profile-details-title fw-bold'>Contact Information</p>
                                                         <div className='icons-d-flex'>
-                                                            <FaLocationDot size="20px" color="#cea835" className='profile-icon' />
+                                                            <FaLocationDot size="15px" color="#cea835" className='profile-icon' />
                                                             {user.city || user.province || user.country ?
                                                                 <p className='information-font fs-14'>{user.city ? user.city + ',' : "-"} {user.province ? user.province + "," : "-"} {user.country ? user.country + "," : "-"}</p>
                                                                 :
@@ -1119,23 +1145,23 @@ const Profile = () => {
                                                         </div>
                                                         {user.website ?
                                                             <div className='icons-d-flex'>
-                                                                <FaLink size="20px" color="#cea835" className='profile-icon' />
+                                                                <FaLink size="15px" color="#cea835" className='profile-icon' />
                                                                 <p className='information-font fs-14'><a href={user.website} target="_blank">{user.website}</a></p>
                                                             </div>
                                                             :
                                                             <div className='icons-d-flex'>
-                                                                <FaLink size="20px" color="#cea835" className='profile-icon' />
+                                                                <FaLink size="15px" color="#cea835" className='profile-icon' />
                                                                 <p className='information-font fs-14'><a href="#">-</a></p>
                                                             </div>
                                                         }
                                                         {user.phone_number ?
                                                             <div className='icons-d-flex'>
-                                                                <FaPhone size="20px" color="#cea835" className='profile-icon' />
+                                                                <FaPhone size="15px" color="#cea835" className='profile-icon' />
                                                                 <p className='information-font mb-0 fs-14'><a href={`tel:${user.phone_number}"`}>{user.phone_number}</a></p>
                                                             </div>
                                                             :
                                                             <div className='icons-d-flex'>
-                                                                <FaPhone size="20px" color="#cea835" className='profile-icon' />
+                                                                <FaPhone size="15px" color="#cea835" className='profile-icon' />
                                                                 <p className='information-font mb-0 fs-14'><a href="#">-</a></p>
                                                             </div>
                                                         }
@@ -1647,11 +1673,61 @@ const Profile = () => {
                                         null
                                     }
                                     {activeTab == "measurement" ?
-                            
                                         <Row>
                                             <Col lg="12">
                                                 <div className="measurement-container">
                                                     <BodyMeasurement userData={user} />
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        
+                                        :
+                                        null
+                                    }
+                                    {activeTabGroup == "orders" || activeTab == "all" ?
+                                        <Row>
+                                            <Col lg="12">
+                                                <div className="measurement-container">
+                                                    <Orders orderStatus={activeTab} activeTabGroup={activeTabGroup} />
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        
+                                        :
+                                        null
+                                    }
+
+                                    {activeTabGroup == "wishlist" && activeTab == "fabrics_wishlist" ?
+                                        <Row>
+                                            <Col lg="12">
+                                                <div className="fabrics-wishlist-container">
+                                                    <FabricsWishlist  />
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        
+                                        :
+                                        null
+                                    }
+
+                                    {activeTabGroup == "wishlist" && activeTab == "designers_wishlist" ?
+                                        <Row>
+                                            <Col lg="12">
+                                                <div className="designers-wishlist-container">
+                                                    <DesignersWishlist  />
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        
+                                        :
+                                        null
+                                    }
+
+                                    {activeTabGroup == "appointments" || activeTab == "upcoming" ?
+                                        <Row>
+                                            <Col lg="12">
+                                                <div className="appointments-container">
+                                                    <UserAppointments  status={activeTab} />
                                                 </div>
                                             </Col>
                                         </Row>

@@ -579,10 +579,10 @@ const Header = () => {
                       <div className="nav-link-menu">
                         <a className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2" style={{ pointerEvents: 'none' }}>Hi,&nbsp;{user.first_name}!</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile`}>My Profile</a>
-                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/orders">My Orders</a>
-                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/wishlist">My Wishlist</a>
-                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/messages">My Messages</a>
-                        <a className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2" href={`/appointments/${currentUser}`}>My Appointments</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=all&tab_group=orders`}>My Orders</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=fabrics_wishlist&tab_group=wishlist`}>My Wishlist</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=upcoming&tab_group=appointments`}>My Appointments</a>
+                        <a className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2" href={`/${userType}/profile?tab=messages&tab_group=messages`}>My Messages</a>
                         <a className="nav-link cursor-pointer text-decoration-none" onClick={logOut}>Sign Out</a>
                         {/* <a className="nav-link" href="/">My Orders</a>
                         <a className="nav-link" href="/">My Wishlist</a>
@@ -874,10 +874,13 @@ const Header = () => {
                       </div>
                       <div className="nav-link-menu">
                         <a className="nav-link pb-0" href="/login">Sign In</a>
-                        <a className="nav-link cursor-pointer text-decoration-none" onClick={viewRegisterModal}>Register</a>
-                        {/* <a className="nav-link" href="/">My Orders</a>
-                        <a className="nav-link" href="/">My Wishlist</a>
-                        <a className="nav-link" href="/">My Orders</a> */}
+                        <a className="nav-link cursor-pointer border-bottom pb-3 mb-2 text-decoration-none" onClick={viewRegisterModal}>Register</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Profile</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Orders</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Wishlist</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Appointments</a>
+                        <a className="nav-link cursor-pointer text-decoration-none" href="/login">My Messages</a>
+                        
                       </div>
                     </div>
                     <a href={`/favorites`}>
@@ -940,7 +943,15 @@ const Header = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-
+      {userDetails.email_verified_at == "" || userDetails.email_verified_at == null ?
+        <div className="verify-email-notification">
+          <p className="text-center fw-600 mb-0">Verify your email to get the most out of Kouture Konect. Didn’t receive an email? <a href="/email-confirmation" className="fw-400 text-decoration-none">Resend confirmation</a></p>
+        </div>
+        :
+        <div className="verify-email-notification">
+          <p className="text-center fw-600 mb-0 fs-14">Verify your email to get the most out of Kouture Konect. Didn’t receive an email? <a href="/email-confirmation" className="fw-400 text-decoration-none">Resend confirmation</a></p>
+        </div>
+      }
       <Modal
         show={underConstructionShow}
         className='modal-preview'

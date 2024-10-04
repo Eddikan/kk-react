@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import LayoutNoFooter from '../Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import 'Assets/styles/DesignerCalendar/style.css'
-import GoBack from 'Components/Shared/GoBack';
 import 'Assets/styles/Order/style.css';
 import User from 'Assets/images/user.png';
 import { useCookies } from 'react-cookie';
@@ -19,7 +17,6 @@ import toast from 'react-hot-toast';
 import axios from "axios";
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-
 const initialCheckOut = {
     card_name: '',
     card_number: '',
@@ -30,6 +27,7 @@ const Orders = (props) => {
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'token', 'userRole']);
     const token = cookies.token;
+    const orderStatus = props.orderStatus;
     const currentUser = cookies.currentUser;
     const [reloadCount, setReloadCount] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
@@ -49,82 +47,8 @@ const Orders = (props) => {
     const [designerName, setDesignerName] = useState('');
     const [text, setText] = useState('');
     const [reorderLoading, setReorderLoading] = useState(false);
-    const [orderStatus, setOrderStatus] = useState('All');
 
-    const showTab = (tab) => {
-        if (tab == "all") {
-            setAllShow(true);
-            setPendingShow(false);
-            setProcessShow(false);
-            setShippedShow(false);
-            setDeliveredShow(false);
-            setReviewShow(false);
-            setCompletedShow(false);
-            setOrderStatus('All');
-
-        } else if (tab === "pending") {
-            setAllShow(false);
-            setPendingShow(true);
-            setProcessShow(false);
-            setShippedShow(false);
-            setDeliveredShow(false);
-            setReviewShow(false);
-            setCompletedShow(false);
-            setOrderStatus('Pending');
-
-        } else if (tab === "processing") {
-            setAllShow(false);
-            setPendingShow(false);
-            setProcessShow(true);
-            setShippedShow(false);
-            setDeliveredShow(false);
-            setReviewShow(false);
-            setCompletedShow(false);
-            setOrderStatus('Processing');
-
-        } else if (tab === "shipped") {
-            setAllShow(false);
-            setPendingShow(false);
-            setProcessShow(false);
-            setShippedShow(true);
-            setDeliveredShow(false);
-            setReviewShow(false);
-            setCompletedShow(false);
-            setOrderStatus('Shipped');
-
-        } else if (tab === "delivered") {
-            setAllShow(false);
-            setPendingShow(false);
-            setProcessShow(false);
-            setShippedShow(false);
-            setDeliveredShow(true);
-            setReviewShow(false);
-            setCompletedShow(false);
-            setOrderStatus('Delivered');
-
-        } else if (tab === "review") {
-            setAllShow(false);
-            setPendingShow(false);
-            setProcessShow(false);
-            setShippedShow(false);
-            setDeliveredShow(false);
-            setReviewShow(true);
-            setCompletedShow(false);
-            setOrderStatus('Reviewed');
-
-        } else if (tab === "completed") {
-            setAllShow(false);
-            setPendingShow(false);
-            setProcessShow(false);
-            setShippedShow(false);
-            setDeliveredShow(false);
-            setReviewShow(false);
-            setCompletedShow(true);
-            setOrderStatus('Completed');
-        }
-        setReloadCount(reloadCount + 1);
-    }
-
+    
     function toggleUnderConstruction(message) {
         setUnderConstructionShow(true);
         setModalHeading(message);
@@ -135,8 +59,12 @@ const Orders = (props) => {
     }
 
     const getOrders = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/order?status=' + orderStatus);
-    };
+        return await axios.get(
+            process.env.REACT_APP_API_ENDPOINT +
+            'user/' + currentUser + 
+            '/order?status=' + (orderStatus === 'all' ? '' : orderStatus)
+        );
+    };    
 
     const chatBoxModal = (first_name, last_name, image) => {
         setChatBox(true);
@@ -174,6 +102,10 @@ const Orders = (props) => {
     useEffect(() => {
         document.body.classList.add('designer-calendar-body');
     }, []);
+    
+    useEffect(() => {
+        document.body.classList.add('designer-calendar-body');
+    }, []);
 
     useEffect(() => {
         setOrdersLoading(true);
@@ -192,48 +124,15 @@ const Orders = (props) => {
                 toast.error('There has been an error getting the orders');
                 setOrdersLoading(false);
             });
-    }, [reloadCount]);
+    }, [reloadCount, orderStatus]);
 
     return (
-        <LayoutNoFooter className='bg-white'>
-            <section className='bg-white'>
-                <Container className='container-order position-relative'>
-                    <Row>
+        <>
+            <div className="orders-container">
+                <p className='title-designer mb-1 lh-25'>Orders </p>
+                <div className="mt-15">
+                    <Row className="mb-4">
                         <Col lg={12}>
-                            <Row className="pb-4">
-                                <Col md={6} className='d-flex justify-content-left align-items-center'>
-                                    <h3 className="fs-30 fw-600 text-black mb-0">Orders</h3>
-                                </Col>
-                                <Col md={6} className="text-right">
-                                    <GoBack fallBack="/#" />
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col lg={3}>
-                            <Row className="mb-3">
-                                <Col>
-                                    <Card>
-                                        <Card.Body className='bg-light'>
-                                            <span className='fw-500 text-black'>Status</span>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            </Row>
-                            <Card className='mb-3'>
-                                <Card.Body>
-                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${allShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("all"); }}>All</p>
-                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${pendingShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("pending"); }}>Pending</p>
-                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${processShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("processing"); }}>Processing</p>
-                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${shippedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("shipped"); }}>Shipped</p>
-                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${deliveredShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("delivered"); }}>Delivered</p>
-                                    {/* <Link to={'/post-purchase-survey'} className='text-decoration-none'>  <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${reviewShow ? 'fw-600 text-gold' : 'text-black'}`}>Review and Feedback</p></Link> */}
-                                    <p className={`cursor-pointer tab-family me-5 mb-3 fs-16 ${completedShow ? 'fw-600 text-gold' : 'text-black'}`} onClick={function () { showTab("completed"); }}>Completed</p>
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col lg={9}>
                             <Row className="mb-2">
                                 <Col>
                                     <Card>
@@ -393,88 +292,88 @@ const Orders = (props) => {
                             }
                         </Col>
                     </Row>
+                </div>
+            </div>
 
-                    {chatBox ?
-                        <>
-                            <Card className='width-chat-card px-0'>
-                                <Card.Header className='order-chat bg-white pt-3 pb-3'>
-                                    <div className='d-flex justify-content-between'>
+            {chatBox ?
+                <>
+                    <Card className='width-chat-card px-0'>
+                        <Card.Header className='order-chat bg-white pt-3 pb-3'>
+                            <div className='d-flex justify-content-between'>
+                                <div>
+                                    <span className="fs-14 fw-500 mb-0 name-of-user-chat">
+                                        <span className='fw-500'>{designerName.first_name} {designerName.last_name}</span>
+                                    </span>
+                                    {/* <span className='ms-3 active-now fs-14 fw-400'>Active Now</span> */}
+                                </div>
+                                <div className="cursor-pointer" onClick={() => setChatBox(false)}>
+                                    <IoCloseOutline color="#39393A" />
+                                </div>
+                            </div>
+                        </Card.Header>
+
+                        <Card.Body >
+                            <div>
+                                <span className='d-flex user-image'>
+                                    {designerName.image && (
+                                        <div
+                                            className='user-photo'
+                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designerName.image})` }}
+                                        >
+                                        </div>
+                                    )}
+
+                                    <div className="designer-info mx-2">
+
                                         <div>
-                                            <span className="fs-14 fw-500 mb-0 name-of-user-chat">
-                                                <span className='fw-500'>{designerName.first_name} {designerName.last_name}</span>
-                                            </span>
-                                            {/* <span className='ms-3 active-now fs-14 fw-400'>Active Now</span> */}
+                                            <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-3">
+                                                <span className=''>{designerName.first_name}{designerName.last_name}</span>
+                                                <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
+                                            </p>
                                         </div>
-                                        <div className="cursor-pointer" onClick={() => setChatBox(false)}>
-                                            <IoCloseOutline color="#39393A" />
-                                        </div>
+
+                                        <div className='fs-14 ms-2 mt-2 name-of-user-chat'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</div>
                                     </div>
-                                </Card.Header>
+                                </span>
+                            </div>
 
-                                <Card.Body >
-                                    <div>
-                                        <span className='d-flex user-image'>
-                                            {designerName.image && (
-                                                <div
-                                                    className='user-photo'
-                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designerName.image})` }}
-                                                >
-                                                </div>
-                                            )}
-
-                                            <div className="designer-info mx-2">
-
-                                                <div>
-                                                    <p className="fs-14 fw-600 mb-0 name-of-user-chat ms-3">
-                                                        <span className=''>{designerName.first_name}{designerName.last_name}</span>
-                                                        <span className='ms-3 fs-14 time-chat fw-400'>2:23 PM</span>
-                                                    </p>
-                                                </div>
-
-                                                <div className='fs-14 ms-2 mt-2 name-of-user-chat'>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam.</div>
-                                            </div>
-                                        </span>
+                            <div className='mt-5 mb-4 text-right d-flex'>
+                                <div>
+                                    <div className='time-chat-box fs-14 fw-400'>3:30 PM
+                                        <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
+                                    <div className='mt-2 welcome-chat'>
+                                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
                                     </div>
+                                </div>
+                                <img src={User} className='placeholder-chat ms-3' />
+                            </div>
 
-                                    <div className='mt-5 mb-4 text-right d-flex'>
-                                        <div>
-                                            <div className='time-chat-box fs-14 fw-400'>3:30 PM
-                                                <span className='ms-2 you-chat-box fw-600 fs-14'>You</span></div>
-                                            <div className='mt-2 welcome-chat'>
-                                                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
-                                            </div>
-                                        </div>
-                                        <img src={User} className='placeholder-chat ms-3' />
+                            <div>
+                                <InputEmoji
+                                    value={text}
+                                    onChange={setText}
+                                    cleanOnEnter
+                                    onEnter={handleOnEnter}
+                                    placeholder="Type a message"
+                                    className="emoji-picker"
+                                />
+                                <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
+                                <div>
+                                    <div
+                                        className="cursor-pointer fw-500 position-absolute send-button"
+                                        onClick={() => toggleUnderConstruction("Send Message")}
+                                    >
+                                        Send
+                                        <VscSend className='ms-1' />
                                     </div>
-
-                                    <div>
-                                        <InputEmoji
-                                            value={text}
-                                            onChange={setText}
-                                            cleanOnEnter
-                                            onEnter={handleOnEnter}
-                                            placeholder="Type a message"
-                                            className="emoji-picker"
-                                        />
-                                        <div className='cursor-pointer position-absolute attach-icon' onClick={() => toggleUnderConstruction("")}><IoIosAttach size={20} /></div>
-                                        <div>
-                                            <div
-                                                className="cursor-pointer fw-500 position-absolute send-button"
-                                                onClick={() => toggleUnderConstruction("Send Message")}
-                                            >
-                                                Send
-                                                <VscSend className='ms-1' />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-                        </>
-                        :
-                        null
-                    }
-                </Container>
-            </section>
+                                </div>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                </>
+                :
+                null
+            }
 
             <Modal
                 show={underConstructionShow}
@@ -501,7 +400,7 @@ const Orders = (props) => {
                 </Modal.Body>
             </Modal>
 
-        </LayoutNoFooter >
+        </>
     );
 };
 
