@@ -93,7 +93,7 @@ const Home = (props) => {
       {currentUser ?
         <HeroLoggedIn />
         :
-        <section id='home' className='py-2 px-5 d-flex align-items-center mh650'>
+        <section id='home' className='py-2 px-5 mt-4 d-flex align-items-center'>
           <Container>
             <Row>
               <Col lg='6' className="my-auto" >
