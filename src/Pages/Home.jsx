@@ -30,6 +30,9 @@ import JoinKoutureBG from 'Assets/images/join-kouture.png';
 import DesignersMarquee from 'Components/Grids/DesignersMarquee';
 import { FaArrowRightLong } from "react-icons/fa6";
 import { FaArrowRight } from 'react-icons/fa';
+import DesignerModalIcon from 'Assets/images/icons/designer-modal-icon.png';
+import FabricModalIcon from 'Assets/images/icons/fabric-modal-icon.png';
+import DesignerVendorModalIcon from 'Assets/images/icons/sewing-modal-icon.png';
 
 
 const Home = (props) => {
@@ -398,23 +401,25 @@ const Home = (props) => {
 
       {/* Setup Shop  */}
       <Modal show={setupShopShow} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setSetupShopShow(false)}>
-        <Modal.Body className="py-5">
+        <Modal.Body className="pt-5 pb-4">
           <button type="button" className="btn-close no-header-close" onClick={() => setSetupShopShow(false)} aria-label="Close"></button>
           <Container className="narrow-850 h-100">
             <Row className=" align-items-center h-100">
               <Col lg="12">
                 {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
+                <div>
                 <h3 className="modal-title text-center fw-bold mb-3">Please start setting up your shop</h3>
                 <p className="modal-subtitle text-center mb-4">We are excited to welcome you to the Kouture Konect community! You’re now one step closer to sharing your exceptional designs and fabrics with fashion enthusiasts worldwide.</p>
-                <p className="modal-subtitle text-center">To get started, please select one of the options:</p>
+                </div>
+                <p className="modal-subtitle fw-600 text-center">To get started, please select one of the options:</p>
                 <Row>
                   <Col lg="4" className="mb-3">
                     {/* onClick={() => showSignupModal('user_designer')} */}
                     <Card onClick={() => navigate('/sign-up?type=designer')} className="modal-card text-center cursor-pointer bg-white border-gold-hover border-solid-2">
                       <Card.Body className="d-flex p-0">
-                        <div className="user-box justify-content-center p-4 align-items-center">
+                        <div className="modal-card-show user-box justify-content-center p-4 align-items-center">
                           <div className="text-center">
-                            <img src={DesignerIcon} alt="Designers" />
+                            <img src={DesignerModalIcon} alt="Designer" />
                             <h3 className="fw-600 fs-20">I am a Designer</h3>
                           </div>
                         </div>
@@ -426,8 +431,8 @@ const Home = (props) => {
                     <Card onClick={() => navigate('/sign-up?type=seller')} className="modal-card text-center cursor-pointer bg-white border-gold-hover border-solid-2">
                       <Card.Body className="modal-card-hover d-flex  p-0">
                       <div className="modal-card-show user-box justify-content-center p-4 align-items-center">
-                        <div className="text-center">
-                          <img src={FabricIcon} alt="Fabrics" />
+                        <div className="pt-3 text-center">
+                          <img src={FabricModalIcon} alt="Fabric" />
                           <h3 className="fw-600 fs-20">I am a Fabric Vendor</h3>
                         </div>
                       </div>
@@ -437,10 +442,10 @@ const Home = (props) => {
                   <Col lg="4">
                     {/* onClick={() => handleShowDesigns()} */}
                     <Card onClick={() => navigate('/sign-up?type=designer_seller')} className="modal-card text-center cursor-pointer bg-white border-gold-hover border-solid-2">
-                      <Card.Body className="d-flex p-0">
-                        <div className="user-box justify-content-center p-4 align-items-center">
-                          <div className="text-center">
-                            <img src={DesignIcon} alt="Designs" />
+                      <Card.Body className="d-flex p-4">
+                        <div className="modal-card-show user-box justify-content-center align-items-center">
+                          <div className="pt-4 text-center">
+                            <img src={DesignerVendorModalIcon} alt="DesignerVendor" />
                             <h3 className="fw-600 fs-20">I am both a Designer & Fabric Vendor</h3>
                           </div>
                         </div>

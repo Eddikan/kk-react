@@ -138,7 +138,9 @@ section#home p.subtitle {
     color: #cea835;
     text-decoration: underline;
 }
-
+.modal-card-show h3{
+    color: #551855;
+}
 @keyframes scrolling {
     0% { transform: translateX(0); }
     100% { transform: translatex(-144vw); }
