@@ -943,14 +943,12 @@ const Header = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      {userDetails.email_verified_at == "" || userDetails.email_verified_at == null ?
+      {currentUser && (userDetails.email_verified_at == "" || userDetails.email_verified_at == null) ?
         <div className="verify-email-notification">
           <p className="text-center fw-600 mb-0">Verify your email to get the most out of Kouture Konect. Didn’t receive an email? <a href="/email-confirmation" className="fw-400 text-decoration-none">Resend confirmation</a></p>
         </div>
         :
-        <div className="verify-email-notification">
-          <p className="text-center fw-600 mb-0 fs-14">Verify your email to get the most out of Kouture Konect. Didn’t receive an email? <a href="/email-confirmation" className="fw-400 text-decoration-none">Resend confirmation</a></p>
-        </div>
+        null
       }
       <Modal
         show={underConstructionShow}
