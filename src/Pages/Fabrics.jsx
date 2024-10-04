@@ -548,7 +548,7 @@ const Fabrics = (props) => {
 
     return (
         <Layout>
-            <div className='py-5 px-2'>
+            <div className='py-5 px-5'>
                 <section>
                     <Container>
                         <Row>
@@ -666,7 +666,7 @@ const Fabrics = (props) => {
                                                     value="High"
                                                     checked={selectedColorFastness.includes("High")}
                                                     onChange={handleSelectColorFastness}
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fs-14"
                                                 />
                                             </Form.Group>
                                             <Form.Group as={Col} lg={12}>
@@ -676,7 +676,7 @@ const Fabrics = (props) => {
                                                     value="Moderate"
                                                     checked={selectedColorFastness.includes("Moderate")}
                                                     onChange={handleSelectColorFastness}
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fs-14"
                                                 />
                                             </Form.Group>
                                             <Form.Group as={Col} lg={12}>
@@ -686,7 +686,7 @@ const Fabrics = (props) => {
                                                     value="Low"
                                                     checked={selectedColorFastness.includes("Low")}
                                                     onChange={handleSelectColorFastness}
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fs-14"
                                                 />
                                             </Form.Group>
                                         </Row>
@@ -702,7 +702,7 @@ const Fabrics = (props) => {
                                                     value="Eco-friendly"
                                                     checked={selectedSustainabilities.includes("Eco-friendly")}
                                                     onChange={handleSelectSustainability}
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fs-14"
                                                 />
                                             </Form.Group>
                                             <Form.Group as={Col} lg={12}>
@@ -712,7 +712,7 @@ const Fabrics = (props) => {
                                                     value="Recycled fibers"
                                                     checked={selectedSustainabilities.includes("Recycled fibers")}
                                                     onChange={handleSelectSustainability}
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fs-14"
                                                 />
                                             </Form.Group>
                                             <Form.Group as={Col} lg={12}>
@@ -722,7 +722,7 @@ const Fabrics = (props) => {
                                                     value="Biodegradable fibers"
                                                     checked={selectedSustainabilities.includes("Biodegradable fibers")}
                                                     onChange={handleSelectSustainability}
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fs-14"
                                                 />
                                             </Form.Group>
                                         </Row>
@@ -738,7 +738,7 @@ const Fabrics = (props) => {
                                         {compositions.map((composition) => (
                                             <Form.Group key={composition}>
                                                 <Form.Check
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fs-14"
                                                     type="checkbox"
                                                     label={composition}
                                                     name="composition"
@@ -754,7 +754,7 @@ const Fabrics = (props) => {
                                         {weaves.map((weave) => (
                                             <Form.Group key={weave}>
                                                 <Form.Check
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fs-14"
                                                     type="checkbox"
                                                     label={weave}
                                                     name="weave"
@@ -785,7 +785,7 @@ const Fabrics = (props) => {
                                         <Row>
                                             <Form.Group as={Col} lg={3}>
                                                 <Form.Check
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fs-14"
                                                     type="radio"
                                                     label="Yes"
                                                     value="1"
@@ -795,7 +795,7 @@ const Fabrics = (props) => {
                                             </Form.Group>
                                             <Form.Group as={Col} lg={2}>
                                                 <Form.Check
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fs-14"
                                                     type="radio"
                                                     label="No"
                                                     value="0"
@@ -811,7 +811,7 @@ const Fabrics = (props) => {
                                         <Row>
                                             <Form.Group as={Col} lg={3}>
                                                 <Form.Check
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fs-14"
                                                     type="radio"
                                                     label="Yes"
                                                     value="1"
@@ -821,7 +821,7 @@ const Fabrics = (props) => {
                                             </Form.Group>
                                             <Form.Group as={Col} lg={2}>
                                                 <Form.Check
-                                                    className="cursor-pointer"
+                                                    className="cursor-pointer fs-14"
                                                     type="radio"
                                                     label="No"
                                                     value="0"
@@ -951,7 +951,7 @@ const Fabrics = (props) => {
                                                                         <div className="design-details">
                                                                             <div className='d-flex justify-content-between align-items-center'>
                                                                                 <div className="d-flex">
-                                                                                    <h4 className="text-black fs-18 fw-600 mb-0 text-ellipsis pb-1">{fabric.name ?? '-'}</h4>
+                                                                                    <h4 className="text-black fs-16 fw-600 mb-0 text-ellipsis pb-1 fabric-name">{fabric.name ?? '-'}</h4>
                                                                                     {fabric.eco_friendly == 1 ?
                                                                                         <div className='d-flex align-items-center'>
                                                                                             <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
@@ -1016,7 +1016,7 @@ const Fabrics = (props) => {
                                                                                 /* Available Props */
                                                                                 />
                                                                             </div>
-                                                                            <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
+                                                                            <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis poppins-ft">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
                                                                             {/* {currentUser ?
                                                                         <div className='d-flex align-items-center mt-1'>
                                                                             {fabric.user.image ?

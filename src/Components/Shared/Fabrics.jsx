@@ -262,7 +262,7 @@ const Fabrics = (props) => {
                                                                 /* Available Props */
                                                                 />
                                                             </div>
-                                                            <p className="text-black fs-18 fw-600 mt-2 text-ellipsis">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</p>
+                                                            <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis poppins-ft">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
                                                             {/* {currentUser ?
                                                                 <div className='d-flex align-items-center mt-1'>
                                                                     {fabric.user.image ?

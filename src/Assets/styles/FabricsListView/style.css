@@ -43,3 +43,6 @@
     justify-content: center;
     align-items: center;
 }
+.designs-grid:hover .fabric-name{
+    text-decoration: underline;
+}

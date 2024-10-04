@@ -224,7 +224,7 @@ const Designers = (props) => {
 
     return (
         <Layout>
-            <section className='py-5 px-2'>
+            <section className='py-5 px-5'>
                 <Container>
                     <Row className='mb-3'>
                         <Col lg="8" className=''>
@@ -288,7 +288,7 @@ const Designers = (props) => {
                                                                 value={category.id}
                                                                 checked={selectedCategories.includes(category.id)}
                                                                 onChange={handleSelectCategoryChange}
-                                                                className="mb-2"
+                                                                className="mb-2 fs-14"
                                                             />
                                                         ))}
                                                     </>

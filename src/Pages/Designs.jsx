@@ -559,7 +559,7 @@ const Designs = (props) => {
 
     return (
         <Layout>
-            <div className='py-5 px-2'>
+            <div className='py-5 px-5'>
                 <section>
                     <Container>
                         <Row className='mb-3'>
@@ -628,7 +628,7 @@ const Designs = (props) => {
                                                                 value={category.id}
                                                                 checked={selectedCategories.includes(category.id)}
                                                                 onChange={handleSelectCategoryChange}
-                                                                className="mb-2"
+                                                                className="mb-2 fs-14"
                                                             />
                                                         ))}
                                                     </>
@@ -649,7 +649,7 @@ const Designs = (props) => {
                                             value="Male"
                                             checked={selectedGenders.includes("Male")}
                                             onChange={handleSelectGenderChange}
-                                            className="mb-2"
+                                            className="mb-2 fs-14"
                                         />
                                         <Form.Check
                                             type="checkbox"
@@ -657,7 +657,7 @@ const Designs = (props) => {
                                             value="Female"
                                             checked={selectedGenders.includes("Female")}
                                             onChange={handleSelectGenderChange}
-                                            className="mb-2"
+                                            className="mb-2 fs-14"
                                         />
                                         <Form.Check
                                             type="checkbox"
@@ -665,7 +665,7 @@ const Designs = (props) => {
                                             value="Other"
                                             checked={selectedGenders.includes("Other")}
                                             onChange={handleSelectGenderChange}
-                                            className="mb-2"
+                                            className="mb-2 fs-14"
                                         />
                                     </Form.Group>
                                     <hr />

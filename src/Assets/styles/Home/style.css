@@ -85,6 +85,7 @@ section#home p.subtitle {
 }
 .modal-card{
     height: 325px;
+    overflow: hidden;
 }
 
 .fashion-card {
