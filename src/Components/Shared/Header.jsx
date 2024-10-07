@@ -489,7 +489,7 @@ const Header = () => {
               <div className="banner-menu d-flex justify-content-start">
                 <a className="banner-item px-3" href="javascript:void(0)" onClick={() => setSetupShopShow(!setupShopShow)}>Set Up Shop</a>
                 <p className="mb-0 text-white">|</p>
-                <a className="banner-item px-3" href="/">Download the App</a>
+                <a className="banner-item px-3" href="https://kouture-konect.jenocabrera.tech/apk/kouture-konect.apk">Download the App</a>
               </div>
             </Col>
             <Col lg="6">
