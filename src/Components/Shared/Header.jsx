@@ -73,6 +73,7 @@ const Header = () => {
   const [favoritesCount, setFavoritesCount] = useState(0);
   const [favorites, setFavorites] = useState([]);
   const [registerModalShow, setRegisterModalShow] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
 
   const [userType, setUserType] = useState('user');
@@ -83,6 +84,7 @@ const Header = () => {
   const appointmentRef = useRef(null);
   const countryRef = useRef(null);
   const orderRef = useRef(null);
+  const searchRef = useRef(null);
   const [underConstructionShow, setUnderConstructionShow] = useState(false);
   const [setupShopShow, setSetupShopShow] = useState(false);
   const [modalHeading, setModalHeading] = useState();
@@ -160,12 +162,19 @@ const Header = () => {
     if (wishlistRef.current && !wishlistRef.current.contains(event.target)) {
       setUserWishlistOpen(false);
     }
+    if (searchRef.current && !searchRef.current.contains(event.target)) {
+      setUserDropdownOpen(false);
+    }
   };
 
   const toggleSetupShopShow = () => {
     setSetupShopShow(!setupShopShow);
-  }
-
+  };
+  
+  const toggleDropdownShow = () => {
+    setUserDropdownOpen(!userDropdownOpen);
+  };
+  
   const toggleUserMenu = () => {
     setUserMenuOpen(!userMenuOpen);
   };
@@ -446,7 +455,7 @@ const Header = () => {
     <>
       {isLoggedIn &&
         <>
-          {(user.profile_completeness >= 0 && user.profile_completeness < 100) &&
+          {/* {(user.profile_completeness >= 0 && user.profile_completeness < 100) &&
             <>
               <div className='banner-completion text-center'>
 
@@ -457,7 +466,7 @@ const Header = () => {
                 </span>
               </div>
             </>
-          }
+          } */}
 
           {/* {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) &&
             <>
@@ -518,11 +527,12 @@ const Header = () => {
               <Form inline className='search-header w-100 d-flex align-items-center'>
                 <FaMagnifyingGlass />
                 <FormControl type='text' placeholder='Search' className='fs-14 search-bar-header ms-2' />
-                <div className="nav-link-dropdown bg-white border border-1 border-black border-gold-hover rounded px-3">
-                  <a className="nav-link d-flex" href="/">
-                    Designers <FaCaretDown />
-                  </a>
-                  <div className="nav-link-menu search-dropdown">
+                <div className="nav-link-dropdown bg-white border border-1 border-black border-gold-hover rounded px-3 search-dropdown-btn" onClick={toggleDropdownShow} ref={searchRef}>
+                  <p className="nav-link my-1 p-0 d-flex " >
+                    Designers <FaCaretDown className="my-1"/>
+                  </p>
+                  {userDropdownOpen && (
+                    <div className="search-dropdown-menu search-dropdown">
                     <a className="nav-link ps-0 pe-0" href="/">
                       <div className="d-flex align-items-center">
                         <img className="mx-2" src={DesignerIcon} width="22px" />
@@ -551,6 +561,7 @@ const Header = () => {
                       </div>
                     </a>
                   </div>
+                  )}
                 </div>
               </Form>
 

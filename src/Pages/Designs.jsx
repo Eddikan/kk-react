@@ -584,7 +584,7 @@ const Designs = (props) => {
                             <Col lg="3">
                                 <div className="filter-sidebar pe-4">
                                     <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600">Search</Form.Label>
+                                        <Form.Label className="fw-600 fs-15">Search</Form.Label>
                                         <Form.Control  placeholder="Enter your search term..." type="text" onChange={(e) => handleChangeSearch(e)} />
                                     </Form.Group>
                                     {/* <Form.Group className='mb-4'>
@@ -597,7 +597,7 @@ const Designs = (props) => {
                                         </Form.Control>
                                     </Form.Group> */}
                                     <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600">Country</Form.Label>
+                                        <Form.Label className="fw-600 fs-15">Country</Form.Label>
                                         <Form.Control
                                             as='select'
                                             name='country'
@@ -617,7 +617,7 @@ const Designs = (props) => {
                                     {categories && categories.length > 0 ?
                                         <>
                                             <Form.Group className='mb-3'>
-                                                <Form.Label className="fw-600">Categories</Form.Label>
+                                                <Form.Label className="fw-600 fs-15">Categories</Form.Label>
                                                 {categories && categories.length > 0 ?
                                                     <>
                                                         {categories.map((category, index) => (
@@ -642,7 +642,7 @@ const Designs = (props) => {
                                     }
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600">Gender</Form.Label>
+                                        <Form.Label className="fw-600 fs-15">Gender</Form.Label>
                                         <Form.Check
                                             type="checkbox"
                                             label="Male"
@@ -670,17 +670,17 @@ const Designs = (props) => {
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600">Season</Form.Label>
+                                        <Form.Label className="fw-600 fs-15">Season</Form.Label>
                                         <Form.Control value={seasonsValue} onChange={(e) => handleChangeSeason(e)}></Form.Control>
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600">Color</Form.Label>
+                                        <Form.Label className="fw-600 fs-15">Color</Form.Label>
                                         <Form.Control value={colorsValue} onChange={(e) => handleChangeColor(e)}></Form.Control>
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600">Material</Form.Label>
+                                        <Form.Label className="fw-600 fs-15">Material</Form.Label>
                                         <Form.Control value={materialsValue} onChange={(e) => handleChangeMaterial(e)}></Form.Control>
                                     </Form.Group>
                                     {/* {seasons && seasons.length > 0 ?
