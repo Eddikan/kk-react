@@ -1,0 +1,14 @@
+.designer-box-details:hover .designer-details-bottom h3{
+    text-decoration: underline;
+}
+.designer-box-details:hover .designer-details-bottom p{
+    text-decoration: underline;
+}
+.save-link.designer-link{
+    display: none;
+    top: 10px !important;
+    right: 10px !important;
+}
+.designer-box-details:hover .save-link.designer-link{
+    display: block;
+}

@@ -20,6 +20,7 @@ import 'react-multi-carousel/lib/styles.css';
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import ShopIcon from 'Assets/images/icons/shop.png';
 import Carousel from '@christian-martins/react-grid-carousel'
+import 'Assets/styles/Designers/style.css';
 
 const Designers = (props) => {
     const navigate = useNavigate();
@@ -365,24 +366,44 @@ const Designers = (props) => {
                                                                         null
                                                                     }
                                                                     {designer.user.image ? (
-                                                                        <div onClick={() => toggleGetUser(designer.user.id)} className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})` }}>
-                                                                            <div className='bg-black-faded cursor-pointer designer-overlay'>
-                                                                                <div className="designer-details">
-                                                                                    <h3 className="designer-name text-white fs-25 mb-1 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
-                                                                                    <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p>
+                                                                        // <div onClick={() => toggleGetUser(designer.user.id)} className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})` }}>
+                                                                        //     <div className='bg-black-faded cursor-pointer designer-overlay'>
+                                                                        //         <div className="designer-details">
+                                                                        //             <h3 className="designer-name text-white fs-25 mb-1 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
+                                                                        //             <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p>
+                                                                        //         </div>
+                                                                        //     </div>
+                                                                        // </div>
+                                                                        <div className="designer-container">
+                                                                            <div onClick={() => toggleGetUser(designer.user.id)} className="designers-grid-div w-100" style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${designer.user.image})` }}>
+                                                                                <div className='bg-black-faded cursor-pointer designer-overlay'>
+                                                                                    {/* <div className="designer-details">
+                                                                                        <h3 className="designer-name text-white fs-25 mb-1 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
+                                                                                        <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p>
+                                                                                    </div> */}
                                                                                 </div>
+                                                                            </div>
+                                                                            <div className="designer-details-bottom">
+                                                                                <h3 className="designer-name fs-18 mt-13 mb-0 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
+                                                                                <p className="mb-0 fs-12 mt-1 bio-short-designer">{designer.user.short_bio || "-"}</p>
                                                                             </div>
                                                                         </div>
                                                                     ) : (
                                                                         <>
+                                                                        <div className="designer-container">
                                                                             <div onClick={() => toggleGetUser(designer.user.id)} className="designers-grid-div w-100" style={{ backgroundImage: `url(${designer.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}>
                                                                                 <div className='bg-black-faded cursor-pointer designer-overlay'>
-                                                                                    <div className="designer-details">
+                                                                                    {/* <div className="designer-details">
                                                                                         <h3 className="designer-name text-white fs-25 mb-1 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
                                                                                         <p className="text-white mb-0 bio-short-designer">{designer.user.short_bio || "-"}</p>
-                                                                                    </div>
+                                                                                    </div> */}
                                                                                 </div>
-                                                                            </div>
+                                                                            </div>  
+                                                                            <div className="designer-details-bottom">
+                                                                                <h3 className="designer-name fs-18 mt-13 mb-0 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
+                                                                                <p className="mb-0 fs-12 mt-1 bio-short-designer">{designer.user.short_bio || "-"}</p>
+                                                                            </div>                                                             
+                                                                        </div>
                                                                         </>
                                                                     )}
                                                                     {userRole !== 'Admin' && designer.user.id != currentUser ?
@@ -416,6 +437,27 @@ const Designers = (props) => {
                                                                                     </div>
                                                                                 </>
                                                                                 :
+                                                                                <div className='save-link designer-link'>
+                                                                                        {userWishlist ?
+                                                                                            <div className="kouture-tooltip">
+                                                                                                <div className="action-button bg-gold">
+                                                                                                    <GoHeart className="text-white" />
+                                                                                                </div>
+                                                                                                <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
+                                                                                                    Remove from Wishlist
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            :
+                                                                                            <div className="kouture-tooltip">
+                                                                                                <div className="action-button bg-white">
+                                                                                                    <GoHeart className="text-black" />
+                                                                                                </div>
+                                                                                                <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
+                                                                                                    Add to Wishlist
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        }
+                                                                                    </div>
                                                                                 // <>
                                                                                 //     <div className='save-link designer-link'>
                                                                                 //         {tempDesignerWishlist.some(wishlistItem => wishlistItem.id === designer.id) ?
@@ -445,7 +487,6 @@ const Designers = (props) => {
                                                                                 //         }
                                                                                 //     </div>
                                                                                 // </>
-                                                                                null
                                                                             }
                                                                             
                                                                         </>
