@@ -37,7 +37,7 @@ const HeroLoggedIn = () => {
                                     Your browser does not support the video tag.
                                 </video> */}
                                 <div className="hero-cards">
-                                    <h2 className="mb-3 text-white text-left text-gold-hover fs-40" style={{lineHeight: '45px', marginTop: '50px'}}>Find<br />Fashion<br />Designers <FaArrowRightLong size="35" className="ms-3"/></h2>
+                                    <h2 className="mb-3 text-white text-left fs-40" style={{lineHeight: '45px', marginTop: '50px'}}>Find<br />Fashion<br />Designers <FaArrowRightLong size="35" className="ms-3"/></h2>
                                 </div>
                             </div>
                         </Col>
@@ -54,7 +54,7 @@ const HeroLoggedIn = () => {
                                     Your browser does not support the video tag.
                                 </video> */}
                                 <div className="hero-cards">
-                                    <h2 className="mb-3 text-white text-left text-gold-hover fs-40" style={{lineHeight: '45px', marginTop: '90px'}}>Shop<br />Fabrics <FaArrowRightLong size="35" className="ms-3"/></h2>
+                                    <h2 className="mb-3 text-white text-left fs-40" style={{lineHeight: '45px', marginTop: '90px'}}>Shop<br />Fabrics <FaArrowRightLong size="35" className="ms-3"/></h2>
                                 </div>
                             </div>
                         </Col>
@@ -71,7 +71,7 @@ const HeroLoggedIn = () => {
                                     Your browser does not support the video tag.
                                 </video> */}
                                 <div className="hero-cards">
-                                    <h2 className="mb-3 text-white text-left text-gold-hover fs-40" style={{lineHeight: '45px', marginTop: '90px'}}>Explore<br />Designs <FaArrowRightLong size="35" className="ms-3"/></h2>
+                                    <h2 className="mb-3 text-white text-left fs-40" style={{lineHeight: '45px', marginTop: '90px'}}>Explore<br />Designs <FaArrowRightLong size="35" className="ms-3"/></h2>
                                 </div>
                             </div>
                         </Col>

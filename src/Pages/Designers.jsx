@@ -17,6 +17,9 @@ import Loading from 'Components/Shared/Loading';
 import axios from 'axios';
 import { debounce } from 'lodash';
 import 'react-multi-carousel/lib/styles.css';
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
+import ShopIcon from 'Assets/images/icons/shop.png';
+import Carousel from '@christian-martins/react-grid-carousel'
 
 const Designers = (props) => {
     const navigate = useNavigate();
@@ -227,11 +230,38 @@ const Designers = (props) => {
             <section className='py-5 px-5'>
                 <Container>
                     <Row className='mb-3'>
-                        <Col lg="8" className=''>
+                        <Col lg="3" className=''>
                             <h2 className='fs-40'>Designers</h2>
                         </Col>
-                        <Col lg="4" className='text-right'>
-                            <GoBack fallBack="/" />
+                        <Col lg="9" className='text-right'>
+                            <Row>
+                                <Col lg="9">
+                                    <div className="d-flex my-2">
+                                        <div className="category-container">
+                                            {categories && categories.length > 0 ? (
+                                                <Carousel 
+                                                    cols={6} 
+                                                    rows={1} 
+                                                    arrowLeft={FaAngleLeft}
+                                                    arrowRight={FaAngleRight}
+                                                    gap={2}
+                                                >
+                                                    {categories.map((category, index) => (
+                                                        <Carousel.Item>
+                                                            <p key={index} className="category-item my-auto text-center fs-12">
+                                                                {category.name}
+                                                            </p>
+                                                        </Carousel.Item>
+                                                    ))}
+                                                </Carousel>
+                                            ) : null}
+                                        </div>
+                                    </div>
+                                </Col>
+                                <Col lg="3">
+                                    <Button className="custom-hover-btn fs-12"> <img src={ShopIcon} height="29px" className="mx-1" alt="shop-icon"/>Create your Shop</Button>
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                     <div id="profile-designers">

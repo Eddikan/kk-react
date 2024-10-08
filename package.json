@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@christian-martins/react-grid-carousel": "^1.0.3",
     "@firebase/firestore": "^4.5.1",
     "@paypal/react-paypal-js": "^8.5.0",
     "@react-oauth/google": "^0.12.1",

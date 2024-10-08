@@ -3209,6 +3209,7 @@ span.rti--tag {
     position: relative;
     width: 100%;
 }
+/* Search Button DropDown */
 .search-dropdown-btn{
     height: 37px;
 }
@@ -3224,4 +3225,11 @@ span.rti--tag {
     -webkit-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.1);
     z-index: 3;
+}
+/*Category Carousel*/
+.category-container{
+    overflow: hidden;
+}
+.category-item p{
+    min-width: 200px;
 }
