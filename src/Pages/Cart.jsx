@@ -255,7 +255,7 @@ const Cart = (props) => {
                 </>
                 :
                 <>
-                    <section>
+                    <section className="px-5">
                         <Container className='top-bottom'>
                             <Row>
                                 <Col lg={12}>

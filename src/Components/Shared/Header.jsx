@@ -12,11 +12,12 @@ import CountryCurrencyLanguageSelector from './CountryCurrencyLanguageSelector';
 import { BsArrowLeft } from "react-icons/bs";
 import { AiOutlineAntDesign } from "react-icons/ai";
 import { Container, Button, Col, Row } from 'react-bootstrap';
-import { FaMagnifyingGlass } from "react-icons/fa6";
+import { FaMagnifyingGlass, FaChevronDown } from "react-icons/fa6";
 import { IoIosPower, IoIosImages, IoIosCog } from "react-icons/io";
 import { BsCartCheck } from "react-icons/bs";
 import { IoCalendarClearOutline, IoCartOutline, IoCloseOutline, IoShirtOutline, IoPersonOutline } from "react-icons/io5";
 import { FaCaretDown, FaCaretUp } from "react-icons/fa";
+import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import { GoBell, GoHeart, GoAlertFill, GoStar, GoGlobe } from "react-icons/go";
 import { BsEnvelope, BsShopWindow } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
@@ -25,7 +26,6 @@ import { Link } from 'react-router-dom';
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoBookmarkOutline } from "react-icons/io5";
 import { VscBell } from "react-icons/vsc";
-
 import NewAppointment from 'Assets/images/new-appointment-icon.png';
 import { HiOutlineBuildingStorefront } from "react-icons/hi2";
 import User from 'Assets/images/user.png';
@@ -48,6 +48,10 @@ import KoutureIcon from 'Assets/images/kouture-konect-icon.png';
 import DesignIcon from 'Assets/images/user-box/dress.png';
 import FabricIcon from 'Assets/images/user-box/fabric.png';
 import DesignerIcon from 'Assets/images/user-box/edit-tools.png';
+import UserIcon from 'Assets/images/icons/profile.png';
+import FavoritesIcon from 'Assets/images/icons/bookmark.png';
+import CartIcon from 'Assets/images/icons/cart.png';
+import BellIcon from 'Assets/images/icons/bell.png';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -90,6 +94,8 @@ const Header = () => {
   const [modalHeading, setModalHeading] = useState();
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCountryCode, setSelectedCountryCode] = useState('US');
+  const [search, setSearch] = useState('');
+  const [activeTab, setActiveTab] = useState('Designers');
   const currentUser = cookies.currentUser;
   const token = cookies.token;
   const userDetails = cookies.userDetails;
@@ -226,6 +232,47 @@ const Header = () => {
   }
 
   let reminded = 0;
+
+  const handleChangeSearch = (e) => {
+    setSearch((prevSearch) => e.target.value);
+  };
+
+  const searchSubmitIcon = () => {
+    if (search != "") {
+      if (activeTab == "Designers") {
+        navigate("/designers?search="+search);
+      } else if (activeTab == "Fabrics") {
+        navigate("/fabrics?search="+search);
+      } else if (activeTab == "Designs") {
+        navigate("/designs?search="+search);
+      }
+    }
+  }
+
+  const searchSubmit = (e) => {
+    e.preventDefault();
+    if (search != "") {
+      if (activeTab == "Designers") {
+        navigate("/designers?search="+search);
+      } else if (activeTab == "Fabrics") {
+        navigate("/fabrics?search="+search);
+      } else if (activeTab == "Designs") {
+        navigate("/designs?search="+search);
+      }
+    }
+  }
+
+  const searchSubmitDropdown = (e) => {
+    if (search != "") {
+      if (e == "Designers") {
+        navigate("/designers?search="+search);
+      } else if (e == "Fabrics") {
+        navigate("/fabrics?search="+search);
+      } else if (e == "Designs") {
+        navigate("/designs?search="+search);
+      }
+    }
+  }
 
   useEffect(() => {
     document.addEventListener('click', handleClickOutside);
@@ -524,16 +571,16 @@ const Header = () => {
             <Nav className="align-items-center w-100">
               {/* <Nav.Link href="/find-designs">Find Designs</Nav.Link>
               <Nav.Link href="/inspirations">Inspirations</Nav.Link> */}
-              <Form inline className='search-header w-100 d-flex align-items-center'>
-                <FaMagnifyingGlass />
-                <FormControl type='text' placeholder='Search' className='fs-14 search-bar-header ms-2' />
-                <div className="nav-link-dropdown bg-white border border-1 border-black border-gold-hover rounded px-3 search-dropdown-btn" onClick={toggleDropdownShow} ref={searchRef}>
-                  <p className="nav-link my-1 p-0 d-flex " >
-                    Designers <FaCaretDown className="my-1"/>
+              <Form onSubmit={searchSubmit} inline className='search-header w-100 d-flex align-items-center'>
+                <HiMiniMagnifyingGlass onClick={searchSubmitIcon} size="20px" />
+                <FormControl type='text' placeholder='Search' name="search" onChange={handleChangeSearch} className='fs-14 search-bar-header ms-2' required />
+                <div className="nav-link-dropdown bg-white border border-1 border-black border-gold-hover px-3 search-dropdown-btn cursor-pointer" onClick={toggleDropdownShow} ref={searchRef}>
+                  <p className="nav-link p-0 text-center fs-13 fw-500" >
+                    {activeTab} <FaChevronDown size="13px" className="ms-2" style={{ display: 'inline-block', verticalAlign: 'middle', marginTop: '-2px'}}/>
                   </p>
                   {userDropdownOpen && (
                     <div className="search-dropdown-menu search-dropdown">
-                    <a className="nav-link ps-0 pe-0" href="/">
+                    <a className="nav-link ps-0 pe-0" href="javascript:void(0)" onClick={function() { searchSubmitDropdown('Designers'); setActiveTab('Designers')}}>
                       <div className="d-flex align-items-center">
                         <img className="mx-2" src={DesignerIcon} width="22px" />
                         <div>
@@ -542,7 +589,7 @@ const Header = () => {
                         </div>
                       </div>
                     </a>
-                    <a className="nav-link ps-0 pe-0" href="/">
+                    <a className="nav-link ps-0 pe-0" href="javascript:void(0)" onClick={function() { searchSubmitDropdown('Fabrics'); setActiveTab('Fabrics')}}>
                       <div className="d-flex align-items-center">
                         <img className="mx-2" src={FabricIcon} width="23px" />
                         <div>
@@ -551,7 +598,7 @@ const Header = () => {
                         </div>
                       </div>
                     </a>
-                    <a className="nav-link ps-0 pe-0" href="/">
+                    <a className="nav-link ps-0 pe-0" href="javascript:void(0)" onClick={function() { searchSubmitDropdown('Designs'); setActiveTab('Designs')}}>
                       <div className="d-flex align-items-center">
                         <img className="mx-2" src={DesignIcon} width="22px" />
                         <div>
@@ -584,7 +631,8 @@ const Header = () => {
                   <>
                     <div className="nav-link-dropdown border-left-rounded border-black ms-2">
                       <div className="nav-link d-flex cursor-pointer">
-                        <IoPersonOutline size={26} />
+                        {/* <IoPersonOutline size={26} /> */}
+                        <img src={UserIcon} className="navigation-icon" alt="Profile" />
                         {/* {userImage ?
                           <div className="header-user-photo cursor-pointer" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + userImage + ")" }}>
 
@@ -651,8 +699,9 @@ const Header = () => {
                     {userRole !== 'Admin' &&
                       <a href={`/favorites`}>
                         <div className="nav-link header-tooltip">
-                          <span className="icon-tooltiptext fs-14">Favorites</span>
-                          <IoBookmarkOutline size={26} />
+                          <span className="icon-tooltiptext fs-14" style={{width: '135px', left: '28%'}}>Favorite Designs</span>
+                          {/* <IoBookmarkOutline size={26} /> */}
+                          <img src={FavoritesIcon} className="navigation-icon" alt="Favorites" />
                           <div>
                             <div className='cart-added position-absolute badge-purple text-white'>
                               <span className='cart-count'>{favoritesCount}</span>
@@ -666,7 +715,8 @@ const Header = () => {
                       <a href={`/cart/`}>
                         <div className="nav-link header-tooltip">
                           <span className="icon-tooltiptext fs-14">Cart</span>
-                          <IoCartOutline size={26} />
+                          {/* <IoCartOutline size={26} /> */}
+                          <img src={CartIcon} className="navigation-icon" alt="Cart" />
                           <div>
                             <div className='cart-added position-absolute badge-purple text-white'>
                               <span className='cart-count'>{cartItemCount}</span>
@@ -690,7 +740,8 @@ const Header = () => {
                     <div className="user-dropdown nav-link cursor-pointer d-block position-relative" ref={bellRef} onClick={toggleBellMenu}>
                       <div className="nav-link header-tooltip" >
                         <span className="icon-tooltiptext fs-14">Notifications</span>
-                        <VscBell size={25} />
+                        {/* <VscBell size={25} /> */}
+                        <img src={BellIcon} className="navigation-icon" alt="Notifications" />
                       </div>
                       {userBellOpen && (
                         <div className="action-box-bell scroll-bar user-menu-bell" id="style-2">
@@ -962,7 +1013,7 @@ const Header = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      {currentUser && (userDetails.email_verified_at == "" || userDetails.email_verified_at == null) ?
+      {currentUser && (!userDetails.email_verified_at || userDetails.email_verified_at == "" || userDetails.email_verified_at == null) ?
         <div className="verify-email-notification">
           <p className="text-center fw-600 mb-0">Verify your email to get the most out of Kouture Konect. Didn’t receive an email? <a href="/email-confirmation" className="fw-400 text-decoration-none">Resend confirmation</a></p>
         </div>
