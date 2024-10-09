@@ -250,21 +250,21 @@ const Fabrics = (props) => {
 
     const handleCompositionChange = (composition) => {
         const updatedCompositions = [...selectedCompositions];
-
+    
         if (updatedCompositions.includes(composition)) {
             updatedCompositions.splice(updatedCompositions.indexOf(composition), 1);
-            if (selectedAllCompositions.length + 1 === compositions.length){
-                setSelectedAllCompositions(true);
-            }
-            else{
-                setSelectedAllCompositions(false);
-            }
         } else {
             updatedCompositions.push(composition);
         }
-        
-        setSelectedCompositions(updatedCompositions);
+    
+        if (updatedCompositions.length === compositions.length) {
+            setSelectedAllCompositions(true); 
+        } else {
+            setSelectedAllCompositions(false);  
+        }
+            setSelectedCompositions(updatedCompositions);
     };
+    
 
     const handleChangeCategory = (event) => {
         const categoryId = parseInt(event, 10);
