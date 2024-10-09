@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Modal, Container, Row, Col, Button, Form, Card } from 'react-bootstrap';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -29,6 +29,12 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 const Designers = (props) => {
     const navigate = useNavigate();
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    }
+    let query = useQuery();
+    const headerSearch = query.get('search');
+
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempDesignerWishlist', 'selectedCountry', 'selectedCountryCode']);
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [designers, setDesigners] = useState([]);
@@ -70,7 +76,7 @@ const Designers = (props) => {
     ]);
 
     const getDesigners = async () => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?areas_of_specialization='+specializationSearch+'&search='+searchValue+'&country='+selectedCountry+'&categories='+selectedCategories+'&page=' + currentPage + '&user_id=' + currentUser);
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'designers?areas_of_specialization='+specializationSearch+'&search='+(searchValue || headerSearch || '')+'&country='+selectedCountry+'&categories='+selectedCategories+'&page=' + currentPage + '&user_id=' + currentUser);
     };
 
     const toggleGetUser = (e) => {
@@ -187,6 +193,7 @@ const Designers = (props) => {
             toast.error('An error occured. Please try again or contact the administrator.');
         });
     };
+
     const handleChangeCategory = (event) => {
         const categoryId = parseInt(event, 10);
         if (!selectedCategories.includes(categoryId)) {
@@ -229,7 +236,7 @@ const Designers = (props) => {
                 toast.error('There has been an error getting the designers, please try again!');
                 setDesignersLoading(false);
             });
-    }, [reloadCount, selectedCountry, selectedCategories, specializationSearch, searchValue]);
+    }, [reloadCount, selectedCountry, selectedCategories, specializationSearch, searchValue, headerSearch]);
 
     const handleChangeCountry = (e) => {
         const {name, value} = e.target;

@@ -46,7 +46,7 @@ const Designs = (props) => {
         return new URLSearchParams(useLocation().search);
     }
     let query = useQuery();
-    const header_search = query.get('search');
+    const headerSearch = query.get('search');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'selectedCountry', 'favoriteItemCount']);
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -70,8 +70,8 @@ const Designs = (props) => {
     const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
     const [country, setCountry] = useState('');
     const [priceRange, setPriceRange] = useState({ from: '', to: '' });
-    const [search, setSearch] = useState(header_search ?? '');
-    const [searchValue, setSearchValue] = useState(header_search ?? '');
+    const [search, setSearch] = useState('');
+    const [searchValue, setSearchValue] = useState('');
 
     // Filter Arrays
     const [colors, setColors] = useState([]);
@@ -574,7 +574,7 @@ const Designs = (props) => {
             onFilterChange({
                 sortField: selectedSortField,
                 sortOrder: selectedSortOrder,
-                search: searchValue,
+                search: searchValue || headerSearch || '',
                 portfolio_item_category_ids: selectedCategories,
                 genders: selectedGenders,
                 seasons: seasonsSearch,
@@ -586,7 +586,19 @@ const Designs = (props) => {
             setMounted(true);
         }
 
-    }, [mounted, searchValue, selectedCategories, selectedGenders, seasonsSearch, colorsSearch, materialsSearch, selectedCountry]);
+    }, [mounted, searchValue, headerSearch, selectedCategories, selectedGenders, seasonsSearch, colorsSearch, materialsSearch, selectedCountry]);
+
+    useEffect(() => {
+        // Only run the filter API call after the component has mounted
+        if (headerSearch) {
+            setSearch(headerSearch);
+            setSearchValue(headerSearch);
+        } else {
+            // Set the component as mounted
+            setSearch('');
+            setSearchValue('');
+        }
+    }, [headerSearch]);
 
     const settings = {
         className: "slider variable-width",

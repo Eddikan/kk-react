@@ -60,8 +60,8 @@ const Header = () => {
     return new URLSearchParams(useLocation().search);
   }
   let query = useQuery();
-  const header_search = query.get('search');
-  const header_type = query.get('type');
+  const headerSearch = query.get('search');
+  const headerType = query.get('type');
 
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'selectedCartItems', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode', 'selectedLanguage', 'selectedCurrency', 'selectedCurrencyCode', 'cartItemCount', 'favoriteItemCount', 'over_18']);
   const currentUrl = window.location.href;
@@ -100,8 +100,8 @@ const Header = () => {
   const [modalHeading, setModalHeading] = useState();
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCountryCode, setSelectedCountryCode] = useState('US');
-  const [search, setSearch] = useState(header_search ?? '');
-  const [activeTab, setActiveTab] = useState(header_type ?? 'Designers');
+  const [search, setSearch] = useState(headerSearch ?? '');
+  const [activeTab, setActiveTab] = useState(headerType ?? 'Designers');
   const currentUser = cookies.currentUser;
   const token = cookies.token;
   const userDetails = cookies.userDetails;

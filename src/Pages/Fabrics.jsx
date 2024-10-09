@@ -570,7 +570,7 @@ const Fabrics = (props) => {
                 price_range: priceRange,
                 sortField: selectedSortField,
                 sortOrder: selectedSortOrder,
-                search: searchValue,
+                search: searchValue || headerSearch || '',
                 country: country,
                 sustainability: selectedSustainabilities,
                 unit_measurement: unitMeasurement,
@@ -587,18 +587,7 @@ const Fabrics = (props) => {
             // Set the component as mounted
             setMounted(true);
         }
-    }, [unitMeasurement, opacitySearch, patternSearch, textureSearch, selectedColorFastness, cutToSize, wrinkleResistant, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, width, length, selectedSustainabilities, priceRange, reloadCount, searchValue, country]);
-
-    useEffect(() => {
-        if (headerSearch && headerSearch != "") {
-            setSearch(headerSearch);
-            setSearchValue(headerSearch);
-        } else {
-            setSearch('');
-            setSearchValue('');
-        }
-
-    }, [headerSearch]);
+    }, [unitMeasurement, opacitySearch, patternSearch, textureSearch, selectedColorFastness, cutToSize, wrinkleResistant, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, width, length, selectedSustainabilities, priceRange, reloadCount, searchValue, country, headerSearch]);
 
     useEffect(() => {
         setSelectedCountry(cookies.selectedCountry ?? '');
@@ -659,7 +648,7 @@ const Fabrics = (props) => {
                                                     <Col lg="3" className="text-right">
                                                         {currentUser ?
                                                             <>
-                                                                {user.is_designer == 1 ?
+                                                                {user.is_seller == 1 ?
                                                                     <Link to="/user/profile?tab=fabrics&tab_group=fabrics">
                                                                         <button className="ddf-button fs-12 btn bg-white border-black text-black bg-white-hover border-gold-hover text-black-hover">
                                                                             <img src={DressIcon} className="ddf-button-icon" alt="Designs" /> Display Your Creations
