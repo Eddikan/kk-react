@@ -11,7 +11,8 @@ import { ImLeaf } from "react-icons/im";
 import GoBack from 'Components/Shared/GoBack';
 import { GoHeart } from "react-icons/go";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-
+import Slider from "react-slick";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
@@ -36,6 +37,7 @@ const Fabrics = (props) => {
     const [selectedCompositions, setSelectedCompositions] = useState([]);
     const [selectedWeaves, setSelectedWeaves] = useState([]);
     const [selectedColors, setSelectedColors] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [country, setCountry] = useState('');
     const [priceRange, setPriceRange] = useState({ from: '', to: '' });
     const [search, setSearch] = useState('');
@@ -86,8 +88,22 @@ const Fabrics = (props) => {
         { value: 'views', label: 'Views' },
     ]);
 
+    const settings = {
+        className: "slider variable-width",
+        dots: false,
+        infinite: false,
+        centerMode: false,
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        variableWidth: true,
+        nextArrow: <FaChevronRight className="category-slider-nav" size="6px" color="#000000" />,
+        prevArrow: <FaChevronLeft className="category-slider-nav" size="6px" color="#000000" />,
+    };
+
     const [selectedSortField, setSelectedSortField] = useState(null);
     const [selectedSortOrder, setSelectedSortOrder] = useState(null);
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [selectedAllCategories, setSelectedAllCategories] = useState(false);
     const [selectedSustainabilities, setSelectedSustainabilities] = useState([]);
     const [selectedColorFastness, setSelectedColorFastness] = useState([]);
     const [wrinkleResistant, setWrinkleResistant] = useState('');
@@ -184,7 +200,7 @@ const Fabrics = (props) => {
             opacity: opacitySearch,
         });
     };
-
+    
     async function onFilterChange(data) {
         setFabricsLoading(true);
         setFabricsFilter(data);
@@ -232,6 +248,20 @@ const Fabrics = (props) => {
         setSelectedCompositions(updatedCompositions);
     };
 
+    const handleChangeCategory = (event) => {
+        const categoryId = parseInt(event, 10);
+        if (!selectedCategories.includes(categoryId)) {
+            setSelectedCategories([...selectedCategories, categoryId]);
+            if (selectedAllCategories.length + 1 === categories.length) {
+                setSelectedAllCategories(true);
+            } else {
+                setSelectedAllCategories(false);
+            }
+        } else {
+            setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
+        }
+    };
+    
     const handleWeaveChange = (weave) => {
         const updatedWeaves = [...selectedWeaves];
 
@@ -548,25 +578,65 @@ const Fabrics = (props) => {
 
     return (
         <Layout>
-            <div className='py-5 px-5'>
-                <section>
-                    <Container>
-                        <Row>
-                            <Col lg="3" className="filter-sidebar">
-                                <div className="pe-4">
-                                    <p className="mb-0 fs-14 fw-500"><Link className="text-decoration-none text-muted" to="/">Home</Link> / Designs</p>
-                                </div>
-                            </Col>
-                            <Col lg="9" className='text-right'>
-                            </Col>
-                        </Row>
-                    </Container>
-                </section>
+            <div className='pb-5 pt-10 px-5'>
                 <section className="pt-3">
                     <Container>
                         <Row className="mt-2">
-                            <Col lg="3">
-                                <div className="filter-sidebar pe-4">
+                            <Col lg="12">
+                                <div className="ddf-header">
+                                    <Row>
+                                        <Col lg="3" className="filter-sidebar">
+                                            <div className="pe-4">
+                                                <p className="mb-0 fs-14 fw-500"><Link className="text-decoration-none text-muted" to="/">Home</Link> / Designs</p>
+                                            </div>
+                                        </Col>
+                                        <Col lg="9" className="category-slider">
+                                            <div  className="ps-4">
+                                                <Row>
+                                                    <Col lg="9">
+                                                        <div className="category-pills">
+                                                            {categories && categories.length > 0 ? (
+                                                                <Slider {...settings}>
+                                                                    {selectedAllCategories || selectedCategories.length < 1  ?
+                                                                        <div className="mx-2 cursor-pointer">
+                                                                            <span class="badge badge-dark bg-dark fs-12 fw-400 text-center">All</span>
+                                                                        </div>
+                                                                        :
+                                                                        <div className="mx-2 cursor-pointer" onClick={function() { setSelectedAllCategories(true); setSelectedCategories([]) }}>
+                                                                            <span class="badge badge-dark bg-white fs-12 text-dark fw-400 text-center">All</span>
+                                                                        </div>
+                                                                    }
+                                                                    {categories.map((category, index) => (
+                                                                        <>
+                                                                            {selectedCategories.includes(category.id) ?
+                                                                                <div className="mx-2 cursor-pointer" onClick={function() { handleChangeCategory(category.id); }}>
+                                                                                    <span class="badge badge-dark bg-dark fs-12 fw-400 text-center">{category.name}</span>
+                                                                                </div>
+                                                                                :
+                                                                                <div className="mx-2 cursor-pointer" onClick={function() { handleChangeCategory(category.id); }}>
+                                                                                    <span class="badge badge-dark bg-white text-dark fs-12 fw-400 text-center">{category.name}</span>
+                                                                                </div>
+                                                                            }
+                                                                        </>
+                                                                    ))}
+                                                                </Slider>
+                                                            ) 
+                                                            :
+                                                                null
+                                                            }
+                                                            
+                                                        </div>
+                                                    </Col>
+                                                    <Col lg="3">
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </Col>
+                            <Col lg="3" className="filter-sidebar">
+                                <div className="pe-4 pt-3">
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Search</Form.Label>
                                         <FormControl

@@ -58,15 +58,20 @@
 .designs-grid:hover .save-link{
     opacity: 1 !important;
 }
-.category-slider{
+.filter-sidebar {
+    border-right: 2px solid #ECECEC;
+    height: 100%;
+}
+
+.ddf-header .filter-sidebar, .ddf-header .category-slider {
     padding-top: 20px;
     padding-bottom: 20px;
     border-bottom: 2px solid #ECECEC;
     min-height: 66px;
 }
-.fabrics-header .filter-sidebar, .fabrics-header .category-slider {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #ECECEC;
-    min-height: 66px;
+
+.category-pills .slick-arrow {
+    padding: 5px;
+    background-color: #EFEFEF !important;
+    border-radius: 50%;
 }
