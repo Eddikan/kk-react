@@ -552,14 +552,12 @@ const Fabrics = (props) => {
                 <section>
                     <Container>
                         <Row>
-                            <Col lg="11">
-                                <h2 className='fs-40 text-left mb-3'>Explore Premium Fabrics</h2>
+                            <Col lg="3" className="filter-sidebar">
+                                <div className="pe-4">
+                                    <p className="mb-0 fs-14 fw-500"><Link className="text-decoration-none text-muted" to="/">Home</Link> / Designs</p>
+                                </div>
                             </Col>
-                            <Col lg="1" className='text-right'>
-                                <GoBack fallBack="/" />
-                            </Col>
-                            <Col lg="12">
-                                <p className='fs-16 fw-400 mb-3 text-black line-height-24'>Fabrics are versatile materials composed of fibers, either natural or synthetic, that are woven, knitted, or bonded together to form a flexible and pliable structure. </p>
+                            <Col lg="9" className='text-right'>
                             </Col>
                         </Row>
                     </Container>
@@ -900,7 +898,7 @@ const Fabrics = (props) => {
                                                                                     <div
                                                                                         className="designs-grid-div w-100 cursor-pointer"
                                                                                         onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }}
-                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px' }}
+                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '229px' }}
                                                                                     >
                                                                                     </div>
                                                                                 </>
@@ -951,7 +949,7 @@ const Fabrics = (props) => {
                                                                         <div className="design-details">
                                                                             <div className='d-flex justify-content-between align-items-center'>
                                                                                 <div className="d-flex">
-                                                                                    <h4 className="text-black fs-18 fw-600 mb-0 max-150 text-ellipsis pb-1 fabric-name">{fabric.name ?? '-'}</h4>
+                                                                                    <h4 className="text-black fs-18 fw-600 mb-0 max-150 text-ellipsis fabric-name">{fabric.name ?? '-'}</h4>
                                                                                     {fabric.eco_friendly == 1 ?
                                                                                         <div className='d-flex align-items-center'>
                                                                                             <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
@@ -999,7 +997,7 @@ const Fabrics = (props) => {
                                                                                 
                                                                             </div>
 
-                                                                            <div className="star-ratings mt-1">
+                                                                            <div className="star-ratings">
                                                                                 <Rating
                                                                                     initialValue={0}
                                                                                     readonly={true}

@@ -8,6 +8,7 @@
     opacity: 0;
     top: 10px !important;
     right: 10px !important;
+    bottom: auto !important;
 }
 .designer-box-details:hover .save-link.designer-link{
     opacity: 1;

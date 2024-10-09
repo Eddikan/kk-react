@@ -232,31 +232,26 @@ const Designers = (props) => {
                 <Container>
                     <Row className='mb-3'>
                         <Col lg="3" className=''>
-                            <h2 className='fs-40'>Designers</h2>
+                            <p className='fs-14 fw-600'><a href="/" className="sidebar-home-btn">Home </a>/ Designers</p>
                         </Col>
                         <Col lg="9" className='text-right'>
                             <Row>
                                 <Col lg="9">
                                     <div className="d-flex my-2">
+                                        <FaAngleLeft style={{width: '20px',}}/>
                                         <div className="category-container">
                                             {categories && categories.length > 0 ? (
-                                                <Carousel 
-                                                    cols={6} 
-                                                    rows={1} 
-                                                    arrowLeft={FaAngleLeft}
-                                                    arrowRight={FaAngleRight}
-                                                    gap={2}
-                                                >
+                                                <div className="category-list d-flex">
+                                                    <p className="category-item my-auto text-center fs-12">All</p>
                                                     {categories.map((category, index) => (
-                                                        <Carousel.Item>
                                                         <p key={index} className="category-item my-auto text-center fs-12">
                                                             {category.name}
                                                         </p>
-                                                        </Carousel.Item>
                                                     ))}
-                                                </Carousel>
+                                                </div>
                                             ) : null}
                                         </div>
+                                        <FaAngleRight style={{width: '20px',}}/>
                                     </div>
                                 </Col>
                                 <Col lg="3">

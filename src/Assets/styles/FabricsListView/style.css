@@ -49,3 +49,24 @@
 .max-150{
     max-width: 150px;
 }
+.save-link{
+    opacity: 0 !important;
+    top: 10px !important;
+    right: 10px !important;
+    bottom: auto !important;
+}
+.designs-grid:hover .save-link{
+    opacity: 1 !important;
+}
+.category-slider{
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #ECECEC;
+    min-height: 66px;
+}
+.fabrics-header .filter-sidebar, .fabrics-header .category-slider {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #ECECEC;
+    min-height: 66px;
+}
