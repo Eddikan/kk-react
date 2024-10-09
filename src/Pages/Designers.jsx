@@ -21,10 +21,10 @@ import axios from 'axios';
 import { debounce } from 'lodash';
 import 'react-multi-carousel/lib/styles.css';
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import ShopIcon from 'Assets/images/icons/shop.png';
 import Carousel from '@christian-martins/react-grid-carousel'
 import 'Assets/styles/Designers/style.css';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import ShopIcon from 'Assets/images/icons/shop.png';
 
 
 const Designers = (props) => {
@@ -67,6 +67,7 @@ const Designers = (props) => {
     const [reloadCount, setReloadCount] = useState(0);
     const currentUser = cookies.currentUser;
     const userRole = cookies.userRole;
+    const user = cookies.userDetails;
 
     const [tempDesignerWishlist, setTempDesignerWishlist] = useState(cookies.tempDesignerWishlist ?? []);
 
@@ -315,7 +316,31 @@ const Designers = (props) => {
                                                             
                                                         </div>
                                                     </Col>
-                                                    <Col lg="3">
+                                                    <Col lg="3" className="text-right">
+                                                        {currentUser ?
+                                                            <>
+                                                                {user.is_seller == 1 ?
+                                                                    <Link to="/user/profile?tab=fabrics&tab_group=fabrics">
+                                                                        <button className="ddf-button fs-12 btn bg-white border-black text-black bg-white-hover border-gold-hover text-black-hover">
+                                                                            <img src={ShopIcon} className="ddf-button-icon" alt="Designers" /> Create Your Shop
+                                                                        </button>
+                                                                    </Link>
+                                                                    :
+                                                                    <Link to="/user/seller-form">
+                                                                        <button className="ddf-button fs-12 btn bg-white border-black text-black bg-white-hover border-gold-hover text-black-hover">
+                                                                            <img src={ShopIcon} className="ddf-button-icon" alt="Designers" /> Create Your Shop
+                                                                        </button>
+                                                                    </Link>
+                                                                }
+                                                                
+                                                            </>
+                                                            :
+                                                            <Link to="/sign-up?type=seller">
+                                                                <button className="ddf-button fs-12 btn bg-white border-black text-black bg-white-hover border-gold-hover text-black-hover">
+                                                                    <img src={ShopIcon} className="ddf-button-icon" alt="Designers" /> Create Your Shop
+                                                                </button>
+                                                            </Link>
+                                                        }
                                                     </Col>
                                                 </Row>
                                             </div>

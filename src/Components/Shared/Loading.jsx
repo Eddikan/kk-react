@@ -9,7 +9,7 @@ const Loading = (props) => {
       <div className={`loading-container ${classNames ? classNames : ""}`}>
         <div className="center-content">
           <IoShirtSharp color="#000000" size="50px" className="mt-2 blink" />
-          <p className="text-center fs-20 mb-2 mt-3">Loading...</p>
+          <p className="text-center fs-16 mb-2 mt-3">Loading...</p>
         </div>
       </div>
     </>
