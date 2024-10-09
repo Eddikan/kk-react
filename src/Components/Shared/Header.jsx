@@ -112,6 +112,8 @@ const Header = () => {
   const tempCart = cookies.tempCart;
   const tempFavorites = cookies.tempFavorites;
   const over_18 = cookies.over_18;
+  const currencyConversions = cookies.currencyConversions ?? "";
+  const selectedCurrency = cookies.selectedCurrency ?? "";
 
   const getUser = async () => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
@@ -130,6 +132,10 @@ const Header = () => {
 
   const getUserCartItems = async () => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart');
+  };
+
+  const getCurrencyConversions = async (e) => {
+    return await axios.get('https://api.fastforex.io/fetch-multi?from=USD&to=AFN,ALL,DZD,USD,EUR,AOA,XCD,ARS,AMD,AWG,AUD,EUR,AZN,BSD,BHD,BDT,BBD,EUR,BZD,XOF,BMD,BTN,BOB,BAM,BWP,BRL,BND,BGN,XOF,BIF,KHR,XAF,CAD,CVE,KYD,XAF,XAF,CLP,CNY,COP,KMF,XAF,HRK,CUP,EUR,CZK,DKK,DJF,XCD,DOP,USD,EGP,USD,XAF,ERN,EUR,SZL,ETB,FJD,EUR,EUR,XAF,GMD,GEL,EUR,GHS,EUR,XCD,GTQ,GNF,XOF,GYD,HTG,HNL,HUF,ISK,INR,IDR,IRR,IQD,EUR,ILS,EUR,XOF,JMD,JPY,JOD,KZT,KES,AUD,KPW,KRW,KWD,KGS,LAK,EUR,LBP,LSL,LRD,LYD,MOP,MGA,MWK,MYR,MVR,MRU,MUR,MXN,MDL,MNT,MAD,MZN,MMK,NAD,AUD,NPR,EUR,XPF,NZD,XOF,NGN,KPW,NOK,OMR,PKR,PAB,PGK,PYG,PEN,PHP,PLN,EUR,QAR,RON,RUB,RWF,XCD,WST,SAR,XOF,RSD,SCR,SLL,SGD,SOS,ZAR,KRW,EUR,LKR,SDG,SRD,SZL,SEK,CHF,SYP,TWD,TJS,TZS,THB,XOF,TOP,TTD,TND,TRY,TMT,UGX,UAH,AED,GBP,USD,UYU,UZS,VUV,VND,YER,ZMW&api_key=demo');
   };
 
   // removeCookies
@@ -182,11 +188,11 @@ const Header = () => {
   const toggleSetupShopShow = () => {
     setSetupShopShow(!setupShopShow);
   };
-  
+
   const toggleDropdownShow = () => {
     setUserDropdownOpen(!userDropdownOpen);
   };
-  
+
   const toggleUserMenu = () => {
     setUserMenuOpen(!userMenuOpen);
   };
@@ -246,11 +252,11 @@ const Header = () => {
   const searchSubmitIcon = () => {
     if (search != "") {
       if (activeTab == "Designers") {
-        navigate("/designers?search="+search+"&type=Designers");
+        navigate("/designers?search=" + search + "&type=Designers");
       } else if (activeTab == "Fabrics") {
-        navigate("/fabrics?search="+search+"&type=Fabrics");
+        navigate("/fabrics?search=" + search + "&type=Fabrics");
       } else if (activeTab == "Designs") {
-        navigate("/designs?search="+search+"&type=Designs");
+        navigate("/designs?search=" + search + "&type=Designs");
       }
     }
   }
@@ -258,24 +264,24 @@ const Header = () => {
   const searchSubmit = (e) => {
     e.preventDefault();
     if (activeTab == "Designers") {
-      navigate("/designers?search="+search+"&type=Designers");
+      navigate("/designers?search=" + search + "&type=Designers");
     } else if (activeTab == "Fabrics") {
-      navigate("/fabrics?search="+search+"&type=Fabrics");
+      navigate("/fabrics?search=" + search + "&type=Fabrics");
     } else if (activeTab == "Designs") {
-      navigate("/designs?search="+search+"&type=Designs");
-      }
-    
+      navigate("/designs?search=" + search + "&type=Designs");
+    }
+
   }
 
   const searchSubmitDropdown = (e) => {
     if (e == "Designers") {
-      navigate("/designers?search="+search+"&type=Designers");
+      navigate("/designers?search=" + search + "&type=Designers");
     } else if (e == "Fabrics") {
-      navigate("/fabrics?search="+search+"&type=Fabrics");
+      navigate("/fabrics?search=" + search + "&type=Fabrics");
     } else if (e == "Designs") {
-      navigate("/designs?search="+search+"&type=Designs");
+      navigate("/designs?search=" + search + "&type=Designs");
     }
-    
+
   }
 
   useEffect(() => {
@@ -341,6 +347,25 @@ const Header = () => {
       setFavoritesCount(0);
     }
   };
+
+  useEffect(() => {
+    if (currencyConversions) {
+
+    } else {
+      getCurrencyConversions()
+        .then((response) => {
+          console.log(response);
+          const status = response.status;
+          if (status == 200) {
+            const currencyData = response.data;
+            const currencyConversionsData = currencyData.results;
+            setCookie('currencyConversions', JSON.stringify(currencyConversionsData), { path: '/' });
+          }
+        })
+        .catch((error) => {
+      });
+    }
+  }, [selectedCurrency]);
 
   useEffect(() => {
     if (currentUser) {
@@ -502,6 +527,8 @@ const Header = () => {
     ? `/login?redirect_to=${encodeURIComponent(currentPath)}`
     : '/login';
 
+
+
   return (
     <>
       {isLoggedIn &&
@@ -580,38 +607,38 @@ const Header = () => {
                 <FormControl type='text' placeholder='Search' name="search" onChange={handleChangeSearch} value={search} className='fs-14 search-bar-header ms-2' />
                 <div className="nav-link-dropdown bg-white border border-1 border-black border-gold-hover px-3 search-dropdown-btn cursor-pointer" onClick={toggleDropdownShow} ref={searchRef}>
                   <p className="nav-link p-0 text-center fs-13 fw-500" >
-                    {activeTab} <FaChevronDown size="13px" className="ms-2" style={{ display: 'inline-block', verticalAlign: 'middle', marginTop: '-2px'}}/>
+                    {activeTab} <FaChevronDown size="13px" className="ms-2" style={{ display: 'inline-block', verticalAlign: 'middle', marginTop: '-2px' }} />
                   </p>
                   {userDropdownOpen && (
                     <div className="search-dropdown-menu search-dropdown">
-                    <a className="nav-link ps-0 pe-0" href="javascript:void(0)" onClick={function() { searchSubmitDropdown('Designers'); setActiveTab('Designers')}}>
-                      <div className="d-flex align-items-center">
-                        <img className="mx-2" src={DesignerIcon} width="22px" />
-                        <div>
-                          <p className="search-dropdown-title mb-0">Designers</p>
-                          <span className="subtitle fs-10">Find top fashion designers</span>
+                      <a className="nav-link ps-0 pe-0" href="javascript:void(0)" onClick={function () { searchSubmitDropdown('Designers'); setActiveTab('Designers') }}>
+                        <div className="d-flex align-items-center">
+                          <img className="mx-2" src={DesignerIcon} width="22px" />
+                          <div>
+                            <p className="search-dropdown-title mb-0">Designers</p>
+                            <span className="subtitle fs-10">Find top fashion designers</span>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                    <a className="nav-link ps-0 pe-0" href="javascript:void(0)" onClick={function() { searchSubmitDropdown('Fabrics'); setActiveTab('Fabrics')}}>
-                      <div className="d-flex align-items-center">
-                        <img className="mx-2" src={FabricIcon} width="23px" />
-                        <div>
-                          <p className="search-dropdown-title mb-0">Fabrics</p>
-                          <span className="subtitle fs-10">Find top fashion designers</span>
+                      </a>
+                      <a className="nav-link ps-0 pe-0" href="javascript:void(0)" onClick={function () { searchSubmitDropdown('Fabrics'); setActiveTab('Fabrics') }}>
+                        <div className="d-flex align-items-center">
+                          <img className="mx-2" src={FabricIcon} width="23px" />
+                          <div>
+                            <p className="search-dropdown-title mb-0">Fabrics</p>
+                            <span className="subtitle fs-10">Find top fashion designers</span>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                    <a className="nav-link ps-0 pe-0" href="javascript:void(0)" onClick={function() { searchSubmitDropdown('Designs'); setActiveTab('Designs')}}>
-                      <div className="d-flex align-items-center">
-                        <img className="mx-2" src={DesignIcon} width="22px" />
-                        <div>
-                          <p className="search-dropdown-title mb-0">Designs</p>
-                          <span className="subtitle fs-10">Find top fashion designers</span>
+                      </a>
+                      <a className="nav-link ps-0 pe-0" href="javascript:void(0)" onClick={function () { searchSubmitDropdown('Designs'); setActiveTab('Designs') }}>
+                        <div className="d-flex align-items-center">
+                          <img className="mx-2" src={DesignIcon} width="22px" />
+                          <div>
+                            <p className="search-dropdown-title mb-0">Designs</p>
+                            <span className="subtitle fs-10">Find top fashion designers</span>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                  </div>
+                      </a>
+                    </div>
                   )}
                 </div>
               </Form>
@@ -703,7 +730,7 @@ const Header = () => {
                     {userRole !== 'Admin' &&
                       <a href={`/favorites`}>
                         <div className="nav-link header-tooltip">
-                          <span className="icon-tooltiptext fs-14" style={{width: '135px', left: '28%'}}>Favorite Designs</span>
+                          <span className="icon-tooltiptext fs-14" style={{ width: '135px', left: '28%' }}>Favorite Designs</span>
                           {/* <IoBookmarkOutline size={26} /> */}
                           <img src={FavoritesIcon} className="navigation-icon" alt="Favorites" />
                           <div>

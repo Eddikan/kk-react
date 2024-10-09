@@ -1225,6 +1225,7 @@ a {
 
 .user-menu.action-box.country-box {
     width: 350px;
+    top: 45px;
 }
 
 @keyframes blink {

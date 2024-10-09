@@ -17,7 +17,7 @@ const CountryData = {
     BH: { name: 'Bahrain', language: 'Arabic', languageCode: 'ar', currency: 'BHD', currencyCode: '.د.ب', rate: 0.38 },
     BD: { name: 'Bangladesh', language: 'Bengali', languageCode: 'bn', currency: 'BDT', currencyCode: '৳', rate: 84.89 },
     BB: { name: 'Barbados', language: 'English', languageCode: 'en', currency: 'BBD', currencyCode: 'BBD$', rate: 2 },
-    BY: { name: 'Belarus', language: 'Belarusian', languageCode: 'be', currency: 'BYN', currencyCode: 'Br', rate: 2.55 },
+    // BY: { name: 'Belarus', language: 'Belarusian', languageCode: 'be', currency: 'BYN', currencyCode: 'Br', rate: 2.55 },
     BE: { name: 'Belgium', language: 'Dutch', languageCode: 'nl', currency: 'EUR', currencyCode: '€', rate: 0.82 },
     BZ: { name: 'Belize', language: 'English', languageCode: 'en', currency: 'BZD', currencyCode: 'BZD$', rate: 2 },
     BJ: { name: 'Benin', language: 'French', languageCode: 'fr', currency: 'XOF', currencyCode: 'CFA', rate: 577.93 },
@@ -43,7 +43,7 @@ const CountryData = {
     CO: { name: 'Colombia', language: 'Spanish', languageCode: 'es', currency: 'COP', currencyCode: 'COP$', rate: 4045.65 },
     KM: { name: 'Comoros', language: 'Comorian', languageCode: 'swb', currency: 'KMF', currencyCode: 'CF', rate: 420.00 },
     CG: { name: 'Congo', language: 'French', languageCode: 'fr', currency: 'XAF', currencyCode: 'FCFA', rate: 556.23 },
-    CR: { name: 'Costa Rica', language: 'Spanish', languageCode: 'es', currency: 'CRC', currencyCode: '₡', rate: 622.00 },
+    // CR: { name: 'Costa Rica', language: 'Spanish', languageCode: 'es', currency: 'CRC', currencyCode: '₡', rate: 622.00 },
     HR: { name: 'Croatia', language: 'Croatian', languageCode: 'hr', currency: 'HRK', currencyCode: 'kn', rate: 6.22 },
     CU: { name: 'Cuba', language: 'Spanish', languageCode: 'es', currency: 'CUP', currencyCode: '$', rate: 1 },
     CY: { name: 'Cyprus', language: 'Greek', languageCode: 'el', currency: 'EUR', currencyCode: '€', rate: 0.82 },
@@ -129,7 +129,7 @@ const CountryData = {
     NL: { name: 'Netherlands', language: 'Dutch', languageCode: 'nl', currency: 'EUR', currencyCode: '€', rate: 0.82 },
     NC: { name: 'New Caledonia', language: 'French', languageCode: 'fr', currency: 'XPF', currencyCode: 'CFP', rate: 105.00 },
     NZ: { name: 'New Zealand', language: 'English', languageCode: 'en', currency: 'NZD', currencyCode: 'NZD$', rate: 1.41 },
-    NI: { name: 'Nicaragua', language: 'Spanish', languageCode: 'es', currency: 'NIO', currencyCode: 'C$', rate: 35.63 },
+    // NI: { name: 'Nicaragua', language: 'Spanish', languageCode: 'es', currency: 'NIO', currencyCode: 'C$', rate: 35.63 },
     NE: { name: 'Niger', language: 'French', languageCode: 'fr', currency: 'XOF', currencyCode: 'CFA', rate: 577.93 },
     NG: { name: 'Nigeria', language: 'English', languageCode: 'en', currency: 'NGN', currencyCode: '₦', rate: 413.00 },
     NU: { name: 'Niue', language: 'Niuean', languageCode: 'niu', currency: 'NZD', currencyCode: 'NZD$', rate: 1.41 },
@@ -173,11 +173,11 @@ const CountryData = {
     SX: { name: 'Sint Maarten', language: 'Dutch', languageCode: 'nl', currency: 'ANG', currencyCode: 'ƒ', rate: 1.79 },
     SK: { name: 'Slovakia', language: 'Slovak', languageCode: 'sk', currency: 'EUR', currencyCode: '€', rate: 0.82 },
     SI: { name: 'Slovenia', language: 'Slovenian', languageCode: 'sl', currency: 'EUR', currencyCode: '€', rate: 0.82 },
-    SB: { name: 'Solomon Islands', language: 'English', languageCode: 'en', currency: 'SBD', currencyCode: 'SI$', rate: 8.02 },
+    // SB: { name: 'Solomon Islands', language: 'English', languageCode: 'en', currency: 'SBD', currencyCode: 'SI$', rate: 8.02 },
     SO: { name: 'Somalia', language: 'Somali', languageCode: 'so', currency: 'SOS', currencyCode: 'Sh', rate: 582.38 },
     ZA: { name: 'South Africa', language: 'Zulu', languageCode: 'zu', currency: 'ZAR', currencyCode: 'R', rate: 14.18 },
     GS: { name: 'South Georgia and the South Sandwich Islands', language: 'English', languageCode: 'en', currency: 'GBP', currencyCode: '£', rate: 0.72 },
-    SS: { name: 'South Sudan', language: 'English', languageCode: 'en', currency: 'SSP', currencyCode: 'SS£', rate: 177.76 },
+    // SS: { name: 'South Sudan', language: 'English', languageCode: 'en', currency: 'SSP', currencyCode: 'SS£', rate: 177.76 },
     ES: { name: 'Spain', language: 'Spanish', languageCode: 'es', currency: 'EUR', currencyCode: '€', rate: 0.82 },
     LK: { name: 'Sri Lanka', language: 'Sinhala', languageCode: 'si', currency: 'LKR', currencyCode: 'Rs', rate: 199.48 },
     SD: { name: 'Sudan', language: 'Arabic', languageCode: 'ar', currency: 'SDG', currencyCode: 'SDG', rate: 55.32 },
@@ -217,8 +217,8 @@ const CountryData = {
     WF: { name: 'Wallis and Futuna', language: 'French', languageCode: 'fr', currency: 'XPF', currencyCode: 'CFP', rate: 97.86 },
     EH: { name: 'Western Sahara', language: 'Arabic', languageCode: 'ar', currency: 'MAD', currencyCode: 'د.م.', rate: 8.91 },
     YE: { name: 'Yemen', language: 'Arabic', languageCode: 'ar', currency: 'YER', currencyCode: '﷼', rate: 250.30 },
-    ZM: { name: 'Zambia', language: 'English', languageCode: 'en', currency: 'ZMW', currencyCode: 'ZK', rate: 23.95 },
-    ZW: { name: 'Zimbabwe', language: 'English', languageCode: 'en', currency: 'USD', currencyCode: '$', rate: 1 }
+    ZM: { name: 'Zambia', language: 'English', languageCode: 'en', currency: 'ZMW', currencyCode: 'ZK', rate: 23.95 }
+    // ZW: { name: 'Zimbabwe', language: 'English', languageCode: 'en', currency: 'USD', currencyCode: '$', rate: 1 }
 };
 
 export default CountryData;

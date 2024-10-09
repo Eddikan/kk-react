@@ -17,7 +17,7 @@ const CountryCodes = {
     BH: 'Bahrain',
     BD: 'Bangladesh',
     BB: 'Barbados',
-    BY: 'Belarus',
+    // BY: 'Belarus',
     BE: 'Belgium',
     BZ: 'Belize',
     BJ: 'Benin',
@@ -44,7 +44,7 @@ const CountryCodes = {
     CO: 'Colombia',
     KM: 'Comoros',
     CG: 'Congo',
-    CR: 'Costa Rica',
+    // CR: 'Costa Rica',
     CI: 'Côte d’Ivoire',
     HR: 'Croatia',
     CU: 'Cuba',
@@ -127,7 +127,7 @@ const CountryCodes = {
     NP: 'Nepal',
     NL: 'Netherlands',
     NZ: 'New Zealand',
-    NI: 'Nicaragua',
+    // NI: 'Nicaragua',
     NE: 'Niger',
     NG: 'Nigeria',
     KP: 'North Korea',
@@ -161,11 +161,11 @@ const CountryCodes = {
     SG: 'Singapore',
     SK: 'Slovakia',
     SI: 'Slovenia',
-    SB: 'Solomon Islands',
+    // SB: 'Solomon Islands',
     SO: 'Somalia',
     ZA: 'South Africa',
     KR: 'South Korea',
-    SS: 'South Sudan',
+    // SS: 'South Sudan',
     ES: 'Spain',
     LK: 'Sri Lanka',
     SD: 'Sudan',
@@ -197,8 +197,8 @@ const CountryCodes = {
     VE: 'Venezuela',
     VN: 'Vietnam',
     YE: 'Yemen',
-    ZM: 'Zambia',
-    ZW: 'Zimbabwe'
+    ZM: 'Zambia'
+    // ZW: 'Zimbabwe'
 };
   
 export default CountryCodes;

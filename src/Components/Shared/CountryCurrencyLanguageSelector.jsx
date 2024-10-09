@@ -72,10 +72,10 @@ const CountryCurrencyLanguageSelector = (props) => {
 
             const select = document.querySelector('.goog-te-combo');
             
-            if (select) {
-                select.value = 'en';
-                select.dispatchEvent(new Event('change'));
-            }
+            // if (select) {
+            //     select.value = 'en';
+            //     select.dispatchEvent(new Event('change'));
+            // }
 
             // setSelectedCountryCode("US");
             // setSelectedCountry(CountryData["US"].name);
@@ -129,16 +129,14 @@ const CountryCurrencyLanguageSelector = (props) => {
     }
 
     useEffect(() => {
-        // console.log(uniqueCurrencies);
-        console.log(selectedLanguageCode);
         if (selectedLanguageCode && selectedLanguageCode != "") {
             const languageCode = selectedLanguageCode;
             const select = document.querySelector('.goog-te-combo');
             
-            if (select) {
-                select.value = languageCode;
-                select.dispatchEvent(new Event('change'));
-            }
+            // if (select) {
+            //     select.value = languageCode;
+            //     select.dispatchEvent(new Event('change'));
+            // }
         }
     }, [cookies, selectedLanguageCode]);
 

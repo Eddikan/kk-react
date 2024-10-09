@@ -21,7 +21,6 @@ import Countries from 'Utils/Countries';
 import axios from "axios";
 import toast from 'react-hot-toast';
 
-
 const initialCheckOut = {
     card_name: '',
     card_number: '',
@@ -787,7 +786,7 @@ const Cart = ({ props }) => {
                                                 }
                                             </Card.Body>
                                         </Card>
-                                        {checkOutFormData.ship_to != "" && checkOutFormData.delivery_first_name != "" && checkOutFormData.delivery_email != "" && checkOutFormData.delivery_phone != "" && checkOutFormData.delivery_address_line_1 != "" && checkOutFormData.delivery_city != "" && checkOutFormData.delivery_province != "" && checkOutFormData.delivery_postal_code != "" && checkOutFormData.delivery_country != "" ?
+                                        {checkOutFormData.ship_to != "" && checkOutFormData.delivery_first_name != "" && checkOutFormData.delivery_email != "" && checkOutFormData.delivery_phone != "" && checkOutFormData.delivery_address_line_1 != "" && checkOutFormData.delivery_city != "" && checkOutFormData.delivery_province != "" && checkOutFormData.delivery_postal_code != "" && checkOutFormData.delivery_country != "" && checkOutFormData.shipping_option != "" ?
                                             <>
                                                 <Card>
                                                     <Card.Body>
