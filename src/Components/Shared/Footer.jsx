@@ -42,27 +42,27 @@ const Footer = (props) => {
                         <Col lg="6" className="pt-4">
                             <div className="footer-link-container d-flex justify-content-center">
                                 <div className="footer-link">
-                                    <Link href="/" className="text-decoration-none fs-16">
+                                    <Link href="/" className="text-decoration-none fs-13">
                                         About Us
                                     </Link>
                                 </div>
                                 <div className="footer-link">
-                                    <Link href="/" className="text-decoration-none fs-16">
+                                    <Link href="/" className="text-decoration-none fs-13">
                                         Designers
                                     </Link>
                                 </div>
                                 <div className="footer-link">
-                                    <Link href="/" className="text-decoration-none fs-16">
+                                    <Link href="/" className="text-decoration-none fs-13">
                                         Fabrics
                                     </Link>
                                 </div>
                                 <div className="footer-link">
-                                    <Link href="/" className="text-decoration-none fs-16">
+                                    <Link href="/" className="text-decoration-none fs-13">
                                         Designs
                                     </Link>
                                 </div>
                                 <div className="footer-link">
-                                    <Link href="mailto:kouturekonnect@gmail.com" className="text-decoration-none fs-16">
+                                    <Link href="mailto:kouturekonnect@gmail.com" className="text-decoration-none fs-13">
                                         Create a Shop
                                     </Link>
                                 </div>

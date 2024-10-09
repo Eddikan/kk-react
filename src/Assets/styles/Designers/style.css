@@ -5,10 +5,10 @@
     text-decoration: underline;
 }
 .save-link.designer-link{
-    display: none;
+    opacity: 0;
     top: 10px !important;
     right: 10px !important;
 }
 .designer-box-details:hover .save-link.designer-link{
-    display: block;
+    opacity: 1;
 }

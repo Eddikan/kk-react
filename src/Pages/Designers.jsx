@@ -249,9 +249,9 @@ const Designers = (props) => {
                                                 >
                                                     {categories.map((category, index) => (
                                                         <Carousel.Item>
-                                                            <p key={index} className="category-item my-auto text-center fs-12">
-                                                                {category.name}
-                                                            </p>
+                                                        <p key={index} className="category-item my-auto text-center fs-12">
+                                                            {category.name}
+                                                        </p>
                                                         </Carousel.Item>
                                                     ))}
                                                 </Carousel>
@@ -260,7 +260,7 @@ const Designers = (props) => {
                                     </div>
                                 </Col>
                                 <Col lg="3">
-                                    <Button className="custom-hover-btn fs-12"> <img src={ShopIcon} height="29px" className="mx-1" alt="shop-icon"/>Create your Shop</Button>
+                                    <Button className="custom-hover-btn py-2 fs-12"> <img src={ShopIcon} height="19px" className="mx-1" alt="shop-icon"/>Create your Shop</Button>
                                 </Col>
                             </Row>
                         </Col>
@@ -438,9 +438,10 @@ const Designers = (props) => {
                                                                                 </>
                                                                                 :
                                                                                 <div className='save-link designer-link'>
-                                                                                        {userWishlist ?
+                                                                                        {tempDesignerWishlist.some(wishlistItem => wishlistItem.id === designer.id) ?
                                                                                             <div className="kouture-tooltip">
-                                                                                                <div className="action-button bg-gold">
+                                                                                                <div className="action-button bg-gold"
+                                                                                                    onClick={function () { toggleTempDesignerWishlist({id: designer.id, user_id: currentUser, first_name: designer.user.name, last_name: designer.user.last_name, short_bio: designer.user.short_bio, image_url: designer.image, designer_user_id: designer.user.id}); }}>
                                                                                                     <GoHeart className="text-white" />
                                                                                                 </div>
                                                                                                 <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
@@ -449,7 +450,8 @@ const Designers = (props) => {
                                                                                             </div>
                                                                                             :
                                                                                             <div className="kouture-tooltip">
-                                                                                                <div className="action-button bg-white">
+                                                                                                <div className="action-button bg-white"
+                                                                                                    onClick={function () { toggleTempDesignerWishlist({id: designer.id, user_id: currentUser, first_name: designer.user.name, last_name: designer.user.last_name, short_bio: designer.user.short_bio, image_url: designer.image, designer_user_id: designer.user.id}); }}>
                                                                                                     <GoHeart className="text-black" />
                                                                                                 </div>
                                                                                                 <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
