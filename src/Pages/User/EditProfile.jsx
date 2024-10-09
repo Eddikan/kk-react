@@ -869,7 +869,7 @@ const EditProfile = () => {
             {userLoading ?
                 <LoadingPage />
                 :
-                <section id='profile' className='py-5 px-2'>
+                <section id='profile' className='py-5 px-5'>
                     <Container>
                         <Row>
                             <Col lg="12" className='mb-3'>

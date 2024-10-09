@@ -1037,9 +1037,9 @@ const Profile = () => {
                                     </p>
 
                                     <div className={`ms-3 profile-accordion-content ${activeTabGroup == "account" ? 'open' : ''}`}>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "profile" ? "text-gold" : ""} `} onClick={function () { setActiveTab('profile') }}>My Profile</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "measurement" ? "text-gold" : ""} `} onClick={function () { setActiveTab('measurement') }}>My Measurements</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "account" ? "text-gold" : ""} `} onClick={function () { setActiveTab('account') }}>Manage my Account</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "profile" ? "text-gold" : ""} `} onClick={function () { setActiveTab('profile') }}>My Profile</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "measurement" ? "text-gold" : ""} `} onClick={function () { setActiveTab('measurement') }}>My Measurements</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "account" ? "text-gold" : ""} `} onClick={function () { setActiveTab('account') }}>Manage my Account</p>
                                     </div>
                                     <p className="profile-side-dropdown fw-600 fs-16 mb-12 position-relative" onClick={function () { setActiveTabGroup((prevActiveGroup) => prevActiveGroup == "orders" ? "" : activeTabGroup != "orders" ? "orders" : ""); setActiveTab('all'); }}>
                                         My Orders
@@ -1054,12 +1054,12 @@ const Profile = () => {
                                         }
                                     </p>
                                     <div className={`ms-3 profile-accordion-content ${activeTabGroup == "orders" ? 'open' : ''}`}>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "all" ? "text-gold" : ""} `} onClick={function () { setActiveTab('all') }}>All</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "pending" ? "text-gold" : ""} `} onClick={function () { setActiveTab('pending') }}>Pending</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "processing" ? "text-gold" : ""} `} onClick={function () { setActiveTab('processing') }}>Processing</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "shipped" ? "text-gold" : ""} `} onClick={function () { setActiveTab('shipped') }}>Shipped</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "delivered" ? "text-gold" : ""} `} onClick={function () { setActiveTab('delivered') }}>Delivered</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "completed" ? "text-gold" : ""} `} onClick={function () { setActiveTab('completed') }}>Completed</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "all" ? "text-gold" : ""} `} onClick={function () { setActiveTab('all') }}>All</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "pending" ? "text-gold" : ""} `} onClick={function () { setActiveTab('pending') }}>Pending</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "processing" ? "text-gold" : ""} `} onClick={function () { setActiveTab('processing') }}>Processing</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "shipped" ? "text-gold" : ""} `} onClick={function () { setActiveTab('shipped') }}>Shipped</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "delivered" ? "text-gold" : ""} `} onClick={function () { setActiveTab('delivered') }}>Delivered</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "completed" ? "text-gold" : ""} `} onClick={function () { setActiveTab('completed') }}>Completed</p>
                                     </div>
                                     <p className="profile-side-dropdown fw-600 fs-16 mb-12 position-relative" onClick={function () { setActiveTabGroup((prevActiveGroup) => prevActiveGroup == "wishlist" ? "" : activeTabGroup != "wishlist" ? "wishlist" : ""); setActiveTab('fabrics_wishlist') }}>
                                         My Wishlist
@@ -1075,10 +1075,17 @@ const Profile = () => {
                                     </p>
 
                                     <div className={`ms-3 profile-accordion-content ${activeTabGroup == "wishlist" ? 'open' : ''}`}>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "fabrics_wishlist" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('wishlist'); setActiveTab('fabrics_wishlist'); }}>Fabrics</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "designers_wishlist" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('wishlist'); setActiveTab('designers_wishlist'); }}>Designers</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "fabrics_wishlist" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('wishlist'); setActiveTab('fabrics_wishlist'); }}>Fabrics</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "designers_wishlist" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('wishlist'); setActiveTab('designers_wishlist'); }}>Designers</p>
                                     </div>
-                                    <p className={`profile-side-dropdown fw-600 fs-16 `} onClick={function () { setActiveTabGroup('appointments'); setActiveTab('upcoming'); }}>
+                                    
+                                    {user.is_designer == 1 &&
+                                        <p className={`profile-side-dropdown fw-600 mb-12 fs-16 ${activeTab == "designs" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('designs'); setActiveTab('designs'); }}>My Designs</p>
+                                    }
+                                    {user.is_seller == 1 &&
+                                        <p className={`profile-side-dropdown fw-600 mb-12 fs-16 ${activeTab == "fabrics" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('fabrics'); setActiveTab('fabrics'); }}>My Fabrics</p>
+                                    }
+                                    <p className="profile-side-dropdown fw-600 fs-16 mb-12 position-relative" onClick={function () { setActiveTabGroup((prevActiveGroup) => prevActiveGroup == "appointments" ? "" : activeTabGroup != "appointments" ? "appointments" : ""); setActiveTab('upcoming') }}>
                                         My Appointments
                                         {activeTabGroup != "appointments" ?
                                             <>
@@ -1091,12 +1098,12 @@ const Profile = () => {
                                         }
                                     </p>
                                     <div className={`ms-3 profile-accordion-content ${activeTabGroup == "appointments" ? 'open' : ''}`}>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "upcoming" ? "text-gold" : ""} `} onClick={function () { setActiveTab('upcoming'); }}>Upcoming</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "in progress" ? "text-gold" : ""} `} onClick={function () { setActiveTab('in progress'); }}>In Progress</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "cancelled" ? "text-gold" : ""} `} onClick={function () { setActiveTab('cancelled'); }}>Cancelled</p>
-                                        <p className={`profile-side-dropdown fs-16 ${activeTab == "completed" ? "text-gold" : ""} `} onClick={function () { setActiveTab('completed'); }}>Completed</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "upcoming" ? "text-gold" : ""} `} onClick={function () { setActiveTab('upcoming'); }}>Upcoming</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "in progress" ? "text-gold" : ""} `} onClick={function () { setActiveTab('in progress'); }}>In Progress</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "cancelled" ? "text-gold" : ""} `} onClick={function () { setActiveTab('cancelled'); }}>Cancelled</p>
+                                        <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "completed" ? "text-gold" : ""} `} onClick={function () { setActiveTab('completed'); }}>Completed</p>
                                     </div>
-                                    <p className={`profile-side-dropdown fw-600 fs-16 ${activeTab == "completed" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('messages'); setActiveTab('messages'); }}>My Messages</p>
+                                    <p className={`profile-side-dropdown fw-600 fs-16 mb-12 ${activeTab == "messages" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('messages'); setActiveTab('messages'); }}>My Messages</p>
                                 </div>
                             </Col>
                             <Col lg='10' className="pt-4">
@@ -1760,6 +1767,36 @@ const Profile = () => {
                                                                 </Card.Body>
                                                             </Card>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        :
+                                        null
+                                    }
+
+                                    {activeTabGroup == "designs" ?
+                                        <Row>
+                                            <Col lg="12">
+                                                <div className="designs-container">
+                                                    <p className='title-designer mb-1 lh-25'>Designs </p>
+                                                    <div className="mt-15">
+                                                        <AdminPortfolio currentUser={currentUser} reloadCount={reloadCount} />
+                                                    </div>
+                                                </div>
+                                            </Col>
+                                        </Row>
+                                        :
+                                        null
+                                    }
+
+                                    {activeTabGroup == "fabrics" ?
+                                        <Row>
+                                            <Col lg="12">
+                                                <div className="fabrics-container">
+                                                    <p className='title-designer mb-1 lh-25'>Fabrics </p>
+                                                    <div className="mt-15">
+                                                        <AdminFabrics currentUser={currentUser} reloadCount={reloadCount} />
                                                     </div>
                                                 </div>
                                             </Col>

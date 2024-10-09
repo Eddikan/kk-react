@@ -257,27 +257,25 @@ const Header = () => {
 
   const searchSubmit = (e) => {
     e.preventDefault();
-    if (search != "") {
-      if (activeTab == "Designers") {
-        navigate("/designers?search="+search+"&type=Designers");
-      } else if (activeTab == "Fabrics") {
-        navigate("/fabrics?search="+search+"&type=Fabrics");
-      } else if (activeTab == "Designs") {
-        navigate("/designs?search="+search+"&type=Designs");
+    if (activeTab == "Designers") {
+      navigate("/designers?search="+search+"&type=Designers");
+    } else if (activeTab == "Fabrics") {
+      navigate("/fabrics?search="+search+"&type=Fabrics");
+    } else if (activeTab == "Designs") {
+      navigate("/designs?search="+search+"&type=Designs");
       }
-    }
+    
   }
 
   const searchSubmitDropdown = (e) => {
-    if (search != "") {
-      if (e == "Designers") {
-        navigate("/designers?search="+search+"&type=Designers");
-      } else if (e == "Fabrics") {
-        navigate("/fabrics?search="+search+"&type=Fabrics");
-      } else if (e == "Designs") {
-        navigate("/designs?search="+search+"&type=Designs");
-      }
+    if (e == "Designers") {
+      navigate("/designers?search="+search+"&type=Designers");
+    } else if (e == "Fabrics") {
+      navigate("/fabrics?search="+search+"&type=Fabrics");
+    } else if (e == "Designs") {
+      navigate("/designs?search="+search+"&type=Designs");
     }
+    
   }
 
   useEffect(() => {
@@ -579,7 +577,7 @@ const Header = () => {
               <Nav.Link href="/inspirations">Inspirations</Nav.Link> */}
               <Form onSubmit={searchSubmit} inline className='search-header w-100 d-flex align-items-center'>
                 <HiMiniMagnifyingGlass onClick={searchSubmitIcon} size="20px" />
-                <FormControl type='text' placeholder='Search' name="search" onChange={handleChangeSearch} className='fs-14 search-bar-header ms-2' required />
+                <FormControl type='text' placeholder='Search' name="search" onChange={handleChangeSearch} value={search} className='fs-14 search-bar-header ms-2' />
                 <div className="nav-link-dropdown bg-white border border-1 border-black border-gold-hover px-3 search-dropdown-btn cursor-pointer" onClick={toggleDropdownShow} ref={searchRef}>
                   <p className="nav-link p-0 text-center fs-13 fw-500" >
                     {activeTab} <FaChevronDown size="13px" className="ms-2" style={{ display: 'inline-block', verticalAlign: 'middle', marginTop: '-2px'}}/>
