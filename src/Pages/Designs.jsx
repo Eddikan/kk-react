@@ -46,7 +46,7 @@ const Designs = (props) => {
         return new URLSearchParams(useLocation().search);
     }
     let query = useQuery();
-    const headerSearch = query.get('search');
+    const header_search = query.get('search');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'selectedCountry', 'favoriteItemCount']);
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -70,8 +70,8 @@ const Designs = (props) => {
     const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
     const [country, setCountry] = useState('');
     const [priceRange, setPriceRange] = useState({ from: '', to: '' });
-    const [search, setSearch] = useState('');
-    const [searchValue, setSearchValue] = useState('');
+    const [search, setSearch] = useState(header_search ?? '');
+    const [searchValue, setSearchValue] = useState(header_search ?? '');
 
     // Filter Arrays
     const [colors, setColors] = useState([]);
@@ -236,7 +236,6 @@ const Designs = (props) => {
 
     async function onFilterChange(data) {
         setDesignsLoading(true);
-        setDesigns([]);
         axios.post(process.env.REACT_APP_API_ENDPOINT + 'portfolio/filter?search='+searchValue+'&country='+selectedCountry+'&user_id=' + currentUser + '&token=' + token, data).then((response) => {
             const selectedDesigns = response.data.data;
             if (selectedDesigns) {
@@ -570,7 +569,6 @@ const Designs = (props) => {
 
     useEffect(() => {
         // Only run the filter API call after the component has mounted
-        
         if (mounted) {
             // Call the API with the updated filter values
             onFilterChange({
@@ -589,17 +587,6 @@ const Designs = (props) => {
         }
 
     }, [mounted, searchValue, selectedCategories, selectedGenders, seasonsSearch, colorsSearch, materialsSearch, selectedCountry]);
-
-    useEffect(() => {
-        if (headerSearch && headerSearch != "") {
-            setSearch(headerSearch);
-            setSearchValue(headerSearch);
-        } else {
-            setSearch('');
-            setSearchValue('');
-        }
-
-    }, [headerSearch]);
 
     const settings = {
         className: "slider variable-width",
@@ -711,7 +698,7 @@ const Designs = (props) => {
                                 <div className="pe-4 pt-3">
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600 fs-15">Search</Form.Label>
-                                        <Form.Control  placeholder="Enter your search term..." value={search} type="text" onChange={(e) => handleChangeSearch(e)} />
+                                        <Form.Control  placeholder="Enter your search term..." value={searchValue} type="text" onChange={(e) => handleChangeSearch(e)} />
                                     </Form.Group>
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Sort</Form.Label>
