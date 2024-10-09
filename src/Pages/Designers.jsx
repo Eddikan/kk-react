@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Layout from 'Components/Layout/Layout';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Modal, Container, Row, Col, Button, Form, Card } from 'react-bootstrap';
 import MalePlaceholder from 'Assets/images/placeholders/male-placeholder.jpg';
 import FemalePlaceholder from 'Assets/images/placeholders/female-placeholder.jpg';
@@ -24,6 +24,11 @@ import 'Assets/styles/Designers/style.css';
 
 const Designers = (props) => {
     const navigate = useNavigate();
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    }
+    let query = useQuery();
+    const headerSearch = query.get('search');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempDesignerWishlist', 'selectedCountry', 'selectedCountryCode']);
     const [selectedItemIndex, setSelectedItemIndex] = useState('');
     const [designers, setDesigners] = useState([]);
@@ -78,7 +83,7 @@ const Designers = (props) => {
 
     const searchChangeDebounce = debounce((e) => {
         setSearchValue(e);
-    }, 1000); // 1000 milliseconds (2 seconds) delay
+    }, 1500); // 1000 milliseconds (2 seconds) delay
 
     const showSignupModal = (e) => {
         setSignupType(e);
@@ -97,7 +102,7 @@ const Designers = (props) => {
 
     const specializationChangeDebounce = debounce((e) => {
         setSpecializationSearch(e);
-    }, 1000); // 1000 milliseconds (2 seconds) delay
+    }, 1500); // 1000 milliseconds (2 seconds) delay
 
     const handleChangeSpecialization = (e) => {
         const { name, value } = e.target;
@@ -211,6 +216,17 @@ const Designers = (props) => {
                 setDesignersLoading(false);
             });
     }, [reloadCount, selectedCountry, selectedCategories, specializationSearch, searchValue]);
+
+    useEffect(() => {
+        if (headerSearch && headerSearch != "") {
+            setSearch(headerSearch);
+            setSearchValue(headerSearch);
+        } else {
+            setSearch('');
+            setSearchValue('');
+        }
+
+    }, [headerSearch]);
 
     const handleChangeCountry = (e) => {
         const {name, value} = e.target;
