@@ -56,6 +56,13 @@ import BellIcon from 'Assets/images/icons/bell.png';
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const useQuery = () => {
+    return new URLSearchParams(useLocation().search);
+  }
+  let query = useQuery();
+  const header_search = query.get('search');
+  const header_type = query.get('type');
+
   const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'selectedCartItems', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode', 'selectedLanguage', 'selectedCurrency', 'selectedCurrencyCode', 'cartItemCount', 'favoriteItemCount', 'over_18']);
   const currentUrl = window.location.href;
 
@@ -79,7 +86,6 @@ const Header = () => {
   const [registerModalShow, setRegisterModalShow] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
-
   const [userType, setUserType] = useState('user');
   const userRef = useRef(null);
   const bellRef = useRef(null);
@@ -94,8 +100,8 @@ const Header = () => {
   const [modalHeading, setModalHeading] = useState();
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedCountryCode, setSelectedCountryCode] = useState('US');
-  const [search, setSearch] = useState('');
-  const [activeTab, setActiveTab] = useState('Designers');
+  const [search, setSearch] = useState(header_search ?? '');
+  const [activeTab, setActiveTab] = useState(header_type ?? 'Designers');
   const currentUser = cookies.currentUser;
   const token = cookies.token;
   const userDetails = cookies.userDetails;
@@ -240,11 +246,11 @@ const Header = () => {
   const searchSubmitIcon = () => {
     if (search != "") {
       if (activeTab == "Designers") {
-        navigate("/designers?search="+search);
+        navigate("/designers?search="+search+"&type=Designers");
       } else if (activeTab == "Fabrics") {
-        navigate("/fabrics?search="+search);
+        navigate("/fabrics?search="+search+"&type=Fabrics");
       } else if (activeTab == "Designs") {
-        navigate("/designs?search="+search);
+        navigate("/designs?search="+search+"&type=Designs");
       }
     }
   }
@@ -253,11 +259,11 @@ const Header = () => {
     e.preventDefault();
     if (search != "") {
       if (activeTab == "Designers") {
-        navigate("/designers?search="+search);
+        navigate("/designers?search="+search+"&type=Designers");
       } else if (activeTab == "Fabrics") {
-        navigate("/fabrics?search="+search);
+        navigate("/fabrics?search="+search+"&type=Fabrics");
       } else if (activeTab == "Designs") {
-        navigate("/designs?search="+search);
+        navigate("/designs?search="+search+"&type=Designs");
       }
     }
   }
@@ -265,11 +271,11 @@ const Header = () => {
   const searchSubmitDropdown = (e) => {
     if (search != "") {
       if (e == "Designers") {
-        navigate("/designers?search="+search);
+        navigate("/designers?search="+search+"&type=Designers");
       } else if (e == "Fabrics") {
-        navigate("/fabrics?search="+search);
+        navigate("/fabrics?search="+search+"&type=Fabrics");
       } else if (e == "Designs") {
-        navigate("/designs?search="+search);
+        navigate("/designs?search="+search+"&type=Designs");
       }
     }
   }

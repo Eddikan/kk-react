@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Button, Card, Modal } from 'react-bootstrap';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import Layout from 'Components/Layout/Layout';
 import FormControl from 'react-bootstrap/FormControl';
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
@@ -14,6 +17,7 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 import { GoAlertFill, GoHeart, GoStar } from "react-icons/go";
 import UserPlaceholder from 'Assets/images/user.png';
 import PinIcon from '../Assets/images/pin.png';
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import { IoShareSocial, IoInformationOutline, IoVideocam, IoCloseOutline, IoHeartOutline, IoEyeOutline } from "react-icons/io5";
 import { BsCartPlus } from "react-icons/bs";
 import { useCookies } from 'react-cookie';
@@ -37,6 +41,11 @@ import axios from 'axios';
 
 const Designs = (props) => {
     const navigate = useNavigate();
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    }
+    let query = useQuery();
+    const header_search = query.get('search');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'tempFavorites', 'selectedCountry', 'favoriteItemCount']);
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -47,6 +56,9 @@ const Designs = (props) => {
     const [designsLoading, setDesignsLoading] = useState(true);
     const [reloadCount, setReloadCount] = useState(0);
 
+    // Category Index
+    const [currentCatIndex, setCurrentCatIndex] = useState(0);
+
     // Filter
     const [selectedColors, setSelectedColors] = useState([]);
     const [selectedGenders, setSelectedGenders] = useState([]);
@@ -56,8 +68,8 @@ const Designs = (props) => {
     const [selectedCategoryIds, setSelectedCategoryIds] = useState([]);
     const [country, setCountry] = useState('');
     const [priceRange, setPriceRange] = useState({ from: '', to: '' });
-    const [search, setSearch] = useState('');
-    const [searchValue, setSearchValue] = useState('');
+    const [search, setSearch] = useState(header_search ?? '');
+    const [searchValue, setSearchValue] = useState(header_search ?? '');
 
     // Filter Arrays
     const [colors, setColors] = useState([]);
@@ -142,6 +154,18 @@ const Designs = (props) => {
             ];
         }
         return [];
+    };
+
+    const handleNextCat = () => {
+        if (currentCatIndex < categories.length - 1) {
+          setCurrentCatIndex(currentCatIndex + 1);
+        }
+    };
+    
+    const handlePrevCat = () => {
+        if (currentCatIndex > 0) {
+            setCurrentCatIndex(currentCatIndex - 1);
+        }
     };
 
     const showSignupModal = (e) => {
@@ -439,6 +463,20 @@ const Designs = (props) => {
         });
     };
 
+    const handleChangeCategory = (event) => {
+        const categoryId = parseInt(event, 10);
+        if (!selectedCategories.includes(categoryId)) {
+            setSelectedCategories([...selectedCategories, categoryId]);
+            if (selectedAllCategories.length + 1 === categories.length) {
+                setSelectedAllCategories(true);
+            } else {
+                setSelectedAllCategories(false);
+            }
+        } else {
+            setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
+        }
+    };
+
     // Handle checkbox change event
     const handleSelectCategoryChange = (event) => {
         const categoryId = parseInt(event.target.value, 10);
@@ -548,6 +586,18 @@ const Designs = (props) => {
 
     }, [mounted, searchValue, selectedCategories, selectedGenders, seasonsSearch, colorsSearch, materialsSearch, selectedCountry]);
 
+    const settings = {
+        className: "slider variable-width",
+        dots: false,
+        infinite: false,
+        centerMode: false,
+        slidesToShow: 5,
+        slidesToScroll: 1,
+        variableWidth: true,
+        nextArrow: <FaChevronRight className="category-slider-nav" size="6px" color="#000000" />,
+        prevArrow: <FaChevronLeft className="category-slider-nav" size="6px" color="#000000" />,
+    };
+
     useEffect(() => {
         // Only run the filter API call after the component has mounted
         setSelectedCountry(cookies.selectedCountry ?? '');
@@ -559,33 +609,68 @@ const Designs = (props) => {
 
     return (
         <Layout>
-            <div className='py-5 px-5'>
+            <div className='pb-5 pt-10 px-5'>
                 <section>
                     <Container>
-                        <Row className='mb-3'>
-                            <Col lg="10">
-                                <h2 className='fs-40 text-left mb-3'>Discover Captivating Designs.</h2>
-                            </Col>
-
-                            <Col lg="2" className='text-right'>
-                                <GoBack fallBack="/" />
-                            </Col>
-
-                            <Col lg="12">
-                                <p className='fs-16 fw-400 mb-0 text-black line-height-24'>In the realm of fabric design, the designer intricately weaves together artistic concepts, skillfully navigating through color harmonies and textural nuances to conceive patterns that not only adorn but tell compelling visual stories through the medium of textiles.</p>
-                            </Col>
-                        </Row>
-                    </Container>
-                </section>
-
-                <section className="pt-3">
-                    <Container>
                         <Row className="mt-2">
-                            <Col lg="3">
-                                <div className="filter-sidebar pe-4">
+                            <Col lg="12">
+                                <div className="ddf-header">
+                                    <Row>
+                                        <Col lg="3" className="filter-sidebar">
+                                            <div className="pe-4">
+                                                <p className="mb-0 fs-14 fw-500"><Link className="text-decoration-none text-muted" to="/">Home</Link> / Designs</p>
+                                            </div>
+                                        </Col>
+                                        <Col lg="9" className="category-slider">
+                                            <div  className="ps-4">
+                                                <Row>
+                                                    <Col lg="9">
+                                                        <div className="category-pills">
+                                                            {categories && categories.length > 0 ? (
+                                                                <Slider {...settings}>
+                                                                    {selectedAllCategories || selectedCategories.length < 1  ?
+                                                                        <div className="mx-2 cursor-pointer">
+                                                                            <span class="badge badge-dark bg-dark fs-12 fw-400 text-center">All</span>
+                                                                        </div>
+                                                                        :
+                                                                        <div className="mx-2 cursor-pointer" onClick={function() { setSelectedAllCategories(true); setSelectedCategories([]) }}>
+                                                                            <span class="badge badge-dark bg-white fs-12 text-dark fw-400 text-center">All</span>
+                                                                        </div>
+                                                                    }
+                                                                    {categories.map((category, index) => (
+                                                                        <>
+                                                                            {selectedCategories.includes(category.id) ?
+                                                                                <div className="mx-2 cursor-pointer" onClick={function() { handleChangeCategory(category.id); }}>
+                                                                                    <span class="badge badge-dark bg-dark fs-12 fw-400 text-center">{category.name}</span>
+                                                                                </div>
+                                                                                :
+                                                                                <div className="mx-2 cursor-pointer" onClick={function() { handleChangeCategory(category.id); }}>
+                                                                                    <span class="badge badge-dark bg-white text-dark fs-12 fw-400 text-center">{category.name}</span>
+                                                                                </div>
+                                                                            }
+                                                                        </>
+                                                                    ))}
+                                                                </Slider>
+                                                            ) 
+                                                            :
+                                                                null
+                                                            }
+                                                            
+                                                        </div>
+                                                    </Col>
+                                                    <Col lg="3">
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        </Col>
+                                    </Row>
+                                </div>
+                            </Col>  
+                            <Col lg="3" className="filter-sidebar">
+                                <div className="pe-4 pt-3">
                                     <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600 fs-15">Search</Form.Label>
-                                        <Form.Control  placeholder="Enter your search term..." type="text" onChange={(e) => handleChangeSearch(e)} />
+                                        <Form.Control  placeholder="Enter your search term..." value={searchValue} type="text" onChange={(e) => handleChangeSearch(e)} />
                                     </Form.Group>
                                     {/* <Form.Group className='mb-4'>
                                         <Form.Label className="fw-600">Sort</Form.Label>
@@ -613,33 +698,6 @@ const Designs = (props) => {
                                             ))}
                                         </Form.Control>
                                     </Form.Group>
-                                    <hr />
-                                    {categories && categories.length > 0 ?
-                                        <>
-                                            <Form.Group className='mb-3'>
-                                                <Form.Label className="fw-600 fs-15">Categories</Form.Label>
-                                                {categories && categories.length > 0 ?
-                                                    <>
-                                                        {categories.map((category, index) => (
-                                                            <Form.Check
-                                                                key={index}
-                                                                type="checkbox"
-                                                                label={category.name}
-                                                                value={category.id}
-                                                                checked={selectedCategories.includes(category.id)}
-                                                                onChange={handleSelectCategoryChange}
-                                                                className="mb-2 fs-14"
-                                                            />
-                                                        ))}
-                                                    </>
-                                                    :
-                                                    null
-                                                }
-                                            </Form.Group>
-                                        </>
-                                        :
-                                        null
-                                    }
                                     <hr />
                                     <Form.Group className='mb-3'>
                                         <Form.Label className="fw-600 fs-15">Gender</Form.Label>
@@ -880,7 +938,7 @@ const Designs = (props) => {
                                 </div>
                             </Col>
                             <Col lg="9" >
-                                <div id="profile-designs">
+                                <div id="profile-designs" className="ps-2 pt-4">
                                     {designsLoading ?
                                         <>
                                             <Card className="text-center">

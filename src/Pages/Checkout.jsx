@@ -89,6 +89,7 @@ const Cart = ({ props }) => {
     const [productCount, setProductCount] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [user, setUser] = useState();
 
     const [showModal, setShowModal] = useState(0);
 
@@ -127,6 +128,10 @@ const Cart = ({ props }) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart');
     };
 
+    const getUser = async () => {
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
+    };
+
     const postCheckOut = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order', data);
     };
@@ -143,11 +148,52 @@ const Cart = ({ props }) => {
 
     const handleChangePaymentInfo = (e) => {
         const { name, value } = e.target;
-        setCheckOutFormData({
-            ...checkOutFormData,
-            [name]: value,
-        });
-    }
+        if (name == "ship_to" && value == "Ship to my address") {
+            if (user) {
+                setCheckOutFormData({
+                    ...checkOutFormData,
+                    delivery_first_name: user.first_name,
+                    delivery_last_name: user.last_name,
+                    delivery_email: user.email,
+                    delivery_phone: user.phone_number,
+                    delivery_address_line_1: user.address_line_1,
+                    delivery_address_line_2: user.address_line_2,
+                    delivery_city: user.city,
+                    delivery_province: user.province,
+                    delivery_postal_code: user.postal_code,
+                    delivery_country: user.country,
+                    [name]: value,
+                });
+            } else {
+                setCheckOutFormData({
+                    ...checkOutFormData,
+                    [name]: value,
+                });
+            }
+        } else if (name == "ship_to" && value == "Ship to designer") {
+            setCheckOutFormData({
+                ...checkOutFormData,
+                delivery_first_name: '',
+                delivery_last_name: '',
+                delivery_email: '',
+                delivery_phone: '',
+                delivery_address_line_1: '',
+                delivery_address_line_2: '',
+                delivery_city: '',
+                delivery_province: '',
+                delivery_postal_code: '',
+                delivery_country: '',
+                [name]: value,
+            });
+        } else {
+            setCheckOutFormData({
+                ...checkOutFormData,
+                [name]: value,
+            });
+        }
+
+        
+    };
 
     const checkOutSubmit = (e) => {
         e.preventDefault();
@@ -282,6 +328,18 @@ const Cart = ({ props }) => {
     }, [selectedCartItems, item, reloadCount, cartItems]);
 
     useEffect(() => {
+        getUser()
+            .then((response) => {
+                const userData = response.data.data;
+                if (userData) {
+                    setUser(userData);
+                }
+            })
+            .catch((error) => {
+                toast.error('There has been an error getting the user, please try again!');
+                setCartLoading(false);
+            });
+
         getUserCartItems()
             .then((response) => {
                 const cartItemsData = response.data.data;
@@ -411,7 +469,7 @@ const Cart = ({ props }) => {
                                                                                     </Col>
 
                                                                                     <Col lg={4} className="text-right">
-                                                                                        <h3><strong>${(cartItem.product.price * cartItem.quantity).toFixed(2)}</strong></h3>
+                                                                                        <h3 className="rufina-family"><strong>${(cartItem.product.price * cartItem.quantity).toFixed(2)}</strong></h3>
                                                                                         {cartItem.quantity > 1 ?
                                                                                             <p className="small text-muted">${cartItem.product.price} each</p>
                                                                                             :
@@ -481,7 +539,7 @@ const Cart = ({ props }) => {
                                                                                     </Col>
 
                                                                                     <Col lg={4} className="text-right">
-                                                                                        <h3><strong>${(cartItem.price * cartItem.quantity).toFixed(2)}</strong></h3>
+                                                                                        <h3 className="rufina-family"><strong>${(cartItem.price * cartItem.quantity).toFixed(2)}</strong></h3>
                                                                                         {cartItem.quantity > 1 ?
                                                                                             <p className="small text-muted">${cartItem.price} each</p>
                                                                                             :
@@ -518,7 +576,7 @@ const Cart = ({ props }) => {
                                             <Card.Body className='bg-light'>
                                                 <Row>
                                                     <Col lg="12" className='text-right'>
-                                                        <span className='fs-18 me-3'>Total Amount: </span><span className='total-price fw-600'><h3 className="total-price fw-600 d-inline-block">${totalAmount}</h3></span>
+                                                        <span className='fs-18 me-3'>Total Amount: </span><span className='total-price fw-600'><h3 className="rufina-family total-price fw-600 d-inline-block">${totalAmount}</h3></span>
                                                     </Col>
                                                 </Row>
                                             </Card.Body>
@@ -528,7 +586,7 @@ const Cart = ({ props }) => {
                                             <Card.Body className='bg-light'>
                                                 <Row>
                                                     <Col lg="12" className='text-right'>
-                                                        <span className='fs-18 me-3'>Total Amount: </span><span className='total-price fw-600'><h3 className="total-price fw-600 d-inline-block">${tempCartTotal}</h3></span>
+                                                        <span className='fs-18 me-3'>Total Amount: </span><span className='total-price fw-600'><h3 className="rufina-family total-price fw-600 d-inline-block">${tempCartTotal}</h3></span>
                                                     </Col>
                                                 </Row>
                                             </Card.Body>
@@ -706,6 +764,18 @@ const Cart = ({ props }) => {
                                                                         </Col>
                                                                     </Row>
                                                                 </FormGroup>
+                                                                <FormGroup className="mb-3">
+                                                                    <Row>
+                                                                        <Col lg="12">
+                                                                            <label class="mb-2 form-label" for="shipping_option">Shipping Option <span class="text-danger">*</span></label>
+                                                                            <Form.Control as='select' name='shipping_option' value={checkOutFormData.shipping_option} className='' onChange={handleChangePaymentInfo} required>
+                                                                                <option value=''>Select Shipping Option</option>
+                                                                                <option value='UPS'>UPS</option>
+                                                                                <option value='GIGM'>GIGM</option>
+                                                                            </Form.Control>
+                                                                        </Col>
+                                                                    </Row>
+                                                                </FormGroup>
                                                             </>
                                                             :
                                                             null
@@ -718,214 +788,216 @@ const Cart = ({ props }) => {
                                             </Card.Body>
                                         </Card>
                                         {checkOutFormData.ship_to != "" && checkOutFormData.delivery_first_name != "" && checkOutFormData.delivery_email != "" && checkOutFormData.delivery_phone != "" && checkOutFormData.delivery_address_line_1 != "" && checkOutFormData.delivery_city != "" && checkOutFormData.delivery_province != "" && checkOutFormData.delivery_postal_code != "" && checkOutFormData.delivery_country != "" ?
-                                            <Card>
-                                                <Card.Body>
-                                                    <div className='fs-22 rufina-family fw-600'>Payment Info</div>
-                                                    <hr className='mt-2' />
-                                                    <div>Payment Method</div>
-                                                    {/* <div className='mt-3 d-flex'>
-                                                        <div className='d-flex'>
-                                                            <input
-                                                                type="radio"
-                                                                name="payment_method"
-                                                                value="VISA"
-                                                                onChange={(e) => { setRadioButtonValue("VISA"); handleChangePaymentInfo(e); }}
-                                                                required
-                                                            />
-                                                        </div>
-                                                        <div className='ms-3'>
-                                                            <FaCcVisa size={20} />
-                                                        </div>
-
-                                                        <div className='ms-2'>
-                                                            VISA
-                                                        </div>
-                                                    </div> */}
-
-                                                    <label className='mt-3 d-flex cursor-pointer'>
-                                                        <div className='d-flex'>
-                                                            <input
-                                                                type="radio"
-                                                                name="payment_method"
-                                                                value="Paypal"
-                                                                onChange={(e) => { setRadioButtonValue("Paypal"); handleChangePaymentInfo(e); }}
-                                                                required
-                                                            />
-                                                        </div>
-                                                        <div className='ms-3'>
-                                                            <FaCcPaypal size={20} />
-                                                        </div>
-
-                                                        <div className='ms-2'>
-                                                            Paypal
-                                                        </div>
-                                                    </label>
-
-                                                    <label className='mt-3 d-flex cursor-pointer'>
-                                                        <div className='d-flex'>
-                                                            <input
-                                                                type="radio"
-                                                                name="payment_method"
-                                                                value="Stripe"
-                                                                onChange={(e) => { setRadioButtonValue("Stripe"); handleChangePaymentInfo(e); }}
-                                                                required
-                                                            />
-                                                        </div>
-                                                        <div className='ms-3'>
-                                                            <FaCcStripe size={20} />
-                                                        </div>
-
-                                                        <div className='ms-2'>
-                                                            Stripe
-                                                        </div>
-                                                    </label>
-
-                                                    {/* <div className='mt-2 d-flex'>
-                                                        <div className='d-flex'>
-                                                            <input
-                                                                type="radio"
-                                                                name="payment_method"
-                                                                value="MasterCard"
-                                                                onChange={(e) => { setRadioButtonValue("MasterCard"); handleChangePaymentInfo(e); }}
-                                                                required
-                                                            />
-                                                        </div>
-                                                        <div className='ms-3'>
-                                                            <FaCcMastercard size={20} />
-                                                        </div>
-
-                                                        <div className='ms-2'>
-                                                            MasterCard
-                                                        </div>
-                                                    </div> */}
-                                                    <label className='mt-2 d-flex cursor-pointer'>
-                                                        <div className='d-flex'>
-                                                            <input
-                                                                type="radio"
-                                                                name="payment_method"
-                                                                value="Cash on Delivery"
-                                                                onChange={(e) => { setRadioButtonValue("Cash on Delivery"); handleChangePaymentInfo(e); }}
-                                                                required
-                                                            />
-                                                        </div>
-                                                        <div className='ms-3'>
-                                                            <FaTruck size={20} />
-                                                        </div>
-
-                                                        <div className='ms-2'>
-                                                            Cash on Delivery
-                                                        </div>
-                                                    </label>
-
-                                                    {radioButtonValue != "" && radioButtonValue != "Cash on Delivery" && radioButtonValue != "Paypal" && radioButtonValue != "Stripe" ?
-                                                        <div>
-                                                            <hr />
-                                                            <div className='mb-4'>
-                                                                <div className='mb-2'>Card Name:</div>
+                                            <>
+                                                <Card>
+                                                    <Card.Body>
+                                                        <div className='fs-22 rufina-family fw-600'>Payment Info</div>
+                                                        <hr className='mt-2' />
+                                                        <div>Payment Method</div>
+                                                        {/* <div className='mt-3 d-flex'>
+                                                            <div className='d-flex'>
                                                                 <input
-                                                                    type="text"
-                                                                    className='form-control'
-                                                                    name="card_name"
-                                                                    value={checkOutFormData.card_name}
-                                                                    onChange={handleChangePaymentInfo}
+                                                                    type="radio"
+                                                                    name="payment_method"
+                                                                    value="VISA"
+                                                                    onChange={(e) => { setRadioButtonValue("VISA"); handleChangePaymentInfo(e); }}
+                                                                    required
                                                                 />
                                                             </div>
-                                                            <hr />
+                                                            <div className='ms-3'>
+                                                                <FaCcVisa size={20} />
+                                                            </div>
 
+                                                            <div className='ms-2'>
+                                                                VISA
+                                                            </div>
+                                                        </div> */}
+
+                                                        <label className='mt-3 d-flex cursor-pointer'>
+                                                            <div className='d-flex'>
+                                                                <input
+                                                                    type="radio"
+                                                                    name="payment_method"
+                                                                    value="Paypal"
+                                                                    onChange={(e) => { setRadioButtonValue("Paypal"); handleChangePaymentInfo(e); }}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div className='ms-3'>
+                                                                <FaCcPaypal size={20} />
+                                                            </div>
+
+                                                            <div className='ms-2'>
+                                                                Paypal
+                                                            </div>
+                                                        </label>
+
+                                                        <label className='mt-3 d-flex cursor-pointer'>
+                                                            <div className='d-flex'>
+                                                                <input
+                                                                    type="radio"
+                                                                    name="payment_method"
+                                                                    value="Stripe"
+                                                                    onChange={(e) => { setRadioButtonValue("Stripe"); handleChangePaymentInfo(e); }}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div className='ms-3'>
+                                                                <FaCcStripe size={20} />
+                                                            </div>
+
+                                                            <div className='ms-2'>
+                                                                Stripe
+                                                            </div>
+                                                        </label>
+
+                                                        {/* <div className='mt-2 d-flex'>
+                                                            <div className='d-flex'>
+                                                                <input
+                                                                    type="radio"
+                                                                    name="payment_method"
+                                                                    value="MasterCard"
+                                                                    onChange={(e) => { setRadioButtonValue("MasterCard"); handleChangePaymentInfo(e); }}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div className='ms-3'>
+                                                                <FaCcMastercard size={20} />
+                                                            </div>
+
+                                                            <div className='ms-2'>
+                                                                MasterCard
+                                                            </div>
+                                                        </div> */}
+                                                        <label className='mt-2 d-flex cursor-pointer'>
+                                                            <div className='d-flex'>
+                                                                <input
+                                                                    type="radio"
+                                                                    name="payment_method"
+                                                                    value="Cash on Delivery"
+                                                                    onChange={(e) => { setRadioButtonValue("Cash on Delivery"); handleChangePaymentInfo(e); }}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div className='ms-3'>
+                                                                <FaTruck size={20} />
+                                                            </div>
+
+                                                            <div className='ms-2'>
+                                                                Cash on Delivery
+                                                            </div>
+                                                        </label>
+
+                                                        {radioButtonValue != "" && radioButtonValue != "Cash on Delivery" && radioButtonValue != "Paypal" && radioButtonValue != "Stripe" ?
                                                             <div>
-                                                                <div className='mb-2'>Card Number:</div>
-                                                                <input
-                                                                    type="text"
-                                                                    name="card_number"
-                                                                    className='form-control mb-2'
-                                                                    value={checkOutFormData.card_number}
-                                                                    onChange={handleChangePaymentInfo}
-                                                                    maxLength={15}
-                                                                    pattern="[0-9]*"
-                                                                />
-                                                            </div>
+                                                                <hr />
+                                                                <div className='mb-4'>
+                                                                    <div className='mb-2'>Card Name:</div>
+                                                                    <input
+                                                                        type="text"
+                                                                        className='form-control'
+                                                                        name="card_name"
+                                                                        value={checkOutFormData.card_name}
+                                                                        onChange={handleChangePaymentInfo}
+                                                                    />
+                                                                </div>
+                                                                <hr />
 
-                                                            <div className='mt-3'>
-                                                                <div className='mb-2'>Expiration Date:</div>
-                                                                <input
-                                                                    type="date"
-                                                                    className='form-control'
-                                                                    name="date"
-                                                                    value={checkOutFormData.date}
-                                                                    onChange={handleChangePaymentInfo}
-                                                                />
-                                                            </div>
+                                                                <div>
+                                                                    <div className='mb-2'>Card Number:</div>
+                                                                    <input
+                                                                        type="text"
+                                                                        name="card_number"
+                                                                        className='form-control mb-2'
+                                                                        value={checkOutFormData.card_number}
+                                                                        onChange={handleChangePaymentInfo}
+                                                                        maxLength={15}
+                                                                        pattern="[0-9]*"
+                                                                    />
+                                                                </div>
 
-                                                        </div>
-                                                        :
-                                                        null
-                                                    }
-                                                    <div className='mt-4'>
-                                                        <Row>
-                                                            <Col lg="12">
-                                                                {totalAmount < 1 ?
-                                                                    <button type="button" className='btn btn-primary' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
-                                                                    :
-                                                                    <>
-                                                                        {radioButtonValue != "" ?
-                                                                            <>
-                                                                                {radioButtonValue == "Paypal" ?
-                                                                                    <>
-                                                                                        {currentUser ?
-                                                                                            <PayPalButtons
-                                                                                                fundingSource="paypal"
-                                                                                                createOrder={(data, actions) => {
-                                                                                                    return actions.order.create({
-                                                                                                        purchase_units: [{
-                                                                                                            amount: {
-                                                                                                                value: totalAmount // Replace with the actual amount
-                                                                                                            },
-                                                                                                        }],
-                                                                                                    });
-                                                                                                }}
-                                                                                                onApprove={(data, actions) => {
-                                                                                                    return actions.order.capture().then((details) => {
-                                                                                                        // alert("Transaction completed by " + details.payer.name.given_name);
-                                                                                                        checkOutSubmitPaypal(details, data);
-                                                                                                        // Call your backend API to save the transaction details
-                                                                                                    });
-                                                                                                }}
-                                                                                            />
+                                                                <div className='mt-3'>
+                                                                    <div className='mb-2'>Expiration Date:</div>
+                                                                    <input
+                                                                        type="date"
+                                                                        className='form-control'
+                                                                        name="date"
+                                                                        value={checkOutFormData.date}
+                                                                        onChange={handleChangePaymentInfo}
+                                                                    />
+                                                                </div>
+
+                                                            </div>
+                                                            :
+                                                            null
+                                                        }
+                                                        <div className='mt-4'>
+                                                            <Row>
+                                                                <Col lg="12">
+                                                                    {totalAmount < 1 ?
+                                                                        <button type="button" className='btn btn-primary' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                                        :
+                                                                        <>
+                                                                            {radioButtonValue != "" ?
+                                                                                <>
+                                                                                    {radioButtonValue == "Paypal" ?
+                                                                                        <>
+                                                                                            {currentUser ?
+                                                                                                <PayPalButtons
+                                                                                                    fundingSource="paypal"
+                                                                                                    createOrder={(data, actions) => {
+                                                                                                        return actions.order.create({
+                                                                                                            purchase_units: [{
+                                                                                                                amount: {
+                                                                                                                    value: totalAmount // Replace with the actual amount
+                                                                                                                },
+                                                                                                            }],
+                                                                                                        });
+                                                                                                    }}
+                                                                                                    onApprove={(data, actions) => {
+                                                                                                        return actions.order.capture().then((details) => {
+                                                                                                            // alert("Transaction completed by " + details.payer.name.given_name);
+                                                                                                            checkOutSubmitPaypal(details, data);
+                                                                                                            // Call your backend API to save the transaction details
+                                                                                                        });
+                                                                                                    }}
+                                                                                                />
+                                                                                                :
+                                                                                                <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                            }
+                                                                                        </>
+                                                                                        : radioButtonValue == "Stripe" ?
+                                                                                            <>
+                                                                                                {currentUser ?
+                                                                                                    <button type="button" className='btn btn-primary' onClick={()=>checkOutSubmitStripe()}>{formStatus != "standby" ? "Loading..." : "Stripe"}</button>
+                                                                                                    :
+                                                                                                    <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                }
+                                                                                            </>
                                                                                             :
-                                                                                            <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
-                                                                                        }
-                                                                                    </>
-                                                                                    : radioButtonValue == "Stripe" ?
-                                                                                        <>
-                                                                                            {currentUser ?
-                                                                                                <button type="button" className='btn btn-primary' onClick={()=>checkOutSubmitStripe()}>{formStatus != "standby" ? "Loading..." : "Stripe"}</button>
-                                                                                                :
-                                                                                                <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
-                                                                                            }
-                                                                                        </>
-                                                                                        :
 
-                                                                                        <>
-                                                                                            {currentUser ?
-                                                                                                <button type="submit" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
-                                                                                                :
-                                                                                                <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
-                                                                                            }
-                                                                                        </>
-                                                                                }
-                                                                            </>
-                                                                            :
-                                                                            null
-                                                                        }
+                                                                                            <>
+                                                                                                {currentUser ?
+                                                                                                    <button type="submit" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                                                                    :
+                                                                                                    <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                }
+                                                                                            </>
+                                                                                    }
+                                                                                </>
+                                                                                :
+                                                                                null
+                                                                            }
 
-                                                                    </>
+                                                                        </>
 
-                                                                }
-                                                            </Col>
-                                                        </Row>
-                                                    </div>
-                                                </Card.Body>
-                                            </Card>
+                                                                    }
+                                                                </Col>
+                                                            </Row>
+                                                        </div>
+                                                    </Card.Body>
+                                                </Card>
+                                            </>
                                             :
                                             null
                                         }
