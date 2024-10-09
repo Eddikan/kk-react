@@ -1167,7 +1167,7 @@ const Designs = (props) => {
                                                                         </div>
                                                                         <div className="design-details">
                                                                             <div className='d-flex align-items-center justify-content-between'>
-                                                                                <p className="text-black fs-18 fw-400 mb-0 text-ellipsis rufina-family">{design.name ?? '-'}</p>
+                                                                                <h4 className="text-black fs-18 fw-400 mb-0 text-ellipsis design-name">{design.name ?? '-'}</h4>
                                                                                 {/* {design.user.id != currentUser ?
                                                                                     <div className="design-atc-container">
                                                                                         <div className="design-atc cursor-pointer">

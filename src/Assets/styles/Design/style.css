@@ -513,9 +513,22 @@ color:#F6D46D;
     max-width: 400px !important;
     left: 48px;
 }
+.design-name{
+    text-decoration: none;
+}
 
 .designs-grid:hover .design-name{
     text-decoration: underline;
+}
+
+.save-link{
+    opacity: 0 !important;
+    top: 10px !important;
+    right: 10px !important;
+    bottom: auto !important;
+}
+.designs-grid:hover .save-link{
+    opacity: 1 !important;
 }
 
 .filter-sidebar {
