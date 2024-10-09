@@ -297,7 +297,7 @@ const DesignerProfile = () => {
             {userLoading ?
                 <LoadingPage />
                 :
-                <section id='designer-profile' className='py-5 px-2'>
+                <section id='designer-profile' className='py-5 px-5'>
                     <Container>
                         <Row>
                             <Col lg="4" className='mb-5'>

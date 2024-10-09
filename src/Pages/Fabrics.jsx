@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Container, Row, Col, Button, Card } from 'react-bootstrap';
 import { IoShirtSharp } from "react-icons/io5";
 import Layout from 'Components/Layout/Layout';
@@ -26,9 +26,15 @@ import 'Assets/styles/FabricsListView/style.css'
 import { Rating } from 'react-simple-star-rating';
 import Pagination from 'Components/Pagination/Pagination';
 import DressIcon from 'Assets/images/icons/dress.png';
+import CurrencyConverter from 'Components/Shared/CurrencyConverter';
 
 const Fabrics = (props) => {
     const navigate = useNavigate();
+    const useQuery = () => {
+        return new URLSearchParams(useLocation().search);
+    }
+    let query = useQuery();
+    const headerSearch = query.get('search');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount']);
     const [mounted, setMounted] = useState(false);
     const [fabrics, setFabrics] = useState([]);
@@ -84,6 +90,8 @@ const Fabrics = (props) => {
     const currentUser = cookies.currentUser;
     const userRole = cookies.userRole;
     const token = cookies.token;
+    const user = cookies.userDetails;
+
     let PageSize = 32;
 
     const [sortOptions] = useState([
@@ -582,6 +590,17 @@ const Fabrics = (props) => {
     }, [unitMeasurement, opacitySearch, patternSearch, textureSearch, selectedColorFastness, cutToSize, wrinkleResistant, ecoFriendly, selectedCompositions, selectedWeaves, selectedColors, width, length, selectedSustainabilities, priceRange, reloadCount, searchValue, country]);
 
     useEffect(() => {
+        if (headerSearch && headerSearch != "") {
+            setSearch(headerSearch);
+            setSearchValue(headerSearch);
+        } else {
+            setSearch('');
+            setSearchValue('');
+        }
+
+    }, [headerSearch]);
+
+    useEffect(() => {
         setSelectedCountry(cookies.selectedCountry ?? '');
         setCountry(cookies.selectedCountry ?? '');
     }, [cookies]);
@@ -589,7 +608,7 @@ const Fabrics = (props) => {
     return (
         <Layout>
             <div className='pb-5 pt-10 px-5'>
-                <section className="pt-3">
+                <section>
                     <Container>
                         <Row className="mt-2">
                             <Col lg="12">
@@ -637,8 +656,32 @@ const Fabrics = (props) => {
                                                             
                                                         </div>
                                                     </Col>
-                                                    <Col lg="3">
-                                                        {/* <Button className="custom-hover-btn p-0 fs-12 fabrics-hover-button"> <img src={DressIcon} height="19px" className="mx-1" alt="shop-icon"/>Showcase your Designs</Button> */}
+                                                    <Col lg="3" className="text-right">
+                                                        {currentUser ?
+                                                            <>
+                                                                {user.is_designer == 1 ?
+                                                                    <Link to="/user/profile?tab=fabrics&tab_group=fabrics">
+                                                                        <button className="ddf-button fs-12 btn bg-white border-black text-black bg-white-hover border-gold-hover text-black-hover">
+                                                                            <img src={DressIcon} className="ddf-button-icon" alt="Designs" /> Display Your Creations
+                                                                        </button>
+                                                                    </Link>
+                                                                    :
+                                                                    <Link to="/user/seller-form">
+                                                                        <button className="ddf-button fs-12 btn bg-white border-black text-black bg-white-hover border-gold-hover text-black-hover">
+                                                                            <img src={DressIcon} className="ddf-button-icon" alt="Designs" /> Display Your Creations
+                                                                        </button>
+                                                                    </Link>
+                                                                }
+                                                                
+                                                            </>
+                                                            :
+                                                            <Link to="/sign-up?type=seller">
+                                                                <button className="ddf-button fs-12 btn bg-white border-black text-black bg-white-hover border-gold-hover text-black-hover">
+                                                                    <img src={DressIcon} className="ddf-button-icon" alt="Designs" /> Display Your Creations
+                                                                </button>
+                                                            </Link>
+                                                        }
+                                                        
                                                     </Col>
                                                 </Row>
                                             </div>
@@ -1023,7 +1066,7 @@ const Fabrics = (props) => {
                                                                                 </>
                                                                                 :
                                                                                 <>
-                                                                                    <div className='save-link'>
+                                                                                    {/* <div className='save-link'>
                                                                                         {userWishlist ?
                                                                                             <div className="kouture-tooltip">
                                                                                                 <div className="action-button bg-gold">
@@ -1043,7 +1086,7 @@ const Fabrics = (props) => {
                                                                                                 </div>
                                                                                             </div>
                                                                                         }
-                                                                                    </div>
+                                                                                    </div> */}
                                                                                 </>
                                                                             }
                                                                         </div>
@@ -1115,7 +1158,10 @@ const Fabrics = (props) => {
                                                                                 /* Available Props */
                                                                                 />
                                                                             </div>
-                                                                            <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis poppins-ft">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
+                                                                            <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis poppins-ft">
+                                                                                <CurrencyConverter price={fabric.price} currency={fabric.currency ?? 'USD'} />
+                                                                                {/* ${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'} */}
+                                                                            </h4>
                                                                             {/* {currentUser ?
                                                                         <div className='d-flex align-items-center mt-1'>
                                                                             {fabric.user.image ?

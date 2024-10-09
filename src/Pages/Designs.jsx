@@ -38,6 +38,7 @@ import 'react-multi-carousel/lib/styles.css';
 import { debounce } from 'lodash';
 import Pagination from 'Components/Pagination/Pagination';
 import axios from 'axios';
+import DiamondIcon from 'Assets/images/icons/diamond.png';
 
 const Designs = (props) => {
     const navigate = useNavigate();
@@ -50,6 +51,7 @@ const Designs = (props) => {
     const currentUser = cookies.currentUser;
     const token = cookies.token;
     const userRole = cookies.userRole;
+    const user = cookies.userDetails;
 
     const [mounted, setMounted] = useState(false);
     const [designs, setDesigns] = useState([]);
@@ -671,7 +673,33 @@ const Designs = (props) => {
                                                             
                                                         </div>
                                                     </Col>
-                                                    <Col lg="3">
+                                                    <Col lg="3" className="text-right">
+                                                        {currentUser ?
+                                                            <>
+                                                                {user.is_designer == 1 ?
+                                                                    <Link to="/user/profile?tab=designs&tab_group=designs">
+                                                                        <button className="ddf-button fs-12 btn bg-white border-black text-black bg-white-hover border-gold-hover text-black-hover">
+                                                                            <img src={DiamondIcon} className="ddf-button-icon" alt="Designs" /> Display Your Creations
+                                                                        </button>
+                                                                    </Link>
+                                                                    :
+                                                                    <Link to="/user/designer-form">
+                                                                        <button className="ddf-button fs-12 btn bg-white border-black text-black bg-white-hover border-gold-hover text-black-hover">
+                                                                            <img src={DiamondIcon} className="ddf-button-icon" alt="Designs" /> Display Your Creations
+                                                                        </button>
+                                                                    </Link>
+                                                                }
+                                                                
+                                                            </>
+                                                            :
+                                                            <Link to="/sign-up?type=designer">
+                                                                <button className="ddf-button fs-12 btn bg-white border-black text-black bg-white-hover border-gold-hover text-black-hover">
+                                                                    <img src={DiamondIcon} className="ddf-button-icon" alt="Designs" /> Display Your Creations
+                                                                </button>
+                                                            </Link>
+                                                            
+                                                        }
+                                                        
                                                     </Col>
                                                 </Row>
                                             </div>

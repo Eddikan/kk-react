@@ -3420,3 +3420,22 @@ span.rti--tag {
 .category-item{
     min-width: 130px;
 }
+
+.ddf-button .ddf-button-icon {
+    max-width: 16px;
+    margin-right: 5px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ddf-button {
+    border-radius: 3px;
+    min-width: 202px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    line-height: 18px;
+}
+
+.category-pills {
+    margin-top: 7px;
+}

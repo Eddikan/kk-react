@@ -17,6 +17,7 @@ import LoadingPage from 'Components/Shared/LoadingPage';
 import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
 import Countries from 'Utils/Countries';
+import CountryData from 'Utils/CountryData-backup';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
@@ -705,10 +706,30 @@ const EditProfile = () => {
     }
 
     const handleChange = (e) => {
+        var { name, value } = e.target;
+
         setProfileFormData({
             ...profileFormData,
             [e.target.name]: e.target.value,
-        })
+        });
+
+        if (name == "country") {
+            const country = Object.values(CountryData).find(country => country.name === value);
+            let currency = 'USD';
+            let currencyCode = '$';
+
+            if (country) {
+                currency = country.currency;
+                currencyCode = country.currencyCode;
+            }
+
+            setProfileFormData({
+                ...profileFormData,
+                [e.target.name]: e.target.value,
+                currency: currency,
+                currency_code: currencyCode
+            });
+        }
     };
 
     const handleChangeBodyMeasurement = (e) => {
@@ -770,6 +791,10 @@ const EditProfile = () => {
                 const user = data.user;
                 const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
                 setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+                
+                setCookie('userCurrency', JSON.stringify(user.currency ?? 'USD'), { path: '/' });
+                setCookie('userCurrencyCode', JSON.stringify(user.currency_code ?? '$'), { path: '/' });
+
                 toast.success('Profile updated successfully!');
                 setReloadCount((prevReloadCount) => prevReloadCount + 1);
             } else {

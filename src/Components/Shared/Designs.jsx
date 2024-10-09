@@ -448,7 +448,7 @@ const Designs = (props) => {
                                                 <Button className="btn-primary button-opacity-hover" variant="primary">View More Designs <FaArrowRight style={{ color: 'white'}}/></Button>
                                             </Link>
                                             :
-                                            <Link to="/sign-up?redirect_to=/">
+                                            <Link to="/sign-up?redirect_to=/designs">
                                                 <Button className="btn-primary button-opacity-hover" variant="primary">View More Designs <FaArrowRight style={{ color: 'white'}}/></Button>
                                             </Link>
                                         }

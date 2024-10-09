@@ -523,9 +523,16 @@ color:#F6D46D;
     height: 100%;
 }
 
-.ddf-header .filter-sidebar, .ddf-header .category-slider {
+.ddf-header .filter-sidebar {
     padding-top: 20px;
     padding-bottom: 20px;
+    border-bottom: 2px solid #ECECEC;
+    min-height: 66px;
+}
+
+.ddf-header .category-slider {
+    padding-top: 12px;
+    padding-bottom: 12px;
     border-bottom: 2px solid #ECECEC;
     min-height: 66px;
 }

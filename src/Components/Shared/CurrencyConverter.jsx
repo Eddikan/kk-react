@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
 const CurrencyConverter = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser']);
+    const [cookies, setCookie, removeCookie] = useCookies(['userCurrency', 'userCurrencyCode','currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser']);
     const [convertedPrice, setConvertedPrice] = useState(0);
     const [currencyCode, setCurrencyCode] = useState('');
     
     const currencyConversions = cookies.currencyConversions;
-    const selectedCurrency = cookies.selectedCurrency || props.userCurrency || 'USD';
-    const selectedCurrencyCode = cookies.selectedCurrencyCode || props.userCurrencyCode || '$';
+    const selectedCurrency = cookies.selectedCurrency || cookies.userCurrency || 'USD';
+    const selectedCurrencyCode = cookies.selectedCurrencyCode || cookies.userCurrencyCode || '$';
     const currentUser = cookies.currentUser;
     const currency = props.currency;
     const price = props.price;

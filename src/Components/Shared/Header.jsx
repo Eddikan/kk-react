@@ -142,6 +142,10 @@ const Header = () => {
   const removeCookies = () => {
     removeCookie('token', { path: '/' });
     removeCookie('userDetails', { path: '/' });
+    removeCookie('currencyConversions', { path: '/' });
+    removeCookie('userCurrency', { path: '/' });
+    removeCookie('userCurrencyCode', { path: '/' });
+    
     removeCookie('isWelcome', { path: '/' });
     removeCookie('currentUser', { path: '/' });
     removeCookie('currentUserDesigner', { path: '/' });
@@ -354,18 +358,17 @@ const Header = () => {
     } else {
       getCurrencyConversions()
         .then((response) => {
-          console.log(response);
           const status = response.status;
           if (status == 200) {
             const currencyData = response.data;
             const currencyConversionsData = currencyData.results;
-            setCookie('currencyConversions', JSON.stringify(currencyConversionsData), { path: '/' });
+            setCookie('currencyConversions', JSON.stringify(currencyConversionsData), { maxAge: 3600, path: '/' });
           }
         })
         .catch((error) => {
       });
     }
-  }, [selectedCurrency]);
+  }, [selectedCurrency, currencyConversions]);
 
   useEffect(() => {
     if (currentUser) {
@@ -679,6 +682,8 @@ const Header = () => {
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile`}>My Profile</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=all&tab_group=orders`}>My Orders</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=fabrics_wishlist&tab_group=wishlist`}>My Wishlist</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=designs&tab_group=designs`}>My Designs</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=fabrics&tab_group=fabrics`}>My Fabrics</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=upcoming&tab_group=appointments`}>My Appointments</a>
                         <a className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2" href={`/${userType}/profile?tab=messages&tab_group=messages`}>My Messages</a>
                         <a className="nav-link cursor-pointer text-decoration-none" onClick={logOut}>Sign Out</a>
@@ -979,6 +984,8 @@ const Header = () => {
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Profile</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Orders</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Wishlist</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Designs</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Fabrics</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Appointments</a>
                         <a className="nav-link cursor-pointer text-decoration-none" href="/login">My Messages</a>
 
