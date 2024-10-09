@@ -58,6 +58,7 @@
 .designs-grid:hover .save-link{
     opacity: 1 !important;
 }
+
 .filter-sidebar {
     border-right: 2px solid #ECECEC;
     height: 100%;
@@ -74,4 +75,7 @@
     padding: 5px;
     background-color: #EFEFEF !important;
     border-radius: 50%;
+}
+.fabrics-hover-button{
+    height: 33px;
 }

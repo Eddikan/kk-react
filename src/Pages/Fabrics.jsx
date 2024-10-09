@@ -12,6 +12,8 @@ import GoBack from 'Components/Shared/GoBack';
 import { GoHeart } from "react-icons/go";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import UserPlaceholder from 'Assets/images/placeholders/user.png';
 import axios from 'axios';
@@ -23,6 +25,7 @@ import { debounce } from 'lodash';
 import 'Assets/styles/FabricsListView/style.css'
 import { Rating } from 'react-simple-star-rating';
 import Pagination from 'Components/Pagination/Pagination';
+import DressIcon from 'Assets/images/icons/dress.png';
 
 const Fabrics = (props) => {
     const navigate = useNavigate();
@@ -35,6 +38,7 @@ const Fabrics = (props) => {
     // Filter
     const [ecoFriendly, setEcoFriendly] = useState(0);
     const [selectedCompositions, setSelectedCompositions] = useState([]);
+    const [selectedAllCompositions, setSelectedAllCompositions] = useState([]);
     const [selectedWeaves, setSelectedWeaves] = useState([]);
     const [selectedColors, setSelectedColors] = useState([]);
     const [categories, setCategories] = useState([]);
@@ -241,10 +245,16 @@ const Fabrics = (props) => {
 
         if (updatedCompositions.includes(composition)) {
             updatedCompositions.splice(updatedCompositions.indexOf(composition), 1);
+            if (selectedAllCompositions.length + 1 === compositions.length){
+                setSelectedAllCompositions(true);
+            }
+            else{
+                setSelectedAllCompositions(false);
+            }
         } else {
             updatedCompositions.push(composition);
         }
-
+        
         setSelectedCompositions(updatedCompositions);
     };
 
@@ -587,34 +597,34 @@ const Fabrics = (props) => {
                                     <Row>
                                         <Col lg="3" className="filter-sidebar">
                                             <div className="pe-4">
-                                                <p className="mb-0 fs-14 fw-500"><Link className="text-decoration-none text-muted" to="/">Home</Link> / Designs</p>
+                                                <p className="mb-0 fs-14 fw-500"><Link className="text-decoration-none text-muted" to="/">Home</Link> / Fabrics</p>
                                             </div>
                                         </Col>
                                         <Col lg="9" className="category-slider">
                                             <div  className="ps-4">
                                                 <Row>
-                                                    <Col lg="9">
+                                                <Col lg="9">
                                                         <div className="category-pills">
-                                                            {categories && categories.length > 0 ? (
+                                                            {compositions && compositions.length > 0 ? (
                                                                 <Slider {...settings}>
-                                                                    {selectedAllCategories || selectedCategories.length < 1  ?
+                                                                    {selectedAllCompositions || selectedCompositions.length < 1  ?
                                                                         <div className="mx-2 cursor-pointer">
                                                                             <span class="badge badge-dark bg-dark fs-12 fw-400 text-center">All</span>
                                                                         </div>
                                                                         :
-                                                                        <div className="mx-2 cursor-pointer" onClick={function() { setSelectedAllCategories(true); setSelectedCategories([]) }}>
+                                                                        <div className="mx-2 cursor-pointer" onClick={function() { setSelectedAllCompositions(true); setSelectedCompositions([]) }}>
                                                                             <span class="badge badge-dark bg-white fs-12 text-dark fw-400 text-center">All</span>
                                                                         </div>
                                                                     }
-                                                                    {categories.map((category, index) => (
+                                                                    {compositions.map((composition, index) => (
                                                                         <>
-                                                                            {selectedCategories.includes(category.id) ?
-                                                                                <div className="mx-2 cursor-pointer" onClick={function() { handleChangeCategory(category.id); }}>
-                                                                                    <span class="badge badge-dark bg-dark fs-12 fw-400 text-center">{category.name}</span>
+                                                                            {selectedCompositions.includes(composition) ?
+                                                                                <div className="mx-2 cursor-pointer" onClick={function() { handleCompositionChange(composition); }}>
+                                                                                    <span className="badge badge-dark bg-dark fs-12 fw-400 text-center">{composition}</span>
                                                                                 </div>
                                                                                 :
-                                                                                <div className="mx-2 cursor-pointer" onClick={function() { handleChangeCategory(category.id); }}>
-                                                                                    <span class="badge badge-dark bg-white text-dark fs-12 fw-400 text-center">{category.name}</span>
+                                                                                <div className="mx-2 cursor-pointer" onClick={function() { handleCompositionChange(composition); }}>
+                                                                                    <span className="badge badge-dark bg-white text-dark fs-12 fw-400 text-center">{composition}</span>
                                                                                 </div>
                                                                             }
                                                                         </>
@@ -628,6 +638,7 @@ const Fabrics = (props) => {
                                                         </div>
                                                     </Col>
                                                     <Col lg="3">
+                                                        {/* <Button className="custom-hover-btn p-0 fs-12 fabrics-hover-button"> <img src={DressIcon} height="19px" className="mx-1" alt="shop-icon"/>Showcase your Designs</Button> */}
                                                     </Col>
                                                 </Row>
                                             </div>
@@ -935,7 +946,7 @@ const Fabrics = (props) => {
                                 </div>
                             </Col>
                             <Col lg="9">
-                                <div id="profile-designs">
+                                <div id="profile-designs" className="ps-2 pt-4">
                                     {fabricsLoading ?
                                         <>
                                             <Card className="text-center">
@@ -1012,7 +1023,27 @@ const Fabrics = (props) => {
                                                                                 </>
                                                                                 :
                                                                                 <>
-
+                                                                                    <div className='save-link'>
+                                                                                        {userWishlist ?
+                                                                                            <div className="kouture-tooltip">
+                                                                                                <div className="action-button bg-gold">
+                                                                                                    <GoHeart className="text-white" />
+                                                                                                </div>
+                                                                                                <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
+                                                                                                    Remove from Wishlist
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            :
+                                                                                            <div className="kouture-tooltip">
+                                                                                                <div className="action-button bg-white">
+                                                                                                    <GoHeart className="text-black" />
+                                                                                                </div>
+                                                                                                <div className="kouture-tooltiptext" style={{width: '190px', left: '-22px'}}>
+                                                                                                    Add to Wishlist
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        }
+                                                                                    </div>
                                                                                 </>
                                                                             }
                                                                         </div>
