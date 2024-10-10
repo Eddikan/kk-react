@@ -522,13 +522,13 @@ color:#F6D46D;
 }
 
 .save-link{
-    opacity: 0 !important;
+    display: none !important;
     top: 10px !important;
     right: 10px !important;
     bottom: auto !important;
 }
 .designs-grid:hover .save-link{
-    opacity: 1 !important;
+    display: block !important;
 }
 
 .filter-sidebar {
@@ -554,4 +554,26 @@ color:#F6D46D;
     padding: 5px;
     background-color: #EFEFEF !important;
     border-radius: 50%;
+}
+.design-side-dropdown {
+    cursor: pointer;
+}
+
+.design-accordion-content {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    padding-left: .25rem;
+}
+
+.design-accordion-content.open {
+    max-height: 530px; /* Set this to a value that can accommodate the content */
+    opacity: 1;
+}
+
+.accordion-icon {
+    position: absolute;
+    right: 0;
+    top: 8px;
 }
