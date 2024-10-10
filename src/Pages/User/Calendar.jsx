@@ -25,7 +25,6 @@ const initialAppointments = {
     title: '',
 };
 
-
 const Calendar = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'userRole']);
     const currentUser = cookies.currentUser;
@@ -101,7 +100,6 @@ const Calendar = (props) => {
             return updatedTimes;
         });
     };
-
 
     const handleChangeTimeMonday = (e, index) => {
         const { name, value } = e.target;

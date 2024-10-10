@@ -15,10 +15,10 @@ import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import { Rating } from 'react-simple-star-rating';
 import { FaArrowRight } from "react-icons/fa6";
-import CurrencyConverter from './CurrencyConverter';
+import CurrencyConverter from 'Utils/CurrencyConverter';
 
 const Fabrics = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['userCurrency', 'userCurrencyCode', 'currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount']);
     const userRole = cookies.userRole;
     const navigate = useNavigate();
     const reloadCount = props.reloadCount;
@@ -164,6 +164,12 @@ const Fabrics = (props) => {
                                         } else {
                                             var fabricImage = PlaceholderImage;
                                         }
+
+                                        const fabricPrice = fabric.price ?? '0';
+                                        const fabricCurrency = fabric.currency ?? 'USD';
+
+                                        const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+
                                         var wishlist_user_ids = fabric.wishlist_user_ids;
                                         const userWishlist = wishlist_user_ids.includes(currentUser);
 
@@ -264,7 +270,7 @@ const Fabrics = (props) => {
                                                                 />
                                                             </div>
                                                             <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis poppins-ft">
-                                                                <CurrencyConverter price={fabric.price} currency={fabric.currency ?? 'USD'} />
+                                                                {convertedPrice.currency_code}{convertedPrice.price}
                                                                 {/* ${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'} */}
                                                             </h4>
                                                             {/* {currentUser ?

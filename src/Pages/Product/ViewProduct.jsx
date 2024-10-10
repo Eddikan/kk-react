@@ -24,6 +24,7 @@ import { BsArrowUpRightSquare } from "react-icons/bs";
 import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
 import axios from 'axios';
+import CurrencyConverter from 'Utils/CurrencyConverter';
 
 const initialReviewData = Object.freeze({
     rating: 0,
@@ -31,7 +32,7 @@ const initialReviewData = Object.freeze({
 });
 
 const ViewProduct = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole', 'tempCart','cartItemCount']);
+    const [cookies, setCookie, removeCookie] = useCookies(['userCurrency', 'userCurrencyCode', 'currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount']);
     const { productId } = useParams();
     const [product, setProduct] = useState('');
     const [productPrice, setProductPrice] = useState(0.00);
@@ -63,6 +64,7 @@ const ViewProduct = () => {
     const [buyNowLoading, setBuyNowLoading] = useState(false);
     const [isProductCurrentUser, setIsProductCurrentUser] = useState(false);
     const [tempCart, setTempCart] = useState(cookies.tempCart ?? []);
+    const [convertedPrice, setConvertedPrice] = useState({currency_code: '$', price: 0.00});
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -186,6 +188,12 @@ const ViewProduct = () => {
                 } else {
                     setIsProductCurrentUser(false);
                 }
+
+                // Price
+                const fabricPrice = productData.price ?? '0';
+                const fabricCurrency = productData.currency ?? 'USD';
+
+                setConvertedPrice(CurrencyConverter(fabricPrice, fabricCurrency, cookies));
 
             } else {
                 setProductLoading(false);
@@ -420,7 +428,7 @@ const ViewProduct = () => {
     useEffect(() => {
         fetchData(productId);
         getProductReviews();
-    }, []);
+    }, [cookies]);
 
     return (
         <Layout>
@@ -442,7 +450,7 @@ const ViewProduct = () => {
                         </Row>
                     </Container> */}
 
-                    <section id="single-product" className='py-5 px-2'>
+                    <section id="single-product" className='pb-5 pt-30 px-5'>
                         <Container>
                             <Row>
                                 <Col lg="12" className='text-right'>
@@ -610,7 +618,7 @@ const ViewProduct = () => {
                                                         null
                                                     }
                                                     <div className="mb-3">
-                                                        <p className="fw-600 fs-25">${productPrice}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
+                                                        <p className="fw-600 fs-25">{convertedPrice.currency_code}{convertedPrice.price}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
                                                     </div>
                                                     <hr />
                                                     <div>

@@ -15,6 +15,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { useParams } from 'react-router-dom';
 import axios from "axios";
 import toast from 'react-hot-toast';
+import CurrencyConverter from 'Utils/CurrencyConverter';
 
 const initialCheckOut = {
     card_name: '',
@@ -32,8 +33,10 @@ const Cart = (props) => {
     // Access individual query parameters using get method
     const item = searchParams.get('item');
 
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'token', 'userDetails', 'userRole', 'tempCart']);
+    const [cookies, setCookie, removeCookie] = useCookies(['userCurrency', 'userCurrencyCode', 'currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount']);
     const currentUser = cookies.currentUser;
+    const currency = cookies.selectedCurrency || cookies.userCurrency || 'USD';
+    const currencyCode = cookies.selectedCurrencyCode || cookies.userCurrencyCode || '$';
     const [reloadCount, setReloadCount] = useState(0);
     const [formStatus, setFormStatus] = useState('standby');
     const [radioButtonValue, setRadioButtonValue] = useState(0);
@@ -115,6 +118,30 @@ const Cart = (props) => {
         }
     };
 
+    const formatPrice = (price) => {
+        let priceStr = price.toString();
+        const decimalSeparator = priceStr.includes(',') ? ',' : '.';
+        let parts = priceStr.split(decimalSeparator);
+
+        if (parts.length > 1) {
+            parts[1] = parts[1].substring(0, 2); // Keep only the first two decimal digits
+        } else {
+            parts[1] = '00'; // If there are no decimal parts, add "00"
+        }
+
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        
+        let finalPrice = parts.join(decimalSeparator);
+
+        if (!finalPrice.includes(decimalSeparator)) {
+            finalPrice += decimalSeparator + "00"; // If there are no decimals, add ".00"
+        } else if (parts[1].length === 1) {
+            finalPrice += "0"; // If there is only one decimal, add another zero
+        }
+
+        return finalPrice;
+    };
+
     const updateItemQuantity = (data) => {
         updateQuantity({ user_id: currentUser, quantity: data.quantity, id: data.id }).then(response => {
             const success = response.data.status;
@@ -156,9 +183,15 @@ const Cart = (props) => {
     useEffect(() => {
         let cart_total = 0;
         if (cartItems.length > 0 && selectedCartItems.length > 0) {
+            console.log(cartItems);
             cart_total = cartItems.reduce((acc, item) => {
                 if (selectedCartItems.includes(item.product.id)) {
-                    const subtotal = item.product.price * item.quantity;
+                    const fabricPrice = item.product.price ?? '0';
+                    const fabricCurrency = item.product.currency ?? 'USD';
+
+                    const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                    const subtotal = convertedPrice.price_raw * item.quantity;
+
                     return acc + subtotal;
                 }
                 return acc;
@@ -166,13 +199,13 @@ const Cart = (props) => {
 
         }
         if (cart_total > 0) {
-            setTotalAmount(cart_total.toFixed(2));
-            setSubtotalAmount(cart_total.toFixed(2));
+            setTotalAmount(cart_total);
+            setSubtotalAmount(formatPrice(cart_total));
         } else {
-            setTotalAmount(0);
-            setSubtotalAmount(0);
+            setTotalAmount(0.00);
+            setSubtotalAmount(0.00);
         }
-    }, [selectedCartItems, item, reloadCount, cartItems]);
+    }, [cookies, selectedCartItems, item, reloadCount, cartItems]);
 
     useEffect(() => {
         if (currentUser) {
@@ -222,7 +255,11 @@ const Cart = (props) => {
             if (tempCartItems.length > 0 && tempCartItems.length > 0) {
                 cart_total = tempCartItems.reduce((acc, item) => {
                     if (selectedCartItems.includes(item.id)) {
-                        const subtotal = parseInt(item.price) * parseInt(item.quantity);
+                        const fabricPrice = item.product.price ?? '0';
+                        const fabricCurrency = item.product.currency ?? 'USD';
+
+                        const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                        const subtotal = convertedPrice.price_raw * item.quantity;
                         return acc + subtotal;
                     }
                     return acc;
@@ -230,9 +267,9 @@ const Cart = (props) => {
 
             }
             if (cart_total > 0) {
-                setTempCartTotal(cart_total.toFixed(2));
-                setTotalAmount(cart_total.toFixed(2));
-                setSubtotalAmount(cart_total.toFixed(2));
+                setTempCartTotal(formatPrice(cart_total));
+                setTotalAmount(cart_total);
+                setSubtotalAmount(formatPrice(cart_total));
 
             } else {
                 setTempCartTotal(0.00);
@@ -241,7 +278,7 @@ const Cart = (props) => {
             }
         }
 
-    }, [tempCartItems, selectedCartItems, reloadCount, item]);
+    }, [cookies, tempCartItems, selectedCartItems, reloadCount, item]);
 
     useEffect(() => {
         setCookie('selectedCartItems', JSON.stringify(selectedCartItems), { path: '/' });
@@ -342,6 +379,13 @@ const Cart = (props) => {
                                                                         var fabricImage = PlaceholderImage;
                                                                     }
 
+                                                                    const fabricPrice = cart_product.price ?? '0';
+                                                                    const fabricCurrency = cart_product.currency ?? 'USD';
+
+                                                                    const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                    const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                    const formattedSubtotal = formatPrice(subtotal);
+
                                                                     return (
                                                                         <Card className='mt-2'>
                                                                             <Card.Body>
@@ -390,7 +434,7 @@ const Cart = (props) => {
                                                                                     </Col>
 
                                                                                     <Col lg={2}>
-                                                                                        ${cartItem.product.price}
+                                                                                        {convertedPrice.currency_code}{convertedPrice.price}
                                                                                     </Col>
 
                                                                                     <Col lg={2}>
@@ -406,7 +450,7 @@ const Cart = (props) => {
                                                                                     </Col>
 
                                                                                     <Col lg={2}>
-                                                                                        ${(cartItem.product.price * cartItem.quantity).toFixed(2)}
+                                                                                        {convertedPrice.currency_code}{formattedSubtotal}
                                                                                     </Col>
 
                                                                                     <Col lg={1} className='text-center cursor-pointer delete-tooltip'
@@ -452,6 +496,13 @@ const Cart = (props) => {
                                                                     } else {
                                                                         var fabricImage = PlaceholderImage;
                                                                     }
+
+                                                                    const fabricPrice = cart_product.price ?? '0';
+                                                                    const fabricCurrency = cart_product.currency ?? 'USD';
+
+                                                                    const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                    const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                    const formattedSubtotal = formatPrice(subtotal);
 
                                                                     return (
                                                                         <Card className='mt-2'>
@@ -501,7 +552,7 @@ const Cart = (props) => {
                                                                                     </Col>
 
                                                                                     <Col lg={2}>
-                                                                                        ${cartItem.price}
+                                                                                        {convertedPrice.currency_code}{convertedPrice.price}
                                                                                     </Col>
 
                                                                                     <Col lg={2}>
@@ -517,7 +568,7 @@ const Cart = (props) => {
                                                                                     </Col>
 
                                                                                     <Col lg={2}>
-                                                                                        ${(cartItem.price * cartItem.quantity).toFixed(2)}
+                                                                                        {convertedPrice.currency_code}{formattedSubtotal}
                                                                                     </Col>
 
                                                                                     <Col lg={1} className='text-center cursor-pointer delete-tooltip'
@@ -560,11 +611,11 @@ const Cart = (props) => {
                                                 </Col>
                                                 {currentUser ?
                                                     <Col className='text-right'>
-                                                        <span className='fs-18 me-3'>Total Amount</span><span className='total-price fs-20 fw-600'>${totalAmount}</span>
+                                                        <span className='fs-18 me-3'>Total Amount</span><span className='total-price fs-20 fw-600'>{currencyCode}{subtotalAmount}</span>
                                                     </Col>
                                                     :
                                                     <Col className='text-right'>
-                                                        <span className='fs-18 me-3'>Total Amount</span><span className='total-price fs-20 fw-600'>${tempCartTotal}</span>
+                                                        <span className='fs-18 me-3'>Total Amount</span><span className='total-price fs-20 fw-600'>{currencyCode}{subtotalAmount}</span>
                                                     </Col>
                                                 }
                                                 

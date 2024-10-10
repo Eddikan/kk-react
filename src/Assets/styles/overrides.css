@@ -1205,7 +1205,7 @@ a {
     box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     -webkit-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
     -moz-box-shadow: 0px 10px 16px 8px rgba(0, 0, 0, 0.18);
-    z-index: 10;
+    z-index: 12;
 }
 
 .user-menu.action-box-incomplete-profile {

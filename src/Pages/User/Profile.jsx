@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import Layout from 'Components/Layout/Layout';
-import { Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
+import { FormGroup, FormControl, Container, Row, Col, Button, Modal, Card, Form } from 'react-bootstrap';
 import 'Assets/styles/User/Profile/style.css'
 import UserPlaceholder from 'Assets/images/user.png';
 import Loading from 'Assets/images/loading.gif'
@@ -11,7 +11,7 @@ import { CiShop } from "react-icons/ci";
 import { FaLocationDot, FaPhone, FaFacebookF, FaLinkedinIn, FaInstagram } from "react-icons/fa6";
 import { PiTrashThin } from "react-icons/pi";
 import { AiOutlineClose } from 'react-icons/ai';
-import { FaLink, FaBehance } from "react-icons/fa";
+import { FaLink, FaBehance, FaPen } from "react-icons/fa";
 import GoBack from 'Components/Shared/GoBack';
 import DesignIcon from 'Assets/images/user-box/dress.png';
 import FabricIcon from 'Assets/images/user-box/fabric.png';
@@ -24,7 +24,7 @@ import AdminPortfolio from 'Components/Shared/Admin/AdminPortfolioGrid';
 import AdminFabrics from 'Components/Shared/Admin/AdminFabricsGrid';
 import LoadingPage from 'Components/Shared/LoadingPage';
 import { GoPencil } from "react-icons/go";
-import { IoStorefrontOutline, IoSaveOutline  } from "react-icons/io5";
+import { IoStorefrontOutline, IoSaveOutline } from "react-icons/io5";
 import axios from 'axios';
 import MyCalendar from 'Components/Shared/MyCalendar';
 import BodyMeasurement from 'Components/Shared/BodyMeasurement';
@@ -81,6 +81,12 @@ const initialDesignerData = Object.freeze({
     pricing_structure: '',
 });
 
+const initialUpdatePasswordData = Object.freeze({
+    new_password: '',
+    current_password: '',
+    confirm_password: '',
+});
+
 const Profile = () => {
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
@@ -108,6 +114,8 @@ const Profile = () => {
     const [setupShopShow, setSetupShopShow] = useState(false);
     const [activeTab, setActiveTab] = useState(tab ? tab : 'profile');
     const [activeTabGroup, setActiveTabGroup] = useState(tab_group ? tab_group : 'account');
+    const [updatePasswordModalShow, setUpdatePasswordModalShow] = useState(false);
+    const [updatePasswordFormData, setUpdatePasswordFormData] = useState(initialUpdatePasswordData);
 
     const [selected, setSelected] = useState("");
 
@@ -165,6 +173,10 @@ const Profile = () => {
         if (screenshot) {
             setViewFrontCapture(screenshot);
         }
+    }
+
+    const toggleUpdatePasswordModal = (e) => {
+        setUpdatePasswordModalShow(!updatePasswordModalShow);
     }
 
     // const showImage = async () => {
@@ -265,7 +277,6 @@ const Profile = () => {
         setVerificationIDShow(!verificationIDShow);
         setWebcamLoaded(false);
     }
-
 
     const toggleCloseverificationIDShow = () => {
         setVerificationIDShow(false);
@@ -599,6 +610,15 @@ const Profile = () => {
             });
     };
 
+    const handleChangePassword = (e) => {
+        const { name, value } = e.target;
+
+        setUpdatePasswordFormData({
+            ...updatePasswordFormData,
+            [name]: value
+        });
+    }
+
     async function updateProfilePicture(e) {
         axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {
             image: e
@@ -654,13 +674,37 @@ const Profile = () => {
                     ...prevUser,
                     [fieldName]: value,
                 }));
-                toast.success('Updated successfully!');
+                toast.success('Profile updated successfully!');
             } else {
                 toast.error('An error occured. Please try again or contact the administrator.');
             }
         }).catch(() => {
             toast.error('An error occured. Please try again or contact the administrator.');
         });
+    }
+
+    async function updatePasswordSubmit(e) {
+        e.preventDefault();
+        if (updatePasswordFormData.new_password != updatePasswordFormData.confirm_password) {
+            toast.error('New Password and Confirm New Password does not match');
+        } else {
+            setFormStatus('loading');
+            axios.post(process.env.REACT_APP_API_ENDPOINT + 'password/change?user_id=' + currentUser + '&token=' + token, {...updatePasswordFormData, user_id: currentUser, token: token}).then((response) => {
+                const success = response.data.status;
+                const data = response.data.data;
+                if (success === 'Success') {
+                    toast.success('Password updated successfully!');
+                    setUpdatePasswordModalShow(false);
+                    setFormStatus('standby');
+                } else {
+                    toast.error('An error occured. Please try again or contact the administrator.');
+                    setFormStatus('standby');
+                }
+            }).catch(() => {
+                toast.error('An error occured. Please try again or contact the administrator.');
+                setFormStatus('standby');
+            });
+        }
     }
 
     const showTab = (tab) => {
@@ -1078,7 +1122,7 @@ const Profile = () => {
                                         <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "fabrics_wishlist" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('wishlist'); setActiveTab('fabrics_wishlist'); }}>Fabrics</p>
                                         <p className={`profile-side-dropdown fs-16 mb-12 ${activeTab == "designers_wishlist" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('wishlist'); setActiveTab('designers_wishlist'); }}>Designers</p>
                                     </div>
-                                    
+
                                     {user.is_designer == 1 &&
                                         <p className={`profile-side-dropdown fw-600 mb-12 fs-16 ${activeTab == "designs" ? "text-gold" : ""} `} onClick={function () { setActiveTabGroup('designs'); setActiveTab('designs'); }}>My Designs</p>
                                     }
@@ -1519,7 +1563,7 @@ const Profile = () => {
                                                                                                                     </div>
                                                                                                                 </Col>
                                                                                                                 <Col lg={6} className="text-center" style={{ paddingLeft: '9px' }}>
-                                                                                                                    
+
                                                                                                                 </Col>
                                                                                                             </Card.Body>
                                                                                                         </Card>
@@ -1619,7 +1663,7 @@ const Profile = () => {
                                                                                                                             </div>
                                                                                                                         </Col>
                                                                                                                         <Col lg={6} className="text-center">
-                                                                                                                            
+
                                                                                                                         </Col>
                                                                                                                     </Card.Body>
                                                                                                                 </Card>
@@ -1662,6 +1706,13 @@ const Profile = () => {
                                                         <p className='title-designer mb-1 lh-25'>Change Password</p>
                                                         <div className="ms-60">
                                                             <p className="mb-3">********</p>
+                                                            <Button
+                                                                className='btn-save btn btn btn-primary bg-white text-black border-black bg-white-hover text-black-hover fs-14'
+                                                                type='button'
+                                                                onClick={toggleUpdatePasswordModal}
+                                                            >
+                                                                <GoPencil size="20px" /> Change
+                                                            </Button>
                                                         </div>
                                                     </div>
                                                     <hr />
@@ -1672,7 +1723,7 @@ const Profile = () => {
                                                                 type='button'
                                                                 style={{ cursor: 'not-allowed' }}
                                                             >
-                                                                <IoSaveOutline size="20px"/> Saving...
+                                                                <IoSaveOutline size="20px" /> Saving...
                                                             </Button>
                                                             :
                                                             <Button
@@ -1680,7 +1731,7 @@ const Profile = () => {
                                                                 type='button'
                                                                 onClick={verificationIDSubmit}
                                                             >
-                                                                <IoSaveOutline size="20px"/> Save
+                                                                <IoSaveOutline size="20px" /> Save
                                                             </Button>
                                                         }
                                                     </div>
@@ -1698,7 +1749,7 @@ const Profile = () => {
                                                 </div>
                                             </Col>
                                         </Row>
-                                        
+
                                         :
                                         null
                                     }
@@ -1710,7 +1761,7 @@ const Profile = () => {
                                                 </div>
                                             </Col>
                                         </Row>
-                                        
+
                                         :
                                         null
                                     }
@@ -1719,11 +1770,11 @@ const Profile = () => {
                                         <Row>
                                             <Col lg="12">
                                                 <div className="fabrics-wishlist-container">
-                                                    <FabricsWishlist  />
+                                                    <FabricsWishlist />
                                                 </div>
                                             </Col>
                                         </Row>
-                                        
+
                                         :
                                         null
                                     }
@@ -1732,11 +1783,11 @@ const Profile = () => {
                                         <Row>
                                             <Col lg="12">
                                                 <div className="designers-wishlist-container">
-                                                    <DesignersWishlist  />
+                                                    <DesignersWishlist />
                                                 </div>
                                             </Col>
                                         </Row>
-                                        
+
                                         :
                                         null
                                     }
@@ -1745,11 +1796,11 @@ const Profile = () => {
                                         <Row>
                                             <Col lg="12">
                                                 <div className="appointments-container">
-                                                    <UserAppointments  status={activeTab} />
+                                                    <UserAppointments status={activeTab} />
                                                 </div>
                                             </Col>
                                         </Row>
-                                        
+
                                         :
                                         null
                                     }
@@ -1915,7 +1966,7 @@ const Profile = () => {
                                                     </Card>
                                                 </>
                                                 : null
-                                            }
+                                        }
                                     </Col>
                                 </Row>
                                 <Row className="mb-2">
@@ -1937,12 +1988,96 @@ const Profile = () => {
                             <div>
                                 <BodyMeasurement userData={user} />
                             </div>
-                            : 
+                            :
                             null
                         }
                     </Container>
                 </section >
             }
+
+            {/* Update Password */}
+            <Modal
+                show={updatePasswordModalShow}
+                size='lg'
+            >
+                <Modal.Header className="pb-0">
+                    <h4 className='text-left fs-25 fw-600 px-2'>Update Password</h4>
+                    <button type='button' className='close react-modal-close' onClick={toggleUpdatePasswordModal} data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span>
+                    </button>
+                </Modal.Header>
+                <Form onSubmit={updatePasswordSubmit}>
+                    <Modal.Body>
+                        <Card className='border-0'>
+                            <Card.Body>
+                                <FormGroup className="mb-3">
+                                    <Form.Label htmlFor="current_password" className='mb-2'>
+                                        Current Pasword <span className="text-danger">*</span>
+                                    </Form.Label>
+                                    <FormControl
+                                        type="password"
+                                        name="current_password"
+                                        value={updatePasswordFormData.current_password}
+                                        onChange={handleChangePassword}
+                                        id="current_password"
+                                        required
+                                    />
+                                </FormGroup>
+                                <FormGroup className="mb-3">
+                                    <Form.Label htmlFor="new_password" className='mb-2'>
+                                        New Password <span className="text-danger">*</span>
+                                    </Form.Label>
+                                    <FormControl
+                                        type="password"
+                                        name="new_password"
+                                        value={updatePasswordFormData.new_password}
+                                        onChange={handleChangePassword}
+                                        id="new_password"
+                                        required
+                                    />
+                                </FormGroup>
+                                <FormGroup className="mb-3">
+                                    <Form.Label htmlFor="new_password" className='mb-2'>
+                                        Confirm New Password <span className="text-danger">*</span>
+                                    </Form.Label>
+                                    <FormControl
+                                        type="password"
+                                        name="confirm_password"
+                                        value={updatePasswordFormData.confirm_password}
+                                        onChange={handleChangePassword}
+                                        id="confirm_password"
+                                        required
+                                    />
+                                </FormGroup>
+                            </Card.Body>
+                        </Card>
+                    </Modal.Body>
+                    <Modal.Footer className='border-none pt-0'>
+                        <div className='text-right'>
+                            <button
+                                className="btn btn-primary border-black bg-white text-black btn-style me-2"
+                                onClick={() => setUpdatePasswordModalShow(false)}
+                                type="button">
+                                Close
+                            </button>
+                            {formStatus != "standby" ?
+                                <button
+                                    className="btn btn-primary btn-save"
+                                    type="button">
+                                    Saving
+                                </button>
+                                :
+                                <button
+                                    className="btn btn-primary btn-save"
+                                    onClick={updatePasswordSubmit}
+                                    type="submit">
+                                    Save
+                                </button>
+                            }
+
+                        </div>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
 
             {/* Setup Shop  */}
             <Modal show={setupShopShow} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setSetupShopShow(false)}>
@@ -2089,7 +2224,7 @@ const Profile = () => {
                                     captureBothSubmit
                                 }
                             >
-                                SAVE
+                                Save
                             </Button>
                         }
                     </Modal.Footer>
@@ -2179,7 +2314,7 @@ const Profile = () => {
                                 type='submit'
                                 onClick={() => { captureFrontSubmit(); }}
                             >
-                                SAVE
+                                Save
                             </Button>
                         }
                     </Modal.Footer>
@@ -2269,7 +2404,7 @@ const Profile = () => {
                                 type='submit'
                                 onClick={() => { captureBackSubmit(); }}
                             >
-                                SAVE
+                                Save
                             </Button>
                         }
                     </Modal.Footer>
@@ -2736,7 +2871,7 @@ const Profile = () => {
                                 className='btn-save btn btn btn-primary'
                                 type='submit'
                             >
-                                SAVE
+                                Save
                             </Button>
                         }
                     </Modal.Footer>
