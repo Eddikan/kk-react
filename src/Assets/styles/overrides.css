@@ -1522,7 +1522,7 @@ form select.form-control,
     border-radius: 5px ;
     padding: 7px 15px;
     color: var(--gray-600);
-    font-size: 14px;
+    font-size: 12px;
 }
 
 form input.form-control:focus,

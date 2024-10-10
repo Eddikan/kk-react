@@ -692,12 +692,12 @@ const Fabrics = (props) => {
                                         />
                                     </Form.Group> */}
                                     <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600 fs-15">Search</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Search</Form.Label>
                                         <Form.Control placeholder="Enter your search term..." type="text" onChange={(e) => handleChangeSearch(e)} />
                                     </Form.Group>
                                     <div style={{ position: "relative" }} className="mb-4">
                                         <div>
-                                            <Form.Label className="fw-600 fs-15">Sort</Form.Label>
+                                            <Form.Label className="fw-600 fs-14">Sort</Form.Label>
                                             <Form.Control as='select' onChange={(e) => handleSortFieldChange(e.target.value)}>
                                                 <option value="" disabled selected  >Sort By:</option>
                                                 {sortOptions.map(option => (
@@ -706,7 +706,7 @@ const Fabrics = (props) => {
                                             </Form.Control>
                                             {selectedSortField && (
                                                 <div className="mt-3">
-                                                    <Form.Label className="fw-600 fs-15">Order: </Form.Label>
+                                                    <Form.Label className="fw-600 fs-14">Order: </Form.Label>
                                                     <Form.Control as='select' onChange={(e) => handleSortOrderChange(e.target.value)}>
                                                         {getOrderOptions().map(option => (
                                                             <option key={option.value} value={option.value} selected={option.value === selectedSortOrder}>{option.label}</option>
@@ -717,7 +717,7 @@ const Fabrics = (props) => {
                                         </div>
                                     </div>
                                     <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600 fs-15">Country</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Country</Form.Label>
                                         <Form.Control
                                             as='select'
                                             name='country'
@@ -735,40 +735,40 @@ const Fabrics = (props) => {
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-5'>
-                                        <Form.Label className="fw-600 fs-15">Price Range</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Price Range</Form.Label>
                                         <Form.Group as={Row} className="mt-3 position-relative">
                                             <MultiRangeSlider min={1} max={100000} onChange={priceRangeChange} />
                                         </Form.Group>
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Measurement</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Measurement</Form.Label>
                                         <Row>
                                             <Form.Group as={Col} lg={12} className="mb-3">
                                                 <Form.Control as='select' name='unit_measurement' value={unitMeasurement} className='mr-sm-2' onChange={handleChangeUnitMeasurement}>
-                                                    <option value='' disabled selected>Select Unit of Measurement</option>
-                                                    <option value='millimeter'>Millimeter</option>
-                                                    <option value='centimeter'>Centimeter</option>
-                                                    <option value='meter'>Meter</option>
-                                                    <option value='inch'>Inch</option>
-                                                    <option value='feet'>Feet</option>
-                                                    <option value='yard'>Yard</option>
+                                                    <option value='' disabled selected> Select Unit of Measurement</option>
+                                                    <option value='millimeter' className="fs-12">Millimeter</option>
+                                                    <option value='centimeter' className="fs-12">Centimeter</option>
+                                                    <option value='meter' className="fs-12">Meter</option>
+                                                    <option value='inch' className="fs-12">Inch</option>
+                                                    <option value='feet' className="fs-12">Feet</option>
+                                                    <option value='yard' className="fs-12">Yard</option>
                                                 </Form.Control>
                                             </Form.Group>
                                             <Form.Group as={Col} lg={6}>
-                                                <Form.Label>Length {unitMeasurement ? `(${unitMeasurement})` : null}
+                                                <Form.Label className="fs-12">Length {unitMeasurement ? `(${unitMeasurement})` : null}
                                                 </Form.Label>
                                                 <FormControl type='number' name='length' value={length} className='mr-sm-2' onChange={handleChangeLength} placeholder='' />
                                             </Form.Group>
                                             <Form.Group as={Col} lg={6}>
-                                                <Form.Label>Width {unitMeasurement ? `(${unitMeasurement})` : null}</Form.Label>
+                                                <Form.Label className="fs-12">Width {unitMeasurement ? `(${unitMeasurement})` : null}</Form.Label>
                                                 <FormControl type='number' name='width' value={width} className='mr-sm-2' onChange={handleChangeWidth} placeholder='' />
                                             </Form.Group>
                                         </Row>
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Color Fastness</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Color Fastness</Form.Label>
                                         <Row>
                                             <Form.Group as={Col} lg={12}>
                                                 <Form.Check
@@ -777,7 +777,7 @@ const Fabrics = (props) => {
                                                     value="High"
                                                     checked={selectedColorFastness.includes("High")}
                                                     onChange={handleSelectColorFastness}
-                                                    className="cursor-pointer fs-14"
+                                                    className="cursor-pointer fs-12"
                                                 />
                                             </Form.Group>
                                             <Form.Group as={Col} lg={12}>
@@ -787,7 +787,7 @@ const Fabrics = (props) => {
                                                     value="Moderate"
                                                     checked={selectedColorFastness.includes("Moderate")}
                                                     onChange={handleSelectColorFastness}
-                                                    className="cursor-pointer fs-14"
+                                                    className="cursor-pointer fs-12"
                                                 />
                                             </Form.Group>
                                             <Form.Group as={Col} lg={12}>
@@ -797,14 +797,14 @@ const Fabrics = (props) => {
                                                     value="Low"
                                                     checked={selectedColorFastness.includes("Low")}
                                                     onChange={handleSelectColorFastness}
-                                                    className="cursor-pointer fs-14"
+                                                    className="cursor-pointer fs-12"
                                                 />
                                             </Form.Group>
                                         </Row>
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Sustainability</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Sustainability</Form.Label>
                                         <Row>
                                             <Form.Group as={Col} lg={12}>
                                                 <Form.Check
@@ -813,7 +813,7 @@ const Fabrics = (props) => {
                                                     value="Eco-friendly"
                                                     checked={selectedSustainabilities.includes("Eco-friendly")}
                                                     onChange={handleSelectSustainability}
-                                                    className="cursor-pointer fs-14"
+                                                    className="cursor-pointer fs-12"
                                                 />
                                             </Form.Group>
                                             <Form.Group as={Col} lg={12}>
@@ -823,7 +823,7 @@ const Fabrics = (props) => {
                                                     value="Recycled fibers"
                                                     checked={selectedSustainabilities.includes("Recycled fibers")}
                                                     onChange={handleSelectSustainability}
-                                                    className="cursor-pointer fs-14"
+                                                    className="cursor-pointer fs-12"
                                                 />
                                             </Form.Group>
                                             <Form.Group as={Col} lg={12}>
@@ -833,23 +833,23 @@ const Fabrics = (props) => {
                                                     value="Biodegradable fibers"
                                                     checked={selectedSustainabilities.includes("Biodegradable fibers")}
                                                     onChange={handleSelectSustainability}
-                                                    className="cursor-pointer fs-14"
+                                                    className="cursor-pointer fs-12"
                                                 />
                                             </Form.Group>
                                         </Row>
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Primary Color</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Primary Color</Form.Label>
                                         <Form.Control value={primaryColorValue} onChange={(e) => handleChangeColor(e)}></Form.Control>
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Primary Fiber</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Primary Fiber</Form.Label>
                                         {compositions.map((composition) => (
                                             <Form.Group key={composition}>
                                                 <Form.Check
-                                                    className="cursor-pointer fs-14"
+                                                    className="cursor-pointer fs-12"
                                                     type="checkbox"
                                                     label={composition}
                                                     name="composition"
@@ -861,11 +861,11 @@ const Fabrics = (props) => {
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Weave</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Weave</Form.Label>
                                         {weaves.map((weave) => (
                                             <Form.Group key={weave}>
                                                 <Form.Check
-                                                    className="cursor-pointer fs-14"
+                                                    className="cursor-pointer fs-12"
                                                     type="checkbox"
                                                     label={weave}
                                                     name="weave"
@@ -877,26 +877,26 @@ const Fabrics = (props) => {
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Pattern</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Pattern</Form.Label>
                                         <Form.Control value={patternValue} onChange={(e) => handleChangePattern(e)}></Form.Control>
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Texture</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Texture</Form.Label>
                                         <Form.Control value={textureValue} onChange={(e) => handleChangeTexture(e)}></Form.Control>
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Opacity</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Opacity</Form.Label>
                                         <Form.Control value={opacityValue} onChange={(e) => handleChangeOpacity(e)}></Form.Control>
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Cut to size</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Cut to size</Form.Label>
                                         <Row>
                                             <Form.Group as={Col} lg={3}>
                                                 <Form.Check
-                                                    className="cursor-pointer fs-14"
+                                                    className="cursor-pointer fs-12"
                                                     type="radio"
                                                     label="Yes"
                                                     value="1"
@@ -906,7 +906,7 @@ const Fabrics = (props) => {
                                             </Form.Group>
                                             <Form.Group as={Col} lg={2}>
                                                 <Form.Check
-                                                    className="cursor-pointer fs-14"
+                                                    className="cursor-pointer fs-12"
                                                     type="radio"
                                                     label="No"
                                                     value="0"
@@ -918,11 +918,11 @@ const Fabrics = (props) => {
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Wrinkle-Resistant</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Wrinkle-Resistant</Form.Label>
                                         <Row>
                                             <Form.Group as={Col} lg={3}>
                                                 <Form.Check
-                                                    className="cursor-pointer fs-14"
+                                                    className="cursor-pointer fs-12"
                                                     type="radio"
                                                     label="Yes"
                                                     value="1"
@@ -932,7 +932,7 @@ const Fabrics = (props) => {
                                             </Form.Group>
                                             <Form.Group as={Col} lg={2}>
                                                 <Form.Check
-                                                    className="cursor-pointer fs-14"
+                                                    className="cursor-pointer fs-12"
                                                     type="radio"
                                                     label="No"
                                                     value="0"

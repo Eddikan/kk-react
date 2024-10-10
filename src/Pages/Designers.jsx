@@ -354,7 +354,7 @@ const Designers = (props) => {
                                 <Col lg="3" className="filter-sidebar">
                                     <div className="pe-4 pt-3">
                                         <Form.Group className='mb-4'>
-                                            <Form.Label className="fw-600 fs-15">Search</Form.Label>
+                                            <Form.Label className="fw-600 fs-14">Search</Form.Label>
                                             <Form.Control  placeholder="Enter your search term..." type="text" onChange={(e) => handleChangeSearch(e)} />
                                         </Form.Group>
                                         {/* <Form.Group className='mb-4'>
@@ -367,7 +367,7 @@ const Designers = (props) => {
                                             </Form.Control>
                                         </Form.Group> */}
                                         <Form.Group className='mb-4'>
-                                            <Form.Label className="fw-600 fs-15">Country</Form.Label>
+                                            <Form.Label className="fw-600 fs-14">Country</Form.Label>
                                             <Form.Control
                                                 as='select'
                                                 name='country'
@@ -385,14 +385,14 @@ const Designers = (props) => {
                                         </Form.Group>
                                         <hr />
                                         <Form.Group className='mb-4'>
-                                            <Form.Label className="fw-600 fs-15">Areas of Specialization and Expertise</Form.Label>
+                                            <Form.Label className="fw-600 fs-14">Areas of Specialization and Expertise</Form.Label>
                                             <Form.Control value={specializationValue} onChange={(e) => handleChangeSpecialization(e)}></Form.Control>
                                         </Form.Group>
                                         <hr />
                                         {categories && categories.length > 0 ?
                                             <>
                                                 <Form.Group className='mb-3'>
-                                                    <Form.Label className="fw-600 fs-15">Categories</Form.Label>
+                                                    <Form.Label className="fw-600 fs-14">Categories</Form.Label>
                                                     {categories && categories.length > 0 ?
                                                         <>
                                                             {categories.map((category, index) => (
@@ -403,7 +403,7 @@ const Designers = (props) => {
                                                                     value={category.id}
                                                                     checked={selectedCategories.includes(category.id)}
                                                                     onChange={handleSelectCategoryChange}
-                                                                    className="mb-2 fs-14"
+                                                                    className="mb-2 fs-12"
                                                                 />
                                                             ))}
                                                         </>
