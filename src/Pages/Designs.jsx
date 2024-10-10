@@ -709,7 +709,7 @@ const Designs = (props) => {
                             <Col lg="3" className="filter-sidebar">
                                 <div className="pe-4 pt-3">
                                     <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600 fs-15">Search</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Search</Form.Label>
                                         <Form.Control  placeholder="Enter your search term..." value={searchValue} type="text" onChange={(e) => handleChangeSearch(e)} />
                                     </Form.Group>
                                     {/* <Form.Group className='mb-4'>
@@ -722,7 +722,7 @@ const Designs = (props) => {
                                         </Form.Control>
                                     </Form.Group> */}
                                     <Form.Group className='mb-4'>
-                                        <Form.Label className="fw-600 fs-15">Country</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Country</Form.Label>
                                         <Form.Control
                                             as='select'
                                             name='country'
@@ -740,14 +740,14 @@ const Designs = (props) => {
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Gender</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Gender</Form.Label>
                                         <Form.Check
                                             type="checkbox"
                                             label="Male"
                                             value="Male"
                                             checked={selectedGenders.includes("Male")}
                                             onChange={handleSelectGenderChange}
-                                            className="mb-2 fs-14"
+                                            className="mb-2 fs-12"
                                         />
                                         <Form.Check
                                             type="checkbox"
@@ -755,7 +755,7 @@ const Designs = (props) => {
                                             value="Female"
                                             checked={selectedGenders.includes("Female")}
                                             onChange={handleSelectGenderChange}
-                                            className="mb-2 fs-14"
+                                            className="mb-2 fs-12"
                                         />
                                         <Form.Check
                                             type="checkbox"
@@ -763,22 +763,22 @@ const Designs = (props) => {
                                             value="Other"
                                             checked={selectedGenders.includes("Other")}
                                             onChange={handleSelectGenderChange}
-                                            className="mb-2 fs-14"
+                                            className="mb-2 fs-12"
                                         />
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Season</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Season</Form.Label>
                                         <Form.Control value={seasonsValue} onChange={(e) => handleChangeSeason(e)}></Form.Control>
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Color</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Color</Form.Label>
                                         <Form.Control value={colorsValue} onChange={(e) => handleChangeColor(e)}></Form.Control>
                                     </Form.Group>
                                     <hr />
                                     <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-15">Material</Form.Label>
+                                        <Form.Label className="fw-600 fs-14">Material</Form.Label>
                                         <Form.Control value={materialsValue} onChange={(e) => handleChangeMaterial(e)}></Form.Control>
                                     </Form.Group>
                                     {/* {seasons && seasons.length > 0 ?
