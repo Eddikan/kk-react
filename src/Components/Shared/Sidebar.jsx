@@ -39,7 +39,7 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                         {userDetails.is_designer == 1 && (
                             <>
                                 <div
-                                    className="hover-sidebar cursor-pointer yellow-hover mt-3"
+                                    className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3"
                                     onClick={() => navigate('/user/center/calendar')}
                                 >
                                     <IoCalendarClearOutline size="20" className="me-2 mb-1" />Calendar</div>
@@ -48,7 +48,7 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                             <a className="yellow-hover cursor-pointer text-decoration "
                                 href={`/user/center/appointments`}
                             >
-                                <div className="hover-sidebar cursor-pointer yellow-hover mt-3"
+                                <div className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3"
                                     onClick={() => navigate('/user/center/appointments')}
                                 >
                                     <PiBriefcase size="22" className="me-2 mb-1" />
@@ -70,12 +70,12 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                                 <p className={currentTab == 'Review' ? 'active-class cursor-pointer fw-600 text-gold' : 'cursor-pointer '} onClick={() => onChangeTab('Review')}>Review and Feedback</p>
                             </AccordionBody> */}
 
-                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/portfolio')}><PiPantsLight size="22" className="me-2 mb-1" />Portfolio</div>
+                            <div className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3" onClick={() => navigate('/user/center/portfolio')}><PiPantsLight size="22" className="me-2 mb-1" />Portfolio</div>
                         </>
                         )}
                         {userDetails.is_seller == 1 && (
                             <>
-                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/products')}><PiScissorsLight size="22" className="me-2 mb-1" />Fabrics</div>
+                            <div className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3" onClick={() => navigate('/user/center/products')}><PiScissorsLight size="22" className="me-2 mb-1" />Fabrics</div>
                             
                             <div className='mt-3 d-flex justify-content-between'>
                                 <div className='yellow-hover'>
@@ -130,9 +130,9 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                             </>
                         )}
                         {userDetails.is_designer == 1 && (
-                            <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/guide')}><RxRulerHorizontal size="22" className="me-2 mb-1" />Measurement Guide</div>
+                            <div className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3" onClick={() => navigate('/user/center/guide')}><RxRulerHorizontal size="22" className="me-2 mb-1" />Measurement Guide</div>
                         )}
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => navigate('/user/center/live/stream')}><RiLiveLine size="22" className="me-2 mb-1" />Live Streams</div>
+                        <div className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3" onClick={() => navigate('/user/center/live/stream')}><RiLiveLine size="22" className="me-2 mb-1" />Live Streams</div>
                         <Card className="mt-3 text-center">
                             <Card.Body>
                                 <p className="text-center fw-600">Help Us Improve <br /> <p className="mb-0 fw-400">Share Your Experience</p></p>

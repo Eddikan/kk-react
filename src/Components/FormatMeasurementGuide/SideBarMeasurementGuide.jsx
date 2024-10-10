@@ -66,15 +66,15 @@ const SidebarMeasurementGuide = ({ onChangeTab }) => {
                     <AccordionItem className='padding-sidebar pt-4'>
                         <p className="fs-20 text-black"><strong>Measurement Guide</strong></p>
 
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => onChangeTab(1)}>
+                        <div className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3" onClick={() => onChangeTab(1)}>
                             <TfiRulerAlt size="22" className="me-2 mb-1" />How to Measure Yourself</div>
 
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3" onClick={() => onChangeTab(2)}>
+                        <div className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3" onClick={() => onChangeTab(2)}>
                             <LiaFemaleSolid size="22" className="me-2 mb-1" />
                             Female Body Types
                         </div>
 
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3 d-flex justify-content-between" onClick={toggleBodyMeasurementSubMenu} >
+                        <div className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3 d-flex justify-content-between" onClick={toggleBodyMeasurementSubMenu} >
                             <div>
                                 <LiaRulerVerticalSolid size="22" className="me-2 mb-1" />
                                 Body Measurement Table
@@ -101,7 +101,7 @@ const SidebarMeasurementGuide = ({ onChangeTab }) => {
                             </div>
                         )}
 
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3 d-flex justify-content-between" onClick={toggleComprehensiveGuideSubMenu}>
+                        <div className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3 d-flex justify-content-between" onClick={toggleComprehensiveGuideSubMenu}>
                             <div>
                                 <RiGuideLine size="22" className="me-2 mb-1" />
                                 Comprehensive Guide
@@ -120,7 +120,7 @@ const SidebarMeasurementGuide = ({ onChangeTab }) => {
                             </div>
                         )}
 
-                        <div className="hover-sidebar cursor-pointer yellow-hover mt-3 d-flex justify-content-between" onClick={toggleBodyMeasurementDescriptionSubMenu}>
+                        <div className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3 d-flex justify-content-between" onClick={toggleBodyMeasurementDescriptionSubMenu}>
                             <div>
                                 <MdOutlineDescription size="22" className="me-2 mb-1" />
                                 Body Measurement Descriptions

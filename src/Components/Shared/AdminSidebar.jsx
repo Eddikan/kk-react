@@ -53,27 +53,27 @@ const Sidebar = ({ }) => {
                         </div>
 
                         <div
-                            className="hover-sidebar cursor-pointer yellow-hover mt-3"
+                            className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3"
                             onClick={() => navigate('/admin/orders')}
                         >
                             <PiShoppingCartSimple size="22" className="me-2 mb-1" />Orders
                         </div>
 
                         <div
-                            className="hover-sidebar cursor-pointer yellow-hover mt-3"
+                            className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3"
                             onClick={() => navigate('/admin/fabrics')}
                         >
                             <PiScissorsLight size="22" className="me-2 mb-1" />Fabrics
                         </div>
 
                         <div
-                            className="hover-sidebar cursor-pointer yellow-hover mt-3"
+                            className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3"
                             onClick={() => navigate('/admin/designs')}>
                             <PiPantsLight size="22" className="me-2 mb-1" />Portfolio
                         </div>
 
                         <div
-                            className="hover-sidebar cursor-pointer yellow-hover mt-3"
+                            className="hover-sidebar cursor-pointer yellow-hover fs-14 mt-3"
                             onClick={() => navigate('/admin/appointments')}
                         >
                             <PiCalendarThin size="22" className="me-2 mb-1" />Appointments

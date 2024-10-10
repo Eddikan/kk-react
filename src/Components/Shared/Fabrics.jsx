@@ -15,6 +15,7 @@ import axios from 'axios';
 import Modal from 'react-bootstrap/Modal';
 import { Rating } from 'react-simple-star-rating';
 import { FaArrowRight } from "react-icons/fa6";
+import CurrencyConverter from './CurrencyConverter';
 
 const Fabrics = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'token', 'userRole']);
@@ -262,7 +263,10 @@ const Fabrics = (props) => {
                                                                 /* Available Props */
                                                                 />
                                                             </div>
-                                                            <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis poppins-ft">${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'}</h4>
+                                                            <h4 className="text-black fs-18 fw-600 mt-2 text-ellipsis poppins-ft">
+                                                                <CurrencyConverter price={fabric.price} currency={fabric.currency ?? 'USD'} />
+                                                                {/* ${fabric.price && fabric.price > 0 ? Number(fabric.price).toFixed(2) : '0.00'} */}
+                                                            </h4>
                                                             {/* {currentUser ?
                                                                 <div className='d-flex align-items-center mt-1'>
                                                                     {fabric.user.image ?

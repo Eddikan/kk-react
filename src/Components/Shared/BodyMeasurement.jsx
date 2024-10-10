@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Modal, ModalFooter, Form, Button } from 'react-bootstrap';
+import {Container, Row, Col, Card, Modal, ModalFooter, Form, Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { IoCloseOutline } from "react-icons/io5";
 import { IoIosHelpCircleOutline } from "react-icons/io";
 import axios from 'axios';
@@ -57,7 +58,6 @@ const initialBodyMeasurementData = {
     side_seam: '',
     pants_trouser_length: '',
 };
-
 
 const measurementGuideData = [
     // Female
@@ -1549,7 +1549,7 @@ const BodyMeasurement = ({ userData }) => {
                         </div>
                     </>
                 : 
-                <p className="text-center mb-3 mt-3">No records found.</p>
+                <p className="text-center mb-3 mt-3">Please update your gender <Link to="/user/profile/edit">here</Link> before filling up your measurements</p>
             }
 
             <Modal

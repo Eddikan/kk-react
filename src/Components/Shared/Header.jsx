@@ -303,11 +303,11 @@ const Header = () => {
 
       if (reminded == 0) {
         if (currentUrl.includes('user')) {
-          if (!completedQuestionnaire) {
+          if (!completedQuestionnaire && (userDetails.is_designer == 1 || userDetails.is_seller == 1)) {
             toast.error('Please complete the questionnaire before proceeding, thank you!');
             setTimeout(function () {
               navigate("/questionnaire");
-            }, 1000)
+            }, 1500)
             reminded = 1;
           }
         }
@@ -682,8 +682,16 @@ const Header = () => {
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile`}>My Profile</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=all&tab_group=orders`}>My Orders</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=fabrics_wishlist&tab_group=wishlist`}>My Wishlist</a>
-                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=designs&tab_group=designs`}>My Designs</a>
-                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=fabrics&tab_group=fabrics`}>My Fabrics</a>
+                        {userDetails.is_designer == 1 ?
+                          <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=designs&tab_group=designs`}>My Designs</a>
+                          :
+                          null
+                        }
+                        {userDetails.is_seller == 1 ?
+                          <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=fabrics&tab_group=fabrics`}>My Fabrics</a>
+                          :
+                          null
+                        }
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=upcoming&tab_group=appointments`}>My Appointments</a>
                         <a className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2" href={`/${userType}/profile?tab=messages&tab_group=messages`}>My Messages</a>
                         <a className="nav-link cursor-pointer text-decoration-none" onClick={logOut}>Sign Out</a>
