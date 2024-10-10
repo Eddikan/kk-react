@@ -25,6 +25,7 @@ import Carousel from '@christian-martins/react-grid-carousel'
 import 'Assets/styles/Designers/style.css';
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import ShopIcon from 'Assets/images/icons/shop.png';
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 
 
 const Designers = (props) => {
@@ -61,6 +62,7 @@ const Designers = (props) => {
     const [categories, setCategories] = useState([]);
 
     const [signupModalShow, setSignupModalShow] = useState(false);
+    const [activeTabGroup, setActiveTabGroup] = useState('');
     const [signupType, setSignupType] = useState('');
     const [search, setSearch] = useState('');
     const [searchValue, setSearchValue] = useState('');
@@ -216,6 +218,14 @@ const Designers = (props) => {
             setSelectedCategories([...selectedCategories, categoryId]);
         } else {
             setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
+        }
+    };
+
+    const handleSelectAllCategories = (event) => {
+        if (event.target.checked) {
+            setSelectedCategories(categories.map(category => category.id));
+        } else {
+            setSelectedCategories([]);
         }
     };
 
@@ -389,32 +399,57 @@ const Designers = (props) => {
                                             <Form.Control value={specializationValue} onChange={(e) => handleChangeSpecialization(e)}></Form.Control>
                                         </Form.Group>
                                         <hr />
-                                        {categories && categories.length > 0 ?
-                                            <>
-                                                <Form.Group className='mb-3'>
-                                                    <Form.Label className="fw-600 fs-14">Categories</Form.Label>
-                                                    {categories && categories.length > 0 ?
-                                                        <>
-                                                            {categories.map((category, index) => (
-                                                                <Form.Check
-                                                                    key={index}
-                                                                    type="checkbox"
-                                                                    label={category.name}
-                                                                    value={category.id}
-                                                                    checked={selectedCategories.includes(category.id)}
-                                                                    onChange={handleSelectCategoryChange}
-                                                                    className="mb-2 fs-12"
-                                                                />
-                                                            ))}
-                                                        </>
-                                                        :
-                                                        null
-                                                    }
-                                                </Form.Group>
-                                            </>
-                                            :
-                                            null
-                                        }
+                                        <p className="designer-side-dropdown fw-600 fs-14 mb-12 position-relative" onClick={function () { setActiveTabGroup((prevActiveGroup) => prevActiveGroup == "categories" ? "" : activeTabGroup != "categories" ? "categories" : ""); }}>
+                                            Categories
+                                            {activeTabGroup != "categories" ?
+                                                <>
+                                                    <AiOutlinePlus size="10px" className="accordion-icon" />
+                                                </>
+                                                :
+                                                <>
+                                                    <AiOutlineMinus size="10px" className="accordion-icon" />
+                                                </>
+                                            }
+                                        </p>
+
+                                        <div className={`ms-3 designer-accordion-content ${activeTabGroup == "categories" ? 'open' : ''}`}>
+                                            
+                                            {categories && categories.length > 0 ?
+                                                <>
+                                                    <Form.Group className='mb-3'>
+                                                        <Form.Group key="all">
+                                                            <Form.Check
+                                                                className="cursor-pointer fs-12"
+                                                                type="checkbox"
+                                                                label="All"
+                                                                name="categories"
+                                                                checked={selectedCategories.length === categories.length || selectedCategories.length === 0}
+                                                                onChange={handleSelectAllCategories}
+                                                            />
+                                                        </Form.Group>
+                                                        {categories && categories.length > 0 ?
+                                                            <>
+                                                                {categories.map((category, index) => (
+                                                                    <Form.Check
+                                                                        key={index}
+                                                                        type="checkbox"
+                                                                        label={category.name}
+                                                                        value={category.id}
+                                                                        checked={selectedCategories.includes(category.id)}
+                                                                        onChange={handleSelectCategoryChange}
+                                                                        className="mb-2 fs-12"
+                                                                    />
+                                                                ))}
+                                                            </>
+                                                            :
+                                                            null
+                                                        }
+                                                    </Form.Group>
+                                                </>
+                                                :
+                                                null
+                                            }
+                                        </div>
                                     </div>
                                 </Col>
                                 <Col lg="9">

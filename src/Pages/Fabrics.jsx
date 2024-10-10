@@ -27,6 +27,7 @@ import { Rating } from 'react-simple-star-rating';
 import Pagination from 'Components/Pagination/Pagination';
 import DressIcon from 'Assets/images/icons/dress.png';
 import CurrencyConverter from 'Components/Shared/CurrencyConverter';
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 
 const Fabrics = (props) => {
     const navigate = useNavigate();
@@ -62,6 +63,7 @@ const Fabrics = (props) => {
     const [unitMeasurement, setUnitMeasurement] = useState('');
     const [width, setWidth] = useState('');
     const [length, setLength] = useState('');
+    const [activeTabGroup, setActiveTabGroup] = useState('');
     
     const colors = ['Red', 'Blue', 'Green', 'Yellow']; // Replace with your array of colors
     const compositions = [
@@ -264,7 +266,21 @@ const Fabrics = (props) => {
         }
             setSelectedCompositions(updatedCompositions);
     };
-    
+    const handleAllCompositionSelect = () => {
+        if (selectedCompositions.length === compositions.length) {
+            setSelectedCompositions([]); 
+        } else {
+            setSelectedCompositions(compositions); 
+        }
+    };
+
+    const handleAllWeaveSelect = () => {
+        if (selectedWeaves.length === weaves.length) {
+            setSelectedWeaves([]); 
+        } else {
+            setSelectedWeaves(weaves); 
+        }
+    };
 
     const handleChangeCategory = (event) => {
         const categoryId = parseInt(event, 10);
@@ -844,37 +860,85 @@ const Fabrics = (props) => {
                                         <Form.Control value={primaryColorValue} onChange={(e) => handleChangeColor(e)}></Form.Control>
                                     </Form.Group>
                                     <hr />
-                                    <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-14">Primary Fiber</Form.Label>
-                                        {compositions.map((composition) => (
-                                            <Form.Group key={composition}>
+                                    <p className="fabric-side-dropdown fw-600 fs-14 mb-12 position-relative" onClick={function () { setActiveTabGroup((prevActiveGroup) => prevActiveGroup == "primary-fiber" ? "" : activeTabGroup != "primary-fiber" ? "primary-fiber" : ""); }}>
+                                        Primary Fiber
+                                        {activeTabGroup != "primary-fiber" ?
+                                            <>
+                                                <AiOutlinePlus size="10px" className="accordion-icon" />
+                                            </>
+                                            :
+                                            <>
+                                                <AiOutlineMinus size="10px" className="accordion-icon" />
+                                            </>
+                                        }
+                                    </p>
+
+                                    <div className={`ms-3 fabric-accordion-content ${activeTabGroup == "primary-fiber" ? 'open' : ''}`}>
+                                        <Form.Group className='mb-3'>
+                                            <Form.Group key="all">
                                                 <Form.Check
                                                     className="cursor-pointer fs-12"
                                                     type="checkbox"
-                                                    label={composition}
+                                                    label="All"
                                                     name="composition"
-                                                    checked={selectedCompositions.includes(composition)}
-                                                    onChange={() => handleCompositionChange(composition)}
+                                                    checked={selectedCompositions.length === compositions.length || selectedCompositions.length === 0}
+                                                    onChange={handleAllCompositionSelect}
                                                 />
                                             </Form.Group>
-                                        ))}
-                                    </Form.Group>
+                                            {compositions.map((composition) => (
+                                                <Form.Group key={composition}>
+                                                    <Form.Check
+                                                        className="cursor-pointer fs-12"
+                                                        type="checkbox"
+                                                        label={composition}
+                                                        name="composition"
+                                                        checked={selectedCompositions.includes(composition)}
+                                                        onChange={() => handleCompositionChange(composition)}
+                                                    />
+                                                </Form.Group>
+                                            ))}
+                                        </Form.Group>
+                                    </div>
                                     <hr />
-                                    <Form.Group className='mb-3'>
-                                        <Form.Label className="fw-600 fs-14">Weave</Form.Label>
-                                        {weaves.map((weave) => (
-                                            <Form.Group key={weave}>
+                                    <p className="fabric-side-dropdown fw-600 fs-14 mb-12 position-relative" onClick={function () { setActiveTabGroup((prevActiveGroup) => prevActiveGroup == "weave" ? "" : activeTabGroup != "weave" ? "weave" : ""); }}>
+                                        Weave
+                                        {activeTabGroup != "weave" ?
+                                            <>
+                                                <AiOutlinePlus size="10px" className="accordion-icon" />
+                                            </>
+                                            :
+                                            <>
+                                                <AiOutlineMinus size="10px" className="accordion-icon" />
+                                            </>
+                                        }
+                                    </p>
+
+                                    <div className={`ms-3 fabric-accordion-content ${activeTabGroup == "weave" ? 'open' : ''}`}>
+                                        <Form.Group className='mb-3'>
+                                            <Form.Group key="all">
                                                 <Form.Check
                                                     className="cursor-pointer fs-12"
                                                     type="checkbox"
-                                                    label={weave}
+                                                    label="All"
                                                     name="weave"
-                                                    checked={selectedWeaves.includes(weave)}
-                                                    onChange={() => handleWeaveChange(weave)}
+                                                    checked={selectedWeaves.length === weaves.length || selectedWeaves.length === 0}
+                                                    onChange={handleAllWeaveSelect}
                                                 />
                                             </Form.Group>
-                                        ))}
-                                    </Form.Group>
+                                            {weaves.map((weave) => (
+                                                <Form.Group key={weave}>
+                                                    <Form.Check
+                                                        className="cursor-pointer fs-12"
+                                                        type="checkbox"
+                                                        label={weave}
+                                                        name="weave"
+                                                        checked={selectedWeaves.includes(weave)}
+                                                        onChange={() => handleWeaveChange(weave)}
+                                                    />
+                                                </Form.Group>
+                                            ))}
+                                        </Form.Group>   
+                                    </div>
                                     <hr />
                                     <Form.Group className='mb-3'>
                                         <Form.Label className="fw-600 fs-14">Pattern</Form.Label>
