@@ -1061,7 +1061,7 @@ const Header = () => {
       </Navbar>
       {currentUser && (!userDetails.email_verified_at || userDetails.email_verified_at == "" || userDetails.email_verified_at == null) ?
         <div className="verify-email-notification">
-          <p className="text-center fw-600 mb-0">Verify your email to get the most out of Kouture Konect. Didn’t receive an email? <a href="/email-confirmation" className="fw-400 text-decoration-none">Resend confirmation</a></p>
+          <p className="text-center fw-600 fs-14 mb-0">Verify your email to get the most out of Kouture Konect. Didn’t receive an email? <a href="/email-confirmation" className="fw-400 text-decoration-none">Resend confirmation</a></p>
         </div>
         :
         null
