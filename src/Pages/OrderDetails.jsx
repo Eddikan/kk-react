@@ -36,6 +36,7 @@ const Orders = (props) => {
     const token = cookies.token;
     const currentUser = cookies.currentUser;
     const currencyConversions = cookies.currencyConversions ?? {};
+    const selectedCurrencyCode = cookies.selectedCurrencyCode || cookies.userCurrencyCode || '$'
     const [reloadCount, setReloadCount] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
@@ -232,12 +233,8 @@ const Orders = (props) => {
 
                                                                                         const productPrice = order_item_product.price ?? '0';
                                                                                         const productCurrency = order_item_product.currency ?? 'USD';
-                                                                                        const orderCurrency = order.order.currency ?? 'USD';
-                                                                                        const orderCurrencyCode = order.order.currency_code ?? '$';
                                                                                         
-                                                                                        const orderCurrencies = {currencyConversions: currencyConversions, selectedCurrency: orderCurrency, selectedCurrencyCode: orderCurrencyCode};
-
-                                                                                        const convertedPrice = CurrencyConverter(productPrice, productCurrency, orderCurrencies);
+                                                                                        const convertedPrice = CurrencyConverter(productPrice, productCurrency, cookies);
                                                                                         
                                                                                         return (
                                                                                             <>
@@ -253,7 +250,7 @@ const Orders = (props) => {
                                                                                                     </Col>
 
                                                                                                     <Col lg={3} className="text-right">
-                                                                                                        <span className='text-black'>{orderCurrencyCode}{convertedPrice.price}</span>
+                                                                                                        <span className='text-black'>{convertedPrice.currency_code}{convertedPrice.price}</span>
                                                                                                     </Col>
 
                                                                                                     <Col lg={2} className="text-right">

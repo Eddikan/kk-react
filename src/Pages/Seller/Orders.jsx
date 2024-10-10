@@ -321,7 +321,7 @@ const Orders = (props) => {
                                                                                             </Col>
 
                                                                                             <Col className="text-right">
-                                                                                                <span className='text-black'>${order.total_amount}</span>
+                                                                                                <span className='text-black'>{order.currency_code && order.currency_code != "" ? order.currency_code : '$'}{order.total_amount}</span>
                                                                                             </Col>
 
                                                                                             <Col className="text-left">
