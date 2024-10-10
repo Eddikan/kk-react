@@ -20,6 +20,7 @@ import InputEmoji from 'react-input-emoji'
 import PlaceholderImage from '../Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
 import axios from "axios";
+import CurrencyConverter from 'Utils/CurrencyConverter';
 
 
 const initialCheckOut = {
@@ -31,9 +32,10 @@ const initialCheckOut = {
 const Orders = (props) => {
     const navigate = useNavigate();
     const { orderId } = useParams();
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'isLoggedIn', 'userDetails', 'token', 'userRole']);
+    const [cookies, setCookie, removeCookie] = useCookies(['userCurrency', 'userCurrencyCode', 'currencyConversions', 'selectedCurrency', 'selectedCurrencyCode', 'currentUser', 'isLoggedIn', 'userDetails', 'userRole', 'selectedCountry', 'tempCart', 'cartItemCount']);
     const token = cookies.token;
     const currentUser = cookies.currentUser;
+    const currencyConversions = cookies.currencyConversions ?? {};
     const [reloadCount, setReloadCount] = useState(0);
     const [underConstructionShow, setUnderConstructionShow] = useState(false);
     const [modalHeading, setModalHeading] = useState('');
@@ -122,8 +124,8 @@ const Orders = (props) => {
 
     return (
         <LayoutNoFooter className='bg-white'>
-            <section className='bg-white'>
-                <Container className='container-order position-relative'>
+            <section className='bg-white pb-5 pt-30 px-5'>
+                <Container className='position-relative'>
                     <Row>
                         <Col lg={12}>
                             <Row className="pb-4">
@@ -228,6 +230,15 @@ const Orders = (props) => {
                                                                                             var orderItemImage = PlaceholderImage;
                                                                                         }
 
+                                                                                        const productPrice = order_item_product.price ?? '0';
+                                                                                        const productCurrency = order_item_product.currency ?? 'USD';
+                                                                                        const orderCurrency = order.order.currency ?? 'USD';
+                                                                                        const orderCurrencyCode = order.order.currency_code ?? '$';
+                                                                                        
+                                                                                        const orderCurrencies = {currencyConversions: currencyConversions, selectedCurrency: orderCurrency, selectedCurrencyCode: orderCurrencyCode};
+
+                                                                                        const convertedPrice = CurrencyConverter(productPrice, productCurrency, orderCurrencies);
+                                                                                        
                                                                                         return (
                                                                                             <>
                                                                                                 <Row className='align-items-center'>
@@ -242,7 +253,7 @@ const Orders = (props) => {
                                                                                                     </Col>
 
                                                                                                     <Col lg={3} className="text-right">
-                                                                                                        <span className='text-black'>${order_item_product.price}</span>
+                                                                                                        <span className='text-black'>{orderCurrencyCode}{convertedPrice.price}</span>
                                                                                                     </Col>
 
                                                                                                     <Col lg={2} className="text-right">

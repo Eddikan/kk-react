@@ -22,7 +22,7 @@ const Sidebar = ({ }) => {
 
                         <div className='d-flex justify-content-between'>
                             <span
-                                className='cursor-pointer users-title yellow-hover'
+                                className='cursor-pointer users-title fs-14 yellow-hover'
                                 onClick={() => navigate('/admin/users')}
                             >
                                 <PiUsersLight size="22" className="me-2 mb-1" />
@@ -81,7 +81,7 @@ const Sidebar = ({ }) => {
 
                         <div className='d-flex justify-content-between mt-3 survey-table'>
                             <span
-                                className='cursor-pointer users-title yellow-hover'
+                                className='cursor-pointer users-title fs-14 yellow-hover'
                                 onClick={() => navigate('/admin/customer-satisfaction-survey')}
                             >
                                 <PiNotepadLight size="22" className="me-2 mb-1" />

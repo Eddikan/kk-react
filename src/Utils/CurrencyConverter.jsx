@@ -32,7 +32,7 @@ const CurrencyConverter = (price, currency, cookies) => {
 
     let convertedPrice = price; // Default to original price if conversions are not available
 
-    if (currencyConversions) {
+    if (currencyConversions && (selectedCurrency != currency)) {
         const currencyPrice = currencyConversions[currency] || 1; // Fallback to 1 if not found
         const conversionPrice = currencyConversions[selectedCurrency] || 1; // Fallback to 1 if not found
 

@@ -80,7 +80,7 @@ const Sidebar = ({ currentTab, onChangeTab }) => {
                             <div className='mt-3 d-flex justify-content-between'>
                                 <div className='yellow-hover'>
                                     <span
-                                        className='cursor-pointer users-title '
+                                        className='cursor-pointer users-title fs-14'
                                         onClick={() => navigate('/user/center/orders')}
                                     >
                                         <PiShoppingCartSimple size="22" className="me-2 mb-1" />

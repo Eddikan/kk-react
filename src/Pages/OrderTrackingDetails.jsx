@@ -152,7 +152,7 @@ const OrderTracking = (props) => {
 
     return (
         <LayoutNoFooter>
-            <section id="details-order">
+            <section id="details-order" className="pb-5 pt-30 px-5">
                 <Container>
                     <Row>
                         <Col lg={12}>
