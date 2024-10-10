@@ -82,6 +82,7 @@ const Cart = ({ props }) => {
     const [deleteLoading, setDeleteLoading] = useState(false);
     const [subtotalAmount, setSubtotalAmount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
+    const [totalAmountDisplay, setTotalAmountDisplay] = useState("0.00");
     const [checkoutStep, setCheckoutStep] = useState(1);
     const [selectedCartItems, setSelectedCartItems] = useState(cookies.selectedCartItems ?? []);
     const [tempCartItems, setTempCartItems] = useState(cookies.tempCart ?? []);
@@ -364,10 +365,12 @@ const Cart = ({ props }) => {
             }
             if (cart_total > 0) {
                 setTotalAmount(cart_total);
-                setSubtotalAmount(formatPrice(cart_total));
+                setSubtotalAmount(cart_total);
+                setTotalAmountDisplay(formatPrice(cart_total))
             } else {
                 setTotalAmount(0.00);
                 setSubtotalAmount(0.00);
+                setTotalAmountDisplay("0.00")
             }
         }
     }, [cookies, selectedCartItems, item, reloadCount, cartItems]);
@@ -427,12 +430,14 @@ const Cart = ({ props }) => {
             if (cart_total > 0) {
                 setTempCartTotal(formatPrice(cart_total));
                 setTotalAmount(cart_total);
-                setSubtotalAmount(formatPrice(cart_total));
+                setSubtotalAmount(cart_total);
+                setTotalAmountDisplay(formatPrice(cart_total))
 
             } else {
                 setTempCartTotal(0.00);
                 setTotalAmount(0.00);
                 setSubtotalAmount(0.00);
+                setTotalAmountDisplay(cart_total)
             }
         }
 
@@ -634,7 +639,7 @@ const Cart = ({ props }) => {
                                             <Card.Body className='bg-light'>
                                                 <Row>
                                                     <Col lg="12" className='text-right'>
-                                                        <span className='fs-18 me-3'>Total Amount: </span><span className='total-price fw-600'><h3 className="rufina-family total-price fw-600 d-inline-block">{currencyCode}{subtotalAmount}</h3></span>
+                                                        <span className='fs-18 me-3'>Total Amount: </span><span className='total-price fw-600'><h3 className="rufina-family total-price fw-600 d-inline-block">{currencyCode}{totalAmountDisplay}</h3></span>
                                                     </Col>
                                                 </Row>
                                             </Card.Body>
@@ -644,7 +649,7 @@ const Cart = ({ props }) => {
                                             <Card.Body className='bg-light'>
                                                 <Row>
                                                     <Col lg="12" className='text-right'>
-                                                        <span className='fs-18 me-3'>Total Amount: </span><span className='total-price fw-600'><h3 className="rufina-family total-price fw-600 d-inline-block">{currencyCode}{subtotalAmount}</h3></span>
+                                                        <span className='fs-18 me-3'>Total Amount: </span><span className='total-price fw-600'><h3 className="rufina-family total-price fw-600 d-inline-block">{currencyCode}{totalAmountDisplay}</h3></span>
                                                     </Col>
                                                 </Row>
                                             </Card.Body>
