@@ -552,7 +552,16 @@ const Cart = (props) => {
                                                                                     </Col>
 
                                                                                     <Col lg={2}>
-                                                                                        {convertedPrice.currency_code}{convertedPrice.price}
+                                                                                    {currentUser ?
+                                                                                            <>
+                                                                                                {convertedPrice?.currency_code}{convertedPrice?.price}
+                                                                                            </>
+                                                                                        :
+                                                                                        <>
+                                                                                                { `$`+cartItem?.price}
+                                                                                        </>
+                                                                                        }
+                                                                                        
                                                                                     </Col>
 
                                                                                     <Col lg={2}>
