@@ -1022,7 +1022,6 @@ const Header = () => {
                         </div>
                       </div>
                     </a> */}
-                    <a href={`/cart`}>
                       <div className="nav-link header-tooltip">
                         <span className="icon-tooltiptext fs-14">Cart</span>
                         <IoCartOutline size={26} />
@@ -1039,7 +1038,6 @@ const Header = () => {
                           <Button href="/login" className="cart-dropdown-btn btn">Sign In</Button>
                         </div>
                       </div>
-                    </a>
                     {/* <div className="country-dropdown nav-link position-relative" ref={countryRef}>
                       <div className="nav-link header-tooltip cursor-pointer" onClick={toggleCountryMenu}>
                         <span className="icon-tooltiptext fs-14">Country</span>
