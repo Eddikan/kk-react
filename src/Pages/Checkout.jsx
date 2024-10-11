@@ -416,8 +416,8 @@ const Cart = ({ props }) => {
             if (tempCartItems.length > 0 && tempCartItems.length > 0) {
                 cart_total = tempCartItems.reduce((acc, item) => {
                     if (selectedCartItems.includes(item.id)) {
-                        const fabricPrice = item.product.price ?? '0';
-                        const fabricCurrency = item.product.currency ?? 'USD';
+                        const fabricPrice = item?.price ?? '0';
+                        const fabricCurrency = item?.currency ?? 'USD';
 
                         const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
                         const subtotal = convertedPrice.price_raw * item.quantity;
