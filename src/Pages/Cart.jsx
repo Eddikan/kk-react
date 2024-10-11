@@ -255,9 +255,8 @@ const Cart = (props) => {
             if (tempCartItems.length > 0 && tempCartItems.length > 0) {
                 cart_total = tempCartItems.reduce((acc, item) => {
                     if (selectedCartItems.includes(item.id)) {
-                        const fabricPrice = item.product.price ?? '0';
-                        const fabricCurrency = item.product.currency ?? 'USD';
-
+                        const fabricPrice = item.price ?? '0';
+                        const fabricCurrency = item.currency ?? 'USD';
                         const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
                         const subtotal = convertedPrice.price_raw * item.quantity;
                         return acc + subtotal;
@@ -552,16 +551,7 @@ const Cart = (props) => {
                                                                                     </Col>
 
                                                                                     <Col lg={2}>
-                                                                                    {currentUser ?
-                                                                                            <>
-                                                                                                {convertedPrice?.currency_code}{convertedPrice?.price}
-                                                                                            </>
-                                                                                        :
-                                                                                        <>
-                                                                                                { `$`+cartItem?.price}
-                                                                                        </>
-                                                                                        }
-                                                                                        
+                                                                                        {convertedPrice?.currency_code}{convertedPrice?.price}
                                                                                     </Col>
 
                                                                                     <Col lg={2}>
