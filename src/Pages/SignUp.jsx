@@ -560,7 +560,7 @@ const SignUp = () => {
                         null
                       } */}
                       <Form.Group className='mb-3' controlId='formBasicEmail'>
-                        <Form.Label>Email Address</Form.Label>
+                        <Form.Label className="fs-15">Email Address</Form.Label>
                         <Email
                           baseList={baseList}
                           refineList={domains}
@@ -572,7 +572,7 @@ const SignUp = () => {
                         {/* <FormControl type='email' name='email' onChange={handleChange} className='mr-sm-2' required /> */}
                       </Form.Group>
                       <Form.Group className='mb-3'>
-                        <Form.Label>Password</Form.Label>
+                        <Form.Label className="fs-15">Password</Form.Label>
                         <div className="show-password">
                           <FormControl type={showPassword ? 'text' : 'password'} name='password' onChange={handleChange} className='mr-sm-2 custom-form' required />
                           {showPassword ?

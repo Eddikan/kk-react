@@ -407,42 +407,59 @@ const Home = (props) => {
             <Row className=" align-items-center h-100">
               <Col lg="12">
                 {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
-                <h3 className="text-left fw-600 mb-5">Set Up Shop</h3>
+                <h3 className="modal-title text-center fw-bold mb-3">Please start setting up your shop</h3>
+                <p className="modal-subtitle text-center mb-3">We are excited to welcome you to the Kouture Konect community! You’re now one step<br />closer to sharing your exceptional designs and fabrics with fashion enthusiasts worldwide.</p>
+                <p className="modal-subtitle text-center fw-bold">To get started, please select one of the options:</p>
                 <Row>
-                  <Col lg="12" className="mb-3">
+                  <Col lg="4" className="mb-3">
                     {/* onClick={() => showSignupModal('user_designer')} */}
-                    <Card onClick={() => navigate('/sign-up?type=designer')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
-                      <Card.Body>
-                        <div className="user-box">
-                          <div>
-                            <img src={DesignerIcon} alt="Designers" />
-                            <h3 className="fw-600">I am a designer</h3>
+                    <Card onClick={() => navigate('/sign-up?type=designer')} className="modal-card cursor-pointer bg-white shop-hover-card">
+                      <Card.Body className="shop-modal-card-body">
+                        <div className="user-box shop-modal-card-content text-center justify-content-center top-content">
+                          <div className="top-content-text">
+                            <img src={DesignerModalIcon} alt="Designers" className="hover-card-icon"/>
+                            <h3 className="shop-modal-title fs-20 fw-600 lh-26">I am a Designer</h3>
+                          </div>
+                        </div>
+                        <div className="user-box shop-modal-card-content text-center justify-content-center bottom-content">
+                          <div className="bottom-text-content">
+                            <p className="shop-modal-text text-black fs-14">Habitasse conubia auctor pharetra nunc vel, praesent donec curae, cursus bibendum mi quisque .</p>
                           </div>
                         </div>
                       </Card.Body>
                     </Card>
                   </Col>
-                  <Col lg="12" className="mb-3">
+                  <Col lg="4" className="mb-3">
                     {/* onClick={() => handleShowFabrics()} */}
-                    <Card onClick={() => navigate('/sign-up?type=seller')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
-                      <Card.Body>
-                        <div className="user-box">
-                          <div>
-                            <img src={FabricIcon} alt="Fabrics" />
-                            <h3 className="fw-600">I am a fabric vendor</h3>
+                    <Card onClick={() => navigate('/sign-up?type=seller')} className="modal-card cursor-pointer bg-white shop-hover-card">
+                      <Card.Body className="shop-modal-card-body">
+                        <div className="user-box shop-modal-card-content text-center justify-content-center top-content">
+                          <div className="top-content-text">
+                            <img src={FabricModalIcon} alt="Fabrics" className="hover-card-icon"/>
+                            <h3 className="shop-modal-title fs-20 fw-600 lh-26">I am a Fabric Vendor</h3>
+                          </div>
+                        </div>                        
+                        <div className="user-box shop-modal-card-content text-center justify-content-center bottom-content">
+                          <div className="bottom-text-content">
+                            <p className="shop-modal-text text-black fs-14">Habitasse conubia auctor pharetra nunc vel, praesent donec curae, cursus bibendum mi quisque .</p>
                           </div>
                         </div>
                       </Card.Body>
                     </Card>
                   </Col>
-                  <Col lg="12">
+                  <Col lg="4">
                     {/* onClick={() => handleShowDesigns()} */}
-                    <Card onClick={() => navigate('/sign-up?type=designer_seller')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
-                      <Card.Body>
-                        <div className="user-box">
-                          <div>
-                            <img src={DesignIcon} alt="Designs" />
-                            <h3 className="fw-600">I am both a designer and a fabric vendor</h3>
+                    <Card onClick={() => navigate('/sign-up?type=designer_seller')} className="modal-card cursor-pointer bg-white shop-hover-card">
+                      <Card.Body className="shop-modal-card-body">
+                        <div className="user-box shop-modal-card-content text-center justify-content-center top-content">
+                          <div className="top-content-text">
+                            <img src={DesignerVendorModalIcon} alt="Designs" className="hover-card-icon"/>
+                            <h3 className="shop-modal-title fs-20 fw-600 lh-26">I am both <br /> Designer and <br /> Fabric Vendor</h3>
+                          </div>
+                        </div>
+                        <div className="user-box shop-modal-card-content text-center justify-content-center bottom-content">
+                          <div className="bottom-text-content">
+                              <p className="shop-modal-text text-black fs-14">Habitasse conubia auctor pharetra nunc vel, praesent donec curae, cursus bibendum mi quisque .</p>
                           </div>
                         </div>
                       </Card.Body>

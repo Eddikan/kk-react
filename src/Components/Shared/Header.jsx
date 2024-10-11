@@ -155,6 +155,7 @@ const Header = () => {
     removeCookie('selectedCartItems', { path: '/' });
     removeCookie('tempCart', { path: '/' });
     removeCookie('tempFavorites', { path: '/' });
+    removeCookie('cartItemCount', { path: '/' });
     removeCookie('selectedCountry', { path: '/' });
     removeCookie('selectedCountryCode', { path: '/' });
     removeCookie('selectedLanguage', { path: '/' });

@@ -141,6 +141,57 @@ section#home p.subtitle {
 .modal-card-show h3{
     color: #551855;
 }
+
+.shop-modal-text{
+    color: white;
+}
+.shop-hover-card{
+    overflow: hidden;
+    border: solid 1px #E0E0E0;
+}
+.shop-hover-card .shop-card-icon{
+    margin-top: 42px;
+}
+.shop-modal-card-body{
+    padding: 0;
+}
+.shop-modal-title{
+    color: #551855;
+    transition: none;
+}
+.shop-modal-text{
+    opacity: 0; 
+    transform: translateY(-350px); 
+}
+.shop-modal-card-content{
+    height: 100%;
+    padding: 0 21px;
+    transition: height 0.3s;
+    border-radius: 5px;
+}
+.shop-hover-card:hover{
+    border-color: #707070;
+}
+.shop-hover-card:hover .shop-modal-card-content{
+    height: 50%;
+}
+.shop-hover-card:hover .hover-card-icon{
+    display: none;
+}
+.shop-hover-card:hover .top-content{
+    background-color: black;
+}
+.shop-hover-card:hover .shop-modal-title{
+    color: white;
+    max-width: 130px;
+}
+.shop-hover-card:hover .shop-modal-text{
+    color: black;
+    opacity: 1; 
+    transform: translateY(0); 
+    transition: opacity 0.3s linear, transform 0.3s ease-out; 
+}
+
 @keyframes scrolling {
     0% { transform: translateX(0); }
     100% { transform: translatex(-144vw); }
