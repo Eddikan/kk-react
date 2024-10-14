@@ -230,4 +230,17 @@
 .portfolio-link .save-link .action-button {
     pointer-events: auto;
 }
-
+.product-price{
+    color: #551855;
+}
+.add-to-cart-button{
+    width: 250px;
+    border: solid 1px black;
+    background-color: white;
+    color: black;
+}
+.buy-button{
+    width: 250px;
+    background-color: black;
+    color: white;
+}

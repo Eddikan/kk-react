@@ -87,7 +87,7 @@ section#signup .sign-up-with-email {
 }
 .hi-eye-off, .hi-eye {
     position: absolute;
-    z-index: 9999;
+    z-index: 3;
 }
 .off-eye {
     top: 14px;

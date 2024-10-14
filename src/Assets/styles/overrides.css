@@ -3162,7 +3162,7 @@ svg.gr-status-icon {
 /* Email Suggestion */
 .email-suggestion {
     position: relative;
-    z-index: 3;
+    z-index: 4;
 }
 
 .email-suggestion input {
@@ -3430,7 +3430,7 @@ span.rti--tag {
 
 .ddf-button {
     border-radius: 3px;
-    min-width: 202px;
+    min-width: 193px;
     padding-top: 7px;
     padding-bottom: 7px;
     line-height: 18px;
@@ -3438,4 +3438,63 @@ span.rti--tag {
 
 .category-pills {
     margin-top: 7px;
+}
+
+.modal-card{
+    height: 325px;
+    overflow: hidden;
+}
+/*Setup Shop Modal*/
+.modal-card-show h3{
+    color: #551855 !important;
+}
+
+.shop-modal-text{
+    color: white !important;
+}
+.shop-hover-card{
+    overflow: hidden !important;
+    border: solid 1px #E0E0E0 !important;
+}
+.shop-hover-card .shop-card-icon{
+    margin-top: 42px !important;
+}
+.shop-modal-card-body{
+    padding: 0 !important;
+}
+.shop-modal-title{
+    color: #551855 !important;
+    transition: none !important;
+}
+.shop-modal-text{
+    opacity: 0 !important; 
+    transform: translateY(-350px) !important; 
+}
+.shop-modal-card-content{
+    height: 100% !important;
+    padding: 0 21px !important;
+    transition: height 0.3s !important;
+    border-radius: 5px !important;
+}
+.shop-hover-card:hover{
+    border-color: #707070 !important;
+}
+.shop-hover-card:hover .shop-modal-card-content{
+    height: 50% !important;
+}
+.shop-hover-card:hover .hover-card-icon{
+    display: none !important;
+}
+.shop-hover-card:hover .top-content{
+    background-color: black !important;
+}
+.shop-hover-card:hover .shop-modal-title{
+    color: white !important;
+    max-width: 130px !important;
+}
+.shop-hover-card:hover .shop-modal-text{
+    color: black !important;
+    opacity: 1 !important; 
+    transform: translateY(0) !important; 
+    transition: opacity 0.3s linear, transform 0.3s ease-out !important; 
 }

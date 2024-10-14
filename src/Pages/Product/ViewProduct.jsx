@@ -25,6 +25,8 @@ import ResponsiveEmbedVideo from 'Components/Shared/ResponsiveEmbeddedVideo';
 import ResponsiveVideo from 'Components/Shared/ResponsiveVideo';
 import axios from 'axios';
 import CurrencyConverter from 'Utils/CurrencyConverter';
+import { TiArrowForwardOutline } from "react-icons/ti";
+import { BsCartPlus } from 'react-icons/bs';
 
 const initialReviewData = Object.freeze({
     rating: 0,
@@ -452,13 +454,13 @@ const ViewProduct = () => {
 
                     <section id="single-product" className='pb-5 pt-30 px-5'>
                         <Container>
-                            <Row>
+                            {/* <Row>
                                 <Col lg="12" className='text-right'>
                                     <GoBack fallBack="/user/profile" />
                                 </Col>
-                            </Row>
+                            </Row> */}
                             <Row>
-                                <Col lg={5}>
+                                <Col lg={6}>
                                     {images && images.length > 0 ?
                                         <>
                                             <ImageCarousel images={images} finalProductImages={finalProductImages} type="product" />
@@ -489,12 +491,12 @@ const ViewProduct = () => {
                                     )}
                                 </Col>
 
-                                <Col lg={7}>
+                                <Col lg={6}>
                                     <Card>
                                         <Card.Body>
                                             <Row>
                                                 <Col lg="12" className="d-flex justify-content-between">
-                                                    <div className='mb-3 d-flex portfolio-designer'>
+                                                    {/* <div className='mb-3 d-flex portfolio-designer'>
                                                         {product.user.image ? (
                                                             <div
                                                                 className='designer-photo'
@@ -518,7 +520,7 @@ const ViewProduct = () => {
                                                                 </>
                                                             }
                                                         </div>
-                                                    </div>
+                                                    </div> */}
 
                                                     {userRole !== 'Admin' &&
                                                         <>
@@ -549,7 +551,7 @@ const ViewProduct = () => {
                                                                 </>
                                                                 :
                                                                 <>
-                                                                    <div>
+                                                                    {/* <div>
 
                                                                         <div className="kouture-tooltip" onClick={toggleShareModal}>
                                                                             <div className="action-button bg-smgray me-2">
@@ -579,7 +581,7 @@ const ViewProduct = () => {
                                                                             :
                                                                             null
                                                                         }
-                                                                    </div>
+                                                                    </div> */}
                                                                 </>
                                                             }
                                                         </>
@@ -587,18 +589,68 @@ const ViewProduct = () => {
                                                 </Col>
 
                                                 <Col lg="12">
-                                                    <div className='d-flex align-items-center mb-2'>
-                                                        <h2 className="fw-600 fs-25 mb-0 ">{product.name ?? "-"}</h2>
-                                                        <div className='d-flex align-items-center'>
-                                                            {product.eco_friendly != null && product.eco_friendly != '' && (
-                                                                <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
-                                                                    <div className='tooltip-content'>
-                                                                        <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
-                                                                    </div>
-                                                                    <ImLeaf color="#55d140" />
-                                                                </span>
-                                                            )}
+                                                    <div className="d-flex justify-content-between">
+                                                        <div className='d-flex align-items-center mb-2'>
+                                                            <h2 className="fw-600 fs-25 mb-0 ">{product.name ?? "-"}</h2>
+                                                            <div className='d-flex align-items-center'>
+                                                                {product.eco_friendly != null && product.eco_friendly != '' && (
+                                                                    <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
+                                                                        <div className='tooltip-content'>
+                                                                            <span className="green-leaf-tooltiptext">Eco-friendly fabric</span>
+                                                                        </div>
+                                                                        <ImLeaf color="#55d140" />
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                         </div>
+                                                        <div> 
+
+                                                            {currentUser ?
+                                                                <>
+                                                                    <div className="wishlist-tooltip"  onClick={toggleShareModal}>
+                                                                        <div className="action-button me-2" >
+                                                                            <span className="wishlist-tooltiptext fs-14">Share</span>
+                                                                            <TiArrowForwardOutline className="text-black" />
+                                                                        </div>
+                                                                    </div>
+                                                                    {userWishlist ?
+                                                                        <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <div className="action-button bg-gold me-2" >
+                                                                                <span className="wishlist-tooltiptext fs-14">Remove from Wishlist</span>
+                                                                                <GoHeart className="text-white" />
+                                                                            </div>
+                                                                        </div>
+                                                                        :
+                                                                        <div className="wishlist-tooltip" onClick={function () { wishlistUpdate({ user_id: currentUser, product_id: product.id }); }}>
+                                                                            <div className="action-button me-2" >
+                                                                                <span className="wishlist-tooltiptext fs-14">Add to Wishlist</span>
+                                                                                <GoHeart className="text-black" />
+                                                                            </div>
+
+                                                                        </div>
+                                                                    }
+                                                                </>
+                                                                :
+                                                                null
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div className="star-ratings mt-1">
+                                                        <Rating
+                                                            initialValue={0}
+                                                            readonly={true}
+                                                            allowFraction={true}
+                                                            size={20}
+                                                            className="star-rating"
+                                                            showTooltip={true}
+                                                            emptyColor="#dddddd"
+                                                            fillColor="#cea835"
+                                                            tooltipArray={[
+                                                                0, 1, 2, 3, 4, 5
+                                                            ]}
+                                                            tooltipDefaultText="0.0"
+                                                        /* Available Props */
+                                                        />
                                                     </div>
                                                     {product.categories && product.categories.length > 0 ?
                                                         <div className="mb-3">
@@ -618,7 +670,7 @@ const ViewProduct = () => {
                                                         null
                                                     }
                                                     <div className="mb-3">
-                                                        <p className="fw-600 fs-25">{convertedPrice.currency_code}{convertedPrice.price}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
+                                                        <p className="fw-600 fs-25 product-price">{convertedPrice.currency_code}{convertedPrice.price}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
                                                     </div>
                                                     <hr />
                                                     <div>
@@ -626,11 +678,11 @@ const ViewProduct = () => {
                                                         <p className="mb-1 fs-16 fw-400 line-height-24">{product.description ?? "-"}</p>
                                                     </div>
                                                     <hr />
-                                                    <div>
+                                                    {/* <div>
                                                         <p className="mb-2 fs-16 fw-600">Care Instructions:</p>
                                                         <p className="mb-1 fs-16 fw-400 line-height-24">{product.care_instructions ?? "-"}</p>
                                                     </div>
-                                                    <hr />
+                                                    <hr /> */}
                                                     <div>
                                                         <p className="mb-2 fs-16 fw-600">Measurements:</p>
                                                         <Row>
@@ -666,7 +718,7 @@ const ViewProduct = () => {
                                                         null
                                                     }
 
-                                                    {product.certifications && product.certifications.length > 0 ?
+                                                    {/* {product.certifications && product.certifications.length > 0 ?
                                                         <>
                                                             <div className="mb-2">
                                                                 <p className="mb-1 fs-16 fw-600">Certifications (Organic, sustainable, etc):</p>
@@ -680,9 +732,9 @@ const ViewProduct = () => {
                                                         </>
                                                         :
                                                         null
-                                                    }
+                                                    } */}
 
-                                                    <div>
+                                                    {/* <div>
                                                         <p className="mb-2 fs-16 fw-600">Specifications:</p>
                                                         <Row>
                                                             <Col sm={6}>
@@ -714,7 +766,7 @@ const ViewProduct = () => {
                                                                 <p className="mb-2 fs-16 fw-400 line-height-24">{product.drape ?? "-"}</p>
                                                             </Col>
                                                         </Row>
-                                                    </div>
+                                                    </div> */}
                                                     {!isProductCurrentUser ?
                                                         <hr />
                                                         :
@@ -735,11 +787,11 @@ const ViewProduct = () => {
                                                                 {!isProductCurrentUser ?
                                                                     <>
                                                                         <p className="mb-2 fs-16 fw-600">Measurement</p>
-                                                                        {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
+                                                                        {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleDecrease()}>
                                                                             -
                                                                         </Button> */}
                                                                         <FormControl min="1" defaultValue="1" type='number' name='count' onChange={handleChange} className='me-3 d-inline-block counter-input' required />
-                                                                        {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleAdd()}>
+                                                                        {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleIncrease()}>
                                                                             +
                                                                         </Button> */}
 
@@ -767,29 +819,30 @@ const ViewProduct = () => {
                                                                                     <>
                                                                                         {addToCartLoading ?
                                                                                             <Button
-                                                                                                className="w-auto me-3 btn-primary fs-16"
+                                                                                                className="me-3 btn-primary fs-16 add-to-cart-button"
                                                                                                 type="button"
                                                                                             >
                                                                                                 Adding to Cart...
                                                                                             </Button>
                                                                                             :
                                                                                             <Button
-                                                                                                className="w-auto me-3 btn-primary fs-16"
+                                                                                                className="me-3 fs-16 add-to-cart-button"
                                                                                                 onClick={() => addToCart({ user_id: currentUser, product_id: product.id, quantity: unitCount })}
                                                                                             >
+                                                                                                <BsCartPlus className=" mx-2" size="20px"/>
                                                                                                 Add to Cart
                                                                                             </Button>
                                                                                         }
                                                                                         {buyNowLoading ?
                                                                                             <Button
-                                                                                                className="w-auto me-3 btn-secondary fs-16"
+                                                                                                className="me-3 btn-secondary fs-16 add-to-cart-button"
                                                                                                 type="button"
                                                                                             >
                                                                                                 Adding to Cart...
                                                                                             </Button>
                                                                                             :
                                                                                             <Button
-                                                                                                className="bg-gold border-gold text-white w-auto me-3 btn-secondary fs-16"
+                                                                                                className="fs-16 buy-button"
                                                                                                 onClick={() => buyNow({ user_id: currentUser, product_id: product.id, quantity: unitCount })}
                                                                                             >
                                                                                                 Buy Now
@@ -800,29 +853,30 @@ const ViewProduct = () => {
                                                                                     <>
                                                                                         {addToCartLoading ?
                                                                                             <Button
-                                                                                                className="w-auto me-3 btn-primary fs-16"
+                                                                                                className="me-3 btn-primary fs-16 add-to-cart-button"
                                                                                                 type="button"
                                                                                             >
                                                                                                 Adding to Cart...
                                                                                             </Button>
                                                                                             :
                                                                                             <Button
-                                                                                                className="w-auto me-3 btn-primary fs-16"
+                                                                                                className="me-3 fs-16 add-to-cart-button"
                                                                                                 onClick={() => addToTempCart({ id: product.id, product_id: product.id, price: product.price, name: product.name, quantity: unitCount, user_first_name: product.user.first_name, user_last_name: product.user.last_name, user_image: product.user.image, total: unitCount * product.price, unit_measurement: product.unit_measurement, images: product.image_urls[0] })}
                                                                                             >
+                                                                                                <BsCartPlus className=" mx-2" size="20px"/>
                                                                                                 Add to Cart
                                                                                             </Button>
                                                                                         }
                                                                                         {buyNowLoading ?
                                                                                             <Button
-                                                                                                className="w-auto me-3 btn-secondary fs-16"
+                                                                                                className="me-3 btn-secondary fs-16 add-to-cart-button"
                                                                                                 type="button"
                                                                                             >
                                                                                                 Adding to Cart...
                                                                                             </Button>
                                                                                             :
                                                                                             <Button
-                                                                                                className="bg-gold border-gold text-white w-auto me-3 btn-secondary fs-16"
+                                                                                                className="me-3 fs-16 buy-button"
                                                                                                 onClick={() => buyTempCart({ id: product.id, product_id: product.id, price: product.price, name: product.name, quantity: unitCount, user_first_name: product.user.first_name, user_last_name: product.user.last_name, user_image: product.user.image, total: unitCount * product.price, unit_measurement: product.unit_measurement, images: product.image_urls[0] })}
                                                                                             >
                                                                                                 Buy Now
@@ -877,7 +931,7 @@ const ViewProduct = () => {
                                     </Card>
                                 </Col>
 
-                                <Col lg="12" className='mt-4'>
+                                <Col lg="6" className='mt-4'>
                                     {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
                                     {/* <div className="d-flex justify-content-between w-100 align-item-center">
                                     <p className={`text-black cursor-pointer me-5 mt-3 mb-0 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews
@@ -889,7 +943,7 @@ const ViewProduct = () => {
                                         <Button className="w-auto mb-3 btn-primary" onClick={function () { toggleAddToReview(); }}>Add Review</Button>
                                     }
 
-                                </div> */}
+                                    </div> */}
 
 
                                     <span
@@ -988,6 +1042,64 @@ const ViewProduct = () => {
                                         :
                                         null
                                     }
+                                </Col>
+                                <Col lg="6">
+                                    <Card>
+                                        <Card.Body>
+                                            <div>
+                                                <p className="mb-2 fs-16 fw-600">Description:</p>
+                                                <p className="mb-1 fs-16 fw-400 line-height-24">{product.description ?? "-"}</p>
+                                            </div>
+                                            {product.certifications && product.certifications.length > 0 ?
+                                                <>
+                                                    <div className="mb-2">
+                                                        <p className="mb-1 fs-16 fw-600">Certifications (Organic, sustainable, etc):</p>
+                                                        {product.certifications.map((certification) => (
+                                                            <span className="design-tag bg-light fs-14 categories-color mw-100">
+                                                                {certification}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                    <hr />
+                                                </>
+                                                :
+                                                null
+                                            }
+                                            <div>
+                                                <p className="mb-2 fs-16 fw-600">Specifications:</p>
+                                                <Row>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Primary Fiber</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.composition ?? "-"}</p>
+                                                    </Col>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Weave</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.weave ?? "-"}</p>
+                                                    </Col>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Pattern</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.pattern ?? "-"}</p>
+                                                    </Col>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Texture</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.texture ?? "-"}</p>
+                                                    </Col>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Opacity</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.opacity ?? "-"}</p>
+                                                    </Col>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Stretch</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.stretch ?? "-"}</p>
+                                                    </Col>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Drape</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.drape ?? "-"}</p>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
                                 </Col>
                             </Row>
                         </Container>
