@@ -1108,6 +1108,45 @@ const ViewProduct = () => {
                                             </div>
                                         </Card.Body>
                                     </Card>
+                                    <Card className="mt-3">
+                                        <Card.Body>
+                                        <div className='d-flex justify-content-between portfolio-designer'>
+                                            <div className="designer-info d-flex mx-2">
+                                                {product.user.image ? (
+                                                    <div
+                                                        className='designer-photo'
+                                                        style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${product.user.image})` }}
+                                                    ></div>
+                                                ) : (
+                                                    <div
+                                                        className='designer-photo'
+                                                        style={{ backgroundImage: `url(${product.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}
+                                                    ></div>
+                                                )}
+                                                <p className="text-black fs-16 fw-600 my-auto ms-2">{product.user.first_name && product.user.first_name != "" ? product.user.first_name : "-"} {product.user.last_name && product.user.last_name != "" ? product.user.last_name : "-"}</p>
+                                            </div>
+                                            <div className="designer-product-buttons">
+                                                {currentUser !== product.user.id ?
+                                                    <>
+                                                        <Button className='text-decoration-none bg-white-hover text-black-hover fs-14 me-3 py-2 view-all-products'>View All</Button>
+                                                    </>
+                                                    :
+                                                    <>
+                                                    </>
+                                                }
+                                                {currentUser !== product.user.id ?
+                                                    <>
+                                                        <Button className='text-decoration-none fs-14 text-white py-2 follow-products'>Follow</Button>
+                                                    </>
+                                                    :
+                                                    <>
+                                                        <Button className='text-decoration-none fs-14 text-white py-2 you-products'>You</Button>
+                                                    </>
+                                                }
+                                            </div>
+                                        </div>
+                                        </Card.Body>
+                                    </Card>
                                 </Col>
 
                                 {/* <Col lg="6" className='mt-4'> */}

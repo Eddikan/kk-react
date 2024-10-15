@@ -10,6 +10,13 @@
 .follow-products,
 .you-products {
     color: #434343;
+    min-width: 160px;
+}
+.view-all-products{
+    background-color: white;
+    color: black;
+    border: solid 1px black;
+    min-width: 160px;
 }
 .text-muted-product {
     color: #8F8F8F;
