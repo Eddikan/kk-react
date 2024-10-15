@@ -461,34 +461,150 @@ const ViewProduct = () => {
                             </Row> */}
                             <Row>
                                 <Col lg={6}>
-                                    {images && images.length > 0 ?
-                                        <>
-                                            <ImageCarousel images={images} finalProductImages={finalProductImages} type="product" />
-                                            {/* <ImageSlider type="product" slidesToShow={4} images={images} finalProductImages={finalProductImages} onActiveImageChange={handleActiveImageChange} /> */}
-                                        </>
-                                        :
-                                        <div className="single-image-slider" style={{ backgroundImage: "url(" + activeImage + ")" }}></div>
-                                    }
-                                    {product.video_demo_type && product.video_demo_type != "" && product.video_demo_url && product.video_demo_url != "" && (
-                                        <div className="mt-4">
-                                            <>
-                                                {
-                                                    product.video_demo_type == "Youtube" || product.video_demo_type == "Vimeo" ?
-                                                        <>
-                                                            {product.video_demo_url.includes('http://') || product.video_demo_url.includes('https://') ?
-                                                                <ResponsiveEmbedVideo src={product.video_demo_url} title={product.name} />
+                                    <Row>
+                                        <Col lg="12">
+                                            {images && images.length > 0 ?
+                                                <>
+                                                    <ImageCarousel images={images} finalProductImages={finalProductImages} type="product" />
+                                                    {/* <ImageSlider type="product" slidesToShow={4} images={images} finalProductImages={finalProductImages} onActiveImageChange={handleActiveImageChange} /> */}
+                                                </>
+                                                :
+                                                <div className="single-image-slider" style={{ backgroundImage: "url(" + activeImage + ")" }}></div>
+                                            }
+                                            {product.video_demo_type && product.video_demo_type != "" && product.video_demo_url && product.video_demo_url != "" && (
+                                                <div className="mt-4">
+                                                    <>
+                                                        {
+                                                            product.video_demo_type == "Youtube" || product.video_demo_type == "Vimeo" ?
+                                                                <>
+                                                                    {product.video_demo_url.includes('http://') || product.video_demo_url.includes('https://') ?
+                                                                        <ResponsiveEmbedVideo src={product.video_demo_url} title={product.name} />
+                                                                        :
+                                                                        null
+                                                                    }
+                                                                </>
                                                                 :
-                                                                null
-                                                            }
+                                                                <>
+                                                                    <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL + 'products/videos/' + product.video_demo_url} />
+                                                                </>
+                                                        }
+                                                    </>
+                                                </div>
+                                            )}
+                                        </Col>
+                                        <Col lg="12" className='mt-4'>
+                                            {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
+                                            {/* <div className="d-flex justify-content-between w-100 align-item-center">
+                                            <p className={`text-black cursor-pointer me-5 mt-3 mb-0 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews
+                                                <BsArrowUpRightSquare className='ms-2' color="#caa533" />
+                                            </p>
+                                            {updateReview ?
+                                                <Button className="w-auto mb-3 btn-primary" onClick={function () { getProductReview(reviewId); toggleAddToReview(); }}>Update Review</Button>
+                                                :
+                                                <Button className="w-auto mb-3 btn-primary" onClick={function () { toggleAddToReview(); }}>Add Review</Button>
+                                            }
+
+                                            </div> */}
+
+
+                                            <span
+                                                className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`}
+                                                onClick={function () { showTab("reviews"); }}
+                                            >
+                                                Customer Reviews
+
+                                                {userRole !== 'Admin' &&
+                                                    <>
+                                                        {!isProductCurrentUser ?
+                                                            <>
+                                                                <span className="cursor-pointer reviews-tooltip" onClick={() => toggleAddToReview(product.image_urls)}>
+                                                                    <div className='tooltip-content'>
+                                                                        <span className="reviews-tooltiptext fs-14">Write Review</span>
+                                                                    </div>
+                                                                    <BsArrowUpRightSquare className='ms-2' color="#caa533" />
+                                                                </span>
+                                                            </>
+                                                            :
+                                                            null
+                                                        }
+                                                    </>
+                                                }
+                                            </span>
+
+                                            <hr className='mt-2 mb-4' />
+                                            {commentsTabShow ?
+                                                <>
+                                                    <div className="text-center">
+                                                        <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
+                                                        <p className="fs-20 text-black">No available comments at this time</p>
+                                                    </div>
+                                                </>
+                                                :
+                                                null
+                                            }
+                                            {reviewsTabShow ?
+                                                <>
+                                                    {productReviewsLoading ?
+                                                        <>
+                                                            <Loading />
                                                         </>
                                                         :
                                                         <>
-                                                            <ResponsiveVideo src={process.env.REACT_APP_STORAGE_URL + 'products/videos/' + product.video_demo_url} />
+                                                            {productReviews && productReviews.length > 0 ?
+                                                                <>
+                                                                    {productReviews.map(({ rating, content, user }, index) => (
+                                                                        <>
+                                                                            <div className="product-review-container mt-4 mb-3">
+                                                                                <div className="d-flex">
+                                                                                    <div className="user">
+                                                                                        {user.image && user.image != "" ?
+                                                                                            <div className="profile-image small" style={{ backgroundImage: "url(" + process.env.REACT_APP_STORAGE_URL + 'user/' + user.image + ")" }}></div>
+                                                                                            :
+                                                                                            <div className="profile-image small" style={{ backgroundImage: "url(" + UserPlaceholder + ")" }}></div>
+                                                                                        }
+                                                                                    </div>
+                                                                                    <div className="rating">
+                                                                                        <p className="text-black fs-16 mb-0 text-left">{user.first_name} {user.last_name}</p>
+                                                                                        <Rating
+                                                                                            initialValue={rating}
+                                                                                            readonly={true}
+                                                                                            allowFraction={true}
+                                                                                            size={22}
+                                                                                            className="star-rating"
+                                                                                            showTooltip={false}
+                                                                                            emptyColor="#dddddd"
+                                                                                            fillColor="#cea835"
+                                                                                        />
+                                                                                        {content && content != "" ?
+                                                                                            <p className="mb-0 mt-3">{content}</p>
+                                                                                            :
+                                                                                            null
+                                                                                        }
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            {index + 1 < productReviews.length ?
+                                                                                <hr />
+                                                                                :
+                                                                                null
+                                                                            }
+                                                                        </>
+                                                                    ))}
+                                                                </>
+                                                                :
+                                                                <div className="text-center">
+                                                                    <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
+                                                                    <p className="fs-20 text-black">No available reviews at this time</p>
+                                                                </div>
+                                                            }
                                                         </>
-                                                }
-                                            </>
-                                        </div>
-                                    )}
+                                                    }
+                                                </>
+                                                :
+                                                null
+                                            }
+                                        </Col>
+                                    </Row>
                                 </Col>
 
                                 <Col lg={6}>
@@ -672,12 +788,19 @@ const ViewProduct = () => {
                                                     <div className="mb-3">
                                                         <p className="fw-600 fs-25 product-price">{convertedPrice.currency_code}{convertedPrice.price}<span className="text-muted-product fs-14 d-inline-block vertical-align-middle">/{product.unit_measurement}</span></p>
                                                     </div>
-                                                    <hr />
                                                     <div>
-                                                        <p className="mb-2 fs-16 fw-600">Description:</p>
-                                                        <p className="mb-1 fs-16 fw-400 line-height-24">{product.description ?? "-"}</p>
+                                                        {/* <p className="mb-2 fs-16 fw-600">Description:</p> */}
+                                                        <p className="mb-1 fs-16 fw-400 line-height-24">
+                                                            {product.description 
+                                                                ? (product.description.length > 200 
+                                                                    ? product.description.slice(0, 200) + "..." 
+                                                                    : product.description) 
+                                                                : "-"}
+                                                        </p>
                                                     </div>
-                                                    <hr />
+
+                                                    <div className="dotted-hr"></div>
+
                                                     {/* <div>
                                                         <p className="mb-2 fs-16 fw-600">Care Instructions:</p>
                                                         <p className="mb-1 fs-16 fw-400 line-height-24">{product.care_instructions ?? "-"}</p>
@@ -699,8 +822,7 @@ const ViewProduct = () => {
                                                                 <p className="mb-1 fs-16 fw-400 line-height-24">{Math.trunc(product.weight) ?? "-"} KG per sq. {product.unit_measurement ?? "-"}</p>
                                                             </Col>
                                                         </Row>
-                                                    </div>
-                                                    <hr />
+                                                    </div> 
 
                                                     {product.colors && product.colors.length > 0 ?
                                                         <>
@@ -712,7 +834,7 @@ const ViewProduct = () => {
                                                                     </span>
                                                                 ))}
                                                             </div>
-                                                            <hr />
+                                                            <div className="dotted-hr"></div>
                                                         </>
                                                         :
                                                         null
@@ -768,7 +890,7 @@ const ViewProduct = () => {
                                                         </Row>
                                                     </div> */}
                                                     {!isProductCurrentUser ?
-                                                        <hr />
+                                                        <div className="dotted-hr"></div>
                                                         :
                                                         null
                                                     }
@@ -929,9 +1051,66 @@ const ViewProduct = () => {
                                             </Row>
                                         </Card.Body>
                                     </Card>
+                                    <Card className='mt-4'>
+                                        <Card.Body>
+                                            <div>
+                                                <p className="mb-2 fs-16 fw-600">Description:</p>
+                                                <p className="mb-1 fs-16 fw-400 line-height-24">{product.description ?? "-"}</p>
+                                            </div>
+                                            <hr />
+                                            {product.certifications && product.certifications.length > 0 ?
+                                                <>
+                                                    <div className="mb-2">
+                                                        <p className="mb-1 fs-16 fw-600">Certifications (Organic, sustainable, etc):</p>
+                                                        {product.certifications.map((certification) => (
+                                                            <span className="design-tag bg-light fs-14 categories-color mw-100">
+                                                                {certification}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                    <hr />
+                                                </>
+                                                :
+                                                null
+                                            }
+                                            <div>
+                                                <p className="mb-2 fs-16 fw-600">Specifications:</p>
+                                                <Row>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Primary Fiber</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.composition ?? "-"}</p>
+                                                    </Col>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Weave</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.weave ?? "-"}</p>
+                                                    </Col>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Pattern</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.pattern ?? "-"}</p>
+                                                    </Col>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Texture</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.texture ?? "-"}</p>
+                                                    </Col>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Opacity</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.opacity ?? "-"}</p>
+                                                    </Col>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Stretch</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.stretch ?? "-"}</p>
+                                                    </Col>
+                                                    <Col sm={4}>
+                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Drape</p>
+                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.drape ?? "-"}</p>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
                                 </Col>
 
-                                <Col lg="6" className='mt-4'>
+                                {/* <Col lg="6" className='mt-4'> */}
                                     {/* <span className={`text-black cursor-pointer me-5 mb-3 fs-16 ${commentsTabShow ? 'fw-600' : ''}`} onClick={function () { showTab("comments"); }}>Comments</span> */}
                                     {/* <div className="d-flex justify-content-between w-100 align-item-center">
                                     <p className={`text-black cursor-pointer me-5 mt-3 mb-0 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`} onClick={function () { showTab("reviews"); }}>Customer Reviews
@@ -946,7 +1125,7 @@ const ViewProduct = () => {
                                     </div> */}
 
 
-                                    <span
+                                    {/* <span
                                         className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`}
                                         onClick={function () { showTab("reviews"); }}
                                     >
@@ -1042,65 +1221,7 @@ const ViewProduct = () => {
                                         :
                                         null
                                     }
-                                </Col>
-                                <Col lg="6">
-                                    <Card>
-                                        <Card.Body>
-                                            <div>
-                                                <p className="mb-2 fs-16 fw-600">Description:</p>
-                                                <p className="mb-1 fs-16 fw-400 line-height-24">{product.description ?? "-"}</p>
-                                            </div>
-                                            {product.certifications && product.certifications.length > 0 ?
-                                                <>
-                                                    <div className="mb-2">
-                                                        <p className="mb-1 fs-16 fw-600">Certifications (Organic, sustainable, etc):</p>
-                                                        {product.certifications.map((certification) => (
-                                                            <span className="design-tag bg-light fs-14 categories-color mw-100">
-                                                                {certification}
-                                                            </span>
-                                                        ))}
-                                                    </div>
-                                                    <hr />
-                                                </>
-                                                :
-                                                null
-                                            }
-                                            <div>
-                                                <p className="mb-2 fs-16 fw-600">Specifications:</p>
-                                                <Row>
-                                                    <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Primary Fiber</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.composition ?? "-"}</p>
-                                                    </Col>
-                                                    <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Weave</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.weave ?? "-"}</p>
-                                                    </Col>
-                                                    <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Pattern</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.pattern ?? "-"}</p>
-                                                    </Col>
-                                                    <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Texture</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.texture ?? "-"}</p>
-                                                    </Col>
-                                                    <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Opacity</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.opacity ?? "-"}</p>
-                                                    </Col>
-                                                    <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Stretch</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.stretch ?? "-"}</p>
-                                                    </Col>
-                                                    <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Drape</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.drape ?? "-"}</p>
-                                                    </Col>
-                                                </Row>
-                                            </div>
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
+                                </Col> */}
                             </Row>
                         </Container>
                     </section>

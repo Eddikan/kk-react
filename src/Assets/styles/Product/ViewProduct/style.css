@@ -244,3 +244,6 @@
     background-color: black;
     color: white;
 }
+.dotted-hr{
+    border-top: dashed 2px #eeeeee;
+}
