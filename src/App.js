@@ -26,6 +26,7 @@ const StripeMobile = lazy(() => import("./Pages/StripeMobile"));
 const CustomerPage = lazy(() => import("./Pages/CustomerPage"));
 const Cart = lazy(() => import("./Pages/Cart"));
 const Checkout = lazy(() => import("./Pages/Checkout"));
+const PaypalMobile = lazy(() => import("./Pages/PaypalMobile"));
 const ThankYouPage = lazy(() => import("./Pages/ThankYouPage"));
 const ViewDesign = lazy(() => import("./Pages/ViewDesign"));
 const EcoFriendlyFabrics = lazy(() => import("./Pages/EcoFriendlyFabrics"));
@@ -437,6 +438,7 @@ const App = () => {
           <Route path="/eco-friendly" exact element={<EcoFriendlyFabrics />} />
           <Route path="/cart" exact element={<Cart />} />
           <Route path="/checkout" exact element={<Checkout />} />
+          <Route path="/paypal/mobile" exact element={<PaypalMobile />} />
           {/* <Route path="/checkout" exact element={
             <Elements stripe={stripePromise}>
               <Checkout />

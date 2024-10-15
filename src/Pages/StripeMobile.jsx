@@ -51,7 +51,6 @@ const StripeMobile = () => {
     const order_email = searchParams.get('order_email');
     const order_amount = searchParams.get('order_amount');
     const order_currency = searchParams.get('order_currency');
-    const order_items = searchParams.get('order_items');
     const user_id = searchParams.get('user_id');
     const checkoutData = JSON.parse(decodeURIComponent(searchParams.get('checkout_data')));
     const orderItems = JSON.parse(searchParams.get('order_items'));
@@ -68,8 +67,8 @@ const StripeMobile = () => {
     const [cartItemId, setCartItemId] = useState('');
     const [reloadCount, setReloadCount] = useState(0);
     const [cartLoading, setCartLoading] = useState(true);
-    const [orderPaymentStatus, setOrderPaymentStatus] = useState('');
     const [checkOutFormData, setCheckOutFormData] = useState(checkoutData);
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
 
     const putCheckOut = async (data, orderID) => {
         return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderID, data);
@@ -82,8 +81,8 @@ const StripeMobile = () => {
     const getUserOrder = async (orderID) => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderID);
     };
-    
-    
+
+
     const checkOutSubmitStripe = async (event) => {
         event.preventDefault();
         setIsSubmitting(true);
@@ -101,6 +100,10 @@ const StripeMobile = () => {
 
         if (error) {
             setErrorMessage(error.message);
+            setShowErrorMessage(true);
+            setTimeout(() => {
+                setShowErrorMessage(false); 
+            }, 1500);
             setIsSubmitting(false);
             return;
         }
@@ -122,7 +125,7 @@ const StripeMobile = () => {
                 setErrorMessage(response.data.error);
             } else {
                 const details = response.data.data;
-                postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: productCount, payment_status: 'Paid', payment_details:details }).then(response => {
+                postCheckOut({ ...checkOutFormData, user_id: user_id, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: orderItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
                     const success = response.data.status;
                     const data = response.data.data;
                     if (success == success) {
@@ -132,7 +135,7 @@ const StripeMobile = () => {
                             setReloadCount(prevReloadCount => prevReloadCount + 1);
                             // navigate(`/stripe?order_id=${data.order.id}`);
                             window.ReactNativeWebView &&
-                            window.ReactNativeWebView.postMessage(JSON.stringify(data));
+                                window.ReactNativeWebView.postMessage(JSON.stringify(data));
                         }, 1000);
                     } else {
                         toast.error('There has been an error adding the order, please try again!');
@@ -148,38 +151,14 @@ const StripeMobile = () => {
         setIsSubmitting(false);
     };
 
-    // useEffect(() => {
-    //     getUserOrder(order_id)
-    //         .then((response) => {
-    //             const cartItemsData = response.data;
-    //             if (cartItemsData) {
-    //                 setCartItems(cartItemsData);
-    //                 console.log("cartItemsData", cartItemsData);
-    //                 setTotalAmount(cartItemsData[0].order_items_total.toFixed(2));
-    //                 setOrderPaymentStatus(cartItemsData[0].order.payment_status);
-    //                 setCartLoading(false);
-    //             } else {
-    //                 toast.error('There has been an error getting the products, please try again!');
-    //                 setCartLoading(false);
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             toast.error('There has been an error getting the products, please try again!');
-    //             setCartLoading(false);
-    //         });
-    // }, [reloadCount, item]);
-
-     useEffect(() => {
+    useEffect(() => {
         // setCartItems(checkout_data);
         console.log("checkoutFormData", checkOutFormData);
-        if(checkOutFormData) {
+        if (checkOutFormData) {
             setCartLoading(false);
         }
-        // window.ReactNativeWebView &&
-        // window.ReactNativeWebView.postMessage(JSON.stringify(checkOutFormData));
-    //   return checkOutFormData;
     }, []);
-    
+
 
     return (
         <>
@@ -187,71 +166,71 @@ const StripeMobile = () => {
                 <div className="Demo">
                     <Card>
                         <Card.Body>
-                            {cartLoading ?
-                                <Loading />
-                                :
-                                <>
-                                    {selectedCartItems.length > 0 && selectedCartItems ?
-                                        <>
-                                                    <form onSubmit={checkOutSubmitStripe}>
-                                                        <Row>
-                                                            <Col lg={12}>
-                                                                <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect Logo" />
-                                                            </Col>
-                                                            <Col lg={12}>
-                                                                <p>Total Amount: ${totalAmount}</p>
-                                                            </Col>
-                                                            <Col lg='12'>
-                                                                <label className='w-100'>
-                                                                    Card number
-                                                                    <CardNumberElement
-                                                                        options={options}
-                                                                    />
-                                                                </label>
-                                                            </Col>
-                                                            <Col lg='8'>
-                                                                <label className='w-100'>
-                                                                    Expiration date
-                                                                    <CardExpiryElement
-                                                                        options={options}
-                                                                    />
-                                                                </label>
-                                                            </Col>
-                                                            <Col lg='4'>
-                                                                <label className='w-100'>
-                                                                    CVC
-                                                                    <CardCvcElement
-                                                                        options={options}
-                                                                    />
-                                                                </label>
-                                                            </Col>
-                                                        </Row>
-                                                        <button type="submit" className="w-100" disabled={!stripe}>
-                                                            {isSubmitting ? 'Loading...' : 'Pay'}
-                                                        </button>
-                                                    </form>
-                                                    {errorMessage && (
-                                                        <p className="alert alert-danger mt-3 mb-0 text-center" style={{ fontSize: '14px' }}>{errorMessage}</p>
-                                                    )}
-                                        </>
-                                        :
-                                        <div className='DemoWrapper'>
-                                            <div className="Demo">
-                                                <Row>
-                                                    <Col lg={12}>
-                                                        <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect Logo" />
-                                                    </Col>
-                                                    <Col lg={12}>
-                                                        <p className="text-center">Order not found</p>
-                                                    </Col>
-                                                </Row>
-                                            </div>
+
+                            <>
+                                {selectedCartItems && selectedCartItems.length > 0 ?
+                                    <>
+                                        <form onSubmit={checkOutSubmitStripe}>
+                                            <Row>
+                                                <Col lg={12}>
+                                                    <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect Logo" />
+                                                    <div className="mb-3 mt-2">
+                                                        {showErrorMessage && (
+                                                            <p className="alert alert-danger mt-3 mb-0 text-center" style={{ fontSize: '14px' }}>{errorMessage}</p>
+                                                        )}
+                                                    </div>
+                                                   
+                                                </Col>
+                                                <Col lg={12}>
+                                                    <p>Total Amount: ${totalAmount}</p>
+                                                </Col>
+                                                <Col lg='12'>
+                                                    <label className='w-100'>
+                                                        Card number
+                                                        <CardNumberElement
+                                                            options={options}
+                                                        />
+                                                    </label>
+                                                </Col>
+                                                <Col lg='8'>
+                                                    <label className='w-100'>
+                                                        Expiration date
+                                                        <CardExpiryElement
+                                                            options={options}
+                                                        />
+                                                    </label>
+                                                </Col>
+                                                <Col lg='4'>
+                                                    <label className='w-100'>
+                                                        CVC
+                                                        <CardCvcElement
+                                                            options={options}
+                                                        />
+                                                    </label>
+                                                </Col>
+                                            </Row>
+                                            <button type="submit" className="w-100" disabled={!stripe} style={{background: '#CEA835'}}>
+                                                {isSubmitting ? 'Loading...' : 'Pay'}
+                                            </button>
+                                        </form>
+                                    </>
+                                    :
+                                    <div className='DemoWrapper'>
+                                        <div className="Demo">
+                                            <Row>
+                                                <Col lg={12}>
+                                                    <img src={KoutureLogo} className="kouture-icon" alt="Kouture Konect Logo" />
+                                                </Col>
+                                                <Col lg={12}>
+                                                    <p className="text-center">Order not found</p>
+                                                </Col>
+                                            </Row>
                                         </div>
-                                    }
+                                    </div>
+                                }
 
-                                </>
+                            </>
 
-                            }
                         </Card.Body>
                     </Card>
 
