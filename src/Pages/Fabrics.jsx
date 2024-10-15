@@ -314,12 +314,14 @@ const Fabrics = (props) => {
     };
 
     const handleChangeWidth = (e) => {
-        var { name, value } = e.target;
+        const value = Number(e.target.value);
+        // var { name, value } = e.target;
         setWidth(value);
     };
 
     const handleChangeLength = (e) => {
-        var { name, value } = e.target;
+        const value = Number(e.target.value);
+        // var { name, value } = e.target;
         setLength(value);
     };
 
@@ -774,11 +776,11 @@ const Fabrics = (props) => {
                                             <Form.Group as={Col} lg={6}>
                                                 <Form.Label className="fs-12">Length {unitMeasurement ? `(${unitMeasurement})` : null}
                                                 </Form.Label>
-                                                <FormControl type='number' name='length' value={length} className='mr-sm-2' onChange={handleChangeLength} placeholder='' />
+                                                <FormControl type='number' min="1" name='length' value={length} className='mr-sm-2' onChange={handleChangeLength} placeholder='' />
                                             </Form.Group>
                                             <Form.Group as={Col} lg={6}>
                                                 <Form.Label className="fs-12">Width {unitMeasurement ? `(${unitMeasurement})` : null}</Form.Label>
-                                                <FormControl type='number' name='width' value={width} className='mr-sm-2' onChange={handleChangeWidth} placeholder='' />
+                                                <FormControl  type='number' min="1" name='width' value={width} className='mr-sm-2' onChange={handleChangeWidth} placeholder='' />
                                             </Form.Group>
                                         </Row>
                                     </Form.Group>

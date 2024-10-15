@@ -1,3 +1,9 @@
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 #single-portfolio .design-tag {
     max-width: 100%;
 }
@@ -253,4 +259,13 @@
 }
 .dotted-hr{
     border-top: dashed 2px #eeeeee;
+}
+.measurement-btns{
+    height: 39px;
+    background-color: #eeeeee;
+    border: none;
+    min-width: 39px;
+}
+.measurement-btns:hover{
+    background-color: #eeeeee !important;
 }

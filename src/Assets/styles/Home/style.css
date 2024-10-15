@@ -138,6 +138,12 @@ section#home p.subtitle {
     color: #cea835;
     text-decoration: underline;
 }
+.get-started-icon{
+    color: white;
+} 
+.join-section-get-started-btn:hover .get-started-icon{
+    color: #cea835;
+}
 .modal-card-show h3{
     color: #551855;
 }

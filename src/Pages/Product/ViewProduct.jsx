@@ -123,21 +123,60 @@ const ViewProduct = () => {
     }
 
     const handleChange = (e) => {
-        const { value, name } = e.target;
+        const value = Number(e.target.value);
         setUnitCount(value);
-        setYards(value * 1.09);
-        if (product.unit_measurement == "centimeter") {
-            setYards(value * 0.01)
-        } else if (product.unit_measurement == "meter") {
-            setYards(value * 1.096)
-        } else if (product.unit_measurement == "inch") {
-            setYards(value * 0.027)
-        } else if (product.unit_measurement == "feet") {
-            setYards(value * 0.333)
-        } else if (product.unit_measurement == "yard") {
-            setYards(value * 1)
-        }
+        convertToYards(value);
+        // const { value, name } = e.target;
+        // setUnitCount(value);
+        // setYards(value * 1.09);
+        // if (product.unit_measurement == "centimeter") {
+        //     setYards(value * 0.01)
+        // } else if (product.unit_measurement == "meter") {
+        //     setYards(value * 1.096)
+        // } else if (product.unit_measurement == "inch") {
+        //     setYards(value * 0.027)
+        // } else if (product.unit_measurement == "feet") {
+        //     setYards(value * 0.333)
+        // } else if (product.unit_measurement == "yard") {
+        //     setYards(value * 1)
+        // }
     }
+
+    const convertToYards = (value) => {
+        let convertedYards = value * 1.09;
+        switch (product.unit_measurement) {
+          case "centimeter":
+            convertedYards = value * 0.01;
+            break;
+          case "meter":
+            convertedYards = value * 1.096;
+            break;
+          case "inch":
+            convertedYards = value * 0.027;
+            break;
+          case "feet":
+            convertedYards = value * 0.333;
+            break;
+          case "yard":
+            convertedYards = value * 1;
+            break;
+          default:
+            break;
+        }
+        setYards(convertedYards);
+    }
+
+    const increment = () => {
+        const newValue = unitCount + 1;
+        setUnitCount(newValue);
+        convertToYards(newValue);
+      };
+    
+      const decrement = () => {
+        const newValue = unitCount > 1 ? unitCount - 1 : 1; 
+        setUnitCount(newValue);
+        convertToYards(newValue);
+      };
 
     const handleChangeReview = (e) => {
         const { value, name } = e.target;
@@ -268,25 +307,30 @@ const ViewProduct = () => {
 
     async function addToCart(e) {
         setAddToCartLoading(true);
-        axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
-            const success = response.data.status;
-            if (success == 'Success') {
-                toast.success("Fabric added to cart successfully!");
-                const currentCartCount = cookies.cartItemCount ?? 0;
-                const latestCartItemCount = parseInt(currentCartCount) +  parseInt(e.quantity);
-                setCookie('cartItemCount', latestCartItemCount, { path: '/' });
+        if (parseInt(e.quantity) > 0){
+            axios.post(process.env.REACT_APP_API_ENDPOINT + 'cart', e).then((response) => {
+                const success = response.data.status;
+                if (success == 'Success') {
+                    toast.success("Fabric added to cart successfully!");
+                    const currentCartCount = cookies.cartItemCount ?? 0;
+                    const latestCartItemCount = parseInt(currentCartCount) +  parseInt(e.quantity);
+                    setCookie('cartItemCount', latestCartItemCount, { path: '/' });
 
-                // setTimeout(() => {
-                //     window.location.reload(); 
-                // }, 500);
-            } else {
+                    // setTimeout(() => {
+                    //     window.location.reload(); 
+                    // }, 500);
+                } else {
+                    toast.error('Something went wrong, please contact the administrator!');
+                }
+                setAddToCartLoading(false);
+            }).catch((error) => {
+                setAddToCartLoading(false);
                 toast.error('Something went wrong, please contact the administrator!');
-            }
-            setAddToCartLoading(false);
-        }).catch((error) => {
-            setAddToCartLoading(false);
-            toast.error('Something went wrong, please contact the administrator!');
-        });
+            });
+        }else{
+            toast.error('Measurement should be greater than 0');
+            setAddToCartLoading(false)
+        }
     }
 
     const addToTempCart = (e) => {
@@ -908,23 +952,33 @@ const ViewProduct = () => {
                                                             <Col lg="12">
                                                                 {!isProductCurrentUser ?
                                                                     <>
-                                                                        <p className="mb-2 fs-16 fw-600">Measurement</p>
-                                                                        {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleDecrease()}>
-                                                                            -
-                                                                        </Button> */}
-                                                                        <FormControl min="1" defaultValue="1" type='number' name='count' onChange={handleChange} className='me-3 d-inline-block counter-input' required />
-                                                                        {/* <Button className='btn-outline me-3 text-black border-black bg-black-hover text-white-hover px-5 w-auto min-width-auto' variant='secondary' onClick={() => handleIncrease()}>
-                                                                            +
-                                                                        </Button> */}
+                                                                       <p className="mb-2 fs-16 fw-600">Measurement</p>
+                                                                       <div className="d-flex mb-3">
+                                                                            <Button className='me-3 text-black p-0 measurement-btns' variant='secondary' onClick={decrement}>
+                                                                                -
+                                                                            </Button>
+                                                                            <FormControl
+                                                                                min="1"
+                                                                                value={unitCount}
+                                                                                type='number'
+                                                                                name='count'
+                                                                                onChange={handleChange}
+                                                                                className='me-3 counter-input'
+                                                                                required
+                                                                            />                                                                        
+                                                                            <Button className='me-3 text-black p-0 measurement-btns' variant='secondary' onClick={increment}>
+                                                                                +
+                                                                            </Button>
 
-                                                                        <span className="fs-18 fw-600">{Number(unitCount)?.toFixed(2)} {
-                                                                            product.unit_measurement !== 'inch' && product.unit_measurement !== 'feet'
-                                                                                ? product.unit_measurement + 's'
-                                                                                : product.unit_measurement === 'feet'
-                                                                                    ? product.unit_measurement
-                                                                                    : product.unit_measurement + 'es'
-                                                                        } {product.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span>
-                                                                        <hr className="mb-4" />
+                                                                            <span className="fs-18 my-auto fw-600">{Number(unitCount)?.toFixed(2)} {
+                                                                                product.unit_measurement !== 'inch' && product.unit_measurement !== 'feet'
+                                                                                    ? product.unit_measurement + 's'
+                                                                                    : product.unit_measurement === 'feet'
+                                                                                        ? product.unit_measurement
+                                                                                        : product.unit_measurement + 'es'
+                                                                            } {product.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span>
+                                                                            <hr className="mb-4" />
+                                                                        </div>
                                                                     </>
                                                                     :
                                                                     null
