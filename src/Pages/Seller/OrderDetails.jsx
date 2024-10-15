@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams,Link,useLocation } from 'react-router-dom';
+import { useNavigate, useParams, Link, useLocation } from 'react-router-dom';
 import LayoutNoFooter from 'Components/Layout/LayoutNoFooter';
 import { Container, Row, Col, Modal, Card } from 'react-bootstrap';
 import GoBack from 'Components/Shared/GoBack';
@@ -10,11 +10,12 @@ import { IoEyeOutline } from "react-icons/io5";
 import { IoCloseOutline } from "react-icons/io5";
 import { CgTrack } from "react-icons/cg";
 import { GrStatusInfo } from "react-icons/gr";
-import { PiEyeSlash,PiEyeLight  } from "react-icons/pi";
+import { PiEyeSlash, PiEyeLight } from "react-icons/pi";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
 import axios from "axios";
 import CurrencyConverter from 'Utils/CurrencyConverter';
+import { FaBoxOpen } from "react-icons/fa6";
 
 const initialStatus = {
     status: ''
@@ -62,7 +63,7 @@ const OrderDetails = (props) => {
     const [survey, setSurvey] = useState('');
     const [user, setUser] = useState('');
     const [reorderLoading, setReorderLoading] = useState(false);
-    const [disabledSurvey,setDisabledSurvey] = useState(false);
+    const [disabledSurvey, setDisabledSurvey] = useState(false);
 
     const [item, setItem] = useState('');
     const [itemStatus, setItemStatus] = useState('');
@@ -127,8 +128,8 @@ const OrderDetails = (props) => {
                     setOrder(selectedOrder[0].order);
                     setUser(selectedOrder[0].user);
                     setSurvey(selectedOrder[0].survey);
-                    setOrderFormData({status: selectedOrder[0].order.status});
-                    setOrderCompleteStatus({status: selectedOrder[0].order.status});
+                    setOrderFormData({ status: selectedOrder[0].order.status });
+                    setOrderCompleteStatus({ status: selectedOrder[0].order.status });
                     setOrderLoading(false);
                 } else {
                     toast.error('There has been an error getting the orders');
@@ -163,7 +164,7 @@ const OrderDetails = (props) => {
     };
 
     const getOrderStatus = async (order_item_id) => {
-        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'item/' + order_item_id );
+        return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'item/' + order_item_id);
     };
 
     const getOrderItemLog = async (order_item_log) => {
@@ -179,11 +180,11 @@ const OrderDetails = (props) => {
     };
 
     const putOrder = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId ,data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'order/' + orderId, data);
     };
 
     const putOrderStatus = async (data) => {
-        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'item/' + orderItemId + '/status/update',data);
+        return await axios.put(process.env.REACT_APP_API_ENDPOINT + 'item/' + orderItemId + '/status/update', data);
     };
 
 
@@ -231,7 +232,7 @@ const OrderDetails = (props) => {
 
     const statusOrderSubmit = (e) => {
         setOrderLoading(true);
-        putOrder({ ...orderFormData, id: orderFormData.id}).then(response => {
+        putOrder({ ...orderFormData, id: orderFormData.id }).then(response => {
             const status = response.data.status;
             if (status === "Success") {
                 setOrderLoading(false);
@@ -284,7 +285,7 @@ const OrderDetails = (props) => {
                     setOrder(selectedOrder[0].order);
                     setUser(selectedOrder[0].user);
                     setSurvey(selectedOrder[0].survey);
-                    setOrderFormData({status: selectedOrder[0].order.status});
+                    setOrderFormData({ status: selectedOrder[0].order.status });
                     setOrderLoading(false);
                     setOrderItemsLog(selectedOrder[0].order_items[0].id);
                 } else {
@@ -296,7 +297,7 @@ const OrderDetails = (props) => {
                 toast.error('There has been an error getting the orders');
                 setOrderLoading(false);
             });
-            
+
     }, [reloadCount]);
 
 
@@ -320,37 +321,37 @@ const OrderDetails = (props) => {
                                 </Col>
 
                                 <Col md={6} className='text-right'>
-                                {survey === '' ?
-                                    <>
-                                        {/* <button className='btn btn-primary mb-3' disabled>
+                                    {survey === '' ?
+                                        <>
+                                            {/* <button className='btn btn-primary mb-3' disabled>
                                             <PiEyeSlash  className="me-2" size={20}/>
                                             View Survey
                                         </button> */}
-                                    </>
-                                    : 
-                                    <>
-                                        <Link to={`/view/order/${orderId}/survey/${survey.id}`} className="text-decoration-none">
-                                            <button className='btn btn-primary mb-3'>
-                                            <PiEyeLight className="me-2" size={20}/>View Survey
-                                            </button>
-                                        </Link>
-                                     </> 
-                                }
+                                        </>
+                                        :
+                                        <>
+                                            <Link to={`/view/order/${orderId}/survey/${survey.id}`} className="text-decoration-none">
+                                                <button className='btn btn-primary mb-3'>
+                                                    <PiEyeLight className="me-2" size={20} />View Survey
+                                                </button>
+                                            </Link>
+                                        </>
+                                    }
 
-                                {order.status === "Completed" ?
-                                <>
-                                </>
-                                :
-                                <>
-                                <button 
-                                    className='btn btn-primary mb-3 ms-3' 
-                                    onClick={() => toggleUpdateOrderStatus(order.id)}
-                                    >
-                                        Order Status
-                                    </button>
-                                </>
-                            }
-                                    
+                                    {order.status === "Completed" ?
+                                        <>
+                                        </>
+                                        :
+                                        <>
+                                            <button
+                                                className='btn btn-primary mb-3 ms-3'
+                                                onClick={() => toggleUpdateOrderStatus(order.id)}
+                                            >
+                                                Order Status
+                                            </button>
+                                        </>
+                                    }
+
                                 </Col>
                             </Row>
                         </Col>
@@ -399,7 +400,7 @@ const OrderDetails = (props) => {
                                             {orders.length > 0 ?
                                                 <>
                                                     {orders.map((order) => {
-                                                        
+
                                                         var order_items = order.order_items;
                                                         var order_product = order_items[0].product;
                                                         if (order_product.image_urls) {
@@ -431,13 +432,13 @@ const OrderDetails = (props) => {
                                                                                         </div>
                                                                                     )}
                                                                                     <div className=''>
-                                                                                        <strong> 
-                                                                                            {order.user.first_name}  
+                                                                                        <strong>
+                                                                                            {order.user.first_name}
                                                                                             &nbsp;
-                                                                                            {order.user.last_name} 
-                                                                                            </strong>
-                                                                                            </div>
+                                                                                            {order.user.last_name}
+                                                                                        </strong>
                                                                                     </div>
+                                                                                </div>
                                                                             </div>
                                                                         </Card.Header>
                                                                         <Card.Body className='bg-white card-body-border'>
@@ -455,7 +456,7 @@ const OrderDetails = (props) => {
 
                                                                                         const productPrice = order_item_product.price ?? '0';
                                                                                         const productCurrency = order_item_product.currency ?? 'USD';
-                                                                                        
+
                                                                                         const convertedPrice = CurrencyConverter(productPrice, productCurrency, cookies);
 
                                                                                         return (
@@ -465,10 +466,14 @@ const OrderDetails = (props) => {
                                                                                                         <div className="designs-grid-div fabric-image"
                                                                                                             style={{ backgroundImage: "url(" + orderItemImage + ")", minHeight: '55px' }}>
                                                                                                         </div>
-
-                                                                                                        <span className='d-flex text-black ms-3'>
-                                                                                                            {order_item_product.name}
-                                                                                                        </span>
+                                                                                                        <div>
+                                                                                                            <span className='d-flex text-black ms-3'>
+                                                                                                                {order_item_product.name}
+                                                                                                            </span>
+                                                                                                            <p className='text-black ms-3'>
+                                                                                                                <FaBoxOpen /> {order_item.status}
+                                                                                                            </p>
+                                                                                                        </div>
                                                                                                     </Col>
 
                                                                                                     <Col lg={3} className="text-right">
@@ -497,16 +502,16 @@ const OrderDetails = (props) => {
                                                                                                             null
                                                                                                             :
                                                                                                             <>
-                                                                                                         <div className="cursor-pointer" onClick={() => toggleUpdateStatus(order_item.id)}>
-                                                                                                            <p className='text-black mb-0'>
-                                                                                                                <GrStatusInfo className='gr-status-icon mb-1' size={15} />
-                                                                                                                Update Status
-                                                                                                            </p>
-                                                                                                        </div>
-                                                                                                        </>
+                                                                                                                <div className="cursor-pointer" onClick={() => toggleUpdateStatus(order_item.id)}>
+                                                                                                                    <p className='text-black mb-0'>
+                                                                                                                        <GrStatusInfo className='gr-status-icon mb-1' size={15} />
+                                                                                                                        Update Status
+                                                                                                                    </p>
+                                                                                                                </div>
+                                                                                                            </>
                                                                                                         }
 
-                                                                                                
+
                                                                                                     </Col>
                                                                                                 </Row>
                                                                                                 {order_items.length > 1 && index + 1 < order_items.length ?
@@ -652,13 +657,13 @@ const OrderDetails = (props) => {
                         <Card.Body>
                             <div>
 
-                            {item.status === "Completed" ?
-                                <>
-                                    <div><strong>Status:</strong>&nbsp;Completed</div>
-                                </>
-                                :
-                                <>
-                                    <label htmlFor="orderStatus" className='mb-2'>Status:</label>
+                                {item.status === "Completed" ?
+                                    <>
+                                        <div><strong>Status:</strong>&nbsp;Completed</div>
+                                    </>
+                                    :
+                                    <>
+                                        <label htmlFor="orderStatus" className='mb-2'>Status:</label>
                                         <select
                                             id="orderStatus"
                                             name='status'
@@ -671,31 +676,31 @@ const OrderDetails = (props) => {
                                                     <option value="Pending">Pending</option>
                                                     <option value="Processing">Processing</option>
                                                 </>
-                                                : itemStatus== "Processing" ?
-                                                <>
-                                                    <option value="Processing">Processing</option>
-                                                    <option value="Shipped">Order Shipped</option>
-                                                </>
-                                                : itemStatus == "Shipped" ?
-                                                <>
-                                                    <option value="Shipped">Order Shipped</option>
-                                                    <option value="Delivered">Delivered</option>
-                                                </>
-                                                : itemStatus == "Delivered" ?
-                                                <>
-                                                    <option value="Delivered">Delivered</option>
-                                                    <option value="Completed">Completed</option>
-                                                </>
-                                                : itemStatus == "Completed" ?
-                                                <>
-                                                    <option value="Completed">Completed</option>
-                                                </>
-                                                :
-                                                null
+                                                : itemStatus == "Processing" ?
+                                                    <>
+                                                        <option value="Processing">Processing</option>
+                                                        <option value="Shipped">Order Shipped</option>
+                                                    </>
+                                                    : itemStatus == "Shipped" ?
+                                                        <>
+                                                            <option value="Shipped">Order Shipped</option>
+                                                            <option value="Delivered">Delivered</option>
+                                                        </>
+                                                        : itemStatus == "Delivered" ?
+                                                            <>
+                                                                <option value="Delivered">Delivered</option>
+                                                                <option value="Completed">Completed</option>
+                                                            </>
+                                                            : itemStatus == "Completed" ?
+                                                                <>
+                                                                    <option value="Completed">Completed</option>
+                                                                </>
+                                                                :
+                                                                null
                                             }
                                         </select>
-                                </>
-                            }
+                                    </>
+                                }
                             </div>
                         </Card.Body>
                     </Card>
@@ -747,12 +752,12 @@ const OrderDetails = (props) => {
                         <Card.Body>
                             <div>
                                 {orderCompleteStatus.status === "Completed" ?
-                                <>
-                                    <div><strong>Status:</strong>&nbsp;Completed</div>
-                                </>
-                                :
-                                <>
-                                    <label htmlFor="orderStatus" className='mb-2'>Status:</label>
+                                    <>
+                                        <div><strong>Status:</strong>&nbsp;Completed</div>
+                                    </>
+                                    :
+                                    <>
+                                        <label htmlFor="orderStatus" className='mb-2'>Status:</label>
                                         <select
                                             id="orderStatus"
                                             name='status'
@@ -766,27 +771,27 @@ const OrderDetails = (props) => {
                                                     <option value="Processing">Processing</option>
                                                 </>
                                                 : order.status == "Processing" ?
-                                                <>
-                                                    <option value="Processing">Processing</option>
-                                                    <option value="Shipped">Order Shipped</option>
-                                                </>
-                                                : order.status == "Shipped" ?
-                                                <>
-                                                    <option value="Shipped">Order Shipped</option>
-                                                    <option value="Delivered">Delivered</option>
-                                                </>
-                                                : order.status == "Delivered" ?
-                                                <>
-                                                    <option value="Delivered">Delivered</option>
-                                                    <option value="Completed">Completed</option>
-                                                </>
-                                                :
-                                                null
+                                                    <>
+                                                        <option value="Processing">Processing</option>
+                                                        <option value="Shipped">Order Shipped</option>
+                                                    </>
+                                                    : order.status == "Shipped" ?
+                                                        <>
+                                                            <option value="Shipped">Order Shipped</option>
+                                                            <option value="Delivered">Delivered</option>
+                                                        </>
+                                                        : order.status == "Delivered" ?
+                                                            <>
+                                                                <option value="Delivered">Delivered</option>
+                                                                <option value="Completed">Completed</option>
+                                                            </>
+                                                            :
+                                                            null
                                             }
                                         </select>
-                                </>
+                                    </>
                                 }
-                                
+
                             </div>
                         </Card.Body>
                     </Card>

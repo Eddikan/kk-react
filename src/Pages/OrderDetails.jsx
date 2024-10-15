@@ -21,6 +21,7 @@ import PlaceholderImage from '../Assets/images/placeholders/image.png';
 import toast from 'react-hot-toast';
 import axios from "axios";
 import CurrencyConverter from 'Utils/CurrencyConverter';
+import { FaBoxOpen } from "react-icons/fa6";
 
 
 const initialCheckOut = {
@@ -233,9 +234,9 @@ const Orders = (props) => {
 
                                                                                         const productPrice = order_item_product.price ?? '0';
                                                                                         const productCurrency = order_item_product.currency ?? 'USD';
-                                                                                        
+
                                                                                         const convertedPrice = CurrencyConverter(productPrice, productCurrency, cookies);
-                                                                                        
+
                                                                                         return (
                                                                                             <>
                                                                                                 <Row className='align-items-center'>
@@ -243,10 +244,14 @@ const Orders = (props) => {
                                                                                                         <div className="designs-grid-div fabric-image"
                                                                                                             style={{ backgroundImage: "url(" + orderItemImage + ")", minHeight: '55px' }}>
                                                                                                         </div>
-
-                                                                                                        <span className='d-flex text-black ms-3'>
-                                                                                                            {order_item_product.name}
-                                                                                                        </span>
+                                                                                                        <div>
+                                                                                                            <span className='d-flex text-black ms-3'>
+                                                                                                                {order_item_product.name}
+                                                                                                            </span>
+                                                                                                            <p className='text-black ms-3'>
+                                                                                                                <FaBoxOpen /> {order_item.status}
+                                                                                                            </p>
+                                                                                                        </div>
                                                                                                     </Col>
 
                                                                                                     <Col lg={3} className="text-right">

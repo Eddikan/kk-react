@@ -22,6 +22,7 @@ const About = lazy(() => import("./Pages/About"));
 const Buttons = lazy(() => import("./Pages/Elements/Buttons"));
 const Forms = lazy(() => import("./Pages/Forms"));
 const Stripe = lazy(() => import("./Pages/Stripe"));
+const StripeMobile = lazy(() => import("./Pages/StripeMobile"));
 const CustomerPage = lazy(() => import("./Pages/CustomerPage"));
 const Cart = lazy(() => import("./Pages/Cart"));
 const Checkout = lazy(() => import("./Pages/Checkout"));
@@ -196,6 +197,7 @@ const App = () => {
       <Elements stripe={stripePromise}>
         <Routes>
           <Route path="/stripe" element={<Stripe />} />
+          <Route path="/stripe/mobile" element={<StripeMobile />} />
         </Routes>
       </Elements>
       <Suspense fallback={<LoadingPage />}>

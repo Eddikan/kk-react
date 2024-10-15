@@ -1497,13 +1497,13 @@ const Designs = (props) => {
                                                                         <IoVideocam className="me-2" color="#ffffff" />Book a Consultation</a>
                                                                 </div>
 
-                                                                <div className='text-center mt-2'
+                                                                {/* <div className='text-center mt-2'
                                                                     onClick={() => { toggleUnderConstruction("Message"); setProfileViewShow(false); }}
                                                                 >
                                                                     <a className='book-consultation btn-message-designer btn w-100'
                                                                     >
                                                                         <AiFillMessage className="me-2" />Send Message</a>
-                                                                </div>
+                                                                </div> */}
                                                             </>
                                                         }
                                                     </Col>
@@ -1545,12 +1545,12 @@ const Designs = (props) => {
                                             <div className='icon-name-color fs-12 mt-2 fw-600'>Consultation</div>
                                         </div>
 
-                                        <div className='text-center mb-4' onClick={() => toggleUnderConstruction("Message")}>
+                                        {/* <div className='text-center mb-4' onClick={() => toggleUnderConstruction("Message")}>
                                             <div className="action-button-designs bg-white">
                                                 <AiFillMessage className="text-black mt-2" size={30} />
                                             </div>
                                             <div className='icon-name-color fs-12 mb-3 mt-2 fw-600'>Message</div>
-                                        </div>
+                                        </div> */}
                                     </>
                                 }
 
