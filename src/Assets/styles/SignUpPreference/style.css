@@ -1,0 +1,44 @@
+.preference-container {
+    margin: 0 auto;
+    max-width: 550px;
+    width: 100%;
+}
+.preference-container h1{
+    font-weight: bold;
+    color: #551855;
+    font-size: 25px;
+}
+.pref-card{
+    height: 187px;
+}
+.pref-card:hover{
+    border-color: #E5E5E5;
+}
+.shop-modal-intro{
+    font-weight: bold;
+    color: #551855;
+    font-size: 25px;
+}
+.modal-subtitle{
+    font-size: 14px;
+}
+.modal-card{
+    height: 325px;
+    overflow: hidden;
+}
+
+.fashion-card {
+    transition: .5s;
+}
+
+.fashion-card:hover {
+    box-shadow: inset 0 0 0 100vw rgba(0,0,0,0.7);
+}
+
+.modal-card:hover .modal-img{
+    background-color: rgba(0, 0, 0, 0.7);
+}
+.modal-box h3 {
+    font-size: 23px;
+    margin: auto;
+}

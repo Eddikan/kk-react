@@ -3445,56 +3445,43 @@ span.rti--tag {
     overflow: hidden;
 }
 /*Setup Shop Modal*/
-.modal-card-show h3{
-    color: #551855 !important;
-}
-
-.shop-modal-text{
-    color: white !important;
-}
-.shop-hover-card{
+.shop-modal-card{
+    height: 187px;
+    overflow: hidden;
     overflow: hidden !important;
     border: solid 1px #E0E0E0 !important;
 }
-.shop-hover-card .shop-card-icon{
-    margin-top: 42px !important;
+.modal-card-show h3{
+    color: #551855 !important;
+}
+.shop-modal-intro,.explore-modal-title{
+    font-weight: bold;
+    color: #551855;
+    font-size: 25px;
+}
+.shop-modal-text{
+    color: white !important;
+}
+.shop-modal-card:hover{
+    border-color: #CECECE!important;
+}
+.shop-modal-card .shop-card-icon{
+    position: absolute;
+    width: 23px;
+    top: 15px;
+    right: 15px;
 }
 .shop-modal-card-body{
     padding: 0 !important;
 }
 .shop-modal-title{
-    color: #551855 !important;
-    transition: none !important;
+    color: #1A1A1A !important;
 }
 .shop-modal-text{
     opacity: 0 !important; 
-    transform: translateY(-350px) !important; 
 }
 .shop-modal-card-content{
     height: 100% !important;
-    padding: 0 21px !important;
-    transition: height 0.3s !important;
+    padding: 0 24px !important;
     border-radius: 5px !important;
-}
-.shop-hover-card:hover{
-    border-color: #707070 !important;
-}
-.shop-hover-card:hover .shop-modal-card-content{
-    height: 50% !important;
-}
-.shop-hover-card:hover .hover-card-icon{
-    display: none !important;
-}
-.shop-hover-card:hover .top-content{
-    background-color: black !important;
-}
-.shop-hover-card:hover .shop-modal-title{
-    color: white !important;
-    max-width: 130px !important;
-}
-.shop-hover-card:hover .shop-modal-text{
-    color: black !important;
-    opacity: 1 !important; 
-    transform: translateY(0) !important; 
-    transition: opacity 0.3s linear, transform 0.3s ease-out !important; 
 }

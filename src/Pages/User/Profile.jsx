@@ -42,6 +42,9 @@ import Orders from 'Components/Shared/User/Orders';
 import FabricsWishlist from 'Components/Shared/User/FabricsWishlist';
 import DesignersWishlist from 'Components/Shared/User/DesignersWishlist';
 import UserAppointments from 'Components/Shared/User/Appointments';
+import DesignerModalIcon from 'Assets/images/icons/designer-modal-icon-purple.png';
+import FabricModalIcon from 'Assets/images/icons/fabric-modal-icon-purple.png';
+import DesignerVendorModalIcon from 'Assets/images/icons/sewing-modal-icon-purple.png';
 
 const initialUserData = Object.freeze({
     is_designer: 0,
@@ -2081,52 +2084,56 @@ const Profile = () => {
 
             {/* Setup Shop  */}
             <Modal show={setupShopShow} backdrop="static" centered size="lg" fullscreen={false} onHide={() => setSetupShopShow(false)}>
-                <Modal.Body className="py-5">
+                <Modal.Body className="pt-5 pb-4">
                     <button type="button" className="btn-close no-header-close" onClick={() => setSetupShopShow(false)} aria-label="Close"></button>
                     <Container className="narrow-850 h-100">
                         <Row className=" align-items-center h-100">
                             <Col lg="12">
                                 {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
-                                <h3 className="text-left fw-600 mb-5">Set Up Shop</h3>
+                                <h3 className="shop-modal-intro text-center fw-bold mt-5 mb-2">Join as a Designer, Fabric Vendor or both</h3>
+                                <p className="modal-subtitle text-center mb-70">To get started, please select one of the options:</p>
                                 <Row>
-                                    <Col lg="12" className="mb-3">
-                                        {/* onClick={() => showSignupModal('user_designer')} */}
-                                        <Card onClick={() => navigate('/user/designer-form')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
-                                            <Card.Body>
-                                                <div className="user-box">
-                                                    <div>
-                                                        <img src={DesignerIcon} alt="Designers" />
-                                                        <h3 className="fw-600">I am a designer</h3>
-                                                    </div>
+                                    <Col lg="4" className="mb-90">
+                                    {/* onClick={() => showSignupModal('user_designer')} */}
+                                    <Card onClick={() => navigate('/user/designer-form')} className="shop-modal-card cursor-pointer bg-white">
+                                        <Card.Body className="shop-modal-card-body">
+                                            <img src={DesignerModalIcon} alt="Designers" className="shop-card-icon"/>
+                                            <div className="user-box shop-modal-card-content text-center justify-content-center">
+                                                <div className="text-start w-100">
+                                                    <p className="mb-0 fs-12">I am a</p>
+                                                    <h3 className="shop-modal-title fs-30 fw-600 lh-26">Designer</h3>
                                                 </div>
-                                            </Card.Body>
-                                        </Card>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
                                     </Col>
-                                    <Col lg="12" className="mb-3">
-                                        {/* onClick={() => handleShowFabrics()} */}
-                                        <Card onClick={() => navigate('/user/seller-form')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
-                                            <Card.Body>
-                                                <div className="user-box">
-                                                    <div>
-                                                        <img src={FabricIcon} alt="Fabrics" />
-                                                        <h3 className="fw-600">I am a fabric vendor</h3>
-                                                    </div>
+                                    <Col lg="4" className="mb-90">
+                                    {/* onClick={() => handleShowFabrics()} */}
+                                    <Card onClick={() => navigate('/user/seller-form')}  className="shop-modal-card cursor-pointer bg-white">
+                                        <Card.Body className="shop-modal-card-body">
+                                            <img src={FabricModalIcon} alt="Fabrics" className="shop-card-icon"/>
+                                            <div className="user-box shop-modal-card-content text-center justify-content-center">
+                                                <div className="text-start w-100">
+                                                    <p className="mb-0 fs-12">I am a</p>
+                                                    <h3 className="shop-modal-title fs-30 fw-600 lh-26">Fabric Vendor</h3>
                                                 </div>
-                                            </Card.Body>
-                                        </Card>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
                                     </Col>
-                                    <Col lg="12">
-                                        {/* onClick={() => handleShowDesigns()} */}
-                                        <Card onClick={() => navigate('/user/designer-form?type=designer_seller')} className="cursor-pointer bg-white border-gold-hover border-solid-2">
-                                            <Card.Body>
-                                                <div className="user-box">
-                                                    <div>
-                                                        <img src={DesignIcon} alt="Designs" />
-                                                        <h3 className="fw-600">I am both a designer and a fabric vendor</h3>
-                                                    </div>
+                                    <Col lg="4" className="mb-90">
+                                    {/* onClick={() => handleShowDesigns()} */}
+                                    <Card onClick={() => navigate('/user/designer-form?type=designer_seller')} className="shop-modal-card cursor-pointer bg-white">
+                                        <Card.Body className="shop-modal-card-body">
+                                            <img src={DesignerVendorModalIcon} alt="Designs" className="shop-card-icon"/>
+                                            <div className="user-box shop-modal-card-content text-center justify-content-center">
+                                                <div className="text-start w-100">
+                                                    <p className="mb-0 fs-12">I am both a</p>
+                                                    <h3 className="shop-modal-title fs-30 fw-600 lh-26">Designer and <br /> Fabric Vendor</h3>
                                                 </div>
-                                            </Card.Body>
-                                        </Card>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
                                     </Col>
                                 </Row>
                             </Col>
@@ -2134,7 +2141,6 @@ const Profile = () => {
                     </Container>
                 </Modal.Body>
             </Modal>
-
             <Modal
                 show={captureBothPhotoModalShow}
                 size='lg'

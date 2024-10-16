@@ -337,35 +337,40 @@ const ViewProduct = () => {
         setAddToCartLoading(true);
         const itemIndex = tempCart.findIndex(item => item.id === e.id); // Assuming each item has a unique 'id'
 
-        let updatedCart;
+        if (parseInt(e.quantity) > 0){
+            let updatedCart;
+        
+            if (itemIndex !== -1) {
+                // Item exists, update the quantity
+                updatedCart = tempCart.map((item, index) => {
+                    if (index === itemIndex) {
+                        return {
+                            ...item,
+                            quantity: parseInt(item.quantity) + parseInt(e.quantity) // Update the quantity
+                        };
+                    }
+                    return item;
+                });
+            } else {
+                // Item does not exist, add it to the cart
+                updatedCart = [...tempCart, e];
+            }
 
-        if (itemIndex !== -1) {
-            // Item exists, update the quantity
-            updatedCart = tempCart.map((item, index) => {
-                if (index === itemIndex) {
-                    return {
-                        ...item,
-                        quantity: parseInt(item.quantity) + parseInt(e.quantity) // Update the quantity
-                    };
-                }
-                return item;
-            });
-        } else {
-            // Item does not exist, add it to the cart
-            updatedCart = [...tempCart, e];
+            setTempCart(updatedCart);
+            setCookie('tempCart', JSON.stringify(updatedCart), { path: '/' });
+
+            const currentCartCount = cookies.cartItemCount ?? 0;
+            const latestCartItemCount = parseInt(currentCartCount) +  parseInt(e.quantity);
+            setCookie('cartItemCount', latestCartItemCount, { path: '/' });
+
+            setTimeout(function () {
+                toast.success("Fabric added to cart successfully!");
+                setAddToCartLoading(false);
+            }, 500);
+        }else{
+            toast.error('Measurement should be greater than 0');
+            setAddToCartLoading(false)
         }
-
-        setTempCart(updatedCart);
-        setCookie('tempCart', JSON.stringify(updatedCart), { path: '/' });
-
-        const currentCartCount = cookies.cartItemCount ?? 0;
-        const latestCartItemCount = parseInt(currentCartCount) +  parseInt(e.quantity);
-        setCookie('cartItemCount', latestCartItemCount, { path: '/' });
-
-        setTimeout(function () {
-            toast.success("Fabric added to cart successfully!");
-            setAddToCartLoading(false);
-        }, 500);
     }
 
     const buyTempCart = (e) => {

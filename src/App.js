@@ -15,6 +15,7 @@ const LogIn = lazy(() => import("./Pages/LogIn"));
 const TwoFactorAuthentication = lazy(() => import("./Pages/TwoFactorAuthentication"));
 const ForgotPassword = lazy(() => import("./Pages/ForgotPassword"));
 const SignUp = lazy(() => import("./Pages/SignUp"));
+const SignUpPreferences = lazy(() => import("./Pages/SignUpPreference"))
 const EmailConfirmation = lazy(() => import("./Pages/EmailConfirmation"));
 const EmailConfirmed = lazy(() => import("./Pages/EmailConfirmed"));
 const Questionnaire = lazy(() => import("./Pages/Questionnaire"));
@@ -207,6 +208,7 @@ const App = () => {
           <Route path="/login" exact element={<LogIn />} />
           <Route path="/forgot-password" exact element={<ForgotPassword />} />
           <Route path="/sign-up" exact element={<SignUp />} />
+          <Route path="/sign-up/preferences" exact element={<SignUpPreferences/>}/>
           <Route path="/two-factor-authentication" exact element={<TwoFactorAuthentication />} />
           <Route
             path="/email-confirmation"

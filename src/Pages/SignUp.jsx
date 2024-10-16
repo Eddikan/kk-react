@@ -134,7 +134,7 @@ const SignUp = () => {
             if (signupOption && signupOption != "") {
               navigate("/" + signupOption);
             } else {
-              navigate("/user/profile");
+              navigate("/sign-up/preferences");
             }
           }
         }
