@@ -140,12 +140,14 @@ const StripeMobile = () => {
                     } else {
                         toast.error('There has been an error adding the order, please try again!');
                     }
-                }).catch(() => {
+                }).catch((error) => {
                     toast.error('There has been an error adding the order, please try again!');
+                    window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(error));
                 });
             }
         } catch (err) {
             setErrorMessage('Payment failed. Please try again.');
+            window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify(err));
         }
 
         setIsSubmitting(false);
