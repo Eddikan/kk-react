@@ -13,39 +13,56 @@ const CurrencyConverter = (props) => {
     const currency = props.currency;
     const price = props.price;
 
-    function formatPrice(price) {
-        // Convert the price to a string
-        let priceStr = price.toString();
+    // function formatPrice(price) {
+    //     // Convert the price to a string
+    //     let priceStr = price.toString();
     
-        // Check if the price contains a comma or dot
-        const decimalSeparator = priceStr.includes(',') ? ',' : '.';
+    //     // Check if the price contains a comma or dot
+    //     const decimalSeparator = priceStr.includes(',') ? ',' : '.';
     
-        // Split the price into whole and decimal parts
+    //     // Split the price into whole and decimal parts
+    //     let parts = priceStr.split(decimalSeparator);
+    
+    //     // If there are decimal parts, keep only the first two digits
+    //     if (parts.length > 1) {
+    //         parts[1] = parts[1].substring(0, 2); // Keep only the first two decimal digits
+    //     } else {
+    //         // If there are no decimal parts, add "00"
+    //         parts[1] = '00';
+    //     }
+    
+    //     // Format the whole number part with a thousand separator
+    //     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        
+    //     // Join the parts back together with the appropriate decimal separator
+    //     let finalPrice = parts.join(decimalSeparator);
+    
+    //     // Ensure that the final price always has two decimal places
+    //     if (!finalPrice.includes(decimalSeparator)) {
+    //         finalPrice += decimalSeparator + "00"; // If there are no decimals, add ".00"
+    //     } else if (parts[1].length === 1) {
+    //         finalPrice += "0"; // If there is only one decimal, add another zero
+    //     }
+    
+    //     return finalPrice;
+    // }
+
+    const formatPrice = (price) => {
+        // Ensure the price is rounded to two decimal places
+        let priceStr = parseFloat(price).toFixed(2);
+    
+        // Use a period as the decimal separator
+        const decimalSeparator = '.';
         let parts = priceStr.split(decimalSeparator);
     
-        // If there are decimal parts, keep only the first two digits
-        if (parts.length > 1) {
-            parts[1] = parts[1].substring(0, 2); // Keep only the first two decimal digits
-        } else {
-            // If there are no decimal parts, add "00"
-            parts[1] = '00';
-        }
-    
-        // Format the whole number part with a thousand separator
+        // Add thousands separator to the integer part
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        
-        // Join the parts back together with the appropriate decimal separator
+    
+        // Rejoin the integer and decimal parts
         let finalPrice = parts.join(decimalSeparator);
     
-        // Ensure that the final price always has two decimal places
-        if (!finalPrice.includes(decimalSeparator)) {
-            finalPrice += decimalSeparator + "00"; // If there are no decimals, add ".00"
-        } else if (parts[1].length === 1) {
-            finalPrice += "0"; // If there is only one decimal, add another zero
-        }
-    
         return finalPrice;
-    }
+    };
 
     useEffect(() => {
         if (currencyConversions) {
