@@ -97,6 +97,13 @@ const Cart = ({ props }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [user, setUser] = useState();
 
+    const [totalAmountConverted, setTotalAmountConverted] = useState(0);
+    const [subtotalAmountConverted, setSubtotalAmountConverted] = useState(0);
+    const [totalQuantity, setTotalQuantity] = useState(0);
+    const [countryName, setCountryName] = useState('');
+    const [geonameId, setGeonameId] = useState('');
+    const [provinces, setProvinces] = useState([]);
+
     const [showModal, setShowModal] = useState(0);
 
     const showSignup = (e) => {
@@ -176,6 +183,13 @@ const Cart = ({ props }) => {
 
     const postIntent = async (data) => await axios.post(process.env.REACT_APP_API_ENDPOINT + 'create-intent', data);
 
+    const handleChangeCountry = (e) => {
+        setCheckOutFormData({
+            ...checkOutFormData,
+            delivery_province: '',
+        });
+    }
+
     const handleChangePaymentInfo = (e) => {
         const { name, value } = e.target;
         if (name == "ship_to" && value == "Ship to my address") {
@@ -194,6 +208,7 @@ const Cart = ({ props }) => {
                     delivery_country: user.country,
                     [name]: value,
                 });
+                setCountryName(user.country);
             } else {
                 setCheckOutFormData({
                     ...checkOutFormData,
@@ -236,7 +251,7 @@ const Cart = ({ props }) => {
             )
         ];
 
-        postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount }).then(response => {
+        postCheckOut({ ...checkOutFormData, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, cookies: cookies }).then(response => {
             const success = response.data.status;
             const data = response.data.data;
             if (success == success) {
@@ -266,7 +281,7 @@ const Cart = ({ props }) => {
             )
         ];
 
-        postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Paid', payment_details: details }).then(response => {
+        postCheckOut({ ...checkOutFormData, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Paid', payment_details: details, cookies: cookies }).then(response => {
             const success = response.data.status;
             const data = response.data.data;
             if (success == success) {
@@ -287,7 +302,6 @@ const Cart = ({ props }) => {
     }
 
     const checkOutSubmitStripe = async event => {
-
         setFormStatus('loading');
         const uniqueSelectedCartItems = [
             ...new Set(
@@ -297,7 +311,7 @@ const Cart = ({ props }) => {
             )
         ];
 
-        postCheckOut({ ...checkOutFormData, user_id: currentUser, subtotal_amount: subtotalAmount, total_amount: totalAmount, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Processing' }).then(response => {
+        postCheckOut({ ...checkOutFormData, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Processing', cookies: cookies }).then(response => {
             const success = response.data.status;
             const data = response.data.data;
             if (success == success) {
@@ -337,6 +351,39 @@ const Cart = ({ props }) => {
     }, []);
 
     useEffect(() => {
+        // Fetch the geonameId for the country
+        if (countryName != "" && countryName) {
+            const fetchGeonameId = async () => {
+                const response = await fetch(
+                    `http://api.geonames.org/searchJSON?q=${countryName}&featureCode=PCLI&maxRows=1&username=vbdev`
+                );
+                const data = await response.json();
+                if (data.geonames.length > 0) {
+                    setGeonameId(data.geonames[0].geonameId);
+                }
+            };
+    
+            fetchGeonameId();
+        }
+        
+    }, [countryName]);
+
+    useEffect(() => {
+        // Fetch the provinces once the geonameId is available
+        if (geonameId) {
+            const fetchProvinces = async () => {
+                const response = await fetch(
+                    `http://api.geonames.org/childrenJSON?geonameId=${geonameId}&username=vbdev`
+                );
+                const data = await response.json();
+                setProvinces(data.geonames);
+            };
+
+            fetchProvinces();
+        }
+    }, [geonameId]);
+
+    useEffect(() => {
         setCheckOutFormData({
             ...checkOutFormData,
             currency: currency,
@@ -347,9 +394,43 @@ const Cart = ({ props }) => {
     useEffect(() => {
         if (currentUser) {
             let cart_total = 0;
+            let cart_total_converted = 0;
+            let cart_total_quantity = 0;
             if (cartItems.length > 0 && selectedCartItems.length > 0) {
-                console.log(cartItems);
-                cart_total = cartItems.reduce((acc, item) => {
+
+                // Should the cart total be a converted price of all?
+                // cart_total = cartItems.reduce((ctc, item) => {
+                //     if (selectedCartItems.includes(item.product.id)) {
+                //         const fabricPrice = item.product.price ?? '0';
+                //         const fabricCurrency = item.product.currency ?? 'USD';
+
+                //         const convertedPrice = CurrencyConverter(fabricPrice, 'USD', cookies);
+                //         const subtotal = convertedPrice.price_raw * item.quantity;
+
+                //         return ctc + subtotal;
+                //     }
+                //     return ctc;
+                // }, 0);
+
+                cart_total_quantity = cartItems.reduce((ctq, item) => {
+                    if (selectedCartItems.includes(item.product.id)) {
+                        const quantity = item.quantity;
+
+                        return ctq + quantity;
+                    }
+                    return ctq;
+                }, 0);
+
+                cart_total = cartItems.reduce((ct, item) => {
+                    if (selectedCartItems.includes(item.product.id)) {
+                        const subtotal = item.product.price * item.quantity;
+
+                        return ct + subtotal;
+                    }
+                    return ct;
+                }, 0);
+
+                cart_total_converted = cartItems.reduce((ctc, item) => {
                     if (selectedCartItems.includes(item.product.id)) {
                         const fabricPrice = item.product.price ?? '0';
                         const fabricCurrency = item.product.currency ?? 'USD';
@@ -357,19 +438,24 @@ const Cart = ({ props }) => {
                         const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
                         const subtotal = convertedPrice.price_raw * item.quantity;
 
-                        return acc + subtotal;
+                        return ctc + subtotal;
                     }
-                    return acc;
+                    return ctc;
                 }, 0);
-
             }
             if (cart_total > 0) {
+                setTotalQuantity(cart_total_quantity);
                 setTotalAmount(cart_total);
+                setTotalAmountConverted(cart_total_converted);
                 setSubtotalAmount(cart_total);
-                setTotalAmountDisplay(formatPrice(cart_total))
+                setSubtotalAmountConverted(cart_total_converted);
+                setTotalAmountDisplay(formatPrice(cart_total_converted))
             } else {
+                setTotalQuantity(0);
                 setTotalAmount(0.00);
+                setTotalAmountConverted(0.00);
                 setSubtotalAmount(0.00);
+                setSubtotalAmountConverted(0.00);
                 setTotalAmountDisplay("0.00")
             }
         }
@@ -413,31 +499,56 @@ const Cart = ({ props }) => {
     useEffect(() => {
         if (!currentUser && tempCartItems) {
             let cart_total = 0;
+            let cart_total_converted = 0;
+            let cart_total_quantity = 0;
+
             if (tempCartItems.length > 0 && tempCartItems.length > 0) {
-                cart_total = tempCartItems.reduce((acc, item) => {
-                    if (selectedCartItems.includes(item.id)) {
-                        const fabricPrice = item?.price ?? '0';
-                        const fabricCurrency = item?.currency ?? 'USD';
+                cart_total_quantity = cartItems.reduce((ctq, item) => {
+                    if (selectedCartItems.includes(item.product.id)) {
+                        const quantity = item.quantity;
+
+                        return ctq + quantity;
+                    }
+                    return ctq;
+                }, 0);
+
+                cart_total = cartItems.reduce((ct, item) => {
+                    if (selectedCartItems.includes(item.product.id)) {
+                        const subtotal = item.product.price * item.quantity;
+
+                        return ct + subtotal;
+                    }
+                    return ct;
+                }, 0);
+
+                cart_total_converted = cartItems.reduce((ctc, item) => {
+                    if (selectedCartItems.includes(item.product.id)) {
+                        const fabricPrice = item.product.price ?? '0';
+                        const fabricCurrency = item.product.currency ?? 'USD';
 
                         const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
                         const subtotal = convertedPrice.price_raw * item.quantity;
-                        return acc + subtotal;
+
+                        return ctc + subtotal;
                     }
-                    return acc;
+                    return ctc;
                 }, 0);
 
             }
             if (cart_total > 0) {
-                setTempCartTotal(formatPrice(cart_total));
+                setTotalQuantity(cart_total_quantity);
                 setTotalAmount(cart_total);
+                setTotalAmountConverted(cart_total_converted);
                 setSubtotalAmount(cart_total);
-                setTotalAmountDisplay(formatPrice(cart_total))
-
+                setSubtotalAmountConverted(cart_total_converted);
+                setTotalAmountDisplay(formatPrice(cart_total_converted))
             } else {
-                setTempCartTotal(0.00);
+                setTotalQuantity(0);
                 setTotalAmount(0.00);
+                setTotalAmountConverted(0.00);
                 setSubtotalAmount(0.00);
-                setTotalAmountDisplay(cart_total)
+                setSubtotalAmountConverted(0.00);
+                setTotalAmountDisplay("0.00")
             }
         }
 
@@ -770,22 +881,35 @@ const Cart = ({ props }) => {
                                                                 <FormGroup className="mb-3">
                                                                     <Row>
                                                                         <Col lg="6">
-                                                                            <Form.Label htmlFor="city" className='mb-2'>
-                                                                                City <span className="text-danger">*</span>
+                                                                            <Form.Label htmlFor="province" className='mb-2'>
+                                                                                Country <span className="text-danger">*</span>
                                                                             </Form.Label>
-                                                                            <FormControl
-                                                                                type="text"
-                                                                                name="delivery_city"
-                                                                                value={checkOutFormData.delivery_city}
-                                                                                onChange={handleChangePaymentInfo}
-                                                                                id="city"
-                                                                                required
-                                                                            />
+                                                                            <Form.Control as='select' name='delivery_country' value={checkOutFormData.delivery_country} className='' 
+                                                                                onChange={function(e) { 
+                                                                                    //handleChangeCountry(); 
+                                                                                    //setCountryName(e.target.value); 
+                                                                                    handleChangePaymentInfo(e); 
+                                                                                }} required>
+                                                                                <option value=''>Select Country</option>
+                                                                                {Countries.map((country, index) => (
+                                                                                    <option key={country + "-" + index} value={country}>
+                                                                                        {country}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </Form.Control>
                                                                         </Col>
                                                                         <Col lg="6">
                                                                             <Form.Label htmlFor="province" className='mb-2'>
                                                                                 Province/State <span className="text-danger">*</span>
                                                                             </Form.Label>
+                                                                            {/* <Form.Control as='select' name='delivery_province' value={checkOutFormData.delivery_province} className='' onChange={function(e) { handleChangePaymentInfo(e); }} required>
+                                                                                <option value=''>Select Province/State</option>
+                                                                                {provinces.map(province => (
+                                                                                    <option key={province.geonameId} value={province.name}>
+                                                                                        {province.name}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </Form.Control> */}
                                                                             <FormControl
                                                                                 type="text"
                                                                                 name="delivery_province"
@@ -800,6 +924,19 @@ const Cart = ({ props }) => {
                                                                 <FormGroup className="mb-3">
                                                                     <Row>
                                                                         <Col lg="6">
+                                                                            <Form.Label htmlFor="city" className='mb-2'>
+                                                                                City <span className="text-danger">*</span>
+                                                                            </Form.Label>
+                                                                            <FormControl
+                                                                                type="text"
+                                                                                name="delivery_city"
+                                                                                value={checkOutFormData.delivery_city}
+                                                                                onChange={handleChangePaymentInfo}
+                                                                                id="city"
+                                                                                required
+                                                                            />
+                                                                        </Col>
+                                                                        <Col lg="6">
                                                                             <Form.Label htmlFor="postal_code" className='mb-2'>
                                                                                 ZIP/Postal Code <span className="text-danger">*</span>
                                                                             </Form.Label>
@@ -811,19 +948,6 @@ const Cart = ({ props }) => {
                                                                                 id="postal_code"
                                                                                 required
                                                                             />
-                                                                        </Col>
-                                                                        <Col lg="6">
-                                                                            <Form.Label htmlFor="province" className='mb-2'>
-                                                                                Country <span className="text-danger">*</span>
-                                                                            </Form.Label>
-                                                                            <Form.Control as='select' name='delivery_country' value={checkOutFormData.delivery_country} className='' onChange={handleChangePaymentInfo} required>
-                                                                                <option value=''>Select Country</option>
-                                                                                {Countries.map((country, index) => (
-                                                                                    <option key={country + "-" + index} value={country}>
-                                                                                        {country}
-                                                                                    </option>
-                                                                                ))}
-                                                                            </Form.Control>
                                                                         </Col>
                                                                     </Row>
                                                                 </FormGroup>

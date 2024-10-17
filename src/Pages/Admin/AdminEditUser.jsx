@@ -382,7 +382,7 @@ const EditUser = () => {
 
                                                         <Col lg="6">
                                                             <Form.Group className='mb-4'>
-                                                                <Form.Label>State/Region</Form.Label>
+                                                                <Form.Label>State/Province</Form.Label>
                                                                 <FormControl type='text' name='province' value={userFormData.province} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                                             </Form.Group>
                                                         </Col>

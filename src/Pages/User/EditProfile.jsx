@@ -17,7 +17,7 @@ import LoadingPage from 'Components/Shared/LoadingPage';
 import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
 import Countries from 'Utils/Countries';
-import CountryData from 'Utils/CountryData-backup';
+import CountryData from 'Utils/CountryData';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
@@ -1064,7 +1064,7 @@ const EditProfile = () => {
                                                         </Col>
                                                         <Col lg="6">
                                                             <Form.Group className='mb-4'>
-                                                                <Form.Label>State/Region</Form.Label>
+                                                                <Form.Label>State/Province</Form.Label>
                                                                 <FormControl type='text' name='province' value={profileFormData.province} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                                             </Form.Group>
                                                         </Col>

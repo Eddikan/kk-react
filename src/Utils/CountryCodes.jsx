@@ -17,7 +17,6 @@ const CountryCodes = {
     BH: 'Bahrain',
     BD: 'Bangladesh',
     BB: 'Barbados',
-    // BY: 'Belarus',
     BE: 'Belgium',
     BZ: 'Belize',
     BJ: 'Benin',
