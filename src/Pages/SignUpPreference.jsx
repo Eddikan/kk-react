@@ -53,7 +53,7 @@ const SignUpPreference = () => {
                                     <Card className="pref-card cursor-pointer bg-white border-solid-2" onClick={toggleSetupShopShow}>
                                         <Card.Body className="rounded d-flex align-items-center justify-content-center">
                                             <div className="pref-box text-center align-items-center">
-                                                <h3 className="lh-35">Create a Shop</h3>
+                                                <h3 className="lh-38">Create a Shop</h3>
                                             </div>
                                         </Card.Body>
                                     </Card>
@@ -62,7 +62,7 @@ const SignUpPreference = () => {
                                     <Card className="pref-card cursor-pointer bg-white border-solid-2" onClick={handleShowUser}>
                                         <Card.Body className="rounded d-flex align-items-center justify-content-center">
                                             <div className="pref-box text-center align-items-center">
-                                                <h3 className="lh-35">Explore the Marketplace</h3>
+                                                <h3 className="lh-38">Explore the Marketplace</h3>
                                             </div>
                                         </Card.Body>
                                     </Card>
@@ -148,7 +148,7 @@ const SignUpPreference = () => {
                                         <div className="user-box shop-modal-card-content text-center justify-content-center">
                                             <div className="text-start w-100">
                                                 <p className="mb-0 fs-12">I am a</p>
-                                                <h3 className="shop-modal-title fs-30 fw-600 lh-30">Designer</h3>
+                                                <h3 className="shop-modal-title fs-30 fw-600 lh-32">Designer</h3>
                                             </div>
                                         </div>
                                     </Card.Body>
@@ -162,7 +162,7 @@ const SignUpPreference = () => {
                                         <div className="user-box shop-modal-card-content text-center justify-content-center">
                                             <div className="text-start w-100">
                                                 <p className="mb-0 fs-12">I am a</p>
-                                                <h3 className="shop-modal-title fs-30 fw-600 lh-30">Fabric Vendor</h3>
+                                                <h3 className="shop-modal-title fs-30 fw-600 lh-32">Fabric Vendor</h3>
                                             </div>
                                         </div>
                                     </Card.Body>
@@ -176,7 +176,7 @@ const SignUpPreference = () => {
                                         <div className="user-box shop-modal-card-content text-center justify-content-center">
                                             <div className="text-start w-100">
                                                 <p className="mb-0 fs-12">I am both a</p>
-                                                <h3 className="shop-modal-title fs-30 fw-600 lh-30">Designer and <br /> Fabric Vendor</h3>
+                                                <h3 className="shop-modal-title fs-30 fw-600 lh-32">Designer and <br /> Fabric Vendor</h3>
                                             </div>
                                         </div>
                                     </Card.Body>
