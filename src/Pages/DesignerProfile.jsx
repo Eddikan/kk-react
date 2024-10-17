@@ -101,6 +101,13 @@ const DesignerProfile = () => {
     }
     let query = useQuery();
     const user_id = query.get('user_id');
+    const tab = query.get('tab');
+
+    useEffect(() => {
+        if (tab) {
+            showTab(tab);
+        }
+    }, [tab]);
 
     // User Image
     const [userImage, setUserImage] = useState();
