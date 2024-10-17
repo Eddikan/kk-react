@@ -62,6 +62,13 @@ const initialCheckOut = {
     shipping_option: '',
 };
 
+const initialShippingDetails = {
+    recipient: '',
+    shipments: '',
+    shipping_details: '',
+    shipping_rate_data: '',
+};
+
 const Cart = ({ props }) => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -112,9 +119,13 @@ const Cart = ({ props }) => {
     const [geonameId, setGeonameId] = useState('');
     const [provinces, setProvinces] = useState([]);
     const [internationalShippingRate, setInternationalShippingRate] = useState([]);
+    const [internationalShippingRateData, setInternationShippingRateData] = useState([]);
     const [totalShippingAmount, setTotalShippingAmount] = useState(0.00);
     const [totalShippingAmountConverted, setTotalShippingAmountConverted] = useState(0.00);
     const [shippingLoading, setShippingLoading] = useState(false);
+    const [shipments, setShipments] = useState([]);
+    const [recipient, setRecipient] = useState([]);
+    const [shippingDetails, setShippingDetails] = useState(initialShippingDetails);
 
     const [showModal, setShowModal] = useState(0);
 
@@ -213,6 +224,10 @@ const Cart = ({ props }) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'ups/v2/get/rating/international', data);
     }
 
+    const createInternationalShipment = async (data) => {
+        return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'ups/v2/create/shipment/international', data);
+    }
+
     const postCheckOut = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order', data);
     };
@@ -299,18 +314,34 @@ const Cart = ({ props }) => {
             )
         ];
 
-        postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, cookies: cookies }).then(response => {
-            const success = response.data.status;
-            const data = response.data.data;
-            if (success == success) {
-                toast.success('Order added successfully!');
-                console.log("data", data);
-                setTimeout(() => {
-                    setReloadCount(prevReloadCount => prevReloadCount + 1);
-                    removeCookie('setSelectedCartItems', { path: '/' });
-                    removeCookie('cookieCheckoutDesigner', { path: '/' });
-                    navigate(`/thank-you?order_id=${data.order.id}`);
-                }, 1000);
+        const shipping_data = {
+            recipient: recipient,
+            shipments: shipments
+        }
+
+        createInternationalShipment(shipping_data).then(response => {
+            const status = response.data.status;
+            const data = response.data;
+            if (status == "Success") {
+
+                postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: {...shippingDetails, shipping_data: data}, cookies: cookies }).then(response => {
+                    const status = response.data.status;
+                    const data = response.data.data;
+                    if (status == "Success") {
+                        toast.success('Order added successfully!');
+                        console.log("data", data);
+                        setTimeout(() => {
+                            setReloadCount(prevReloadCount => prevReloadCount + 1);
+                            removeCookie('setSelectedCartItems', { path: '/' });
+                            removeCookie('cookieCheckoutDesigner', { path: '/' });
+                            navigate(`/thank-you?order_id=${data.order.id}`);
+                        }, 1000);
+                    } else {
+                        toast.error('There has been an error adding the order, please try again!');
+                    }
+                }).catch(() => {
+                    toast.error('There has been an error adding the order, please try again!');
+                });
             } else {
                 toast.error('There has been an error adding the order, please try again!');
             }
@@ -329,10 +360,10 @@ const Cart = ({ props }) => {
             )
         ];
 
-        postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Paid', payment_details: details, cookies: cookies }).then(response => {
-            const success = response.data.status;
+        postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Paid', payment_details: details, shipping_details: shippingDetails, cookies: cookies }).then(response => {
+            const status = response.data.status;
             const data = response.data.data;
-            if (success == success) {
+            if (status == "Success") {
                 toast.success('Order added successfully!');
                 console.log("data", data);
                 setTimeout(() => {
@@ -359,10 +390,10 @@ const Cart = ({ props }) => {
             )
         ];
 
-        postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Processing', cookies: cookies }).then(response => {
-            const success = response.data.status;
+        postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, payment_status: 'Processing', shipping_details: shippingDetails, cookies: cookies }).then(response => {
+            const status = response.data.status;
             const data = response.data.data;
-            if (success == success) {
+            if (status == "Success") {
                 // toast.success('Order added successfully!');
                 // console.log("data", data);
                 setTimeout(() => {
@@ -400,13 +431,13 @@ const Cart = ({ props }) => {
 
     useEffect(() => {
         // Fetch the geonameId for the country
-
         if (countryName != "" && checkOutFormData.shipping_option == "UPS") {
             setShippingLoading(true);
             setCountryCode(getCountryCode(countryName));
             setInternationalShippingRate([]);
             var country_code = getCountryCode(countryName);
-            const recipient = {
+
+            const _recipient = {
                 name: checkOutFormData.delivery_first_name + " " + checkOutFormData.delivery_last_name,
                 phone: checkOutFormData.delivery_phone,
                 address_line: checkOutFormData.delivery_address_line_1,
@@ -417,71 +448,185 @@ const Cart = ({ props }) => {
                 residential: "true"
             };
 
-            const shipments = [
-                {
-                    "seller": {
-                        "id": "1",
-                        "name": "John Doe",
-                        "phone": "0000000000",
-                        "address_line": "123 Shipper Street",
-                        "city": "Cypress",
-                        "state_code": "TX",
-                        "postal_code": "77429",
-                        "country_code": "US"
-                    },
-                    "package": {
-                        "weight": "12",
-                        "description": "",
-                        "dimensions": {
-                            "length": "5",
-                            "width": "5",
-                            "unit_of_measurement": "IN"
+            setRecipient(_recipient);
+
+            if (currentUser && cartItems) {
+                const _shipments = cartItems.reduce((itemsArray, item) => {
+                    if (selectedCartItems.includes(item.product.id)) {
+                        var length = item.product.length > 0 ? item.product.length : 1;
+                        var width = item.product.width > 0 ? item.product.width : 1;
+                        var weight = item.product.weight ?? 1;
+                        const shipment_item = {
+                            seller: {
+                                id: item.seller.id,
+                                name: item.seller.first_name+" "+item.seller.last_name,
+                                phone: item.seller.phone_number,
+                                address_line: item.seller.address_line_1,
+                                city: item.seller.city,
+                                state_code: item.seller.province_code ?? '01',
+                                postal_code: item.seller.postal_code,
+                                country_code: item.seller.country_code ?? 'PH'
+                            },
+                            package: {
+                                weight: String(weight),
+                                description: item.product.description,
+                                dimensions: {
+                                    length: String(length),
+                                    width: String(width),
+                                    unit_of_measurement: "CM"
+                                }
+                            }
+
                         }
+                        itemsArray.push(shipment_item);
                     }
-                },
-                {
-                    "seller": {
-                        "id": "2",
-                        "name": "Alice Johnson",
-                        "phone": "1111111111",
-                        "address_line": "789 Shipper Avenue",
-                        "city": "Houston",
-                        "state_code": "TX",
-                        "postal_code": "77001",
-                        "country_code": "US"
-                    },
-                    "package": {
-                        "weight": "15",
-                        "description": "",
-                        "dimensions": {
-                            "length": "7",
-                            "width": "7",
-                            "unit_of_measurement": "IN"
-                        }
+                    return itemsArray;
+                }, []);
+
+
+                const data = {
+                    recipient: _recipient,
+                    shipments: _shipments,
+                };
+
+                setShipments(_shipments);
+                setRecipient(_recipient);
+    
+                getInternationalRates(data).then(response => {
+                    const success = response.data.status;
+                    const data = response.data.data;
+                    const international_shipping_rate = response.data.data
+                    const international_shipping_rate_data = response.data
+                    if (success == success) {
+                        setInternationalShippingRate(international_shipping_rate);
+                        setInternationShippingRateData(international_shipping_rate_data);
+                        setShippingDetails({
+                            ...shippingDetails,
+                            shipments: _shipments,
+                            recipient: _recipient,
+                            shipping_rate_data: international_shipping_rate_data
+                        });
+
+                        setShippingLoading(false);
+                    } else {
+                        toast.error('There has been an error getting the shipping rates, please try again!');
+                        setShippingLoading(false);
                     }
-                }
-            ];
-
-
-            const data = {
-                recipient: recipient,
-                shipments: shipments,
-            };
-
-            getInternationalRates(data).then(response => {
-                const success = response.data.status;
-                const data = response.data.data;
-                if (success == success) {
-                    setInternationalShippingRate(data);
-                    setShippingLoading(false);
-                } else {
+                }).catch(() => {
                     toast.error('There has been an error getting the shipping rates, please try again!');
                     setShippingLoading(false);
-                }
-            }).catch(() => {
-                toast.error('There has been an error getting the shipping rates, please try again!');
-                setShippingLoading(false);
-            });
+                });
+            } else if (!currentUser && tempCartItems) {
+                const _shipments = tempCartItems.reduce((itemsArray, item) => {
+                    if (selectedCartItems.includes(item.id)) {
+                        var length = item.length > 0 ? item.length : 1;
+                        var width = item.width > 0 ? item.width : 1;
+                        var weight = item.weight ?? 1;
+                        const shipment_item = {
+                            seller: {
+                                id: item.user_id,
+                                name: item.user_first_name+" "+item.user_last_name,
+                                phone: item.user_phone_number,
+                                address_line: item.user_address_line_1,
+                                city: item.user_city,
+                                state_code: item.user_province_code ?? '01',
+                                postal_code: item.user_postal_code,
+                                country_code: item.user_country_code ?? 'PH'
+                            },
+                            package: {
+                                weight: String(weight),
+                                description: item.description,
+                                dimensions: {
+                                    length: String(length),
+                                    width: String(width),
+                                    unit_of_measurement: "CM"
+                                }
+                            }
+
+                        }
+                        itemsArray.push(shipment_item);
+                    }
+                    return itemsArray;
+                }, []);
+
+
+                const data = {
+                    recipient: _recipient,
+                    shipments: _shipments,
+                };
+
+                setShipments(_shipments);
+                setRecipient(_recipient);
+    
+                getInternationalRates(data).then(response => {
+                    const success = response.data.status;
+                    const data = response.data.data;
+                    const international_shipping_rate = response.data.data
+                    const international_shipping_rate_data = response.data
+                    if (success == success) {
+                        setInternationalShippingRate(international_shipping_rate);
+                        setInternationShippingRateData(international_shipping_rate_data);
+                        setShippingDetails({
+                            ...shippingDetails,
+                            shipments: _shipments,
+                            recipient: _recipient,
+                            shipping_rate_data: international_shipping_rate_data
+                        });
+                        setShippingLoading(false);
+                    } else {
+                        toast.error('There has been an error getting the shipping rates, please try again!');
+                        setShippingLoading(false);
+                    }
+                }).catch(() => {
+                    toast.error('There has been an error getting the shipping rates, please try again!');
+                    setShippingLoading(false);
+                });
+            }
+
+            // const _shipments = [
+            //     {
+            //         "seller": {
+            //             "id": "1",
+            //             "name": "John Doe",
+            //             "phone": "0000000000",
+            //             "address_line": "123 Shipper Street",
+            //             "city": "Cypress",
+            //             "state_code": "TX",
+            //             "postal_code": "77429",
+            //             "country_code": "US"
+            //         },
+            //         "package": {
+            //             "weight": "12",
+            //             "description": "",
+            //             "dimensions": {
+            //                 "length": "5",
+            //                 "width": "5",
+            //                 "unit_of_measurement": "IN"
+            //             }
+            //         }
+            //     },
+            //     {
+            //         "seller": {
+            //             "id": "2",
+            //             "name": "Alice Johnson",
+            //             "phone": "1111111111",
+            //             "address_line": "789 Shipper Avenue",
+            //             "city": "Houston",
+            //             "state_code": "TX",
+            //             "postal_code": "77001",
+            //             "country_code": "US"
+            //         },
+            //         "package": {
+            //             "weight": "15",
+            //             "description": "",
+            //             "dimensions": {
+            //                 "length": "7",
+            //                 "width": "7",
+            //                 "unit_of_measurement": "IN"
+            //             }
+            //         }
+            //     }
+            // ];
 
         }
 
@@ -532,6 +677,7 @@ const Cart = ({ props }) => {
             let cart_total_quantity = 0;
             let total_shipping_amount = 0;
             let total_shipping_amount_converted = 0;
+            
             if (cartItems.length > 0 && selectedCartItems.length > 0) {
 
                 // Should the cart total be a converted price of all?
@@ -579,8 +725,8 @@ const Cart = ({ props }) => {
                                 var shippingRate = internationalShippingRate[index];
 
                                 if (shippingRate) {
-                                    total_shipping_price = shippingRate.RateResponse.RatedShipment.TotalCharges.MonetaryValue ?? 0;;
-                                    shipping_currency = shippingRate.RateResponse.RatedShipment.TotalCharges.CurrencyCode ?? 'USD';
+                                    total_shipping_price = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
+                                    shipping_currency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
 
                                 }
                             }
@@ -602,8 +748,8 @@ const Cart = ({ props }) => {
                                 var shippingRate = internationalShippingRate[index];
 
                                 if (shippingRate) {
-                                    total_shipping_price = shippingRate.RateResponse.RatedShipment.TotalCharges.MonetaryValue ?? 0;;
-                                    shipping_currency = shippingRate.RateResponse.RatedShipment.TotalCharges.CurrencyCode ?? 'USD';
+                                    total_shipping_price = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
+                                    shipping_currency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
 
                                     total_shipping_price_converted = CurrencyConverter(total_shipping_price, shipping_currency, cookies);
                                 }
@@ -693,10 +839,27 @@ const Cart = ({ props }) => {
             let cart_total = 0;
             let cart_total_converted = 0;
             let cart_total_quantity = 0;
+            let total_shipping_amount = 0;
+            let total_shipping_amount_converted = 0;
 
             if (tempCartItems.length > 0 && tempCartItems.length > 0) {
-                cart_total_quantity = cartItems.reduce((ctq, item) => {
-                    if (selectedCartItems.includes(item.product.id)) {
+
+                // Should the cart total be a converted price of all?
+                // cart_total = cartItems.reduce((ctc, item) => {
+                //     if (selectedCartItems.includes(item.product.id)) {
+                //         const fabricPrice = item.product.price ?? '0';
+                //         const fabricCurrency = item.product.currency ?? 'USD';
+
+                //         const convertedPrice = CurrencyConverter(fabricPrice, 'USD', cookies);
+                //         const subtotal = convertedPrice.price_raw * item.quantity;
+
+                //         return ctc + subtotal;
+                //     }
+                //     return ctc;
+                // }, 0);
+
+                cart_total_quantity = tempCartItems.reduce((ctq, item) => {
+                    if (item && selectedCartItems.includes(item.id)) {
                         const quantity = item.quantity;
 
                         return ctq + quantity;
@@ -704,19 +867,70 @@ const Cart = ({ props }) => {
                     return ctq;
                 }, 0);
 
-                cart_total = cartItems.reduce((ct, item) => {
-                    if (selectedCartItems.includes(item.product.id)) {
-                        const subtotal = item.product.price * item.quantity;
-
+                cart_total = tempCartItems.reduce((ct, item) => {
+                    if (item && selectedCartItems.includes(item.id)) {
+                        const subtotal = item.price * item.quantity;
                         return ct + subtotal;
                     }
                     return ct;
                 }, 0);
 
-                cart_total_converted = cartItems.reduce((ctc, item) => {
-                    if (selectedCartItems.includes(item.product.id)) {
-                        const fabricPrice = item.product.price ?? '0';
-                        const fabricCurrency = item.product.currency ?? 'USD';
+                if (internationalShippingRate && checkOutFormData.shipping_option == "UPS") {
+                    total_shipping_amount = tempCartItems.reduce((tsa, item, index) => {
+                        if (item && selectedCartItems.includes(item.id)) {
+                            let shippingPriceConverted = 0.00;
+                            let total_shipping_price = 0.00;
+                            let total_shipping_price_converted = 0.00;
+
+                            let shipping_currency = 'USD';
+
+                            if (internationalShippingRate && internationalShippingRate.length > 0) {
+                                var shippingRate = internationalShippingRate[index];
+
+                                if (shippingRate) {
+                                    total_shipping_price = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
+                                    shipping_currency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
+
+                                }
+                            }
+
+                            return parseFloat(tsa) + parseFloat(total_shipping_price);
+                        }
+
+                    }, 0);
+
+                    total_shipping_amount_converted = tempCartItems.reduce((tsa, item, index) => {
+                        if (item && selectedCartItems.includes(item.id)) {
+                            let shippingPriceConverted = 0.00;
+                            let total_shipping_price = 0.00;
+                            let total_shipping_price_converted = 0.00;
+
+                            let shipping_currency = 'USD';
+
+                            if (internationalShippingRate && internationalShippingRate.length > 0) {
+                                var shippingRate = internationalShippingRate[index];
+
+                                if (shippingRate) {
+                                    total_shipping_price = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
+                                    shipping_currency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
+
+                                    total_shipping_price_converted = CurrencyConverter(total_shipping_price, shipping_currency, cookies);
+                                }
+                            }
+
+                            return parseFloat(tsa) + parseFloat(total_shipping_price_converted.price_raw ?? 0);
+                        }
+
+                    }, 0);
+                } else {
+                    total_shipping_amount = 0;
+                    total_shipping_amount_converted = 0;
+                }
+
+                cart_total_converted = tempCartItems.reduce((ctc, item) => {
+                    if (item && selectedCartItems.includes(item.id)) {
+                        const fabricPrice = item.price ?? '0';
+                        const fabricCurrency = item.currency ?? 'USD';
 
                         const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
                         const subtotal = convertedPrice.price_raw * item.quantity;
@@ -727,13 +941,16 @@ const Cart = ({ props }) => {
                 }, 0);
 
             }
+
             if (cart_total > 0) {
                 setTotalQuantity(cart_total_quantity);
-                setTotalAmount(cart_total);
-                setTotalAmountConverted(cart_total_converted);
+                setTotalAmount(parseFloat(parseFloat(cart_total) + parseFloat(total_shipping_amount)));
+                setTotalAmountConverted(parseFloat(parseFloat(cart_total_converted) + parseFloat(total_shipping_amount_converted)));
                 setSubtotalAmount(cart_total);
                 setSubtotalAmountConverted(cart_total_converted);
-                setTotalAmountDisplay(formatPrice(cart_total_converted))
+                setTotalAmountDisplay(formatPrice(parseFloat(parseFloat(cart_total_converted) + parseFloat(total_shipping_amount_converted))))
+                setTotalShippingAmount(parseFloat(total_shipping_amount));
+                setTotalShippingAmountConverted(parseFloat(total_shipping_amount_converted));
             } else {
                 setTotalQuantity(0);
                 setTotalAmount(0.00);
@@ -741,10 +958,12 @@ const Cart = ({ props }) => {
                 setSubtotalAmount(0.00);
                 setSubtotalAmountConverted(0.00);
                 setTotalAmountDisplay("0.00");
+                setTotalShippingAmount(0.00);
+                setTotalShippingAmountConverted(0.00);
             }
         }
 
-    }, [cookies, tempCartItems, selectedCartItems, reloadCount, item]);
+    }, [cookies, tempCartItems, selectedCartItems, reloadCount, item, internationalShippingRate, checkOutFormData]);
 
     return (
         <LayoutNoFooter>
@@ -820,9 +1039,9 @@ const Cart = ({ props }) => {
 
                                                                             const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
                                                                             const subtotal = convertedPrice.price_raw * cartItem.quantity;
-                                                                            let cart_item_total = 0;
                                                                             const formattedSubtotal = formatPrice(subtotal);
 
+                                                                            let cart_item_total = 0;
                                                                             let shippingPriceConverted = 0.00;
                                                                             let totalShippingPrice = 0.00;
                                                                             let totalShippingPriceConverted = 0.00;
@@ -834,9 +1053,9 @@ const Cart = ({ props }) => {
                                                                                 var shippingRate = internationalShippingRate[index];
 
                                                                                 if (shippingRate) {
-                                                                                    totalShippingPrice = shippingRate.RateResponse.RatedShipment.TotalCharges.MonetaryValue ?? 0;;
-                                                                                    shippingCurrency = shippingRate.RateResponse.RatedShipment.TotalCharges.CurrencyCode ?? 'USD';
-
+                                                                                    totalShippingPrice = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
+                                                                                    shippingCurrency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
+                                                                                    
                                                                                     totalShippingPriceConverted = CurrencyConverter(totalShippingPrice, shippingCurrency, cookies);
 
                                                                                     cart_item_total = parseFloat(subtotal) + parseFloat(totalShippingPriceConverted.price_raw);
@@ -853,7 +1072,7 @@ const Cart = ({ props }) => {
                                                                                             <Col lg={5}>
                                                                                                 <div className='d-flex'>
                                                                                                     <div className="designs-grid-div fabric-image"
-                                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", width: '100px', height: '100px' }}>
+                                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", width: '126px', height: '126px' }}>
                                                                                                     </div>
 
                                                                                                     <div className='ms-3'>
@@ -929,7 +1148,7 @@ const Cart = ({ props }) => {
                                                 <>
                                                     {tempCartItems.length > 0 && selectedCartItems.length > 0 ?
                                                         <>
-                                                            {tempCartItems.map((cartItem) => {
+                                                            {tempCartItems.map((cartItem, index) => {
 
                                                                 if (selectedCartItems.includes(cartItem.id)) {
                                                                     var cart_product = cartItem;
@@ -947,14 +1166,38 @@ const Cart = ({ props }) => {
                                                                     const subtotal = convertedPrice.price_raw * cartItem.quantity;
                                                                     const formattedSubtotal = formatPrice(subtotal);
 
+                                                                    let cart_item_total = 0;
+                                                                    let shippingPriceConverted = 0.00;
+                                                                    let totalShippingPrice = 0.00;
+                                                                    let totalShippingPriceConverted = 0.00;
+
+                                                                    let shippingCurrency = 'USD';
+
+
+                                                                    if (internationalShippingRate && internationalShippingRate.length > 0 && checkOutFormData.shipping_option == "UPS") {
+                                                                        var shippingRate = internationalShippingRate[index];
+
+                                                                        if (shippingRate) {
+                                                                            totalShippingPrice = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
+                                                                            shippingCurrency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
+
+                                                                            totalShippingPriceConverted = CurrencyConverter(totalShippingPrice, shippingCurrency, cookies);
+
+                                                                            cart_item_total = parseFloat(subtotal) + parseFloat(totalShippingPriceConverted.price_raw);
+                                                                        }
+
+                                                                    } else {
+                                                                        cart_item_total = parseFloat(subtotal);
+                                                                    }
+
                                                                     return (
                                                                         <Card className='mt-2'>
                                                                             <Card.Body>
                                                                                 <Row className="align-items-center">
-                                                                                    <Col lg={8}>
+                                                                                    <Col lg={5}>
                                                                                         <div className='d-flex'>
                                                                                             <div className="designs-grid-div fabric-image"
-                                                                                                style={{ backgroundImage: "url(" + fabricImage + ")", width: '100px', height: '100px' }}>
+                                                                                                style={{ backgroundImage: "url(" + fabricImage + ")", width: '126px', height: '126px' }}>
                                                                                             </div>
 
                                                                                             <div className='ms-3'>
@@ -967,8 +1210,19 @@ const Cart = ({ props }) => {
                                                                                             </div>
                                                                                         </div>
                                                                                     </Col>
+                                                                                    <Col lg={2} className="text-right">
+                                                                                        <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}{formattedSubtotal}</strong></h3>
+                                                                                    </Col>
+                                                                                    <Col lg={2} className="text-right">
+                                                                                        {checkOutFormData.shipping_option == "UPS" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
+                                                                                            <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}{totalShippingPriceConverted.price}</strong></h3>
+                                                                                            :
+                                                                                            <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}0.00</strong></h3>
+                                                                                        }
 
-                                                                                    <Col lg={4} className="text-right">
+                                                                                    </Col>
+
+                                                                                    <Col lg={3} className="text-right">
                                                                                         <h3 className="rufina-family"><strong>{convertedPrice.currency_code}{formattedSubtotal}</strong></h3>
                                                                                         {cartItem.quantity > 1 ?
                                                                                             <p className="small text-muted">{convertedPrice.currency_code}{convertedPrice.price} each</p>
@@ -1254,7 +1508,7 @@ const Cart = ({ props }) => {
                                         </Card>
                                         {checkOutFormData.ship_to && checkOutFormData.ship_to != "" && checkOutFormData.delivery_first_name && checkOutFormData.delivery_first_name != "" && checkOutFormData.delivery_email && checkOutFormData.delivery_email != "" && checkOutFormData.delivery_phone && checkOutFormData.delivery_phone != "" && checkOutFormData.delivery_address_line_1 && checkOutFormData.delivery_address_line_1 != "" && checkOutFormData.delivery_city && checkOutFormData.delivery_city != "" && checkOutFormData.delivery_province && checkOutFormData.delivery_province != "" && checkOutFormData.delivery_postal_code && checkOutFormData.delivery_postal_code != "" && checkOutFormData.delivery_country && checkOutFormData.delivery_country != "" && checkOutFormData.delivery_province_code && checkOutFormData.delivery_province_code != "" ?
                                             <>
-                                                <Card>
+                                                <Card className="mb-3">
                                                     <Card.Body>
                                                         <div className='fs-22 rufina-family fw-600'>Shipping Option</div>
                                                         <hr className='mt-2' />
