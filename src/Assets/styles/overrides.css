@@ -3485,3 +3485,6 @@ span.rti--tag {
     padding: 0 24px !important;
     border-radius: 5px !important;
 }
+.dotted-hr{
+    border-top: dashed 2px #eeeeee;
+}
