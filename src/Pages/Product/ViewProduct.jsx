@@ -557,7 +557,7 @@ const ViewProduct = () => {
 
 
                                             <span
-                                                className={`text-black cursor-pointer me-5 mb-3 fs-16 ${reviewsTabShow ? 'fw-400' : ''}`}
+                                                className={`text-black cursor-pointer me-5 mb-3 fs-25 ${reviewsTabShow ? 'fw-400' : ''}`}
                                                 onClick={function () { showTab("reviews"); }}
                                             >
                                                 Customer Reviews
@@ -625,7 +625,7 @@ const ViewProduct = () => {
                                                                                             fillColor="#cea835"
                                                                                         />
                                                                                         {content && content != "" ?
-                                                                                            <p className="mb-0 mt-3">{content}</p>
+                                                                                            <p className="mb-0 fs-14 mt-3">{content}</p>
                                                                                             :
                                                                                             null
                                                                                         }
@@ -756,7 +756,7 @@ const ViewProduct = () => {
                                                 <Col lg="12">
                                                     <div className="d-flex justify-content-between">
                                                         <div className='d-flex align-items-center mb-2'>
-                                                            <h2 className="fw-600 fs-25 mb-0 ">{product.name ?? "-"}</h2>
+                                                            <h2 className="fw-600 fs-20 mb-0 ">{product.name ?? "-"}</h2>
                                                             <div className='d-flex align-items-center'>
                                                                 {product.eco_friendly != null && product.eco_friendly != '' && (
                                                                     <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
@@ -859,7 +859,7 @@ const ViewProduct = () => {
                                                     </div>
                                                     <div>
                                                         {/* <p className="mb-2 fs-16 fw-600">Description:</p> */}
-                                                        <p className="mb-1 fs-16 fw-400 line-height-24">
+                                                        <p className="mb-1 fs-14 fw-400 line-height-24">
                                                             {product.description 
                                                                 ? (product.description.length > 200 
                                                                     ? product.description.slice(0, 200) + "..." 
@@ -868,7 +868,7 @@ const ViewProduct = () => {
                                                         </p>
                                                     </div>
 
-                                                    <div className="dotted-hr"></div>
+                                                    <div className="dotted-hr my-3"></div>
 
                                                     {/* <div>
                                                         <p className="mb-2 fs-16 fw-600">Care Instructions:</p>
@@ -879,16 +879,16 @@ const ViewProduct = () => {
                                                         <p className="mb-2 fs-16 fw-600">Measurements:</p>
                                                         <Row>
                                                             <Col sm={4}>
-                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Length</p>
-                                                                <p className="mb-1 fs-16 fw-400 line-height-24">{Math.trunc(product.length) ?? "-"} {product.unit_measurement ?? "-"}{product.unit_measurement == 'inch' && product.length > 1 ? 'es' : product.length > 1 ? "s" : null}</p>
+                                                                <p className="mb-0 fs-14 fw-400 line-height-24 text-muted">Length</p>
+                                                                <p className="mb-1 fs-14 fw-400 line-height-24">{Math.trunc(product.length) ?? "-"} {product.unit_measurement ?? "-"}{product.unit_measurement == 'inch' && product.length > 1 ? 'es' : product.length > 1 ? "s" : null}</p>
                                                             </Col>
                                                             <Col sm={4}>
-                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Width</p>
-                                                                <p className="mb-1 fs-16 fw-400 line-height-24">{Math.trunc(product.width) ?? "-"} {product.unit_measurement ?? "-"}{product.unit_measurement == 'inch' && product.width > 1 ? 'es' : product.width > 1 ? "s" : null}</p>
+                                                                <p className="mb-0 fs-14 fw-400 line-height-24 text-muted">Width</p>
+                                                                <p className="mb-1 fs-14 fw-400 line-height-24">{Math.trunc(product.width) ?? "-"} {product.unit_measurement ?? "-"}{product.unit_measurement == 'inch' && product.width > 1 ? 'es' : product.width > 1 ? "s" : null}</p>
                                                             </Col>
                                                             <Col sm={4}>
-                                                                <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Weight</p>
-                                                                <p className="mb-1 fs-16 fw-400 line-height-24">{Math.trunc(product.weight) ?? "-"} KG per sq. {product.unit_measurement ?? "-"}</p>
+                                                                <p className="mb-0 fs-14 fw-400 line-height-24 text-muted">Weight</p>
+                                                                <p className="mb-1 fs-14 fw-400 line-height-24">{Math.trunc(product.weight) ?? "-"} KG per sq. {product.unit_measurement ?? "-"}</p>
                                                             </Col>
                                                         </Row>
                                                     </div> 
@@ -903,7 +903,7 @@ const ViewProduct = () => {
                                                                     </span>
                                                                 ))}
                                                             </div>
-                                                            <div className="dotted-hr"></div>
+                                                            <div className="dotted-hr my-3"></div>
                                                         </>
                                                         :
                                                         null
@@ -958,11 +958,11 @@ const ViewProduct = () => {
                                                             </Col>
                                                         </Row>
                                                     </div> */}
-                                                    {!isProductCurrentUser ?
-                                                        <div className="dotted-hr"></div>
+                                                    {/* {!isProductCurrentUser ?
+                                                        <div className="dotted-hr my-3"></div>
                                                         :
                                                         null
-                                                    }
+                                                    } */}
                                                     {/* <div>
                                                         <p className="mb-2 fs-16 fw-600">Fabric Process Insight</p>
                                                         <p className="mb-4 fs-16 fw-400 line-height-24">{product.seller?.fabric_process_insights ?? "-"}</p>
@@ -1134,7 +1134,7 @@ const ViewProduct = () => {
                                         <Card.Body>
                                             <div>
                                                 <p className="mb-2 fs-16 fw-600">Description:</p>
-                                                <p className="mb-1 fs-16 fw-400 line-height-24">{product.description ?? "-"}</p>
+                                                <p className="mb-1 fs-14 fw-400 line-height-24">{product.description ?? "-"}</p>
                                             </div>
                                             <hr />
                                             {product.certifications && product.certifications.length > 0 ?
@@ -1156,32 +1156,32 @@ const ViewProduct = () => {
                                                 <p className="mb-2 fs-16 fw-600">Specifications:</p>
                                                 <Row>
                                                     <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Primary Fiber</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.composition ?? "-"}</p>
+                                                        <p className="mb-0 fs-14 fw-400 line-height-24 text-muted">Primary Fiber</p>
+                                                        <p className="mb-2 fs-14 fw-400 line-height-24">{product.composition ?? "-"}</p>
                                                     </Col>
                                                     <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Weave</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.weave ?? "-"}</p>
+                                                        <p className="mb-0 fs-14 fw-400 line-height-24 text-muted">Weave</p>
+                                                        <p className="mb-2 fs-14 fw-400 line-height-24">{product.weave ?? "-"}</p>
                                                     </Col>
                                                     <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Pattern</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.pattern ?? "-"}</p>
+                                                        <p className="mb-0 fs-14 fw-400 line-height-24 text-muted">Pattern</p>
+                                                        <p className="mb-2 fs-14 fw-400 line-height-24">{product.pattern ?? "-"}</p>
                                                     </Col>
                                                     <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Texture</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.texture ?? "-"}</p>
+                                                        <p className="mb-0 fs-14 fw-400 line-height-24 text-muted">Texture</p>
+                                                        <p className="mb-2 fs-14 fw-400 line-height-24">{product.texture ?? "-"}</p>
                                                     </Col>
                                                     <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Opacity</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.opacity ?? "-"}</p>
+                                                        <p className="mb-0 fs-14 fw-400 line-height-24 text-muted">Opacity</p>
+                                                        <p className="mb-2 fs-14 fw-400 line-height-24">{product.opacity ?? "-"}</p>
                                                     </Col>
                                                     <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Stretch</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.stretch ?? "-"}</p>
+                                                        <p className="mb-0 fs-14 fw-400 line-height-24 text-muted">Stretch</p>
+                                                        <p className="mb-2 fs-14 fw-400 line-height-24">{product.stretch ?? "-"}</p>
                                                     </Col>
                                                     <Col sm={4}>
-                                                        <p className="mb-0 fs-16 fw-400 line-height-24 text-muted">Drape</p>
-                                                        <p className="mb-2 fs-16 fw-400 line-height-24">{product.drape ?? "-"}</p>
+                                                        <p className="mb-0 fs-14 fw-400 line-height-24 text-muted">Drape</p>
+                                                        <p className="mb-2 fs-14 fw-400 line-height-24">{product.drape ?? "-"}</p>
                                                     </Col>
                                                 </Row>
                                             </div>
@@ -1207,7 +1207,7 @@ const ViewProduct = () => {
                                             <div className="designer-product-buttons">
                                                 {currentUser !== product.user.id ?
                                                     <>
-                                                        <Button className='text-decoration-none bg-white-hover text-black-hover fs-14 me-3 py-2 view-all-products'>View All</Button>
+                                                        <Button href={`/designer-profile?user_id=${product.user.id}&tab=fabric`} className='text-decoration-none bg-white-hover text-black-hover fs-14 me-3 py-2 view-all-products'>View All</Button>
                                                     </>
                                                     :
                                                     <>
@@ -1219,7 +1219,7 @@ const ViewProduct = () => {
                                                     </>
                                                     :
                                                     <>
-                                                        <Button className='text-decoration-none fs-14 text-white py-2 you-products'>You</Button>
+                                                        <Button href="/user/profile" className='text-decoration-none fs-14 text-white py-2 you-products'>You</Button>
                                                     </>
                                                 }
                                             </div>
@@ -1476,7 +1476,7 @@ const ViewProduct = () => {
                                 <button className="btn btn-primary" type="button" onClick={function () { reviewAdd(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Saving..." : "Submit"} </button>
                                 )
                                 :
-                                <button className="btn btn-primary" type="button" onClick={() => navigate('/login')} style={{ minWidth: '100px', padding: '9px 20px' }}>Sign in</button>                      
+                                <button className="btn btn-primary" type="button"  onClick={() => window.location.href = `/login?redirect_to=/product/${product.id}`}  style={{ minWidth: '100px', padding: '9px 20px' }}>Sign in</button>                      
                         }
                     </Card.Footer>
                 </Modal.Body>
