@@ -660,7 +660,7 @@ const ViewProduct = () => {
                                     <Card>
                                         <Card.Body>
                                             <Row>
-                                                <Col lg="12" className="d-flex justify-content-between">
+                                                {/* <Col lg="12" className="d-flex justify-content-between"> */}
                                                     {/* <div className='mb-3 d-flex portfolio-designer'>
                                                         {product.user.image ? (
                                                             <div
@@ -687,7 +687,7 @@ const ViewProduct = () => {
                                                         </div>
                                                     </div> */}
 
-                                                    {userRole !== 'Admin' &&
+                                                    {/* {userRole !== 'Admin' &&
                                                         <>
                                                             {isProductCurrentUser ?
                                                                 <>
@@ -715,7 +715,7 @@ const ViewProduct = () => {
 
                                                                 </>
                                                                 :
-                                                                <>
+                                                                <> */}
                                                                     {/* <div>
 
                                                                         <div className="kouture-tooltip" onClick={toggleShareModal}>
@@ -747,11 +747,11 @@ const ViewProduct = () => {
                                                                             null
                                                                         }
                                                                     </div> */}
-                                                                </>
+                                                                {/* </>
                                                             }
                                                         </>
                                                     }
-                                                </Col>
+                                                </Col> */}
 
                                                 <Col lg="12">
                                                     <div className="d-flex justify-content-between">
@@ -769,8 +769,27 @@ const ViewProduct = () => {
                                                             </div>
                                                         </div>
                                                         <div> 
+                                                        {isProductCurrentUser ? (
+                                                            <>
+                                                                <div>
+                                                                    <Link to={`/user/center/product/${product.id}/edit`} className="text-decoration-none">
+                                                                        <div className="kouture-tooltip">
+                                                                            <div className="action-button bg-white me-2">
+                                                                                <span className="kouture-tooltiptext fs-14">Edit</span>
+                                                                                <GoPencil className="text-black" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </Link>
 
-                                                            {currentUser ?
+                                                                    <div className="kouture-tooltip" onClick={toggleShareModal}>
+                                                                        <div className="action-button bg-white me-2">
+                                                                            <span className="kouture-tooltiptext fs-14">Share</span>
+                                                                            <GoShareAndroid className="text-black" />
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </>
+                                                        ) : currentUser ? (
                                                                 <>
                                                                     <div className="wishlist-tooltip"  onClick={toggleShareModal}>
                                                                         <div className="action-button me-2" >
@@ -795,8 +814,9 @@ const ViewProduct = () => {
                                                                         </div>
                                                                     }
                                                                 </>
-                                                                :
-                                                                null
+                                                            )
+                                                            :
+                                                            null
                                                             }
                                                         </div>
                                                     </div>
@@ -1182,7 +1202,7 @@ const ViewProduct = () => {
                                                         style={{ backgroundImage: `url(${product.user.gender === 'Female' ? FemalePlaceholder : MalePlaceholder})` }}
                                                     ></div>
                                                 )}
-                                                <p className="text-black fs-16 fw-600 my-auto ms-2">{product.user.first_name && product.user.first_name != "" ? product.user.first_name : "-"} {product.user.last_name && product.user.last_name != "" ? product.user.last_name : "-"}</p>
+                                                <p className="text-black fs-16 lh-20 fw-600 my-auto ms-2">{product.user.first_name && product.user.first_name != "" ? product.user.first_name : "-"} {product.user.last_name && product.user.last_name != "" ? product.user.last_name : "-"}</p>
                                             </div>
                                             <div className="designer-product-buttons">
                                                 {currentUser !== product.user.id ?
@@ -1452,7 +1472,11 @@ const ViewProduct = () => {
                         {updateReview ?
                             <button className="btn btn-primary" type="button" onClick={function () { reviewUpdate(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Updating..." : "Update"}</button>
                             :
-                            <button className="btn btn-primary" type="button" onClick={function () { reviewAdd(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Saving..." : "Submit"} </button>
+                            currentUser ? (
+                                <button className="btn btn-primary" type="button" onClick={function () { reviewAdd(); }} style={{ minWidth: '100px', padding: '9px 20px' }}>{addReviewLoading ? "Saving..." : "Submit"} </button>
+                                )
+                                :
+                                <button className="btn btn-primary" type="button" onClick={() => navigate('/login')} style={{ minWidth: '100px', padding: '9px 20px' }}>Sign in</button>                      
                         }
                     </Card.Footer>
                 </Modal.Body>

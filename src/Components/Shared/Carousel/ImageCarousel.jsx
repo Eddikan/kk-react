@@ -41,7 +41,7 @@ const ImageSlider = (props) => {
                     <Swiper
                         onSwiper={setThumbsSwiper}
                         spaceBetween={10}
-                        slidesPerView={6}
+                        slidesPerView={5}
                         freeMode={true}
                         watchSlidesProgress={true}
                         modules={[FreeMode, Navigation, Thumbs]}

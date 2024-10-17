@@ -1148,7 +1148,11 @@ const Fabrics = (props) => {
                                                                         <div className="design-details">
                                                                             <div className='d-flex justify-content-between align-items-center'>
                                                                                 <div className="d-flex">
-                                                                                    <h4 className="text-black fs-18 fw-600 mb-0 max-150 text-ellipsis fabric-name">{fabric.name ?? '-'}</h4>
+                                                                                    {userRole !== 'Admin' ?
+                                                                                        <h4 className="text-black cursor-pointer fs-18 fw-600 mb-0 max-150 text-ellipsis fabric-name" onClick={() => {navigate('/product/' + fabric.id); }}>{fabric.name ?? '-'}</h4>
+                                                                                        :
+                                                                                        <h4 className="text-black cursor-pointer fs-18 fw-600 mb-0 max-150 text-ellipsis fabric-name" onClick={() => {navigate('/admin/fabric/' + fabric.id); }}>{fabric.name ?? '-'}</h4>
+                                                                                    }
                                                                                     {fabric.eco_friendly == 1 ?
                                                                                         <div className='d-flex align-items-center'>
                                                                                             <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>

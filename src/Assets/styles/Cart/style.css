@@ -36,8 +36,10 @@ img.placeholder-cart {
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
-    width: 46px;
-    min-height: 48px;
+    /* width: 46px;
+    min-height: 48px; */
+    width: 152px;
+    min-height: 126px;
 }
 .top-bottom {
     padding-top: 50px;
@@ -91,4 +93,7 @@ img.placeholder-cart {
 
 .delete-tooltip:hover .icon-tooltiptext {
     visibility: visible;
+}
+.product-price{
+    color: #551855;
 }
