@@ -1040,13 +1040,15 @@ const Header = () => {
                             <span className="cart-count">{cartItemCount}</span>
                           </div>
                         </div>
-
-                        <div className="cart-dropdown text-center">
-                          <IoCartOutline className="my-2" size={54} style={{ opacity: 0.2 }} />
-                          <p className="fs-14 mb-3 fw-bolder">Your Cart is Empty, Shop Now!</p>
-                          <p className="fs-13">Good to have you back! The items in your cart are saved. Sign in when you're ready to review or purchase them.</p>
-                          <Button href="/login" className="cart-dropdown-btn btn">Sign In</Button>
-                        </div>
+                     
+                        {cartItemCount === 0 && (
+                          <div className="cart-dropdown text-center">
+                            <IoCartOutline className="my-2" size={54} style={{ opacity: 0.2 }} />
+                            <p className="fs-14 mb-3 fw-bolder">Your Cart is Empty, Shop Now!</p>
+                            <p className="fs-13">Good to have you back! The items in your cart are saved. Sign in when you're ready to review or purchase them.</p>
+                            <Button href="/login" className="cart-dropdown-btn btn">Sign In</Button>
+                          </div>
+                        )}
                       </div>
                     </a>
                     {/* <div className="country-dropdown nav-link position-relative" ref={countryRef}>
