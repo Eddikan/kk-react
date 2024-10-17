@@ -16,7 +16,6 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 import toast from 'react-hot-toast';
 import CurrencyConverter from 'Utils/CurrencyConverter';
-import { Rating } from 'react-simple-star-rating';
 
 const initialCheckOut = {
     card_name: '',
@@ -159,7 +158,7 @@ const Cart = (props) => {
     
         return finalPrice;
     };
-
+    
     const updateItemQuantity = (data) => {
         updateQuantity({ user_id: currentUser, quantity: data.quantity, id: data.id }).then(response => {
             const success = response.data.status;
@@ -312,21 +311,21 @@ const Cart = (props) => {
                     <section className="px-5">
                         <Container className='top-bottom'>
                             <Row>
-                                <Col lg="8">
-                                    <Row>
-                                        <Col lg={12}>
-                                            <Row className="pb-4">
-                                                <Col md={12} className='d-flex justify-content-left align-items-center'>
-                                                    <p className="mb-0 fs-14 fw-500"><Link className="text-decoration-none text-muted" to="/">Home</Link> / Cart</p>
-                                                </Col>
-                                                {/* <Col md={6} className="text-right">
-                                                    <GoBack fallBack="/#" />
-                                                </Col> */}
-                                            </Row>
+                                <Col lg={12}>
+                                    <Row className="pb-4">
+                                        <Col md={6} className='d-flex justify-content-left align-items-center'>
+                                            <h3 className="fs-30 fw-600 text-black mb-0">Cart</h3>
                                         </Col>
+                                        <Col md={6} className="text-right">
+                                            <GoBack fallBack="/#" />
+                                        </Col>
+                                    </Row>
+                                </Col>
 
-                                        <Col lg={12}>
-                                            {/* <Row>
+                                <Col lg={12}>
+                                    <Card>
+                                        <Card.Body className='bg-light'>
+                                            <Row>
                                                 <Col lg={1}>
                                                     {currentUser ?
                                                         <input
@@ -357,47 +356,56 @@ const Cart = (props) => {
                                                     }
                                                     
                                                 </Col>
-                                            </Row> */}
+                                                <Col lg={4}>
+                                                    Item
+                                                </Col>
 
+                                                <Col lg={2}>
+                                                    Price
+                                                </Col>
+
+                                                <Col lg={2}>
+                                                    Size
+                                                </Col>
+
+                                                <Col lg={2}>
+                                                    Total
+                                                </Col>
+
+                                                <Col lg={1} className='text-center'>
+                                                    Action
+                                                </Col>
+                                            </Row>
+                                        </Card.Body>
+                                    </Card>
+
+                                    <>
+                                        {currentUser ?
                                             <>
-                                                {currentUser ?
+                                                {cartItems ?
                                                     <>
-                                                        {cartItems ?
+                                                        {cartItems.length > 0 ?
                                                             <>
-                                                                {cartItems.length > 0 ?
-                                                                    <>
-                                                                        {cartItems.map((cartItem) => {
-                                                                            var cart_product = cartItem.product;
-                                                                            if (cart_product.image_urls) {
-                                                                                var image_urls = JSON.parse(cart_product.image_urls);
-                                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                                            } else {
-                                                                                var fabricImage = PlaceholderImage;
-                                                                            }
+                                                                {cartItems.map((cartItem) => {
+                                                                    var cart_product = cartItem.product;
+                                                                    if (cart_product.image_urls) {
+                                                                        var image_urls = JSON.parse(cart_product.image_urls);
+                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                                    } else {
+                                                                        var fabricImage = PlaceholderImage;
+                                                                    }
 
-                                                                            const fabricPrice = cart_product.price ?? '0';
-                                                                            const fabricCurrency = cart_product.currency ?? 'USD';
+                                                                    const fabricPrice = cart_product.price ?? '0';
+                                                                    const fabricCurrency = cart_product.currency ?? 'USD';
 
-                                                                            let colorsArray;
+                                                                    const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                    const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                    const formattedSubtotal = formatPrice(subtotal);
 
-                                                                            if (Array.isArray(cartItem.product.colors)) {
-                                                                                colorsArray = cartItem.product.colors.filter(color => color.trim() !== "");
-                                                                            } else if (typeof cartItem.product.colors === 'string') {
-                                                                                try {
-                                                                                    colorsArray = JSON.parse(cartItem.product.colors).filter(color => color.trim() !== "");
-                                                                                } catch (e) {
-                                                                                    colorsArray = []; // Fallback if parsing fails
-                                                                                }
-                                                                            } else {
-                                                                                colorsArray = [];
-                                                                            }
-
-                                                                            const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
-                                                                            const subtotal = convertedPrice.price_raw * cartItem.quantity;
-                                                                            const formattedSubtotal = formatPrice(subtotal);
-
-                                                                            return (
-                                                                                <Row className="align-items-center mb-4">
+                                                                    return (
+                                                                        <Card className='mt-2'>
+                                                                            <Card.Body>
+                                                                                <Row className="align-items-center">
                                                                                     <Col lg={1}>
                                                                                         <input
                                                                                             type="checkbox"
@@ -406,67 +414,18 @@ const Cart = (props) => {
                                                                                             onChange={(e) => { handleCheckboxChange(cartItem.product.id); }}
                                                                                         />
                                                                                     </Col>
-                                                                                    <Col lg={10}>
+                                                                                    <Col lg={4}>
                                                                                         <div className='d-flex'>
                                                                                             <div className="designs-grid-div fabric-image"
                                                                                                 style={{ backgroundImage: "url(" + fabricImage + ")" }}>
                                                                                             </div>
 
-                                                                                            <div className='ms-4'>
+                                                                                            <div className='ms-3'>
                                                                                                 <div className='mb-1 fw-500 text-black'>
-                                                                                                    <h3 className="product-name fs-18">{cartItem.product.name}</h3>
+                                                                                                    {cartItem.product.name}
                                                                                                 </div>
 
-                                                                                                <div className="star-ratings mt-1">
-                                                                                                    <Rating
-                                                                                                        initialValue={0}
-                                                                                                        readonly={true}
-                                                                                                        allowFraction={true}
-                                                                                                        size={20}
-                                                                                                        className="star-rating"
-                                                                                                        showTooltip={true}
-                                                                                                        emptyColor="#dddddd"
-                                                                                                        fillColor="#cea835"
-                                                                                                        tooltipArray={[
-                                                                                                            0, 1, 2, 3, 4, 5
-                                                                                                        ]}
-                                                                                                        tooltipDefaultText="0.0"
-                                                                                                    /* Available Props */
-                                                                                                    />
-                                                                                                </div>
-
-                                                                                                {colorsArray && colorsArray.length > 0 ?
-                                                                                                    <> 
-                                                                                                        <p className="mb-3 mt-2 fs-12 fw-600">Color:{" "}
-                                                                                                            {colorsArray.length > 1 ? (
-                                                                                                                colorsArray.join(", ")
-                                                                                                            ) : (
-                                                                                                                colorsArray[0]
-                                                                                                            )}
-                                                                                                        </p>
-                                                                                                    </>
-                                                                                                    :
-                                                                                                    <p className="mb-3 mt-2 fs-12 fw-600">Color: Not Specified</p>
-                                                                                                }
-
-                                                                                                <div className="price-measurement-container d-flex">
-                                                                                                    <div className="product-price">
-                                                                                                        <p className="fw-500 fs-18">{convertedPrice.currency_code}{convertedPrice.price}</p>
-                                                                                                    </div>
-                                                                                                    <div className="measurement-input d-flex">
-                                                                                                        <input
-                                                                                                            type="number"
-                                                                                                            className="form-control p-2 me-2 d-inline-block"
-                                                                                                            min="1"
-                                                                                                            style={{ maxWidth: 60 }}
-                                                                                                            defaultValue={cartItem.quantity}
-                                                                                                            onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id })}
-                                                                                                        />
-                                                                                                        <p>{cartItem.product.unit_measurement}</p>
-                                                                                                    </div>
-                                                                                                </div>
-
-                                                                                                {/* <div className='d-flex align-items-center user-image-chat'>
+                                                                                                <div className='d-flex align-items-center user-image-chat'>
                                                                                                     {cartItem.seller.image ?
                                                                                                         <div
                                                                                                             className='user-photo-chat'
@@ -485,12 +444,12 @@ const Cart = (props) => {
                                                                                                         &nbsp;
                                                                                                         {cartItem.seller.last_name}
                                                                                                     </span>
-                                                                                                </div> */}
+                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </Col>
 
-                                                                                    {/* <Col lg={2}>
+                                                                                    <Col lg={2}>
                                                                                         {convertedPrice.currency_code}{convertedPrice.price}
                                                                                     </Col>
 
@@ -504,11 +463,11 @@ const Cart = (props) => {
                                                                                             onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id })}
                                                                                         />
                                                                                         {cartItem.product.unit_measurement}
-                                                                                    </Col> */}
+                                                                                    </Col>
 
-                                                                                    {/* <Col lg={2}>
+                                                                                    <Col lg={2}>
                                                                                         {convertedPrice.currency_code}{formattedSubtotal}
-                                                                                    </Col> */}
+                                                                                    </Col>
 
                                                                                     <Col lg={1} className='text-center cursor-pointer delete-tooltip'
                                                                                         onClick={function () { toggleDeleteCartItem(cartItem.id); }}
@@ -517,17 +476,11 @@ const Cart = (props) => {
                                                                                         <AiOutlineDelete size="20" />
                                                                                     </Col>
                                                                                 </Row>
-                                                                            );
-                                                                        })}
+                                                                            </Card.Body>
+                                                                        </Card>
+                                                                    );
+                                                                })}
 
-                                                                    </>
-                                                                    :
-                                                                    <>
-                                                                        <div className='text-center my-3'>
-                                                                            Your cart is empty.
-                                                                        </div>
-                                                                    </>
-                                                                }
                                                             </>
                                                             :
                                                             <>
@@ -539,113 +492,113 @@ const Cart = (props) => {
                                                     </>
                                                     :
                                                     <>
-                                                        {tempCartItems ?
+                                                        <div className='text-center my-3'>
+                                                            Your cart is empty.
+                                                        </div>
+                                                    </>
+                                                }
+                                            </>
+                                            :
+                                            <>
+                                                {tempCartItems ?
+                                                    <>
+                                                        {tempCartItems.length > 0 ?
                                                             <>
-                                                                {tempCartItems.length > 0 ?
-                                                                    <>
-                                                                        {tempCartItems.map((cartItem) => {
-                                                                            var cart_product = cartItem;
-                                                                            if (cart_product.images) {
-                                                                                var image = cart_product.images;
-                                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url;
-                                                                            } else {
-                                                                                var fabricImage = PlaceholderImage;
-                                                                            }
+                                                                {tempCartItems.map((cartItem) => {
+                                                                    var cart_product = cartItem;
+                                                                    if (cart_product.images) {
+                                                                        var image = cart_product.images;
+                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url;
+                                                                    } else {
+                                                                        var fabricImage = PlaceholderImage;
+                                                                    }
 
-                                                                            const fabricPrice = cart_product.price ?? '0';
-                                                                            const fabricCurrency = cart_product.currency ?? 'USD';
+                                                                    const fabricPrice = cart_product.price ?? '0';
+                                                                    const fabricCurrency = cart_product.currency ?? 'USD';
 
-                                                                            const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
-                                                                            const subtotal = convertedPrice.price_raw * cartItem.quantity;
-                                                                            const formattedSubtotal = formatPrice(subtotal);
+                                                                    const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                    const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                    const formattedSubtotal = formatPrice(subtotal);
 
-                                                                            return (
-                                                                                <Card className='mt-2'>
-                                                                                    <Card.Body>
-                                                                                        <Row className="align-items-center">
-                                                                                            <Col lg={1}>
-                                                                                                <input
-                                                                                                    type="checkbox"
-                                                                                                    className="check-box me-2 check-box-color cursor-pointer"
-                                                                                                    checked={selectedCartItems.includes(cartItem.id)}
-                                                                                                    onChange={(e) => { handleCheckboxChange(cartItem.id); }}
-                                                                                                />
-                                                                                            </Col>
-                                                                                            <Col lg={4}>
-                                                                                                <div className='d-flex'>
-                                                                                                    <div className="designs-grid-div fabric-image"
-                                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")" }}>
-                                                                                                    </div>
+                                                                    return (
+                                                                        <Card className='mt-2'>
+                                                                            <Card.Body>
+                                                                                <Row className="align-items-center">
+                                                                                    <Col lg={1}>
+                                                                                        <input
+                                                                                            type="checkbox"
+                                                                                            className="check-box me-2 check-box-color cursor-pointer"
+                                                                                            checked={selectedCartItems.includes(cartItem.id)}
+                                                                                            onChange={(e) => { handleCheckboxChange(cartItem.id); }}
+                                                                                        />
+                                                                                    </Col>
+                                                                                    <Col lg={4}>
+                                                                                        <div className='d-flex'>
+                                                                                            <div className="designs-grid-div fabric-image"
+                                                                                                style={{ backgroundImage: "url(" + fabricImage + ")" }}>
+                                                                                            </div>
 
-                                                                                                    <div className='ms-3'>
-                                                                                                        <div className='mb-1 fw-500 text-black'>
-                                                                                                            {cartItem.name}
-                                                                                                        </div>
-
-                                                                                                        <div className='d-flex align-items-center user-image-chat'>
-                                                                                                            {cartItem.user_image ?
-                                                                                                                <div
-                                                                                                                    className='user-photo-chat'
-                                                                                                                    style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${cartItem.user_image})` }}
-                                                                                                                >
-                                                                                                                </div>
-                                                                                                                :
-                                                                                                                <div
-                                                                                                                    className='user-photo-chat'
-                                                                                                                    style={{ backgroundImage: `url(${UserPlaceholder})` }}
-                                                                                                                >
-                                                                                                                </div>
-                                                                                                            }
-                                                                                                            <span className='name-user ms-2'>
-                                                                                                                {cartItem.user_first_name}
-                                                                                                                &nbsp;
-                                                                                                                {cartItem.user_last_name}
-                                                                                                            </span>
-                                                                                                        </div>
-                                                                                                    </div>
+                                                                                            <div className='ms-3'>
+                                                                                                <div className='mb-1 fw-500 text-black'>
+                                                                                                    {cartItem.name}
                                                                                                 </div>
-                                                                                            </Col>
 
-                                                                                            <Col lg={2}>
-                                                                                                {convertedPrice?.currency_code}{convertedPrice?.price}
-                                                                                            </Col>
+                                                                                                <div className='d-flex align-items-center user-image-chat'>
+                                                                                                    {cartItem.user_image ?
+                                                                                                        <div
+                                                                                                            className='user-photo-chat'
+                                                                                                            style={{ backgroundImage: `url(${process.env.REACT_APP_STORAGE_URL}user/${cartItem.user_image})` }}
+                                                                                                        >
+                                                                                                        </div>
+                                                                                                        :
+                                                                                                        <div
+                                                                                                            className='user-photo-chat'
+                                                                                                            style={{ backgroundImage: `url(${UserPlaceholder})` }}
+                                                                                                        >
+                                                                                                        </div>
+                                                                                                    }
+                                                                                                    <span className='name-user ms-2'>
+                                                                                                        {cartItem.user_first_name}
+                                                                                                        &nbsp;
+                                                                                                        {cartItem.user_last_name}
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </Col>
 
-                                                                                            <Col lg={2}>
-                                                                                                <input
-                                                                                                    type="number"
-                                                                                                    className="form-control p-2 me-2 d-inline-block"
-                                                                                                    min="1"
-                                                                                                    style={{ maxWidth: 60 }}
-                                                                                                    defaultValue={cartItem.quantity}
-                                                                                                    onChange={(e) => updateTempItemQuantity({ id: cartItem.id, quantity: e.target.value })}
-                                                                                                />
-                                                                                                {cartItem.unit_measurement}
-                                                                                            </Col>
+                                                                                    <Col lg={2}>
+                                                                                        {convertedPrice?.currency_code}{convertedPrice?.price}
+                                                                                    </Col>
 
-                                                                                            <Col lg={2}>
-                                                                                                {convertedPrice.currency_code}{formattedSubtotal}
-                                                                                            </Col>
+                                                                                    <Col lg={2}>
+                                                                                        <input
+                                                                                            type="number"
+                                                                                            className="form-control p-2 me-2 d-inline-block"
+                                                                                            min="1"
+                                                                                            style={{ maxWidth: 60 }}
+                                                                                            defaultValue={cartItem.quantity}
+                                                                                            onChange={(e) => updateTempItemQuantity({ id: cartItem.id, quantity: e.target.value })}
+                                                                                        />
+                                                                                        {cartItem.unit_measurement}
+                                                                                    </Col>
 
-                                                                                            <Col lg={1} className='text-center cursor-pointer delete-tooltip'
-                                                                                                onClick={function () { deleteTempCartItem(cartItem.id); }}
-                                                                                            >
-                                                                                                <span className="icon-tooltiptext fs-14">Delete</span>
-                                                                                                <AiOutlineDelete size="20" />
-                                                                                            </Col>
-                                                                                        </Row>
-                                                                                    </Card.Body>
-                                                                                </Card>
-                                                                            );
-                                                                        })}
+                                                                                    <Col lg={2}>
+                                                                                        {convertedPrice.currency_code}{formattedSubtotal}
+                                                                                    </Col>
 
-                                                                    </>
-                                                                    :
-                                                                    <>
-                                                                        <div className='text-center my-3'>
-                                                                            Your cart is empty.
-                                                                        </div>
-                                                                    </>
-                                                                }
+                                                                                    <Col lg={1} className='text-center cursor-pointer delete-tooltip'
+                                                                                        onClick={function () { deleteTempCartItem(cartItem.id); }}
+                                                                                    >
+                                                                                        <span className="icon-tooltiptext fs-14">Delete</span>
+                                                                                        <AiOutlineDelete size="20" />
+                                                                                    </Col>
+                                                                                </Row>
+                                                                            </Card.Body>
+                                                                        </Card>
+                                                                    );
+                                                                })}
+
                                                             </>
                                                             :
                                                             <>
@@ -655,42 +608,45 @@ const Cart = (props) => {
                                                             </>
                                                         }
                                                     </>
+                                                    :
+                                                    <>
+                                                        <div className='text-center my-3'>
+                                                            Your cart is empty.
+                                                        </div>
+                                                    </>
                                                 }
                                             </>
-                                            <Card className='mt-2'>
-                                                <Card.Body className='bg-light'>
-                                                    <Row>
-                                                        <Col lg={1}>
-                                                        </Col>
-                                                        <Col lg={6}>
-                                                        </Col>
-                                                        {currentUser ?
-                                                            <Col className='text-right'>
-                                                                <span className='fs-18 me-3'>Total Amount</span><span className='total-price fs-20 fw-600'>{currencyCode}{subtotalAmount}</span>
-                                                            </Col>
-                                                            :
-                                                            <Col className='text-right'>
-                                                                <span className='fs-18 me-3'>Total Amount</span><span className='total-price fs-20 fw-600'>{currencyCode}{subtotalAmount}</span>
-                                                            </Col>
-                                                        }
-                                                        
-                                                    </Row>
-                                                </Card.Body>
-                                            </Card>
-                                            <div className="text-right">
-                                                {totalAmount > 0 ?
-                                                    <Link to="/checkout">
-                                                        <button className='btn btn-primary mt-3'>Check Out</button>
-                                                    </Link>
+                                        }
+                                    </>
+                                    <Card className='mt-2'>
+                                        <Card.Body className='bg-light'>
+                                            <Row>
+                                                <Col lg={1}>
+                                                </Col>
+                                                <Col lg={6}>
+                                                </Col>
+                                                {currentUser ?
+                                                    <Col className='text-right'>
+                                                        <span className='fs-18 me-3'>Total Amount</span><span className='total-price fs-20 fw-600'>{currencyCode}{subtotalAmount}</span>
+                                                    </Col>
                                                     :
-                                                    <button className='btn btn-primary mt-3' disabled={true}>Check Out</button>
+                                                    <Col className='text-right'>
+                                                        <span className='fs-18 me-3'>Total Amount</span><span className='total-price fs-20 fw-600'>{currencyCode}{subtotalAmount}</span>
+                                                    </Col>
                                                 }
-                                            </div>
-                                        </Col>
-                                    </Row>
-                                </Col>
-                                <Col lg="4">
-                                
+                                                
+                                            </Row>
+                                        </Card.Body>
+                                    </Card>
+                                    <div className="text-right">
+                                        {totalAmount > 0 ?
+                                            <Link to="/checkout">
+                                                <button className='btn btn-primary mt-3'>Check Out</button>
+                                            </Link>
+                                            :
+                                            <button className='btn btn-primary mt-3' disabled={true}>Check Out</button>
+                                        }
+                                    </div>
                                 </Col>
                             </Row>
                         </Container>

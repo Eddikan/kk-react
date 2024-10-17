@@ -2101,7 +2101,7 @@ const Profile = () => {
                                             <div className="user-box shop-modal-card-content text-center justify-content-center">
                                                 <div className="text-start w-100">
                                                     <p className="mb-0 fs-12">I am a</p>
-                                                    <h3 className="shop-modal-title fs-30 fw-600 lh-26">Designer</h3>
+                                                    <h3 className="shop-modal-title fs-30 fw-600 lh-30">Designer</h3>
                                                 </div>
                                             </div>
                                         </Card.Body>
@@ -2115,7 +2115,7 @@ const Profile = () => {
                                             <div className="user-box shop-modal-card-content text-center justify-content-center">
                                                 <div className="text-start w-100">
                                                     <p className="mb-0 fs-12">I am a</p>
-                                                    <h3 className="shop-modal-title fs-30 fw-600 lh-26">Fabric Vendor</h3>
+                                                    <h3 className="shop-modal-title fs-30 fw-600 lh-30">Fabric Vendor</h3>
                                                 </div>
                                             </div>
                                         </Card.Body>
@@ -2129,7 +2129,7 @@ const Profile = () => {
                                             <div className="user-box shop-modal-card-content text-center justify-content-center">
                                                 <div className="text-start w-100">
                                                     <p className="mb-0 fs-12">I am both a</p>
-                                                    <h3 className="shop-modal-title fs-30 fw-600 lh-26">Designer and <br /> Fabric Vendor</h3>
+                                                    <h3 className="shop-modal-title fs-30 fw-600 lh-30">Designer and <br /> Fabric Vendor</h3>
                                                 </div>
                                             </div>
                                         </Card.Body>
