@@ -18,6 +18,7 @@ import { TagsInput } from "react-tag-input-component";
 import axios from 'axios';
 import Countries from 'Utils/Countries';
 import CountryData from 'Utils/CountryData';
+import CountryCodes from 'Utils/CountryCodes';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 
@@ -703,7 +704,18 @@ const EditProfile = () => {
             setBodyMeasurementShow(true);
             setChecklistData(() => bodyMeasurement);
         }
-    }
+    };
+
+    const getCountryCode = (countryName) => {
+        // Find the country code based on the country name
+        const entries = Object.entries(CountryCodes);
+        for (const [code, name] of entries) {
+            if (name.toLowerCase() === countryName.toLowerCase()) {
+                return code; // Return the corresponding country code
+            }
+        }
+        return null; // Return null if no match is found
+    };
 
     const handleChange = (e) => {
         var { name, value } = e.target;
@@ -717,17 +729,23 @@ const EditProfile = () => {
             const country = Object.values(CountryData).find(country => country.name === value);
             let currency = 'USD';
             let currencyCode = '$';
+            let country_code = 'US';
 
             if (country) {
                 currency = country.currency;
                 currencyCode = country.currencyCode;
             }
 
+            if (value && value != "") {
+                country_code = getCountryCode(value);
+            }
+
             setProfileFormData({
                 ...profileFormData,
                 [e.target.name]: e.target.value,
                 currency: currency,
-                currency_code: currencyCode
+                currency_code: currencyCode,
+                country_code: country_code ?? "US"
             });
         }
     };
@@ -1056,25 +1074,7 @@ const EditProfile = () => {
                                                         </Form.Group>
                                                     </Col>
                                                     <Row>
-                                                        <Col lg="6">
-                                                            <Form.Group className='mb-4'>
-                                                                <Form.Label>City</Form.Label>
-                                                                <FormControl type='text' name='city' value={profileFormData.city} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                            </Form.Group>
-                                                        </Col>
-                                                        <Col lg="6">
-                                                            <Form.Group className='mb-4'>
-                                                                <Form.Label>State/Province</Form.Label>
-                                                                <FormControl type='text' name='province' value={profileFormData.province} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                            </Form.Group>
-                                                        </Col>
-                                                        <Col lg="6">
-                                                            <Form.Group className='mb-4'>
-                                                                <Form.Label>Postal Code</Form.Label>
-                                                                <FormControl type='number' name='postal_code' value={profileFormData.postal_code} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                            </Form.Group>
-                                                        </Col>
-                                                        <Col lg="6">
+                                                        <Col lg="12">
                                                             <Form.Group className='mb-4'>
                                                                 <Form.Label>Country</Form.Label>
                                                                 {/* <FormControl type='text' name='country' value={profileFormData.country} className='mr-sm-2' onChange={handleChange} required placeholder='' /> */}
@@ -1086,6 +1086,30 @@ const EditProfile = () => {
                                                                         </option>
                                                                     ))}
                                                                 </Form.Control>
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col lg="6">
+                                                            <Form.Group className='mb-4'>
+                                                                <Form.Label>State/Province</Form.Label>
+                                                                <FormControl type='text' name='province' value={profileFormData.province} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col lg="6">
+                                                            <Form.Group className='mb-4'>
+                                                                <Form.Label>State/Province Code</Form.Label>
+                                                                <FormControl type='text' name='province_code' value={profileFormData.province_code} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col lg="6">
+                                                            <Form.Group className='mb-4'>
+                                                                <Form.Label>City</Form.Label>
+                                                                <FormControl type='text' name='city' value={profileFormData.city} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                            </Form.Group>
+                                                        </Col>
+                                                        <Col lg="6">
+                                                            <Form.Group className='mb-4'>
+                                                                <Form.Label>Postal Code</Form.Label>
+                                                                <FormControl type='number' name='postal_code' value={profileFormData.postal_code} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                                                             </Form.Group>
                                                         </Col>
                                                         <div className="text-right mt-0 mb-2">

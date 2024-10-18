@@ -76,8 +76,7 @@ img.placeholder-cart {
     position: absolute;
     z-index: 1;
     bottom: 29px;
-    left: 25px;
-    margin-left: -16px;
+    left: 16%;
 }
 
 .delete-tooltip .icon-tooltiptext::after {
