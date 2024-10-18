@@ -337,19 +337,27 @@ const Cart = (props) => {
                     <section className="px-5">
                         <Container className='top-bottom'>
                             <Row>
-                                <Col md={12} className='d-flex justify-content-left align-items-center'>
-                                    <p className="mb-0 fs-14 fw-500"><Link className="text-decoration-none text-muted" to="/">Home</Link> / Cart</p>
-                                </Col>
                                 
-                                {currentUser && user.profile_completeness >= 0 && user.profile_completeness < 100 && 
-                                    <Col lg={12}>
-                                        <div className="alert alert-warning mt-3 d-flex justify-content-between" role="alert">
-                                            <p className="my-auto">You have to complete your profile before making a transaction</p>
-                                            <a href="/user/complete-profile">
-                                                <Button className="btn-primary ms-80" >Complete Profile</Button>
-                                            </a>
-                                        </div>
-                                    </Col>
+                                {currentUser && user.profile_completeness >= 0 && user.profile_completeness < 100 ? 
+                                    <>
+                                        <Col md={12} className='d-flex justify-content-left align-items-center'>
+                                            <p className="mb-3 fs-14 fw-500"><Link className="text-decoration-none text-muted" to="/">Home</Link> / Cart</p>
+                                        </Col>
+                                        <Col lg={12} className="mb-20">
+                                            <div className="alert alert-warning d-flex justify-content-between" role="alert">
+                                                <p className="my-auto">You have to complete your profile before making a transaction.</p>
+                                                <a href="/user/complete-profile">
+                                                    <Button className="btn-primary ms-80" >Complete Profile</Button>
+                                                </a>
+                                            </div>
+                                        </Col>
+                                    </>
+                                    :
+                                    <>
+                                        <Col md={12} className='d-flex justify-content-left align-items-center'>
+                                            <p className="mb-35 fs-14 fw-500"><Link className="text-decoration-none text-muted" to="/">Home</Link> / Cart</p>
+                                        </Col>
+                                    </>
                                 }
                                 
                                 {/* <Col md={6} className="text-right">
@@ -431,7 +439,7 @@ const Cart = (props) => {
 
                                                                             return (
                                                                                 <>
-                                                                                <Row className="align-items-center">
+                                                                                <Row>
                                                                                     <Col lg={1}>
                                                                                         <input
                                                                                             type="checkbox"
