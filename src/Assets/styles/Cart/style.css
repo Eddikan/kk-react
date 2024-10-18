@@ -38,7 +38,7 @@ img.placeholder-cart {
     position: relative;
     /* width: 46px;
     min-height: 48px; */
-    width: 152px;
+    width: 220px;
     min-height: 126px;
 }
 .top-bottom {
@@ -76,7 +76,7 @@ img.placeholder-cart {
     position: absolute;
     z-index: 1;
     bottom: 29px;
-    left: 16%;
+    left: -36px;
 }
 
 .delete-tooltip .icon-tooltiptext::after {
@@ -94,5 +94,28 @@ img.placeholder-cart {
     visibility: visible;
 }
 .product-price{
+    color: #551855;
+}
+.measurement-btns{
+    height: 39px;
+    background-color: #eeeeee;
+    border: none;
+    min-width: 39px;
+}
+.measurement-btns:hover{
+    background-color: #eeeeee !important;
+}
+.color-column-keep-height{
+    min-height: 44.39px;
+}
+.cart-card{
+    max-width: 348px;
+    height: 200px;
+    width: 100%;
+}
+.checkout-btn{
+    width: 100%;
+}
+.subtotal-amount{
     color: #551855;
 }

@@ -8,6 +8,7 @@ import '../Assets/styles/EmailConfirmation/style.css';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import MailIcon from '../Assets/images/icons/email.png'
 
 const initialUserData = Object.freeze({
     first_name: '',
@@ -101,11 +102,11 @@ const EmailConfirmation = () => {
                     <Row>
                         <Col lg='12'>
                             <Link to="/">
-                                <img src={Logo} />
+                                <img src={MailIcon} />
                             </Link>
                         </Col>
                     </Row>
-                    <Row className='narrow-600 p-5  mt-5 text-dgray'>
+                    <Row className='narrow-600 p-5  pt-4 mt-2 text-dgray'>
                         <Col lg='12'>
                             <h1 className='pb-2'>Email Confirmed</h1>
                             <p className='subtitle'>Thank you for confirming your email!</p>
