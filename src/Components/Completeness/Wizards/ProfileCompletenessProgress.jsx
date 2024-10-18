@@ -119,7 +119,7 @@ const ProfileProgress = ({ completeness, reloadCount }) => {
                         </>
                     }
                 </div>
-                {/* <div className='w-100 step-container'>
+                <div className='w-100 step-container'>
                     {aboutDone == "Yes" && addressDone == "Yes" && contactDone == "Yes" && socialDone != "Yes"?
                         <>
                             <div className='d-flex align-items-center active'>
@@ -148,9 +148,9 @@ const ProfileProgress = ({ completeness, reloadCount }) => {
                             </div>
                         </>
                     }
-                </div> */}
+                </div>
                 <div className='w-100 step-container'>
-                    {aboutDone == "Yes" && addressDone == "Yes" && contactDone == "Yes" && bodyMeasurementDone != "Yes"?
+                    {aboutDone == "Yes" && addressDone == "Yes" && contactDone == "Yes" && socialDone == "Yes" && bodyMeasurementDone != "Yes"?
                         <>
                             <div className='d-flex align-items-center active'>
                                 <div className='progress-circle progress-circle-active'>
@@ -172,7 +172,7 @@ const ProfileProgress = ({ completeness, reloadCount }) => {
                         <>
                             <div className='d-flex align-items-center inactive'>
                                 <div className='progress-circle progress-circle-inactive'>
-                                    <span className='fs-12 fw-500'>4</span>
+                                    <span className='fs-12 fw-500'>5</span>
                                 </div>
                                 <span className='ms-2'>Body Measurement</span>
                             </div>
@@ -190,6 +190,15 @@ const ProfileProgress = ({ completeness, reloadCount }) => {
                         </>
                     }
                     {addressDone == "Yes" ?
+                        <>
+                            <div className='progress-line line-active'></div>
+                        </>
+                    :
+                        <>
+                            <div className='progress-line'></div>
+                        </>
+                    }
+                    {socialDone == "Yes" ?
                         <>
                             <div className='progress-line line-active'></div>
                         </>

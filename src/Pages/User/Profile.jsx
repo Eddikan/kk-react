@@ -1017,8 +1017,8 @@ const Profile = () => {
                                                                 :
                                                                 null
                                                             }
-                                                            <Button href="/user/profile/edit" type='button' id="btn-edit-profile" className='mt-2'>
-                                                                <GoPencil size="20px" /><span className='ms-1'>Edit Profile</span>
+                                                            <Button href="/user/complete-profile" type='button' className='mt-2'>
+                                                                Complete Profile
                                                             </Button>
                                                         </div>
                                                     </Col>

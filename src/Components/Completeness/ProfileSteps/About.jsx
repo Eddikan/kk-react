@@ -21,11 +21,11 @@ const AboutStep = ({ user, currentUser, reload, token }) => {
 
     async function submitProfile(e) {
         if (profileFormData.first_name === '' || profileFormData.first_name == null) {
-            toast('First name is required!', {
+            toast('First Name is required!', {
                 icon: '⚠️',
             });
         } else if (profileFormData.last_name === '' || profileFormData.first_name == null) {
-            toast('Last name is required!', {
+            toast('Last Name is required!', {
                 icon: '⚠️',
             });
         } else if (profileFormData.gender === '' || profileFormData.gender == null) {
@@ -35,12 +35,12 @@ const AboutStep = ({ user, currentUser, reload, token }) => {
         } else {
             e.preventDefault();
             setFormStatus(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...profileFormData}).then((response) => {
+            axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...profileFormData, about_complete: 1}).then((response) => {
                 const success = response.data.status;
                 if (success == 'Success') {
                     const data = response.data.data;
                     const userData = data.user;
-                    const user_details = { currentUser: userData.id, id: userData.id, first_name: userData.first_name, last_name: userData.last_name, image: userData.image, email_verified_at: userData.email_verified_at, signup_type: userData.signup_type, email: userData.email, is_seller: userData.is_seller, is_designer: userData.is_designer, shop_completed: userData.shop_completed, profile_completeness: userData.profile_completeness  }
+                    const user_details = { currentUser: userData.id, id: userData.id, first_name: userData.first_name, last_name: userData.last_name, image: userData.image, email_verified_at: userData.email_verified_at, signup_type: userData.signup_type, email: userData.email, is_seller: userData.is_seller, is_designer: userData.is_designer, shop_completed: userData.shop_completed, profile_completeness: userData.profile_completeness, is_designer: userData.is_designer, is_seller: userData.is_seller  }
                     setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
                     setCookie('aboutDone', "Yes", { path: '/' });
                     toast.success('Personal information updated successfully!');

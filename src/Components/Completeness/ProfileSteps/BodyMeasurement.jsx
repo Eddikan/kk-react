@@ -595,7 +595,7 @@ const BodyMeasurementStep = ({ user, currentUser, reload, token }) => {
             ...profileFormData,
             body_measurement: JSON.stringify(checklistData)
         };
-        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...updatedProfileFormData }).then((response) => {
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token, { ...updatedProfileFormData, body_measurement_complete: 1 }).then((response) => {
             const success = response.data.status;
             if (success == 'Success') {
                 const data = response.data.data;
@@ -661,8 +661,6 @@ const BodyMeasurementStep = ({ user, currentUser, reload, token }) => {
                 if (success == 'Success') {
                     const data = response.data.data;
                     const user = data.user;
-                    const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
-                    setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
                     toast.success('Body measurement added successfully!');
                     reload();
                 } else {

@@ -271,7 +271,7 @@ const ProfileCompleteness = () => {
                                                 />
                                             </>
                                         }
-                                        {/* {contactDone == "Yes" && socialDone == "No" && 
+                                        {contactDone == "Yes" && socialDone == "No" && 
                                             <>
                                                 <SocialMediaStep
                                                     currentUser={currentUser}
@@ -280,7 +280,7 @@ const ProfileCompleteness = () => {
                                                     reload={() => setReloadCount(reloadCount + 1)}
                                                 />
                                             </>
-                                        }  */}
+                                        } 
                                         {contactDone == "Yes" && bodyMeasurementDone == "No" && 
                                             <>
                                                 <BodyMeasurementStep

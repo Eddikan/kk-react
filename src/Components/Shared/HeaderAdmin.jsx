@@ -141,17 +141,17 @@ const HeaderAdmin = () => {
             //     }
             // }
 
-            if (reminded == 0) {
-                if (currentUrl.includes('user')) {
-                    if (!completedQuestionnaire) {
-                        toast.error('Please complete the questionnaire before proceeding, thank you!');
-                        setTimeout(function () {
-                            navigate("/questionnaire");
-                        }, 1000)
-                        reminded = 1;
-                    }
-                }
-            }
+            // if (reminded == 0) {
+            //     if (currentUrl.includes('user')) {
+            //         if (!completedQuestionnaire) {
+            //             toast.error('Please complete the questionnaire before proceeding, thank you!');
+            //             setTimeout(function () {
+            //                 navigate("/questionnaire");
+            //             }, 1000)
+            //             reminded = 1;
+            //         }
+            //     }
+            // }
 
         } else {
             if (currentUrl.includes('user') || currentUrl.includes('designers') || currentUrl.includes('fabrics') || currentUrl.includes('designs')) {

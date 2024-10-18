@@ -145,17 +145,17 @@ const HeaderSeller = () => {
             //     }
             // }
 
-            if (reminded == 0) {
-                if (currentUrl.includes('user')) {
-                    if (!completedQuestionnaire) {
-                        toast.error('Please complete the questionnaire before proceeding, thank you!');
-                        setTimeout(function () {
-                            navigate("/questionnaire");
-                        }, 1000)
-                        reminded = 1;
-                    }
-                }
-            }
+            // if (reminded == 0) {
+            //     if (currentUrl.includes('user')) {
+            //         if (!completedQuestionnaire) {
+            //             toast.error('Please complete the questionnaire before proceeding, thank you!');
+            //             setTimeout(function () {
+            //                 navigate("/questionnaire");
+            //             }, 1000)
+            //             reminded = 1;
+            //         }
+            //     }
+            // }
 
         } else {
             if (currentUrl.includes('user') || currentUrl.includes('designers') || currentUrl.includes('fabrics') || currentUrl.includes('designs')) {
@@ -222,7 +222,7 @@ const HeaderSeller = () => {
         <>
             {isLoggedIn &&
                 <>
-                    {(user.profile_completeness >= 0 && user.profile_completeness < 100) &&
+                    {/* {(user.profile_completeness >= 0 && user.profile_completeness < 100) &&
                         <>
                             <div className='banner-completion text-center'>
 
@@ -233,7 +233,7 @@ const HeaderSeller = () => {
                                 </span>
                             </div>
                         </>
-                    }
+                    } */}
 
                     {/* {(user.shop_completed == 0 && (user.is_designer == 1 || user.is_seller == 1)) && 
             <>

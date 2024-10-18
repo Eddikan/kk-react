@@ -233,6 +233,7 @@ const Orders = (props) => {
                                                                                         }
 
                                                                                         const productPrice = order_item_product.price ?? '0';
+
                                                                                         const productCurrency = order_item_product.currency ?? 'USD';
 
                                                                                         const convertedPrice = CurrencyConverter(productPrice, productCurrency, cookies);

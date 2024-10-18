@@ -138,7 +138,7 @@ const Header = () => {
   };
 
   const getCurrencyConversions = async (e) => {
-    return await axios.get('https://api.fastforex.io/fetch-multi?from=USD&to=AFN,ALL,DZD,USD,EUR,AOA,XCD,ARS,AMD,AWG,AUD,EUR,AZN,BSD,BHD,BDT,BBD,EUR,BZD,XOF,BMD,BTN,BOB,BAM,BWP,BRL,BND,BGN,XOF,BIF,KHR,XAF,CAD,CVE,KYD,XAF,XAF,CLP,CNY,COP,KMF,XAF,HRK,CUP,EUR,CZK,DKK,DJF,XCD,DOP,USD,EGP,USD,XAF,ERN,EUR,SZL,ETB,FJD,EUR,EUR,XAF,GMD,GEL,EUR,GHS,EUR,XCD,GTQ,GNF,XOF,GYD,HTG,HNL,HUF,ISK,INR,IDR,IRR,IQD,EUR,ILS,EUR,XOF,JMD,JPY,JOD,KZT,KES,AUD,KPW,KRW,KWD,KGS,LAK,EUR,LBP,LSL,LRD,LYD,MOP,MGA,MWK,MYR,MVR,MRU,MUR,MXN,MDL,MNT,MAD,MZN,MMK,NAD,AUD,NPR,EUR,XPF,NZD,XOF,NGN,KPW,NOK,OMR,PKR,PAB,PGK,PYG,PEN,PHP,PLN,EUR,QAR,RON,RUB,RWF,XCD,WST,SAR,XOF,RSD,SCR,SLL,SGD,SOS,ZAR,KRW,EUR,LKR,SDG,SRD,SZL,SEK,CHF,SYP,TWD,TJS,TZS,THB,XOF,TOP,TTD,TND,TRY,TMT,UGX,UAH,AED,GBP,USD,UYU,UZS,VUV,VND,YER,ZMW&api_key=demo');
+    return await axios.get('https://api.fastforex.io/fetch-multi?from=USD&to=AFN,ALL,DZD,USD,EUR,AOA,XCD,ARS,AMD,AWG,AUD,EUR,AZN,BSD,BHD,BDT,BBD,EUR,BZD,XOF,BMD,BTN,BOB,BAM,BWP,BRL,BND,BGN,XOF,BIF,KHR,XAF,CAD,CVE,KYD,XAF,XAF,CLP,CNY,COP,KMF,XAF,HRK,CUP,EUR,CZK,DKK,DJF,XCD,DOP,USD,EGP,USD,XAF,ERN,EUR,SZL,ETB,FJD,EUR,EUR,XAF,GMD,GEL,EUR,GHS,EUR,XCD,GTQ,GNF,XOF,GYD,HTG,HNL,HUF,ISK,INR,IDR,IRR,IQD,EUR,ILS,EUR,XOF,JMD,JPY,JOD,KZT,KES,AUD,KPW,KRW,KWD,KGS,LAK,EUR,LBP,LSL,LRD,LYD,MOP,MGA,MWK,MYR,MVR,MRU,MUR,MXN,MDL,MNT,MAD,MZN,MMK,NAD,AUD,NPR,EUR,XPF,NZD,XOF,NGN,KPW,NOK,OMR,PKR,PAB,PGK,PYG,PEN,PHP,PLN,EUR,QAR,RON,RUB,RWF,XCD,WST,SAR,XOF,RSD,SCR,SLL,SGD,SOS,ZAR,KRW,EUR,LKR,SDG,SRD,SZL,SEK,CHF,SYP,TWD,TJS,TZS,THB,XOF,TOP,TTD,TND,TRY,TMT,UGX,UAH,AED,GBP,USD,UYU,UZS,VUV,VND,YER,ZMW&api_key=9920f5c7b2-af7c7a72bd-slk430');
   };
 
   useEffect(()=>{
@@ -311,17 +311,17 @@ const Header = () => {
       //   }
       // }
 
-      if (reminded == 0) {
-        if (currentUrl.includes('user')) {
-          if (!completedQuestionnaire && (userDetails.is_designer == 1 || userDetails.is_seller == 1)) {
-            toast.error('Please complete the questionnaire before proceeding, thank you!');
-            setTimeout(function () {
-              navigate("/questionnaire");
-            }, 1500)
-            reminded = 1;
-          }
-        }
-      }
+      // if (reminded == 0) {
+      //   if (currentUrl.includes('user')) {
+      //     if (!completedQuestionnaire && (userDetails.is_designer == 1 || userDetails.is_seller == 1)) {
+      //       toast.error('Please complete the questionnaire before proceeding, thank you!');
+      //       setTimeout(function () {
+      //         navigate("/questionnaire");
+      //       }, 1500)
+      //       reminded = 1;
+      //     }
+      //   }
+      // }
 
     }
 
@@ -363,8 +363,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (currencyConversions) {
-
+    if (currencyConversions && currencyConversions != "") {
     } else {
       getCurrencyConversions()
         .then((response) => {

@@ -652,7 +652,6 @@ const EditProfile = () => {
             description: 'Ask your partner to gently mark the wall with colored tape where the ruler, book, or another flat object meets your nape while you stand against the wall. Use a tape measure, preferably a metal one for accuracy, to measure the distance from the floor to the mark on the wall.',
         },
     ];
-    
 
     const showTab = (tab) => {
         if (tab == "profile") {
@@ -807,7 +806,7 @@ const EditProfile = () => {
             if (success == 'Success') {
                 const data = response.data.data;
                 const user = data.user;
-                const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
+                const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer, shop_completed: user.shop_completed, profile_completeness: user.profile_completeness }
                 setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
                 
                 setCookie('userCurrency', JSON.stringify(user.currency ?? 'USD'), { path: '/' });
