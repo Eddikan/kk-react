@@ -7,6 +7,7 @@ import '../Assets/styles/EmailConfirmation/style.css';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import MailIcon from '../Assets/images/icons/email.png'
 
 const initialUserData = Object.freeze({
   first_name: '',
@@ -99,18 +100,19 @@ const EmailConfirmation = () => {
         <Container className='text-center'>
           <Row>
             <Col lg='12'>
-              <img src={Logo} />
+              <img src={MailIcon} className="mail-icon"/>
             </Col>
           </Row>
-          <Row className='narrow-600 p-5  mt-5 text-dgray'>
+          <Row className='narrow-750 p-5  pt-4 mt-2 text-dgray'>
             <Col lg='12'>
               <h1 className='pb-2'>Email Confirmation</h1>
-              <p className='subtitle'>Thank you for signing up for Kouture Konect. Before we get started, we'll need to verify your email. Please check your email</p>
-              <p className='login-with-email'>or</p>
+              <p className='subtitle mb-0'>Thank you for signing up for Kouture Konect. Before we get</p>
+              <p className='fs-16'>started, we'll need to verify your email. Please check your email</p>
+              {/* <p className='login-with-email'>or</p> */}
               {formStatus != "standby" ?
-                <Button className='btn-primary fs-16' variant='primary'>Sending...</Button>
+                <Button className='btn-primary mt-4' variant='primary'>Sending...</Button>
                 :
-                <Button onClick={resendVerificationEmail} className='btn-primary fs-16' variant='primary'>Resend Email</Button>
+                <Button onClick={resendVerificationEmail} className='btn-primary fs-16 mt-4' variant='primary'>Resend Email</Button>
               }
             </Col>
           </Row>
