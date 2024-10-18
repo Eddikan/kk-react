@@ -281,7 +281,7 @@ const ProfileCompleteness = () => {
                                                 />
                                             </>
                                         } 
-                                        {contactDone == "Yes" && bodyMeasurementDone == "No" && 
+                                        {socialDone == "Yes" && bodyMeasurementDone == "No" && 
                                             <>
                                                 <BodyMeasurementStep
                                                     currentUser={currentUser}
@@ -291,7 +291,7 @@ const ProfileCompleteness = () => {
                                                 />
                                             </>
                                         }
-                                        {contactDone == "Yes" && addressDone == "Yes"  && aboutDone == "Yes" && bodyMeasurementDone == "Yes" ?
+                                        {contactDone == "Yes" && addressDone == "Yes"  && socialDone == "Yes" && aboutDone == "Yes" && bodyMeasurementDone == "Yes" ?
                                             <>
                                                 <ThankyouStep
                                                     currentUser={currentUser}

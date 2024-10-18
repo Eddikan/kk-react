@@ -1463,11 +1463,14 @@ const BodyMeasurementStep = ({ user, currentUser, reload, token }) => {
                                         </Form.Group>
                                     </Col>
                                     <div className="text-right mt-4 mb-2">
+                                    <div className="text-right mt-4 mb-2">
+                                        <Button type='button' onClick={submitBack} className="btn-back mx-2">Back</Button>
                                         {formStatus ?
                                             <Button type='button' className="btn-save">Saving...</Button>
                                             :
-                                            <Button type='submit' className="btn-save">Save</Button>
+                                            <Button type='button' onClick={submitBodyMeasurement} className="btn-save">Finish</Button>
                                         }
+                                    </div>
                                     </div>
                                 </>
                                 :

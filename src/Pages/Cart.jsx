@@ -337,8 +337,7 @@ const Cart = (props) => {
                     <section className="px-5">
                         <Container className='top-bottom'>
                             <Row>
-                                
-                                {currentUser && user.profile_completeness >= 0 && user.profile_completeness < 100 ? 
+                                {currentUser && user && user?.profile_completeness >= 0 && user?.profile_completeness < 100 ? 
                                     <>
                                         <Col md={12} className='d-flex justify-content-left align-items-center'>
                                             <p className="mb-3 fs-14 fw-500"><Link className="text-decoration-none text-muted" to="/">Home</Link> / Cart</p>
@@ -881,7 +880,7 @@ const Cart = (props) => {
                                                 }
                                                 <Col lg="12">
                                                 {currentUser ? (
-                                                    totalAmount > 0 && user.profile_completeness === 100 ? (
+                                                    totalAmount > 0 && user && user?.profile_completeness === 100 ? (
                                                         <Link to="/checkout">
                                                             <button className='checkout-btn btn btn-primary mt-3'>Check Out</button>
                                                         </Link>

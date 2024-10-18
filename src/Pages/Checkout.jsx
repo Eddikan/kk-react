@@ -2715,7 +2715,7 @@ const Cart = ({ props }) => {
                                                                                                 <>
                                                                                                     {currentUser ?
                                                                                                         <>
-                                                                                                            {user.profile_complete == 1 ?
+                                                                                                            {user?.profile_complete == 1 ?
                                                                                                                 <PayPalButtons
                                                                                                                     fundingSource="paypal"
                                                                                                                     createOrder={(data, actions) => {
@@ -2750,7 +2750,7 @@ const Cart = ({ props }) => {
                                                                                                     <>
                                                                                                         {currentUser ?
                                                                                                             <>
-                                                                                                                {user.profile_complete == 1 ?
+                                                                                                                {user?.profile_complete == 1 ?
                                                                                                                     <button type="button" className='btn btn-primary' onClick={() => checkOutSubmitStripe()}>{formStatus != "standby" ? "Loading..." : "Checkout"}</button>
                                                                                                                     :
                                                                                                                     <Link to="/user/complete-profile">
@@ -2768,7 +2768,7 @@ const Cart = ({ props }) => {
                                                                                                     <>
                                                                                                         {currentUser ?
                                                                                                             <>
-                                                                                                                {user.profile_complete == 1 ?
+                                                                                                                {user?.profile_complete == 1 ?
                                                                                                                     <button type="submit" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
                                                                                                                     :
                                                                                                                     <Link to="/user/complete-profile">
