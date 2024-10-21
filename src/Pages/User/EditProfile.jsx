@@ -105,6 +105,11 @@ const initialChecklistData = {
 
 }
 
+const initialLatLon = Object.freeze({
+    latitude: 0,
+    longitude: 0,
+});
+
 const initialDesignerData = Object.freeze({
     areas_of_specialization: [""],
 });
@@ -127,14 +132,22 @@ const EditProfile = () => {
     const [userImage, setUserImage] = useState('');
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser']);
     const [areasOfSpecializationData, setAreaOfSpecializationData] = useState(initialDesignerData.areas_of_specialization);
-
     const [areasOfSpecialization, setAreaOfSpecialization] = useState(initialDesignerData.areas_of_specialization);
+    const [errors, setErrors] = useState();
 
     const [measurementGuideModalShow, setMeasurementGuideModalShow] = useState(false);
     const [modalHeadingMeasurementGuide, setModalHeadingMeasurementGuide] = useState('');
     const [measurementGuideDescription, setModalMeasurementGuideDescription] = useState('');
     const [measurementGuideImage, setModalMeasurementGuideImage] = useState('');
     const [measurementGuidedataLookup, setMeasurementGuideDataLookup] = useState({});
+
+    // Locations
+    const [cities, setCities] = useState([]);
+    const [provinces, setProvinces] = useState([]);
+
+    const [provincesLoading, setProvincesLoading] = useState(false);
+    const [citiesLoading, setCitiesLoading] = useState(false);
+    const [coordinates, setCoordinates] = useState(initialLatLon);
 
     const currentUser = cookies.currentUser;
     const token = cookies.token;
@@ -421,7 +434,7 @@ const EditProfile = () => {
             image: require('Assets/images/body-length.png'), // Adjust path
             description: 'Ask your partner to gently mark the wall with colored tape where the ruler, book, or another flat object meets your nape while you stand against the wall. Use a tape measure, preferably a metal one for accuracy, to measure the distance from the floor to the mark on the wall.',
         },
-    
+
         // Male
         {
             id: 47,
@@ -716,13 +729,101 @@ const EditProfile = () => {
         return null; // Return null if no match is found
     };
 
+    const getCoordinates = async (requestData) => {
+        const API_KEY = '7ba22fb46e866c41cd6bd744126fa733'; // Replace with your OpenWeatherMap API key
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${requestData}&appid=${API_KEY}`;
+        setProfileFormLoading(true);
+        try {
+            const response = await axios.get(url);
+            const { lat, lon } = response.data.coord; // Extracting latitude and longitude
+            if (response.status == 200) {
+                setCoordinates({
+                    ...coordinates,
+                    latitude: lat,
+                    longitude: lon,
+                });
+            } else {
+                toast.error('Failed to fetch coordinates. Please check the city name and try again.');
+            }
+            setProfileFormLoading(false);
+            
+        } catch (error) {
+            toast.error('Failed to fetch coordinates. Please check the city name and try again.');
+            console.error(error);
+            setProfileFormLoading(false);
+        }
+    };
+
+    const getCountryStates = async (requestData) => {
+        try {
+            setProvincesLoading(true);
+            const response = await axios.post(
+                process.env.REACT_APP_LOCATION_API_ENDPOINT + 'countries/states',
+                requestData, // JSON body with country
+                {
+                    headers: {
+                        'Content-Type': 'application/json', // Ensure it's sending as JSON
+                    },
+                }
+            );
+
+            const { error, data } = response.data;
+
+            if (!error) {
+                setProvinces(data.states); // Assuming the response has the states in `data.states`
+                setProvincesLoading(false);
+            } else {
+                const errors = response.data.errors;
+                if (errors) {
+                    setErrors(errors);
+                    toast.error('There has been an error getting the states, please try again!');
+                } else {
+                    toast.error('There has been an error getting the states, please try again!');
+                }
+                setProvincesLoading(false);
+            }
+        } catch (err) {
+            toast.error('There has been an error getting the states, please try again!');
+            setProvincesLoading(false);
+        }
+    };
+
+    const getStateCities = async (requestData) => {
+        try {
+            setCitiesLoading(true);
+            const response = await axios.post(
+                process.env.REACT_APP_LOCATION_API_ENDPOINT + 'countries/state/cities',
+                requestData, // JSON body with country and state
+                {
+                    headers: {
+                        'Content-Type': 'application/json', // Ensure it's sending as JSON
+                    },
+                }
+            );
+
+            const { error, data } = response.data;
+
+            if (!error) {
+                setCities(data); // Assuming the response has the cities in `data`
+                setCitiesLoading(false);
+            } else {
+                const errors = response.data.errors;
+                if (errors) {
+                    setErrors(errors);
+                    toast.error('There has been an error getting the cities, please try again!');
+                } else {
+                    toast.error('There has been an error getting the cities, please try again!');
+                }
+                setCitiesLoading(false);
+            }
+        } catch (err) {
+            toast.error('There has been an error getting the cities, please try again!');
+            setCitiesLoading(false);
+        }
+    };
+
     const handleChange = (e) => {
         var { name, value } = e.target;
-
-        setProfileFormData({
-            ...profileFormData,
-            [e.target.name]: e.target.value,
-        });
 
         if (name == "country") {
             const country = Object.values(CountryData).find(country => country.name === value);
@@ -744,7 +845,25 @@ const EditProfile = () => {
                 [e.target.name]: e.target.value,
                 currency: currency,
                 currency_code: currencyCode,
-                country_code: country_code ?? "US"
+                country_code: country_code ?? "US",
+                province: "",
+                province_code: "",
+                city: "",
+            });
+        } else if (name == "province") {
+            const selectedProvince = e.target.selectedOptions[0];
+            const provinceCode = selectedProvince.getAttribute('data-province-code');
+
+            setProfileFormData({
+                ...profileFormData,
+                [e.target.name]: e.target.value,
+                province_code: provinceCode,
+                city: "",
+            });
+        } else {
+            setProfileFormData({
+                ...profileFormData,
+                [e.target.name]: e.target.value,
             });
         }
     };
@@ -764,24 +883,24 @@ const EditProfile = () => {
         });
 
         e.preventDefault();
-            setProfileFormLoading(true);
-            axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token + '&gender=' + value).then((response) => {
-                const success = response.data.status;
-                if (success == 'Success') {
-                    const data = response.data.data;
-                    const user = data.user;
-                    const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
-                    setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-                    toast.success('Profile updated successfully!');
-                    setReloadCount((prevReloadCount) => prevReloadCount + 1);
-                } else {
-                    const errors = response.data.errors;
-                }
-                setProfileFormLoading(false);
-            }).catch((error) => {
-                setProfileFormLoading(false);
-                toast.error('Something went wrong, please contact the administrator!');
-            });
+        setProfileFormLoading(true);
+        axios.put(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '?user_id=' + currentUser + '&token=' + token + '&gender=' + value).then((response) => {
+            const success = response.data.status;
+            if (success == 'Success') {
+                const data = response.data.data;
+                const user = data.user;
+                const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at }
+                setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
+                toast.success('Profile updated successfully!');
+                setReloadCount((prevReloadCount) => prevReloadCount + 1);
+            } else {
+                const errors = response.data.errors;
+            }
+            setProfileFormLoading(false);
+        }).catch((error) => {
+            setProfileFormLoading(false);
+            toast.error('Something went wrong, please contact the administrator!');
+        });
     };
 
     const handleChangePhone = (e) => {
@@ -797,7 +916,9 @@ const EditProfile = () => {
 
         const updatedProfileFormData = {
             ...profileFormData,
-            body_measurement: JSON.stringify(checklistData)
+            body_measurement: JSON.stringify(checklistData),
+            latitude: coordinates.latitude,
+            longitude: coordinates.longitude
             // ...(bodyMeasurementShow && { body_measurement: JSON.stringify(checklistData) }),
         };
 
@@ -808,7 +929,7 @@ const EditProfile = () => {
                 const user = data.user;
                 const user_details = { currentUser: user.id, id: user.id, first_name: user.first_name, last_name: user.last_name, image: user.image, email_verified_at: user.email_verified_at, signup_type: user.signup_type, email: user.email, is_seller: user.is_seller, is_designer: user.is_designer, shop_completed: user.shop_completed, profile_completeness: user.profile_completeness }
                 setCookie('userDetails', JSON.stringify(user_details), { path: '/' });
-                
+
                 setCookie('userCurrency', JSON.stringify(user.currency ?? 'USD'), { path: '/' });
                 setCookie('userCurrencyCode', JSON.stringify(user.currency_code ?? '$'), { path: '/' });
 
@@ -906,6 +1027,44 @@ const EditProfile = () => {
         fetchData({ currentUser: currentUser, token: token });
     }, [reloadCount]);
 
+    useEffect(() => {
+        var userCountry = profileFormData.country;
+
+        if (userCountry && userCountry != "") {
+            var data = {
+                country: userCountry
+            };
+            setProvinces([]);
+            setCities([]);
+
+            getCountryStates(data);
+        }
+    }, [profileFormData.country]);
+
+    useEffect(() => {
+        var userCountry = profileFormData.country;
+        var userProvince = profileFormData.province;
+
+        if (userCountry && userCountry != "" && userProvince && userProvince != "") {
+            var data = {
+                country: userCountry,
+                state: userProvince
+            };
+            setCities([]);
+
+            getStateCities(data);
+        }
+    }, [profileFormData.country, profileFormData.province]);
+
+    useEffect(() => {
+        var userCity = profileFormData.city;
+
+        if (userCity && userCity != "") {
+            var data = userCity;
+            getCoordinates(data);
+        }
+    }, [profileFormData.city]);
+
     return (
         <Layout>
             {userLoading ?
@@ -925,22 +1084,22 @@ const EditProfile = () => {
                                             }
                                         </div>
                                         <div>
-                                            <h2 className='fs-20 mb-2'>
+                                            <h2 className='fs-25 mb-1'>
                                                 {user.first_name || user.last_name ?
                                                     <span>{user.first_name} {user.last_name}</span>
                                                     :
                                                     <span>-</span>
                                                 }
                                             </h2>
-                                            <div className='icons-d-flex'>
+                                            <div className='icons-d-flex' style={{ columnGap: '5px' }}>
                                                 <img src={PinIcon} className='mt-1' />
                                                 {user.city || user.province || user.country ?
-                                                    <p className='fs-16 color-light-blue'>
-                                                        {user.province ? user.province + ',' : user.city ? user.city + ','  : "" } {user.country ? user.country : ""}
+                                                    <p className='fs-14 color-light-blue'>
+                                                        {user.province ? user.province + ',' : user.city ? user.city + ',' : ""} {user.country ? user.country : ""}
                                                         {/* {user.city ? user.city + ',' : ""} {user.province ? user.province + "," : ""} {user.country ? user.country : ""} */}
                                                     </p>
                                                     :
-                                                    <p className='fs-16 color-light-blue'>-</p>
+                                                    <p className='fs-14 color-light-blue'>-</p>
                                                 }
                                             </div>
                                         </div>
@@ -1073,12 +1232,12 @@ const EditProfile = () => {
                                                         </Form.Group>
                                                     </Col>
                                                     <Row>
-                                                        <Col lg="12">
+                                                        <Col lg="6">
                                                             <Form.Group className='mb-4'>
                                                                 <Form.Label>Country</Form.Label>
                                                                 {/* <FormControl type='text' name='country' value={profileFormData.country} className='mr-sm-2' onChange={handleChange} required placeholder='' /> */}
                                                                 <Form.Control as='select' name='country' value={profileFormData.country} className='mr-sm-2' onChange={handleChange} required>
-                                                                    <option value=''>Select Country</option>
+                                                                    <option value='' disabled>Select Country</option>
                                                                     {Countries.map((country, index) => (
                                                                         <option key={country + "-" + index} value={country}>
                                                                             {country}
@@ -1090,19 +1249,63 @@ const EditProfile = () => {
                                                         <Col lg="6">
                                                             <Form.Group className='mb-4'>
                                                                 <Form.Label>State/Province</Form.Label>
-                                                                <FormControl type='text' name='province' value={profileFormData.province} className='mr-sm-2' onChange={handleChange} required placeholder='' />
-                                                            </Form.Group>
-                                                        </Col>
-                                                        <Col lg="6">
-                                                            <Form.Group className='mb-4'>
-                                                                <Form.Label>State/Province Code</Form.Label>
-                                                                <FormControl type='text' name='province_code' value={profileFormData.province_code} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                                {provincesLoading ?
+                                                                    <>
+                                                                        <Form.Control as='select' name='province' value="" className='mr-sm-2' disabled required>
+                                                                            <option value='' selected>Loading...</option>
+                                                                        </Form.Control>
+                                                                    </>
+                                                                    :
+                                                                    <>
+                                                                        {profileFormData.country && provinces && provinces.length > 0 ?
+                                                                            <Form.Control as='select' name='province' value={profileFormData.province} className='mr-sm-2' onChange={handleChange} required>
+                                                                                <option value='' disabled>Select Province</option>
+                                                                                {provinces.map((province, index) => {
+                                                                                    if (province.name != "American Samoa") {
+                                                                                        return (
+                                                                                            <option key={province.name + "-" + index} value={province.name} data-province-code={province.state_code}>
+                                                                                                {province.name}
+                                                                                            </option>
+                                                                                        )
+                                                                                    }
+                                                                                })}
+                                                                            </Form.Control>
+                                                                            :
+                                                                            <Form.Control as='select' name='province' value="" className='mr-sm-2' disabled required>
+                                                                                <option value='' selected>Please select country first</option>
+                                                                            </Form.Control>
+                                                                        }
+                                                                    </>
+                                                                }
                                                             </Form.Group>
                                                         </Col>
                                                         <Col lg="6">
                                                             <Form.Group className='mb-4'>
                                                                 <Form.Label>City</Form.Label>
-                                                                <FormControl type='text' name='city' value={profileFormData.city} className='mr-sm-2' onChange={handleChange} required placeholder='' />
+                                                                {citiesLoading ?
+                                                                    <>
+                                                                        <Form.Control as='select' name='city' value="" className='mr-sm-2' disabled required>
+                                                                            <option value='' selected>Loading...</option>
+                                                                        </Form.Control>
+                                                                    </>
+                                                                    :
+                                                                    <>
+                                                                        {profileFormData.province && cities && cities.length > 0 ?
+                                                                            <Form.Control as='select' name='city' value={profileFormData.city} className='mr-sm-2' onChange={handleChange} required>
+                                                                                <option value='' disabled>Select City</option>
+                                                                                {cities.map((city, index) => (
+                                                                                    <option key={city + "-" + index} value={cities.name}>
+                                                                                        {city}
+                                                                                    </option>
+                                                                                ))}
+                                                                            </Form.Control>
+                                                                            :
+                                                                            <Form.Control as='select' name='city' value="" className='mr-sm-2' disabled required>
+                                                                                <option value='' selected>Please select a province first</option>
+                                                                            </Form.Control>
+                                                                        }
+                                                                    </>
+                                                                }
                                                             </Form.Group>
                                                         </Col>
                                                         <Col lg="6">
@@ -1156,15 +1359,15 @@ const EditProfile = () => {
                                                                         border: '1px solid #f3f3f3',
                                                                         minHeight: '40px'
                                                                     }}
-                                                                    buttonStyle={{ 
+                                                                    buttonStyle={{
                                                                         backgroundColor: 'transparent',
                                                                         borderRight: 'none',
                                                                         border: '1px solid #f3f3f3'
                                                                     }}
-                                                                    searchStyle={{ 
+                                                                    searchStyle={{
                                                                         width: "80%"
                                                                     }}
-                                                                    countryListStyle={{ 
+                                                                    countryListStyle={{
                                                                         width: "225px"
                                                                     }}
                                                                 />
@@ -2074,7 +2277,7 @@ const EditProfile = () => {
                                                         }
                                                     </Row>
                                                 </div>
-                                            : 
+                                                :
                                                 null
                                             }
                                         </Card.Body>

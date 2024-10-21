@@ -138,7 +138,7 @@ const SignUpPreference = () => {
                         <Col lg="12">
                             {/* <h3 className="text-center fw-600 mb-5">I am looking for...</h3> */}
                             <h3 className="shop-modal-intro text-center fw-bold mt-5 mb-2">Join as a Designer, Fabric Vendor or both</h3>
-                            <p className="modal-subtitle text-center mb-70">To get started, please select one of the options:</p>
+                            <p className="modal-subtitle text-center mb-50">To get started, please select one of the options:</p>
                             <Row>
                                 <Col lg="4" className="mb-90">
                                 {/* onClick={() => showSignupModal('user_designer')} */}
@@ -148,7 +148,7 @@ const SignUpPreference = () => {
                                         <div className="user-box shop-modal-card-content text-center justify-content-center">
                                             <div className="text-start w-100">
                                                 <p className="mb-0 fs-12">I am a</p>
-                                                <h3 className="shop-modal-title fs-30 fw-600 lh-32">Designer</h3>
+                                                <h3 className="shop-modal-title fs-30 fw-600 lh-35 mt-2">Designer</h3>
                                             </div>
                                         </div>
                                     </Card.Body>
@@ -162,7 +162,7 @@ const SignUpPreference = () => {
                                         <div className="user-box shop-modal-card-content text-center justify-content-center">
                                             <div className="text-start w-100">
                                                 <p className="mb-0 fs-12">I am a</p>
-                                                <h3 className="shop-modal-title fs-30 fw-600 lh-32">Fabric Vendor</h3>
+                                                <h3 className="shop-modal-title fs-30 fw-600 lh-35 mt-2">Fabric Vendor</h3>
                                             </div>
                                         </div>
                                     </Card.Body>
@@ -176,7 +176,7 @@ const SignUpPreference = () => {
                                         <div className="user-box shop-modal-card-content text-center justify-content-center">
                                             <div className="text-start w-100">
                                                 <p className="mb-0 fs-12">I am both a</p>
-                                                <h3 className="shop-modal-title fs-30 fw-600 lh-32">Designer and <br /> Fabric Vendor</h3>
+                                                <h3 className="shop-modal-title fs-30 fw-600 lh-35 mt-2">Designer & <br /> Fabric Vendor</h3>
                                             </div>
                                         </div>
                                     </Card.Body>

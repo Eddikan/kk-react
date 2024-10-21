@@ -16,37 +16,37 @@
 @font-face {
     font-family: 'TheSeasons';
     src: local('TheSeasons'),
-         url('../fonts/TheSeasons/TheSeasons-Regular.otf') format('opentype');
+         url('../fonts/TheSeasons/TheSeasons-Regular.ttf') format('truetype'); /* Changed to TTF */
 }
 
 @font-face {
     font-family: 'TheSeasons Bold';
     src: local('TheSeasons Bold'),
-         url('../fonts/TheSeasons/TheSeasons-Bold.otf') format('opentype');
+         url('../fonts/TheSeasons/TheSeasons-Bold.ttf') format('truetype'); /* Changed to TTF */
 }
 
 @font-face {
     font-family: 'TheSeasons BoldItalic';
     src: local('TheSeasons BoldItalic'),
-         url('../fonts/TheSeasons/TheSeasons-BoldItalic.otf') format('opentype');
+         url('../fonts/TheSeasons/TheSeasons-BoldItalic.ttf') format('truetype'); /* Changed to TTF */
 }
 
 @font-face {
     font-family: 'TheSeasons Light';
     src: local('TheSeasons Light'),
-         url('../fonts/TheSeasons/TheSeasons-Light.otf') format('opentype');
+         url('../fonts/TheSeasons/TheSeasons-Light.ttf') format('truetype'); /* Changed to TTF */
 }
 
 @font-face {
     font-family: 'TheSeasons LightItalic';
     src: local('TheSeasons LightItalic'),
-         url('../fonts/TheSeasons/TheSeasons-LightItalic.otf') format('opentype');
+         url('../fonts/TheSeasons/TheSeasons-LightItalic.ttf') format('truetype'); /* Changed to TTF */
 }
 
 @font-face {
     font-family: 'TheSeasons Italic';
     src: local('TheSeasons Italic'),
-         url('../fonts/TheSeasons/TheSeasons-Italic.otf') format('opentype');
+         url('../fonts/TheSeasons/TheSeasons-Italic.ttf') format('truetype'); /* Changed to TTF */
 }
 
 :root {
@@ -2565,6 +2565,14 @@ section#profile {
 
 .rufina-family {
     font-family: 'Rufina';
+}
+
+.theseasons-family-regular {
+    font-family: 'TheSeasons';
+}
+
+.theseasons-family-bold {
+    font-family: 'TheSeasons Bold';
 }
 
 section#designer-profile {

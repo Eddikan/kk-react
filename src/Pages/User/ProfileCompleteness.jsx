@@ -188,7 +188,7 @@ const ProfileCompleteness = () => {
             {userLoading ?
                 <LoadingPage />
                 :
-                <section id='profile' className='py-5 px-2'>
+                <section id='profile' className='pt-30 pb-5 px-5'>
                     <Container>
                         {/* <Row>
                             <Col lg="12" className='mb-3'>

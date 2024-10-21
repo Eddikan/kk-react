@@ -105,12 +105,11 @@ img.placeholder-cart {
 .measurement-btns:hover{
     background-color: #eeeeee !important;
 }
-.color-column-keep-height{
-    min-height: 44.39px;
+.color-column-keep-height {
+    min-height: 35px;
 }
 .cart-card{
-    max-width: 348px;
-    height: 200px;
+    max-width: 85%;
     width: 100%;
 }
 .checkout-btn{

@@ -69,6 +69,11 @@ const initialShippingDetails = {
     shipping_rate_data: '',
 };
 
+const initialLatLon = Object.freeze({
+    latitude: 0,
+    longitude: 0,
+});
+
 const Cart = ({ props }) => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -119,10 +124,9 @@ const Cart = ({ props }) => {
     const [provinceCode, setProvinceCode] = useState('');
     const [cityName, setCityName] = useState('');
     const [geonameId, setGeonameId] = useState('');
-    const [provinces, setProvinces] = useState([]);
 
     const [internationalShippingRate, setInternationalShippingRate] = useState();
-    const [internationalShippingRateData, setInternationShippingRateData] = useState();
+    const [internationalShippingRateData, setInternationalShippingRateData] = useState();
 
     const [gigmShippingRate, setGigmShippingRate] = useState();
     const [gigmShippingRateData, setGigmShippingRateData] = useState();
@@ -134,6 +138,17 @@ const Cart = ({ props }) => {
     const [recipient, setRecipient] = useState([]);
     const [shippingDetails, setShippingDetails] = useState(initialShippingDetails);
     const [errors, setErrors] = useState([]);
+    
+    // Locations
+    const [cities, setCities] = useState([]);
+    const [provinces, setProvinces] = useState([]);
+    const [coordinates, setCoordinates] = useState(initialLatLon);
+
+    const [provincesLoading, setProvincesLoading] = useState(false);
+    const [citiesLoading, setCitiesLoading] = useState(false);
+
+    // Ordered Items
+    const [orderedItems, setOrderedItems] = useState([]);
 
     const [showModal, setShowModal] = useState(0);
 
@@ -166,26 +181,6 @@ const Cart = ({ props }) => {
 
     const toggleAuthModal = (e) => {
         setAuthModalShow(!authModalShow);
-    };
-
-    const api_key = '7ba22fb46e866c41cd6bd744126fa733'; // Replace with your OpenWeather API key
-
-    const fetchCoordinates = async (city) => {
-        try {
-            const response = await fetch(
-                `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${api_key}`
-            );
-            const data = await response.json();
-            if (data.length > 0) {
-                return { city: city, lat: data[0].lat, lon: data[0].lon };
-            } else {
-                console.error(`City not found: ${city}`);
-                return null;
-            }
-        } catch (error) {
-            console.error('Error fetching coordinates:', error);
-            return null;
-        }
     };
 
     // const formatPrice = (price) => {
@@ -238,7 +233,100 @@ const Cart = ({ props }) => {
             }
         }
         return null; // Return null if no match is found
-    }
+    };
+
+    const getCountryStates = async (requestData) => {
+        try {
+            setProvincesLoading(true);
+            const response = await axios.post(
+                process.env.REACT_APP_LOCATION_API_ENDPOINT + 'countries/states',
+                requestData, // JSON body with country
+                {
+                    headers: {
+                        'Content-Type': 'application/json', // Ensure it's sending as JSON
+                    },
+                }
+            );
+
+            const { error, data } = response.data;
+
+            if (!error) {
+                setProvinces(data.states); // Assuming the response has the states in `data.states`
+                setProvincesLoading(false);
+            } else {
+                const errors = response.data.errors;
+                if (errors) {
+                    setErrors(errors);
+                    toast.error('There has been an error getting the states, please try again!');
+                } else {
+                    toast.error('There has been an error getting the states, please try again!');
+                }
+                setProvincesLoading(false);
+            }
+        } catch (err) {
+            toast.error('There has been an error getting the states, please try again!');
+            setProvincesLoading(false);
+        }
+    };
+
+    const getStateCities = async (requestData) => {
+        try {
+            setCitiesLoading(true);
+            const response = await axios.post(
+                process.env.REACT_APP_LOCATION_API_ENDPOINT + 'countries/state/cities',
+                requestData, // JSON body with country and state
+                {
+                    headers: {
+                        'Content-Type': 'application/json', // Ensure it's sending as JSON
+                    },
+                }
+            );
+
+            const { error, data } = response.data;
+
+            if (!error) {
+                setCities(data); // Assuming the response has the cities in `data`
+                setCitiesLoading(false);
+            } else {
+                const errors = response.data.errors;
+                if (errors) {
+                    setErrors(errors);
+                    toast.error('There has been an error getting the cities, please try again!');
+                } else {
+                    toast.error('There has been an error getting the cities, please try again!');
+                }
+                setCitiesLoading(false);
+            }
+        } catch (err) {
+            toast.error('There has been an error getting the cities, please try again!');
+            setCitiesLoading(false);
+        }
+    };
+
+    const getCoordinates = async (requestData) => {
+        const API_KEY = '7ba22fb46e866c41cd6bd744126fa733'; // Replace with your OpenWeatherMap API key
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${requestData}&appid=${API_KEY}`;
+        setFormStatus("loading")
+        try {
+            const response = await axios.get(url);
+            const { lat, lon } = response.data.coord; // Extracting latitude and longitude
+            if (response.status == 200) {
+                setCoordinates({
+                    ...coordinates,
+                    latitude: lat,
+                    longitude: lon,
+                });
+            } else {
+                toast.error('Failed to fetch coordinates. Please check the city name and try again.');
+            }
+            setFormStatus("standby");
+            
+        } catch (error) {
+            toast.error('Failed to fetch coordinates. Please check the city name and try again.');
+            console.error(error);
+            setFormStatus("standby");
+        }
+    };
 
     const getUserCartItems = async () => {
         return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser + '/cart');
@@ -250,19 +338,19 @@ const Cart = ({ props }) => {
 
     const getInternationalRates = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'ups/v2/get/rating/international', data);
-    }
+    };
 
     const getGigmRates = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'gigm/v2/get/shipment/price', data);
-    }
+    };
 
     const createUpsInternationalShipment = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'ups/v2/create/shipment/international', data);
-    }
+    };
 
     const createGigmShipment = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'gigm/v2/create/shipment', data);
-    }
+    };
 
     const postCheckOut = async (data) => {
         return await axios.post(process.env.REACT_APP_API_ENDPOINT + 'order', data);
@@ -277,13 +365,6 @@ const Cart = ({ props }) => {
     };
 
     const postIntent = async (data) => await axios.post(process.env.REACT_APP_API_ENDPOINT + 'create-intent', data);
-
-    const handleChangeCountry = (e) => {
-        setCheckOutFormData({
-            ...checkOutFormData,
-            delivery_province: '',
-        });
-    };
 
     const imperialCountries = ['US', 'UK', 'LR', 'MM']; // Add more countries as needed
 
@@ -362,7 +443,7 @@ const Cart = ({ props }) => {
                     delivery_province_code: user.province_code,
                     delivery_postal_code: user.postal_code,
                     delivery_country: user.country,
-                    delivery_country_code: user.code,
+                    delivery_country_code: user.country_code,
                     [name]: value,
                 });
                 setCountryName(user.country);
@@ -389,14 +470,34 @@ const Cart = ({ props }) => {
                 delivery_country_code: '',
                 [name]: value,
             });
-        } else {
+        } else if (name == "delivery_country") {
+            var country_code = getCountryCode(value);
+
             setCheckOutFormData({
                 ...checkOutFormData,
                 [name]: value,
+                delivery_country_code: country_code,
+                delivery_province: "",
+                delivery_province_code: "",
+                city: "",
+            });
+        } else if (name == "delivery_province") {
+            const selectedProvince = e.target.selectedOptions[0];
+            const provinceCode = selectedProvince.getAttribute('data-province-code');
+
+            setCheckOutFormData({
+                ...checkOutFormData,
+                [name]: value,
+                delivery_province_code: provinceCode,
+                city: "",
+            });
+
+        } else {
+            setCheckOutFormData({
+                ...checkOutFormData,
+                [name]: value
             });
         }
-
-
     };
 
     const checkOutSubmit = (e) => {
@@ -419,8 +520,38 @@ const Cart = ({ props }) => {
             createUpsInternationalShipment(shipping_data).then(response => {
                 const status = response.data.status;
                 const data = response.data;
+                
                 if (status == "Success") {
-                    postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, cookies: cookies }).then(response => {
+
+                    const orderItemDetails = cartItems.map((cartItem, index) => {
+                        const cartItemShippingRate = internationalShippingRate[index] || {};
+                        const cartItemShipmentResults = data[index] || {};
+                        const cartItemTrackingDetails = response.total_charges?.data?.[index] || {};
+                        
+                        const cart_item_shipping_price = parseFloat(cartItemShippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue) || 0;
+                        const cart_item_shipping_currency = cartItemShippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode || 'USD';
+                        const cart_item_shipment_price = parseFloat(cartItemShipmentResults?.ShipmentResponse?.ShipmentResults?.ShipmentCharges?.TotalCharges?.MonetaryValue) || 0;
+                        const cart_item_shipment_currency = cartItemShipmentResults?.ShipmentResponse?.ShipmentResults?.ShipmentCharges?.TotalCharges?.CurrencyCode || 'USD';
+                
+                        const cart_item_shipping_price_converted = CurrencyConverter(cart_item_shipping_price, cart_item_shipping_currency, cookies);
+                        const cart_item_shipment_price_converted = CurrencyConverter(cart_item_shipment_price, cart_item_shipment_currency, cookies);
+                
+                        return {
+                            product_id: cartItem.product.id,
+                            quantity: cartItem.quantity,
+                            tracking_details: cartItemTrackingDetails,
+                            shipping_details: {
+                                shipping_amount: cart_item_shipping_price,
+                                shipping_amount_converted: cart_item_shipping_price_converted.price_raw,
+                                shipment_amount: cart_item_shipment_price,
+                                shipment_amount_converted: cart_item_shipment_price_converted.price_raw,
+                                shipping_details: cartItemShippingRate,
+                                shipment_details: cartItemShipmentResults,
+                            }
+                        };
+                    });
+
+                    postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, cookies: cookies, order_item_details: orderItemDetails }).then(response => {
                         const status = response.data.status;
                         const data = response.data.data;
                         if (status == "Success") {
@@ -444,7 +575,8 @@ const Cart = ({ props }) => {
                             setFormStatus('standby');
 
                         }
-                    }).catch(() => {
+                    }).catch((error) => {
+                        console.log(error);
                         toast.error('There has been an error adding the order, please try again!');
                     });
                 } else {
@@ -454,12 +586,15 @@ const Cart = ({ props }) => {
                         if (errors) {
                             setErrors(errors);
                         }
+                        setFormStatus('standby');
                     } else {
                         toast.error('There has been an error adding the order, please try again!');
+                        setFormStatus('standby');
                     }
                 }
             }).catch(() => {
-                toast.error('There has been an error adding the order, please try again!');
+                toast.error('There has been an error adding the order, please try again in the catchchchchc!');
+                setFormStatus('standby');
             });
 
         } else if (checkOutFormData.shipping_option == "GIGM") {
@@ -537,7 +672,7 @@ const Cart = ({ props }) => {
                 toast.error('There has been an error adding the order, please try again!');
             });
         }
-    }
+    };
 
     const checkOutSubmitPaypal = (details, data) => {
         setFormStatus('loading');
@@ -676,7 +811,7 @@ const Cart = ({ props }) => {
                 toast.error('There has been an error adding the order, please try again!');
             });
         }
-    }
+    };
 
     const checkOutSubmitStripe = async event => {
         setFormStatus('loading');
@@ -839,581 +974,528 @@ const Cart = ({ props }) => {
     }, []);
 
     useEffect(() => {
-        // Fetch the geonameId for the country
-        if (countryName != "" && checkOutFormData.shipping_option == "UPS") {
-            setErrors([]);
+        if (countryName != "" && checkOutFormData.delivery_country_code != "" && checkOutFormData.delivery_province_code != "" && checkOutFormData.delivery_postal_code != "" && checkOutFormData.delivery_city != "" && checkOutFormData.delivery_address_line_1 != "" && checkOutFormData.delivery_shipping_option != "") {
+            if (checkOutFormData.shipping_option == "UPS") {
+                setErrors([]);
 
-            setShippingLoading(true);
-            setCountryCode(getCountryCode(countryName));
-            setInternationalShippingRate([]);
-            var country_code = getCountryCode(countryName);
+                setShippingLoading(true);
+                setCountryCode(getCountryCode(countryName));
+                setInternationalShippingRate();
+                setInternationalShippingRateData();
+                var country_code = getCountryCode(countryName);
 
-            const _recipient = {
-                name: checkOutFormData.delivery_first_name + " " + checkOutFormData.delivery_last_name,
-                phone: checkOutFormData.delivery_phone,
-                address_line: checkOutFormData.delivery_address_line_1,
-                city: checkOutFormData.delivery_city,
-                state_code: checkOutFormData.delivery_province_code,
-                postal_code: checkOutFormData.delivery_postal_code,
-                country_code: country_code,
-                residential: "true"
-            };
-
-            setRecipient(_recipient);
-
-            if (currentUser && cartItems) {
-                const _shipments = cartItems.reduce((itemsArray, item) => {
-                    if (selectedCartItems.includes(item.product.id)) {
-                        var length = (item.product.length > 0 ? item.product.length : 1) * item.quantity;
-                        var width = (item.product.width > 0 ? item.product.width : 1) * item.quantity;
-                        var weight = (item.product.weight ?? 1) * item.quantity;
-                        const product_unit_measurement = item.product.unit_measurement;
-                        const is_imperial = getUnitOfMeasurement(item.seller.country_code);
-
-                        if (is_imperial) {
-                            const unit_measurement = 'IN';
-                            let converted_length = convertToInch(parseFloat(length), product_unit_measurement);
-                            let converted_width = convertToInch(parseFloat(width), product_unit_measurement);
-
-                            if (converted_length > 0) {
-                                converted_length = converted_length.toFixed(2);
-                            }
-
-                            if (converted_width > 0) {
-                                converted_width = converted_width.toFixed(2);
-                            }
-
-                            const shipment_item = {
-                                seller: {
-                                    id: item.seller.id,
-                                    name: item.seller.first_name + " " + item.seller.last_name,
-                                    phone: item.seller.phone_number,
-                                    address_line: item.seller.address_line_1,
-                                    city: item.seller.city,
-                                    state_code: item.seller.province_code,
-                                    postal_code: item.seller.postal_code,
-                                    country_code: item.seller.country_code,
-                                },
-                                package: {
-                                    weight: String(weight),
-                                    description: item.product.description,
-                                    dimensions: {
-                                        length: String(converted_length),
-                                        width: String(converted_width),
-                                        unit_of_measurement: unit_measurement
-                                    }
-                                }
-
-                            }
-
-                            itemsArray.push(shipment_item);
-
-                        } else {
-                            const unit_measurement = 'CM';
-                            const converted_length = convertToCm(parseFloat(length), product_unit_measurement);
-                            const converted_width = convertToCm(parseFloat(width), product_unit_measurement);
-
-                            const shipment_item = {
-                                seller: {
-                                    id: item.seller.id,
-                                    name: item.seller.first_name + " " + item.seller.last_name,
-                                    phone: item.seller.phone_number,
-                                    address_line: item.seller.address_line_1,
-                                    city: item.seller.city,
-                                    state_code: item.seller.province_code,
-                                    postal_code: item.seller.postal_code,
-                                    country_code: item.seller.country_code,
-                                },
-                                package: {
-                                    weight: String(weight),
-                                    description: item.product.description,
-                                    dimensions: {
-                                        length: String(converted_length),
-                                        width: String(converted_width),
-                                        unit_of_measurement: unit_measurement
-                                    }
-                                }
-
-                            }
-
-                            itemsArray.push(shipment_item);
-                        }
-
-                    }
-                    return itemsArray;
-                }, []);
-
-
-                const data = {
-                    recipient: _recipient,
-                    shipments: _shipments,
+                const _recipient = {
+                    name: checkOutFormData.delivery_first_name + " " + checkOutFormData.delivery_last_name,
+                    phone: checkOutFormData.delivery_phone,
+                    address_line: checkOutFormData.delivery_address_line_1,
+                    city: checkOutFormData.delivery_city,
+                    state_code: checkOutFormData.delivery_province_code,
+                    postal_code: checkOutFormData.delivery_postal_code,
+                    country_code: country_code,
+                    residential: "true"
                 };
 
-                setShipments(_shipments);
                 setRecipient(_recipient);
 
-                getInternationalRates(data).then(response => {
-                    const status = response.data.status;
-                    const data = response.data.data;
-                    const international_shipping_rate = response.data.data
-                    const international_shipping_rate_data = response.data
-                    if (status == "Success") {
-                        setInternationalShippingRate(international_shipping_rate);
-                        setInternationShippingRateData(international_shipping_rate_data);
-                        setShippingDetails({
-                            ...shippingDetails,
-                            shipments: _shipments,
-                            recipient: _recipient,
-                            shipping_rate_data: international_shipping_rate_data
-                        });
+                if (currentUser && cartItems) {
+                    const _shipments = cartItems.reduce((itemsArray, item) => {
+                        if (selectedCartItems.includes(item.product.id)) {
+                            var length = (item.product.length > 0 ? item.product.length : 1) * item.quantity;
+                            var width = (item.product.width > 0 ? item.product.width : 1) * item.quantity;
+                            var weight = (item.product.weight ?? 1) * item.quantity;
+                            const product_unit_measurement = item.product.unit_measurement;
+                            const is_imperial = getUnitOfMeasurement(item.seller.country_code);
 
-                        setShippingLoading(false);
-                    } else {
-                        const errors = response.data.errors;
-                        if (errors) {
-                            setErrors(errors);
-                        }
-                        // toast.error('There has been an error getting the shipping rates, please try again!');
-                        setShippingLoading(false);
-                    }
-                }).catch(() => {
-                    toast.error('There has been an error getting the shipping rates, please try again!');
-                    setShippingLoading(false);
-                });
-            } else if (!currentUser && tempCartItems) {
-                const _shipments = tempCartItems.reduce((itemsArray, item) => {
-                    if (selectedCartItems.includes(item.id)) {
-                        var length = (item.length > 0 ? item.length : 1) * item.quantity;
-                        var width = (item.width > 0 ? item.width : 1) * item.quantity;
-                        var weight = (item.weight ?? 1) * item.quantity;
-                        const product_unit_measurement = item.unit_measurement;
-                        const is_imperial = getUnitOfMeasurement(item.user_country_code);
+                            if (is_imperial) {
+                                const unit_measurement = 'IN';
+                                let converted_length = convertToInch(parseFloat(length), product_unit_measurement);
+                                let converted_width = convertToInch(parseFloat(width), product_unit_measurement);
 
-                        console.log(item.description);
-
-                        if (is_imperial) {
-                            const unit_measurement = 'IN';
-                            let converted_length = convertToInch(parseFloat(length), product_unit_measurement);
-                            let converted_width = convertToInch(parseFloat(width), product_unit_measurement);
-
-                            if (converted_length > 0) {
-                                converted_length = converted_length.toFixed(2);
-                            }
-
-                            if (converted_width > 0) {
-                                converted_width = converted_width.toFixed(2);
-                            }
-
-                            const shipment_item = {
-                                seller: {
-                                    id: item.user_id,
-                                    name: item.user_first_name + " " + item.user_last_name,
-                                    phone: item.user_phone_number,
-                                    address_line: item.user_address_line_1,
-                                    city: item.user_city,
-                                    state_code: item.user_province_code,
-                                    postal_code: item.user_postal_code,
-                                    country_code: item.user_country_code
-                                },
-                                package: {
-                                    weight: String(weight),
-                                    description: item.description,
-                                    dimensions: {
-                                        length: String(converted_length),
-                                        width: String(converted_width),
-                                        unit_of_measurement: unit_measurement
-                                    }
+                                if (converted_length > 0) {
+                                    converted_length = converted_length.toFixed(2);
                                 }
 
+                                if (converted_width > 0) {
+                                    converted_width = converted_width.toFixed(2);
+                                }
+
+                                const shipment_item = {
+                                    seller: {
+                                        id: item.seller.id,
+                                        name: item.seller.first_name + " " + item.seller.last_name,
+                                        phone: item.seller.phone_number,
+                                        address_line: item.seller.address_line_1,
+                                        city: item.seller.city,
+                                        state_code: item.seller.province_code,
+                                        postal_code: item.seller.postal_code,
+                                        country_code: item.seller.country_code,
+                                    },
+                                    package: {
+                                        weight: String(weight),
+                                        description: item.product.description,
+                                        dimensions: {
+                                            length: String(converted_length),
+                                            width: String(converted_width),
+                                            unit_of_measurement: unit_measurement
+                                        }
+                                    }
+
+                                }
+
+                                itemsArray.push(shipment_item);
+
+                            } else {
+                                const unit_measurement = 'CM';
+                                const converted_length = convertToCm(parseFloat(length), product_unit_measurement);
+                                const converted_width = convertToCm(parseFloat(width), product_unit_measurement);
+
+                                const shipment_item = {
+                                    seller: {
+                                        id: item.seller.id,
+                                        name: item.seller.first_name + " " + item.seller.last_name,
+                                        phone: item.seller.phone_number,
+                                        address_line: item.seller.address_line_1,
+                                        city: item.seller.city,
+                                        state_code: item.seller.province_code,
+                                        postal_code: item.seller.postal_code,
+                                        country_code: item.seller.country_code,
+                                    },
+                                    package: {
+                                        weight: String(weight),
+                                        description: item.product.description,
+                                        dimensions: {
+                                            length: String(converted_length),
+                                            width: String(converted_width),
+                                            unit_of_measurement: unit_measurement
+                                        }
+                                    }
+
+                                }
+
+                                itemsArray.push(shipment_item);
                             }
-                            itemsArray.push(shipment_item);
+
+                        }
+                        return itemsArray;
+                    }, []);
+
+
+                    const data = {
+                        recipient: _recipient,
+                        shipments: _shipments,
+                    };
+
+                    setShipments(_shipments);
+                    setRecipient(_recipient);
+
+                    getInternationalRates(data).then(response => {
+                        const status = response.data.status;
+                        const data = response.data.data;
+                        const international_shipping_rate = response.data.data
+                        const international_shipping_rate_data = response.data
+                        if (status == "Success") {
+                            setInternationalShippingRate(international_shipping_rate);
+                            setInternationalShippingRateData(international_shipping_rate_data);
+                            setShippingDetails({
+                                ...shippingDetails,
+                                shipments: _shipments,
+                                recipient: _recipient,
+                                shipping_rate_data: international_shipping_rate_data
+                            });
+
+                            setShippingLoading(false);
                         } else {
-                            const unit_measurement = 'CM';
-                            const converted_length = convertToCm(parseFloat(length), product_unit_measurement);
-                            const converted_width = convertToCm(parseFloat(width), product_unit_measurement);
-
-                            const shipment_item = {
-                                seller: {
-                                    id: item.user_id,
-                                    name: item.user_first_name + " " + item.user_last_name,
-                                    phone: item.user_phone_number,
-                                    address_line: item.user_address_line_1,
-                                    city: item.user_city,
-                                    state_code: item.user_province_code,
-                                    postal_code: item.user_postal_code,
-                                    country_code: item.user_country_code
-                                },
-                                package: {
-                                    weight: String(weight),
-                                    description: item.description,
-                                    dimensions: {
-                                        length: String(converted_length),
-                                        width: String(converted_width),
-                                        unit_of_measurement: unit_measurement
-                                    }
-                                }
-
+                            const errors = response.data.errors;
+                            if (errors) {
+                                setErrors(errors);
                             }
-                            itemsArray.push(shipment_item);
+                            // toast.error('There has been an error getting the shipping rates, please try again!');
+                            setShippingLoading(false);
                         }
-                    }
-                    return itemsArray;
-                }, []);
-
-
-                const data = {
-                    recipient: _recipient,
-                    shipments: _shipments,
-                };
-
-                setShipments(_shipments);
-                setRecipient(_recipient);
-
-                getInternationalRates(data).then(response => {
-                    const success = response.data.status;
-                    const data = response.data.data;
-                    const international_shipping_rate = response.data.data
-                    const international_shipping_rate_data = response.data
-                    if (success == success) {
-                        setInternationalShippingRate(international_shipping_rate);
-                        setInternationShippingRateData(international_shipping_rate_data);
-                        setShippingDetails({
-                            ...shippingDetails,
-                            shipments: _shipments,
-                            recipient: _recipient,
-                            shipping_rate_data: international_shipping_rate_data
-                        });
-                        setShippingLoading(false);
-                    } else {
+                    }).catch(() => {
                         toast.error('There has been an error getting the shipping rates, please try again!');
                         setShippingLoading(false);
-                    }
-                }).catch(() => {
-                    toast.error('There has been an error getting the shipping rates, please try again!');
-                    setShippingLoading(false);
-                });
-            }
+                    });
+                } else if (!currentUser && tempCartItems) {
+                    const _shipments = tempCartItems.reduce((itemsArray, item) => {
+                        if (selectedCartItems.includes(item.id)) {
+                            var length = (item.length > 0 ? item.length : 1) * item.quantity;
+                            var width = (item.width > 0 ? item.width : 1) * item.quantity;
+                            var weight = (item.weight ?? 1) * item.quantity;
+                            const product_unit_measurement = item.unit_measurement;
+                            const is_imperial = getUnitOfMeasurement(item.user_country_code);
 
-            // const _shipments = [
-            //     {
-            //         "seller": {
-            //             "id": "1",
-            //             "name": "John Doe",
-            //             "phone": "0000000000",
-            //             "address_line": "123 Shipper Street",
-            //             "city": "Cypress",
-            //             "state_code": "TX",
-            //             "postal_code": "77429",
-            //             "country_code": "US"
-            //         },
-            //         "package": {
-            //             "weight": "12",
-            //             "description": "",
-            //             "dimensions": {
-            //                 "length": "5",
-            //                 "width": "5",
-            //                 "unit_of_measurement": "IN"
-            //             }
-            //         }
-            //     },
-            //     {
-            //         "seller": {
-            //             "id": "2",
-            //             "name": "Alice Johnson",
-            //             "phone": "1111111111",
-            //             "address_line": "789 Shipper Avenue",
-            //             "city": "Houston",
-            //             "state_code": "TX",
-            //             "postal_code": "77001",
-            //             "country_code": "US"
-            //         },
-            //         "package": {
-            //             "weight": "15",
-            //             "description": "",
-            //             "dimensions": {
-            //                 "length": "7",
-            //                 "width": "7",
-            //                 "unit_of_measurement": "IN"
-            //             }
-            //         }
-            //     }
-            // ];
+                            console.log(item.description);
 
-        } else if (countryName != "" && checkOutFormData.shipping_option == "GIGM") {
-            setErrors([]);
+                            if (is_imperial) {
+                                const unit_measurement = 'IN';
+                                let converted_length = convertToInch(parseFloat(length), product_unit_measurement);
+                                let converted_width = convertToInch(parseFloat(width), product_unit_measurement);
 
-            setShippingLoading(true);
-            setCountryCode(getCountryCode(countryName));
-            setInternationalShippingRate([]);
-            var country_code = getCountryCode(countryName);
-
-            const _recipient = {
-                name: checkOutFormData.delivery_first_name + " " + checkOutFormData.delivery_last_name,
-                phone: checkOutFormData.delivery_phone,
-                address_line: checkOutFormData.delivery_address_line_1,
-                city: checkOutFormData.delivery_city,
-                state: checkOutFormData.delivery_province,
-                postal_code: checkOutFormData.delivery_postal_code,
-                country: checkOutFormData.delivery_country,
-                residential: "true"
-            };
-
-            setRecipient(_recipient);
-
-            if (currentUser && cartItems) {
-                const _shipments = cartItems.reduce((itemsArray, item) => {
-                    if (selectedCartItems.includes(item.product.id)) {
-                        var length = (item.product.length > 0 ? item.product.length : 1) * item.quantity;
-                        var width = (item.product.width > 0 ? item.product.width : 1) * item.quantity;
-                        var weight = (item.product.weight ?? 1) * item.quantity;
-                        const product_unit_measurement = item.product.unit_measurement;
-                        const is_imperial = getUnitOfMeasurement(item.seller.country_code);
-
-                        if (is_imperial) {
-                            const unit_measurement = 'IN';
-                            let converted_length = convertToInch(parseFloat(length), product_unit_measurement);
-                            let converted_width = convertToInch(parseFloat(width), product_unit_measurement);
-
-                            if (converted_length > 0) {
-                                converted_length = converted_length.toFixed(2);
-                            }
-
-                            if (converted_width > 0) {
-                                converted_width = converted_width.toFixed(2);
-                            }
-
-                            const shipment_item = {
-                                shipper: {
-                                    id: item.seller.id,
-                                    name: item.seller.first_name + " " + item.seller.last_name,
-                                    phone: item.seller.phone_number,
-                                    address_line: item.seller.address_line_1,
-                                    city: item.seller.city,
-                                    state: item.seller.province,
-                                    postal_code: item.seller.postal_code,
-                                    country: item.seller.country,
-                                },
-                                package: {
-                                    name: item.product.name,
-                                    description: item.product.description,
-                                    weight: String(weight),
-                                    dimensions: {
-                                        length: String(converted_length),
-                                        width: String(converted_width),
-                                        unit_of_measurement: unit_measurement
-                                    }
+                                if (converted_length > 0) {
+                                    converted_length = converted_length.toFixed(2);
                                 }
 
+                                if (converted_width > 0) {
+                                    converted_width = converted_width.toFixed(2);
+                                }
+
+                                const shipment_item = {
+                                    seller: {
+                                        id: item.user_id,
+                                        name: item.user_first_name + " " + item.user_last_name,
+                                        phone: item.user_phone_number,
+                                        address_line: item.user_address_line_1,
+                                        city: item.user_city,
+                                        state_code: item.user_province_code,
+                                        postal_code: item.user_postal_code,
+                                        country_code: item.user_country_code
+                                    },
+                                    package: {
+                                        weight: String(weight),
+                                        description: item.description,
+                                        dimensions: {
+                                            length: String(converted_length),
+                                            width: String(converted_width),
+                                            unit_of_measurement: unit_measurement
+                                        }
+                                    }
+
+                                }
+                                itemsArray.push(shipment_item);
+                            } else {
+                                const unit_measurement = 'CM';
+                                const converted_length = convertToCm(parseFloat(length), product_unit_measurement);
+                                const converted_width = convertToCm(parseFloat(width), product_unit_measurement);
+
+                                const shipment_item = {
+                                    seller: {
+                                        id: item.user_id,
+                                        name: item.user_first_name + " " + item.user_last_name,
+                                        phone: item.user_phone_number,
+                                        address_line: item.user_address_line_1,
+                                        city: item.user_city,
+                                        state_code: item.user_province_code,
+                                        postal_code: item.user_postal_code,
+                                        country_code: item.user_country_code
+                                    },
+                                    package: {
+                                        weight: String(weight),
+                                        description: item.description,
+                                        dimensions: {
+                                            length: String(converted_length),
+                                            width: String(converted_width),
+                                            unit_of_measurement: unit_measurement
+                                        }
+                                    }
+
+                                }
+                                itemsArray.push(shipment_item);
                             }
+                        }
+                        return itemsArray;
+                    }, []);
 
-                            itemsArray.push(shipment_item);
 
+                    const data = {
+                        recipient: _recipient,
+                        shipments: _shipments,
+                    };
+
+                    setShipments(_shipments);
+                    setRecipient(_recipient);
+
+                    getInternationalRates(data).then(response => {
+                        const success = response.data.status;
+                        const data = response.data.data;
+                        const international_shipping_rate = response.data.data
+                        const international_shipping_rate_data = response.data
+                        if (success == success) {
+                            setInternationalShippingRate(international_shipping_rate);
+                            setInternationalShippingRateData(international_shipping_rate_data);
+                            setShippingDetails({
+                                ...shippingDetails,
+                                shipments: _shipments,
+                                recipient: _recipient,
+                                shipping_rate_data: international_shipping_rate_data
+                            });
+                            setShippingLoading(false);
                         } else {
-                            const unit_measurement = 'CM';
-                            const converted_length = convertToCm(parseFloat(length), product_unit_measurement);
-                            const converted_width = convertToCm(parseFloat(width), product_unit_measurement);
-
-                            const shipment_item = {
-                                shipper: {
-                                    id: item.seller.id,
-                                    name: item.seller.first_name + " " + item.seller.last_name,
-                                    phone: item.seller.phone_number,
-                                    address_line: item.seller.address_line_1,
-                                    city: item.seller.city,
-                                    state: item.seller.province,
-                                    postal_code: item.seller.postal_code,
-                                    country: item.seller.country,
-                                },
-                                package: {
-                                    name: item.product.name,
-                                    description: item.product.description,
-                                    weight: String(weight),
-                                    dimensions: {
-                                        length: String(converted_length),
-                                        width: String(converted_width),
-                                        unit_of_measurement: unit_measurement
-                                    }
-                                }
-
-                            }
-
-                            itemsArray.push(shipment_item);
+                            toast.error('There has been an error getting the shipping rates, please try again!');
+                            setShippingLoading(false);
                         }
-
-                    }
-                    return itemsArray;
-                }, []);
-
-                const data = {
-                    recipient: _recipient,
-                    shipments: _shipments,
-                };
-
-                setShipments(_shipments);
-                setRecipient(_recipient);
-
-                getGigmRates(data).then(response => {
-                    const status = response.data.status;
-                    const data = response.data.data;
-                    if (data) {
-                        const gigm_shipping_rate = response.data.total_charges;
-                        const gigm_shipping_rate_data = response.data;
-
-                        setGigmShippingRate(gigm_shipping_rate);
-                        setGigmShippingRateData(gigm_shipping_rate_data);
-
-                        setShippingDetails({
-                            ...shippingDetails,
-                            shipments: _shipments,
-                            recipient: _recipient,
-                            shipping_rate_data: gigm_shipping_rate_data
-                        });
-                        setShippingLoading(false);
-                    } else {
-                        const errors = response.data.errors;
-                        if (errors) {
-                            setErrors(errors);
-                        }
-                        // toast.error('There has been an error getting the shipping rates, please try again!');
-                        setShippingLoading(false);
-                    }
-                }).catch(() => {
-                    toast.error('There has been an error getting the shipping rates, please try again!');
-                    setShippingLoading(false);
-                });
-
-            } else if (!currentUser && tempCartItems) {
-                const _shipments = tempCartItems.reduce((itemsArray, item) => {
-                    if (selectedCartItems.includes(item.id)) {
-                        var length = (item.length > 0 ? item.length : 1) * item.quantity;
-                        var width = (item.width > 0 ? item.width : 1) * item.quantity;
-                        var weight = (item.weight ?? 1) * item.quantity;
-                        const product_unit_measurement = item.unit_measurement;
-                        const is_imperial = getUnitOfMeasurement(item.user_country_code);
-
-                        if (is_imperial) {
-                            const unit_measurement = 'IN';
-                            let converted_length = convertToInch(parseFloat(length), product_unit_measurement);
-                            let converted_width = convertToInch(parseFloat(width), product_unit_measurement);
-
-                            if (converted_length > 0) {
-                                converted_length = converted_length.toFixed(2);
-                            }
-
-                            if (converted_width > 0) {
-                                converted_width = converted_width.toFixed(2);
-                            }
-
-                            const shipment_item = {
-                                seller: {
-                                    id: item.user_id,
-                                    name: item.user_first_name + " " + item.user_last_name,
-                                    phone: item.user_phone_number,
-                                    address_line: item.user_address_line_1,
-                                    city: item.user_city,
-                                    state_code: item.user_province_code,
-                                    postal_code: item.user_postal_code,
-                                    country_code: item.user_country_code
-                                },
-                                package: {
-                                    weight: String(weight),
-                                    description: item.description,
-                                    dimensions: {
-                                        length: String(converted_length),
-                                        width: String(converted_width),
-                                        unit_of_measurement: unit_measurement
-                                    }
-                                }
-
-                            }
-                            itemsArray.push(shipment_item);
-                        } else {
-                            const unit_measurement = 'CM';
-                            const converted_length = convertToCm(parseFloat(length), product_unit_measurement);
-                            const converted_width = convertToCm(parseFloat(width), product_unit_measurement);
-
-                            const shipment_item = {
-                                seller: {
-                                    id: item.user_id,
-                                    name: item.user_first_name + " " + item.user_last_name,
-                                    phone: item.user_phone_number,
-                                    address_line: item.user_address_line_1,
-                                    city: item.user_city,
-                                    state_code: item.user_province_code,
-                                    postal_code: item.user_postal_code,
-                                    country_code: item.user_country_code
-                                },
-                                package: {
-                                    weight: String(weight),
-                                    description: item.description,
-                                    dimensions: {
-                                        length: String(converted_length),
-                                        width: String(converted_width),
-                                        unit_of_measurement: unit_measurement
-                                    }
-                                }
-
-                            }
-                            itemsArray.push(shipment_item);
-                        }
-                    }
-                    return itemsArray;
-                }, []);
-
-
-                const data = {
-                    recipient: _recipient,
-                    shipments: _shipments,
-                };
-
-                setShipments(_shipments);
-                setRecipient(_recipient);
-
-                getGigmRates(data).then(response => {
-                    const status = response.data.status;
-                    const data = response.data.data;
-                    if (status == "Success") {
-                        const gigm_shipping_rate = response.data.total_charges;
-                        const gigm_shipping_rate_data = response.data;
-
-                        setGigmShippingRate(gigm_shipping_rate);
-                        setGigmShippingRateData(gigm_shipping_rate_data);
-
-                        setShippingDetails({
-                            ...shippingDetails,
-                            shipments: _shipments,
-                            recipient: _recipient,
-                            shipping_rate_data: gigm_shipping_rate_data
-                        });
-                        setShippingLoading(false);
-                    } else {
+                    }).catch(() => {
                         toast.error('There has been an error getting the shipping rates, please try again!');
                         setShippingLoading(false);
-                    }
-                }).catch(() => {
-                    toast.error('There has been an error getting the shipping rates, please try again!');
-                    setShippingLoading(false);
-                });
+                    });
+                }
+
+            } else if (checkOutFormData.shipping_option == "GIGM") {
+                setErrors([]);
+
+                setShippingLoading(true);
+                setCountryCode(getCountryCode(countryName));
+                setGigmShippingRate();
+                setGigmShippingRateData();
+                var country_code = getCountryCode(countryName);
+
+                const _recipient = {
+                    name: checkOutFormData.delivery_first_name + " " + checkOutFormData.delivery_last_name,
+                    phone: checkOutFormData.delivery_phone,
+                    address_line: checkOutFormData.delivery_address_line_1,
+                    city: checkOutFormData.delivery_city,
+                    state: checkOutFormData.delivery_province,
+                    postal_code: checkOutFormData.delivery_postal_code,
+                    country: checkOutFormData.delivery_country,
+                    residential: "true"
+                };
+
+                setRecipient(_recipient);
+
+                if (currentUser && cartItems) {
+                    const _shipments = cartItems.reduce((itemsArray, item) => {
+                        if (selectedCartItems.includes(item.product.id)) {
+                            var length = (item.product.length > 0 ? item.product.length : 1) * item.quantity;
+                            var width = (item.product.width > 0 ? item.product.width : 1) * item.quantity;
+                            var weight = (item.product.weight ?? 1) * item.quantity;
+                            const product_unit_measurement = item.product.unit_measurement;
+                            const is_imperial = getUnitOfMeasurement(item.seller.country_code);
+
+                            if (is_imperial) {
+                                const unit_measurement = 'IN';
+                                let converted_length = convertToInch(parseFloat(length), product_unit_measurement);
+                                let converted_width = convertToInch(parseFloat(width), product_unit_measurement);
+
+                                if (converted_length > 0) {
+                                    converted_length = converted_length.toFixed(2);
+                                }
+
+                                if (converted_width > 0) {
+                                    converted_width = converted_width.toFixed(2);
+                                }
+
+                                const shipment_item = {
+                                    shipper: {
+                                        id: item.seller.id,
+                                        name: item.seller.first_name + " " + item.seller.last_name,
+                                        phone: item.seller.phone_number,
+                                        address_line: item.seller.address_line_1,
+                                        city: item.seller.city,
+                                        state: item.seller.province,
+                                        postal_code: item.seller.postal_code,
+                                        country: item.seller.country,
+                                    },
+                                    package: {
+                                        name: item.product.name,
+                                        description: item.product.description,
+                                        weight: String(weight),
+                                        dimensions: {
+                                            length: String(converted_length),
+                                            width: String(converted_width),
+                                            unit_of_measurement: unit_measurement
+                                        }
+                                    }
+
+                                }
+
+                                itemsArray.push(shipment_item);
+
+                            } else {
+                                const unit_measurement = 'CM';
+                                const converted_length = convertToCm(parseFloat(length), product_unit_measurement);
+                                const converted_width = convertToCm(parseFloat(width), product_unit_measurement);
+
+                                const shipment_item = {
+                                    shipper: {
+                                        id: item.seller.id,
+                                        name: item.seller.first_name + " " + item.seller.last_name,
+                                        phone: item.seller.phone_number,
+                                        address_line: item.seller.address_line_1,
+                                        city: item.seller.city,
+                                        state: item.seller.province,
+                                        postal_code: item.seller.postal_code,
+                                        country: item.seller.country,
+                                    },
+                                    package: {
+                                        name: item.product.name,
+                                        description: item.product.description,
+                                        weight: String(weight),
+                                        dimensions: {
+                                            length: String(converted_length),
+                                            width: String(converted_width),
+                                            unit_of_measurement: unit_measurement
+                                        }
+                                    }
+
+                                }
+
+                                itemsArray.push(shipment_item);
+                            }
+
+                        }
+                        return itemsArray;
+                    }, []);
+
+                    const data = {
+                        recipient: _recipient,
+                        shipments: _shipments,
+                    };
+
+                    setShipments(_shipments);
+                    setRecipient(_recipient);
+
+                    getGigmRates(data).then(response => {
+                        const status = response.data.status;
+                        const data = response.data.data;
+                        if (data) {
+                            const gigm_shipping_rate = response.data.total_charges;
+                            const gigm_shipping_rate_data = response.data;
+
+                            setGigmShippingRate(gigm_shipping_rate);
+                            setGigmShippingRateData(gigm_shipping_rate_data);
+
+                            setShippingDetails({
+                                ...shippingDetails,
+                                shipments: _shipments,
+                                recipient: _recipient,
+                                shipping_rate_data: gigm_shipping_rate_data
+                            });
+                            setShippingLoading(false);
+                        } else {
+                            const errors = response.data.errors;
+                            if (errors) {
+                                setErrors(errors);
+                            }
+                            // toast.error('There has been an error getting the shipping rates, please try again!');
+                            setShippingLoading(false);
+                        }
+                    }).catch(() => {
+                        toast.error('There has been an error getting the shipping rates, please try again!');
+                        setShippingLoading(false);
+                    });
+
+                } else if (!currentUser && tempCartItems) {
+                    const _shipments = tempCartItems.reduce((itemsArray, item) => {
+                        if (selectedCartItems.includes(item.id)) {
+                            var length = (item.length > 0 ? item.length : 1) * item.quantity;
+                            var width = (item.width > 0 ? item.width : 1) * item.quantity;
+                            var weight = (item.weight ?? 1) * item.quantity;
+                            const product_unit_measurement = item.unit_measurement;
+                            const is_imperial = getUnitOfMeasurement(item.user_country_code);
+
+                            if (is_imperial) {
+                                const unit_measurement = 'IN';
+                                let converted_length = convertToInch(parseFloat(length), product_unit_measurement);
+                                let converted_width = convertToInch(parseFloat(width), product_unit_measurement);
+
+                                if (converted_length > 0) {
+                                    converted_length = converted_length.toFixed(2);
+                                }
+
+                                if (converted_width > 0) {
+                                    converted_width = converted_width.toFixed(2);
+                                }
+
+                                const shipment_item = {
+                                    seller: {
+                                        id: item.user_id,
+                                        name: item.user_first_name + " " + item.user_last_name,
+                                        phone: item.user_phone_number,
+                                        address_line: item.user_address_line_1,
+                                        city: item.user_city,
+                                        state_code: item.user_province_code,
+                                        postal_code: item.user_postal_code,
+                                        country_code: item.user_country_code
+                                    },
+                                    package: {
+                                        weight: String(weight),
+                                        description: item.description,
+                                        dimensions: {
+                                            length: String(converted_length),
+                                            width: String(converted_width),
+                                            unit_of_measurement: unit_measurement
+                                        }
+                                    }
+
+                                }
+                                itemsArray.push(shipment_item);
+                            } else {
+                                const unit_measurement = 'CM';
+                                const converted_length = convertToCm(parseFloat(length), product_unit_measurement);
+                                const converted_width = convertToCm(parseFloat(width), product_unit_measurement);
+
+                                const shipment_item = {
+                                    seller: {
+                                        id: item.user_id,
+                                        name: item.user_first_name + " " + item.user_last_name,
+                                        phone: item.user_phone_number,
+                                        address_line: item.user_address_line_1,
+                                        city: item.user_city,
+                                        state_code: item.user_province_code,
+                                        postal_code: item.user_postal_code,
+                                        country_code: item.user_country_code
+                                    },
+                                    package: {
+                                        weight: String(weight),
+                                        description: item.description,
+                                        dimensions: {
+                                            length: String(converted_length),
+                                            width: String(converted_width),
+                                            unit_of_measurement: unit_measurement
+                                        }
+                                    }
+
+                                }
+                                itemsArray.push(shipment_item);
+                            }
+                        }
+                        return itemsArray;
+                    }, []);
+
+
+                    const data = {
+                        recipient: _recipient,
+                        shipments: _shipments,
+                    };
+
+                    setShipments(_shipments);
+                    setRecipient(_recipient);
+
+                    getGigmRates(data).then(response => {
+                        const status = response.data.status;
+                        const data = response.data.data;
+                        if (status == "Success") {
+                            const gigm_shipping_rate = response.data.total_charges;
+                            const gigm_shipping_rate_data = response.data;
+
+                            setGigmShippingRate(gigm_shipping_rate);
+                            setGigmShippingRateData(gigm_shipping_rate_data);
+
+                            setShippingDetails({
+                                ...shippingDetails,
+                                shipments: _shipments,
+                                recipient: _recipient,
+                                shipping_rate_data: gigm_shipping_rate_data
+                            });
+                            setShippingLoading(false);
+                        } else {
+                            toast.error('There has been an error getting the shipping rates, please try again!');
+                            setShippingLoading(false);
+                        }
+                    }).catch(() => {
+                        toast.error('There has been an error getting the shipping rates, please try again!');
+                        setShippingLoading(false);
+                    });
+                }
             }
+        } else {
+            setInternationalShippingRate();
+            setInternationalShippingRateData();
+            setGigmShippingRate();
+            setGigmShippingRateData();
         }
+    }, [countryName, checkOutFormData.delivery_country_code, checkOutFormData.delivery_province_code, checkOutFormData.delivery_postal_code, checkOutFormData.delivery_city, checkOutFormData.delivery_address_line_1, checkOutFormData.shipping_option]);
 
-    }, [countryName, countryCode, checkOutFormData.country_code, checkOutFormData.province_code, checkOutFormData.postal_code, checkOutFormData.city, checkOutFormData.address_line_1, checkOutFormData.shipping_option]);
-
-    useEffect(() => {
-        // Fetch the provinces once the geonameId is available
-        if (geonameId) {
-            const fetchProvinces = async () => {
-                const response = await fetch(
-                    `http://api.geonames.org/childrenJSON?geonameId=${geonameId}&username=vbdev`
-                );
-                const data = await response.json();
-                setProvinces(data.geonames);
-                console.log(data);
-            };
-
-            fetchProvinces();
-        }
-    }, [geonameId]);
 
     useEffect(() => {
         setCheckOutFormData({
@@ -1432,7 +1514,6 @@ const Cart = ({ props }) => {
             let total_shipping_amount_converted = 0;
 
             if (cartItems.length > 0 && selectedCartItems.length > 0) {
-
 
                 cart_total_quantity = cartItems.reduce((ctq, item) => {
                     if (selectedCartItems.includes(item.product.id)) {
@@ -1465,7 +1546,7 @@ const Cart = ({ props }) => {
                                 var shippingRate = internationalShippingRate[index];
 
                                 if (shippingRate) {
-                                    total_shipping_price = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
+                                    total_shipping_price = parseFloat(shippingRate.RateResponse.RatedShipment.TotalCharges.MonetaryValue) || 0;
                                     shipping_currency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
 
                                 }
@@ -1478,27 +1559,29 @@ const Cart = ({ props }) => {
 
                     total_shipping_amount_converted = cartItems.reduce((tsa, item, index) => {
                         if (selectedCartItems.includes(item.product.id)) {
-                            let shippingPriceConverted = 0.00;
                             let total_shipping_price = 0.00;
                             let total_shipping_price_converted = 0.00;
-
                             let shipping_currency = 'USD';
-
+                    
                             if (internationalShippingRate && internationalShippingRate.length > 0) {
-                                var shippingRate = internationalShippingRate[index];
-
+                                const shippingRate = internationalShippingRate[index];
+                    
                                 if (shippingRate) {
-                                    total_shipping_price = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
-                                    shipping_currency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
-
+                                    total_shipping_price = parseFloat(shippingRate.RateResponse.RatedShipment.TotalCharges.MonetaryValue) || 0; // Ensure it's a float
+                                    shipping_currency = shippingRate.RateResponse.RatedShipment.TotalCharges.CurrencyCode || 'USD';
+                    
                                     total_shipping_price_converted = CurrencyConverter(total_shipping_price, shipping_currency, cookies);
                                 }
                             }
-
-                            return parseFloat(tsa) + parseFloat(total_shipping_price_converted.price_raw ?? 0);
+                    
+                            // Return accumulated total
+                            return tsa + (parseFloat(total_shipping_price_converted.price_raw) || 0); // Ensure we add a float
                         }
-
-                    }, 0);
+                    
+                        // Return tsa if the item is not included in selectedCartItems
+                        return tsa; 
+                    }, 0); // Initial value is 0
+                    
                 } else if (gigmShippingRate && checkOutFormData.shipping_option == "GIGM") {
                     let shipping_currency = 'NGN';
 
@@ -1527,6 +1610,7 @@ const Cart = ({ props }) => {
                 setTotalAmountConverted(parseFloat(parseFloat(cart_total_converted) + parseFloat(total_shipping_amount_converted)));
                 setSubtotalAmount(cart_total);
                 setSubtotalAmountConverted(cart_total_converted);
+
                 setTotalAmountDisplay(formatPrice(parseFloat(parseFloat(cart_total_converted) + parseFloat(total_shipping_amount_converted))));
                 setSubtotalAmountDisplay(formatPrice(cart_total_converted));
                 setTotalShippingAmount(parseFloat(total_shipping_amount));
@@ -1643,27 +1727,28 @@ const Cart = ({ props }) => {
 
                     total_shipping_amount_converted = tempCartItems.reduce((tsa, item, index) => {
                         if (item && selectedCartItems.includes(item.id)) {
-                            let shippingPriceConverted = 0.00;
                             let total_shipping_price = 0.00;
                             let total_shipping_price_converted = 0.00;
-
                             let shipping_currency = 'USD';
-
+                    
                             if (internationalShippingRate && internationalShippingRate.length > 0) {
-                                var shippingRate = internationalShippingRate[index];
-
+                                const shippingRate = internationalShippingRate[index];
+                    
                                 if (shippingRate) {
-                                    total_shipping_price = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
-                                    shipping_currency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
-
+                                    total_shipping_price = parseFloat(shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue) || 0; // Ensure it's a float
+                                    shipping_currency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode || 'USD';
+                    
                                     total_shipping_price_converted = CurrencyConverter(total_shipping_price, shipping_currency, cookies);
                                 }
                             }
-
-                            return parseFloat(tsa) + parseFloat(total_shipping_price_converted.price_raw ?? 0);
+                    
+                            return tsa + (parseFloat(total_shipping_price_converted.price_raw) || 0); // Ensure we add a float
                         }
-
-                    }, 0);
+                    
+                        // Return tsa if the item is not included in selectedCartItems
+                        return tsa; 
+                    }, 0); // Initial value is 0
+                    
                 } else if (gigmShippingRate && checkOutFormData.shipping_option == "GIGM") {
                     let shipping_currency = 'NGN';
 
@@ -1712,6 +1797,44 @@ const Cart = ({ props }) => {
 
     }, [cookies, tempCartItems, selectedCartItems, reloadCount, item, internationalShippingRate, checkOutFormData]);
 
+    useEffect(() => {
+        var deliveryCountry = checkOutFormData.delivery_country;
+
+        if (deliveryCountry && deliveryCountry != "") {
+            var data = {
+                country: deliveryCountry
+            };
+            setProvinces([]);
+            setCities([]);
+
+            getCountryStates(data);
+        }
+    }, [checkOutFormData.delivery_country]);
+
+    useEffect(() => {
+        var deliveryCountry = checkOutFormData.delivery_country;
+        var deliveryProvince = checkOutFormData.delivery_province;
+
+        if (deliveryCountry && deliveryCountry != "" && deliveryProvince && deliveryProvince != "") {
+            var data = {
+                country: deliveryCountry,
+                state: deliveryProvince
+            };
+            setCities([]);
+
+            getStateCities(data);
+        }
+    }, [checkOutFormData.delivery_country, checkOutFormData.delivery_province]);
+
+    useEffect(() => {
+        var deliveryCity = checkOutFormData.delivery_city;
+
+        if (deliveryCity && deliveryCity != "") {
+            var data = deliveryCity;
+            getCoordinates(data);
+        }
+    }, [checkOutFormData.delivery_city]);
+    
     return (
         <LayoutNoFooter>
             {cartLoading || userLoading ?
@@ -1784,22 +1907,6 @@ const Cart = ({ props }) => {
                                                                     let shippingCurrency = 'USD';
 
                                                                     cart_item_total = parseFloat(subtotal);
-
-                                                                    // if (internationalShippingRate && internationalShippingRate.length > 0 && checkOutFormData.shipping_option == "UPS") {
-                                                                    //     var shippingRate = internationalShippingRate[index];
-
-                                                                    //     if (shippingRate) {
-                                                                    //         totalShippingPrice = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
-                                                                    //         shippingCurrency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
-
-                                                                    //         totalShippingPriceConverted = CurrencyConverter(totalShippingPrice, shippingCurrency, cookies);
-
-                                                                    //         cart_item_total = parseFloat(subtotal) + parseFloat(totalShippingPriceConverted.price_raw);
-                                                                    //     }
-
-                                                                    // } else {
-                                                                    //     cart_item_total = parseFloat(subtotal);
-                                                                    // }
 
                                                                     return (
                                                                         <Card className='mt-2'>
@@ -1908,23 +2015,6 @@ const Cart = ({ props }) => {
                                                                     let shippingCurrency = 'USD';
 
                                                                     cart_item_total = parseFloat(subtotal);
-
-
-                                                                    // if (internationalShippingRate && internationalShippingRate.length > 0 && checkOutFormData.shipping_option == "UPS") {
-                                                                    //     var shippingRate = internationalShippingRate[index];
-
-                                                                    //     if (shippingRate) {
-                                                                    //         totalShippingPrice = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
-                                                                    //         shippingCurrency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
-
-                                                                    //         totalShippingPriceConverted = CurrencyConverter(totalShippingPrice, shippingCurrency, cookies);
-
-                                                                    //         cart_item_total = parseFloat(subtotal) + parseFloat(totalShippingPriceConverted.price_raw);
-                                                                    //     }
-
-                                                                    // } else {
-                                                                    //     cart_item_total = parseFloat(subtotal);
-                                                                    // }
 
                                                                     return (
                                                                         <Card className='mt-2'>
@@ -2125,17 +2215,16 @@ const Cart = ({ props }) => {
                                                                 </FormGroup>
                                                                 <FormGroup className="mb-3">
                                                                     <Row>
-                                                                        <Col lg="12">
+                                                                        <Col lg="6">
                                                                             <Form.Label htmlFor="province" className='mb-2'>
                                                                                 Country <span className="text-danger">*</span>
                                                                             </Form.Label>
                                                                             <Form.Control as='select' name='delivery_country' value={checkOutFormData.delivery_country} className=''
                                                                                 onChange={function (e) {
-                                                                                    // handleChangeCountry(); 
                                                                                     setCountryName(e.target.value);
                                                                                     handleChangePaymentInfo(e);
                                                                                 }} required>
-                                                                                <option value=''>Select Country</option>
+                                                                                <option value='' disabled>Select Country</option>
                                                                                 {Countries.map((country, index) => (
                                                                                     <option key={country + "-" + index} value={country}>
                                                                                         {country}
@@ -2143,60 +2232,71 @@ const Cart = ({ props }) => {
                                                                                 ))}
                                                                             </Form.Control>
                                                                         </Col>
-                                                                    </Row>
-                                                                </FormGroup>
-                                                                <FormGroup className="mb-3">
-                                                                    <Row>
                                                                         <Col lg="6">
                                                                             <Form.Label htmlFor="province" className='mb-2'>
                                                                                 Province/State <span className="text-danger">*</span>
                                                                             </Form.Label>
-                                                                            {/* <Form.Control as='select' name='delivery_province' value={checkOutFormData.delivery_province} className='' onChange={function(e) { handleChangePaymentInfo(e); }} required>
-                                                                                <option value=''>Select Province/State</option>
-                                                                                {provinces.map(province => (
-                                                                                    <option key={province.geonameId} value={province.name}>
-                                                                                        {province.name}
-                                                                                    </option>
-                                                                                ))}
-                                                                            </Form.Control> */}
-                                                                            <FormControl
-                                                                                type="text"
-                                                                                name="delivery_province"
-                                                                                value={checkOutFormData.delivery_province}
-                                                                                onChange={handleChangePaymentInfo}
-                                                                                id="province"
-                                                                                required
-                                                                            />
-                                                                        </Col>
-                                                                        <Col lg="6">
-                                                                            <Form.Label htmlFor="province" className='mb-2'>
-                                                                                Province/State Code <span className="text-danger">*</span>
-                                                                            </Form.Label>
-                                                                            <FormControl
-                                                                                type="text"
-                                                                                name="delivery_province_code"
-                                                                                value={checkOutFormData.delivery_province_code}
-                                                                                onChange={handleChangePaymentInfo}
-                                                                                id="province"
-                                                                                required
-                                                                            />
+                                                                            {provincesLoading ?
+                                                                                <>
+                                                                                    <Form.Control as='select' id="province" name='delivery_province' value="" className='mr-sm-2' disabled required>
+                                                                                        <option value='' selected>Loading...</option>
+                                                                                    </Form.Control>
+                                                                                </>
+                                                                                :
+                                                                                <>
+                                                                                    {checkOutFormData.delivery_country && provinces && provinces.length > 0 ?
+                                                                                        <Form.Control as='select' name='delivery_province' value={checkOutFormData.delivery_province} onChange={handleChangePaymentInfo} required>
+                                                                                            <option value='' disabled>Select Province</option>
+                                                                                            {provinces.map((province, index) => {
+                                                                                                if (province.name != "American Samoa") {
+                                                                                                    return (
+                                                                                                        <option key={province.name + "-" + index} value={province.name} data-province-code={province.state_code}>
+                                                                                                            {province.name}
+                                                                                                        </option>
+                                                                                                    )
+                                                                                                }
+                                                                                            })}
+                                                                                        </Form.Control>
+                                                                                        :
+                                                                                        <Form.Control as='select' name='delivery_province' value="" disabled required>
+                                                                                            <option value='' selected>Please select country first</option>
+                                                                                        </Form.Control>
+                                                                                    }
+                                                                                </>
+                                                                            }
                                                                         </Col>
                                                                     </Row>
                                                                 </FormGroup>
                                                                 <FormGroup className="mb-3">
                                                                     <Row>
                                                                         <Col lg="6">
-                                                                            <Form.Label htmlFor="city" className='mb-2'>
+                                                                            <Form.Label htmlFor="delivery_city" className='mb-2'>
                                                                                 City <span className="text-danger">*</span>
                                                                             </Form.Label>
-                                                                            <FormControl
-                                                                                type="text"
-                                                                                name="delivery_city"
-                                                                                value={checkOutFormData.delivery_city}
-                                                                                onChange={handleChangePaymentInfo}
-                                                                                id="city"
-                                                                                required
-                                                                            />
+                                                                            {citiesLoading ?
+                                                                                <>
+                                                                                    <Form.Control as='select' name='delivery_city' value="" disabled required>
+                                                                                        <option value='' selected>Loading...</option>
+                                                                                    </Form.Control>
+                                                                                </>
+                                                                                :
+                                                                                <>
+                                                                                    {checkOutFormData.delivery_province && cities && cities.length > 0 ?
+                                                                                        <Form.Control as='select' name='delivery_city' value={checkOutFormData.delivery_city} onChange={handleChangePaymentInfo} required>
+                                                                                            <option value='' disabled>Select City</option>
+                                                                                            {cities.map((city, index) => (
+                                                                                                <option key={city + "-" + index} value={cities.name}>
+                                                                                                    {city}
+                                                                                                </option>
+                                                                                            ))}
+                                                                                        </Form.Control>
+                                                                                        :
+                                                                                        <Form.Control as='select' name='delivery_city' value="" disabled required>
+                                                                                            <option value='' selected>Please select a province first</option>
+                                                                                        </Form.Control>
+                                                                                    }
+                                                                                </>
+                                                                            }
                                                                         </Col>
                                                                         <Col lg="6">
                                                                             <Form.Label htmlFor="postal_code" className='mb-2'>
@@ -2279,7 +2379,7 @@ const Cart = ({ props }) => {
                                                                     <Card.Body>
                                                                         <Row>
                                                                             <Col lg="12" className='text-center'>
-                                                                                <span>Loading...</span>
+                                                                                <span className="fs-14">Loading...</span>
                                                                             </Col>
                                                                         </Row>
                                                                     </Card.Body>

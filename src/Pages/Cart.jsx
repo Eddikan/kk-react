@@ -142,7 +142,7 @@ const Cart = (props) => {
     //     }
 
     //     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        
+
     //     let finalPrice = parts.join(decimalSeparator);
 
     //     if (!finalPrice.includes(decimalSeparator)) {
@@ -157,17 +157,17 @@ const Cart = (props) => {
     const formatPrice = (price) => {
         // Ensure the price is rounded to two decimal places
         let priceStr = parseFloat(price).toFixed(2);
-    
+
         // Use a period as the decimal separator
         const decimalSeparator = '.';
         let parts = priceStr.split(decimalSeparator);
-    
+
         // Add thousands separator to the integer part
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    
+
         // Rejoin the integer and decimal parts
         let finalPrice = parts.join(decimalSeparator);
-    
+
         return finalPrice;
     };
 
@@ -212,7 +212,6 @@ const Cart = (props) => {
     useEffect(() => {
         let cart_total = 0;
         if (cartItems.length > 0 && selectedCartItems.length > 0) {
-            console.log(cartItems);
             cart_total = cartItems.reduce((acc, item) => {
                 if (selectedCartItems.includes(item.product.id)) {
                     const fabricPrice = item.product.price ?? '0';
@@ -253,33 +252,33 @@ const Cart = (props) => {
     useEffect(() => {
         if (currentUser) {
             getUserCartItems()
-            .then((response) => {
-                const cartItemsData = response.data.data;
-                if (cartItemsData) {
-                    setCartItems(cartItemsData);
-                    if (item && item !== "") {
-                        // Extract item ids from cartItemsData and add parseInt(item)
-                        const updatedSelectedCartItems = [...cartItemsData.map(cartItem => cartItem.product.id), parseInt(item)];
-                        setSelectedCartItems(updatedSelectedCartItems);
-                        setCartLoading(false);
-                    } else {
-                        // Map over cartItemsData to extract item ids and add them to selectedCartItems
-                        if (!selectedCartItems || selectedCartItems.length < 1) {
-                            const updatedSelectedCartItems = cartItemsData.map(cartItem => cartItem.product.id);
+                .then((response) => {
+                    const cartItemsData = response.data.data;
+                    if (cartItemsData) {
+                        setCartItems(cartItemsData);
+                        if (item && item !== "") {
+                            // Extract item ids from cartItemsData and add parseInt(item)
+                            const updatedSelectedCartItems = [...cartItemsData.map(cartItem => cartItem.product.id), parseInt(item)];
                             setSelectedCartItems(updatedSelectedCartItems);
+                            setCartLoading(false);
+                        } else {
+                            // Map over cartItemsData to extract item ids and add them to selectedCartItems
+                            if (!selectedCartItems || selectedCartItems.length < 1) {
+                                const updatedSelectedCartItems = cartItemsData.map(cartItem => cartItem.product.id);
+                                setSelectedCartItems(updatedSelectedCartItems);
+                            }
+                            setCartLoading(false);
                         }
+
+                    } else {
+                        toast.error('There has been an error getting the products, please try again!');
                         setCartLoading(false);
                     }
-
-                } else {
+                })
+                .catch((error) => {
                     toast.error('There has been an error getting the products, please try again!');
                     setCartLoading(false);
-                }
-            })
-            .catch((error) => {
-                toast.error('There has been an error getting the products, please try again!');
-                setCartLoading(false);
-            });
+                });
         } else {
             if (tempCartItems) {
                 if (!selectedCartItems || selectedCartItems.length < 1) {
@@ -288,7 +287,7 @@ const Cart = (props) => {
                 }
                 setCartLoading(false);
             }
-            
+
         }
     }, [reloadCount, currentUser]);
 
@@ -337,7 +336,7 @@ const Cart = (props) => {
                     <section className="px-5">
                         <Container className='top-bottom'>
                             <Row>
-                                {currentUser && user && user?.profile_completeness >= 0 && user?.profile_completeness < 100 ? 
+                                {currentUser && user && user?.profile_completeness >= 0 && user?.profile_completeness < 100 ?
                                     <>
                                         <Col md={12} className='d-flex justify-content-left align-items-center'>
                                             <p className="mb-3 fs-14 fw-500"><Link className="text-decoration-none text-muted" to="/">Home</Link> / Cart</p>
@@ -358,11 +357,11 @@ const Cart = (props) => {
                                         </Col>
                                     </>
                                 }
-                                
+
                                 {/* <Col md={6} className="text-right">
                                     <GoBack fallBack="/#" />
                                 </Col> */}
-                                            
+
                                 <Col lg="8">
                                     <Row>
                                         <Col lg={12}>
@@ -438,87 +437,87 @@ const Cart = (props) => {
 
                                                                             return (
                                                                                 <>
-                                                                                <Row>
-                                                                                    <Col lg={1}>
-                                                                                        <input
-                                                                                            type="checkbox"
-                                                                                            className="check-box me-2 check-box-color cursor-pointer"
-                                                                                            checked={selectedCartItems.includes(cartItem.product.id)}
-                                                                                            onChange={(e) => { handleCheckboxChange(cartItem.product.id); }}
-                                                                                        />
-                                                                                    </Col>
-                                                                                    <Col lg={11}>
-                                                                                        <div className='d-flex'>
-                                                                                            <div className="designs-grid-div fabric-image"
-                                                                                                style={{ backgroundImage: "url(" + fabricImage + ")" }}>
-                                                                                            </div>
-                                                                                            <div className='ms-4 w-100'>
-                                                                                                <Row>
-                                                                                                    <Col lg="12">
-                                                                                                        <div className='mb-1 fw-500 text-black'>
-                                                                                                            <h3 className="product-name fs-18">{cartItem.product.name}</h3>
-                                                                                                        </div>
-                                                                                                    </Col>
-                                                                                                    <Col lg="12">
-                                                                                                        <div className="star-ratings mt-1">
-                                                                                                            <Rating
-                                                                                                                initialValue={0}
-                                                                                                                readonly={true}
-                                                                                                                allowFraction={true}
-                                                                                                                size={20}
-                                                                                                                className="star-rating"
-                                                                                                                showTooltip={true}
-                                                                                                                emptyColor="#dddddd"
-                                                                                                                fillColor="#cea835"
-                                                                                                                tooltipArray={[
-                                                                                                                    0, 1, 2, 3, 4, 5
-                                                                                                                ]}
-                                                                                                                tooltipDefaultText="0.0"
-                                                                                                            /* Available Props */
-                                                                                                            />
-                                                                                                        </div>
-                                                                                                    </Col>
-                                                                                                    <Col lg="12" className="color-column-keep-height">
-                                                                                                        {colorsArray && colorsArray.length > 0 ?
-                                                                                                            <> 
-                                                                                                                <p className="mb-3 mt-2 fs-12 fw-600">Color:{" "}
-                                                                                                                    {colorsArray.length > 1 ? (
-                                                                                                                        colorsArray.join(", ")
-                                                                                                                    ) : (
-                                                                                                                        colorsArray[0]
-                                                                                                                    )}
-                                                                                                                </p>
-                                                                                                            </>
-                                                                                                            :
-                                                                                                            null
-                                                                                                        }
-                                                                                                    </Col>
-                                                                                                    
-                                                                                                    <Col lg="5">
-                                                                                                        <div className="product-price">
-                                                                                                            <p className="fw-500 fs-18">{convertedPrice.currency_code}{convertedPrice.price}</p>
-                                                                                                        </div>
-                                                                                                    </Col>
-                                                                                                    <Col lg="6">
-                                                                                                        <div className="measurement-input d-flex">
-                                                                                                            <input
-                                                                                                                type="number"
-                                                                                                                className="form-control p-2 me-2 d-inline-block"
-                                                                                                                min="1"
-                                                                                                                style={{ maxWidth: 60 }}
-                                                                                                                defaultValue={cartItem.quantity}
-                                                                                                                onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id })}
-                                                                                                            />
-                                                                                                            <p className="my-auto">{cartItem.product.unit_measurement}</p>
-                                                                                                        </div>
-                                                                                                    </Col>
-                                                                                                    <Col lg="1" className="text-end">
-                                                                                                        <div className='text-center cursor-pointer my-auto delete-tooltip' onClick={function () { toggleDeleteCartItem(cartItem.id); }}>
-                                                                                                            <span className="icon-tooltiptext fs-14">Delete</span>
-                                                                                                            <AiOutlineDelete size="20" />
-                                                                                                        </div>
-                                                                                                    </Col>
-                                                                                                    {/* <div className="price-measurement-container d-flex justify-content-between">
+                                                                                    <Row>
+                                                                                        <Col lg={1}>
+                                                                                            <input
+                                                                                                type="checkbox"
+                                                                                                className="check-box me-2 check-box-color cursor-pointer"
+                                                                                                checked={selectedCartItems.includes(cartItem.product.id)}
+                                                                                                onChange={(e) => { handleCheckboxChange(cartItem.product.id); }}
+                                                                                            />
+                                                                                        </Col>
+                                                                                        <Col lg={11}>
+                                                                                            <div className='d-flex'>
+                                                                                                <div className="designs-grid-div fabric-image"
+                                                                                                    style={{ backgroundImage: "url(" + fabricImage + ")" }}>
+                                                                                                </div>
+                                                                                                <div className='ms-4 w-100'>
+                                                                                                    <Row>
+                                                                                                        <Col lg="12">
+                                                                                                            <div className='fw-500 text-black'>
+                                                                                                                <h3 className="product-name fs-18">{cartItem.product.name}</h3>
+                                                                                                            </div>
+                                                                                                        </Col>
+                                                                                                        <Col lg="12">
+                                                                                                            <div className="star-ratings">
+                                                                                                                <Rating
+                                                                                                                    initialValue={0}
+                                                                                                                    readonly={true}
+                                                                                                                    allowFraction={true}
+                                                                                                                    size={20}
+                                                                                                                    className="star-rating"
+                                                                                                                    showTooltip={true}
+                                                                                                                    emptyColor="#dddddd"
+                                                                                                                    fillColor="#cea835"
+                                                                                                                    tooltipArray={[
+                                                                                                                        0, 1, 2, 3, 4, 5
+                                                                                                                    ]}
+                                                                                                                    tooltipDefaultText="0.0"
+                                                                                                                /* Available Props */
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                        </Col>
+                                                                                                        <Col lg="12" className="color-column-keep-height">
+                                                                                                            {colorsArray && colorsArray.length > 0 ?
+                                                                                                                <>
+                                                                                                                    <p className="mb-3 mt-2 fs-12 fw-600">Color:{" "}
+                                                                                                                        {colorsArray.length > 1 ? (
+                                                                                                                            colorsArray.join(", ")
+                                                                                                                        ) : (
+                                                                                                                            colorsArray[0]
+                                                                                                                        )}
+                                                                                                                    </p>
+                                                                                                                </>
+                                                                                                                :
+                                                                                                                null
+                                                                                                            }
+                                                                                                        </Col>
+
+                                                                                                        <Col lg="5">
+                                                                                                            <div className="product-price">
+                                                                                                                <p className="fw-500 fs-18">{convertedPrice.currency_code}{convertedPrice.price}</p>
+                                                                                                            </div>
+                                                                                                        </Col>
+                                                                                                        <Col lg="6">
+                                                                                                            <div className="measurement-input d-flex">
+                                                                                                                <input
+                                                                                                                    type="number"
+                                                                                                                    className="form-control p-2 me-2 d-inline-block"
+                                                                                                                    min="1"
+                                                                                                                    style={{ maxWidth: 60 }}
+                                                                                                                    defaultValue={cartItem.quantity}
+                                                                                                                    onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id })}
+                                                                                                                />
+                                                                                                                <p className="my-auto">{cartItem.product.unit_measurement}</p>
+                                                                                                            </div>
+                                                                                                        </Col>
+                                                                                                        <Col lg="1" className="text-end">
+                                                                                                            <div className='text-center cursor-pointer my-auto delete-tooltip' onClick={function () { toggleDeleteCartItem(cartItem.id); }}>
+                                                                                                                <span className="icon-tooltiptext fs-14">Delete</span>
+                                                                                                                <AiOutlineDelete size="20" />
+                                                                                                            </div>
+                                                                                                        </Col>
+                                                                                                        {/* <div className="price-measurement-container d-flex justify-content-between">
                                                                                                         
                                                                                                         <div className="measurement-input d-flex">
                                                                                                             <input
@@ -536,9 +535,9 @@ const Cart = (props) => {
                                                                                                             <AiOutlineDelete size="20" />
                                                                                                         </div>
                                                                                                     </div> */}
-                                                                                                </Row>
+                                                                                                    </Row>
 
-                                                                                                {/* <div className='d-flex align-items-center user-image-chat'>
+                                                                                                    {/* <div className='d-flex align-items-center user-image-chat'>
                                                                                                     {cartItem.seller.image ?
                                                                                                         <div
                                                                                                             className='user-photo-chat'
@@ -558,12 +557,12 @@ const Cart = (props) => {
                                                                                                         {cartItem.seller.last_name}
                                                                                                     </span>
                                                                                                 </div> */}
-                                                                                            </div>
-                                                                                            
-                                                                                        </div>
-                                                                                    </Col>
+                                                                                                </div>
 
-                                                                                    {/* <Col lg={2}>
+                                                                                            </div>
+                                                                                        </Col>
+
+                                                                                        {/* <Col lg={2}>
                                                                                         {convertedPrice.currency_code}{convertedPrice.price}
                                                                                     </Col>
 
@@ -579,20 +578,20 @@ const Cart = (props) => {
                                                                                         {cartItem.product.unit_measurement}
                                                                                     </Col> */}
 
-                                                                                    {/* <Col lg={2}>
+                                                                                        {/* <Col lg={2}>
                                                                                         {convertedPrice.currency_code}{formattedSubtotal}
                                                                                     </Col> */}
 
-                                                                                    {/* <Col lg={1} className='text-center cursor-pointer delete-tooltip'
+                                                                                        {/* <Col lg={1} className='text-center cursor-pointer delete-tooltip'
                                                                                         onClick={function () { toggleDeleteCartItem(cartItem.id); }}
                                                                                     >
                                                                                         <span className="icon-tooltiptext fs-14">Delete</span>
                                                                                         <AiOutlineDelete size="20" />
                                                                                     </Col> */}
-                                                                                </Row>
-                                                                                {index < cartItems.length - 1 && 
-                                                                                    <div className="dotted-hr my-3"></div>
-                                                                                }
+                                                                                    </Row>
+                                                                                    {index < cartItems.length - 1 &&
+                                                                                        <div className="dotted-hr my-3"></div>
+                                                                                    }
                                                                                 </>
                                                                             );
                                                                         })}
@@ -651,88 +650,88 @@ const Cart = (props) => {
 
                                                                             return (
                                                                                 <>
-                                                                                <Row className="align-items-center">
-                                                                                    <Col lg={1}>
-                                                                                        <input
-                                                                                            type="checkbox"
-                                                                                            className="check-box me-2 check-box-color cursor-pointer"
-                                                                                            checked={selectedCartItems.includes(cartItem.id)}
-                                                                                            onChange={(e) => { handleCheckboxChange(cartItem.id); }}
-                                                                                        />
-                                                                                    </Col>
-                                                                                    <Col lg={11}>
-                                                                                        <div className='d-flex'>
-                                                                                            <div className="designs-grid-div fabric-image"
-                                                                                                style={{ backgroundImage: "url(" + fabricImage + ")" }}>
-                                                                                            </div>
-                                                                                            
-                                                                                            <div className='ms-4 w-100'>
-                                                                                            <Row>
-                                                                                                <Col lg="12">
-                                                                                                    <div className='mb-1 fw-500 text-black'>
-                                                                                                        {cartItem.name}
-                                                                                                    </div>
-                                                                                                </Col>
-                                                                                                <Col lg="12">
-                                                                                                    <div className="star-ratings mt-1">
-                                                                                                        <Rating
-                                                                                                            initialValue={0}
-                                                                                                            readonly={true}
-                                                                                                            allowFraction={true}
-                                                                                                            size={20}
-                                                                                                            className="star-rating"
-                                                                                                            showTooltip={true}
-                                                                                                            emptyColor="#dddddd"
-                                                                                                            fillColor="#cea835"
-                                                                                                            tooltipArray={[
-                                                                                                                0, 1, 2, 3, 4, 5
-                                                                                                            ]}
-                                                                                                            tooltipDefaultText="0.0"
-                                                                                                        /* Available Props */
-                                                                                                        />
-                                                                                                    </div>
-                                                                                                </Col>
-                                                                                                <Col lg="12" className="color-column-keep-height">
-                                                                                                    {cartItem.colors && cartItem.colors.length > 0 ?
-                                                                                                        <> 
-                                                                                                            <p className="mb-3 mt-2 fs-12 fw-600">Color:{" "}
-                                                                                                                    {colorsArray.length > 1 ? (
-                                                                                                                        colorsArray.join(", ")
-                                                                                                                    ) : (
-                                                                                                                        colorsArray[0]
-                                                                                                                    )}
-                                                                                                                </p>
-                                                                                                        </>
-                                                                                                        :
-                                                                                                        null
-                                                                                                    }
-                                                                                                </Col>
-                                                                                                <Col lg="5">
-                                                                                                    <div className="product-price">
-                                                                                                        <p className="fw-500 fs-18">{convertedPrice.currency_code}{convertedPrice.price}</p>
-                                                                                                    </div>
-                                                                                                </Col>
-                                                                                                <Col lg="6">
-                                                                                                    <input
-                                                                                                        type="number"
-                                                                                                        className="form-control p-2 me-2 d-inline-block"
-                                                                                                        min="1"
-                                                                                                        style={{ maxWidth: 60 }}
-                                                                                                        defaultValue={cartItem.quantity}
-                                                                                                        onChange={(e) => updateTempItemQuantity({ id: cartItem.id, quantity: e.target.value })}
-                                                                                                    />
-                                                                                                    {cartItem.unit_measurement}
-                                                                                                </Col>
-                                                                                                <Col lg={1} className="text-end">
-                                                                                                    <div className='text-center cursor-pointer delete-tooltip'  onClick={function () { deleteTempCartItem(cartItem.id); }}>
-                                                                                                        <span className="icon-tooltiptext fs-14">Delete</span>
-                                                                                                        <AiOutlineDelete size="20" />
-                                                                                                    </div>
-                                                                                                </Col>
-                                                                                            </Row>
-                                                                                                
+                                                                                    <Row className="align-items-center">
+                                                                                        <Col lg={1}>
+                                                                                            <input
+                                                                                                type="checkbox"
+                                                                                                className="check-box me-2 check-box-color cursor-pointer"
+                                                                                                checked={selectedCartItems.includes(cartItem.id)}
+                                                                                                onChange={(e) => { handleCheckboxChange(cartItem.id); }}
+                                                                                            />
+                                                                                        </Col>
+                                                                                        <Col lg={11}>
+                                                                                            <div className='d-flex'>
+                                                                                                <div className="designs-grid-div fabric-image"
+                                                                                                    style={{ backgroundImage: "url(" + fabricImage + ")" }}>
+                                                                                                </div>
 
-                                                                                                {/* <div className='d-flex align-items-center user-image-chat'>
+                                                                                                <div className='ms-4 w-100'>
+                                                                                                    <Row>
+                                                                                                        <Col lg="12">
+                                                                                                            <div className='fw-500 text-black'>
+                                                                                                                {cartItem.name}
+                                                                                                            </div>
+                                                                                                        </Col>
+                                                                                                        <Col lg="12">
+                                                                                                            <div className="star-ratings">
+                                                                                                                <Rating
+                                                                                                                    initialValue={0}
+                                                                                                                    readonly={true}
+                                                                                                                    allowFraction={true}
+                                                                                                                    size={20}
+                                                                                                                    className="star-rating"
+                                                                                                                    showTooltip={true}
+                                                                                                                    emptyColor="#dddddd"
+                                                                                                                    fillColor="#cea835"
+                                                                                                                    tooltipArray={[
+                                                                                                                        0, 1, 2, 3, 4, 5
+                                                                                                                    ]}
+                                                                                                                    tooltipDefaultText="0.0"
+                                                                                                                /* Available Props */
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                        </Col>
+                                                                                                        <Col lg="12" className="color-column-keep-height">
+                                                                                                            {cartItem.colors && cartItem.colors.length > 0 ?
+                                                                                                                <>
+                                                                                                                    <p className="mb-3 mt-2 fs-12 fw-600">Color:{" "}
+                                                                                                                        {colorsArray.length > 1 ? (
+                                                                                                                            colorsArray.join(", ")
+                                                                                                                        ) : (
+                                                                                                                            colorsArray[0]
+                                                                                                                        )}
+                                                                                                                    </p>
+                                                                                                                </>
+                                                                                                                :
+                                                                                                                null
+                                                                                                            }
+                                                                                                        </Col>
+                                                                                                        <Col lg="5">
+                                                                                                            <div className="product-price">
+                                                                                                                <p className="fw-500 fs-18">{convertedPrice.currency_code}{convertedPrice.price}</p>
+                                                                                                            </div>
+                                                                                                        </Col>
+                                                                                                        <Col lg="6">
+                                                                                                            <input
+                                                                                                                type="number"
+                                                                                                                className="form-control p-2 me-2 d-inline-block"
+                                                                                                                min="1"
+                                                                                                                style={{ maxWidth: 60 }}
+                                                                                                                defaultValue={cartItem.quantity}
+                                                                                                                onChange={(e) => updateTempItemQuantity({ id: cartItem.id, quantity: e.target.value })}
+                                                                                                            />
+                                                                                                            {cartItem.unit_measurement}
+                                                                                                        </Col>
+                                                                                                        <Col lg={1} className="text-end">
+                                                                                                            <div className='text-center cursor-pointer delete-tooltip' onClick={function () { deleteTempCartItem(cartItem.id); }}>
+                                                                                                                <span className="icon-tooltiptext fs-14">Delete</span>
+                                                                                                                <AiOutlineDelete size="20" />
+                                                                                                            </div>
+                                                                                                        </Col>
+                                                                                                    </Row>
+
+
+                                                                                                    {/* <div className='d-flex align-items-center user-image-chat'>
                                                                                                     {cartItem.user_image ?
                                                                                                         <div
                                                                                                             className='user-photo-chat'
@@ -752,11 +751,11 @@ const Cart = (props) => {
                                                                                                         {cartItem.user_last_name}
                                                                                                     </span>
                                                                                                 </div> */}
+                                                                                                </div>
                                                                                             </div>
-                                                                                        </div>
-                                                                                    </Col>
+                                                                                        </Col>
 
-                                                                                    {/* <Col lg={2}>
+                                                                                        {/* <Col lg={2}>
                                                                                         {convertedPrice?.currency_code}{convertedPrice?.price}
                                                                                     </Col>
 
@@ -782,11 +781,11 @@ const Cart = (props) => {
                                                                                         <span className="icon-tooltiptext fs-14">Delete</span>
                                                                                         <AiOutlineDelete size="20" />
                                                                                     </Col> */}
-                                                                                </Row>
-                                                                                {index < tempCartItems.length - 1 && 
-                                                                                    <div className="dotted-hr my-3"></div>
-                                                                                }
-                                                                            </> 
+                                                                                    </Row>
+                                                                                    {index < tempCartItems.length - 1 &&
+                                                                                        <div className="dotted-hr my-3"></div>
+                                                                                    }
+                                                                                </>
                                                                             );
                                                                         })}
 
@@ -841,32 +840,118 @@ const Cart = (props) => {
                                         </Col>
                                     </Row>
                                 </Col>
-                                <Col lg="4" className="d-flex justify-content-center">
+                                <Col lg="4" className="d-flex justify-content-end">
                                     <Card className="cart-card">
-                                        <Card.Body className="d-flex align-content-between flex-wrap">
+                                        <Card.Body>
                                             <Row>
                                                 <Col lg="12">
-                                                    <p className="fs-18 fw-600">Summary of Purchase</p>
+                                                    <p className="fs-18 fw-600 mb-0">Summary of Purchase</p>
+                                                    <hr className="mt-2" />
                                                 </Col>
-                                                {/* <Col lg="6">
-                                                {currentUser ?
-                                                    <p className="fs-14 text-muted">Subtotal </p>
-                                                    :
-                                                    <p className="fs-14 text-muted">Subtotal </p>
-                                                }
-                                                </Col> */}
-                                                {/* {currentUser ?
-                                                    <Col lg="6">
-                                                        <p className="fs-14 text-right fw-600">{currencyCode}{subtotalAmount}</p>
-                                                    </Col>
-                                                    :
-                                                    <Col lg="6">
-                                                        <p className="fs-14 text-right fw-600">{currencyCode}{subtotalAmount}</p>
-                                                    </Col>
-                                                } */}
+                                                <Col lg="12">
+                                                    {currentUser ?
+                                                        <>
+                                                            {cartItems ?
+                                                                <>
+                                                                    {cartItems.length > 0 ?
+                                                                        <>
+                                                                            {cartItems.map((cartItem, index) => {
+                                                                                var cart_product = cartItem.product;
+
+                                                                                const fabricPrice = cart_product.price ?? '0';
+                                                                                const fabricCurrency = cart_product.currency ?? 'USD';
+
+                                                                                const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                                const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                                const formattedSubtotal = formatPrice(subtotal);
+
+                                                                                return (
+                                                                                    <>
+                                                                                        <Row>
+                                                                                            <Col lg="6">
+                                                                                                <p className="fs-14 text-muted mb-10">{cartItem.product.name} X {cartItem.quantity}</p>
+                                                                                            </Col>
+                                                                                            <Col lg="6">
+                                                                                                <p className="fs-14 text-right mb-10 fw-600">{convertedPrice.currency_code}{formattedSubtotal}</p>
+                                                                                            </Col>
+                                                                                        </Row>
+                                                                                    </>
+                                                                                );
+                                                                            })}
+                                                                        </>
+                                                                        :
+                                                                        <Row>
+                                                                            <Col lg="12">
+                                                                                <p className="fs-14 text-muted mb-0">Your cart is empty.</p>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    }
+                                                                </>
+                                                                :
+                                                                <Row>
+                                                                    <Col lg="12">
+                                                                        <p className="fs-14 text-muted mb-0">Your cart is empty.</p>
+                                                                    </Col>
+                                                                </Row>
+                                                            }
+                                                        </>
+                                                        :
+                                                        <>
+                                                            {tempCartItems ?
+                                                                <>
+                                                                    {tempCartItems.length > 0 ?
+                                                                        <>
+                                                                            {tempCartItems.map((cartItem, index) => {
+                                                                                var cart_product = cartItem;
+
+                                                                                const fabricPrice = cart_product.price ?? '0';
+                                                                                const fabricCurrency = cart_product.currency ?? 'USD';
+
+                                                                                const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                                const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                                const formattedSubtotal = formatPrice(subtotal);
+
+                                                                                return (
+                                                                                    <>
+                                                                                        <Row>
+                                                                                            <Col lg="6">
+                                                                                                <p className="fs-14 text-muted mb-10">{cartItem.name} X {cartItem.quantity}</p>
+                                                                                            </Col>
+                                                                                            <Col lg="6">
+                                                                                                <p className="fs-14 text-right mb-10 fw-600">{convertedPrice.currency_code}{formattedSubtotal}</p>
+                                                                                            </Col>
+                                                                                        </Row>
+                                                                                    </>
+                                                                                );
+                                                                            })}
+
+                                                                        </>
+                                                                        :
+                                                                        <Row>
+                                                                            <Col lg="12">
+                                                                                <p className="fs-14 text-muted mb-0">Your cart is empty.</p>
+                                                                            </Col>
+                                                                        </Row>
+                                                                    }
+                                                                </>
+                                                                :
+                                                                <Row>
+                                                                    <Col lg="12">
+                                                                        <p className="fs-14 text-muted">Your cart is empty.</p>
+                                                                    </Col>
+                                                                </Row>
+                                                            }
+                                                        </>
+                                                    }
+                                                </Col>
                                             </Row>
                                             <Row>
-                                                <Col lg="4" className="py-2">
+                                                <Col lg="12">
+                                                    <hr className="mt-50 mb-3 w-100" />
+                                                </Col>
+                                            </Row>
+                                            <Row className="vertical-align-middle align-items-center justify-content-center">
+                                                <Col lg="4">
                                                     <p className="fs-14 mb-0 text-muted">Subtotal </p>
                                                 </Col>
                                                 {currentUser ?
@@ -879,23 +964,23 @@ const Cart = (props) => {
                                                     </Col>
                                                 }
                                                 <Col lg="12">
-                                                {currentUser ? (
-                                                    totalAmount > 0 && user && user?.profile_completeness === 100 ? (
+                                                    {currentUser ? (
+                                                        totalAmount > 0 && user && user?.profile_completeness === 100 ? (
+                                                            <Link to="/checkout">
+                                                                <button className='checkout-btn btn btn-primary mt-3'>Check Out</button>
+                                                            </Link>
+                                                        ) : (
+                                                            <button className='checkout-btn btn btn-primary mt-3' disabled={true}>Check Out</button>
+                                                        )
+                                                    ) : (totalAmount > 0 ?
+
                                                         <Link to="/checkout">
                                                             <button className='checkout-btn btn btn-primary mt-3'>Check Out</button>
                                                         </Link>
-                                                    ) : (
-                                                        <button className='checkout-btn btn btn-primary mt-3' disabled={true}>Check Out</button>
-                                                    )
-                                                ) : (totalAmount > 0 ?
-                                                    
-                                                    <Link to="/checkout">
-                                                        <button className='checkout-btn btn btn-primary mt-3'>Check Out</button>
-                                                    </Link>
-                                                    : (
-                                                        <button className='checkout-btn btn btn-primary mt-3' disabled={true}>Check Out</button>
-                                                    )
-                                                )}
+                                                        : (
+                                                            <button className='checkout-btn btn btn-primary mt-3' disabled={true}>Check Out</button>
+                                                        )
+                                                    )}
                                                 </Col>
                                             </Row>
                                         </Card.Body>
