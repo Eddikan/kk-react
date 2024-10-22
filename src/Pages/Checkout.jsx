@@ -124,6 +124,7 @@ const Cart = ({ props }) => {
     const [provinceCode, setProvinceCode] = useState('');
     const [cityName, setCityName] = useState('');
     const [geonameId, setGeonameId] = useState('');
+    const [shipmentError, setShipmentError] = useState(true);
 
     const [internationalShippingRate, setInternationalShippingRate] = useState();
     const [internationalShippingRateData, setInternationalShippingRateData] = useState();
@@ -1043,7 +1044,7 @@ const Cart = ({ props }) => {
         if (countryName != "" && checkOutFormData.delivery_country_code != "" && checkOutFormData.delivery_province_code != "" && checkOutFormData.delivery_postal_code != "" && checkOutFormData.delivery_city != "" && checkOutFormData.delivery_address_line_1 != "" && checkOutFormData.delivery_shipping_option != "") {
             if (checkOutFormData.shipping_option == "UPS") {
                 setErrors([]);
-
+                setShipmentError(true);
                 setShippingLoading(true);
                 setCountryCode(getCountryCode(countryName));
                 setInternationalShippingRate();
@@ -1161,7 +1162,7 @@ const Cart = ({ props }) => {
                     getInternationalRates(data).then(response => {
                         const status = response.data.status;
                         const data = response.data.data;
-                        const international_shipping_rate = response.data.data
+                        const international_shipping_rate = response.data.data;
                         const international_shipping_rate_data = response.data
                         if (status == "Success") {
                             setInternationalShippingRate(international_shipping_rate);
@@ -1172,6 +1173,13 @@ const Cart = ({ props }) => {
                                 recipient: _recipient,
                                 shipping_rate_data: international_shipping_rate_data
                             });
+
+                            const hasFailed = international_shipping_rate.some(rate => rate.status && rate.status === "Fail");
+                            if (hasFailed) {
+                                setShipmentError(true);
+                            } else {
+                                setShipmentError(false);
+                            }
 
                             setShippingLoading(false);
                         } else {
@@ -1292,6 +1300,12 @@ const Cart = ({ props }) => {
                                 shipping_rate_data: international_shipping_rate_data
                             });
                             setShippingLoading(false);
+                            const hasFailed = international_shipping_rate.some(rate => rate.status && rate.status === "Fail");
+                            if (hasFailed) {
+                                setShipmentError(true);
+                            } else {
+                                setShipmentError(false);
+                            }
                         } else {
                             toast.error('There has been an error getting the shipping rates, please try again!');
                             setShippingLoading(false);
@@ -1304,7 +1318,7 @@ const Cart = ({ props }) => {
 
             } else if (checkOutFormData.shipping_option == "GIGM") {
                 setErrors([]);
-
+                setShipmentError(false);
                 setShippingLoading(true);
                 setCountryCode(getCountryCode(countryName));
                 setGigmShippingRate();
@@ -1618,7 +1632,7 @@ const Cart = ({ props }) => {
                                 var shippingRate = internationalShippingRate[index];
 
                                 if (shippingRate) {
-                                    total_shipping_price = parseFloat(shippingRate.RateResponse.RatedShipment.TotalCharges.MonetaryValue) || 0;
+                                    total_shipping_price = parseFloat(shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue) || 0;
                                     shipping_currency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
 
                                 }
@@ -1626,7 +1640,6 @@ const Cart = ({ props }) => {
 
                             return parseFloat(tsa) + parseFloat(total_shipping_price);
                         }
-
                     }, 0);
 
                     total_shipping_amount_converted = cartItems.reduce((tsa, item, index) => {
@@ -1639,8 +1652,8 @@ const Cart = ({ props }) => {
                                 const shippingRate = internationalShippingRate[index];
 
                                 if (shippingRate) {
-                                    total_shipping_price = parseFloat(shippingRate.RateResponse.RatedShipment.TotalCharges.MonetaryValue) || 0; // Ensure it's a float
-                                    shipping_currency = shippingRate.RateResponse.RatedShipment.TotalCharges.CurrencyCode || 'USD';
+                                    total_shipping_price = parseFloat(shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue) || 0; // Ensure it's a float
+                                    shipping_currency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode || 'USD';
 
                                     total_shipping_price_converted = CurrencyConverter(total_shipping_price, shipping_currency, cookies);
                                 }
@@ -1785,7 +1798,7 @@ const Cart = ({ props }) => {
                                 var shippingRate = internationalShippingRate[index];
 
                                 if (shippingRate) {
-                                    total_shipping_price = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
+                                    total_shipping_price = parseFloat(shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue) || 0;
                                     shipping_currency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
 
                                 }
@@ -2518,17 +2531,22 @@ const Cart = ({ props }) => {
 
                                                                                         let shippingCurrency = 'USD';
 
+                                                                                        let item_errors = [];
 
                                                                                         if (internationalShippingRate && internationalShippingRate.length > 0 && checkOutFormData.shipping_option == "UPS") {
                                                                                             var shippingRate = internationalShippingRate[index];
 
                                                                                             if (shippingRate) {
-                                                                                                totalShippingPrice = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
+                                                                                                totalShippingPrice = parseFloat(shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue) || 0;
                                                                                                 shippingCurrency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
 
                                                                                                 totalShippingPriceConverted = CurrencyConverter(totalShippingPrice, shippingCurrency, cookies);
 
                                                                                                 cart_item_total = parseFloat(subtotal) + parseFloat(totalShippingPriceConverted.price_raw);
+
+                                                                                                if (shippingRate.status == "Fail") {
+                                                                                                    item_errors = shippingRate?.data?.response?.errors ?? [];
+                                                                                                }
                                                                                             }
 
                                                                                         } else if (gigmShippingRate && checkOutFormData.shipping_option == "GIGM") {
@@ -2544,11 +2562,11 @@ const Cart = ({ props }) => {
                                                                                             cart_item_total = parseFloat(subtotal);
                                                                                         }
 
-                                                                                        let item_errors = [];
-                                                                                        if (errors && errors.shipment_errors?.length > 0) {
-                                                                                            const shipment_errors = errors.shipment_errors;
-                                                                                            item_errors = shipment_errors[index];
-                                                                                        }
+
+                                                                                        // if (errors && errors.shipment_errors?.length > 0) {
+                                                                                        //     const shipment_errors = errors.shipment_errors;
+                                                                                        //     item_errors = shipment_errors[index];
+                                                                                        // }
 
                                                                                         return (
                                                                                             <Card className="mb-3">
@@ -2591,7 +2609,7 @@ const Cart = ({ props }) => {
                                                                                                     {item_errors && item_errors.length > 0 ? (
                                                                                                         <>
                                                                                                             {item_errors.map((error, index) => (
-                                                                                                                <p className="fs-12 mt-1 mb-0 text-danger lh-15" key={index}>{error}</p>
+                                                                                                                <p className="fs-12 mt-1 mb-0 text-danger lh-15" key={index}>{error.message}</p>
                                                                                                             ))}
                                                                                                         </>
                                                                                                     ) : null}
@@ -2644,18 +2662,22 @@ const Cart = ({ props }) => {
                                                                                                 let totalShippingPriceConverted = 0.00;
 
                                                                                                 let shippingCurrency = 'USD';
-
+                                                                                                let item_errors = [];
 
                                                                                                 if (internationalShippingRate && internationalShippingRate.length > 0 && checkOutFormData.shipping_option == "UPS") {
                                                                                                     var shippingRate = internationalShippingRate[index];
 
                                                                                                     if (shippingRate) {
-                                                                                                        totalShippingPrice = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
+                                                                                                        totalShippingPrice = parseFloat(shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue) || 0;
                                                                                                         shippingCurrency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
 
                                                                                                         totalShippingPriceConverted = CurrencyConverter(totalShippingPrice, shippingCurrency, cookies);
 
                                                                                                         cart_item_total = parseFloat(subtotal) + parseFloat(totalShippingPriceConverted.price_raw);
+
+                                                                                                        if (shippingRate.status == "Fail") {
+                                                                                                            item_errors = shippingRate?.data?.response?.errors ?? [];
+                                                                                                        }
                                                                                                     }
 
                                                                                                 } else if (gigmShippingRate && checkOutFormData.shipping_option == "GIGM") {
@@ -2671,11 +2693,11 @@ const Cart = ({ props }) => {
                                                                                                     cart_item_total = parseFloat(subtotal);
                                                                                                 }
 
-                                                                                                let item_errors = [];
-                                                                                                if (errors && errors.shipment_errors?.length > 0) {
-                                                                                                    const shipment_errors = errors.shipment_errors;
-                                                                                                    item_errors = shipment_errors[index];
-                                                                                                }
+                                                                                                // let item_errors = [];
+                                                                                                // if (errors && errors.shipment_errors?.length > 0) {
+                                                                                                //     const shipment_errors = errors.shipment_errors;
+                                                                                                //     item_errors = shipment_errors[index];
+                                                                                                // }
 
                                                                                                 return (
                                                                                                     <Card className="mb-2">
@@ -2718,7 +2740,7 @@ const Cart = ({ props }) => {
                                                                                                             {item_errors && item_errors.length > 0 ? (
                                                                                                                 <>
                                                                                                                     {item_errors.map((error, index) => (
-                                                                                                                        <p className="mt-1 mb-0 text-danger fs-12 lh-15" key={index}>{error}</p>
+                                                                                                                        <p className="mt-1 mb-0 text-danger fs-12 lh-15" key={index}>{error.message}</p>
                                                                                                                     ))}
                                                                                                                 </>
                                                                                                             ) : null}
@@ -2918,103 +2940,108 @@ const Cart = ({ props }) => {
                                                         <div className='mt-4'>
                                                             <Row>
                                                                 <Col lg="12">
-                                                                    {errors && (errors.shipment_errors || errors.recipient_errors) ?
+                                                                    {errors && (errors.shipment_errors || errors.recipient_errors || shipmentError) ?
                                                                         <button type="button" className='btn btn-primary' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
                                                                         :
                                                                         <>
-                                                                            {totalAmount < 1 ?
-                                                                                <button type="button" className='btn btn-primary' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                                            {shipmentLoading ?
+                                                                                <button type="button" className='btn btn-primary' disabled={true}>Loading...</button>
                                                                                 :
                                                                                 <>
-                                                                                    {radioButtonValue != "" ?
+                                                                                    {totalAmount < 1 ?
+                                                                                        <button type="button" className='btn btn-primary' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                                                        :
                                                                                         <>
-                                                                                            {radioButtonValue == "Paypal" ?
+                                                                                            {radioButtonValue != "" ?
                                                                                                 <>
-                                                                                                    {currentUser ?
+                                                                                                    {radioButtonValue == "Paypal" ?
                                                                                                         <>
-                                                                                                            {user?.profile_complete == 1 ?
-                                                                                                                <PayPalButtons
-                                                                                                                    fundingSource="paypal"
-                                                                                                                    createOrder={(data, actions) => {
-                                                                                                                        return actions.order.create({
-                                                                                                                            purchase_units: [{
-                                                                                                                                amount: {
-                                                                                                                                    value: totalAmount // Replace with the actual amount
-                                                                                                                                },
-                                                                                                                            }],
-                                                                                                                        });
-                                                                                                                    }}
-                                                                                                                    onApprove={(data, actions) => {
-                                                                                                                        return actions.order.capture().then((details) => {
-                                                                                                                            // alert("Transaction completed by " + details.payer.name.given_name);
-                                                                                                                            checkOutSubmitPaypal(details, data);
-                                                                                                                            // Call your backend API to save the transaction details
-                                                                                                                        });
-                                                                                                                    }}
-                                                                                                                />
+                                                                                                            {currentUser ?
+                                                                                                                <>
+                                                                                                                    {user?.profile_complete == 1 ?
+                                                                                                                        <PayPalButtons
+                                                                                                                            fundingSource="paypal"
+                                                                                                                            createOrder={(data, actions) => {
+                                                                                                                                return actions.order.create({
+                                                                                                                                    purchase_units: [{
+                                                                                                                                        amount: {
+                                                                                                                                            value: totalAmount // Replace with the actual amount
+                                                                                                                                        },
+                                                                                                                                    }],
+                                                                                                                                });
+                                                                                                                            }}
+                                                                                                                            onApprove={(data, actions) => {
+                                                                                                                                return actions.order.capture().then((details) => {
+                                                                                                                                    // alert("Transaction completed by " + details.payer.name.given_name);
+                                                                                                                                    checkOutSubmitPaypal(details, data);
+                                                                                                                                    // Call your backend API to save the transaction details
+                                                                                                                                });
+                                                                                                                            }}
+                                                                                                                        />
+                                                                                                                        :
+                                                                                                                        <Link to="/user/complete-profile">
+                                                                                                                            <button type="button" className='btn btn-primary'>Complete Profile to Check Out</button>
+                                                                                                                        </Link>
+                                                                                                                    }
+                                                                                                                </>
+
                                                                                                                 :
-                                                                                                                <Link to="/user/complete-profile">
-                                                                                                                    <button type="button" className='btn btn-primary'>Complete Profile to Check Out</button>
+                                                                                                                <Link to="/login?redirect_to=/checkout">
+                                                                                                                    <button type="button" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
                                                                                                                 </Link>
+                                                                                                                // <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
                                                                                                             }
                                                                                                         </>
+                                                                                                        : radioButtonValue == "Stripe" ?
+                                                                                                            <>
+                                                                                                                {currentUser ?
+                                                                                                                    <>
+                                                                                                                        {user?.profile_complete == 1 ?
+                                                                                                                            <button type="button" className='btn btn-primary' onClick={() => checkOutSubmitStripe()}>{formStatus != "standby" ? "Loading..." : "Checkout"}</button>
+                                                                                                                            :
+                                                                                                                            <Link to="/user/complete-profile">
+                                                                                                                                <button type="button" className='btn btn-primary'>Complete Profile to Check Out</button>
+                                                                                                                            </Link>
+                                                                                                                        }
+                                                                                                                    </>
 
-                                                                                                        :
-                                                                                                        <Link to="/login?redirect_to=/checkout">
-                                                                                                            <button type="button" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
-                                                                                                        </Link>
-                                                                                                        // <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                                    :
+                                                                                                                    <Link to="/login?redirect_to=/checkout">
+                                                                                                                        <button type="button" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                                    </Link>
+                                                                                                                    // <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                                }
+                                                                                                            </>
+                                                                                                            :
+
+                                                                                                            <>
+                                                                                                                {currentUser ?
+                                                                                                                    <>
+                                                                                                                        {user?.profile_complete == 1 ?
+                                                                                                                            <button type="submit" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
+                                                                                                                            :
+                                                                                                                            <Link to="/user/complete-profile">
+                                                                                                                                <button type="button" className='btn btn-primary'>Complete Profile to Check Out</button>
+                                                                                                                            </Link>
+                                                                                                                        }
+                                                                                                                    </>
+                                                                                                                    :
+                                                                                                                    <Link to="/login?redirect_to=/checkout">
+                                                                                                                        <button type="button" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                                    </Link>
+                                                                                                                    // <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                                }
+                                                                                                            </>
                                                                                                     }
                                                                                                 </>
-                                                                                                : radioButtonValue == "Stripe" ?
-                                                                                                    <>
-                                                                                                        {currentUser ?
-                                                                                                            <>
-                                                                                                                {user?.profile_complete == 1 ?
-                                                                                                                    <button type="button" className='btn btn-primary' onClick={() => checkOutSubmitStripe()}>{formStatus != "standby" ? "Loading..." : "Checkout"}</button>
-                                                                                                                    :
-                                                                                                                    <Link to="/user/complete-profile">
-                                                                                                                        <button type="button" className='btn btn-primary'>Complete Profile to Check Out</button>
-                                                                                                                    </Link>
-                                                                                                                }
-                                                                                                            </>
-
-                                                                                                            :
-                                                                                                            <Link to="/login?redirect_to=/checkout">
-                                                                                                                <button type="button" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
-                                                                                                            </Link>
-                                                                                                            // <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
-                                                                                                        }
-                                                                                                    </>
-                                                                                                    :
-
-                                                                                                    <>
-                                                                                                        {currentUser ?
-                                                                                                            <>
-                                                                                                                {user?.profile_complete == 1 ?
-                                                                                                                    <button type="submit" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
-                                                                                                                    :
-                                                                                                                    <Link to="/user/complete-profile">
-                                                                                                                        <button type="button" className='btn btn-primary'>Complete Profile to Check Out</button>
-                                                                                                                    </Link>
-                                                                                                                }
-                                                                                                            </>
-
-                                                                                                            :
-                                                                                                            <Link to="/login?redirect_to=/checkout">
-                                                                                                                <button type="button" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
-                                                                                                            </Link>
-                                                                                                            // <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
-                                                                                                        }
-                                                                                                    </>
+                                                                                                :
+                                                                                                null
                                                                                             }
+
                                                                                         </>
-                                                                                        :
-                                                                                        null
+
                                                                                     }
-
                                                                                 </>
-
                                                                             }
                                                                         </>
                                                                     }

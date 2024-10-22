@@ -1,9 +1,12 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import { IoIosCheckmarkCircle } from "react-icons/io";
-import { HiOutlineBuildingStorefront } from "react-icons/hi2";
+import { FiUser } from "react-icons/fi"
 import { FaArrowRightLong } from "react-icons/fa6";
 import { useCookies } from 'react-cookie';
+import { IoHomeOutline } from 'react-icons/io5';
+
 
 const ThankYouProgress = ({ user, currentUser, reload, token, onStepPlusFour }) => {
     const [cookies, setCookie, removeCookie] = useCookies(['currentUser','userDetails']);
@@ -32,6 +35,18 @@ const ThankYouProgress = ({ user, currentUser, reload, token, onStepPlusFour }) 
                                 Set up your shop<FaArrowRightLong className='ms-2'/></span>
                             </span>
                         </div> */}
+                        {userDetails.profile_complete != 1 ?
+                            <div>
+                                <Link to="/user/complete-profile" className='text-decoration-none'>
+                                    <span><FiUser size={25} className='text-gold me-2 ms-3'/> 
+                                        <span className='fw-500 cursor-pointer'>
+                                        Complete Profile<FaArrowRightLong className='ms-2'/></span>
+                                    </span>
+                                </Link>
+                            </div>
+                            :
+                            null
+                        }
                     </div>
                 </Col>
             </Row>

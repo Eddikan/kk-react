@@ -846,7 +846,7 @@ const AdminViewFabrics = () => {
                                                                                 }
                                                                             </div>
                                                                             <div className="rating">
-                                                                                <p className="text-black fs-16 mb-0 text-left">{user.first_name} {user.last_name}</p>
+                                                                                <p className="text-black fs-14 mb-0 text-left">{user.first_name} {user.last_name}</p>
                                                                                 <Rating
                                                                                     initialValue={rating}
                                                                                     readonly={true}
@@ -876,7 +876,7 @@ const AdminViewFabrics = () => {
                                                         :
                                                         <div className="text-center">
                                                             <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
-                                                            <p className="fs-20 text-black">No available reviews at this time</p>
+                                                            <p className="text-black">No available reviews at this time</p>
                                                         </div>
                                                     }
                                                 </>

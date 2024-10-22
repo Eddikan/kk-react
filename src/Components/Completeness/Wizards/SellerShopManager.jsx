@@ -38,7 +38,7 @@ const SellerShopManager = ({ progress }) => {
                     }
                 </div>
 
-                <div className='w-100 step-container'>
+                {/* <div className='w-100 step-container'>
                     {progress == 2 ?
                         <>
                             <div className='d-flex align-items-center active'>
@@ -67,9 +67,9 @@ const SellerShopManager = ({ progress }) => {
                             </div>
                         </>
                     }
-                </div>
+                </div> */}
                 
-                <div className='progress-lines'>
+                {/* <div className='progress-lines'>
                     {progress == 2 || progress == 3 ?
                         <>
                             <div className='progress-line line-active'></div>
@@ -89,7 +89,7 @@ const SellerShopManager = ({ progress }) => {
                         </>
                     }
                     
-                </div>
+                </div> */}
             </div>
         </>
     )

@@ -557,7 +557,7 @@ const ViewProduct = () => {
 
 
                                             <span
-                                                className={`text-black cursor-pointer me-5 mb-3 fs-25 ${reviewsTabShow ? 'fw-400' : ''}`}
+                                                className={`text-black cursor-pointer me-5 mb-3 fs-16 mt-3 ${reviewsTabShow ? 'fw-400' : ''}`}
                                                 onClick={function () { showTab("reviews"); }}
                                             >
                                                 Customer Reviews
@@ -613,7 +613,7 @@ const ViewProduct = () => {
                                                                                         }
                                                                                     </div>
                                                                                     <div className="rating">
-                                                                                        <p className="text-black fs-16 mb-0 text-left">{user.first_name} {user.last_name}</p>
+                                                                                        <p className="text-black fs-14 mb-0 text-left">{user.first_name} {user.last_name}</p>
                                                                                         <Rating
                                                                                             initialValue={rating}
                                                                                             readonly={true}
@@ -625,7 +625,7 @@ const ViewProduct = () => {
                                                                                             fillColor="#cea835"
                                                                                         />
                                                                                         {content && content != "" ?
-                                                                                            <p className="mb-0 fs-14 mt-3">{content}</p>
+                                                                                            <p className="mb-0 fs-14 mt-15">{content}</p>
                                                                                             :
                                                                                             null
                                                                                         }
@@ -643,7 +643,7 @@ const ViewProduct = () => {
                                                                 :
                                                                 <div className="text-center">
                                                                     <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
-                                                                    <p className="fs-20 text-black">No available reviews at this time</p>
+                                                                    <p className="text-black">No available reviews at this time</p>
                                                                 </div>
                                                             }
                                                         </>
@@ -1301,7 +1301,7 @@ const ViewProduct = () => {
                                                                                 }
                                                                             </div>
                                                                             <div className="rating">
-                                                                                <p className="text-black fs-16 mb-0 text-left">{user.first_name} {user.last_name}</p>
+                                                                                <p className="text-black fs-14 mb-0 text-left">{user.first_name} {user.last_name}</p>
                                                                                 <Rating
                                                                                     initialValue={rating}
                                                                                     readonly={true}
@@ -1331,7 +1331,7 @@ const ViewProduct = () => {
                                                         :
                                                         <div className="text-center">
                                                             <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
-                                                            <p className="fs-20 text-black">No available reviews at this time</p>
+                                                            <p className="text-black">No available reviews at this time</p>
                                                         </div>
                                                     }
                                                 </>

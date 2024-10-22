@@ -17,7 +17,7 @@ const ProfileProgress = ({ progress }) => {
                                 <span className='ms-2 fw-500'>Set your availability</span>
                             </div>
                         </>
-                    :progress == 1 || progress == 2 || progress == 3 ?
+                    :progress == 1 || progress == 2 || progress == 3 || progress == 4 ?
           
                         <>
                             <div className='d-flex align-items-center check'>

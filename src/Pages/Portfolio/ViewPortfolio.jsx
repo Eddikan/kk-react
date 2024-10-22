@@ -370,7 +370,7 @@ const ViewPortFolio = () => {
                                         <>
                                             <div className="text-center">
                                                 <GoAlertFill size="60px" className="mb-3 mt-2 text-gold" />
-                                                <p className="fs-20 text-black">No available reviews at this time</p>
+                                                <p className="text-black">No available reviews at this time</p>
                                             </div>
                                         </>
                                         :

@@ -26,7 +26,7 @@ const initialQuestionnaire3Data = Object.freeze({
     is_seller: 1,
 });
 
-const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
+const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user, singleStep }) => {
     const navigate = useNavigate();
 
     const [questionnaire3Data, setQuestionnaire3Data] = useState(initialQuestionnaire3Data);
@@ -282,8 +282,11 @@ const UploadProduct = ({ onStepPlusTwo, onStepMinusTwo, user }) => {
                     </Row>
                     <Row>
                         <Col lg="12" className="text-right">
-                            <Button className='btn-back me-3' type="button" onClick={() => onStepMinusTwo()} >Back</Button>
-
+                            {singleStep ?
+                                null
+                                :
+                                <Button className='btn-back me-3' type="button" onClick={() => onStepMinusTwo()} >Back</Button>
+                            }
                             {questionnaire3Loading ?
                                 <Button className='btn-save' type="button">Saving...</Button>
                                 :
