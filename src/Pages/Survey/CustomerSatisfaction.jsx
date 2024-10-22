@@ -128,7 +128,7 @@ const CustomerSatisfaction = (props) => {
     return (
         <Layout>
             <section className='bg-light'>
-                <Container className='py-5'>
+                <Container className='pt-30 pb-5 px-5'>
                     <Row>
                         <Col lg={11}>
                         </Col>
