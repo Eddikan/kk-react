@@ -517,9 +517,9 @@ color:#F6D46D;
     text-decoration: none;
 }
 
-.designs-grid:hover .design-name{
+/* .designs-grid:hover .design-name{
     text-decoration: underline;
-}
+} */
 
 .save-link{
     display: none !important;

@@ -1242,34 +1242,34 @@ const Fabrics = (props) => {
                                                                 </>
                                                             )
                                                         })}
+                                                        {currentUser && currentUser != "" ?
+                                                            <Pagination
+                                                                className="mt-4 mb-0"
+                                                                currentPage={currentPage}
+                                                                totalCount={pageCount}
+                                                                pageSize={PageSize}
+                                                                onPageChange={page => handleChangePage(page)}
+                                                            />
+                                                            :
+                                                            <Col lg={12} className="text-center mt-4">
+                                                                <Link to="/sign-up?type=customer&option=fabrics&redirect_to=/fabrics">
+                                                                    <Button type="button" className="btn-primary" variant="primary">View More</Button>
+                                                                </Link>
+                                                            </Col>
+                                                        }
                                                     </Row>
                                                 </>
                                                 :
                                                 <Card className="text-center">
                                                     <Card.Body>
                                                         <IoShirtSharp size="50px" className="mt-2" />
-                                                        <p className="text-center fs-20 mb-2 mt-3">No records found.</p>
+                                                        <p className="text-center fs-14 mb-2 mt-3">No records found.</p>
                                                     </Card.Body>
                                                 </Card>
                                             }
                                         </>
                                     }
                                 </div>
-                                {currentUser && currentUser != "" ?
-                                    <Pagination
-                                        className="mt-4 mb-0"
-                                        currentPage={currentPage}
-                                        totalCount={pageCount}
-                                        pageSize={PageSize}
-                                        onPageChange={page => handleChangePage(page)}
-                                    />
-                                    :
-                                    <Col lg={12} className="text-center mt-4">
-                                        <Link to="/sign-up?type=customer&option=fabrics&redirect_to=/fabrics">
-                                            <Button type="button" className="btn-primary" variant="primary">View More</Button>
-                                        </Link>
-                                    </Col>
-                                }
                             </Col>
                         </Row>
                     </Container>

@@ -222,7 +222,7 @@ const Favorites = (props) => {
                                                     :
                                                     <div className="text-center mt-5">
                                                         <GoAlertFill size="120px" className="mb-4 mt-5 text-gold" />
-                                                        <p className="fs-20 text-black">No favorite at this time</p>
+                                                        <p className="fs-14 text-black">No favorite at this time</p>
                                                     </div>
                                                 }
                                             </>
@@ -313,7 +313,7 @@ const Favorites = (props) => {
                                                     :
                                                     <div className="text-center mt-5">
                                                         <GoAlertFill size="120px" className="mb-4 mt-5 text-gold" />
-                                                        <p className="fs-20 text-black">No favorite at this time</p>
+                                                        <p className="fs-14 text-black">No favorite at this time</p>
                                                     </div>
                                                 }
                                             </>

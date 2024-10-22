@@ -195,7 +195,7 @@ const Home = (props) => {
               <div>
                 <p className="join-section-p text-white fs-20 fw-400 mb-0">Showcase your unique creations and connect with fashion</p>
                 <p className="join-section-p text-white fs-20 fw-400 mb-40">enthusiasts eager to discover fresh talent</p>
-                <a href="/" className='join-section-get-started-btn fs-20'>Get Started Now <FaArrowRightLong className="get-started-icon ms-2"/></a>
+                <p className='join-section-get-started-btn cursor-pointer fs-20' onClick={() => toggleSetupShopShow()}>Get Started Now <FaArrowRightLong className="get-started-icon ms-2"/></p>
               </div>
             </Col>
             <Col lg="6">
