@@ -108,13 +108,15 @@ img.placeholder-cart {
 .color-column-keep-height {
     min-height: 35px;
 }
-.cart-card{
+.cart-card {
     max-width: 85%;
     width: 100%;
+    height: fit-content;
+    padding-bottom: 15px;
 }
-.checkout-btn{
+.checkout-btn {
     width: 100%;
 }
-.subtotal-amount{
+.subtotal-amount {
     color: #551855;
 }

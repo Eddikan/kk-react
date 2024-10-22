@@ -431,9 +431,10 @@ const Header = () => {
 
       getUserCartItems()
         .then((response) => {
-          const selectedCartItem = response.data.data;
-          if (selectedCartItem) {
-            const totalQuantity = getTotalQuantity(selectedCartItem);
+          const selectedCartItems = response.data.data;
+          if (selectedCartItems) {
+            // const totalQuantity = getTotalQuantity(selectedCartItem);
+            const totalQuantity = selectedCartItems.length ?? 0;
             setCartItemCount(totalQuantity);
           } else {
             toast.error('There has been an error getting the notifications, please try again!');
@@ -444,7 +445,8 @@ const Header = () => {
         });
     } else {
       if (tempCart) {
-        const totalQuantity = getTotalQuantity(tempCart);
+        // const totalQuantity = getTotalQuantity(tempCart);
+        const totalQuantity = tempCart.length ?? 0;
         setCartItemCount(totalQuantity);
       }
       if (tempFavorites) {
@@ -474,7 +476,8 @@ const Header = () => {
           });
       } else {
         if (tempCart) {
-          const totalQuantity = getTotalQuantity(tempCart);
+          // const totalQuantity = getTotalQuantity(tempCart);
+          const totalQuantity = tempCart.length ?? 0;
           setCartItemCount(totalQuantity);
         }
         if (tempFavorites) {
@@ -494,9 +497,10 @@ const Header = () => {
     if (currentUser) {
       getUserCartItems()
         .then((response) => {
-          const selectedCartItem = response.data.data;
-          if (selectedCartItem) {
-            const totalQuantity = getTotalQuantity(selectedCartItem);
+          const selectedCartItems = response.data.data;
+          if (selectedCartItems) {
+            // const totalQuantity = getTotalQuantity(selectedCartItem);
+            const totalQuantity = selectedCartItems.length ?? 0;
             setCartItemCount(totalQuantity);
           } else {
             toast.error('There has been an error getting the notifications, please try again!');

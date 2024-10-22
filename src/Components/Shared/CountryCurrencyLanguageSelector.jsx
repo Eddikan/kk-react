@@ -10,8 +10,8 @@ const CountryCurrencyLanguageSelector = (props) => {
     const [selectedCountryCode, setSelectedCountryCode] = useState(cookies.selectedCountryCode ?? '');
     const [selectedLanguage, setSelectedLanguage] = useState(cookies.selectedLanguage ?? "");
     const [selectedLanguageCode, setSelectedLanguageCode] = useState(cookies.selectedLanguageCode ?? "");
-    const [selectedCurrency, setSelectedCurrency] = useState(cookies.selectedCurrency || cookies.userCurrency || "");
-    const [selectedCurrencyCode, setSelectedCurrencyCode] = useState(cookies.selectedCurrencyCode || cookies.userCurrencyCode || "");
+    const [selectedCurrency, setSelectedCurrency] = useState(cookies.selectedCurrency || cookies.userCurrency || "USD");
+    const [selectedCurrencyCode, setSelectedCurrencyCode] = useState(cookies.selectedCurrencyCode || cookies.userCurrencyCode || "$");
 
     const userDetails = cookies.userDetails;
 
