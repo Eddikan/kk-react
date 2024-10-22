@@ -138,11 +138,12 @@ const Cart = ({ props }) => {
     const [recipient, setRecipient] = useState([]);
     const [shippingDetails, setShippingDetails] = useState(initialShippingDetails);
     const [errors, setErrors] = useState([]);
-    
+
     // Locations
     const [cities, setCities] = useState([]);
     const [provinces, setProvinces] = useState([]);
     const [coordinates, setCoordinates] = useState(initialLatLon);
+    const [emptyCities, setEmptyCities] = useState(false);
 
     const [provincesLoading, setProvincesLoading] = useState(false);
     const [citiesLoading, setCitiesLoading] = useState(false);
@@ -256,7 +257,7 @@ const Cart = ({ props }) => {
             } else {
                 const errors = response.data.errors;
                 if (errors) {
-                    setErrors(errors);
+                    // setErrors(errors);
                     toast.error('There has been an error getting the states, please try again!');
                 } else {
                     toast.error('There has been an error getting the states, please try again!');
@@ -287,10 +288,15 @@ const Cart = ({ props }) => {
             if (!error) {
                 setCities(data); // Assuming the response has the cities in `data`
                 setCitiesLoading(false);
+                if (data && data.length < 1) {
+                    setEmptyCities(true);
+                } else {
+                    setEmptyCities(false);
+                }
             } else {
                 const errors = response.data.errors;
                 if (errors) {
-                    setErrors(errors);
+                    // setErrors(errors);
                     toast.error('There has been an error getting the cities, please try again!');
                 } else {
                     toast.error('There has been an error getting the cities, please try again!');
@@ -320,7 +326,7 @@ const Cart = ({ props }) => {
                 toast.error('Failed to fetch coordinates. Please check the city name and try again.');
             }
             setFormStatus("standby");
-            
+
         } catch (error) {
             toast.error('Failed to fetch coordinates. Please check the city name and try again.');
             console.error(error);
@@ -479,7 +485,8 @@ const Cart = ({ props }) => {
                 delivery_country_code: country_code,
                 delivery_province: "",
                 delivery_province_code: "",
-                city: "",
+                delivery_city: "",
+                shipping_option: ""
             });
         } else if (name == "delivery_province") {
             const selectedProvince = e.target.selectedOptions[0];
@@ -489,7 +496,8 @@ const Cart = ({ props }) => {
                 ...checkOutFormData,
                 [name]: value,
                 delivery_province_code: provinceCode,
-                city: "",
+                delivery_city: "",
+                shipping_option: ""
             });
 
         } else {
@@ -520,22 +528,22 @@ const Cart = ({ props }) => {
             createUpsInternationalShipment(shipping_data).then(response => {
                 const status = response.data.status;
                 const data = response.data;
-                
+
                 if (status == "Success") {
 
-                    const orderItemDetails = cartItems.map((cartItem, index) => {
+                    const checkOutOrderItems = cartItems.map((cartItem, index) => {
                         const cartItemShippingRate = internationalShippingRate[index] || {};
                         const cartItemShipmentResults = data[index] || {};
-                        const cartItemTrackingDetails = response.total_charges?.data?.[index] || {};
-                        
+                        const cartItemTrackingDetails = data.total_charges?.data[index] || {};
+
                         const cart_item_shipping_price = parseFloat(cartItemShippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue) || 0;
                         const cart_item_shipping_currency = cartItemShippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode || 'USD';
                         const cart_item_shipment_price = parseFloat(cartItemShipmentResults?.ShipmentResponse?.ShipmentResults?.ShipmentCharges?.TotalCharges?.MonetaryValue) || 0;
                         const cart_item_shipment_currency = cartItemShipmentResults?.ShipmentResponse?.ShipmentResults?.ShipmentCharges?.TotalCharges?.CurrencyCode || 'USD';
-                
+
                         const cart_item_shipping_price_converted = CurrencyConverter(cart_item_shipping_price, cart_item_shipping_currency, cookies);
                         const cart_item_shipment_price_converted = CurrencyConverter(cart_item_shipment_price, cart_item_shipment_currency, cookies);
-                
+
                         return {
                             product_id: cartItem.product.id,
                             quantity: cartItem.quantity,
@@ -551,7 +559,7 @@ const Cart = ({ props }) => {
                         };
                     });
 
-                    postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, cookies: cookies, order_item_details: orderItemDetails }).then(response => {
+                    postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, currency_conversions: cookies.currencyConversions, checkout_order_items: checkOutOrderItems }).then(response => {
                         const status = response.data.status;
                         const data = response.data.data;
                         if (status == "Success") {
@@ -602,7 +610,7 @@ const Cart = ({ props }) => {
                 const status = response.data.status;
                 const data = response.data;
                 if (status == "Success") {
-                    postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, cookies: cookies }).then(response => {
+                    postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, currency_conversions: cookies.currencyConversions }).then(response => {
                         const status = response.data.status;
                         const data = response.data.data;
                         if (status == "Success") {
@@ -644,7 +652,7 @@ const Cart = ({ props }) => {
                 toast.error('There has been an error adding the order, please try again!');
             });
         } else {
-            postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, cookies: cookies }).then(response => {
+            postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, currency_conversions: cookies.currencyConversions }).then(response => {
                 const status = response.data.status;
                 const data = response.data.data;
                 if (status == "Success") {
@@ -694,7 +702,36 @@ const Cart = ({ props }) => {
                 const status = response.data.status;
                 const data = response.data;
                 if (status == "Success") {
-                    postCheckOut({ ...checkOutFormData, payment_status: 'Paid', delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, cookies: cookies, payment_details: details }).then(response => {
+
+                    const checkOutOrderItems = cartItems.map((cartItem, index) => {
+                        const cartItemShippingRate = internationalShippingRate[index] || {};
+                        const cartItemShipmentResults = data[index] || {};
+                        const cartItemTrackingDetails = data.total_charges?.data[index] || {};
+
+                        const cart_item_shipping_price = parseFloat(cartItemShippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue) || 0;
+                        const cart_item_shipping_currency = cartItemShippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode || 'USD';
+                        const cart_item_shipment_price = parseFloat(cartItemShipmentResults?.ShipmentResponse?.ShipmentResults?.ShipmentCharges?.TotalCharges?.MonetaryValue) || 0;
+                        const cart_item_shipment_currency = cartItemShipmentResults?.ShipmentResponse?.ShipmentResults?.ShipmentCharges?.TotalCharges?.CurrencyCode || 'USD';
+
+                        const cart_item_shipping_price_converted = CurrencyConverter(cart_item_shipping_price, cart_item_shipping_currency, cookies);
+                        const cart_item_shipment_price_converted = CurrencyConverter(cart_item_shipment_price, cart_item_shipment_currency, cookies);
+
+                        return {
+                            product_id: cartItem.product.id,
+                            quantity: cartItem.quantity,
+                            tracking_details: cartItemTrackingDetails,
+                            shipping_details: {
+                                shipping_amount: cart_item_shipping_price,
+                                shipping_amount_converted: cart_item_shipping_price_converted.price_raw,
+                                shipment_amount: cart_item_shipment_price,
+                                shipment_amount_converted: cart_item_shipment_price_converted.price_raw,
+                                shipping_details: cartItemShippingRate,
+                                shipment_details: cartItemShipmentResults,
+                            }
+                        };
+                    });
+
+                    postCheckOut({ ...checkOutFormData, payment_status: 'Paid', delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, currency_conversions: cookies.currencyConversions, payment_details: details, checkout_order_items: checkOutOrderItems }).then(response => {
                         const status = response.data.status;
                         const data = response.data.data;
                         if (status == "Success") {
@@ -741,7 +778,7 @@ const Cart = ({ props }) => {
                 const status = response.data.status;
                 const data = response.data;
                 if (status == "Success") {
-                    postCheckOut({ ...checkOutFormData, payment_status: 'Paid', delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, cookies: cookies, payment_details: details }).then(response => {
+                    postCheckOut({ ...checkOutFormData, payment_status: 'Paid', delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, currency_conversions: cookies.currencyConversions, payment_details: details }).then(response => {
                         const status = response.data.status;
                         const data = response.data.data;
                         if (status == "Success") {
@@ -833,7 +870,36 @@ const Cart = ({ props }) => {
                 const status = response.data.status;
                 const data = response.data;
                 if (status == "Success") {
-                    postCheckOut({ ...checkOutFormData, payment_status: 'Processing', delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, cookies: cookies }).then(response => {
+
+                    const checkOutOrderItems = cartItems.map((cartItem, index) => {
+                        const cartItemShippingRate = internationalShippingRate[index] || {};
+                        const cartItemShipmentResults = data[index] || {};
+                        const cartItemTrackingDetails = data.total_charges?.data[index] || {};
+
+                        const cart_item_shipping_price = parseFloat(cartItemShippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue) || 0;
+                        const cart_item_shipping_currency = cartItemShippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode || 'USD';
+                        const cart_item_shipment_price = parseFloat(cartItemShipmentResults?.ShipmentResponse?.ShipmentResults?.ShipmentCharges?.TotalCharges?.MonetaryValue) || 0;
+                        const cart_item_shipment_currency = cartItemShipmentResults?.ShipmentResponse?.ShipmentResults?.ShipmentCharges?.TotalCharges?.CurrencyCode || 'USD';
+
+                        const cart_item_shipping_price_converted = CurrencyConverter(cart_item_shipping_price, cart_item_shipping_currency, cookies);
+                        const cart_item_shipment_price_converted = CurrencyConverter(cart_item_shipment_price, cart_item_shipment_currency, cookies);
+
+                        return {
+                            product_id: cartItem.product.id,
+                            quantity: cartItem.quantity,
+                            tracking_details: cartItemTrackingDetails,
+                            shipping_details: {
+                                shipping_amount: cart_item_shipping_price,
+                                shipping_amount_converted: cart_item_shipping_price_converted.price_raw,
+                                shipment_amount: cart_item_shipment_price,
+                                shipment_amount_converted: cart_item_shipment_price_converted.price_raw,
+                                shipping_details: cartItemShippingRate,
+                                shipment_details: cartItemShipmentResults,
+                            }
+                        };
+                    });
+
+                    postCheckOut({ ...checkOutFormData, payment_status: 'Processing', delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, currency_conversions: cookies.currencyConversions, checkout_order_items: checkOutOrderItems }).then(response => {
                         const status = response.data.status;
                         const data = response.data.data;
                         if (status == "Success") {
@@ -880,7 +946,7 @@ const Cart = ({ props }) => {
                 const status = response.data.status;
                 const data = response.data;
                 if (status == "Success") {
-                    postCheckOut({ ...checkOutFormData, payment_status: 'Processing', delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, cookies: cookies }).then(response => {
+                    postCheckOut({ ...checkOutFormData, payment_status: 'Processing', delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, currency_conversions: cookies.currencyConversions }).then(response => {
                         const status = response.data.status;
                         const data = response.data.data;
                         if (status == "Success") {
@@ -1000,9 +1066,13 @@ const Cart = ({ props }) => {
                 if (currentUser && cartItems) {
                     const _shipments = cartItems.reduce((itemsArray, item) => {
                         if (selectedCartItems.includes(item.product.id)) {
-                            var length = (item.product.length > 0 ? item.product.length : 1) * item.quantity;
-                            var width = (item.product.width > 0 ? item.product.width : 1) * item.quantity;
+                            // var length = (item.product.length > 0 ? item.product.length : 1) * item.quantity;
+                            // var width = (item.product.width > 0 ? item.product.width : 1) * item.quantity;
+                            // var weight = (item.product.weight ?? 1) * item.quantity;
+                            var length = item.quantity;
+                            var width = item.quantity;
                             var weight = (item.product.weight ?? 1) * item.quantity;
+
                             const product_unit_measurement = item.product.unit_measurement;
                             const is_imperial = getUnitOfMeasurement(item.seller.country_code);
 
@@ -1119,13 +1189,15 @@ const Cart = ({ props }) => {
                 } else if (!currentUser && tempCartItems) {
                     const _shipments = tempCartItems.reduce((itemsArray, item) => {
                         if (selectedCartItems.includes(item.id)) {
-                            var length = (item.length > 0 ? item.length : 1) * item.quantity;
-                            var width = (item.width > 0 ? item.width : 1) * item.quantity;
-                            var weight = (item.weight ?? 1) * item.quantity;
+                            // var length = (item.length > 0 ? item.length : 1) * item.quantity;
+                            // var width = (item.width > 0 ? item.width : 1) * item.quantity;
+                            // var weight = (item.weight ?? 1) * item.quantity;
+                            var length = item.quantity;
+                            var width = item.quantity;
+                            var weight = (item.product.weight ?? 1) * item.quantity;
+
                             const product_unit_measurement = item.unit_measurement;
                             const is_imperial = getUnitOfMeasurement(item.user_country_code);
-
-                            console.log(item.description);
 
                             if (is_imperial) {
                                 const unit_measurement = 'IN';
@@ -1562,26 +1634,26 @@ const Cart = ({ props }) => {
                             let total_shipping_price = 0.00;
                             let total_shipping_price_converted = 0.00;
                             let shipping_currency = 'USD';
-                    
+
                             if (internationalShippingRate && internationalShippingRate.length > 0) {
                                 const shippingRate = internationalShippingRate[index];
-                    
+
                                 if (shippingRate) {
                                     total_shipping_price = parseFloat(shippingRate.RateResponse.RatedShipment.TotalCharges.MonetaryValue) || 0; // Ensure it's a float
                                     shipping_currency = shippingRate.RateResponse.RatedShipment.TotalCharges.CurrencyCode || 'USD';
-                    
+
                                     total_shipping_price_converted = CurrencyConverter(total_shipping_price, shipping_currency, cookies);
                                 }
                             }
-                    
+
                             // Return accumulated total
                             return tsa + (parseFloat(total_shipping_price_converted.price_raw) || 0); // Ensure we add a float
                         }
-                    
+
                         // Return tsa if the item is not included in selectedCartItems
-                        return tsa; 
+                        return tsa;
                     }, 0); // Initial value is 0
-                    
+
                 } else if (gigmShippingRate && checkOutFormData.shipping_option == "GIGM") {
                     let shipping_currency = 'NGN';
 
@@ -1652,7 +1724,8 @@ const Cart = ({ props }) => {
                 .then((response) => {
                     const cartItemsData = response.data.data;
                     if (cartItemsData) {
-                        setCartItems(cartItemsData);
+                        const filteredCartItems = cartItemsData.filter(item => selectedCartItems.includes(item.product.id));
+                        setCartItems(filteredCartItems);
                         setCartLoading(false);
                         cartItemsData.map((cartItem) => {
                             if (selectedCartItems.includes(cartItem.product.id)) {
@@ -1685,25 +1758,23 @@ const Cart = ({ props }) => {
             if (tempCartItems.length > 0 && tempCartItems.length > 0) {
 
                 cart_total_quantity = tempCartItems.reduce((ctq, item) => {
-                    if (item && selectedCartItems.includes(item.id)) {
-                        const quantity = item.quantity;
+                    const quantity = item.quantity;
 
-                        return ctq + quantity;
-                    }
+                    return ctq + quantity;
+
                     return ctq;
                 }, 0);
 
                 cart_total = tempCartItems.reduce((ct, item) => {
-                    if (item && selectedCartItems.includes(item.id)) {
-                        const subtotal = item.price * item.quantity;
-                        return ct + subtotal;
-                    }
+                    const subtotal = item.price * item.quantity;
+                    return ct + subtotal;
+
                     return ct;
                 }, 0);
 
                 if (internationalShippingRate && checkOutFormData.shipping_option == "UPS") {
                     total_shipping_amount = tempCartItems.reduce((tsa, item, index) => {
-                        if (item && selectedCartItems.includes(item.id)) {
+                        if (item) {
                             let shippingPriceConverted = 0.00;
                             let total_shipping_price = 0.00;
                             let total_shipping_price_converted = 0.00;
@@ -1726,29 +1797,29 @@ const Cart = ({ props }) => {
                     }, 0);
 
                     total_shipping_amount_converted = tempCartItems.reduce((tsa, item, index) => {
-                        if (item && selectedCartItems.includes(item.id)) {
+                        if (item) {
                             let total_shipping_price = 0.00;
                             let total_shipping_price_converted = 0.00;
                             let shipping_currency = 'USD';
-                    
+
                             if (internationalShippingRate && internationalShippingRate.length > 0) {
                                 const shippingRate = internationalShippingRate[index];
-                    
+
                                 if (shippingRate) {
                                     total_shipping_price = parseFloat(shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue) || 0; // Ensure it's a float
                                     shipping_currency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode || 'USD';
-                    
+
                                     total_shipping_price_converted = CurrencyConverter(total_shipping_price, shipping_currency, cookies);
                                 }
                             }
-                    
+
                             return tsa + (parseFloat(total_shipping_price_converted.price_raw) || 0); // Ensure we add a float
                         }
-                    
+
                         // Return tsa if the item is not included in selectedCartItems
-                        return tsa; 
+                        return tsa;
                     }, 0); // Initial value is 0
-                    
+
                 } else if (gigmShippingRate && checkOutFormData.shipping_option == "GIGM") {
                     let shipping_currency = 'NGN';
 
@@ -1758,7 +1829,7 @@ const Cart = ({ props }) => {
                 }
 
                 cart_total_converted = tempCartItems.reduce((ctc, item) => {
-                    if (item && selectedCartItems.includes(item.id)) {
+                    if (item) {
                         const fabricPrice = item.price ?? '0';
                         const fabricCurrency = item.currency ?? 'USD';
 
@@ -1834,7 +1905,13 @@ const Cart = ({ props }) => {
             getCoordinates(data);
         }
     }, [checkOutFormData.delivery_city]);
-    
+
+    useEffect(() => {
+        const filteredTempCartItems = tempCartItems.filter(item => selectedCartItems.includes(item.id));
+        setTempCartItems(filteredTempCartItems);
+
+    }, [selectedCartItems]);
+
     return (
         <LayoutNoFooter>
             {cartLoading || userLoading ?
@@ -1861,7 +1938,7 @@ const Cart = ({ props }) => {
                                     <Card>
                                         <Card.Body className='bg-light'>
                                             <Row>
-                                                <Col lg={8}>
+                                                <Col lg={7}>
                                                     Item
                                                 </Col>
                                                 {/* <Col className="text-right" lg={2}>
@@ -1870,7 +1947,7 @@ const Cart = ({ props }) => {
                                                 <Col className="text-right" lg={2}>
                                                     Shipping
                                                 </Col> */}
-                                                <Col className="text-right" lg={4}>
+                                                <Col className="text-right" lg={5}>
                                                     Total
                                                 </Col>
                                             </Row>
@@ -1883,75 +1960,74 @@ const Cart = ({ props }) => {
                                                     {cartItems.length > 0 && selectedCartItems.length > 0 ?
                                                         <>
                                                             {cartItems.map((cartItem, index) => {
-                                                                if (selectedCartItems.includes(cartItem.product.id)) {
-                                                                    var cart_product = cartItem.product;
-                                                                    if (cart_product.image_urls) {
-                                                                        var image_urls = JSON.parse(cart_product.image_urls);
-                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                                    } else {
-                                                                        var fabricImage = PlaceholderImage;
-                                                                    }
+                                                                var cart_product = cartItem.product;
+                                                                if (cart_product.image_urls) {
+                                                                    var image_urls = JSON.parse(cart_product.image_urls);
+                                                                    var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                                } else {
+                                                                    var fabricImage = PlaceholderImage;
+                                                                }
 
-                                                                    const fabricPrice = cart_product.price ?? '0';
-                                                                    const fabricCurrency = cart_product.currency ?? 'USD';
+                                                                const fabricPrice = cart_product.price ?? '0';
+                                                                const fabricCurrency = cart_product.currency ?? 'USD';
 
-                                                                    const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
-                                                                    const subtotal = convertedPrice.price_raw * cartItem.quantity;
-                                                                    const formattedSubtotal = formatPrice(subtotal);
+                                                                const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                const formattedSubtotal = formatPrice(subtotal);
 
-                                                                    let cart_item_total = 0;
-                                                                    let shippingPriceConverted = 0.00;
-                                                                    let totalShippingPrice = 0.00;
-                                                                    let totalShippingPriceConverted = 0.00;
+                                                                let cart_item_total = 0;
+                                                                let shippingPriceConverted = 0.00;
+                                                                let totalShippingPrice = 0.00;
+                                                                let totalShippingPriceConverted = 0.00;
 
-                                                                    let shippingCurrency = 'USD';
+                                                                let shippingCurrency = 'USD';
 
-                                                                    cart_item_total = parseFloat(subtotal);
+                                                                cart_item_total = parseFloat(subtotal);
 
-                                                                    return (
-                                                                        <Card className='mt-2'>
-                                                                            <Card.Body>
-                                                                                <Row className="align-items-center">
-                                                                                    <Col lg={8}>
-                                                                                        <div className='d-flex'>
-                                                                                            <div className="designs-grid-div fabric-image"
-                                                                                                style={{ backgroundImage: "url(" + fabricImage + ")", width: '126px', height: '126px' }}>
+                                                                return (
+                                                                    <Card className='mt-2'>
+                                                                        <Card.Body>
+                                                                            <Row className="align-items-center">
+                                                                                <Col lg={7}>
+                                                                                    <div className='d-flex'>
+                                                                                        <div className="designs-grid-div fabric-image"
+                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", width: '126px', height: '126px' }}>
+                                                                                        </div>
+
+                                                                                        <div className='ms-3'>
+                                                                                            <div className='mb-1 fw-500 text-black'>
+                                                                                                {cartItem.product.name}
                                                                                             </div>
-
-                                                                                            <div className='ms-3'>
-                                                                                                <div className='mb-1 fw-500 text-black'>
-                                                                                                    {cartItem.product.name}
-                                                                                                </div>
-                                                                                                <div className="">
-                                                                                                    <p className="small">Qty. {cartItem.quantity} {cartItem.product.unit_measurement}</p>
-                                                                                                </div>
+                                                                                            <div className="">
+                                                                                                <p className="small">Qty. {cartItem.quantity} {cartItem.product.unit_measurement == "inch" ? cartItem.product.unit_measurement + "(es)" : cartItem.product.unit_measurement + "(s)"}</p>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </Col>
-                                                                                    {/* <Col lg={2} className="text-right">
-                                                                                        <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}{formattedSubtotal}</strong></h3>
-                                                                                    </Col>
-                                                                                    <Col lg={2} className="text-right">
-                                                                                        {checkOutFormData.shipping_option == "UPS" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
-                                                                                            <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}{totalShippingPriceConverted.price}</strong></h3>
-                                                                                            :
-                                                                                            <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}0.00</strong></h3>
-                                                                                        }
+                                                                                    </div>
+                                                                                </Col>
+                                                                                {/* <Col lg={2} className="text-right">
+                                                                                    <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}{formattedSubtotal}</strong></h3>
+                                                                                </Col>
+                                                                                <Col lg={2} className="text-right">
+                                                                                    {checkOutFormData.shipping_option == "UPS" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
+                                                                                        <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}{totalShippingPriceConverted.price}</strong></h3>
+                                                                                        :
+                                                                                        <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}0.00</strong></h3>
+                                                                                    }
 
-                                                                                    </Col> */}
-                                                                                    <Col lg={4} className="text-right">
-                                                                                        <h3 className="rufina-family"><strong>{convertedPrice.currency_code}{formatPrice(cart_item_total)}</strong></h3>
-                                                                                        {cartItem.quantity > 1 ?
-                                                                                            <p className="small text-muted">{convertedPrice.currency_code}{convertedPrice.price} each</p>
-                                                                                            :
-                                                                                            null
-                                                                                        }
-                                                                                    </Col>
-                                                                                </Row>
-                                                                            </Card.Body>
-                                                                        </Card>
-                                                                    );
-                                                                }
+                                                                                </Col> */}
+                                                                                <Col lg={5} className="text-right">
+                                                                                    <h3 className="rufina-family"><strong>{convertedPrice.currency_code}{formatPrice(cart_item_total)}</strong></h3>
+                                                                                    {cartItem.quantity > 1 ?
+                                                                                        <p className="small text-muted">{convertedPrice.currency_code}{convertedPrice.price} each</p>
+                                                                                        :
+                                                                                        null
+                                                                                    }
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Card.Body>
+                                                                    </Card>
+                                                                );
+
                                                             })}
 
                                                         </>
@@ -1991,76 +2067,74 @@ const Cart = ({ props }) => {
                                                         <>
                                                             {tempCartItems.map((cartItem, index) => {
 
-                                                                if (selectedCartItems.includes(cartItem.id)) {
-                                                                    var cart_product = cartItem;
-                                                                    if (cart_product.images) {
-                                                                        var image = cart_product.images;
-                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url;
-                                                                    } else {
-                                                                        var fabricImage = PlaceholderImage;
-                                                                    }
+                                                                var cart_product = cartItem;
+                                                                if (cart_product.images) {
+                                                                    var image = cart_product.images;
+                                                                    var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image.image_url;
+                                                                } else {
+                                                                    var fabricImage = PlaceholderImage;
+                                                                }
 
-                                                                    const fabricPrice = cart_product.price ?? '0';
-                                                                    const fabricCurrency = cart_product.currency ?? 'USD';
+                                                                const fabricPrice = cart_product.price ?? '0';
+                                                                const fabricCurrency = cart_product.currency ?? 'USD';
 
-                                                                    const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
-                                                                    const subtotal = convertedPrice.price_raw * cartItem.quantity;
-                                                                    const formattedSubtotal = formatPrice(subtotal);
+                                                                const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                const formattedSubtotal = formatPrice(subtotal);
 
-                                                                    let cart_item_total = 0;
-                                                                    let shippingPriceConverted = 0.00;
-                                                                    let totalShippingPrice = 0.00;
-                                                                    let totalShippingPriceConverted = 0.00;
+                                                                let cart_item_total = 0;
+                                                                let shippingPriceConverted = 0.00;
+                                                                let totalShippingPrice = 0.00;
+                                                                let totalShippingPriceConverted = 0.00;
 
-                                                                    let shippingCurrency = 'USD';
+                                                                let shippingCurrency = 'USD';
 
-                                                                    cart_item_total = parseFloat(subtotal);
+                                                                cart_item_total = parseFloat(subtotal);
 
-                                                                    return (
-                                                                        <Card className='mt-2'>
-                                                                            <Card.Body>
-                                                                                <Row className="align-items-center">
-                                                                                    <Col lg={8}>
-                                                                                        <div className='d-flex'>
-                                                                                            <div className="designs-grid-div fabric-image"
-                                                                                                style={{ backgroundImage: "url(" + fabricImage + ")", width: '126px', height: '126px' }}>
+                                                                return (
+                                                                    <Card className='mt-2'>
+                                                                        <Card.Body>
+                                                                            <Row className="align-items-center">
+                                                                                <Col lg={7}>
+                                                                                    <div className='d-flex'>
+                                                                                        <div className="designs-grid-div fabric-image"
+                                                                                            style={{ backgroundImage: "url(" + fabricImage + ")", width: '126px', height: '126px' }}>
+                                                                                        </div>
+
+                                                                                        <div className='ms-3'>
+                                                                                            <div className='mb-1 fw-500 text-black'>
+                                                                                                {cartItem.name}
                                                                                             </div>
-
-                                                                                            <div className='ms-3'>
-                                                                                                <div className='mb-1 fw-500 text-black'>
-                                                                                                    {cartItem.name}
-                                                                                                </div>
-                                                                                                <div className="">
-                                                                                                    <p className="small">Qty. {cartItem.quantity} {cartItem.unit_measurement}</p>
-                                                                                                </div>
+                                                                                            <div className="">
+                                                                                                <p className="small">Qty. {cartItem.quantity} {cartItem.unit_measurement} {cartItem.unit_measurement == "inch" ? cartItem.unit_measurement + "(es)" : cartItem.unit_measurement + "(s)"}</p>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </Col>
-                                                                                    {/* <Col lg={2} className="text-right">
-                                                                                        <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}{formattedSubtotal}</strong></h3>
-                                                                                    </Col>
-                                                                                    <Col lg={2} className="text-right">
-                                                                                        {checkOutFormData.shipping_option == "UPS" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
-                                                                                            <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}{totalShippingPriceConverted.price}</strong></h3>
-                                                                                            :
-                                                                                            <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}0.00</strong></h3>
-                                                                                        }
+                                                                                    </div>
+                                                                                </Col>
+                                                                                {/* <Col lg={2} className="text-right">
+                                                                                    <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}{formattedSubtotal}</strong></h3>
+                                                                                </Col>
+                                                                                <Col lg={2} className="text-right">
+                                                                                    {checkOutFormData.shipping_option == "UPS" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
+                                                                                        <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}{totalShippingPriceConverted.price}</strong></h3>
+                                                                                        :
+                                                                                        <h3 className="rufina-family fs-18"><strong>{convertedPrice.currency_code}0.00</strong></h3>
+                                                                                    }
 
-                                                                                    </Col> */}
+                                                                                </Col> */}
 
-                                                                                    <Col lg={4} className="text-right">
-                                                                                        <h3 className="rufina-family"><strong>{convertedPrice.currency_code}{formattedSubtotal}</strong></h3>
-                                                                                        {cartItem.quantity > 1 ?
-                                                                                            <p className="small text-muted">{convertedPrice.currency_code}{convertedPrice.price} each</p>
-                                                                                            :
-                                                                                            null
-                                                                                        }
-                                                                                    </Col>
-                                                                                </Row>
-                                                                            </Card.Body>
-                                                                        </Card>
-                                                                    );
-                                                                }
+                                                                                <Col lg={5} className="text-right">
+                                                                                    <h3 className="rufina-family"><strong>{convertedPrice.currency_code}{formattedSubtotal}</strong></h3>
+                                                                                    {cartItem.quantity > 1 ?
+                                                                                        <p className="small text-muted">{convertedPrice.currency_code}{convertedPrice.price} each</p>
+                                                                                        :
+                                                                                        null
+                                                                                    }
+                                                                                </Col>
+                                                                            </Row>
+                                                                        </Card.Body>
+                                                                    </Card>
+                                                                );
                                                             })}
 
                                                         </>
@@ -2105,6 +2179,13 @@ const Cart = ({ props }) => {
                                 </Col>
 
                                 <Col lg={6}>
+                                    {checkOutFormData.ship_to && checkOutFormData.ship_to != "" && checkOutFormData.delivery_first_name && checkOutFormData.delivery_first_name != "" && checkOutFormData.delivery_email && checkOutFormData.delivery_email != "" && checkOutFormData.delivery_phone && checkOutFormData.delivery_phone != "" && checkOutFormData.delivery_address_line_1 && checkOutFormData.delivery_address_line_1 != "" && checkOutFormData.delivery_city && checkOutFormData.delivery_city != "" && checkOutFormData.delivery_province && checkOutFormData.delivery_province != "" && checkOutFormData.delivery_postal_code && checkOutFormData.delivery_postal_code != "" && checkOutFormData.delivery_country && checkOutFormData.delivery_country != "" && checkOutFormData.delivery_province_code && checkOutFormData.delivery_province_code != "" && checkOutFormData.delivery_city != "" && checkOutFormData.shipping_option != "" && checkOutFormData.shipping_option && checkOutFormData.payment_method && checkOutFormData.payment_method != "" ?
+                                        null
+                                        :
+                                        <div className="mb-2 alert alert-warning" role="alert">
+                                            Please fill up all the required information.
+                                        </div>
+                                    }
                                     <Form onSubmit={checkOutSubmit}>
                                         <Card className="mb-3">
                                             <Card.Body>
@@ -2281,19 +2362,34 @@ const Cart = ({ props }) => {
                                                                                 </>
                                                                                 :
                                                                                 <>
-                                                                                    {checkOutFormData.delivery_province && cities && cities.length > 0 ?
-                                                                                        <Form.Control as='select' name='delivery_city' value={checkOutFormData.delivery_city} onChange={handleChangePaymentInfo} required>
-                                                                                            <option value='' disabled>Select City</option>
-                                                                                            {cities.map((city, index) => (
-                                                                                                <option key={city + "-" + index} value={cities.name}>
-                                                                                                    {city}
-                                                                                                </option>
-                                                                                            ))}
-                                                                                        </Form.Control>
+                                                                                    {emptyCities ?
+                                                                                        <>
+                                                                                            <FormControl
+                                                                                                type="text"
+                                                                                                name="delivery_city"
+                                                                                                value={checkOutFormData.delivery_city}
+                                                                                                onChange={handleChangePaymentInfo}
+                                                                                                id="city"
+                                                                                                required
+                                                                                            />
+                                                                                        </>
                                                                                         :
-                                                                                        <Form.Control as='select' name='delivery_city' value="" disabled required>
-                                                                                            <option value='' selected>Please select a province first</option>
-                                                                                        </Form.Control>
+                                                                                        <>
+                                                                                            {checkOutFormData.delivery_province && cities && cities.length > 0 ?
+                                                                                                <Form.Control as='select' name='delivery_city' value={checkOutFormData.delivery_city} onChange={handleChangePaymentInfo} required>
+                                                                                                    <option value='' disabled>Select City</option>
+                                                                                                    {cities.map((city, index) => (
+                                                                                                        <option key={city + "-" + index} value={cities.name}>
+                                                                                                            {city}
+                                                                                                        </option>
+                                                                                                    ))}
+                                                                                                </Form.Control>
+                                                                                                :
+                                                                                                <Form.Control as='select' name='delivery_city' value="" disabled required>
+                                                                                                    <option value='' selected>Please select a province first</option>
+                                                                                                </Form.Control>
+                                                                                            }
+                                                                                        </>
                                                                                     }
                                                                                 </>
                                                                             }
@@ -2324,27 +2420,36 @@ const Cart = ({ props }) => {
                                                 }
                                             </Card.Body>
                                         </Card>
-                                        {checkOutFormData.ship_to && checkOutFormData.ship_to != "" && checkOutFormData.delivery_first_name && checkOutFormData.delivery_first_name != "" && checkOutFormData.delivery_email && checkOutFormData.delivery_email != "" && checkOutFormData.delivery_phone && checkOutFormData.delivery_phone != "" && checkOutFormData.delivery_address_line_1 && checkOutFormData.delivery_address_line_1 != "" && checkOutFormData.delivery_city && checkOutFormData.delivery_city != "" && checkOutFormData.delivery_province && checkOutFormData.delivery_province != "" && checkOutFormData.delivery_postal_code && checkOutFormData.delivery_postal_code != "" && checkOutFormData.delivery_country && checkOutFormData.delivery_country != "" && checkOutFormData.delivery_province_code && checkOutFormData.delivery_province_code != "" ?
-                                            <>
-                                                <Card className="mb-3">
-                                                    <Card.Body>
-                                                        <div className='fs-22 rufina-family fw-600'>Shipping Method</div>
-                                                        <hr className='mt-2' />
-                                                        <FormGroup>
-                                                            <Row>
-                                                                <Col lg="12">
-                                                                    <label className="mb-2 form-label" htmlFor="shipping_option">Shipping Provider <span className="text-danger">*</span></label>
+                                        {checkOutFormData.ship_to && checkOutFormData.ship_to != "" ?
+                                            <Card className="mb-3">
+                                                <Card.Body>
+                                                    <div className='fs-22 rufina-family fw-600'>Shipping Method</div>
+                                                    <hr className='mt-2' />
+                                                    <FormGroup>
+                                                        <Row>
+                                                            <Col lg="12">
+                                                                <label className="mb-2 form-label" htmlFor="shipping_option">Shipping Provider <span className="text-danger">*</span></label>
+                                                                {checkOutFormData.ship_to && checkOutFormData.ship_to != "" && checkOutFormData.delivery_first_name && checkOutFormData.delivery_first_name != "" && checkOutFormData.delivery_email && checkOutFormData.delivery_email != "" && checkOutFormData.delivery_phone && checkOutFormData.delivery_phone != "" && checkOutFormData.delivery_address_line_1 && checkOutFormData.delivery_address_line_1 != "" && checkOutFormData.delivery_city && checkOutFormData.delivery_city != "" && checkOutFormData.delivery_province && checkOutFormData.delivery_province != "" && checkOutFormData.delivery_postal_code && checkOutFormData.delivery_postal_code != "" && checkOutFormData.delivery_country && checkOutFormData.delivery_country != "" && checkOutFormData.delivery_province_code && checkOutFormData.delivery_province_code != "" && checkOutFormData.delivery_city != "" ?
                                                                     <Form.Control as='select' name='shipping_option' value={checkOutFormData.shipping_option} className='' onChange={handleChangePaymentInfo} required>
                                                                         <option value=''>Select Shipping Option</option>
                                                                         <option value='UPS'>UPS</option>
                                                                         <option value='GIGM'>GIGM</option>
                                                                     </Form.Control>
-                                                                </Col>
-                                                            </Row>
-                                                        </FormGroup>
-                                                    </Card.Body>
-                                                </Card>
-                                            </>
+                                                                    :
+                                                                    <>
+                                                                        <Form.Control as='select' name='shipping_option' value={checkOutFormData.shipping_option} className='' disabled required>
+                                                                            <option value=''>Select Shipping Option</option>
+                                                                            <option value='UPS'>UPS</option>
+                                                                            <option value='GIGM'>GIGM</option>
+                                                                        </Form.Control>
+                                                                        <p className="fs-12 text-warning mb-0 mt-2">Please fill up Shipping Information before choosing your Shipping Provider.</p>
+                                                                    </>
+                                                                }
+                                                            </Col>
+                                                        </Row>
+                                                    </FormGroup>
+                                                </Card.Body>
+                                            </Card>
                                             :
                                             null
                                         }
@@ -2359,13 +2464,13 @@ const Cart = ({ props }) => {
                                                             <Card className="mb-2">
                                                                 <Card.Body className='bg-light'>
                                                                     <Row>
-                                                                        <Col lg={5}>
+                                                                        <Col lg={3}>
                                                                             Item
                                                                         </Col>
-                                                                        <Col className="text-right" lg={2}>
+                                                                        <Col className="text-right" lg={3}>
                                                                             Price
                                                                         </Col>
-                                                                        <Col className="text-right" lg={2}>
+                                                                        <Col className="text-right" lg={3}>
                                                                             Shipping
                                                                         </Col>
                                                                         <Col className="text-right" lg={3}>
@@ -2391,109 +2496,109 @@ const Cart = ({ props }) => {
                                                                             {cartItems.length > 0 && selectedCartItems.length > 0 ?
                                                                                 <>
                                                                                     {cartItems.map((cartItem, index) => {
-                                                                                        if (selectedCartItems.includes(cartItem.product.id)) {
-                                                                                            var cart_product = cartItem.product;
-                                                                                            if (cart_product.image_urls) {
-                                                                                                var image_urls = JSON.parse(cart_product.image_urls);
-                                                                                                var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                                                            } else {
-                                                                                                var fabricImage = PlaceholderImage;
-                                                                                            }
+                                                                                        var cart_product = cartItem.product;
+                                                                                        if (cart_product.image_urls) {
+                                                                                            var image_urls = JSON.parse(cart_product.image_urls);
+                                                                                            var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                                                        } else {
+                                                                                            var fabricImage = PlaceholderImage;
+                                                                                        }
 
-                                                                                            const fabricPrice = cart_product.price ?? '0';
-                                                                                            const fabricCurrency = cart_product.currency ?? 'USD';
+                                                                                        const fabricPrice = cart_product.price ?? '0';
+                                                                                        const fabricCurrency = cart_product.currency ?? 'USD';
 
-                                                                                            const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
-                                                                                            const subtotal = convertedPrice.price_raw * cartItem.quantity;
-                                                                                            const formattedSubtotal = formatPrice(subtotal);
+                                                                                        const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                                        const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                                        const formattedSubtotal = formatPrice(subtotal);
 
-                                                                                            let cart_item_total = 0;
-                                                                                            let shippingPriceConverted = 0.00;
-                                                                                            let totalShippingPrice = 0.00;
-                                                                                            let totalShippingPriceConverted = 0.00;
+                                                                                        let cart_item_total = 0;
+                                                                                        let shippingPriceConverted = 0.00;
+                                                                                        let totalShippingPrice = 0.00;
+                                                                                        let totalShippingPriceConverted = 0.00;
 
-                                                                                            let shippingCurrency = 'USD';
+                                                                                        let shippingCurrency = 'USD';
 
 
-                                                                                            if (internationalShippingRate && internationalShippingRate.length > 0 && checkOutFormData.shipping_option == "UPS") {
-                                                                                                var shippingRate = internationalShippingRate[index];
+                                                                                        if (internationalShippingRate && internationalShippingRate.length > 0 && checkOutFormData.shipping_option == "UPS") {
+                                                                                            var shippingRate = internationalShippingRate[index];
 
-                                                                                                if (shippingRate) {
-                                                                                                    totalShippingPrice = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
-                                                                                                    shippingCurrency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
-
-                                                                                                    totalShippingPriceConverted = CurrencyConverter(totalShippingPrice, shippingCurrency, cookies);
-
-                                                                                                    cart_item_total = parseFloat(subtotal) + parseFloat(totalShippingPriceConverted.price_raw);
-                                                                                                }
-
-                                                                                            } else if (gigmShippingRate && checkOutFormData.shipping_option == "GIGM") {
-                                                                                                var shippingRate = gigmShippingRate.data[index];
-
-                                                                                                shippingCurrency = shippingRate.currency_code;
-                                                                                                totalShippingPrice = shippingRate.total_charges_amount;
+                                                                                            if (shippingRate) {
+                                                                                                totalShippingPrice = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
+                                                                                                shippingCurrency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
 
                                                                                                 totalShippingPriceConverted = CurrencyConverter(totalShippingPrice, shippingCurrency, cookies);
 
                                                                                                 cart_item_total = parseFloat(subtotal) + parseFloat(totalShippingPriceConverted.price_raw);
-                                                                                            } else {
-                                                                                                cart_item_total = parseFloat(subtotal);
                                                                                             }
 
-                                                                                            let item_errors = [];
-                                                                                            if (errors && errors.shipment_errors?.length > 0) {
-                                                                                                item_errors = errors.shipment_errors[index];
-                                                                                            }
+                                                                                        } else if (gigmShippingRate && checkOutFormData.shipping_option == "GIGM") {
+                                                                                            var shippingRate = gigmShippingRate.data[index];
 
-                                                                                            return (
-                                                                                                <Card className="mb-3">
-                                                                                                    <Card.Body className="py-3">
-                                                                                                        <Row className="align-items-center">
-                                                                                                            <Col lg={5}>
-                                                                                                                <div className='d-flex'>
-                                                                                                                    <div>
-                                                                                                                        <div className='mb-0 fw-500 text-black'>
-                                                                                                                            {cartItem.product.name}
-                                                                                                                        </div>
-                                                                                                                        <div className="">
-                                                                                                                            <p className="mb-0 small">Qty. {cartItem.quantity} {cartItem.product.unit_measurement}</p>
-                                                                                                                        </div>
+                                                                                            shippingCurrency = shippingRate.currency_code;
+                                                                                            totalShippingPrice = shippingRate.total_charges_amount;
+
+                                                                                            totalShippingPriceConverted = CurrencyConverter(totalShippingPrice, shippingCurrency, cookies);
+
+                                                                                            cart_item_total = parseFloat(subtotal) + parseFloat(totalShippingPriceConverted.price_raw);
+                                                                                        } else {
+                                                                                            cart_item_total = parseFloat(subtotal);
+                                                                                        }
+
+                                                                                        let item_errors = [];
+                                                                                        if (errors && errors.shipment_errors?.length > 0) {
+                                                                                            const shipment_errors = errors.shipment_errors;
+                                                                                            item_errors = shipment_errors[index];
+                                                                                        }
+
+                                                                                        return (
+                                                                                            <Card className="mb-3">
+                                                                                                <Card.Body className="py-3">
+                                                                                                    <Row className="align-items-center">
+                                                                                                        <Col lg={3}>
+                                                                                                            <div className='d-flex'>
+                                                                                                                <div>
+                                                                                                                    <div className='mb-0 fw-500 text-black fs-14'>
+                                                                                                                        {cartItem.product.name}
+                                                                                                                    </div>
+                                                                                                                    <div className="">
+                                                                                                                        <p className="mb-0 fs-12">Qty. {cartItem.quantity} {cartItem.product.unit_measurement == "inch" ? cartItem.product.unit_measurement + "(es)" : cartItem.product.unit_measurement + "(s)"}</p>
                                                                                                                     </div>
                                                                                                                 </div>
-                                                                                                            </Col>
-                                                                                                            <Col lg={2} className="text-right">
-                                                                                                                <p className="mb-0 fw-500">{convertedPrice.currency_code}{formattedSubtotal}</p>
-                                                                                                            </Col>
-                                                                                                            <Col lg={2} className="text-right">
-                                                                                                                {checkOutFormData.shipping_option == "UPS" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
-                                                                                                                    <p className="mb-0 fw-500">{convertedPrice.currency_code}{totalShippingPriceConverted.price}</p>
-                                                                                                                    : checkOutFormData.shipping_option == "GIGM" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
-                                                                                                                        <p className="mb-0 fw-500">{convertedPrice.currency_code}{totalShippingPriceConverted.price}</p>
-                                                                                                                        :
-                                                                                                                        <p className="mb-0 fw-500">{convertedPrice.currency_code}0.00</p>
-                                                                                                                }
-
-                                                                                                            </Col>
-                                                                                                            <Col lg={3} className="text-right">
-                                                                                                                <p className="mb-0 fw-500">{convertedPrice.currency_code}{formatPrice(cart_item_total)}</p>
-                                                                                                                {cartItem.quantity > 1 ?
-                                                                                                                    <p className="small text-muted mb-0">{convertedPrice.currency_code}{convertedPrice.price} each</p>
+                                                                                                            </div>
+                                                                                                        </Col>
+                                                                                                        <Col lg={3} className="text-right">
+                                                                                                            <p className="mb-0 fs-14 fw-500">{convertedPrice.currency_code}{formattedSubtotal}</p>
+                                                                                                        </Col>
+                                                                                                        <Col lg={3} className="text-right">
+                                                                                                            {checkOutFormData.shipping_option == "UPS" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
+                                                                                                                <p className="mb-0 fs-14 fw-500">{convertedPrice.currency_code}{totalShippingPriceConverted.price}</p>
+                                                                                                                : checkOutFormData.shipping_option == "GIGM" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
+                                                                                                                    <p className="mb-0 fs-14 fw-500">{convertedPrice.currency_code}{totalShippingPriceConverted.price}</p>
                                                                                                                     :
-                                                                                                                    null
-                                                                                                                }
-                                                                                                            </Col>
-                                                                                                        </Row>
-                                                                                                        {item_errors && item_errors.length > 0 ? (
-                                                                                                            <>
-                                                                                                                {item_errors.map((error, index) => (
-                                                                                                                    <p className="mt-1 mb-0 text-danger small" key={index}>{error}</p>
-                                                                                                                ))}
-                                                                                                            </>
-                                                                                                        ) : null}
-                                                                                                    </Card.Body>
-                                                                                                </Card>
-                                                                                            );
-                                                                                        }
+                                                                                                                    <p className="mb-0 fs-14 fw-500">{convertedPrice.currency_code}0.00</p>
+                                                                                                            }
+
+                                                                                                        </Col>
+                                                                                                        <Col lg={3} className="text-right">
+                                                                                                            <p className="mb-0 fs-14 fw-500">{convertedPrice.currency_code}{formatPrice(cart_item_total)}</p>
+                                                                                                            {cartItem.quantity > 1 ?
+                                                                                                                <p className="fs-12 text-muted mb-0">{convertedPrice.currency_code}{convertedPrice.price} each</p>
+                                                                                                                :
+                                                                                                                null
+                                                                                                            }
+                                                                                                        </Col>
+                                                                                                    </Row>
+                                                                                                    {item_errors && item_errors.length > 0 ? (
+                                                                                                        <>
+                                                                                                            {item_errors.map((error, index) => (
+                                                                                                                <p className="fs-12 mt-1 mb-0 text-danger lh-15" key={index}>{error}</p>
+                                                                                                            ))}
+                                                                                                        </>
+                                                                                                    ) : null}
+                                                                                                </Card.Body>
+                                                                                            </Card>
+                                                                                        );
+
                                                                                     })}
 
                                                                                 </>
@@ -2518,97 +2623,109 @@ const Cart = ({ props }) => {
                                                                                     {tempCartItems.length > 0 && tempCartItems.length > 0 ?
                                                                                         <>
                                                                                             {tempCartItems.map((cartItem, index) => {
-                                                                                                if (selectedCartItems.includes(cartItem.id)) {
-                                                                                                    var cart_product = cartItem;
-                                                                                                    if (cart_product.image_urls) {
-                                                                                                        var image_urls = JSON.parse(cart_product.image_urls);
-                                                                                                        var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
-                                                                                                    } else {
-                                                                                                        var fabricImage = PlaceholderImage;
-                                                                                                    }
+                                                                                                var cart_product = cartItem;
+                                                                                                if (cart_product.image_urls) {
+                                                                                                    var image_urls = JSON.parse(cart_product.image_urls);
+                                                                                                    var fabricImage = process.env.REACT_APP_STORAGE_URL + 'product/' + image_urls[0].image_url;
+                                                                                                } else {
+                                                                                                    var fabricImage = PlaceholderImage;
+                                                                                                }
 
-                                                                                                    const fabricPrice = cart_product.price ?? '0';
-                                                                                                    const fabricCurrency = cart_product.currency ?? 'USD';
+                                                                                                const fabricPrice = cart_product.price ?? '0';
+                                                                                                const fabricCurrency = cart_product.currency ?? 'USD';
 
-                                                                                                    const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
-                                                                                                    const subtotal = convertedPrice.price_raw * cartItem.quantity;
-                                                                                                    const formattedSubtotal = formatPrice(subtotal);
+                                                                                                const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                                                const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                                                const formattedSubtotal = formatPrice(subtotal);
 
-                                                                                                    let cart_item_total = 0;
-                                                                                                    let shippingPriceConverted = 0.00;
-                                                                                                    let totalShippingPrice = 0.00;
-                                                                                                    let totalShippingPriceConverted = 0.00;
+                                                                                                let cart_item_total = 0;
+                                                                                                let shippingPriceConverted = 0.00;
+                                                                                                let totalShippingPrice = 0.00;
+                                                                                                let totalShippingPriceConverted = 0.00;
 
-                                                                                                    let shippingCurrency = 'USD';
+                                                                                                let shippingCurrency = 'USD';
 
 
-                                                                                                    if (internationalShippingRate && internationalShippingRate.length > 0 && checkOutFormData.shipping_option == "UPS") {
-                                                                                                        var shippingRate = internationalShippingRate[index];
+                                                                                                if (internationalShippingRate && internationalShippingRate.length > 0 && checkOutFormData.shipping_option == "UPS") {
+                                                                                                    var shippingRate = internationalShippingRate[index];
 
-                                                                                                        if (shippingRate) {
-                                                                                                            totalShippingPrice = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
-                                                                                                            shippingCurrency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
-
-                                                                                                            totalShippingPriceConverted = CurrencyConverter(totalShippingPrice, shippingCurrency, cookies);
-
-                                                                                                            cart_item_total = parseFloat(subtotal) + parseFloat(totalShippingPriceConverted.price_raw);
-                                                                                                        }
-
-                                                                                                    } else if (gigmShippingRate && checkOutFormData.shipping_option == "GIGM") {
-                                                                                                        var shippingRate = gigmShippingRate.data[index];
-
-                                                                                                        shippingCurrency = shippingRate.currency_code;
-                                                                                                        totalShippingPrice = shippingRate.total_charges_amount;
+                                                                                                    if (shippingRate) {
+                                                                                                        totalShippingPrice = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.MonetaryValue ?? 0;;
+                                                                                                        shippingCurrency = shippingRate?.RateResponse?.RatedShipment?.TotalCharges?.CurrencyCode ?? 'USD';
 
                                                                                                         totalShippingPriceConverted = CurrencyConverter(totalShippingPrice, shippingCurrency, cookies);
 
                                                                                                         cart_item_total = parseFloat(subtotal) + parseFloat(totalShippingPriceConverted.price_raw);
-                                                                                                    } else {
-                                                                                                        cart_item_total = parseFloat(subtotal);
                                                                                                     }
 
-                                                                                                    return (
-                                                                                                        <Card className="mb-2">
-                                                                                                            <Card.Body className="py-3">
-                                                                                                                <Row className="align-items-center">
-                                                                                                                    <Col lg={5}>
-                                                                                                                        <div className='d-flex'>
-                                                                                                                            <div>
-                                                                                                                                <div className='mb-0 fw-500 text-black'>
-                                                                                                                                    {cartItem.name}
-                                                                                                                                </div>
-                                                                                                                                <div className="">
-                                                                                                                                    <p className="mb-0 small">Qty. {cartItem.quantity} {cartItem.unit_measurement}</p>
-                                                                                                                                </div>
+                                                                                                } else if (gigmShippingRate && checkOutFormData.shipping_option == "GIGM") {
+                                                                                                    var shippingRate = gigmShippingRate.data[index];
+
+                                                                                                    shippingCurrency = shippingRate.currency_code;
+                                                                                                    totalShippingPrice = shippingRate.total_charges_amount;
+
+                                                                                                    totalShippingPriceConverted = CurrencyConverter(totalShippingPrice, shippingCurrency, cookies);
+
+                                                                                                    cart_item_total = parseFloat(subtotal) + parseFloat(totalShippingPriceConverted.price_raw);
+                                                                                                } else {
+                                                                                                    cart_item_total = parseFloat(subtotal);
+                                                                                                }
+
+                                                                                                let item_errors = [];
+                                                                                                if (errors && errors.shipment_errors?.length > 0) {
+                                                                                                    const shipment_errors = errors.shipment_errors;
+                                                                                                    item_errors = shipment_errors[index];
+                                                                                                }
+
+                                                                                                return (
+                                                                                                    <Card className="mb-2">
+                                                                                                        <Card.Body className="py-3">
+                                                                                                            <Row className="align-items-center">
+                                                                                                                <Col lg={5}>
+                                                                                                                    <div className='d-flex'>
+                                                                                                                        <div>
+                                                                                                                            <div className='mb-0 fs-14 fw-500 text-black'>
+                                                                                                                                {cartItem.name}
+                                                                                                                            </div>
+                                                                                                                            <div className="">
+                                                                                                                                <p className="mb-0 fs-12">Qty. {cartItem.quantity} {cartItem.unit_measurement == "inch" ? cartItem.unit_measurement + "(es)" : cartItem.unit_measurement + "(s)"}</p>
                                                                                                                             </div>
                                                                                                                         </div>
-                                                                                                                    </Col>
-                                                                                                                    <Col lg={2} className="text-right">
-                                                                                                                        <p className="mb-0 fw-500">{convertedPrice.currency_code}{formattedSubtotal}</p>
-                                                                                                                    </Col>
-                                                                                                                    <Col lg={2} className="text-right">
-                                                                                                                        {checkOutFormData.shipping_option == "UPS" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
-                                                                                                                            <p className="mb-0 fw-500">{convertedPrice.currency_code}{totalShippingPriceConverted.price}</p>
-                                                                                                                            : checkOutFormData.shipping_option == "GIGM" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
-                                                                                                                                <p className="mb-0 fw-500">{convertedPrice.currency_code}{totalShippingPriceConverted.price}</p>
-                                                                                                                                :
-                                                                                                                                <p className="mb-0 fw-500">{convertedPrice.currency_code}0.00</p>
-                                                                                                                        }
-
-                                                                                                                    </Col>
-                                                                                                                    <Col lg={3} className="text-right">
-                                                                                                                        <p className="mb-0 fw-500">{convertedPrice.currency_code}{formatPrice(cart_item_total)}</p>
-                                                                                                                        {cartItem.quantity > 1 ?
-                                                                                                                            <p className="small text-muted mb-0">{convertedPrice.currency_code}{convertedPrice.price} each</p>
+                                                                                                                    </div>
+                                                                                                                </Col>
+                                                                                                                <Col lg={2} className="text-right">
+                                                                                                                    <p className="mb-0 fs-14 fw-500">{convertedPrice.currency_code}{formattedSubtotal}</p>
+                                                                                                                </Col>
+                                                                                                                <Col lg={2} className="text-right">
+                                                                                                                    {checkOutFormData.shipping_option == "UPS" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
+                                                                                                                        <p className="mb-0 fs-14 fw-500">{convertedPrice.currency_code}{totalShippingPriceConverted.price}</p>
+                                                                                                                        : checkOutFormData.shipping_option == "GIGM" && totalShippingPriceConverted.price_raw && totalShippingPriceConverted.price_raw > 0 ?
+                                                                                                                            <p className="mb-0 fs-14 fw-500">{convertedPrice.currency_code}{totalShippingPriceConverted.price}</p>
                                                                                                                             :
-                                                                                                                            null
-                                                                                                                        }
-                                                                                                                    </Col>
-                                                                                                                </Row>
-                                                                                                            </Card.Body>
-                                                                                                        </Card>
-                                                                                                    );
-                                                                                                }
+                                                                                                                            <p className="mb-0 fs-14 fw-500">{convertedPrice.currency_code}0.00</p>
+                                                                                                                    }
+
+                                                                                                                </Col>
+                                                                                                                <Col lg={3} className="text-right">
+                                                                                                                    <p className="mb-0 fs-14 fw-500">{convertedPrice.currency_code}{formatPrice(cart_item_total)}</p>
+                                                                                                                    {cartItem.quantity > 1 ?
+                                                                                                                        <p className="fs-12 text-muted mb-0">{convertedPrice.currency_code}{convertedPrice.price} each</p>
+                                                                                                                        :
+                                                                                                                        null
+                                                                                                                    }
+                                                                                                                </Col>
+                                                                                                            </Row>
+                                                                                                            {item_errors && item_errors.length > 0 ? (
+                                                                                                                <>
+                                                                                                                    {item_errors.map((error, index) => (
+                                                                                                                        <p className="mt-1 mb-0 text-danger fs-12 lh-15" key={index}>{error}</p>
+                                                                                                                    ))}
+                                                                                                                </>
+                                                                                                            ) : null}
+                                                                                                        </Card.Body>
+                                                                                                    </Card>
+                                                                                                );
+
                                                                                             })}
 
                                                                                         </>
@@ -2660,7 +2777,7 @@ const Cart = ({ props }) => {
                                                     <Card.Body>
                                                         <div className='fs-22 rufina-family fw-600'>Payment Info</div>
                                                         <hr className='mt-2' />
-                                                        <div>Payment Method</div>
+                                                        <div>Payment Method <span className="text-danger">*</span></div>
                                                         {/* <div className='mt-3 d-flex'>
                                                             <div className='d-flex'>
                                                                 <input
@@ -2843,7 +2960,10 @@ const Cart = ({ props }) => {
                                                                                                         </>
 
                                                                                                         :
-                                                                                                        <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                        <Link to="/login?redirect_to=/checkout">
+                                                                                                            <button type="button" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                        </Link>
+                                                                                                        // <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
                                                                                                     }
                                                                                                 </>
                                                                                                 : radioButtonValue == "Stripe" ?
@@ -2860,7 +2980,10 @@ const Cart = ({ props }) => {
                                                                                                             </>
 
                                                                                                             :
-                                                                                                            <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                            <Link to="/login?redirect_to=/checkout">
+                                                                                                                <button type="button" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                            </Link>
+                                                                                                            // <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
                                                                                                         }
                                                                                                     </>
                                                                                                     :
@@ -2878,7 +3001,10 @@ const Cart = ({ props }) => {
                                                                                                             </>
 
                                                                                                             :
-                                                                                                            <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                            <Link to="/login?redirect_to=/checkout">
+                                                                                                                <button type="button" className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
+                                                                                                            </Link>
+                                                                                                            // <button type="button" onClick={toggleAuthModal} className='btn btn-primary'>{formStatus != "standby" ? "Loading..." : "Sign in to Check Out"}</button>
                                                                                                         }
                                                                                                     </>
                                                                                             }

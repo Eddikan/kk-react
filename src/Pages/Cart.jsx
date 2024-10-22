@@ -17,6 +17,7 @@ import axios from "axios";
 import toast from 'react-hot-toast';
 import CurrencyConverter from 'Utils/CurrencyConverter';
 import { Rating } from 'react-simple-star-rating';
+import CartIcon from 'Assets/images/icons/cart.png';
 
 const initialCheckOut = {
     card_name: '',
@@ -53,6 +54,7 @@ const Cart = (props) => {
     const [tempCartItems, setTempCartItems] = useState(cookies.tempCart ?? []);
     const [tempCartTotal, setTempCartTotal] = useState(0.00);
     const [user, setUser] = useState();
+    const [userLoading, setUserLoading] = useState(true);
 
     const toggleDeleteCartItem = (id) => {
         setCartItemId(id);
@@ -241,11 +243,15 @@ const Cart = (props) => {
                 const userData = response.data.data;
                 if (userData) {
                     setUser(userData);
+                    setUserLoading(false);
+                } else {
+                    setUserLoading(false);
                 }
             })
             .catch((error) => {
                 toast.error('There has been an error getting the user, please try again!');
                 setCartLoading(false);
+                setUserLoading(false);
             });
     }, [reloadCount, item]);
 
@@ -598,17 +604,33 @@ const Cart = (props) => {
                                                                     </>
                                                                     :
                                                                     <>
-                                                                        <div className='text-center my-3'>
-                                                                            Your cart is empty.
-                                                                        </div>
+                                                                         <Card>
+                                                                            <Card.Body>
+                                                                                <div className='text-center'>
+                                                                                    <img src={CartIcon} style={{width: '80px'}} className="mt-20" />
+                                                                                    <h3 className="mt-30">Your cart is empty.</h3>
+                                                                                    <Link to="/fabrics">
+                                                                                        <button className='d-block mx-auto btn btn-primary mb-20 mt-4'>Shop Now</button>
+                                                                                    </Link>
+                                                                                </div>
+                                                                            </Card.Body>
+                                                                        </Card>
                                                                     </>
                                                                 }
                                                             </>
                                                             :
                                                             <>
-                                                                <div className='text-center my-3'>
-                                                                    Your cart is empty.
-                                                                </div>
+                                                                <Card>
+                                                                    <Card.Body>
+                                                                        <div className='text-center'>
+                                                                            <img src={CartIcon} style={{width: '80px'}} className="mt-20" />
+                                                                            <h3 className="mt-30">Your cart is empty.</h3>
+                                                                            <Link to="/fabrics">
+                                                                                <button className='d-block mx-auto btn btn-primary mb-20 mt-4'>Shop Now</button>
+                                                                            </Link>
+                                                                        </div>
+                                                                    </Card.Body>
+                                                                </Card>
                                                             </>
                                                         }
                                                     </>
@@ -792,17 +814,33 @@ const Cart = (props) => {
                                                                     </>
                                                                     :
                                                                     <>
-                                                                        <div className='text-center my-3'>
-                                                                            Your cart is empty.
-                                                                        </div>
-                                                                    </>
+                                                                        <Card>
+                                                                        <Card.Body>
+                                                                            <div className='text-center'>
+                                                                                <img src={CartIcon} style={{width: '80px'}} className="mt-20" />
+                                                                                <h3 className="mt-30">Your cart is empty.</h3>
+                                                                                <Link to="/fabrics">
+                                                                                    <button className='d-block mx-auto btn btn-primary mb-20 mt-4'>Shop Now</button>
+                                                                                </Link>
+                                                                            </div>
+                                                                        </Card.Body>
+                                                                    </Card>
+                                                                </>
                                                                 }
                                                             </>
                                                             :
                                                             <>
-                                                                <div className='text-center my-3'>
-                                                                    Your cart is empty.
-                                                                </div>
+                                                                <Card>
+                                                                    <Card.Body>
+                                                                        <div className='text-center'>
+                                                                            <img src={CartIcon} style={{width: '80px'}} className="mt-20" />
+                                                                            <h3 className="mt-30">Your cart is empty.</h3>
+                                                                            <Link to="/fabrics">
+                                                                                <button className='d-block mx-auto btn btn-primary mb-20 mt-4'>Shop Now</button>
+                                                                            </Link>
+                                                                        </div>
+                                                                    </Card.Body>
+                                                                </Card>
                                                             </>
                                                         }
                                                     </>
@@ -857,26 +895,27 @@ const Cart = (props) => {
                                                                         <>
                                                                             {cartItems.map((cartItem, index) => {
                                                                                 var cart_product = cartItem.product;
+                                                                                if (selectedCartItems.includes(cart_product.id)) {
+                                                                                    const fabricPrice = cart_product.price ?? '0';
+                                                                                        const fabricCurrency = cart_product.currency ?? 'USD';
 
-                                                                                const fabricPrice = cart_product.price ?? '0';
-                                                                                const fabricCurrency = cart_product.currency ?? 'USD';
+                                                                                        const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                                        const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                                        const formattedSubtotal = formatPrice(subtotal);
 
-                                                                                const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
-                                                                                const subtotal = convertedPrice.price_raw * cartItem.quantity;
-                                                                                const formattedSubtotal = formatPrice(subtotal);
-
-                                                                                return (
-                                                                                    <>
-                                                                                        <Row>
-                                                                                            <Col lg="6">
-                                                                                                <p className="fs-14 text-muted mb-10">{cartItem.product.name} X {cartItem.quantity}</p>
-                                                                                            </Col>
-                                                                                            <Col lg="6">
-                                                                                                <p className="fs-14 text-right mb-10 fw-600">{convertedPrice.currency_code}{formattedSubtotal}</p>
-                                                                                            </Col>
-                                                                                        </Row>
-                                                                                    </>
-                                                                                );
+                                                                                        return (
+                                                                                            <>
+                                                                                                <Row>
+                                                                                                    <Col lg="6">
+                                                                                                        <p className="fs-14 text-muted mb-10">{cartItem.product.name} x {cartItem.quantity}</p>
+                                                                                                    </Col>
+                                                                                                    <Col lg="6">
+                                                                                                        <p className="fs-14 text-right mb-10 fw-600">{convertedPrice.currency_code}{formattedSubtotal}</p>
+                                                                                                    </Col>
+                                                                                                </Row>
+                                                                                            </>
+                                                                                        );
+                                                                                }
                                                                             })}
                                                                         </>
                                                                         :
@@ -904,25 +943,28 @@ const Cart = (props) => {
                                                                             {tempCartItems.map((cartItem, index) => {
                                                                                 var cart_product = cartItem;
 
-                                                                                const fabricPrice = cart_product.price ?? '0';
-                                                                                const fabricCurrency = cart_product.currency ?? 'USD';
+                                                                                if (selectedCartItems.includes(cart_product.id)) {
 
-                                                                                const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
-                                                                                const subtotal = convertedPrice.price_raw * cartItem.quantity;
-                                                                                const formattedSubtotal = formatPrice(subtotal);
+                                                                                    const fabricPrice = cart_product.price ?? '0';
+                                                                                    const fabricCurrency = cart_product.currency ?? 'USD';
 
-                                                                                return (
-                                                                                    <>
-                                                                                        <Row>
-                                                                                            <Col lg="6">
-                                                                                                <p className="fs-14 text-muted mb-10">{cartItem.name} X {cartItem.quantity}</p>
-                                                                                            </Col>
-                                                                                            <Col lg="6">
-                                                                                                <p className="fs-14 text-right mb-10 fw-600">{convertedPrice.currency_code}{formattedSubtotal}</p>
-                                                                                            </Col>
-                                                                                        </Row>
-                                                                                    </>
-                                                                                );
+                                                                                    const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                                    const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                                    const formattedSubtotal = formatPrice(subtotal);
+
+                                                                                    return (
+                                                                                        <>
+                                                                                            <Row>
+                                                                                                <Col lg="6">
+                                                                                                    <p className="fs-14 text-muted mb-10">{cartItem.name} x {cartItem.quantity}</p>
+                                                                                                </Col>
+                                                                                                <Col lg="6">
+                                                                                                    <p className="fs-14 text-right mb-10 fw-600">{convertedPrice.currency_code}{formattedSubtotal}</p>
+                                                                                                </Col>
+                                                                                            </Row>
+                                                                                        </>
+                                                                                    );
+                                                                                }
                                                                             })}
 
                                                                         </>
@@ -970,17 +1012,24 @@ const Cart = (props) => {
                                                                 <button className='checkout-btn btn btn-primary mt-3'>Check Out</button>
                                                             </Link>
                                                         ) : (
-                                                            <button className='checkout-btn btn btn-primary mt-3' disabled={true}>Check Out</button>
+                                                            <>
+                                                                {userLoading ? 
+                                                                    <>
+                                                                        <button className='checkout-btn btn btn-primary mt-3' disabled={true}>Loading...</button>
+                                                                    </>
+                                                                    :
+                                                                    <>
+                                                                        <button className='checkout-btn btn btn-primary mt-3' disabled={true}>Check Out</button>
+                                                                    </>
+                                                                }
+                                                            </>
+                                                            
                                                         )
-                                                    ) : (totalAmount > 0 ?
-
-                                                        <Link to="/checkout">
-                                                            <button className='checkout-btn btn btn-primary mt-3'>Check Out</button>
+                                                    ) : 
+                                                        <Link to="/login?redirect_to=/checkout">
+                                                            <button className='checkout-btn btn btn-primary mt-3'>Sign in to Check Out</button>
                                                         </Link>
-                                                        : (
-                                                            <button className='checkout-btn btn btn-primary mt-3' disabled={true}>Check Out</button>
-                                                        )
-                                                    )}
+                                                    }
                                                 </Col>
                                             </Row>
                                         </Card.Body>

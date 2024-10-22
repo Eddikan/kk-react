@@ -144,6 +144,7 @@ const EditProfile = () => {
     // Locations
     const [cities, setCities] = useState([]);
     const [provinces, setProvinces] = useState([]);
+    const [emptyCities, setEmptyCities] = useState(false);
 
     const [provincesLoading, setProvincesLoading] = useState(false);
     const [citiesLoading, setCitiesLoading] = useState(false);
@@ -806,6 +807,11 @@ const EditProfile = () => {
             if (!error) {
                 setCities(data); // Assuming the response has the cities in `data`
                 setCitiesLoading(false);
+                if (data && data.length < 1) {
+                    setEmptyCities(true);
+                } else {
+                    setEmptyCities(false);
+                }
             } else {
                 const errors = response.data.errors;
                 if (errors) {
@@ -1290,20 +1296,36 @@ const EditProfile = () => {
                                                                     </>
                                                                     :
                                                                     <>
-                                                                        {profileFormData.province && cities && cities.length > 0 ?
-                                                                            <Form.Control as='select' name='city' value={profileFormData.city} className='mr-sm-2' onChange={handleChange} required>
-                                                                                <option value='' disabled>Select City</option>
-                                                                                {cities.map((city, index) => (
-                                                                                    <option key={city + "-" + index} value={cities.name}>
-                                                                                        {city}
-                                                                                    </option>
-                                                                                ))}
-                                                                            </Form.Control>
+                                                                        {emptyCities ?
+                                                                            <>
+                                                                                <FormControl
+                                                                                    type="text"
+                                                                                    name="city"
+                                                                                    className='mr-sm-2'
+                                                                                    value={profileFormData.city}
+                                                                                    onChange={handleChange}
+                                                                                    required
+                                                                                />
+                                                                            </>
                                                                             :
-                                                                            <Form.Control as='select' name='city' value="" className='mr-sm-2' disabled required>
-                                                                                <option value='' selected>Please select a province first</option>
-                                                                            </Form.Control>
+                                                                            <>
+                                                                                {profileFormData.province && cities && cities.length > 0 ?
+                                                                                    <Form.Control as='select' name='city' value={profileFormData.city} className='mr-sm-2' onChange={handleChange} required>
+                                                                                        <option value='' disabled>Select City</option>
+                                                                                        {cities.map((city, index) => (
+                                                                                            <option key={city + "-" + index} value={cities.name}>
+                                                                                                {city}
+                                                                                            </option>
+                                                                                        ))}
+                                                                                    </Form.Control>
+                                                                                    :
+                                                                                    <Form.Control as='select' name='city' value="" className='mr-sm-2' disabled required>
+                                                                                        <option value='' selected>Please select a province first</option>
+                                                                                    </Form.Control>
+                                                                                }
+                                                                            </>
                                                                         }
+                                                                        
                                                                     </>
                                                                 }
                                                             </Form.Group>

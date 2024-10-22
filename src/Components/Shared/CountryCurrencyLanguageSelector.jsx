@@ -5,13 +5,15 @@ import CountryData from 'Utils/CountryData';
 import { useCookies } from 'react-cookie';
 
 const CountryCurrencyLanguageSelector = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode', 'selectedLanguage', 'selectedLanguageCode', 'selectedCurrency', 'selectedCurrencyCode']);
+    const [cookies, setCookie, removeCookie] = useCookies(['currentUser', 'userDetails', 'userRole', 'isLoggedIn', 'tempCart', 'tempFavorites', 'selectedCountry', 'selectedCountryCode', 'selectedLanguage', 'selectedLanguageCode', 'selectedCurrency', 'selectedCurrencyCode', 'userCurrency', 'userCurrencyCode']);
     const [selectedCountry, setSelectedCountry] = useState(cookies.selectedCountry ?? '');
     const [selectedCountryCode, setSelectedCountryCode] = useState(cookies.selectedCountryCode ?? '');
     const [selectedLanguage, setSelectedLanguage] = useState(cookies.selectedLanguage ?? "");
     const [selectedLanguageCode, setSelectedLanguageCode] = useState(cookies.selectedLanguageCode ?? "");
-    const [selectedCurrency, setSelectedCurrency] = useState(cookies.selectedCurrency ?? "");
-    const [selectedCurrencyCode, setSelectedCurrencyCode] = useState(cookies.selectedCurrency ?? "");
+    const [selectedCurrency, setSelectedCurrency] = useState(cookies.selectedCurrency || cookies.userCurrency || "");
+    const [selectedCurrencyCode, setSelectedCurrencyCode] = useState(cookies.selectedCurrencyCode || cookies.userCurrencyCode || "");
+
+    const userDetails = cookies.userDetails;
 
     const customLabels = {
         '': 'Select a country',
@@ -138,6 +140,7 @@ const CountryCurrencyLanguageSelector = (props) => {
             //     select.dispatchEvent(new Event('change'));
             // }
         }
+        console.log(userDetails);
     }, [cookies, selectedLanguageCode]);
 
     return (
