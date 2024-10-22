@@ -54,24 +54,24 @@ const Footer = (props) => {
                         <Col lg="6" className="pt-4">
                             <div className="footer-link-container d-flex justify-content-center">
                                 <div className="footer-link">
-                                    <Link to="/about" className="text-decoration-none fs-13">
+                                    <a href="/about-kouture-konect" className="text-decoration-none fs-13">
                                         About Us
-                                    </Link>
+                                    </a>
                                 </div>
                                 <div className="footer-link">
-                                    <Link to="/designers" className="text-decoration-none fs-13">
+                                    <a href="/designers" className="text-decoration-none fs-13">
                                         Designers
-                                    </Link>
+                                    </a>
                                 </div>
                                 <div className="footer-link">
-                                    <Link to="/fabrics" className="text-decoration-none fs-13">
+                                    <a href="/fabrics" className="text-decoration-none fs-13">
                                         Fabrics
-                                    </Link>
+                                    </a>
                                 </div>
                                 <div className="footer-link">
-                                    <Link to="/designs" className="text-decoration-none fs-13">
+                                    <a href="/designs" className="text-decoration-none fs-13">
                                         Designs
-                                    </Link>
+                                    </a>
                                 </div>
                                 <div className="footer-link">
                                     <Link className="text-decoration-none fs-13" onClick={() => setSetupShopShow(!setupShopShow)}>
