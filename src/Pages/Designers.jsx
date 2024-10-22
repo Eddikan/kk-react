@@ -503,9 +503,9 @@ const Designers = (props) => {
                                                                                             </div> */}
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div className="designer-details-bottom">
-                                                                                        <h3 className="designer-name fs-18 mt-13 mb-0 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
-                                                                                        <p className="mb-0 fs-12 mt-1 bio-short-designer">{designer.user.short_bio || "-"}</p>
+                                                                                    <div className="designer-details-bottom" onClick={() => toggleGetUser(designer.user.id)}>
+                                                                                        <h3 className="designer-name cursor-pointer fs-18 mt-13 mb-0 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
+                                                                                        <p className="mb-0 fs-12 mt-1 cursor-pointer bio-short-designer">{designer.user.short_bio || "-"}</p>
                                                                                     </div>
                                                                                 </div>
                                                                             ) : (
@@ -519,9 +519,9 @@ const Designers = (props) => {
                                                                                             </div> */}
                                                                                         </div>
                                                                                     </div>  
-                                                                                    <div className="designer-details-bottom">
-                                                                                        <h3 className="designer-name fs-18 mt-13 mb-0 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
-                                                                                        <p className="mb-0 fs-12 mt-1 bio-short-designer">{designer.user.short_bio || "-"}</p>
+                                                                                    <div className="designer-details-bottom"  onClick={() => toggleGetUser(designer.user.id)}>
+                                                                                        <h3 className="designer-name cursor-pointer fs-18 mt-13 mb-0 fw-600">{designer.user.first_name && designer.user.first_name !== "" ? designer.user.first_name : "-"} {designer.user.last_name && designer.user.last_name !== "" ? designer.user.last_name : "-"}</h3>
+                                                                                        <p className="mb-0 fs-12 mt-1 cursor-pointer bio-short-designer">{designer.user.short_bio || "-"}</p>
                                                                                     </div>                                                             
                                                                                 </div>
                                                                                 </>
@@ -621,7 +621,7 @@ const Designers = (props) => {
                                                                     </Col>
                                                                 )
                                                             })}
-                                                            {currentUser && currentUser != "" ?
+                                                            {currentUser && currentUser !== "" ?
                                                                 <Pagination
                                                                     className="mt-4 mb-0"
                                                                     currentPage={currentPage}
@@ -642,7 +642,7 @@ const Designers = (props) => {
                                                     <Card className="text-center">
                                                         <Card.Body>
                                                             <IoShirtSharp size="50px" className="mt-2" />
-                                                            <p className="text-center fs-20 mb-2 mt-3">No records found.</p>
+                                                            <p className="text-center fs-14 mb-2 mt-3">No records found.</p>
                                                         </Card.Body>
                                                     </Card>
                                                 )}

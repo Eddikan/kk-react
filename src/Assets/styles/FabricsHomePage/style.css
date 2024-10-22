@@ -184,6 +184,6 @@ p.request {
     color: var(--black);
     background-color: var(--white);
 }
-.designs-grid:hover .fabric-name{
+/* .designs-grid:hover .fabric-name{
     text-decoration: underline;
-}
+} */

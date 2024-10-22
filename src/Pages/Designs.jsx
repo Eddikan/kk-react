@@ -1228,7 +1228,26 @@ const Designs = (props) => {
                                                                         </div>
                                                                         <div className="design-details">
                                                                             <div className='d-flex align-items-center justify-content-between'>
-                                                                                <h4 className="text-black fs-18 fw-400 mb-0 text-ellipsis design-name">{design.name ?? '-'}</h4>
+                                                                                <h4 className="text-black fs-18 fw-400 cursor-pointer mb-0 text-ellipsis design-name"
+                                                                                onClick={function () {
+                                                                                    togglePortfolioImage(
+                                                                                        design.id,
+                                                                                        design.designer.id,
+                                                                                        design.user.first_name,
+                                                                                        design.user.last_name,
+                                                                                        design.image_urls,
+                                                                                        design.user.image,
+                                                                                        design.user.address_line_1,
+                                                                                        design.user.city,
+                                                                                        design.user.province,
+                                                                                        design.user.country,
+                                                                                        design.tags,
+                                                                                        design.description,
+                                                                                        design.user.id,
+                                                                                        userWishlist
+                                                                                    );
+                                                                                    toggleAddViewCount(design.id);
+                                                                                }}>{design.name ?? '-'}</h4>
                                                                                 {/* {design.user.id != currentUser ?
                                                                                     <div className="design-atc-container">
                                                                                         <div className="design-atc cursor-pointer">
@@ -1306,7 +1325,7 @@ const Designs = (props) => {
                                                     <Card className="text-center">
                                                         <Card.Body>
                                                             <IoShirtSharp size="50px" className="mt-2" />
-                                                            <p className="text-center fs-20 mb-2 mt-3">No records found.</p>
+                                                            <p className="text-center fs-14 mb-2 mt-3">No records found.</p>
                                                         </Card.Body>
                                                     </Card>
                                                 </>

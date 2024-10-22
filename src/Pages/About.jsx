@@ -17,6 +17,7 @@ import CustomerExperience from 'Assets/images/customer-experience.png';
 const About = () => {
   return (
     <Layout>
+      <div className='pb-5 pt-10 px-5'>
       <section className='go-back-section'>
         <Container>
           <Row>
@@ -192,9 +193,7 @@ const About = () => {
           </Row>
         </Container>
       </section>
-
-
-
+      </div>
     </Layout >
   );
 };

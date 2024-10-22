@@ -389,7 +389,26 @@ const Designs = (props) => {
                                                         }
                                                         <div className="design-details">
                                                             <div className='d-flex align-items-center justify-content-between'>
-                                                                <p className="text-black cursor-pointer fs-18 fw-600 mb-0 text-ellipsis rufina-family design-name">{design.name ?? '-'}</p>
+                                                                <p className="text-black cursor-pointer fs-18 fw-600 mb-0 text-ellipsis rufina-family design-name" 
+                                                                    onClick={function () {
+                                                                        togglePortfolioImage(
+                                                                            design.id,
+                                                                            design.designer.id,
+                                                                            design.user.first_name,
+                                                                            design.user.last_name,
+                                                                            design.image_urls,
+                                                                            design.user.image,
+                                                                            design.user.address_line_1,
+                                                                            design.user.city,
+                                                                            design.user.province,
+                                                                            design.user.country,
+                                                                            design.tags,
+                                                                            design.description,
+                                                                            design.user.id,
+                                                                            userWishlist
+                                                                        );
+                                                                        toggleAddViewCount(design.id);
+                                                                    }}>{design.name ?? '-'}</p>
                                                                 {/* {currentUser ?
                                                                     <div className='d-flex align-items-center'>
                                                                         <span className='fs-14 text-no-wrap mx-2'>

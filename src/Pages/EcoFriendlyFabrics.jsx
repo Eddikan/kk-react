@@ -1085,7 +1085,7 @@ const Fabrics = (props) => {
                                                                                     <div
                                                                                         className="designs-grid-div w-100 cursor-pointer"
                                                                                         onClick={function () { toggleAddViewCount(fabric.id); navigate('/admin/fabric/' + fabric.id); }}
-                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '200px', minWidth: '250px' }}
+                                                                                        style={{ backgroundImage: "url(" + fabricImage + ")", minHeight: '229px' }}
                                                                                     >
                                                                                     </div>
                                                                                 </>
@@ -1147,7 +1147,20 @@ const Fabrics = (props) => {
                                                                         <div className="design-details">
                                                                             <div className='d-flex justify-content-between align-items-center'>
                                                                                 <div className="d-flex">
-                                                                                    <h4 className="text-black fs-18 fw-600 mb-0 max-150 text-ellipsis fabric-name">{fabric.name ?? '-'}</h4>
+                                                                                {userRole !== 'Admin' ?
+                                                                                <>
+                                                                                    <h4 className="text-black fs-18 fw-600 mb-0 max-150 text-ellipsis cursor-pointer fabric-name" 
+                                                                                    onClick={function () { toggleAddViewCount(fabric.id); navigate('/product/' + fabric.id); }}
+                                                                                    >{fabric.name ?? '-'}</h4>
+                                                                                </>
+                                                                                :
+                                                                                <>
+                                                                                    <h4 className="text-black fs-18 fw-600 mb-0 max-150 text-ellipsis cursor-pointer fabric-name"
+                                                                                    onClick={function () { toggleAddViewCount(fabric.id); navigate('/admin/fabric/' + fabric.id); }}>
+                                                                                    {fabric.name ?? '-'}</h4>
+                                                                                </>
+                                                                                }
+                                                                                    
                                                                                     {fabric.eco_friendly == 1 ?
                                                                                         <div className='d-flex align-items-center'>
                                                                                             <span className='fs-14 text-no-wrap mx-2 green-leaf-tooltip'>
@@ -1238,34 +1251,34 @@ const Fabrics = (props) => {
                                                                 </>
                                                             )
                                                         })}
+                                                        {currentUser && currentUser != "" ?
+                                                            <Pagination
+                                                                className="mt-4 mb-0"
+                                                                currentPage={currentPage}
+                                                                totalCount={pageCount}
+                                                                pageSize={PageSize}
+                                                                onPageChange={page => handleChangePage(page)}
+                                                            />
+                                                            :
+                                                            <Col lg={12} className="text-center mt-4">
+                                                                <Link to="/sign-up?type=customer&option=fabrics&redirect_to=/fabrics">
+                                                                    <Button type="button" className="btn-primary" variant="primary">View More</Button>
+                                                                </Link>
+                                                            </Col>
+                                                        }
                                                     </Row>
                                                 </>
                                                 :
                                                 <Card className="text-center">
                                                     <Card.Body>
                                                         <IoShirtSharp size="50px" className="mt-2" />
-                                                        <p className="text-center fs-20 mb-2 mt-3">No records found.</p>
+                                                        <p className="text-center fs-14 mb-2 mt-3">No records found.</p>
                                                     </Card.Body>
                                                 </Card>
                                             }
                                         </>
                                     }
                                 </div>
-                                {currentUser && currentUser != "" ?
-                                    <Pagination
-                                        className="mt-4 mb-0"
-                                        currentPage={currentPage}
-                                        totalCount={pageCount}
-                                        pageSize={PageSize}
-                                        onPageChange={page => handleChangePage(page)}
-                                    />
-                                    :
-                                    <Col lg={12} className="text-center mt-4">
-                                        <Link to="/sign-up?type=customer&option=fabrics&redirect_to=/fabrics">
-                                            <Button type="button" className="btn-primary" variant="primary">View More</Button>
-                                        </Link>
-                                    </Col>
-                                }
                             </Col>
                         </Row>
                     </Container>
