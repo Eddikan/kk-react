@@ -18,6 +18,7 @@ import toast from 'react-hot-toast';
 import CurrencyConverter from 'Utils/CurrencyConverter';
 import { Rating } from 'react-simple-star-rating';
 import CartIcon from 'Assets/images/icons/cart.png';
+import FormControl from 'react-bootstrap/FormControl';
 
 const initialCheckOut = {
     card_name: '',
@@ -423,6 +424,11 @@ const Cart = (props) => {
                                                                             const fabricPrice = cart_product.price ?? '0';
                                                                             const fabricCurrency = cart_product.currency ?? 'USD';
 
+
+                                                                            const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
+                                                                            const subtotal = convertedPrice.price_raw * cartItem.quantity;
+                                                                            const formattedSubtotal = formatPrice(subtotal);
+                                                                            
                                                                             let colorsArray;
 
                                                                             if (Array.isArray(cartItem.product.colors)) {
@@ -436,10 +442,6 @@ const Cart = (props) => {
                                                                             } else {
                                                                                 colorsArray = [];
                                                                             }
-
-                                                                            const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
-                                                                            const subtotal = convertedPrice.price_raw * cartItem.quantity;
-                                                                            const formattedSubtotal = formatPrice(subtotal);
 
                                                                             return (
                                                                                 <>
@@ -506,6 +508,13 @@ const Cart = (props) => {
                                                                                                         </Col>
                                                                                                         <Col lg="6">
                                                                                                             <div className="measurement-input d-flex">
+                                                                                                                <Button
+                                                                                                                    className='me-3 text-black p-0 measurement-btns'
+                                                                                                                    variant='secondary'
+                                                                                                                    onClick={() => updateItemQuantity({ quantity: Math.max(1, cartItem.quantity - 1), id: cartItem.id })} 
+                                                                                                                >
+                                                                                                                    -
+                                                                                                                </Button>
                                                                                                                 <input
                                                                                                                     type="number"
                                                                                                                     className="form-control p-2 me-2 d-inline-block"
@@ -514,7 +523,13 @@ const Cart = (props) => {
                                                                                                                     defaultValue={cartItem.quantity}
                                                                                                                     onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id })}
                                                                                                                 />
-                                                                                                                <p className="my-auto">{cartItem.product.unit_measurement}</p>
+                                                                                                                <Button
+                                                                                                                    className='me-3 text-black p-0 measurement-btns'
+                                                                                                                    variant='secondary'
+                                                                                                                    onClick={() => updateItemQuantity({ quantity: cartItem.quantity + 1, id: cartItem.id })} 
+                                                                                                                >
+                                                                                                                    +
+                                                                                                                </Button>
                                                                                                             </div>
                                                                                                         </Col>
                                                                                                         <Col lg="1" className="text-end">
@@ -734,7 +749,29 @@ const Cart = (props) => {
                                                                                                             </div>
                                                                                                         </Col>
                                                                                                         <Col lg="6">
-                                                                                                            <input
+                                                                                                            <Button
+                                                                                                                    className='me-3 text-black p-0 measurement-btns'
+                                                                                                                    variant='secondary'
+                                                                                                                    onClick={() => updateTempItemQuantity({ id: cartItem.id, quantity: parseInt(cartItem.quantity) - 1 })} 
+                                                                                                                >
+                                                                                                                    -
+                                                                                                                </Button>
+                                                                                                                <input
+                                                                                                                    type="number"
+                                                                                                                    className="form-control p-2 me-2 d-inline-block"
+                                                                                                                    min="1"
+                                                                                                                    style={{ maxWidth: 60 }}
+                                                                                                                    defaultValue={cartItem.quantity}
+                                                                                                                    onChange={(e) => updateTempItemQuantity({ id: cartItem.id, quantity: e.target.value })}
+                                                                                                                />
+                                                                                                                <Button
+                                                                                                                    className='me-3 text-black p-0 measurement-btns'
+                                                                                                                    variant='secondary'
+                                                                                                                    onClick={() => updateTempItemQuantity({ id: cartItem.id, quantity: parseInt(cartItem.quantity) + 1 })}
+                                                                                                                >
+                                                                                                                    +
+                                                                                                            </Button>
+                                                                                                            {/* <input
                                                                                                                 type="number"
                                                                                                                 className="form-control p-2 me-2 d-inline-block"
                                                                                                                 min="1"
@@ -742,7 +779,7 @@ const Cart = (props) => {
                                                                                                                 defaultValue={cartItem.quantity}
                                                                                                                 onChange={(e) => updateTempItemQuantity({ id: cartItem.id, quantity: e.target.value })}
                                                                                                             />
-                                                                                                            {cartItem.unit_measurement}
+                                                                                                            {cartItem.unit_measurement} */}
                                                                                                         </Col>
                                                                                                         <Col lg={1} className="text-end">
                                                                                                             <div className='text-center cursor-pointer delete-tooltip' onClick={function () { deleteTempCartItem(cartItem.id); }}>
