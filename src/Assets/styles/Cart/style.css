@@ -65,9 +65,15 @@ img.placeholder-cart {
     background-color: var(--black);
     border-color: var(--black);
 }
-.delete-tooltip {
+.delete-tooltip  {
     position: relative;
     display: inline-block;
+
+    width: 30px;
+    height: 30px;
+    padding-top: 3px;
+    background-color: #F0F0F0;
+    border-radius: 50%;
 }
 
 .delete-tooltip .icon-tooltiptext {
@@ -80,8 +86,8 @@ img.placeholder-cart {
     padding: 6px 0;
     position: absolute;
     z-index: 1;
-    bottom: 29px;
-    left: -36px;
+    bottom: 35px;
+    left: -32px;
 }
 
 .delete-tooltip .icon-tooltiptext::after {
@@ -102,14 +108,25 @@ img.placeholder-cart {
     color: #551855;
 }
 .measurement-btns{
-    height: 39px;
+    height: 24px;
     background-color: #eeeeee;
     border: none;
-    min-width: 39px;
+    min-width: 24px;
+    border-radius: 0;
 }
 .measurement-btns:hover{
     background-color: #eeeeee !important;
 }
+
+.cart-quantity-input {
+    width: 65px;
+    max-width: 60px;
+    height: 24px;
+    border-radius: 0;
+    font-size: 14px;
+    text-align: center;
+}
+
 .color-column-keep-height {
     min-height: 35px;
 }

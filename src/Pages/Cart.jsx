@@ -11,7 +11,7 @@ import 'Assets/styles/Cart/style.css';
 import { IoCloseOutline } from "react-icons/io5";
 import PlaceholderImage from 'Assets/images/placeholders/image.png';
 import UserPlaceholder from 'Assets/images/user.png';
-import { AiOutlineDelete } from "react-icons/ai";
+import { IoTrashOutline } from "react-icons/io5";
 import { useParams } from 'react-router-dom';
 import axios from "axios";
 import toast from 'react-hot-toast';
@@ -175,6 +175,16 @@ const Cart = (props) => {
     };
 
     const updateItemQuantity = (data) => {
+        setCartItems(prevItems => {
+            // Create a copy of the current cart items array
+            const updatedItems = [...prevItems];
+        
+            // Update the quantity of the item at the specified index
+            updatedItems[data.index].quantity = data.quantity;
+        
+            // Set the new updated cart items array
+            return updatedItems;
+        });
         updateQuantity({ user_id: currentUser, quantity: data.quantity, id: data.id }).then(response => {
             const success = response.data.status;
             if (success == success) {
@@ -467,7 +477,7 @@ const Cart = (props) => {
                                                                                                             </div>
                                                                                                         </Col>
                                                                                                         <Col lg="12">
-                                                                                                            <div className="star-ratings">
+                                                                                                            <div className="star-ratings mt-2">
                                                                                                                 <Rating
                                                                                                                     initialValue={0}
                                                                                                                     readonly={true}
@@ -488,7 +498,7 @@ const Cart = (props) => {
                                                                                                         <Col lg="12" className="color-column-keep-height">
                                                                                                             {colorsArray && colorsArray.length > 0 ?
                                                                                                                 <>
-                                                                                                                    <p className="mb-3 mt-2 fs-12 fw-600">Color:{" "}
+                                                                                                                    <p className="mb-3 mt-2 fs-12">Color:{" "}
                                                                                                                         {colorsArray.length > 1 ? (
                                                                                                                             colorsArray.join(", ")
                                                                                                                         ) : (
@@ -500,33 +510,38 @@ const Cart = (props) => {
                                                                                                                 null
                                                                                                             }
                                                                                                         </Col>
-
-                                                                                                        <Col lg="5">
+                                                                                                    </Row>
+                                                                                                    <Row className="vertical-align-middle align-items-center justify-content-center">
+                                                                                                        <Col lg="3">
                                                                                                             <div className="product-price">
-                                                                                                                <p className="fw-500 fs-18">{convertedPrice.currency_code}{convertedPrice.price}</p>
+                                                                                                                <p className="fw-600 fs-18 mb-0 lh-27">{convertedPrice.currency_code}{convertedPrice.price}</p>
                                                                                                             </div>
                                                                                                         </Col>
-                                                                                                        <Col lg="6">
+                                                                                                        <Col lg="8">
                                                                                                             <div className="measurement-input d-flex">
                                                                                                                 <Button
-                                                                                                                    className='me-3 text-black p-0 measurement-btns'
+                                                                                                                    className='text-black p-0 measurement-btns'
                                                                                                                     variant='secondary'
-                                                                                                                    onClick={() => updateItemQuantity({ quantity: Math.max(1, cartItem.quantity - 1), id: cartItem.id })} 
+                                                                                                                    onClick={function() {
+                                                                                                                        updateItemQuantity({ quantity: Math.max(1, cartItem.quantity - 1), id: cartItem.id, index: index });
+                                                                                                                    }} 
                                                                                                                 >
                                                                                                                     -
                                                                                                                 </Button>
                                                                                                                 <input
                                                                                                                     type="number"
-                                                                                                                    className="form-control p-2 me-2 d-inline-block"
+                                                                                                                    className="form-control d-inline-block cart-quantity-input"
                                                                                                                     min="1"
-                                                                                                                    style={{ maxWidth: 60 }}
-                                                                                                                    defaultValue={cartItem.quantity}
-                                                                                                                    onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id })}
+                                                                                                                    style={{ maxWidth: 65 }}
+                                                                                                                    value={cartItem.quantity}
+                                                                                                                    onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id, index: index })}
                                                                                                                 />
                                                                                                                 <Button
-                                                                                                                    className='me-3 text-black p-0 measurement-btns'
+                                                                                                                    className='text-black p-0 measurement-btns'
                                                                                                                     variant='secondary'
-                                                                                                                    onClick={() => updateItemQuantity({ quantity: cartItem.quantity + 1, id: cartItem.id })} 
+                                                                                                                    onClick={function() { 
+                                                                                                                        updateItemQuantity({ quantity: cartItem.quantity + 1, id: cartItem.id, index: index }); 
+                                                                                                                    }} 
                                                                                                                 >
                                                                                                                     +
                                                                                                                 </Button>
@@ -535,7 +550,7 @@ const Cart = (props) => {
                                                                                                         <Col lg="1" className="text-end">
                                                                                                             <div className='text-center cursor-pointer my-auto delete-tooltip' onClick={function () { toggleDeleteCartItem(cartItem.id); }}>
                                                                                                                 <span className="icon-tooltiptext fs-14">Delete</span>
-                                                                                                                <AiOutlineDelete size="20" />
+                                                                                                                <IoTrashOutline size="14" />
                                                                                                             </div>
                                                                                                         </Col>
                                                                                                         {/* <div className="price-measurement-container d-flex justify-content-between">
@@ -553,7 +568,7 @@ const Cart = (props) => {
                                                                                                         </div>
                                                                                                         <div className='text-center cursor-pointer my-auto delete-tooltip' onClick={function () { toggleDeleteCartItem(cartItem.id); }}>
                                                                                                             <span className="icon-tooltiptext fs-14">Delete</span>
-                                                                                                            <AiOutlineDelete size="20" />
+                                                                                                            <IoTrashOutline size="20" />
                                                                                                         </div>
                                                                                                     </div> */}
                                                                                                     </Row>
@@ -607,7 +622,7 @@ const Cart = (props) => {
                                                                                         onClick={function () { toggleDeleteCartItem(cartItem.id); }}
                                                                                     >
                                                                                         <span className="icon-tooltiptext fs-14">Delete</span>
-                                                                                        <AiOutlineDelete size="20" />
+                                                                                        <IoTrashOutline size="20" />
                                                                                     </Col> */}
                                                                                     </Row>
                                                                                     {index < cartItems.length - 1 &&
@@ -710,7 +725,7 @@ const Cart = (props) => {
                                                                                                             </div>
                                                                                                         </Col>
                                                                                                         <Col lg="12">
-                                                                                                            <div className="star-ratings">
+                                                                                                            <div className="star-ratings mt-2">
                                                                                                                 <Rating
                                                                                                                     initialValue={0}
                                                                                                                     readonly={true}
@@ -731,7 +746,7 @@ const Cart = (props) => {
                                                                                                         <Col lg="12" className="color-column-keep-height">
                                                                                                             {cartItem.colors && cartItem.colors.length > 0 ?
                                                                                                                 <>
-                                                                                                                    <p className="mb-3 mt-2 fs-12 fw-600">Color:{" "}
+                                                                                                                    <p className="mb-3 mt-2 fs-12">Color:{" "}
                                                                                                                         {colorsArray.length > 1 ? (
                                                                                                                             colorsArray.join(", ")
                                                                                                                         ) : (
@@ -743,33 +758,35 @@ const Cart = (props) => {
                                                                                                                 null
                                                                                                             }
                                                                                                         </Col>
-                                                                                                        <Col lg="5">
+                                                                                                    </Row>
+                                                                                                    <Row className="vertical-align-middle align-items-center justify-content-center">
+                                                                                                        <Col lg="3">
                                                                                                             <div className="product-price">
-                                                                                                                <p className="fw-500 fs-18">{convertedPrice.currency_code}{convertedPrice.price}</p>
+                                                                                                                <p className="fw-600 fs-18 mb-0 lh-27">{convertedPrice.currency_code}{convertedPrice.price}</p>
                                                                                                             </div>
                                                                                                         </Col>
-                                                                                                        <Col lg="6">
+                                                                                                        <Col lg="8">
                                                                                                             <Button
-                                                                                                                    className='me-3 text-black p-0 measurement-btns'
-                                                                                                                    variant='secondary'
-                                                                                                                    onClick={() => updateTempItemQuantity({ id: cartItem.id, quantity: parseInt(cartItem.quantity) - 1 })} 
-                                                                                                                >
-                                                                                                                    -
-                                                                                                                </Button>
-                                                                                                                <input
-                                                                                                                    type="number"
-                                                                                                                    className="form-control p-2 me-2 d-inline-block"
-                                                                                                                    min="1"
-                                                                                                                    style={{ maxWidth: 60 }}
-                                                                                                                    defaultValue={cartItem.quantity}
-                                                                                                                    onChange={(e) => updateTempItemQuantity({ id: cartItem.id, quantity: e.target.value })}
-                                                                                                                />
-                                                                                                                <Button
-                                                                                                                    className='me-3 text-black p-0 measurement-btns'
-                                                                                                                    variant='secondary'
-                                                                                                                    onClick={() => updateTempItemQuantity({ id: cartItem.id, quantity: parseInt(cartItem.quantity) + 1 })}
-                                                                                                                >
-                                                                                                                    +
+                                                                                                                    className='text-black p-0 measurement-btns'
+                                                                                                                variant='secondary'
+                                                                                                                onClick={() => updateTempItemQuantity({ id: cartItem.id, quantity: parseInt(cartItem.quantity) - 1 })} 
+                                                                                                            >
+                                                                                                                -
+                                                                                                            </Button>
+                                                                                                            <input
+                                                                                                                type="number"
+                                                                                                                className="form-control d-inline-block cart-quantity-input"
+                                                                                                                min="1"
+                                                                                                                style={{ maxWidth: 65 }}
+                                                                                                                value={cartItem.quantity}
+                                                                                                                onChange={(e) => updateTempItemQuantity({ id: cartItem.id, quantity: e.target.value })}
+                                                                                                            />
+                                                                                                            <Button
+                                                                                                                className='text-black p-0 measurement-btns'
+                                                                                                                variant='secondary'
+                                                                                                                onClick={() => updateTempItemQuantity({ id: cartItem.id, quantity: parseInt(cartItem.quantity) + 1 })}
+                                                                                                            >
+                                                                                                                +
                                                                                                             </Button>
                                                                                                             {/* <input
                                                                                                                 type="number"
@@ -784,7 +801,7 @@ const Cart = (props) => {
                                                                                                         <Col lg={1} className="text-end">
                                                                                                             <div className='text-center cursor-pointer delete-tooltip' onClick={function () { deleteTempCartItem(cartItem.id); }}>
                                                                                                                 <span className="icon-tooltiptext fs-14">Delete</span>
-                                                                                                                <AiOutlineDelete size="20" />
+                                                                                                                <IoTrashOutline size="14" />
                                                                                                             </div>
                                                                                                         </Col>
                                                                                                     </Row>
@@ -838,7 +855,7 @@ const Cart = (props) => {
                                                                                         onClick={function () { deleteTempCartItem(cartItem.id); }}
                                                                                     >
                                                                                         <span className="icon-tooltiptext fs-14">Delete</span>
-                                                                                        <AiOutlineDelete size="20" />
+                                                                                        <IoTrashOutline size="20" />
                                                                                     </Col> */}
                                                                                     </Row>
                                                                                     {index < tempCartItems.length - 1 &&

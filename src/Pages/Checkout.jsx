@@ -611,7 +611,44 @@ const Cart = ({ props }) => {
                 const status = response.data.status;
                 const data = response.data;
                 if (status == "Success") {
-                    postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, currency_conversions: cookies.currencyConversions }).then(response => {
+
+                    const checkOutOrderItems = cartItems.map((cartItem, index) => {
+                        try {
+                            const cartItemShippingRate = gigmShippingRate.data[index] || {};
+                            const cartItemShipmentResults = data.responses[index].data || {};
+                            const cartItemTrackingDetails = data.responses[index].data || {};
+                    
+                            const cart_item_shipping_price = parseFloat(cartItemShippingRate?.total_charges_amount) || 0;
+                            const cart_item_shipping_currency = cartItemShippingRate?.currency_code || 'USD';
+                    
+                            const cart_item_shipment_price = cart_item_shipping_price;
+                            const cart_item_shipment_currency = cart_item_shipping_currency;
+                    
+                            const cart_item_shipping_price_converted = CurrencyConverter(cart_item_shipping_price, cart_item_shipping_currency, cookies);
+                            const cart_item_shipment_price_converted = CurrencyConverter(cart_item_shipment_price, cart_item_shipment_currency, cookies);
+                    
+                            // Return the object you're constructing for each cart item
+                            return {
+                                product_id: cartItem.product.id,
+                                quantity: cartItem.quantity,
+                                tracking_details: cartItemTrackingDetails,
+                                shipping_details: {
+                                    shipping_amount: cart_item_shipping_price,
+                                    shipping_amount_converted: cart_item_shipping_price_converted.price_raw,
+                                    shipment_amount: cart_item_shipment_price,
+                                    shipment_amount_converted: cart_item_shipment_price_converted.price_raw,
+                                    shipping_details: cartItemShippingRate,
+                                    shipment_details: cartItemShipmentResults,
+                                }
+                            };
+                        } catch (error) {
+                            console.error("Error in map function: ", error);
+                            throw error;  // You can throw the error again to catch it outside the map
+                        }
+                    });
+                    
+
+                    postCheckOut({ ...checkOutFormData, delivery_country_code: countryCode, user_id: currentUser, product_count: totalQuantity, subtotal_amount: subtotalAmount, subtotal_amount_converted: subtotalAmountConverted, total_amount: totalAmount, total_amount_converted: totalAmountConverted, shipping_amount: totalShippingAmount, shipping_amount_converted: totalShippingAmountConverted, cart_item_ids: uniqueSelectedCartItems, product_count: productCount, shipping_details: { ...shippingDetails, shipping_data: data }, currency_conversions: cookies.currencyConversions, checkout_order_items: checkOutOrderItems }).then(response => {
                         const status = response.data.status;
                         const data = response.data.data;
                         if (status == "Success") {
@@ -1333,7 +1370,9 @@ const Cart = ({ props }) => {
                     state: checkOutFormData.delivery_province,
                     postal_code: checkOutFormData.delivery_postal_code,
                     country: checkOutFormData.delivery_country,
-                    residential: "true"
+                    residential: "true",
+                    lat: coordinates.latitude,
+                    lon: coordinates.longitude
                 };
 
                 setRecipient(_recipient);
@@ -1341,8 +1380,12 @@ const Cart = ({ props }) => {
                 if (currentUser && cartItems) {
                     const _shipments = cartItems.reduce((itemsArray, item) => {
                         if (selectedCartItems.includes(item.product.id)) {
-                            var length = (item.product.length > 0 ? item.product.length : 1) * item.quantity;
-                            var width = (item.product.width > 0 ? item.product.width : 1) * item.quantity;
+                            // var length = (item.product.length > 0 ? item.product.length : 1) * item.quantity;
+                            // var width = (item.product.width > 0 ? item.product.width : 1) * item.quantity;
+                            // var weight = (item.product.weight ?? 1) * item.quantity;
+
+                            var length = item.quantity;
+                            var width = item.quantity;
                             var weight = (item.product.weight ?? 1) * item.quantity;
                             const product_unit_measurement = item.product.unit_measurement;
                             const is_imperial = getUnitOfMeasurement(item.seller.country_code);
@@ -1370,6 +1413,8 @@ const Cart = ({ props }) => {
                                         state: item.seller.province,
                                         postal_code: item.seller.postal_code,
                                         country: item.seller.country,
+                                        lat: item.seller.latitude,
+                                        lon: item.seller.longitude,
                                     },
                                     package: {
                                         name: item.product.name,
@@ -1581,7 +1626,6 @@ const Cart = ({ props }) => {
             setGigmShippingRateData();
         }
     }, [countryName, checkOutFormData.delivery_country_code, checkOutFormData.delivery_province_code, checkOutFormData.delivery_postal_code, checkOutFormData.delivery_city, checkOutFormData.delivery_address_line_1, checkOutFormData.shipping_option]);
-
 
     useEffect(() => {
         setCheckOutFormData({
@@ -1939,7 +1983,7 @@ const Cart = ({ props }) => {
                                 <Col lg={12}>
                                     <Row className="pb-4">
                                         <Col md={6} className='d-flex justify-content-left align-items-center'>
-                                            <h3 className="fs-30 fw-600 text-black mb-0">Checkout</h3>
+                                            <h3 className="fs-30 fw-600 text-black mb-0">Check Out</h3>
                                         </Col>
                                         <Col md={6} className="text-right">
                                             <GoBack fallBack="/#" />
@@ -2944,7 +2988,7 @@ const Cart = ({ props }) => {
                                                                         <button type="button" className='btn btn-primary' disabled={true}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
                                                                         :
                                                                         <>
-                                                                            {shipmentLoading ?
+                                                                            {shippingLoading ?
                                                                                 <button type="button" className='btn btn-primary' disabled={true}>Loading...</button>
                                                                                 :
                                                                                 <>
@@ -2997,7 +3041,7 @@ const Cart = ({ props }) => {
                                                                                                                 {currentUser ?
                                                                                                                     <>
                                                                                                                         {user?.profile_complete == 1 ?
-                                                                                                                            <button type="button" className='btn btn-primary' onClick={() => checkOutSubmitStripe()}>{formStatus != "standby" ? "Loading..." : "Checkout"}</button>
+                                                                                                                            <button type="button" className='btn btn-primary' onClick={() => checkOutSubmitStripe()}>{formStatus != "standby" ? "Loading..." : "Check Out"}</button>
                                                                                                                             :
                                                                                                                             <Link to="/user/complete-profile">
                                                                                                                                 <button type="button" className='btn btn-primary'>Complete Profile to Check Out</button>
@@ -3035,7 +3079,7 @@ const Cart = ({ props }) => {
                                                                                                     }
                                                                                                 </>
                                                                                                 :
-                                                                                                null
+                                                                                                <button type="button" className='btn btn-primary' disabled={true}>Check Out</button>
                                                                                             }
 
                                                                                         </>

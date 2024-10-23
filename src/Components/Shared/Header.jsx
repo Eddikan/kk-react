@@ -514,7 +514,8 @@ const Header = () => {
 
     } else {
       if (tempCart) {
-        const totalQuantity = getTotalQuantity(tempCart);
+        // const totalQuantity = getTotalQuantity(tempCart);
+        const totalQuantity = tempCart.length ?? 0;
         setCartItemCount(totalQuantity);
       }
       if (tempFavorites) {
@@ -695,12 +696,12 @@ const Header = () => {
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile`}>My Profile</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=all&tab_group=orders`}>My Orders</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=fabrics_wishlist&tab_group=wishlist`}>My Wishlist</a>
-                        {userDetails.is_designer == 1 ?
+                        {userDetails?.is_designer == 1 ?
                           <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=designs&tab_group=designs`}>My Designs</a>
                           :
                           null
                         }
-                        {userDetails.is_seller == 1 ?
+                        {userDetails?.is_seller == 1 ?
                           <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=fabrics&tab_group=fabrics`}>My Fabrics</a>
                           :
                           null
