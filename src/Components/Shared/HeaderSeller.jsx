@@ -647,20 +647,20 @@ const Header = () => {
                       <div className="nav-link-menu">
                         <a className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2" style={{ pointerEvents: 'none' }}>Hi,&nbsp;{user.first_name}!</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile`}>My Profile</a>
-                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=all&tab_group=orders`}>My Orders</a>
-                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=fabrics_wishlist&tab_group=wishlist`}>My Wishlist</a>
-                        {userDetails.is_designer == 1 ?
-                          <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=designs&tab_group=designs`}>My Designs</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/center/orders`}>Orders</a>
+                        {/* <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=fabrics_wishlist&tab_group=wishlist`}>My Wishlist</a> */}
+                        {userDetails?.is_designer == 1 ?
+                          <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/center/portfolio`}>Portfolio</a>
                           :
                           null
                         }
-                        {userDetails.is_seller == 1 ?
-                          <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=fabrics&tab_group=fabrics`}>My Fabrics</a>
+                        {userDetails?.is_seller == 1 ?
+                          <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/center/fabrics`}>Fabrics</a>
                           :
                           null
                         }
-                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/profile?tab=upcoming&tab_group=appointments`}>My Appointments</a>
-                        <a className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2" href={`/${userType}/profile?tab=messages&tab_group=messages`}>My Messages</a>
+                        <a className="nav-link cursor-pointer text-decoration-none pb-0" href={`/${userType}/center/appointments`}>Appointments</a>
+                        {/* <a className="nav-link cursor-pointer text-decoration-none border-bottom pb-3 mb-2" href={`/${userType}/profile?tab=messages&tab_group=messages`}>My Messages</a> */}
                         <a className="nav-link cursor-pointer text-decoration-none" onClick={logOut}>Sign Out</a>
                         {/* <a className="nav-link" href="/">My Orders</a>
                         <a className="nav-link" href="/">My Wishlist</a>
@@ -788,35 +788,42 @@ const Header = () => {
                     </div>
                     {userRole !== 'Admin' &&
                       <>
-                        {user.shop_completed != 1 ?
-                          <>
-                            {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
-                              <>
-                                <a href={`/user/shop/setup`}>
-                                  <button type="button" className="btn-shop btn"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
-                                  {/* <div className="nav-link header-tooltip cursor-pointer">
-                                    <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                                    <BsShopWindow size={23} />
-                                  </div> */}
-                                </a>
-                              </>
-                            }
-                          </>
-                          :
-                          <>
-                            {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
-                              <>
-                                <a href={`${userDetails.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`}>
-                                  <button type="button" className="btn-shop btn"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
-                                  {/* <div className="nav-link header-tooltip cursor-pointer">
-                                    <span className="icon-tooltiptext fs-14">Shop Manager</span>
-                                    <BsShopWindow size={23} />
-                                  </div> */}
-                                </a>
-                              </>
-                            }
-                          </>
+                        {user ?
+                            <>
+                                {user.shop_completed != 1 ?
+                                    <>
+                                        {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
+                                        <>
+                                            <a href={`/user/shop/setup`}>
+                                            <button type="button" className="btn-shop btn"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
+                                            {/* <div className="nav-link header-tooltip cursor-pointer">
+                                                <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                                                <BsShopWindow size={23} />
+                                            </div> */}
+                                            </a>
+                                        </>
+                                        }
+                                    </>
+                                    :
+                                    <>
+                                        {(userDetails.is_seller == 1 || userDetails.is_designer == 1) &&
+                                        <>
+                                            <a href={`${userDetails.is_designer == 1 ? '/user/center/calendar' : '/user/center/products'}`}>
+                                            <button type="button" className="btn-shop btn"><BsShopWindow size={23} /> <span className="ms-2">Shop Manager</span></button>
+                                            {/* <div className="nav-link header-tooltip cursor-pointer">
+                                                <span className="icon-tooltiptext fs-14">Shop Manager</span>
+                                                <BsShopWindow size={23} />
+                                            </div> */}
+                                            </a>
+                                        </>
+                                        }
+                                    </>
+                                    }
+                            </>
+                            :
+                            null
                         }
+                        
                       </>
                     }
                     <div className="user-dropdown nav-link position-relative d-none" ref={userRef}>
