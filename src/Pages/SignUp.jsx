@@ -110,18 +110,30 @@ const SignUp = () => {
         setCookie('signup_type', selectedUser.signup_type, { path: '/' });
 
         if (selectedOption === 'Yes') {
-          if (redirectTo && redirectTo != "" & redirectTo != null) {
-            if (signupOption && signupOption != "") {
-              navigate(`/questionnaire?option=${signupOption}&redirect_to=${encodeURIComponent(redirectTo)}`);
-            } else {
-              navigate(`/questionnaire?redirect_to=${encodeURIComponent(redirectTo)}`);
-            }
-          } else {
-            if (signupOption && signupOption != "") {
-              navigate("/questionnaire?option=" + signupOption);
-            } else {
-              navigate("/questionnaire");
-            }
+          // if (redirectTo && redirectTo != "" & redirectTo != null) {
+          //   if (signupOption && signupOption != "") {
+          //     navigate(`/questionnaire?option=${signupOption}&redirect_to=${encodeURIComponent(redirectTo)}`);
+          //   } else {
+          //     navigate(`/questionnaire?redirect_to=${encodeURIComponent(redirectTo)}`);
+          //   }
+          // } else {
+          //   if (signupOption && signupOption != "") {
+          //     navigate("/questionnaire?option=" + signupOption);
+          //   } else {
+          //     navigate("/questionnaire");
+          //   }
+          // }
+          if(signupType === 'designer'){
+            navigate("/user/designer-form");
+          } 
+          else if(signupType === 'seller'){
+            navigate("/user/seller-form");
+          }
+          else if(signupType === 'designer_seller'){
+            navigate('/user/designer-form?type=designer_seller');
+          }
+          else{
+            navigate("/sign-up/preferences");
           }
         } else {
           if (redirectTo && redirectTo != "" & redirectTo != null) {

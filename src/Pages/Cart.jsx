@@ -56,6 +56,8 @@ const Cart = (props) => {
     const [tempCartTotal, setTempCartTotal] = useState(0.00);
     const [user, setUser] = useState();
     const [userLoading, setUserLoading] = useState(true);
+    const [unitCount, setUnitCount] = useState(1.00);
+    const [yards, setYards] = useState(0.00);
 
     const toggleDeleteCartItem = (id) => {
         setCartItemId(id);
@@ -185,10 +187,13 @@ const Cart = (props) => {
             // Set the new updated cart items array
             return updatedItems;
         });
-        updateQuantity({ user_id: currentUser, quantity: data.quantity, id: data.id }).then(response => {
+        updateQuantity({ user_id: currentUser, quantity: data.quantity, id: data.id, unit_measurement: data.unit_measurement}).then(response => {
             const success = response.data.status;
             if (success == success) {
                 setReloadCount(reloadCount + 1);
+                setUnitCount(data.quantity);
+                convertToYards(data.quantity, data.unit_measurement)
+                console.log(data);
             } else {
                 toast.error('There has been an error adding the order, please try again!');
             }
@@ -196,7 +201,29 @@ const Cart = (props) => {
             toast.error('There has been an error adding the order, please try again!');
         });
     }
-
+    const convertToYards = (value,unit_measurement) => {
+        let convertedYards = value * 1.09;
+        switch (unit_measurement) {
+          case "centimeter":
+            convertedYards = value * 0.01;
+            break;
+          case "meter":
+            convertedYards = value * 1.096;
+            break;
+          case "inch":
+            convertedYards = value * 0.027;
+            break;
+          case "feet":
+            convertedYards = value * 0.333;
+            break;
+          case "yard":
+            convertedYards = value * 1;
+            break;
+          default:
+            break;
+        }
+        setYards(convertedYards);
+    }
     const deleteCartItemSubmit = (cartItemId) => {
         setDeleteLoading(true);
         deleteCartItem(cartItemId).then(response => {
@@ -229,6 +256,7 @@ const Cart = (props) => {
                 if (selectedCartItems.includes(item.product.id)) {
                     const fabricPrice = item.product.price ?? '0';
                     const fabricCurrency = item.product.currency ?? 'USD';
+                    const unitMeasurement = item.product.unit_measurement ?? 'yard';
 
                     const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
                     const subtotal = convertedPrice.price_raw * item.quantity;
@@ -545,6 +573,13 @@ const Cart = (props) => {
                                                                                                                 >
                                                                                                                     +
                                                                                                                 </Button>
+                                                                                                                {/* <span className="fs-18 my-auto fw-600">{Number(cartItem.quantity)?.toFixed(2)} {
+                                                                                                                    cartItem.product.unit_measurement !== 'inch' && cartItem.product.unit_measurement !== 'feet'
+                                                                                                                    ? cartItem.product.unit_measurement + 's'
+                                                                                                                    : cartItem.product.unit_measurement === 'feet'
+                                                                                                                        ? cartItem.product.unit_measurement
+                                                                                                                        : cartItem.product.unit_measurement + 'es'
+                                                                                                                } {cartItem.product.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span> */}
                                                                                                             </div>
                                                                                                         </Col>
                                                                                                         <Col lg="1" className="text-end">
@@ -788,6 +823,14 @@ const Cart = (props) => {
                                                                                                             >
                                                                                                                 +
                                                                                                             </Button>
+
+                                                                                                            {/* <span className="fs-18 my-auto ms-1 fw-600">{Number(unitCount)?.toFixed(2)} {
+                                                                                                                cartItem.unit_measurement !== 'inch' && cartItem.unit_measurement !== 'feet'
+                                                                                                                    ? cartItem.unit_measurement + 's'
+                                                                                                                    : cartItem.unit_measurement === 'feet'
+                                                                                                                        ? cartItem.unit_measurement
+                                                                                                                        : cartItem.unit_measurement + 'es'
+                                                                                                            } {cartItem.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span> */}
                                                                                                             {/* <input
                                                                                                                 type="number"
                                                                                                                 className="form-control p-2 me-2 d-inline-block"
