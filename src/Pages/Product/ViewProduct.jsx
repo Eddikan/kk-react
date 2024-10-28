@@ -143,28 +143,33 @@ const ViewProduct = () => {
     }
 
     const convertToYards = (value) => {
-        let convertedYards = value * 1.09;
+        let convertedYards = value; 
+    
         switch (product.unit_measurement) {
-          case "centimeter":
-            convertedYards = value * 0.01;
-            break;
-          case "meter":
-            convertedYards = value * 1.096;
-            break;
-          case "inch":
-            convertedYards = value * 0.027;
-            break;
-          case "feet":
-            convertedYards = value * 0.333;
-            break;
-          case "yard":
-            convertedYards = value * 1;
-            break;
-          default:
-            break;
+            case "millimeter":
+                convertedYards = value / 914.4; 
+                break;
+            case "centimeter":
+                convertedYards = value / 91.44; 
+                break;
+            case "meter":
+                convertedYards = value * 1.09361; 
+                break;
+            case "inch":
+                convertedYards = value / 36;
+                break;
+            case "feet":
+                convertedYards = value / 3;
+                break;
+            case "yard":
+                convertedYards = value;
+                break;
+            default:
+                break;
         }
+    
         setYards(convertedYards);
-    }
+    };    
 
     const increment = () => {
         const newValue = unitCount + 1;

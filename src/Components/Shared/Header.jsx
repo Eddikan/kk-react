@@ -1209,7 +1209,7 @@ const Header = () => {
                   <Row>
                     <Col lg="4" className="mb-90">
                       {/* onClick={() => showSignupModal('user_designer')} */}
-                      <Card onClick={() => navigate('/sign-up?type=designer')} className="shop-modal-card cursor-pointer bg-white">
+                      <Card onClick={() => {window.location.href = '/sign-up?type=designer';}} className="shop-modal-card cursor-pointer bg-white">
                         <Card.Body className="shop-modal-card-body">
                           <img src={DesignerModalIcon} alt="Designers" className="shop-card-icon" />
                           <div className="user-box shop-modal-card-content text-center justify-content-center">
@@ -1223,7 +1223,7 @@ const Header = () => {
                     </Col>
                     <Col lg="4" className="mb-90">
                       {/* onClick={() => handleShowFabrics()} */}
-                      <Card onClick={(e) => { navigate('/sign-up?type=seller'); }} className="shop-modal-card cursor-pointer bg-white">
+                      <Card onClick={() => {window.location.href = '/sign-up?type=seller';}} className="shop-modal-card cursor-pointer bg-white">
                         <Card.Body className="shop-modal-card-body">
                           <img src={FabricModalIcon} alt="Fabrics" className="shop-card-icon" />
                           <div className="user-box shop-modal-card-content text-center justify-content-center">
@@ -1237,7 +1237,7 @@ const Header = () => {
                     </Col>
                     <Col lg="4" className="mb-90">
                       {/* onClick={() => handleShowDesigns()} */}
-                      <Card onClick={() => navigate('/sign-up?type=designer_seller')} className="shop-modal-card cursor-pointer bg-white">
+                      <Card onClick={() => {window.location.href = '/sign-up?type=designer_seller';}} className="shop-modal-card cursor-pointer bg-white">
                         <Card.Body className="shop-modal-card-body">
                           <img src={DesignerVendorModalIcon} alt="Designs" className="shop-card-icon" />
                           <div className="user-box shop-modal-card-content text-center justify-content-center">

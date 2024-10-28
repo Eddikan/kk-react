@@ -50,14 +50,13 @@ const Cart = (props) => {
     const [cartItemModalDelete, setCartItemModalDelete] = useState(false);
     const [cartLoading, setCartLoading] = useState(true);
     const [deleteLoading, setDeleteLoading] = useState(false);
+    const [quantityLoading, setQuantityLoading] = useState(false);
     const [subtotalAmount, setSubtotalAmount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
     const [tempCartItems, setTempCartItems] = useState(cookies.tempCart ?? []);
     const [tempCartTotal, setTempCartTotal] = useState(0.00);
     const [user, setUser] = useState();
     const [userLoading, setUserLoading] = useState(true);
-    const [unitCount, setUnitCount] = useState(1.00);
-    const [yards, setYards] = useState(0.00);
 
     const toggleDeleteCartItem = (id) => {
         setCartItemId(id);
@@ -191,9 +190,6 @@ const Cart = (props) => {
             const success = response.data.status;
             if (success == success) {
                 setReloadCount(reloadCount + 1);
-                setUnitCount(data.quantity);
-                convertToYards(data.quantity, data.unit_measurement)
-                console.log(data);
             } else {
                 toast.error('There has been an error adding the order, please try again!');
             }
@@ -201,29 +197,41 @@ const Cart = (props) => {
             toast.error('There has been an error adding the order, please try again!');
         });
     }
-    const convertToYards = (value,unit_measurement) => {
-        let convertedYards = value * 1.09;
-        switch (unit_measurement) {
-          case "centimeter":
-            convertedYards = value * 0.01;
-            break;
-          case "meter":
-            convertedYards = value * 1.096;
-            break;
-          case "inch":
-            convertedYards = value * 0.027;
-            break;
-          case "feet":
-            convertedYards = value * 0.333;
-            break;
-          case "yard":
-            convertedYards = value * 1;
-            break;
-          default:
-            break;
+    const convertToYards = (value, unit) => {
+        let convertedYards = value;
+    
+        switch (unit) {
+            case "millimeter":
+                convertedYards = value / 914.4; 
+                break;
+            case "centimeter":
+                convertedYards = value / 91.44;
+                break;
+            case "meter":
+                convertedYards = value * 1.09361
+                break;
+            case "inch":
+                convertedYards = value / 36;
+                break;
+            case "feet":
+                convertedYards = value / 3;
+                break;
+            case "yard":
+                convertedYards = value;
+                break;
+            default:
+                break;
         }
-        setYards(convertedYards);
-    }
+    
+        return convertedYards;
+    };
+    const handleInputDefault = (value) => {
+        let itemQuantityDefault = value;
+        if (itemQuantityDefault === '' || itemQuantityDefault < 1) {
+            itemQuantityDefault = 1; 
+        }
+        return itemQuantityDefault;
+    };
     const deleteCartItemSubmit = (cartItemId) => {
         setDeleteLoading(true);
         deleteCartItem(cartItemId).then(response => {
@@ -256,7 +264,6 @@ const Cart = (props) => {
                 if (selectedCartItems.includes(item.product.id)) {
                     const fabricPrice = item.product.price ?? '0';
                     const fabricCurrency = item.product.currency ?? 'USD';
-                    const unitMeasurement = item.product.unit_measurement ?? 'yard';
 
                     const convertedPrice = CurrencyConverter(fabricPrice, fabricCurrency, cookies);
                     const subtotal = convertedPrice.price_raw * item.quantity;
@@ -458,7 +465,8 @@ const Cart = (props) => {
                                                                             } else {
                                                                                 var fabricImage = PlaceholderImage;
                                                                             }
-
+                                                                            const itemQuantity = cartItem.quantity;
+                                                                            const yards = convertToYards(cartItem.quantity,cartItem.product.unit_measurement);
                                                                             const fabricPrice = cart_product.price ?? '0';
                                                                             const fabricCurrency = cart_product.currency ?? 'USD';
 
@@ -483,7 +491,7 @@ const Cart = (props) => {
 
                                                                             return (
                                                                                 <>
-                                                                                    <Row>
+                                                                                    <Row className="align-items-center">
                                                                                         <Col lg={1}>
                                                                                             <input
                                                                                                 type="checkbox"
@@ -547,39 +555,45 @@ const Cart = (props) => {
                                                                                                         </Col>
                                                                                                         <Col lg="8">
                                                                                                             <div className="measurement-input d-flex">
-                                                                                                                <Button
+                                                                                                                <button
                                                                                                                     className='text-black p-0 measurement-btns'
-                                                                                                                    variant='secondary'
+                                                                                                                    // variant='secondary'
                                                                                                                     onClick={function() {
                                                                                                                         updateItemQuantity({ quantity: Math.max(1, cartItem.quantity - 1), id: cartItem.id, index: index });
                                                                                                                     }} 
                                                                                                                 >
                                                                                                                     -
-                                                                                                                </Button>
+                                                                                                                </button>
                                                                                                                 <input
                                                                                                                     type="number"
                                                                                                                     className="form-control d-inline-block cart-quantity-input"
                                                                                                                     min="1"
                                                                                                                     style={{ maxWidth: 65 }}
-                                                                                                                    value={cartItem.quantity}
+                                                                                                                    value={itemQuantity}
                                                                                                                     onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id, index: index })}
+                                                                                                                    onBlur={(e) => {const newQuantity = handleInputDefault(e.target.value);
+                                                                                                                        updateItemQuantity({ quantity: newQuantity, id: cartItem.id, index: index });
+                                                                                                                    }}
                                                                                                                 />
-                                                                                                                <Button
+                                                                                                                <button
                                                                                                                     className='text-black p-0 measurement-btns'
-                                                                                                                    variant='secondary'
-                                                                                                                    onClick={function() { 
-                                                                                                                        updateItemQuantity({ quantity: cartItem.quantity + 1, id: cartItem.id, index: index }); 
+                                                                                                                    // variant='secondary'
+                                                                                                                    onClick={() => {
+                                                                                                                        const currentQuantity = parseInt(itemQuantity) || 1; 
+                                                                                                                        updateItemQuantity({ quantity: currentQuantity + 1, id: cartItem.id, index: index });
                                                                                                                     }} 
                                                                                                                 >
                                                                                                                     +
-                                                                                                                </Button>
-                                                                                                                {/* <span className="fs-18 my-auto fw-600">{Number(cartItem.quantity)?.toFixed(2)} {
+                                                                                                                </button>
+                                                                                                                
+                                                                                                                <span className="fs-14 ms-2 my-auto fw-600">{Number(cartItem.quantity)?.toFixed(2)} {
                                                                                                                     cartItem.product.unit_measurement !== 'inch' && cartItem.product.unit_measurement !== 'feet'
                                                                                                                     ? cartItem.product.unit_measurement + 's'
                                                                                                                     : cartItem.product.unit_measurement === 'feet'
                                                                                                                         ? cartItem.product.unit_measurement
                                                                                                                         : cartItem.product.unit_measurement + 'es'
-                                                                                                                } {cartItem.product.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span> */}
+                                                                                                                } {cartItem.product.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span>
+                                                                                                                
                                                                                                             </div>
                                                                                                         </Col>
                                                                                                         <Col lg="1" className="text-end">
@@ -714,6 +728,7 @@ const Cart = (props) => {
                                                                                 var fabricImage = PlaceholderImage;
                                                                             }
 
+                                                                            const yards = convertToYards(cartItem.quantity,cartItem.unit_measurement);
                                                                             const fabricPrice = cart_product.price ?? '0';
                                                                             const fabricCurrency = cart_product.currency ?? 'USD';
 
@@ -804,7 +819,11 @@ const Cart = (props) => {
                                                                                                             <Button
                                                                                                                     className='text-black p-0 measurement-btns'
                                                                                                                 variant='secondary'
-                                                                                                                onClick={() => updateTempItemQuantity({ id: cartItem.id, quantity: parseInt(cartItem.quantity) - 1 })} 
+                                                                                                                onClick={() => {
+                                                                                                                    if (cartItem.quantity > 1) {
+                                                                                                                        updateTempItemQuantity({ id: cartItem.id, quantity: parseInt(cartItem.quantity) - 1 });
+                                                                                                                    }
+                                                                                                                }} 
                                                                                                             >
                                                                                                                 -
                                                                                                             </Button>
@@ -815,6 +834,9 @@ const Cart = (props) => {
                                                                                                                 style={{ maxWidth: 65 }}
                                                                                                                 value={cartItem.quantity}
                                                                                                                 onChange={(e) => updateTempItemQuantity({ id: cartItem.id, quantity: e.target.value })}
+                                                                                                                onBlur={(e) => {const newQuantity = handleInputDefault(e.target.value);
+                                                                                                                    updateTempItemQuantity({ quantity: newQuantity, id: cartItem.id, index: index });
+                                                                                                                }}
                                                                                                             />
                                                                                                             <Button
                                                                                                                 className='text-black p-0 measurement-btns'
@@ -824,13 +846,13 @@ const Cart = (props) => {
                                                                                                                 +
                                                                                                             </Button>
 
-                                                                                                            {/* <span className="fs-18 my-auto ms-1 fw-600">{Number(unitCount)?.toFixed(2)} {
+                                                                                                            <span className="fs-14 my-auto ms-1 fw-600">{Number(cartItem.quantity)?.toFixed(2)} {
                                                                                                                 cartItem.unit_measurement !== 'inch' && cartItem.unit_measurement !== 'feet'
                                                                                                                     ? cartItem.unit_measurement + 's'
                                                                                                                     : cartItem.unit_measurement === 'feet'
                                                                                                                         ? cartItem.unit_measurement
                                                                                                                         : cartItem.unit_measurement + 'es'
-                                                                                                            } {cartItem.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span> */}
+                                                                                                            } {cartItem.unit_measurement != "yard" ? <span className="fs-14 fw-400 text-muted-product">({yards.toFixed(2)} yards)</span> : null}</span>
                                                                                                             {/* <input
                                                                                                                 type="number"
                                                                                                                 className="form-control p-2 me-2 d-inline-block"
