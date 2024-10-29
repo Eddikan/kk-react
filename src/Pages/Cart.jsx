@@ -225,13 +225,12 @@ const Cart = (props) => {
     
         return convertedYards;
     };
+
     const handleInputDefault = (value) => {
-        let itemQuantityDefault = value;
-        if (itemQuantityDefault === '' || itemQuantityDefault < 1) {
-            itemQuantityDefault = 1; 
-        }
+        const itemQuantityDefault = Math.max(1, parseInt(value) || 1);
         return itemQuantityDefault;
     };
+
     const deleteCartItemSubmit = (cartItemId) => {
         setDeleteLoading(true);
         deleteCartItem(cartItemId).then(response => {
@@ -571,6 +570,7 @@ const Cart = (props) => {
                                                                                                                     style={{ maxWidth: 65 }}
                                                                                                                     value={itemQuantity}
                                                                                                                     onChange={(e) => updateItemQuantity({ quantity: e.target.value, id: cartItem.id, index: index })}
+                                                                                                                    // Change Value to 1 when user leaves the input empty or with a negative number
                                                                                                                     onBlur={(e) => {const newQuantity = handleInputDefault(e.target.value);
                                                                                                                         updateItemQuantity({ quantity: newQuantity, id: cartItem.id, index: index });
                                                                                                                     }}

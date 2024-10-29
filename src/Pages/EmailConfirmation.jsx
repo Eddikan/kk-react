@@ -36,7 +36,11 @@ const EmailConfirmation = () => {
   const getUser = async () => {
     return await axios.get(process.env.REACT_APP_API_ENDPOINT + 'user/' + currentUser);
   };
-
+  useEffect(() =>{
+    if(!currentUser){
+      navigate("/login");
+    }
+  })
   async function resendVerificationEmail(e) {
     setFormStatus('loading');
     axios.post(process.env.REACT_APP_API_ENDPOINT + 'resend/verification/' + currentUser + '?user_id=' + currentUser + '&token=' + token, {
@@ -75,7 +79,8 @@ const EmailConfirmation = () => {
           } else if (selectedUser.signup_type == "user_design") {
             navigate("/designs");
           } else {
-            navigate("/questionnaire");
+            // navigate("/questionnaire");
+            navigate("/sign-up/preferences");
           }
         }
       } else {

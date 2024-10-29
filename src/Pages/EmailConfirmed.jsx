@@ -46,7 +46,11 @@ const EmailConfirmation = () => {
     async function goToQuestionnaire(e) {
         navigate("/questionnaire");
     }
-
+    useEffect(() =>{
+        if(!currentUser){
+          navigate("/login");
+        }
+      })
     useEffect(() => {
         // ComponentDidMount logic goes here
         // This will be executed after the component is mounted
