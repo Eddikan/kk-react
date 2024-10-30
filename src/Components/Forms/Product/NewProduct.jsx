@@ -169,6 +169,18 @@ const NewProduct = (props) => {
             setSelectedSustainabilities(selectedSustainabilities.filter(s => s !== sustainability));
         }
     };
+    
+    // const isValidUrl = (url, type) => {
+    //     if (type === "Youtube"){
+    //         const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
+    //         return youtubeRegex.test(url)
+    //     }else if(type === "Vimeo"){
+    //         const vimeoRegex = /^(https?:\/\/)?(www\.)?vimeo\.com\/.+$/;
+    //         return vimeoRegex.test(url);
+    //     }else{
+    //         toast.error('Invalid Video Type');
+    //     }
+    // };
 
     useEffect(() => {
         setProductData({
@@ -278,11 +290,11 @@ const NewProduct = (props) => {
                     <Card>
                         <Card.Body className='bg-lgray'>
                             <Form.Group className='mb-4 mt-2'>
-                                <Form.Label>Name</Form.Label>
+                                <Form.Label>Name<span className='text-danger'>*</span></Form.Label>
                                 <FormControl type='text' name='name' value={productData.name} className='mr-sm-2' onChange={handleChange} required placeholder='' />
                             </Form.Group>
                             <Form.Group className='my-4'>
-                                <Form.Label>Description</Form.Label>
+                                <Form.Label>Description<span className='text-danger'>*</span></Form.Label>
                                 <FormControl as="textarea"
                                     name="description"
                                     rows={3} // You can adjust the number of rows as needed
@@ -657,6 +669,28 @@ const NewProduct = (props) => {
                                     <option value='Vimeo'>Vimeo</option>
                                     <option value='Upload'>Upload Video</option>
                                 </Form.Control>
+                                {/* Check if Youtube or Vimeo URL is Valid */}
+                                {/* {productData.video_demo_type === "Youtube" || productData.video_demo_type === "Vimeo" ?
+                                    <>
+                                        <FormControl  type='text' name='video_demo_url'  value={productData.video_demo_url}  className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />
+                                        {productData.video_demo_url && productData.video_demo_url !== "" && !isValidUrl(productData.video_demo_url, productData.video_demo_type) && (
+                                            <div className="text-danger mt-2 fs-12">
+                                                Please enter a valid {productData.video_demo_type} link.
+                                            </div>
+                                        )}
+                                        {productData.video_demo_url && productData.video_demo_url !== "" && isValidUrl(productData.video_demo_url, productData.video_demo_type) && (
+                                            <div className="mt-3">
+                                                <ResponsiveEmbedVideo src={productData.video_demo_url} title={productData.name} />
+                                            </div>
+                                        )}
+                                    </>
+                                     : productData.video_demo_type == "Upload" ?
+                                        <div className="mt-3">
+                                            <VideoDragAndDrop type="product" onVideoChange={handleVideoChange} size={size} />
+                                        </div>
+                                        :
+                                        null
+                                } */}
                                 {productData.video_demo_type == "Youtube" || productData.video_demo_type == "Vimeo" ?
                                     <>
                                         <FormControl type='text' name='video_demo_url' value={productData.video_demo_url} className='mr-sm-2 mt-3' onChange={handleChange} placeholder={`Insert ${productData.video_demo_type} embed link`} />

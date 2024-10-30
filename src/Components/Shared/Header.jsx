@@ -540,9 +540,10 @@ const Header = () => {
     ? `/sign-up?redirect_to=${encodeURIComponent(currentPath)}`
     : '/sign-up';
 
-  const hrefLogin = currentPath
-    ? `/login?redirect_to=${encodeURIComponent(currentPath)}`
-    : '/login';
+  const ddfPaths = ["/designers", "/designs", "/fabrics"]
+  const hrefLogin = ddfPaths.includes(currentPath)
+    ? `/login?redirect_to=${encodeURIComponent(currentPath)}` 
+    : '/login'; 
 
 
 
@@ -1001,7 +1002,7 @@ const Header = () => {
                         <IoPersonOutline size={26} />
                       </div>
                       <div className="nav-link-menu">
-                        <a className="nav-link pb-0" href="/login">Sign In</a>
+                        <a className="nav-link pb-0" href={hrefLogin}>Sign In</a>
                         <a className="nav-link cursor-pointer border-bottom pb-3 mb-2 text-decoration-none" onClick={viewRegisterModal}>Register</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Profile</a>
                         <a className="nav-link cursor-pointer text-decoration-none pb-0" href="/login">My Orders</a>
